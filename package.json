@@ -10,6 +10,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@biomejs/biome": "^1.8.1",
     "@t3-oss/env-nextjs": "^0.10.1",
     "geist": "^1.3.0",
     "next": "^14.2.1",
