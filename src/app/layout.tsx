@@ -2,7 +2,7 @@ import "~/styles/globals.css";
 
 export const metadata = {
 	title: "Fountain",
-	description: "Collaborative web3 blogging",
+	description: "where your writing journey begins...",
 	icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
