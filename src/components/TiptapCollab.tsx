@@ -16,7 +16,7 @@ const TiptapCollab = () => {
   const provider = new TiptapCollabProvider({
     name: "document.name", // Unique document identifier for syncing. 
     appId: 'v91rwzmo', // Cloud Dashboard AppID or `baseURL` for on-premises
-    token: 'notoken', // JWT token
+    token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MTg4MzE0MjgsIm5iZiI6MTcxODgzMTQyOCwiZXhwIjoxNzE4OTE3ODI4LCJpc3MiOiJodHRwczovL2Nsb3VkLnRpcHRhcC5kZXYiLCJhdWQiOiJ2OTFyd3ptbyJ9.z0bALIoyGgAGQ6CdDzwgSi7e3A66yLaFu-Lla_ld5oI', // JWT token
     document: doc,
 
      // The onSynced callback ensures initial content is set only once using editor.setContent(), preventing repetitive content insertion on editor syncs.
@@ -39,9 +39,6 @@ const TiptapCollab = () => {
 
   const editor = useEditor({
   extensions: [
-    StarterKit.configure({
-            history: false, // Disables default history to use Collaboration's history management
-    }),
     Paragraph,
     Document,
     Text,
@@ -55,37 +52,6 @@ const TiptapCollab = () => {
       class: 'prose prose-sm sm:prose-base lg:prose-lg m-5 focus:outline-none rounded-lg p-8',
     },
   },
-
-  content: `
-    <h2>
-      Hi there,
-    </h2>
-    <p>
-      your fountastic 🖋  journey starts here.
-    </p>
-    <ul>
-      <li>
-        That’s a bullet list with one …
-      </li>
-      <li>
-        … or two list items.
-      </li>
-    </ul>
-    <p>
-      Isn’t that great? And all of that is editable. But wait, there’s more. Let’s try a code block:
-    </p>
-<pre><code class="language-css">body {
-  display: none;
-}</code></pre>
-    <p>
-      I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little bit around. Don’t forget to check the other examples too.
-    </p>
-    <blockquote>
-      Wow, that’s amazing. Good work! 👏
-      <br />
-      — Mom
-    </blockquote>
-  `,
 })
 
   return (
