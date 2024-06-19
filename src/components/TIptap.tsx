@@ -10,15 +10,16 @@ const Tiptap = () => {
   ],
   editorProps: {
     attributes: {
-      class: 'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl m-5 focus:outline-none',
+      class: 'prose prose-sm sm:prose-base lg:prose-lg m-5 focus:outline-none rounded-lg p-8',
     },
   },
+
   content: `
     <h2>
       Hi there,
     </h2>
     <p>
-      this is a basic <em>basic</em> example of <strong>Tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:
+      your fountastic 🖋  journey starts here.
     </p>
     <ul>
       <li>
@@ -38,13 +39,12 @@ const Tiptap = () => {
       I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little bit around. Don’t forget to check the other examples too.
     </p>
     <blockquote>
-      Wow, that’s amazing. Good work, boy! 👏
+      Wow, that’s amazing. Good work! 👏
       <br />
       — Mom
     </blockquote>
   `,
 })
-
 
   return (
     <EditorContent editor={editor} />
