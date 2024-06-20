@@ -9,6 +9,9 @@ import StarterKit from '@tiptap/starter-kit'
 import Collaboration from '@tiptap/extension-collaboration'
 import * as Y from 'yjs'
 import { TiptapCollabProvider } from '@hocuspocus/provider'
+import { env } from '~/env'
+
+const hocuspocusToken = env.NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN;
 
 const TiptapCollab = () => {
   const doc = new Y.Doc() 
@@ -16,7 +19,7 @@ const TiptapCollab = () => {
   const provider = new TiptapCollabProvider({
     name: "document.name", // Unique document identifier for syncing. 
     appId: 'v91rwzmo', // Cloud Dashboard AppID or `baseURL` for on-premises
-    token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MTg4MzE0MjgsIm5iZiI6MTcxODgzMTQyOCwiZXhwIjoxNzE4OTE3ODI4LCJpc3MiOiJodHRwczovL2Nsb3VkLnRpcHRhcC5kZXYiLCJhdWQiOiJ2OTFyd3ptbyJ9.z0bALIoyGgAGQ6CdDzwgSi7e3A66yLaFu-Lla_ld5oI', // JWT token
+    token: hocuspocusToken, // JWT token
     document: doc,
 
      // The onSynced callback ensures initial content is set only once using editor.setContent(), preventing repetitive content insertion on editor syncs.
@@ -25,20 +28,16 @@ const TiptapCollab = () => {
       if( !doc.getMap('config').get('initialContentLoaded') && editor ){
         doc.getMap('config').set('initialContentLoaded', true);
 
-        editor.commands.setContent(`
-        <p>
-          This is a radically reduced version of Tiptap. It has support for a document, with paragraphs and text. That’s it. It’s probably too much for real minimalists though.
-        </p>
-        <p>
-          The paragraph extension is not really required, but you need at least one node. Sure, that node can be something different.
-        </p>
-        `)
+        editor.commands.setContent(`fountastic!`)
       }
     }
   })
 
   const editor = useEditor({
   extensions: [
+    StarterKit.configure({
+      history: false,
+    }),
     Paragraph,
     Document,
     Text,
