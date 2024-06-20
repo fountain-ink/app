@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { serifFontVar } from "~/styles/fonts";
+import { serifFontVar } from "@/styles/fonts";
 
 export default function HomePage() {
 	return (
