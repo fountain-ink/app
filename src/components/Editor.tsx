@@ -30,7 +30,7 @@ const getInitialUser = () => {
 const doc = new Y.Doc();
 
 const provider = new TiptapCollabProvider({
-	name: "document2", // Unique document identifier for syncing.
+	name: "document3", // Unique document identifier for syncing.
 	appId: "v91rwzmo", // Cloud Dashboard AppID or `baseURL` for on-premises
 	token: hocuspocusToken, // JWT token
 	document: doc,
