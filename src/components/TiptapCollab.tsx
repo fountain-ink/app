@@ -20,6 +20,7 @@ const hocuspocusToken = env.NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN;
 
 const colors = ["#958DF1", "#F98181", "#FBBC88", "#FAF594"];
 const names = ["Lea Thompson", "Cyndi Lauper", "Tom Cruise", "Madonna"];
+
 const getRandomElement = (list: string[]) =>
 	list[Math.floor(Math.random() * list.length)];
 const getRandomColor = () => getRandomElement(colors);
