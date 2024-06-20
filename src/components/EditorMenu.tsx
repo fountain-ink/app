@@ -155,15 +155,14 @@ export const EditorMenu = ({ editor }: { editor: Editor | null }) => {
 			>
 				Redo
 			</button>
-			<button
-				type="button"
+			{/* <button type="button"
 				onClick={() => editor.chain().focus().setColor("#958DF1").run()}
 				className={
 					editor.isActive("textStyle", { color: "#958DF1" }) ? "is-active" : ""
 				}
 			>
 				Purple
-			</button>
+			</button> */}
 		</div>
 	);
 };
