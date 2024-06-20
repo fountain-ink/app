@@ -47,22 +47,21 @@ const TiptapCollab = () => {
 
 	useEffect(() => {
 		// Update status changes
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		provider.on("status", (event: any) => {
 			console.log(event);
 			setStatus(event.status);
 		});
 	}, []);
 
-	useEffect(() => {
-		if (editor && currentUser) {
-			localStorage.setItem("currentUser", JSON.stringify(currentUser));
-			editor.chain().focus().updateUser(currentUser).run();
-		}
-	}, [currentUser]);
+	// useEffect(() => {
+	// 		if (editor && currentUser) {
+	// 			localStorage.setItem("currentUser", JSON.stringify(currentUser));
+	// 			editor.chain().focus().updateUser(currentUser).run();
+	// 		}
+	// 	}, [editor, currentUser]);
 
 	const setName = useCallback(() => {
-		const name = (window.prompt("Name") || "").trim().substring(0, 32);
+		const name = (window.prompt("Name") ?? "").trim().substring(0, 32);
 
 		if (name) {
 			return setCurrentUser({ ...currentUser, name });
@@ -82,11 +81,9 @@ const TiptapCollab = () => {
 			}),
 			Collaboration.configure({
 				document: doc,
-         
 			}),
 			CollaborationCursor.configure({
 				provider,
-        
 			}),
 		],
 		editorProps: {
