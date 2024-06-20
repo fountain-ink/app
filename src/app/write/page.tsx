@@ -1,3 +1,4 @@
+import { EditorMenu } from "~/components/EditorMenu";
 import Tiptap from "~/components/TIptap";
 
 export default function HomePage() {

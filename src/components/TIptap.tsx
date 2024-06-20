@@ -1,20 +1,20 @@
-'use client'
+"use client";
 
-import { useEditor, EditorContent } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import { EditorMenu } from "./EditorMenu";
 
 const Tiptap = () => {
-  const editor = useEditor({
-  extensions: [
-    StarterKit,
-  ],
-  editorProps: {
-    attributes: {
-      class: 'prose prose-sm sm:prose-base lg:prose-lg m-5 focus:outline-none rounded-lg p-8',
-    },
-  },
+	const editor = useEditor({
+		extensions: [StarterKit],
+		editorProps: {
+			attributes: {
+				class:
+					"prose prose-sm sm:prose-base lg:prose-lg m-5 focus:outline-none rounded-lg p-8",
+			},
+		},
 
-  content: `
+		content: `
     <h2>
       Hi there,
     </h2>
@@ -44,11 +44,14 @@ const Tiptap = () => {
       — Mom
     </blockquote>
   `,
-})
+	});
 
-  return (
-    <EditorContent editor={editor} />
-  )
-}
+	return (
+		<>
+			<EditorMenu editor={editor} />
+			<EditorContent editor={editor} />
+		</>
+	);
+};
 
-export default Tiptap
+export default Tiptap;
