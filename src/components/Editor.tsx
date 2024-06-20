@@ -1,20 +1,14 @@
 "use client";
 
-import CharacterCount from "@tiptap/extension-character-count";
+import { env } from "@/env";
+import { TiptapCollabProvider } from "@hocuspocus/provider";
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
-import Highlight from "@tiptap/extension-highlight";
-import TaskItem from "@tiptap/extension-task-item";
-import TaskList from "@tiptap/extension-task-list";
-
 import { EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-
-import { TiptapCollabProvider } from "@hocuspocus/provider";
 import { useCallback, useEffect, useState } from "react";
 import * as Y from "yjs";
-import { env } from "~/env";
 import { EditorMenu } from "./EditorMenu";
+import ExtensionKit from "./extensions/ExtensionKit";
 
 const hocuspocusToken = env.NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN;
 
@@ -36,18 +30,19 @@ const getInitialUser = () => {
 const doc = new Y.Doc();
 
 const provider = new TiptapCollabProvider({
-	name: "document.name", // Unique document identifier for syncing.
+	name: "document2", // Unique document identifier for syncing.
 	appId: "v91rwzmo", // Cloud Dashboard AppID or `baseURL` for on-premises
 	token: hocuspocusToken, // JWT token
 	document: doc,
 });
 
-const TiptapCollab = () => {
+const Tiptap = () => {
 	const [status, setStatus] = useState("connecting");
 	const [currentUser, setCurrentUser] = useState(getInitialUser);
 
 	useEffect(() => {
 		// Update status changes
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		provider.on("status", (event: any) => {
 			console.log(event);
 			setStatus(event.status);
@@ -71,20 +66,34 @@ const TiptapCollab = () => {
 
 	const editor = useEditor({
 		extensions: [
-			StarterKit.configure({
-				history: false,
-			}),
-			Highlight,
-			TaskList,
-			TaskItem,
-			CharacterCount.configure({
-				limit: 10000,
+			// StarterKit.configure({
+			// 	history: false,
+			// }),
+			// Highlight,
+			// TaskList,
+			// TaskItem,
+			// CharacterCount.configure({
+			// 	limit: 10000,
+			// }),
+			// Collaboration.configure({
+			// 	document: doc,
+			// }),
+			// CollaborationCursor.configure({
+			// 	provider,
+			// }),
+
+			...ExtensionKit({
+				provider,
 			}),
 			Collaboration.configure({
 				document: doc,
 			}),
 			CollaborationCursor.configure({
 				provider,
+				user: {
+					name: getRandomElement(names),
+					color: getRandomElement(colors),
+				},
 			}),
 		],
 		editorProps: {
@@ -97,10 +106,10 @@ const TiptapCollab = () => {
 
 	return (
 		<>
-			{/* <EditorMenu editor={editor} /> */}
+			<EditorMenu editor={editor} />
 			<EditorContent editor={editor} />
 		</>
 	);
 };
 
-export default TiptapCollab;
+export default Tiptap;
