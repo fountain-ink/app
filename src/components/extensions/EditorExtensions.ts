@@ -1,5 +1,6 @@
 "use client";
 import {
+	GlobalDragHandle,
 	HorizontalRule,
 	Placeholder,
 	StarterKit,
@@ -38,6 +39,8 @@ const horizontalRule = HorizontalRule.configure({
 		class: cx("mt-4 mb-6 border-t border-muted-foreground"),
 	},
 });
+
+const dragHandle = GlobalDragHandle.configure({});
 
 const starterKit = StarterKit.configure({
 	history: false,
@@ -83,8 +86,9 @@ const starterKit = StarterKit.configure({
 export const defaultExtensions = [
 	starterKit,
 	placeholder,
-	TiptapLink,
 	UpdatedImage,
+	dragHandle,
+	tiptapLink,
 	taskList,
 	taskItem,
 	horizontalRule,
