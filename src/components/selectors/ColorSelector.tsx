@@ -97,12 +97,10 @@ const HIGHLIGHT_COLORS: BubbleColorMenuItem[] = [
 	},
 ];
 
-interface ColorSelectorProps {
-	open: boolean;
-	onOpenChange: (open: boolean) => void;
-}
-
-export const ColorSelector = ({ open, onOpenChange }) => {
+export const ColorSelector = ({
+	open,
+	onOpenChange,
+}: { open: boolean; onOpenChange: (open: boolean) => void }) => {
 	const { editor } = useEditor();
 
 	if (!editor) return null;

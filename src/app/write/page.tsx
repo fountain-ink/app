@@ -1,4 +1,3 @@
-import { EditorMenu } from "@/components/EditorMenu";
 import Tiptap from "@/components/Editor";
 import NovelEditor from "@/components/NovelEditor";
 

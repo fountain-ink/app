@@ -7,7 +7,6 @@ import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { useCallback, useEffect, useState } from "react";
 import * as Y from "yjs";
-import { EditorMenu } from "./EditorMenu";
 import ExtensionKit from "./extensions/ExtensionKit";
 
 const hocuspocusToken = env.NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN;
@@ -74,7 +73,6 @@ const Tiptap = () => {
 
 	return (
 		<>
-			<EditorMenu editor={editor} />
 			<EditorContent editor={editor} />
 		</>
 	);

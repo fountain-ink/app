@@ -16,12 +16,13 @@ import { EditorBubbleItem, useEditor } from "novel";
 import { Popover } from "@radix-ui/react-popover";
 import { PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
+import { Editor } from "@tiptap/react";
 
 export type SelectorItem = {
   name: string;
   icon: LucideIcon;
-  command: (editor: ReturnType<typeof useEditor>["editor"]) => void;
-  isActive: (editor: ReturnType<typeof useEditor>["editor"]) => boolean;
+  command: (editor: Editor) => void;
+  isActive: (editor: Editor) => boolean;
 };
 
 const items: SelectorItem[] = [
@@ -85,6 +86,7 @@ const items: SelectorItem[] = [
     isActive: (editor) => editor.isActive("codeBlock"),
   },
 ];
+
 interface NodeSelectorProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
