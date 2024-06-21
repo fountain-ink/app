@@ -41,7 +41,6 @@ const Tiptap = () => {
 	const [currentUser, setCurrentUser] = useState(getInitialUser);
 
 	useEffect(() => {
-		// Update status changes
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		provider.on("status", (event: any) => {
 			console.log(event);
@@ -49,39 +48,8 @@ const Tiptap = () => {
 		});
 	}, []);
 
-	// useEffect(() => {
-	// 		if (editor && currentUser) {
-	// 			localStorage.setItem("currentUser", JSON.stringify(currentUser));
-	// 			editor.chain().focus().updateUser(currentUser).run();
-	// 		}
-	// 	}, [editor, currentUser]);
-
-	const setName = useCallback(() => {
-		const name = (window.prompt("Name") ?? "").trim().substring(0, 32);
-
-		if (name) {
-			return setCurrentUser({ ...currentUser, name });
-		}
-	}, [currentUser]);
-
 	const editor = useEditor({
 		extensions: [
-			// StarterKit.configure({
-			// 	history: false,
-			// }),
-			// Highlight,
-			// TaskList,
-			// TaskItem,
-			// CharacterCount.configure({
-			// 	limit: 10000,
-			// }),
-			// Collaboration.configure({
-			// 	document: doc,
-			// }),
-			// CollaborationCursor.configure({
-			// 	provider,
-			// }),
-
 			...ExtensionKit({
 				provider,
 			}),
