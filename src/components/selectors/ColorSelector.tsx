@@ -140,7 +140,7 @@ export const ColorSelector = ({
 					</div>
 					{TEXT_COLORS.map(({ name, color }, index) => (
 						<EditorBubbleItem
-							key={index}
+							key={name}
 							onSelect={() => {
 								editor.commands.unsetColor();
 								name !== "Default" &&
@@ -170,7 +170,7 @@ export const ColorSelector = ({
 					</div>
 					{HIGHLIGHT_COLORS.map(({ name, color }, index) => (
 						<EditorBubbleItem
-							key={index}
+							key={name}
 							onSelect={() => {
 								editor.commands.unsetHighlight();
 								name !== "Default" && editor.commands.setHighlight({ color });

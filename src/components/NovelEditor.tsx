@@ -27,9 +27,11 @@ export default () => {
 	const [openAI, setOpenAI] = useState(false);
 
 	return (
-		<EditorRoot>
+		<EditorRoot >
 			<EditorContent
+     initialContent={{}} 
 				editorProps={{
+
 					attributes: {
 						class:
 							"prose prose-sm sm:prose-base lg:prose-lg m-5 focus:outline-none rounded-lg p-8",

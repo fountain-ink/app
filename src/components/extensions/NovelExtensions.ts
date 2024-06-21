@@ -8,13 +8,11 @@ import {
 	TiptapImage,
 	TiptapLink,
 	UpdatedImage,
+
 } from "novel/extensions";
 
 import { cx } from "class-variance-authority";
 
-// TODO I am using cx here to get tailwind autocomplete working, idk if someone else can write a regex to just capture the class key in objects
-
-// You can overwrite the placeholder with your own configuration
 const placeholder = Placeholder;
 const tiptapLink = TiptapLink.configure({
 	HTMLAttributes: {

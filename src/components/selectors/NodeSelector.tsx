@@ -30,7 +30,6 @@ const items: SelectorItem[] = [
     name: "Text",
     icon: TextIcon,
     command: (editor) => editor.chain().focus().toggleNode("paragraph", "paragraph").run(),
-    // I feel like there has to be a more efficient way to do this – feel free to PR if you know how!
     isActive: (editor) =>
       editor.isActive("paragraph") &&
       !editor.isActive("bulletList") &&
@@ -112,7 +111,7 @@ export const NodeSelector = ({ open, onOpenChange }: NodeSelectorProps) => {
       <PopoverContent sideOffset={5} align='start' className='w-48 p-1'>
         {items.map((item, index) => (
           <EditorBubbleItem
-            key={index}
+            key={item.name}
             onSelect={(editor) => {
               item.command(editor);
               onOpenChange(false);
