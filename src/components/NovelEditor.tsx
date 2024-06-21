@@ -1,4 +1,8 @@
 "use client";
+import { NodeSelector } from "./selectors/node-selector";
+
+import { ColorSelector } from "./selectors/color-selector";
+
 import {
 	EditorBubble,
 	EditorBubbleItem,
@@ -10,10 +14,19 @@ import {
 } from "novel";
 import { defaultExtensions } from "./extensions/NovelExtensions";
 import { slashCommand, suggestionItems } from "./extensions/SlashCommand";
+import { LinkSelector } from "./selectors/link-selector";
+import { TextButtons } from "./selectors/text-buttons";
+import { useState } from "react";
 
 const extensions = [...defaultExtensions, slashCommand];
 
-export default () => (
+export default () => {
+  const [openNode, setOpenNode] = useState(false);
+  const [openLink, setOpenLink] = useState(false);
+  const [openColor, setOpenColor] = useState(false);
+  const [openAI, setOpenAI] = useState(false);
+  
+  return (
 	<EditorRoot>
 		<EditorContent extensions={extensions}>
 			<EditorCommand className="z-50 h-auto max-h-[330px]  w-72 overflow-y-auto rounded-md border border-muted bg-background px-1 py-2 shadow-md transition-all">
@@ -41,12 +54,17 @@ export default () => (
 					</EditorCommandItem>
 				))}
 			</EditorCommand>
-			<EditorBubble>
-				boop
-				{/* <EditorBubbleItem />
-        <EditorBubbleItem />
-        <EditorBubbleItem /> */}
+			<EditorBubble
+				tippyOptions={{
+					placement: openAI ? "bottom-start" : "top",
+				}}
+				className="flex w-fit max-w-[90vw] overflow-hidden rounded border border-muted bg-background shadow-xl"
+			>
+				<NodeSelector open={openNode} onOpenChange={setOpenNode} />
+				<LinkSelector open={openLink} onOpenChange={setOpenLink} />
+				<TextButtons />
+				<ColorSelector open={openColor} onOpenChange={setOpenColor} />
 			</EditorBubble>
 		</EditorContent>
 	</EditorRoot>
-);
+)};
