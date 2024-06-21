@@ -8,7 +8,6 @@ import {
 	TiptapImage,
 	TiptapLink,
 	UpdatedImage,
-
 } from "novel/extensions";
 
 import { cx } from "class-variance-authority";
@@ -41,6 +40,7 @@ const horizontalRule = HorizontalRule.configure({
 });
 
 const starterKit = StarterKit.configure({
+	history: false,
 	bulletList: {
 		HTMLAttributes: {
 			class: cx("list-disc list-outside leading-3 -mt-2"),
@@ -84,7 +84,6 @@ export const defaultExtensions = [
 	starterKit,
 	placeholder,
 	TiptapLink,
-	TiptapImage,
 	UpdatedImage,
 	taskList,
 	taskItem,

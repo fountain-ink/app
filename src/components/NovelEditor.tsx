@@ -3,6 +3,10 @@ import { NodeSelector } from "./selectors/NodeSelector";
 
 import { ColorSelector } from "./selectors/ColorSelector";
 
+import { env } from "@/env";
+import { TiptapCollabProvider } from "@hocuspocus/provider";
+import Collaboration from "@tiptap/extension-collaboration";
+import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import {
 	EditorBubble,
 	EditorBubbleItem,
@@ -12,13 +16,49 @@ import {
 	EditorContent,
 	EditorRoot,
 } from "novel";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import * as Y from "yjs";
 import { defaultExtensions } from "./extensions/NovelExtensions";
 import { slashCommand, suggestionItems } from "./extensions/SlashCommand";
 import { LinkSelector } from "./selectors/LinkSelector";
 import { TextButtons } from "./selectors/TextSelector";
 
-const extensions = [...defaultExtensions, slashCommand];
+const token = env.NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN;
+const colors = ["#958DF1", "#F98181", "#FBBC88", "#FAF594"];
+const names = ["Lea Thompson", "Cyndi Lauper", "Tom Cruise", "Madonna"];
+
+const getRandomElement = (list: string[]) =>
+	list[Math.floor(Math.random() * list.length)];
+const getRandomColor = () => getRandomElement(colors);
+const getRandomName = () => getRandomElement(names);
+
+const getInitialUser = () => {
+	return {
+		name: getRandomName(),
+		color: getRandomColor(),
+	};
+};
+
+const document = new Y.Doc();
+
+const provider = new TiptapCollabProvider({
+	name: "document5",
+	appId: "v91rwzmo", //`baseURL` for on-premises
+	token,
+	document,
+});
+
+const extensions = [
+	...defaultExtensions,
+	slashCommand,
+	Collaboration.configure({
+		document: document,
+	}),
+	CollaborationCursor.configure({
+		provider,
+		user: getInitialUser(),
+	}),
+];
 
 export default () => {
 	const [openNode, setOpenNode] = useState(false);
@@ -27,11 +67,9 @@ export default () => {
 	const [openAI, setOpenAI] = useState(false);
 
 	return (
-		<EditorRoot >
+		<EditorRoot>
 			<EditorContent
-     initialContent={{}} 
 				editorProps={{
-
 					attributes: {
 						class:
 							"prose prose-sm sm:prose-base lg:prose-lg m-5 focus:outline-none rounded-lg p-8",
