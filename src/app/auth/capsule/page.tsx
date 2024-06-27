@@ -1,5 +1,5 @@
-import CapsuleAuth from "@/components/CapsuleModal";
-import { EmailSignup } from "@/components/EmailSignup";
+import CapsuleAuth from "@/components/auth/CapsuleModal";
+import { EmailSignup } from "@/components/auth/EmailSignup";
 
 export default function HomePage() {
 	return (
