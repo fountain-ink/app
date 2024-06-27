@@ -6,12 +6,11 @@ export const metadata = {
 	icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
-	children,
-}: { children: React.ReactNode }) {
-	return (
-		<html lang="en" className={"scroll-smooth"}>
-			<body>{children}</body>
-		</html>
-	);
-}
+import { ThirdwebProvider } from "thirdweb/react";
+ 
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
+  return <ThirdwebProvider>{children}</ThirdwebProvider>;
+};
+ 
+
+export default RootLayout;
