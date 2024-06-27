@@ -1,3 +1,5 @@
+"use client";
+
 import Capsule, {
 	CapsuleModal,
 	EmailTheme,
@@ -18,14 +20,14 @@ const constructorOpts = {
 	supportUrl: "mailto:support@example.com", // Can also be a webpage URL
 };
 
-const capsule = new Capsule(
-	Environment.BETA,
-	process.env.REACT_APP_CAPSULE_API_KEY,
-	constructorOpts, // Customized constructorOpts
-);
-
 const CapsuleAuth = () => {
 	const [isOpen, setIsOpen] = useState(false); // Use any state management you wish, this is purely an example!
+
+	const capsule = new Capsule(
+		Environment.BETA,
+		process.env.CAPSULE_API_KEY,
+		constructorOpts, 
+	);
 
 	return (
 		<div>
