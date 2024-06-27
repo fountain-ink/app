@@ -6,7 +6,6 @@ import {
 	StarterKit,
 	TaskItem,
 	TaskList,
-	TiptapImage,
 	TiptapLink,
 	UpdatedImage,
 } from "novel/extensions";
