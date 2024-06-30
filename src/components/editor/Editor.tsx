@@ -74,16 +74,16 @@ export const Editor = () => {
 				editorProps={{
 					attributes: {
 						class:
-							"prose prose-sm sm:prose-base lg:prose-lg m-5 focus:outline-none rounded-lg p-8 w-full",
+							"prose prose-sm sm:prose-base lg:prose-lg focus:outline-none rounded-lg p-4 pt-2",
 					},
 				}}
 				extensions={extensions}
 			>
-					<EditorCommand className="z-50 h-auto max-h-[330px]  w-72 overflow-y-auto rounded-md border border-muted bg-background px-1 py-2 shadow-md transition-all">
-						<EditorCommandEmpty className="px-2 text-muted-foreground">
-							No results
-						</EditorCommandEmpty>
-				<EditorCommandList>
+				<EditorCommand className="z-50 h-auto max-h-[330px]  w-72 overflow-y-auto rounded-md border border-muted bg-background px-1 py-2 shadow-md transition-all">
+					<EditorCommandEmpty className="px-2 text-muted-foreground">
+						No results
+					</EditorCommandEmpty>
+					<EditorCommandList>
 						{suggestionItems.map((item) => (
 							<EditorCommandItem
 								value={item.title}
@@ -104,8 +104,8 @@ export const Editor = () => {
 								</div>
 							</EditorCommandItem>
 						))}
-				</EditorCommandList>
-					</EditorCommand>
+					</EditorCommandList>
+				</EditorCommand>
 				<EditorBubble
 					tippyOptions={{
 						placement: openAI ? "bottom-start" : "top",

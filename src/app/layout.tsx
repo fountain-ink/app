@@ -7,10 +7,17 @@ export const metadata = {
 };
 
 import { ThirdwebProvider } from "thirdweb/react";
- 
+
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
-  return <ThirdwebProvider>{children}</ThirdwebProvider>;
+	return (
+		<html lang="en">
+			<body>
+				<main>
+					<ThirdwebProvider>{children}</ThirdwebProvider>
+				</main>
+			</body>
+		</html>
+	);
 };
- 
 
 export default RootLayout;
