@@ -74,7 +74,7 @@ export const Editor = () => {
 				editorProps={{
 					attributes: {
 						class:
-							"prose prose-sm sm:prose-base lg:prose-lg focus:outline-none rounded-lg p-4 pt-2",
+							"prose prose-sm sm:prose-base lg:prose-lg focus:outline-none rounded-lg",
 					},
 				}}
 				extensions={extensions}
