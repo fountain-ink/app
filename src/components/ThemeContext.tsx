@@ -27,7 +27,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 		const themeEntries = Object.entries(themes[theme]);
 
 		for (let i = 0; i < themeEntries.length; i++) {
-			const [key, value] = themeEntries[i];
+			// biome-ignore lint/style/noNonNullAssertion: inteded use
+			const [key, value] = themeEntries[i]!;
 
 			root.style.setProperty(`--${key}`, value);
 		}
