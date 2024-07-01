@@ -1,3 +1,4 @@
+import { ThemeProvider } from "@/components/ThemeContext";
 import "@/styles/globals.css";
 
 export const metadata = {
@@ -13,7 +14,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 		<html lang="en">
 			<body>
 				<main>
-					<ThirdwebProvider>{children}</ThirdwebProvider>
+					<ThirdwebProvider>
+						<ThemeProvider>{children}</ThemeProvider>
+					</ThirdwebProvider>
 				</main>
 			</body>
 		</html>
