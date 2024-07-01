@@ -8,6 +8,8 @@ export const env = createEnv({
    */
   server: {
     NODE_ENV: z.enum(["development", "test", "production"]),
+    THIRDWEB_SECRET_KEY: z.string(),
+    THIRDWEB_ADMIN_PRIVATE_KEY: z.string().optional()
   },
 
   /**
@@ -17,7 +19,8 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN: z.string(),
-    NEXT_PUBLIC_CAPSULE_API_KEY: z.string(),
+    NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN: z.string(),
+    NEXT_PUBLIC_THIRDWEB_AUTH_CLIENT_ID: z.string(),
   },
 
   /**
@@ -27,7 +30,10 @@ export const env = createEnv({
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN: process.env.NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN,
-    NEXT_PUBLIC_CAPSULE_API_KEY: process.env.NEXT_PUBLIC_CAPSULE_API_KEY,
+    NEXT_PUBLIC_THIRDWEB_AUTH_CLIENT_ID: process.env.NEXT_PUBLIC_THIRDWEB_AUTH_CLIENT_ID,
+    NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN: process.env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN,
+    THIRDWEB_SECRET_KEY: process.env.THIRDWEB_SECRET_KEY,
+    THIRDWEB_ADMIN_PRIVATE_KEY: process.env.THIRDWEB_ADMIN_PRIVATE_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
