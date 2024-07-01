@@ -18,6 +18,9 @@ const config = {
 			},
 		},
 		extend: {
+      fontFamily: {
+        martina: ['Test Martina Plantijn', 'sans-serif'],
+      },
 			colors: {
 				border: "hsl(var(--border))",
 				input: "hsl(var(--input))",
@@ -27,7 +30,7 @@ const config = {
 				primary: {
 					DEFAULT: "hsl(var(--primary))",
 					foreground: "hsl(var(--primary-foreground))",
-				},
+    },
 				secondary: {
 					DEFAULT: "hsl(var(--secondary))",
 					foreground: "hsl(var(--secondary-foreground))",
@@ -77,4 +80,4 @@ const config = {
 	plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;
 
-export default config;
+export default config
