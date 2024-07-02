@@ -1,4 +1,5 @@
-export type ThemeType = "light" | "dark"; // etc
+export const ThemeNames = ["light", "dark"] as const
+export type ThemeType = typeof ThemeNames[number]
 
 type ThemeColors = {
 	background: string;
