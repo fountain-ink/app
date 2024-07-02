@@ -24,13 +24,14 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
 	useEffect(() => {
 		const root = document.documentElement;
-		const themeEntries = Object.entries(themes[theme]);
+		const themeProperties = Object.entries(themes[theme]);
 
-		for (let i = 0; i < themeEntries.length; i++) {
+		for (let i = 0; i < themeProperties.length; i++) {
 			// biome-ignore lint/style/noNonNullAssertion: inteded use
-			const [key, value] = themeEntries[i]!;
+			const [property, value] = themeProperties[i]!;
 
-			root.style.setProperty(`--${key}`, value);
+			root.style.setProperty(property, value);
+
 		}
 	}, [theme]);
 

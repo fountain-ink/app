@@ -1,6 +1,7 @@
 "use client";
 
 import { themeNames, themes } from "@/styles/themes";
+import { ChevronDown } from "lucide-react";
 import { useTheme } from "./ThemeContext";
 import {
 	DropdownMenu,
@@ -16,18 +17,12 @@ export const ThemeSwitcher = () => {
 
 	const themeButtons = Object.values(themeNames).map((theme) => {
 		const accent = themes[theme].accent;
-		// const background = themes[theme].background;
-		// const foreground = themes[theme].foreground;
 
 		return (
 			<DropdownMenuItem
 				className="flex gap-2"
 				key={theme}
 				onClick={() => setTheme(theme)}
-				// style={{
-				// 	backgroundColor: `hsl(${background})`,
-				// 	color: `hsl(${foreground})`,
-				// }}
 			>
 				<div
 					className="w-6 h-6 rounded-full"
@@ -42,9 +37,10 @@ export const ThemeSwitcher = () => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger>
-				<div className="flex gap-2">
+				<div className="flex gap-2 items-center">
 					<div className="w-6 h-6 rounded-full bg-accent" />
 					Switch Theme
+					<ChevronDown size={16} />
 				</div>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
