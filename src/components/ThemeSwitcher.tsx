@@ -13,10 +13,10 @@ import {
 } from "./ui/dropdown-menu";
 
 export const ThemeSwitcher = () => {
-	const { theme, setTheme } = useTheme();
+	const { setTheme } = useTheme();
 
 	const themeButtons = Object.values(themeNames).map((theme) => {
-		const accent = themes[theme].accent;
+		const accent = themes[theme]["--accent"];
 
 		return (
 			<DropdownMenuItem
