@@ -1,5 +1,6 @@
-export const ThemeNames = ["light", "dark"] as const
-export type ThemeType = typeof ThemeNames[number]
+export const themeNames = ["light", "dark"] as const; // append to this to add more themes
+
+export type ThemeType = (typeof themeNames)[number];
 
 type ThemeColors = {
 	background: string;
@@ -15,7 +16,6 @@ type ThemeColors = {
 	input: string;
 	ring: string;
 	radius: string;
-
 	"card-foreground": string;
 	"popover-foreground": string;
 	"primary-foreground": string;
@@ -27,8 +27,8 @@ type ThemeColors = {
 
 export const themes: Record<ThemeType, ThemeColors> = {
 	light: {
-		background: "0 0% 100%",
-		foreground: "222.2 84% 4.9%",
+		background: "#d0dff7",
+		foreground: "#432a21",
 		card: "0 0% 100%",
 		popover: "0 0% 100%",
 		primary: "222.2 47.4% 11.2%",

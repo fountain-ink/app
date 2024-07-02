@@ -1,6 +1,6 @@
 "use client";
 
-import { ThemeNames, themes } from "@/styles/themes";
+import { themeNames, themes } from "@/styles/themes";
 import { useTheme } from "./ThemeContext";
 import {
 	DropdownMenu,
@@ -14,7 +14,7 @@ import {
 export const ThemeSwitcher = () => {
 	const { theme, setTheme } = useTheme();
 
-	const themeButtons = Object.values(ThemeNames).map((theme) => {
+	const themeButtons = Object.values(themeNames).map((theme) => {
 		const accent = themes[theme].accent;
 		// const background = themes[theme].background;
 		// const foreground = themes[theme].foreground;
