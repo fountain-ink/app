@@ -75,6 +75,20 @@ const config = {
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
 			},
+			typography: {
+        DEFAULT: {
+          css: {
+            color: "hsl(var(--foreground))",
+            a: {
+              color: 'inherit',
+              '&:hover': {
+                color: "hsl(var(--primary))",
+              },
+            },
+          },
+        },
+      },
+
 		},
 	},
 	plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],

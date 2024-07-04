@@ -26,6 +26,7 @@ const taskList = TaskList.configure({
 		class: cx("not-prose pl-2"),
 	},
 });
+
 const taskItem = TaskItem.configure({
 	HTMLAttributes: {
 		class: cx("flex items-start my-4"),
@@ -74,11 +75,11 @@ const starterKit = StarterKit.configure({
 			spellcheck: "false",
 		},
 	},
-	horizontalRule: false,
 	dropcursor: {
-		color: "#DBEAFE",
+		color: "hsl(var(--accent))",
 		width: 4,
 	},
+	horizontalRule: false,
 	gapcursor: false,
 });
 

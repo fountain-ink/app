@@ -1,8 +1,9 @@
 "use client";
 
 import { useActiveAccount } from "thirdweb/react";
-import { generatePayload, login } from "@/actions/login";
+import { generatePayload, login, logout  } from "@/actions/login";
 import { signLoginPayload } from "thirdweb/auth";
+import { Button } from "../ui/button";
 
 export const LoginButton: React.FC = () => {
   const account = useActiveAccount();
@@ -20,8 +21,15 @@ export const LoginButton: React.FC = () => {
   }
 
   return (
-    <button type="button" disabled={!account} onClick={handleClick}>
+    <Button disabled={!account} onClick={handleClick}>
       Login
-    </button>
+    </Button>
   );
+};
+
+export const LogOutButton: React.FC = () => {
+	async function handleClick() {
+		await logout();
+	}
+	return <Button onClick={handleClick}>Log out</Button>;
 };
