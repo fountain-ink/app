@@ -1,4 +1,5 @@
 import { ThemeProvider } from "@/components/ThemeContext";
+import { Web3Provider } from "@/components/web3/Web3Provider";
 import "@/styles/globals.css";
 
 export const metadata = {
@@ -15,7 +16,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 			<body>
 				<main>
 					<ThirdwebProvider>
-						<ThemeProvider>{children}</ThemeProvider>
+						<Web3Provider>
+							<ThemeProvider>{children}</ThemeProvider>
+						</Web3Provider>
 					</ThirdwebProvider>
 				</main>
 			</body>
