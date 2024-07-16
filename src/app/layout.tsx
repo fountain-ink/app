@@ -8,18 +8,15 @@ export const metadata = {
 	icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-import { ThirdwebProvider } from "thirdweb/react";
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
 	return (
 		<html lang="en">
 			<body>
 				<main>
-					<ThirdwebProvider>
 						<Web3Provider>
 							<ThemeProvider>{children}</ThemeProvider>
 						</Web3Provider>
-					</ThirdwebProvider>
 				</main>
 			</body>
 		</html>

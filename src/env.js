@@ -3,24 +3,17 @@ import { z } from "zod";
 
 export const env = createEnv({
   /**
-   * Specify your server-side environment variables schema here. This way you can ensure the app
-   * isn't built with invalid env vars.
+   * server-side environment variables schema 
    */
   server: {
     NODE_ENV: z.enum(["development", "test", "production"]),
-    THIRDWEB_SECRET_KEY: z.string(),
-    THIRDWEB_ADMIN_PRIVATE_KEY: z.string().optional()
   },
 
   /**
-   * Specify your client-side environment variables schema here. This way you can ensure the app
-   * isn't built with invalid env vars. To expose them to the client, prefix them with
-   * `NEXT_PUBLIC_`.
+   * client-side environment variables schema. prefix them with `NEXT_PUBLIC_`.
    */
   client: {
     NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN: z.string(),
-    NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN: z.string(),
-    NEXT_PUBLIC_THIRDWEB_CLIENT_ID: z.string(),
     NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: z.string(),
   },
 
@@ -32,10 +25,6 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
     NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN: process.env.NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN,
-    NEXT_PUBLIC_THIRDWEB_CLIENT_ID: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID,
-    NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN: process.env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN,
-    THIRDWEB_SECRET_KEY: process.env.THIRDWEB_SECRET_KEY,
-    THIRDWEB_ADMIN_PRIVATE_KEY: process.env.THIRDWEB_ADMIN_PRIVATE_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
