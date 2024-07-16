@@ -48,7 +48,7 @@ function generateFontFaces() {
   }
 
   fs.writeFileSync(outputFile, cssContent);
-  console.log("> Dynamic fonts generated successfully.\n");
+  console.log("> Dynamic fonts generated successfully\n");
 
   return fontFamilies;
 }

@@ -8,15 +8,14 @@ export const metadata = {
 	icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
 	return (
 		<html lang="en">
 			<body>
 				<main>
-						<Web3Provider>
-							<ThemeProvider>{children}</ThemeProvider>
-						</Web3Provider>
+					<Web3Provider>
+						<ThemeProvider>{children}</ThemeProvider>
+					</Web3Provider>
 				</main>
 			</body>
 		</html>

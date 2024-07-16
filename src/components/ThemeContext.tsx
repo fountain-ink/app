@@ -1,4 +1,5 @@
 "use client";
+
 import { ThemeType, themes } from "@/styles/themes";
 import React, {
 	ReactNode,
@@ -31,7 +32,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 			const [property, value] = themeProperties[i]!;
 
 			root.style.setProperty(property, value);
-
 		}
 	}, [theme]);
 
