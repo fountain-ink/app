@@ -1,5 +1,5 @@
 import Arweave from "arweave";
-import { GraphQLClient, gql } from "graphql-request";
+import { GraphQLClient } from "graphql-request";
 
 export const arweave = Arweave.init({
 	host: "arweave.net",
@@ -34,7 +34,10 @@ export async function getTransactionId(
 }
 
 export async function getDecodedContent(transactionId: string) {
-	const transaction = await arweave.transactions.get(transactionId);
-	const decoder = new TextDecoder();
-	return decoder.decode(transaction.data);
+	console.log(transactionId);
+	const transaction = await arweave.transactions.getData(transactionId, {
+		decode: true,
+		string: true,
+	});
+	return transaction;
 }
