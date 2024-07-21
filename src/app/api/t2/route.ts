@@ -1,4 +1,4 @@
-import { getDecodedContent } from "@/lib/arweave";
+import { getTransactionContent } from "@/lib/arweave";
 import { JSDOM } from "jsdom";
 import { NextResponse } from "next/server";
 
@@ -59,7 +59,6 @@ export async function GET(request: Request) {
 	}
 	try {
 		const transactionId = await getTransactionId(slug);
-		console.log(transactionId);
 
 		if (!transactionId) {
 			return NextResponse.json(
@@ -68,12 +67,17 @@ export async function GET(request: Request) {
 			);
 		}
 
-		const decodedContent = await getDecodedContent(transactionId);
+		const decodedContent = await getTransactionContent(transactionId);
+		if (!decodedContent) {
+			return NextResponse.json(
+				{ error: "No decoded content found" },
+				{ status: 500 },
+			);
+		}
 		const parsedContent: T2Post = JSON.parse(decodedContent);
-		const jsonContent = JSON.parse(parsedContent.json);
 
 		return NextResponse.json({
-			content: jsonContent || "",
+			content: decodedContent || "",
 			cover_img_url: parsedContent.cover_img_url,
 			createdAt: parsedContent.createdAt,
 			title: parsedContent.title,

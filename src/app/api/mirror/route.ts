@@ -1,4 +1,4 @@
-import { getDecodedContent, getTransactionId } from "@/lib/arweave";
+import { getTransactionContent, getTransactionId } from "@/lib/arweave";
 import { gql } from "graphql-request";
 import { NextResponse } from "next/server";
 
@@ -48,7 +48,14 @@ export async function GET(request: Request) {
 			);
 		}
 
-		const decodedContent = await getDecodedContent(transactionId);
+		const decodedContent = await getTransactionContent(transactionId);
+		if (!decodedContent) {
+			return NextResponse.json(
+				{ error: "No decoded content found" },
+				{ status: 500 },
+			);
+		}
+
 		const parsedContent: DecodedContent = JSON.parse(decodedContent);
 
 		return NextResponse.json({
