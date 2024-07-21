@@ -56,6 +56,8 @@ export async function GET(request: Request) {
 			);
 		}
 
+
+
 		const parsedContent: DecodedContent = JSON.parse(decodedContent);
 
 		return NextResponse.json({

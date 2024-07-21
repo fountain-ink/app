@@ -91,6 +91,7 @@
     "cmdk": "^1.0.0",
     "connectkit": "^1.8.2",
     "date-fns": "^3.6.0",
+    "editorjs-html": "^3.4.3",
     "embla-carousel-react": "^8.1.5",
     "ethers": "^5.7.2",
     "graphql": "^16.9.0",

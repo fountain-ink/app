@@ -1,4 +1,5 @@
 import { getTransactionContent } from "@/lib/arweave";
+import edjsHTML from "editorjs-html";
 import { JSDOM } from "jsdom";
 import { NextResponse } from "next/server";
 
@@ -70,21 +71,24 @@ export async function GET(request: Request) {
 		const decodedContent = await getTransactionContent(transactionId);
 		if (!decodedContent) {
 			return NextResponse.json(
-				{ error: "No decoded content found" },
+				{ error: "Failed to decode content" },
 				{ status: 500 },
 			);
 		}
-		const parsedContent: T2Post = JSON.parse(decodedContent);
+
+		const edjsParser = edjsHTML();
+		const { content } = JSON.parse(decodedContent);
+		const htmlContent = edjsParser.parse(content.body);
 
 		return NextResponse.json({
-			content: decodedContent || "",
-			cover_img_url: parsedContent.cover_img_url,
-			createdAt: parsedContent.createdAt,
-			title: parsedContent.title,
-			subtitle: parsedContent.subtitle,
-			post_preview: parsedContent.post_preview,
-			id: parsedContent.id,
-			slug: parsedContent.slug,
+			content: htmlContent || "",
+			cover_img_url: content.cover_img_url,
+			createdAt: content.createdAt,
+			title: content.title,
+			subtitle: content.subtitle,
+			post_preview: content.post_preview,
+			id: content.id,
+			slug: content.slug,
 		});
 	} catch (error) {
 		console.error("Error:", error);
