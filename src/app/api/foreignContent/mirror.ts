@@ -1,6 +1,5 @@
 import { getTransactionContent, getTransactionId } from "@/lib/arweave";
 import { gql } from "graphql-request";
-import { NextResponse } from "next/server";
 
 const query = gql`
   query GetMirrorTransactions($digest: String!) {
@@ -19,12 +18,8 @@ const query = gql`
 
 interface MirrorContent {
 	title: string;
-	body: string;
+	content: string;
 	timestamp: number;
-}
-
-interface DecodedContent {
-	content: MirrorContent;
 	digest: string;
 	originalDigest: string;
 }
@@ -40,16 +35,17 @@ export async function getMirrorContent(slug: string) {
 			throw new Error("No transaction found for this digest");
 		}
 
-		const decodedContent = await getTransactionContent(transactionId);
-		if (!decodedContent) {
+		const content = await getTransactionContent(transactionId);
+		if (!content) {
 			throw new Error("Failed to decode content");
 		}
 
-		const parsedContent: DecodedContent = JSON.parse(decodedContent);
+		const parsedContent = JSON.parse(content);
+		console.log(parsedContent, content);
 
 		return {
 			title: parsedContent.content.title,
-			content: parsedContent.content.body,
+			content: parsedContent.content.content,
 			timestamp: parsedContent.content.timestamp,
 			digest: parsedContent.digest,
 			originalDigest: parsedContent.originalDigest,

@@ -1,6 +1,5 @@
 import { getTransactionContent, getTransactionId } from "@/lib/arweave";
 import { gql } from "graphql-request";
-import { NextResponse } from "next/server";
 
 const query = gql`
   query GetParagraphPost($slug: String!) {

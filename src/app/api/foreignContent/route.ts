@@ -3,7 +3,6 @@ import { getMirrorContent } from "./mirror";
 import { getParagraphContent } from "./paragraph";
 import { getT2Content } from "./t2";
 
-// Unified output interface
 interface Content {
   title: string;
   subtitle?: string;
@@ -15,7 +14,6 @@ interface Content {
   platformSpecific?: any;
 }
 
-// Platform-specific logic
 const platformLogic = {
   t2: async (slug: string): Promise<Content> => {
 
@@ -25,7 +23,6 @@ const platformLogic = {
     }).then(response => response.json());
 
 
-    // Return unified content
     return {
       title: content.title,
       subtitle: content.subtitle,
@@ -48,7 +45,6 @@ const platformLogic = {
       throw error;
     }).then(response => response);
 
-    // Return unified content
     return {
       title: parsedContent.title,
       content: parsedContent.content,
