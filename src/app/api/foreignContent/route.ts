@@ -3,7 +3,7 @@ import { getMirrorContent } from "./mirror";
 import { getParagraphContent } from "./paragraph";
 import { getT2Content } from "./t2";
 
-interface Post {
+export interface ForeignPost {
 	title: string;
 	content: string;
 	timestamp: number;
@@ -11,7 +11,7 @@ interface Post {
 }
 
 const platformLogic = {
-	t2: async (slug: string): Promise<Post> => {
+	t2: async (slug: string): Promise<ForeignPost> => {
 		const post = await getT2Content(slug)
 			.catch((error) => {
 				console.error("Error:", error);
@@ -21,7 +21,7 @@ const platformLogic = {
 
 		return post;
 	},
-	mirror: async (slug: string): Promise<Post> => {
+	mirror: async (slug: string): Promise<ForeignPost> => {
 		const post = await getMirrorContent(slug)
 			.catch((error) => {
 				console.error("Error:", error);
@@ -31,7 +31,7 @@ const platformLogic = {
 
 		return post;
 	},
-	paragraph: async (slug: string): Promise<Post> => {
+	paragraph: async (slug: string): Promise<ForeignPost> => {
 		const post = await getParagraphContent(slug)
 			.catch((error) => {
 				console.error("Error:", error);

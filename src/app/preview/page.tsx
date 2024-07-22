@@ -6,9 +6,11 @@ import { EditorDate } from "@/components/editor/EditorDate";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 import React, { useState } from "react";
 
-interface UnifiedContent {
+interface ForeignContent {
 	title: string;
 	subtitle?: string;
 	content: string;
@@ -16,14 +18,16 @@ interface UnifiedContent {
 	createdAt: number;
 	preview?: string;
 	slug: string;
-	platformSpecific?: any;
 }
 
 const ContentFetcher: React.FC = () => {
 	const [url, setUrl] = useState("");
-	const [content, setContent] = useState<UnifiedContent | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+
+	const editor = useEditor({
+		extensions: [StarterKit],
+	});
 
 	const fetchContent = async () => {
 		setLoading(true);
@@ -35,8 +39,9 @@ const ContentFetcher: React.FC = () => {
 			if (!response.ok) {
 				throw new Error("Failed to fetch content");
 			}
-			const data = await response.json();
-			setContent(data);
+			const data: ForeignContent = await response.json();
+			console.log(editor, data.content);
+			editor?.commands.setContent(data.content);
 		} catch (err) {
 			setError("Error fetching content. Please try again.");
 			console.error(err);
@@ -50,10 +55,9 @@ const ContentFetcher: React.FC = () => {
 			<div className="container flex flex-col items-center justify-center w-full max-w-lg md:max-w-xl lg:max-w-2xl lg:max-w-4xl ">
 				<div className="w-full min-h-screen py-4">
 					<ThemeSwitcher />
-
 					<Card className="w-full max-w-2xl mx-auto">
 						<CardHeader>
-							<CardTitle>Content Fetcher</CardTitle>
+							<CardTitle>Fountain Preview</CardTitle>
 						</CardHeader>
 						<CardContent>
 							<div className="flex space-x-2 mb-4">
@@ -69,7 +73,7 @@ const ContentFetcher: React.FC = () => {
 								</Button>
 							</div>
 							{error && <p className="text-red-500 mb-4">{error}</p>}
-							{content && (
+							{/* {content && (
 								<div>
 									<h2 className="text-xl font-bold mb-2">{content.title}</h2>
 									{content.subtitle && (
@@ -85,15 +89,13 @@ const ContentFetcher: React.FC = () => {
 									<p className="mb-2">
 										{new Date(content.createdAt).toLocaleDateString()}
 									</p>
-									{content.preview && <p className="mb-4">{content.preview}</p>}
-									<div dangerouslySetInnerHTML={{ __html: content.content }} />
 								</div>
-							)}
+							)} */}
 						</CardContent>
 					</Card>
 					<EditorDate />
 					<EditorCollaborators />
-					<Editor />
+					<EditorContent editor={editor} />
 				</div>
 			</div>
 		</div>
