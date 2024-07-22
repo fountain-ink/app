@@ -10,7 +10,7 @@ interface T2Post {
 	title: string;
 	subtitle: string;
 	id: string;
-	content: string[];
+	content: string;
 	storeOnArweave: boolean;
 	sendNewsletter: boolean;
 	published: boolean;
@@ -72,7 +72,7 @@ export async function getT2Content(slug: string) {
 		const htmlContent = edjsParser.parse(content.body);
 
 		const post: T2Post = {
-			content: htmlContent || "",
+			content: htmlContent.join(''),
 			title: content.title,
 			subtitle: content.subtitle,
 			cover_img_url: content.cover_img_url,

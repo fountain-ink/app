@@ -50,7 +50,7 @@ const provider = new TiptapCollabProvider({
 	document,
 });
 
-const extensions = [
+export const editorExtensionsList = [
 	...defaultExtensions,
 	slashCommand,
 	Collaboration.configure({
@@ -62,7 +62,7 @@ const extensions = [
 	}),
 ];
 
-export const Editor = () => {
+export const Editor = ({ children }: { children?: React.ReactNode }) => {
 	const [openNode, setOpenNode] = useState(false);
 	const [openLink, setOpenLink] = useState(false);
 	const [openColor, setOpenColor] = useState(false);
@@ -70,6 +70,7 @@ export const Editor = () => {
 
 	return (
 		<EditorRoot>
+			{children}
 			<EditorContent
 				editorProps={{
 					attributes: {
@@ -77,7 +78,7 @@ export const Editor = () => {
 							"prose prose-sm sm:prose-base lg:prose-lg focus:outline-none rounded-lg",
 					},
 				}}
-				extensions={extensions}
+				extensions={editorExtensionsList}
 			>
 				<EditorCommand className="z-50 h-auto max-h-[330px]  w-72 overflow-y-auto rounded-md border border-muted bg-background px-1 py-2 shadow-md transition-all">
 					<EditorCommandEmpty className="px-2 text-muted-foreground">
