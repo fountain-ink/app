@@ -20,8 +20,7 @@ interface MirrorContent {
 	title: string;
 	content: string;
 	timestamp: number;
-	digest: string;
-	originalDigest: string;
+	slug: string;
 }
 
 export async function getMirrorContent(slug: string) {
@@ -41,15 +40,13 @@ export async function getMirrorContent(slug: string) {
 		}
 
 		const parsedContent = JSON.parse(content);
-		console.log(parsedContent, content);
 
 		return {
 			title: parsedContent.content.title,
-			content: parsedContent.content.content,
+			content: parsedContent.content.body,
 			timestamp: parsedContent.content.timestamp,
-			digest: parsedContent.digest,
-			originalDigest: parsedContent.originalDigest,
-		};
+			slug: parsedContent.digest,
+		} as MirrorContent;
 	} catch (error) {
 		console.error("Error:", error);
 		throw error;

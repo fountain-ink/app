@@ -21,16 +21,10 @@ const query = gql`
 `;
 
 interface ParagraphPost {
-	cover_img_url: string;
-	createdAt: number;
-	post_preview: string;
 	title: string;
-	subtitle: string;
-	id: string;
-	storeOnArweave: boolean;
-	sendNewsletter: boolean;
-	published: boolean;
-	json: string;
+	// subtitle: string;
+	timestamp: number;
+	content: string;
 	slug: string;
 }
 
@@ -51,18 +45,18 @@ export async function getParagraphContent(slug:string) {
 		}
 
 		const parsedContent: ParagraphPost = JSON.parse(decodedContent);
-		const jsonContent = JSON.parse(parsedContent.json);
+		const jsonContent = JSON.parse(parsedContent.content);
 
 		return {
-			content: jsonContent || "",
-			cover_img_url: parsedContent.cover_img_url,
-			createdAt: parsedContent.createdAt,
+			// cover_img_url: parsedContent.cover_img_url,
+			// post_preview: parsedContent.post_preview,
+			// id: parsedContent.id,
+			// subtitle: parsedContent.subtitle,
 			title: parsedContent.title,
-			subtitle: parsedContent.subtitle,
-			post_preview: parsedContent.post_preview,
-			id: parsedContent.id,
+			content: jsonContent,
+			timestamp: parsedContent.timestamp,
 			slug: parsedContent.slug,
-		};
+		} as ParagraphPost;
 
 	} catch (error) {
 		console.error("Error:", error);
