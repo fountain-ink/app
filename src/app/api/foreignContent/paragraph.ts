@@ -35,30 +35,26 @@ interface ParagraphPost {
 	slug: string;
 }
 
-export async function GET(request: Request) {
-	const { searchParams } = new URL(request.url);
-	const slug = searchParams.get("slug");
+export async function getParagraphContent(slug:string) {
 	if (!slug) {
-		return NextResponse.json(
-			{ error: "Slug parameter is required" },
-			{ status: 400 },
-		);
+		throw new Error("Slug parameter is required");
 	}
 
 	try {
 		const transactionId = await getTransactionId(query, { slug });
 		if (!transactionId) {
-			return NextResponse.json(
-				{ error: "No transaction found for this slug" },
-				{ status: 404 },
-			);
+			throw new Error("No transaction found for this slug");
 		}
 
 		const decodedContent = await getTransactionContent(transactionId);
+		if (!decodedContent) {
+			throw new Error("Failed to decode content");
+		}
+
 		const parsedContent: ParagraphPost = JSON.parse(decodedContent);
 		const jsonContent = JSON.parse(parsedContent.json);
 
-		return NextResponse.json({
+		return {
 			content: jsonContent || "",
 			cover_img_url: parsedContent.cover_img_url,
 			createdAt: parsedContent.createdAt,
@@ -67,12 +63,10 @@ export async function GET(request: Request) {
 			post_preview: parsedContent.post_preview,
 			id: parsedContent.id,
 			slug: parsedContent.slug,
-		});
+		};
+
 	} catch (error) {
 		console.error("Error:", error);
-		return NextResponse.json(
-			{ error: "Error fetching data", details: (error as Error).message },
-			{ status: 500 },
-		);
+		throw error;
 	}
 }

@@ -10,6 +10,7 @@ interface T2Post {
 	title: string;
 	subtitle: string;
 	id: string;
+	content: string[];
 	storeOnArweave: boolean;
 	sendNewsletter: boolean;
 	published: boolean;
@@ -32,6 +33,7 @@ function extractTransactionId(html: string): string | null {
 	const linkElement = document.querySelector(
 		'a[href^="https://viewblock.io/arweave/tx/"]',
 	);
+
 	if (linkElement) {
 		const href = linkElement.getAttribute("href");
 		if (href) {
@@ -49,52 +51,45 @@ async function getTransactionId(slug: string): Promise<string | null> {
 	return extractTransactionId(pageContent);
 }
 
-export async function GET(request: Request) {
-	const { searchParams } = new URL(request.url);
-	const slug = searchParams.get("slug");
+export async function getT2Content(slug: string) {
 	if (!slug) {
-		return NextResponse.json(
-			{ error: "Slug parameter is required" },
-			{ status: 400 },
-		);
+		throw new Error("Slug parameter is required");
 	}
 	try {
 		const transactionId = await getTransactionId(slug);
 
 		if (!transactionId) {
-			return NextResponse.json(
-				{ error: "No transaction found for this slug" },
-				{ status: 404 },
-			);
+			throw new Error("No transaction found for this slug");
 		}
 
 		const decodedContent = await getTransactionContent(transactionId);
 		if (!decodedContent) {
-			return NextResponse.json(
-				{ error: "Failed to decode content" },
-				{ status: 500 },
-			);
+			throw new Error("Failed to decode content");
 		}
 
 		const edjsParser = edjsHTML();
 		const { content } = JSON.parse(decodedContent);
 		const htmlContent = edjsParser.parse(content.body);
 
-		return NextResponse.json({
+		const post: T2Post = {
 			content: htmlContent || "",
-			cover_img_url: content.cover_img_url,
-			createdAt: content.createdAt,
 			title: content.title,
 			subtitle: content.subtitle,
+			cover_img_url: content.cover_img_url,
+			createdAt: content.createdAt,
 			post_preview: content.post_preview,
 			id: content.id,
 			slug: content.slug,
-		});
+			storeOnArweave: content.storeOnArweave,
+			sendNewsletter: content.sendNewsletter,
+			published: content.published,
+			json: decodedContent,
+		};
+
+		return NextResponse.json(post, { status: 200 });
+
 	} catch (error) {
 		console.error("Error:", error);
-		return NextResponse.json(
-			{ error: "Error fetching data", details: (error as Error).message },
-			{ status: 500 },
-		);
+		throw error
 	}
 }

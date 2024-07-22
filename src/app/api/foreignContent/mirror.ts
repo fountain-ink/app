@@ -29,49 +29,33 @@ interface DecodedContent {
 	originalDigest: string;
 }
 
-export async function GET(request: Request) {
-	const { searchParams } = new URL(request.url);
-	const digest = searchParams.get("digest");
-	if (!digest) {
-		return NextResponse.json(
-			{ error: "Digest parameter is required" },
-			{ status: 400 },
-		);
+export async function getMirrorContent(slug: string) {
+	if (!slug) {
+		throw new Error("Digest parameter is required");
 	}
 
 	try {
-		const transactionId = await getTransactionId(query, { digest });
+		const transactionId = await getTransactionId(query, { digest: slug });
 		if (!transactionId) {
-			return NextResponse.json(
-				{ error: "No transaction found" },
-				{ status: 404 },
-			);
+			throw new Error("No transaction found for this digest");
 		}
 
 		const decodedContent = await getTransactionContent(transactionId);
 		if (!decodedContent) {
-			return NextResponse.json(
-				{ error: "No decoded content found" },
-				{ status: 500 },
-			);
+			throw new Error("Failed to decode content");
 		}
-
-
 
 		const parsedContent: DecodedContent = JSON.parse(decodedContent);
 
-		return NextResponse.json({
+		return {
 			title: parsedContent.content.title,
-			body: parsedContent.content.body,
+			content: parsedContent.content.body,
 			timestamp: parsedContent.content.timestamp,
 			digest: parsedContent.digest,
 			originalDigest: parsedContent.originalDigest,
-		});
+		};
 	} catch (error) {
 		console.error("Error:", error);
-		return NextResponse.json(
-			{ error: "Error fetching data", details: (error as Error).message },
-			{ status: 500 },
-		);
+		throw error;
 	}
 }
