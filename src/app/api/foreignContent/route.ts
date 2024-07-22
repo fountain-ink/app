@@ -8,10 +8,6 @@ interface Post {
 	content: string;
 	timestamp: number;
 	slug: string;
-	subtitle?: string;
-	coverImage?: string;
-	preview?: string;
-	// platformSpecific?: any;
 }
 
 const platformLogic = {
@@ -23,20 +19,7 @@ const platformLogic = {
 			})
 			.then((response) => response.json());
 
-		return {
-			title: post.title,
-			content: post.content,
-			timestamp: post.createdAt,
-			slug: post.slug,
-			// subtitle: post.subtitle,
-			// coverImage: post.cover_img_url,
-			// preview: post.post_preview,
-			// platformSpecific: {
-			// 	storeOnArweave: post.storeOnArweave,
-			// 	sendNewsletter: post.sendNewsletter,
-			// 	published: post.published,
-			// },
-		};
+		return post;
 	},
 	mirror: async (slug: string): Promise<Post> => {
 		const post = await getMirrorContent(slug)
@@ -46,16 +29,7 @@ const platformLogic = {
 			})
 			.then((response) => response);
 
-		return {
-			title: post.title,
-			content: post.content,
-			timestamp: post.timestamp,
-			slug: slug,
-			// platformSpecific: {
-			// 	digest: parsedContent.slug,
-			// 	originalDigest: parsedContent.originalDigest,
-			// },
-		};
+		return post;
 	},
 	paragraph: async (slug: string): Promise<Post> => {
 		const post = await getParagraphContent(slug)
@@ -65,18 +39,7 @@ const platformLogic = {
 			})
 			.then((response) => response);
 
-		return {
-			title: post.title,
-			content: JSON.stringify(post.content),
-			timestamp: post.timestamp,
-			slug: post.slug,
-			// subtitle: parsedContent.subtitle,
-			// coverImage: parsedContent.cover_img_url,
-			// preview: parsedContent.post_preview,
-			// platformSpecific: {
-			// 	id: parsedContent.id,
-			// },
-		};
+		return post;
 	},
 };
 

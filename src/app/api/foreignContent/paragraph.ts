@@ -22,13 +22,12 @@ const query = gql`
 
 interface ParagraphPost {
 	title: string;
-	// subtitle: string;
 	timestamp: number;
 	content: string;
 	slug: string;
 }
 
-export async function getParagraphContent(slug:string) {
+export async function getParagraphContent(slug: string) {
 	if (!slug) {
 		throw new Error("Slug parameter is required");
 	}
@@ -39,13 +38,12 @@ export async function getParagraphContent(slug:string) {
 			throw new Error("No transaction found for this slug");
 		}
 
-		const decodedContent = await getTransactionContent(transactionId);
-		if (!decodedContent) {
+		const content = await getTransactionContent(transactionId);
+		if (!content) {
 			throw new Error("Failed to decode content");
 		}
 
-		const parsedContent: ParagraphPost = JSON.parse(decodedContent);
-		const jsonContent = JSON.parse(parsedContent.content);
+		const parsedContent = JSON.parse(content);
 
 		return {
 			// cover_img_url: parsedContent.cover_img_url,
@@ -53,11 +51,10 @@ export async function getParagraphContent(slug:string) {
 			// id: parsedContent.id,
 			// subtitle: parsedContent.subtitle,
 			title: parsedContent.title,
-			content: jsonContent,
+			content: parsedContent.json,
 			timestamp: parsedContent.timestamp,
 			slug: parsedContent.slug,
 		} as ParagraphPost;
-
 	} catch (error) {
 		console.error("Error:", error);
 		throw error;
