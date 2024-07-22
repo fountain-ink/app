@@ -19,33 +19,33 @@ export const FontSize = Extension.create({
     }
   },
 
-  addGlobalAttributes() {
-    return [
-      {
-        types: ['paragraph'],
-        attributes: {
-          class: {},
-        },
-      },
-      {
-        types: this.options.types,
-        attributes: {
-          fontSize: {
-            parseHTML: element => element.style.fontSize.replace(/['"]+/g, ''),
-            renderHTML: attributes => {
-              if (!attributes.fontSize) {
-                return {}
-              }
+  // addGlobalAttributes() {
+  //   return [
+  //     {
+  //       types: ['paragraph'],
+  //       attributes: {
+  //         class: {},
+  //       },
+  //     },
+  //     {
+  //       types: this.options.types,
+  //       attributes: {
+  //         fontSize: {
+  //           parseHTML: element => element.style.fontSize.replace(/['"]+/g, ''),
+  //           renderHTML: attributes => {
+  //             if (!attributes.fontSize) {
+  //               return {}
+  //             }
 
-              return {
-                style: `font-size: ${attributes.fontSize}`,
-              }
-            },
-          },
-        },
-      },
-    ]
-  },
+  //             return {
+  //               style: `font-size: ${attributes.fontSize}`,
+  //             }
+  //           },
+  //         },
+  //       },
+  //     },
+  //   ]
+  // },
 
   addCommands() {
     return {
