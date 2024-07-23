@@ -24,6 +24,13 @@ interface MirrorContent {
 	slug: string;
 }
 
+function stripImgTags(content: string): string {
+  const regex = /<p>\s*(<img[^>]+>)\s*<\/p>/g;
+  
+  // Replace matches with just the <img> tag
+  return content.replace(regex, '$1');
+}
+
 export async function getMirrorContent(slug: string) {
 	if (!slug) {
 		throw new Error("Digest parameter is required");
@@ -43,7 +50,7 @@ export async function getMirrorContent(slug: string) {
 		const parsedPost = JSON.parse(post);
 		const markdownContent = parsedPost.content.body;
 		const converter = markdownit()
-		const content = converter.render(markdownContent);
+		const content = stripImgTags(converter.render(markdownContent));
 
 		return {
 			title: parsedPost.content.title,

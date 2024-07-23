@@ -10,14 +10,6 @@ export interface ForeignPost {
 	slug: string;
 }
 
-function stripImgTags(content: string): string {
-  // Regular expression to match <p> tags containing only an <img> tag
-  const regex = /<p>\s*(<img[^>]+>)\s*<\/p>/g;
-  
-  // Replace matches with just the <img> tag
-  return content.replace(regex, '$1');
-}
-
 const platformLogic = {
 	t2: async (slug: string): Promise<ForeignPost> => {
 		const post = await getT2Content(slug)
@@ -37,8 +29,7 @@ const platformLogic = {
 			})
 			.then((response) => response);
 
-    const content = stripImgTags(post.content)
-		return {...post, content};
+		return post;
 	},
 	paragraph: async (slug: string): Promise<ForeignPost> => {
 		const post = await getParagraphContent(slug)
@@ -84,8 +75,8 @@ export async function GET(request: Request) {
 		}
 
 		const content = await platformLogic[platform](slug);
-    content.content = `<h1>${content.title}</h1>${content.content}`
-    console.log(content)
+		content.content = `<h1>${content.title}</h1>${content.content}`;
+		console.log(content);
 
 		return NextResponse.json(content, { status: 200 });
 	} catch (error) {
