@@ -31,7 +31,15 @@ import { useDebouncedCallback } from "use-debounce";
 
 const token = env.NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN;
 const colors = ["#958DF1", "#F98181", "#FBBC88", "#FAF594"];
-const names = ["Lea Thompson", "Cyndi Lauper", "Tom Cruise", "Madonna"];
+const names = [
+	"Stani Kulechov",
+	"Peter Kerr",
+	"Nicole Butler",
+	"Claudia Ceniceros",
+	"Ben South Lee",
+	"Nader Dabit",
+	"Christina B.",
+];
 
 const getRandomElement = (list: string[]) =>
 	list[Math.floor(Math.random() * list.length)];
