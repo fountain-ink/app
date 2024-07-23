@@ -1,6 +1,6 @@
 import { getTransactionContent, getTransactionId } from "@/lib/arweave";
 import { gql } from "graphql-request";
-import showdown from "showdown";
+import markdownit from 'markdown-it'
 
 const query = gql`
   query GetMirrorTransactions($digest: String!) {
@@ -42,8 +42,8 @@ export async function getMirrorContent(slug: string) {
 
 		const parsedPost = JSON.parse(post);
 		const markdownContent = parsedPost.content.body;
-		const converter = new showdown.Converter();
-		const content = converter.makeHtml(markdownContent);
+		const converter = markdownit()
+		const content = converter.render(markdownContent);
 
 		return {
 			title: parsedPost.content.title,

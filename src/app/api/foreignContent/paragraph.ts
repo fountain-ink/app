@@ -46,12 +46,8 @@ export async function getParagraphContent(slug: string) {
 		const parsedContent = JSON.parse(content);
 
 		return {
-			// cover_img_url: parsedContent.cover_img_url,
-			// post_preview: parsedContent.post_preview,
-			// id: parsedContent.id,
-			// subtitle: parsedContent.subtitle,
 			title: parsedContent.title,
-			content: parsedContent.json,
+			content: parsedContent.staticHtml,
 			timestamp: parsedContent.timestamp,
 			slug: parsedContent.slug,
 		} as ParagraphPost;
