@@ -36,6 +36,8 @@ const names = [
 	"Peter Kerr",
 	"Nicole Butler",
 	"Claudia Ceniceros",
+	"Maria Paula",
+	"Josh Stevens",
 	"Ben South Lee",
 	"Nader Dabit",
 	"Christina B.",
