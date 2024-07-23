@@ -10,8 +10,8 @@ const preview = () => {
 			<div className="container flex flex-col items-center justify-center w-full max-w-lg md:max-w-xl lg:max-w-2xl lg:max-w-4xl ">
 				<div className="w-full min-h-screen py-4">
 					{/* <ThemeSwitcher /> */}
-					<EditorDate />
-					<EditorCollaborators />
+					{/* <EditorDate /> */}
+					{/* <EditorCollaborators /> */}
 					<Editor>
 						<ContentPreview />
 					</Editor>

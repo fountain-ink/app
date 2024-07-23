@@ -44,9 +44,11 @@ export const ContentPreview = () => {
 	};
 
 	return (
-		<Card className="w-full max-w-2xl my-8 mx-auto">
+		<Card className="w-full max-w-2xl my-8 mx-auto drop-shadow-lg">
 			<CardHeader>
-				<CardTitle>Fountain Preview</CardTitle>
+				<CardTitle className="text-2xl font-bold text-center">
+					Preview Your content on Fountain
+				</CardTitle>
 			</CardHeader>
 			<CardContent>
 				<div className="flex space-x-2 mb-4">
@@ -58,7 +60,7 @@ export const ContentPreview = () => {
 						className="flex-grow"
 					/>
 					<Button onClick={fetchContent} disabled={loading}>
-						{loading ? "Loading..." : "Fetch"}
+						{loading ? "Loading..." : "Import"}
 					</Button>
 				</div>
 				{error && <p className="text-red-500 mb-4">{error}</p>}
