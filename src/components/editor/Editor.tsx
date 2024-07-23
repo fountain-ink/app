@@ -11,7 +11,9 @@ import {
 	EditorCommandItem,
 	EditorCommandList,
 	EditorContent,
+	EditorInstance,
 	EditorRoot,
+	JSONContent,
 } from "novel";
 import { useState } from "react";
 import * as Y from "yjs";
@@ -25,6 +27,7 @@ import { TextButtons } from "./selectors/TextSelector";
 
 import "@/styles/prosemirror.css";
 import { handleCommandNavigation } from "novel/extensions";
+import { useDebouncedCallback } from "use-debounce";
 
 const token = env.NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN;
 const colors = ["#958DF1", "#F98181", "#FBBC88", "#FAF594"];
@@ -45,7 +48,7 @@ const getInitialUser = () => {
 const document = new Y.Doc();
 
 const provider = new TiptapCollabProvider({
-	name: "document5",
+	name: "document6",
 	appId: "v91rwzmo", //`baseURL` for on-premises
 	token,
 	document,
@@ -68,11 +71,25 @@ export const Editor = ({ children }: { children?: React.ReactNode }) => {
 	const [openLink, setOpenLink] = useState(false);
 	const [openColor, setOpenColor] = useState(false);
 	const [openAI, setOpenAI] = useState(false);
+	const [content, setContent] = useState<JSONContent | undefined>(undefined);
+
+	const debouncedUpdates = useDebouncedCallback(
+		async (editor: EditorInstance) => {
+			const json = editor.getJSON();
+
+			setContent(json);
+		},
+		500,
+	);
 
 	return (
 		<EditorRoot>
 			{children}
 			<EditorContent
+				onUpdate={({ editor }) => {
+					debouncedUpdates(editor);
+				}}
+				initialContent={content}
 				editorProps={{
 					handleDOMEvents: {
 						keydown: (_view, event) => handleCommandNavigation(event),

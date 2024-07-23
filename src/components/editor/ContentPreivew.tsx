@@ -4,13 +4,15 @@ import { editorExtensionsList } from "@/components/editor/Editor";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useEditor } from "@tiptap/react";
-import React, { useState } from "react";
+// import { useEditor } from "@tiptap/react";
+import React, { useEffect, useRef, useState } from "react";
 import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from "../ui/collapsible";
+import { Editor, EditorOptions } from "@tiptap/react";
+import { useEditor } from "novel";
 
 interface ForeignContent {
 	title: string;
@@ -21,13 +23,15 @@ interface ForeignContent {
 	preview?: string;
 	slug: string;
 }
+
+
 export const ContentPreview = () => {
 	const [url, setUrl] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [title, setTitle] = useState("");
 
-	const editor = useEditor({ extensions: editorExtensionsList });
+	const editor = useEditor();
 
 	const fetchContent = async () => {
 		setLoading(true);
@@ -40,7 +44,7 @@ export const ContentPreview = () => {
 				throw new Error("Failed to fetch content");
 			}
 			const data: ForeignContent = await response.json();
-			editor?.commands.setContent(data.content);
+			editor?.editor?.commands.setContent(data.content);
 			setTitle(data.title);
 		} catch (err) {
 			setError("Error fetching content. Please try again.");
@@ -49,6 +53,7 @@ export const ContentPreview = () => {
 			setLoading(false);
 		}
 	};
+  
 
 	return (
 		<>
