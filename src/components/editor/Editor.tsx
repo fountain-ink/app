@@ -24,6 +24,7 @@ import { NodeSelector } from "./selectors/NodeSelector";
 import { TextButtons } from "./selectors/TextSelector";
 
 import "@/styles/prosemirror.css";
+import { handleCommandNavigation } from "novel/extensions";
 
 const token = env.NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN;
 const colors = ["#958DF1", "#F98181", "#FBBC88", "#FAF594"];
@@ -73,12 +74,20 @@ export const Editor = ({ children }: { children?: React.ReactNode }) => {
 			{children}
 			<EditorContent
 				editorProps={{
+					handleDOMEvents: {
+						keydown: (_view, event) => handleCommandNavigation(event),
+					},
 					attributes: {
 						class:
 							"prose prose-sm sm:prose-base lg:prose-lg focus:outline-none rounded-lg",
 					},
 				}}
 				extensions={editorExtensionsList}
+				// 	editorProps={{
+				// attributes: {
+				//   class: `prose prose-lg dark:prose-invert prose-headings:font-title font-default focus:outline-none max-w-full`,
+				// }
+				// }}
 			>
 				<EditorCommand className="z-50 h-auto max-h-[330px]  w-72 overflow-y-auto rounded-md border border-muted bg-card px-1 py-2 shadow-md transition-all">
 					<EditorCommandEmpty className="px-2 text-muted-foreground">
@@ -107,17 +116,19 @@ export const Editor = ({ children }: { children?: React.ReactNode }) => {
 						))}
 					</EditorCommandList>
 				</EditorCommand>
-				<EditorBubble
-					tippyOptions={{
-						placement: openAI ? "bottom-start" : "top",
-					}}
-					className="flex w-fit max-w-[90vw] overflow-hidden rounded border border-muted bg-card shadow-xl"
-				>
-					<NodeSelector open={openNode} onOpenChange={setOpenNode} />
-					<LinkSelector open={openLink} onOpenChange={setOpenLink} />
-					<TextButtons />
-					<ColorSelector open={openColor} onOpenChange={setOpenColor} />
-				</EditorBubble>
+				<div>
+					<EditorBubble
+						tippyOptions={{
+							placement: openAI ? "bottom-start" : "top",
+						}}
+						className="flex w-fit max-w-[90vw] overflow-hidden rounded border border-muted bg-card shadow-xl"
+					>
+						<NodeSelector open={openNode} onOpenChange={setOpenNode} />
+						<LinkSelector open={openLink} onOpenChange={setOpenLink} />
+						<TextButtons />
+						<ColorSelector open={openColor} onOpenChange={setOpenColor} />
+					</EditorBubble>
+				</div>
 			</EditorContent>
 		</EditorRoot>
 	);
