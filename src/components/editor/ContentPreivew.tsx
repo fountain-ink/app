@@ -71,7 +71,7 @@ export const ContentPreview = () => {
 				{isOpen ? <X size={20} /> : <ChevronDown size={20} />}
 			</Button>
 			<div
-				className={`absolute top-12 right-0 overflow-hidden transition-all duration-300 ease-in-out ${
+				className={`absolute top-12 right-0 transition-all duration-300 ease-in-out ${
 					isOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
 				}`}
 			>
