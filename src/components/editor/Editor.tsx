@@ -92,7 +92,6 @@ export const Editor = ({ children }: { children?: React.ReactNode }) => {
 
 	return (
 		<EditorRoot>
-			{children}
 			<EditorContent
 				onUpdate={({ editor }) => {
 					debouncedUpdates(editor);
@@ -114,6 +113,7 @@ export const Editor = ({ children }: { children?: React.ReactNode }) => {
 				// }
 				// }}
 			>
+				{children}
 				<EditorCommand className="z-50 h-auto max-h-[330px]  w-72 overflow-y-auto rounded-md border border-muted bg-card px-1 py-2 shadow-md transition-all">
 					<EditorCommandEmpty className="px-2 text-muted-foreground">
 						No results
@@ -141,7 +141,6 @@ export const Editor = ({ children }: { children?: React.ReactNode }) => {
 						))}
 					</EditorCommandList>
 				</EditorCommand>
-				<div>
 					<EditorBubble
 						tippyOptions={{
 							placement: openAI ? "bottom-start" : "top",
@@ -153,7 +152,6 @@ export const Editor = ({ children }: { children?: React.ReactNode }) => {
 						<TextButtons />
 						<ColorSelector open={openColor} onOpenChange={setOpenColor} />
 					</EditorBubble>
-				</div>
 			</EditorContent>
 		</EditorRoot>
 	);
