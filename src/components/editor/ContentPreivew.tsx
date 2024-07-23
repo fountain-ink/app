@@ -30,12 +30,12 @@ export const ContentPreview = () => {
 	const [isCollapsibleOpen, setIsCollapsibleOpen] = useState(false);
 	const { editor } = useEditor();
 
-	const fetchContent = async () => {
+	const fetchContent = async (fetchUrl: string) => {
 		setLoading(true);
 		setError(null);
 		try {
 			const response = await fetch(
-				`/api/foreignContent?url=${encodeURIComponent(url)}`,
+				`/api/foreignContent?url=${encodeURIComponent(fetchUrl)}`,
 			);
 			if (!response.ok) {
 				throw new Error("Failed to fetch content");
@@ -43,6 +43,7 @@ export const ContentPreview = () => {
 			const data: ForeignContent = await response.json();
 			const json = generateJSON(data.content, [...editorExtensionsList]);
 			editor?.commands.setContent(json);
+			setUrl(fetchUrl);
 		} catch (err) {
 			setError("Error fetching content. Please try again.");
 			console.error(err);
@@ -50,6 +51,14 @@ export const ContentPreview = () => {
 			setLoading(false);
 		}
 	};
+
+	const exampleLinks = [
+		"https://paragraph.xyz/@cstreet/impact-shadows",
+		"https://app.t2.world/article/clypwtj202425561ymcn5w742wd",
+		"https://app.t2.world/article/cltbrml5c1130221zmc6hqd6uvq",
+		"https://foundation.mirror.xyz/mP5oui8vd_n_7_hUk76qPR4gTL7U_Jl-60kKt0qlk9A",
+		"https://mirror.xyz/filarm.eth/dLolcroQ98JRhVxNpZHOwI1C1E6ecCqLfFFNJ7UgArE",
+	];
 
 	return (
 		<div className="fixed top-4 right-4 z-50">
@@ -66,7 +75,7 @@ export const ContentPreview = () => {
 					isOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
 				}`}
 			>
-				<Card className="w-96 max-w-full drop-shadow-lg animate-in slide-in-from-top-2 duration-300">
+				<Card className="w-[500px] max-w-full drop-shadow-lg animate-in slide-in-from-top-2 duration-300">
 					<CardHeader>
 						<CardTitle className="text-xl font-bold">
 							Preview Your content on Fountain
@@ -81,7 +90,7 @@ export const ContentPreview = () => {
 								placeholder="Enter URL"
 								className="flex-grow"
 							/>
-							<Button onClick={fetchContent} disabled={loading}>
+							<Button onClick={() => fetchContent(url)} disabled={loading}>
 								{loading ? "Loading..." : "Import"}
 							</Button>
 						</div>
@@ -100,21 +109,21 @@ export const ContentPreview = () => {
 								Example links
 							</CollapsibleTrigger>
 							<CollapsibleContent className="overflow-hidden transition-all duration-300 ease-in-out">
-								<ul className="list-disc list-inside text-sm text-muted-foreground p-2 space-y-1 animate-in slide-in-from-top-1 duration-300">
-									<li>https://paragraph.xyz/@cstreet/impact-shadows</li>
-									<li>https://paragraph.xyz/@daopunks/weekly-update-752024</li>
-									<li>
-										https://app.t2.world/article/clypwtj202425561ymcn5w742wd
-									</li>
-									<li>
-										https://app.t2.world/article/cltbrml5c1130221zmc6hqd6uvq
-									</li>
-									<li>
-										https://foundation.mirror.xyz/mP5oui8vd_n_7_hUk76qPR4gTL7U_Jl-60kKt0qlk9A
-									</li>
-									<li>
-										https://mirror.xyz/filarm.eth/dLolcroQ98JRhVxNpZHOwI1C1E6ecCqLfFFNJ7UgArE
-									</li>
+								<ul className="list-none text-sm text-muted-foreground p-2 space-y-1 animate-in slide-in-from-top-1 duration-300">
+									{exampleLinks.map((link, index) => (
+										<li key={link}>
+											<Button
+												variant="link"
+												className="p-0 h-auto text-left truncate text-ellipsis overflow-hidden whitespace-nowrap"
+												onClick={() => {
+													setUrl(link);
+													fetchContent(link);
+												}}
+											>
+												{link}
+											</Button>
+										</li>
+									))}
 								</ul>
 							</CollapsibleContent>
 						</Collapsible>
