@@ -77,7 +77,7 @@ export const ContentPreview = () => {
 							example links
 						</CollapsibleTrigger>
 						<CollapsibleContent>
-							<ul className="list-disc list-inside text-sm text-muted-foreground">
+							<ul className="list-disc list-inside text-sm text-muted-foreground p-2 space-y-1">
 								<li>https://paragraph.xyz/@cstreet/impact-shadows</li>
 								<li>https://paragraph.xyz/@daopunks/weekly-update-752024</li>
 								<li>

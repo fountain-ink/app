@@ -80,7 +80,7 @@ export const Editor = ({ children }: { children?: React.ReactNode }) => {
 				}}
 				extensions={editorExtensionsList}
 			>
-				<EditorCommand className="z-50 h-auto max-h-[330px]  w-72 overflow-y-auto rounded-md border border-muted bg-background px-1 py-2 shadow-md transition-all">
+				<EditorCommand className="z-50 h-auto max-h-[330px]  w-72 overflow-y-auto rounded-md border border-muted bg-card px-1 py-2 shadow-md transition-all">
 					<EditorCommandEmpty className="px-2 text-muted-foreground">
 						No results
 					</EditorCommandEmpty>
@@ -111,7 +111,7 @@ export const Editor = ({ children }: { children?: React.ReactNode }) => {
 					tippyOptions={{
 						placement: openAI ? "bottom-start" : "top",
 					}}
-					className="flex w-fit max-w-[90vw] overflow-hidden rounded border border-muted bg-background shadow-xl"
+					className="flex w-fit max-w-[90vw] overflow-hidden rounded border border-muted bg-card shadow-xl"
 				>
 					<NodeSelector open={openNode} onOpenChange={setOpenNode} />
 					<LinkSelector open={openLink} onOpenChange={setOpenLink} />
