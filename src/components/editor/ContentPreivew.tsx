@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useEditor } from "@tiptap/react";
-import { ChevronDown } from "lucide-react";
 import React, { useState } from "react";
 import {
 	Collapsible,
@@ -26,6 +25,7 @@ export const ContentPreview = () => {
 	const [url, setUrl] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const [title, setTitle] = useState("");
 
 	const editor = useEditor({ extensions: editorExtensionsList });
 
@@ -41,6 +41,7 @@ export const ContentPreview = () => {
 			}
 			const data: ForeignContent = await response.json();
 			editor?.commands.setContent(data.content);
+			setTitle(data.title);
 		} catch (err) {
 			setError("Error fetching content. Please try again.");
 			console.error(err);
@@ -50,46 +51,55 @@ export const ContentPreview = () => {
 	};
 
 	return (
-		<Card className="w-full max-w-2xl my-8 mx-auto drop-shadow-lg">
-			<CardHeader>
-				<CardTitle className="text-2xl font-bold text-center">
-					Preview Your content on Fountain
-				</CardTitle>
-			</CardHeader>
-			<CardContent>
-				<div className="flex space-x-2 mb-4">
-					<Input
-						type="text"
-						value={url}
-						onChange={(e) => setUrl(e.target.value)}
-						placeholder="Enter URL"
-						className="flex-grow"
-					/>
-					<Button onClick={fetchContent} disabled={loading}>
-						{loading ? "Loading..." : "Import"}
-					</Button>
-				</div>
-				{error && <p className="text-red-500 mb-4">{error}</p>}
-				<Collapsible>
-					<CollapsibleTrigger className="rounded-lg border p-2 flex items-center gap-2">
-						example links
-					</CollapsibleTrigger>
-					<CollapsibleContent>
-						<ul>
-							<li>https://paragraph.xyz/@cstreet/impact-shadows</li>
-							<li>https://paragraph.xyz/@daopunks/weekly-update-752024</li>
-							<li>https://app.t2.world/article/clyn8v54m146178720mcyo4fd9fv</li>
-							<li>https://app.t2.world/article/cltbrml5c1130221zmc6hqd6uvq</li>
-							<li>
-								https://zksync.mirror.xyz/BqdsMuLluf6AlWBgWOKoa587eQcFZq20zTf7dYblxsU
-							</li>
-							<li>
-								https://mirror.xyz/filarm.eth/dLolcroQ98JRhVxNpZHOwI1C1E6ecCqLfFFNJ7UgArE
-							</li>
-						</ul>
-					</CollapsibleContent>
-				</Collapsible>
-			</CardContent>
-		</Card>
+		<>
+			<Card className="w-full max-w-2xl my-8 mx-auto drop-shadow-lg">
+				<CardHeader>
+					<CardTitle className="text-2xl font-bold text-center">
+						Preview Your content on Fountain
+					</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<div className="flex space-x-2 mb-4">
+						<Input
+							type="text"
+							value={url}
+							onChange={(e) => setUrl(e.target.value)}
+							placeholder="Enter URL"
+							className="flex-grow"
+						/>
+						<Button onClick={fetchContent} disabled={loading}>
+							{loading ? "Loading..." : "Import"}
+						</Button>
+					</div>
+					{error && <p className="text-red-500 mb-4">{error}</p>}
+					<Collapsible>
+						<CollapsibleTrigger className="rounded-lg border p-2 flex items-center gap-2">
+							example links
+						</CollapsibleTrigger>
+						<CollapsibleContent>
+							<ul className="list-disc list-inside text-sm text-muted-foreground">
+								<li>https://paragraph.xyz/@cstreet/impact-shadows</li>
+								<li>https://paragraph.xyz/@daopunks/weekly-update-752024</li>
+								<li>
+									https://app.t2.world/article/clypwtj202425561ymcn5w742wd
+								</li>
+								<li>
+									https://app.t2.world/article/cltbrml5c1130221zmc6hqd6uvq
+								</li>
+								<li>
+									https://foundation.mirror.xyz/mP5oui8vd_n_7_hUk76qPR4gTL7U_Jl-60kKt0qlk9A
+								</li>
+								<li>
+									https://mirror.xyz/filarm.eth/dLolcroQ98JRhVxNpZHOwI1C1E6ecCqLfFFNJ7UgArE
+								</li>
+							</ul>
+						</CollapsibleContent>
+					</Collapsible>
+				</CardContent>
+			</Card>
+			<h1 className="text-6xl font-bold font-martina text-center my-8">
+				{title}
+			</h1>
+		</>
 	);
 };
