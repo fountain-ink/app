@@ -1,5 +1,6 @@
 import { getTransactionContent, getTransactionId } from "@/lib/arweave";
 import { gql } from "graphql-request";
+import showdown from "showdown";
 
 const query = gql`
   query GetMirrorTransactions($digest: String!) {
@@ -34,18 +35,21 @@ export async function getMirrorContent(slug: string) {
 			throw new Error("No transaction found for this digest");
 		}
 
-		const content = await getTransactionContent(transactionId);
-		if (!content) {
+		const post = await getTransactionContent(transactionId);
+		if (!post) {
 			throw new Error("Failed to decode content");
 		}
 
-		const parsedContent = JSON.parse(content);
+		const parsedPost = JSON.parse(post);
+		const markdownContent = parsedPost.content.body;
+		const converter = new showdown.Converter();
+		const content = converter.makeHtml(markdownContent);
 
 		return {
-			title: parsedContent.content.title,
-			content: parsedContent.content.body,
-			timestamp: parsedContent.content.timestamp,
-			slug: parsedContent.digest,
+			title: parsedPost.content.title,
+			content: content,
+			timestamp: parsedPost.content.timestamp,
+			slug: parsedPost.digest,
 		} as MirrorContent;
 	} catch (error) {
 		console.error("Error:", error);

@@ -1,13 +1,10 @@
 "use client";
-import { ThemeSwitcher } from "@/components/ThemeSwitcher";
-import { Editor, editorExtensionsList } from "@/components/editor/Editor";
-import { EditorCollaborators } from "@/components/editor/EditorCollaborators";
-import { EditorDate } from "@/components/editor/EditorDate";
+
+import { editorExtensionsList } from "@/components/editor/Editor";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { EditorContent, useCurrentEditor, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
+import { useEditor } from "@tiptap/react";
 import React, { useState } from "react";
 
 interface ForeignContent {
@@ -65,25 +62,6 @@ export const ContentPreview = () => {
 					</Button>
 				</div>
 				{error && <p className="text-red-500 mb-4">{error}</p>}
-
-				{/* {content && (
-								<div>
-									<h2 className="text-xl font-bold mb-2">{content.title}</h2>
-									{content.subtitle && (
-										<h3 className="text-lg mb-2">{content.subtitle}</h3>
-									)}
-									{content.coverImage && (
-										<img
-											src={content.coverImage}
-											alt="Cover"
-											className="mb-4 max-w-full h-auto"
-										/>
-									)}
-									<p className="mb-2">
-										{new Date(content.createdAt).toLocaleDateString()}
-									</p>
-								</div>
-							)} */}
 			</CardContent>
 		</Card>
 	);
