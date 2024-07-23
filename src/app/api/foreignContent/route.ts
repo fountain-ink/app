@@ -75,7 +75,7 @@ export async function GET(request: Request) {
 		}
 
 		const content = await platformLogic[platform](slug);
-    console.log(content.content, content.title)
+    content.content = `<h1>${content.title}</h1>${content.content}`
 
 		return NextResponse.json(content, { status: 200 });
 	} catch (error) {
