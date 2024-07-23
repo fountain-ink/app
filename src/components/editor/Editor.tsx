@@ -103,15 +103,10 @@ export const Editor = ({ children }: { children?: React.ReactNode }) => {
 					},
 					attributes: {
 						class:
-							"prose prose-sm sm:prose-base lg:prose-lg focus:outline-none rounded-lg",
+							"prose prose-sm sm:prose-base prose-h1:font-martina prose-h1:my-8 prose-h1:text-center prose-h1:text-6xl lg:prose-lg focus:outline-none rounded-lg",
 					},
 				}}
 				extensions={editorExtensionsList}
-				// 	editorProps={{
-				// attributes: {
-				//   class: `prose prose-lg dark:prose-invert prose-headings:font-title font-default focus:outline-none max-w-full`,
-				// }
-				// }}
 			>
 				{children}
 				<EditorCommand className="z-50 h-auto max-h-[330px]  w-72 overflow-y-auto rounded-md border border-muted bg-card px-1 py-2 shadow-md transition-all">
@@ -141,17 +136,17 @@ export const Editor = ({ children }: { children?: React.ReactNode }) => {
 						))}
 					</EditorCommandList>
 				</EditorCommand>
-					<EditorBubble
-						tippyOptions={{
-							placement: openAI ? "bottom-start" : "top",
-						}}
-						className="flex w-fit max-w-[90vw] overflow-hidden rounded border border-muted bg-card shadow-xl"
-					>
-						<NodeSelector open={openNode} onOpenChange={setOpenNode} />
-						<LinkSelector open={openLink} onOpenChange={setOpenLink} />
-						<TextButtons />
-						<ColorSelector open={openColor} onOpenChange={setOpenColor} />
-					</EditorBubble>
+				<EditorBubble
+					tippyOptions={{
+						placement: openAI ? "bottom-start" : "top",
+					}}
+					className="flex w-fit max-w-[90vw] overflow-hidden rounded border border-muted bg-card shadow-xl"
+				>
+					<NodeSelector open={openNode} onOpenChange={setOpenNode} />
+					<LinkSelector open={openLink} onOpenChange={setOpenLink} />
+					<TextButtons />
+					<ColorSelector open={openColor} onOpenChange={setOpenColor} />
+				</EditorBubble>
 			</EditorContent>
 		</EditorRoot>
 	);

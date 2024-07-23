@@ -29,7 +29,6 @@ export const ContentPreview = () => {
 	const [url, setUrl] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const [title, setTitle] = useState("");
 
 	const { editor } = useEditor();
 
@@ -46,7 +45,6 @@ export const ContentPreview = () => {
 			const data: ForeignContent = await response.json();
       const json = generateJSON(data.content, [...editorExtensionsList]);
 			editor?.commands.setContent(json);
-			setTitle(data.title);
 		} catch (err) {
 			setError("Error fetching content. Please try again.");
 			console.error(err);
@@ -102,9 +100,6 @@ export const ContentPreview = () => {
 					</Collapsible>
 				</CardContent>
 			</Card>
-			<h1 className="text-6xl font-bold font-martina text-center my-8">
-				{title}
-			</h1>
 		</>
 	);
 };
