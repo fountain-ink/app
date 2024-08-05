@@ -1,8 +1,13 @@
-import logo from "public/logo.svg"
+import { FountainLogo } from "./Icons";
+import { UserAvatar } from "./UserAvatar";
+
 export const Header = () => {
-  return (
-    <div className="fixed h-10 sm:h-12 backdrop-blur-sm flex items-around">
-      {logo}
-    </div>
-  )
+	return (
+		<div className="fixed w-full p-2 z-[50] backdrop-blur-sm flex justify-between items-center">
+			<div className="w-10 h-10 flex items-center justify-center">
+				<FountainLogo />
+			</div>
+			<UserAvatar />
+		</div>
+	);
 };

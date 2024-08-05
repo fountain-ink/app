@@ -1,3 +1,4 @@
+import { Header } from "@/components/Header";
 import { ThemeProvider } from "@/components/ThemeContext";
 import { Web3Provider } from "@/components/web3/Web3Provider";
 import "@/styles/globals.css";
@@ -14,7 +15,10 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 			<body>
 				<main>
 					<Web3Provider>
-						<ThemeProvider>{children}</ThemeProvider>
+						<ThemeProvider>
+							<Header />
+							{children}
+						</ThemeProvider>
 					</Web3Provider>
 				</main>
 			</body>
