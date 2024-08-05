@@ -5,7 +5,6 @@ import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import {
 	EditorBubble,
-	EditorBubbleItem,
 	EditorCommand,
 	EditorCommandEmpty,
 	EditorCommandItem,

@@ -12,11 +12,8 @@ export const Figcaption = Node.create({
   },
 
   content: 'inline*',
-
   selectable: false,
-
   draggable: false,
-
   marks: 'link',
 
   parseHTML() {
