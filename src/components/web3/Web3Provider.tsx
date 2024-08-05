@@ -4,24 +4,30 @@ import { env } from "@/env";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { http, WagmiProvider, createConfig } from "wagmi";
-import { mainnet } from "wagmi/chains";
+import { LensProvider } from "@lens-protocol/react-web";
+import { mainnet, polygon } from "wagmi/chains";
+import { LensConfig, production } from "@lens-protocol/react-web";
+import { bindings } from "@lens-protocol/wagmi";
 
 const config = createConfig(
 	getDefaultConfig({
-		chains: [mainnet],
+		chains: [polygon],
 		transports: {
-			[mainnet.id]: http(
-				`https://eth-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
-			),
+			[polygon.id]: http(),
 		},
 		walletConnectProjectId: env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
 
 		appName: "Fountain",
 		appDescription: "Slow social",
-		appUrl: "https://fountain.ink", 
+		appUrl: "https://fountain.ink",
 		appIcon: "https://fountain.ink/logo.png",
 	}),
 );
+
+const lensConfig: LensConfig = {
+	environment: production,
+	bindings: bindings(config),
+};
 
 const queryClient = new QueryClient();
 
@@ -29,7 +35,9 @@ export const Web3Provider = ({ children }: { children: JSX.Element }) => {
 	return (
 		<WagmiProvider config={config}>
 			<QueryClientProvider client={queryClient}>
-				<ConnectKitProvider>{children}</ConnectKitProvider>
+				<ConnectKitProvider>
+					<LensProvider config={lensConfig}>{children}</LensProvider>
+				</ConnectKitProvider>
 			</QueryClientProvider>
 		</WagmiProvider>
 	);
