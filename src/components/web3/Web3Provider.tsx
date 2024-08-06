@@ -1,13 +1,14 @@
 "use client";
 
 import { env } from "@/env";
+import { LensProvider } from "@lens-protocol/react-web";
+import { LensConfig, production } from "@lens-protocol/react-web";
+import { bindings } from "@lens-protocol/wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { http, WagmiProvider, createConfig } from "wagmi";
-import { LensProvider } from "@lens-protocol/react-web";
 import { mainnet, polygon } from "wagmi/chains";
-import { LensConfig, production } from "@lens-protocol/react-web";
-import { bindings } from "@lens-protocol/wagmi";
+import CustomAvatar from "../UserAvatar";
 
 const config = createConfig(
 	getDefaultConfig({
@@ -35,7 +36,11 @@ export const Web3Provider = ({ children }: { children: JSX.Element }) => {
 	return (
 		<WagmiProvider config={config}>
 			<QueryClientProvider client={queryClient}>
-				<ConnectKitProvider>
+				<ConnectKitProvider
+					options={{
+						customAvatar: CustomAvatar,
+					}}
+				>
 					<LensProvider config={lensConfig}>{children}</LensProvider>
 				</ConnectKitProvider>
 			</QueryClientProvider>
