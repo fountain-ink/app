@@ -1,6 +1,8 @@
+"use client";
+
 import { Suspense } from "react";
 import { FountainLogo } from "./Icons";
-import { UserAvatar } from "./UserAvatar";
+import { UserAvatar } from "./user/UserAvatar";
 
 export const Header = () => {
 	return (
