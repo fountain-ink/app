@@ -1,27 +1,25 @@
 "use client";
 
-import { ConnectKitButton } from "connectkit";
+import { SessionType, useSession } from "@lens-protocol/react-web";
 
 export const UserAvatar = () => {
-	return <ConnectKitButton />;
+	const { data: session } = useSession({ suspense: true });
+
+	if (session.type !== SessionType.WithProfile) {
+		return null;
+	}
+
+	const avatar =
+		session.profile.metadata?.picture?.__typename === "ImageSet"
+			? session.profile?.metadata?.picture?.raw.uri
+			: session.profile?.metadata?.picture?.image?.raw.uri;
+
+	return (
+		<img
+			src={avatar}
+			alt={session?.profile?.handle?.localName}
+			width="100%"
+			height="100%"
+		/>
+	);
 };
-
-import { Types } from "connectkit";
-
-const CustomAvatar = ({ address, ensImage, ensName, size, radius }: Types.CustomAvatarProps) => {
-  return (
-    <div
-      style={{
-        overflow: "hidden",
-        borderRadius: radius,
-        height: size,
-        width: size,
-        background: generateColorFromAddress(address), // your function here
-      }}
-    >
-      {ensImage && <img src={ensImage} alt={ensName ?? address} width="100%" height="100%" />}
-    </div>
-  );
-};
-
-export default CustomAvatar;

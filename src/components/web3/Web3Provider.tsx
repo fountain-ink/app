@@ -7,8 +7,7 @@ import { bindings } from "@lens-protocol/wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { http, WagmiProvider, createConfig } from "wagmi";
-import { mainnet, polygon } from "wagmi/chains";
-import CustomAvatar from "../UserAvatar";
+import { polygon } from "wagmi/chains";
 
 const config = createConfig(
 	getDefaultConfig({
@@ -36,11 +35,7 @@ export const Web3Provider = ({ children }: { children: JSX.Element }) => {
 	return (
 		<WagmiProvider config={config}>
 			<QueryClientProvider client={queryClient}>
-				<ConnectKitProvider
-					options={{
-						customAvatar: CustomAvatar,
-					}}
-				>
+				<ConnectKitProvider>
 					<LensProvider config={lensConfig}>{children}</LensProvider>
 				</ConnectKitProvider>
 			</QueryClientProvider>

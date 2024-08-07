@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { FountainLogo } from "./Icons";
 import { UserAvatar } from "./UserAvatar";
 
@@ -7,7 +8,9 @@ export const Header = () => {
 			<div className="w-10 h-10 flex items-center justify-center">
 				<FountainLogo />
 			</div>
-			<UserAvatar />
+			<Suspense fallback={null}>
+				<UserAvatar />
+			</Suspense>
 		</div>
 	);
 };
