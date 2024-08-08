@@ -2,8 +2,9 @@
 
 import { SessionType, useSession } from "@lens-protocol/react-web";
 import { Suspense } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
-const Avatar = () => {
+const SessionAvatar = () => {
 	const { data: session } = useSession({ suspense: true });
 
 	if (session.type !== SessionType.WithProfile) {
@@ -11,24 +12,26 @@ const Avatar = () => {
 	}
 
 	const avatar =
-		session.profile.metadata?.picture?.__typename === "ImageSet"
-			? session.profile?.metadata?.picture?.raw.uri
-			: session.profile?.metadata?.picture?.image?.raw.uri;
+		session?.profile?.metadata?.picture?.__typename === "ImageSet"
+			? session?.profile?.metadata?.picture?.optimized?.uri ||
+			  session?.profile?.metadata?.picture?.raw?.uri
+			: session?.profile?.metadata?.picture?.image.optimized?.uri ||
+			  session?.profile?.metadata?.picture?.image.raw?.uri;
 
 	return (
-		<img
-			src={avatar}
-			alt={session?.profile?.handle?.localName}
-			width="100%"
-			height="100%"
-		/>
+		<Avatar className="w-full h-full m-0">
+			<AvatarImage src={avatar} />
+			<AvatarFallback><div className="flex h-full w-full items-center justify-center rounded-full bg-muted"/></AvatarFallback>
+		</Avatar>
 	);
 };
 
-export const UserAvatar = () => {
+export const UserAvatar = ({ size = 40 }: { size?: number }) => {
 	return (
 		<Suspense fallback={null}>
-			<Avatar />
+			<div style={{ width: size, height: size }}>
+				<SessionAvatar />
+			</div>
 		</Suspense>
 	);
 };

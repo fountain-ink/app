@@ -5,9 +5,11 @@ import { useAccount } from "wagmi";
 import { UserAvatar } from "./UserAvatar";
 
 export const UserMenu = () => {
-	const { address, isConnecting, isDisconnected } = useAccount();
+	const { address, isConnecting, isDisconnected, isConnected } = useAccount();
 
-	const profileOrConnector = isDisconnected ? <ConnectKitButton /> : <UserAvatar />;
+  if (!isConnected) return <ConnectKitButton />;
+
+	const profileOrConnector = isConnected ? <ConnectKitButton /> : <UserAvatar />;
 
   return <div>
     {profileOrConnector}

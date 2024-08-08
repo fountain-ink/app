@@ -13,14 +13,12 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 	return (
 		<html lang="en">
 			<body>
-				<main>
 					<Web3Provider>
 						<ThemeProvider>
 							<Header />
 							{children}
 						</ThemeProvider>
 					</Web3Provider>
-				</main>
 			</body>
 		</html>
 	);
