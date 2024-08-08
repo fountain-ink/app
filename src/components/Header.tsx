@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FountainLogo } from "./Icons";
 import { UserMenu } from "./user/UserMenu";
+import { Suspense } from "react";
 
 export const Header = () => {
 	return (
@@ -8,7 +9,9 @@ export const Header = () => {
 			<Link href={"/"} className="w-10 h-10 flex items-center justify-center">
 				<FountainLogo />
 			</Link>
-			<UserMenu />
+			<Suspense fallback={null}>
+				<UserMenu />
+			</Suspense>
 		</div>
 	);
 };

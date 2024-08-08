@@ -31,7 +31,7 @@ const lensConfig: LensConfig = {
 
 const queryClient = new QueryClient();
 
-export const Web3Provider = ({ children }: { children: JSX.Element }) => {
+export const Web3Providers = ({ children }: { children: JSX.Element }) => {
 	return (
 		<WagmiProvider config={config}>
 			<QueryClientProvider client={queryClient}>
