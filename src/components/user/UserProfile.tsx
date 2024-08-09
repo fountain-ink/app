@@ -30,24 +30,25 @@ export const UserProfile = ({ user }: { user: string }) => {
 	if (!cover) {
 		return <div className="w-full h-48 bg-muted" />;
 	}
-
 	return (
 		<div className="flex flex-col">
 			<UserCover profile={profile} />
 			<div className="flex flex-row">
 				<div className="grow min-h-[2000px]">content</div>
-				<div className="grow-0 w-[30%] h-fit sticky -translate-y-[60%] ">
+				<div className="grow-0 w-[30%] h-fit sticky top-0">
 					<UserAvatar
-						className="rounded-full ring-4 ring-background w-[100%] sm:w-[60%] h-auto aspect-square"
+						className="rounded-full ring-4 ring-background w-[100%] sm:w-[60%] h-auto aspect-square -translate-y-1/2"
 						profile={profile}
 					/>
-					<UserName profile={profile} />
-					<div className="mb-2">
-						<UserHandle profile={profile} />
+					<div className="-mt-[25%]">
+						<UserName profile={profile} />
+						<div className="mb-2">
+							<UserHandle profile={profile} />
+						</div>
+						<UserFollowing profile={profile} />
+						<UserBio profile={profile} />
+						<UserSocials profile={profile} />
 					</div>
-					<UserFollowing profile={profile} />
-					<UserBio profile={profile} />
-					<UserSocials profile={profile} />
 				</div>
 			</div>
 		</div>
