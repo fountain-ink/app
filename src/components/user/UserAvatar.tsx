@@ -12,16 +12,16 @@ export const SessionAvatar = () => {
 	}
 
 	return (
-		<ProfileAvatar profile={session?.profile} loading={loading} error={error} />
+		<UserAvatar profile={session?.profile} loading={loading} error={error} />
 	);
 };
 
-export const ProfileAvatar = ({
+export const UserAvatar = ({
 	profile,
 	loading,
 	error,
 	size = 40,
-}: { profile?: Profile; loading: boolean; error?: Error; size?: number }) => {
+}: { profile?: Profile; loading?: boolean; error?: Error; size?: number }) => {
 	if (loading) {
 		return <AvatarSuspense />;
 	}
