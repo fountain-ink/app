@@ -12,7 +12,12 @@ export const SessionAvatar = () => {
 	}
 
 	return (
-		<UserAvatar profile={session?.profile} loading={loading} error={error} />
+		<UserAvatar
+			className="w-10 h-10"
+			profile={session?.profile}
+			loading={loading}
+			error={error}
+		/>
 	);
 };
 
@@ -20,8 +25,13 @@ export const UserAvatar = ({
 	profile,
 	loading,
 	error,
-	size = 40,
-}: { profile?: Profile; loading?: boolean; error?: Error; size?: number }) => {
+	className,
+}: {
+	profile?: Profile;
+	loading?: boolean;
+	error?: Error;
+	className?: string;
+}) => {
 	if (loading) {
 		return <AvatarSuspense />;
 	}
@@ -39,7 +49,7 @@ export const UserAvatar = ({
 			  profile?.metadata?.picture?.image.raw?.uri;
 
 	return (
-		<div style={{ width: size, height: size }}>
+		<div className={className}>
 			<Avatar className="w-full h-full m-0">
 				<AvatarImage src={avatar} />
 

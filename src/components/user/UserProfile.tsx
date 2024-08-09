@@ -32,13 +32,12 @@ export const UserProfile = ({ user }: { user: string }) => {
 		<div className="flex flex-col">
 			<UserCover profile={profile} />
 			<div className="flex flex-row">
-				<div className="grow">content</div>
+				<div className="grow min-h-screen">content</div>
 				<div className="grow-0 w-[30%]">
-					<div className="-mt-20 ">
-						<div className="rounded-full w-fit h-fit ring-4 ring-background">
-							<UserAvatar size={150} profile={profile} />
-						</div>
-					</div>
+					<UserAvatar
+						className="-translate-y-1/2  rounded-full ring-4 ring-background w-[100%] sm:w-[60%] h-auto aspect-square"
+						profile={profile}
+					/>
 					<UserBio profile={profile} />
 					<UserSocials profile={profile} />
 				</div>
