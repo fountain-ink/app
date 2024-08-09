@@ -5,6 +5,7 @@ import {
 } from "@lens-protocol/react-web";
 import { useAccount } from "wagmi";
 import { Button } from "../ui/button";
+import { toast } from "sonner";
 
 export function ProfileLoginButton({
 	profile,
@@ -26,7 +27,7 @@ export function ProfileLoginButton({
 			return onSuccess(profile);
 		}
 
-		window.alert(result.error.message);
+    toast.error(result.error.message);
 	};
 
 	return (
