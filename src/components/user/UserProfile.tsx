@@ -4,6 +4,7 @@ import { UserAvatar } from "@/components/user/UserAvatar";
 import { useProfile } from "@lens-protocol/react-web";
 import { toast } from "sonner";
 import { UserBio } from "./UserBio";
+import { UserContent } from "./UserContent";
 import { UserCover } from "./UserCover";
 import { UserFollowing } from "./UserFollowing";
 import { UserHandle } from "./UserHandle";
@@ -31,23 +32,28 @@ export const UserProfile = ({ user }: { user: string }) => {
 		return <div className="w-full h-48 bg-muted" />;
 	}
 	return (
-		<div className="flex flex-col">
+		<div className="flex flex-col items-center justify-center w-[70%] mx-auto">
 			<UserCover profile={profile} />
-			<div className="flex flex-row">
-				<div className="grow min-h-[2000px]">content</div>
-				<div className="grow-0 w-[30%] h-fit sticky top-0">
-					<UserAvatar
-						className="rounded-full ring-4 ring-background w-[100%] sm:w-[60%] h-auto aspect-square -translate-y-1/2"
-						profile={profile}
-					/>
-					<div className="-mt-[25%]">
-						<UserName profile={profile} />
-						<div className="mb-2">
-							<UserHandle profile={profile} />
+
+			<div className="flex flex-row w-full">
+				<div className="grow w-[70%]">
+					<UserContent profile={profile} />
+				</div>
+				<div className="flex flex-row w-[30%]">
+					<div className="grow-0 h-fit sticky top-0">
+						<UserAvatar
+							className="rounded-full ring-4 ring-background w-[100%] sm:w-[60%] h-auto aspect-square -translate-y-1/2"
+							profile={profile}
+						/>
+						<div className="-mt-[25%]">
+							<UserName profile={profile} />
+							<div className="mb-2">
+								<UserHandle profile={profile} />
+							</div>
+							<UserFollowing profile={profile} />
+							<UserBio profile={profile} />
+							<UserSocials profile={profile} />
 						</div>
-						<UserFollowing profile={profile} />
-						<UserBio profile={profile} />
-						<UserSocials profile={profile} />
 					</div>
 				</div>
 			</div>
