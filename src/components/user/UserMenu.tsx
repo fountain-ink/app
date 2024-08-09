@@ -2,25 +2,31 @@
 
 import { SessionType, useSession } from "@lens-protocol/react-web";
 import { ConnectKitButton } from "connectkit";
-import { useAccount } from "wagmi";
+import Link from "next/link";
+import { toast } from "sonner";
 import { ProfileSelect } from "../auth/ProfileSelect";
-import { UserAvatar } from "./UserAvatar";
+import { AvatarSuspense, SessionAvatar } from "./UserAvatar";
 
 export const UserMenu = () => {
 	const { data, loading, error } = useSession();
-	const { address, isConnecting, isDisconnected, isConnected } = useAccount();
 
-	if (loading) return null;
-	if (error) return null;
+	if (loading) return <AvatarSuspense />;
 
-	if (!isConnected) return <ConnectKitButton />;
+	if (error) {
+		toast.error(error.message);
+		return null;
+	}
 
 	switch (data.type) {
 		case SessionType.Anonymous:
-			return <ProfileSelect onSuccess={() => {}} />;
+			return <ConnectKitButton />;
 		case SessionType.JustWallet:
 			return <ProfileSelect onSuccess={() => {}} />;
 		case SessionType.WithProfile:
-			return <UserAvatar />;
+			return (
+				<Link href={"/profile"}>
+					<SessionAvatar />
+				</Link>
+			);
 	}
 };

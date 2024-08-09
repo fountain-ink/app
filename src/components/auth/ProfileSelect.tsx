@@ -84,7 +84,7 @@ export function ProfileSelect({
 	}
 
 	return (
-		<Dialog open>
+		<Dialog defaultOpen>
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>Select profile</DialogTitle>
