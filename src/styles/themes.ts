@@ -25,11 +25,10 @@ type ThemeColors = {
 	"--destructive-foreground": string;
 };
 
-
 export const themes: Record<ThemeType, ThemeColors> = {
 	light: {
-		"--background": "#d0dff7",
-		"--foreground": "#432a21",
+		"--background": "217 71% 89%",
+		"--foreground": "18 35% 19%",
 		"--card": "0 0% 100%",
 		"--popover": "0 0% 100%",
 		"--primary": "222.2 47.4% 11.2%",

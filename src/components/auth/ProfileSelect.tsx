@@ -3,9 +3,10 @@ import {
 	useLogin,
 	useProfilesManaged,
 } from "@lens-protocol/react-web";
+import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { Button } from "../ui/button";
-import { toast } from "sonner";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 
 export function ProfileLoginButton({
 	profile,
@@ -27,17 +28,39 @@ export function ProfileLoginButton({
 			return onSuccess(profile);
 		}
 
-    toast.error(result.error.message);
+		toast.error(result.error.message);
 	};
 
+	const avatar =
+		profile?.metadata?.picture?.__typename === "ImageSet"
+			? profile?.metadata?.picture?.optimized?.uri ||
+			  profile?.metadata?.picture?.raw?.uri
+			: profile?.metadata?.picture?.image.optimized?.uri ||
+			  profile?.metadata?.picture?.image.raw?.uri;
+
 	return (
-		<Button disabled={loading} onClick={login}>
-			{profile.handle?.fullHandle ?? profile.id}
+		<Button
+			variant="ghost"
+			size="lg"
+			className="flex items-center gap-2"
+			disabled={loading}
+			onClick={login}
+		>
+			{avatar && (
+				<img
+					src={avatar}
+					alt={profile.handle?.localName}
+					className="w-6 h-6 rounded-full"
+				/>
+			)}
+			{profile.handle?.localName ?? profile.id}
 		</Button>
 	);
 }
 
-export function ProfileSelect({ onSuccess }: { onSuccess: (profile: Profile) => void }) {
+export function ProfileSelect({
+	onSuccess,
+}: { onSuccess: (profile: Profile) => void }) {
 	const { address } = useAccount();
 	const {
 		data: profiles,
@@ -61,14 +84,19 @@ export function ProfileSelect({ onSuccess }: { onSuccess: (profile: Profile) => 
 	}
 
 	return (
-		<div>
-			{profiles.map((profile) => (
-				<ProfileLoginButton
-					key={profile.id}
-					profile={profile}
-					onSuccess={onSuccess}
-				/>
-			))}
-		</div>
+		<Dialog open>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Select profile</DialogTitle>
+				</DialogHeader>
+				{profiles.map((profile) => (
+					<ProfileLoginButton
+						key={profile.id}
+						profile={profile}
+						onSuccess={onSuccess}
+					/>
+				))}
+			</DialogContent>
+		</Dialog>
 	);
 }

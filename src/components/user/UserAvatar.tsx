@@ -2,17 +2,19 @@
 
 import { SessionType, useSession } from "@lens-protocol/react-web";
 import { Suspense } from "react";
+import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const SessionAvatar = () => {
 	const { data: session, loading, error } = useSession();
 
 	if (loading) {
-		return null;
+		return <AvatarSuspense />;
 	}
 
 	if (error) {
-		return null;
+		toast.error(error.message);
+		return <AvatarSuspense />;
 	}
 
 	if (session.type !== SessionType.WithProfile) {
@@ -29,8 +31,17 @@ const SessionAvatar = () => {
 	return (
 		<Avatar className="w-full h-full m-0">
 			<AvatarImage src={avatar} />
-			<AvatarFallback><div className="flex h-full w-full items-center justify-center rounded-full bg-muted"/></AvatarFallback>
+
+			<AvatarFallback>
+				<AvatarSuspense />
+			</AvatarFallback>
 		</Avatar>
+	);
+};
+
+const AvatarSuspense = () => {
+	return (
+		<div className="flex h-full w-full items-center justify-center rounded-full bg-muted" />
 	);
 };
 
