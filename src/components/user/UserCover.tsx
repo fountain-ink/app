@@ -1,19 +1,11 @@
-"use client";
+import { Profile } from "@lens-protocol/react-web";
 
-import { SessionType, useProfile, useSession } from "@lens-protocol/react-web";
-import { toast } from "sonner";
-
-export const UserCover = ({ user }: { user: string }) => {
-	const handle = `lens/${user}`;
-	const { data: profile, loading, error } = useProfile({ forHandle: handle });
-
+export const UserCover = ({
+	profile,
+	loading,
+}: { profile?: Profile; loading?: boolean }) => {
 	if (loading) {
 		return <UserCoverSuspense />;
-	}
-
-	if (error) {
-		toast.error(error.message);
-		return null;
 	}
 
 	const cover =

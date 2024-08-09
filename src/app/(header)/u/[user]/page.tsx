@@ -16,9 +16,10 @@ const user = async ({ params }: { params: { user: string } }) => {
 	const user = params.user;
 
 	return (
-		<div className="flex flex-col gap-4 items-center justify-center w-full max-w-lg lg:max-w-xl">
-			<UserCover user={user} />
-			<UserProfile user={user} />
+		<div className="w-full flex items-center justify-center">
+			<div className="flex flex-col gap-4 max-w-[70%]">
+				<UserProfile user={user} />
+			</div>
 		</div>
 	);
 };
