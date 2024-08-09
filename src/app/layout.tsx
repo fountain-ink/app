@@ -1,6 +1,5 @@
-import { Header } from "@/components/Header";
-import { Web3Providers } from "@/components/Web3Providers";
 import { ThemeProvider } from "@/components/ThemeContext";
+import { Web3Providers } from "@/components/Web3Providers";
 import "@/styles/globals.css";
 
 export const metadata = {
@@ -14,10 +13,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 		<html lang="en">
 			<body>
 				<Web3Providers>
-					<ThemeProvider>
-						<Header />
-						{children}
-					</ThemeProvider>
+					<ThemeProvider>{children}</ThemeProvider>
 				</Web3Providers>
 			</body>
 		</html>

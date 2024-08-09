@@ -3,20 +3,23 @@
 import { SessionType, useSession } from "@lens-protocol/react-web";
 import { ConnectKitButton } from "connectkit";
 import { useAccount } from "wagmi";
-import { UserAvatar } from "./UserAvatar";
 import { ProfileSelect } from "../auth/ProfileSelect";
+import { UserAvatar } from "./UserAvatar";
 
 export const UserMenu = () => {
+	const { data, loading, error } = useSession();
 	const { address, isConnecting, isDisconnected, isConnected } = useAccount();
-	const { data } = useSession({ suspense: true });
+
+	if (loading) return null;
+	if (error) return null;
 
 	if (!isConnected) return <ConnectKitButton />;
 
 	switch (data.type) {
 		case SessionType.Anonymous:
-      return <ProfileSelect onSuccess={() => {}} />
+			return <ProfileSelect onSuccess={() => {}} />;
 		case SessionType.JustWallet:
-		// data is a WalletOnlySession      return <Onboarding address={data.address} />;
+			return <ProfileSelect onSuccess={() => {}} />;
 		case SessionType.WithProfile:
 			return <UserAvatar />;
 	}

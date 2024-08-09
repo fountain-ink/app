@@ -5,7 +5,15 @@ import { Suspense } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const SessionAvatar = () => {
-	const { data: session } = useSession({ suspense: true });
+	const { data: session, loading, error } = useSession();
+
+	if (loading) {
+		return null;
+	}
+
+	if (error) {
+		return null;
+	}
 
 	if (session.type !== SessionType.WithProfile) {
 		return null;
