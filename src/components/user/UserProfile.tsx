@@ -31,8 +31,8 @@ export const UserProfile = ({ user }: { user: string }) => {
 				<div className="grow w-[70%]">
 					<UserContent profile={profile} />
 				</div>
-				<div className="w-[30%]">
-					<div className="sticky top-24 right-0 h-fit">
+				<div className="w-[30%] p-4">
+					<div className="sticky top-32 right-0 h-fit">
 						<UserAvatar
 							className="rounded-full ring-4 ring-background w-[100%] sm:w-[60%] h-auto aspect-square -translate-y-1/2"
 							profile={profile}
@@ -54,40 +54,52 @@ export const UserProfile = ({ user }: { user: string }) => {
 };
 
 const ProfileSuspense = () => {
-  return (
-    <div className="flex flex-col items-center justify-center w-[100%] sm:w-[70%] mx-auto">
-      <div className="w-full h-48 bg-muted animate-pulse rounded-b-lg" /> {/* UserCover placeholder */}
-      <div className="flex flex-row w-full">
-        <div className="grow w-[70%] p-4">
-          <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="flex flex-col space-y-2">
-                <div className="h-4 bg-muted animate-pulse rounded w-3/4" />
-                <div className="h-4 bg-muted animate-pulse rounded w-1/2" />
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="w-[30%]">
-          <div className="sticky top-24 right-0 h-fit">
-            <div className="rounded-full bg-muted animate-pulse w-[100%] sm:w-[60%] h-auto aspect-square -translate-y-1/2" /> {/* UserAvatar placeholder */}
-            <div className="-mt-[25%] space-y-4">
-              <div className="h-6 bg-muted animate-pulse rounded w-3/4" /> {/* UserName placeholder */}
-              <div className="h-4 bg-muted animate-pulse rounded w-1/2" /> {/* UserHandle placeholder */}
-              <div className="h-4 bg-muted animate-pulse rounded w-full" /> {/* UserFollowing placeholder */}
-              <div className="space-y-2"> {/* UserBio placeholder */}
-                <div className="h-4 bg-muted animate-pulse rounded w-full" />
-                <div className="h-4 bg-muted animate-pulse rounded w-3/4" />
-              </div>
-              <div className="flex space-x-2"> {/* UserSocials placeholder */}
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="w-8 h-8 bg-muted animate-pulse rounded-full" />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+	return (
+		<div className="flex flex-col items-center justify-center w-[100%] sm:w-[70%] mx-auto">
+			<div className="w-full h-48 bg-muted animate-pulse rounded-b-lg" />{" "}
+			{/* UserCover placeholder */}
+			<div className="flex flex-row w-full">
+				<div className="grow w-[70%] p-4">
+					<div className="space-y-4">
+						{[1, 2, 3].map((i) => (
+							<div key={i} className="flex flex-col space-y-2">
+								<div className="h-4 bg-muted animate-pulse rounded w-3/4" />
+								<div className="h-4 bg-muted animate-pulse rounded w-1/2" />
+							</div>
+						))}
+					</div>
+				</div>
+				<div className="w-[30%]">
+					<div className="sticky top-24 right-0 h-fit">
+						<div className="rounded-full bg-muted animate-pulse w-[100%] sm:w-[60%] h-auto aspect-square -translate-y-1/2" />{" "}
+						{/* UserAvatar placeholder */}
+						<div className="-mt-[25%] space-y-4">
+							<div className="h-6 bg-muted animate-pulse rounded w-3/4" />{" "}
+							{/* UserName placeholder */}
+							<div className="h-4 bg-muted animate-pulse rounded w-1/2" />{" "}
+							{/* UserHandle placeholder */}
+							<div className="h-4 bg-muted animate-pulse rounded w-full" />{" "}
+							{/* UserFollowing placeholder */}
+							<div className="space-y-2">
+								{" "}
+								{/* UserBio placeholder */}
+								<div className="h-4 bg-muted animate-pulse rounded w-full" />
+								<div className="h-4 bg-muted animate-pulse rounded w-3/4" />
+							</div>
+							<div className="flex space-x-2">
+								{" "}
+								{/* UserSocials placeholder */}
+								{[1, 2, 3].map((i) => (
+									<div
+										key={i}
+										className="w-8 h-8 bg-muted animate-pulse rounded-full"
+									/>
+								))}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 };

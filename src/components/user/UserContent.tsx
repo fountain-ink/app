@@ -45,7 +45,7 @@ export const UserContent = ({
 			return <PostView key={publication.id} publication={publication} />;
 	});
 
-	return <div className="flex flex-col gap-2">{posts}</div>;
+	return <div className="flex flex-col gap-2 m-4 p-4">{posts}</div>;
 };
 
 export const ContentSuspense = () => {
