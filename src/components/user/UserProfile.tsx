@@ -19,7 +19,6 @@ export const UserProfile = ({ user }: { user: string }) => {
 		return <UserSuspense />;
 	}
 
-
 	if (error) {
 		toast.error(error.message);
 		return null;
@@ -32,17 +31,15 @@ export const UserProfile = ({ user }: { user: string }) => {
 	if (!cover) {
 		return <div className="w-full h-48 bg-muted" />;
 	}
-
 	return (
 		<div className="flex flex-col items-center justify-center w-[100%] sm:w-[70%] mx-auto">
 			<UserCover profile={profile} />
-
 			<div className="flex flex-row w-full">
 				<div className="grow w-[70%]">
 					<UserContent profile={profile} />
 				</div>
-				<div className="flex flex-row w-[30%]">
-					<div className="grow-0 h-fit sticky top-0 mx-4 sm:mx-0">
+				<div className="w-[30%]">
+					<div className="sticky top-24 right-0 h-fit">
 						<UserAvatar
 							className="rounded-full ring-4 ring-background w-[100%] sm:w-[60%] h-auto aspect-square -translate-y-1/2"
 							profile={profile}

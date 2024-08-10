@@ -1,3 +1,4 @@
+import { Header } from "@/components/Header";
 import { ThemeProvider } from "@/components/ThemeContext";
 import { Toaster } from "@/components/ui/sonner";
 import { Web3Providers } from "@/components/Web3Providers";
@@ -16,6 +17,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 				<Web3Providers>
 					<ThemeProvider>
 						<Toaster position="top-center" offset={16} />
+						<Header />
 						{children}
 					</ThemeProvider>
 				</Web3Providers>

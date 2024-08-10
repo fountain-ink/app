@@ -24,7 +24,7 @@ export const UserMenu = () => {
 			return <ProfileSelect onSuccess={() => {}} />;
 		case SessionType.WithProfile:
 			return (
-				<Link href={"/profile"}>
+				<Link href={`/u/${data.profile?.handle?.localName}`}>
 					<SessionAvatar />
 				</Link>
 			);
