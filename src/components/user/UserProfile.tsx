@@ -19,6 +19,7 @@ export const UserProfile = ({ user }: { user: string }) => {
 		return <UserSuspense />;
 	}
 
+
 	if (error) {
 		toast.error(error.message);
 		return null;
