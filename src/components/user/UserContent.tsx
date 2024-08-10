@@ -1,6 +1,11 @@
 "use client";
 
-import { Profile, usePublications } from "@lens-protocol/react-web";
+import {
+	Profile,
+	PublicationMetadataMainFocusType,
+	PublicationType,
+	usePublications,
+} from "@lens-protocol/react-web";
 import { toast } from "sonner";
 import { PostView } from "../post/PostView";
 
@@ -16,7 +21,15 @@ export const UserContent = ({
 		data: publications,
 		loading: publicationsLoading,
 		error,
-	} = usePublications({ where: { from: [profile.id] } });
+	} = usePublications({
+		where: {
+			from: [profile.id],
+			metadata: {
+				mainContentFocus: [PublicationMetadataMainFocusType.Article],
+			},
+			publicationTypes: [PublicationType.Post],
+		},
+	});
 
 	if (publicationsLoading || !publications) {
 		return <ContentSuspense />;
@@ -27,9 +40,10 @@ export const UserContent = ({
 		return null;
 	}
 
-	const posts = publications.map((publication) => (
-		<PostView key={publication.id} publication={publication} />
-	));
+	const posts = publications.map((publication) => {
+		if (publication.__typename === "Post")
+			return <PostView key={publication.id} publication={publication} />;
+	});
 
 	return <div className="flex flex-col gap-2">{posts}</div>;
 };
