@@ -1,4 +1,3 @@
-import { UserCover } from "@/components/user/UserCover";
 import { UserProfile } from "../../../../components/user/UserProfile";
 
 export async function generateMetadata({

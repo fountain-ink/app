@@ -4,7 +4,7 @@ import { UserAvatar } from "@/components/user/UserAvatar";
 import { useProfile } from "@lens-protocol/react-web";
 import { toast } from "sonner";
 import { UserBio } from "./UserBio";
-import { UserContent } from "./UserContent";
+import { ContentSuspense, UserContent } from "./UserContent";
 import { UserCover } from "./UserCover";
 import { UserFollowing } from "./UserFollowing";
 import { UserHandle } from "./UserHandle";
@@ -61,11 +61,8 @@ const ProfileSuspense = () => {
 			<div className="flex flex-row w-full">
 				<div className="grow w-[70%] p-4">
 					<div className="space-y-4">
-						{[1, 2, 3].map((i) => (
-							<div key={i} className="flex flex-col space-y-2">
-								<div className="h-4 bg-muted animate-pulse rounded w-3/4" />
-								<div className="h-4 bg-muted animate-pulse rounded w-1/2" />
-							</div>
+						{[1, 2, 3, 4, 5, 6, 7].map((i) => (
+							<ContentSuspense />
 						))}
 					</div>
 				</div>
