@@ -13,7 +13,7 @@ export const UserCover = ({
 		profile?.metadata?.coverPicture?.raw;
 
 	if (!cover) {
-		return <div className="w-full h-48 bg-muted" />;
+		return <div className="w-full h-24 bg-background" />;
 	}
 
 	return (
