@@ -13,7 +13,7 @@ export const UserCover = ({
 		profile?.metadata?.coverPicture?.raw;
 
 	if (!cover) {
-		return null;
+		return <div className="w-full h-64 bg-card/50 rounded-b-xl" />;
 	}
 
 	return (
