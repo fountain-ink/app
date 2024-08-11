@@ -8,7 +8,6 @@ const fontDirs = [
   // Add more font directories here
 ];
 const outputFile = path.join(process.cwd(), "src", "styles", "fonts.css");
-const tailwindConfigFile = path.join(process.cwd(), "tailwind.config.ts");
 
 const weightMap = {
   light: 300,
