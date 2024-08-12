@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FountainLogo } from "./Icons";
+import { Button } from "./ui/button";
 import { UserMenu } from "./user/UserMenu";
 
 export const Header = () => {
@@ -8,7 +9,12 @@ export const Header = () => {
 			<Link href={"/"} className="w-10 h-10 flex items-center justify-center">
 				<FountainLogo />
 			</Link>
-			<UserMenu />
+			<div className="flex gap-2">
+				<Link href={"/write"} className="h-10 flex items-center justify-center">
+					<Button className="rounded-full px-6">Write</Button>
+				</Link>
+				<UserMenu />
+			</div>
 		</div>
 	);
 };
