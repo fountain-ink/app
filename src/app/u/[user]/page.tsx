@@ -1,4 +1,4 @@
-import { UserProfile } from "../../../../components/user/UserProfile";
+import { UserProfile } from "@/components/user/UserProfile";
 
 export async function generateMetadata({
 	params,
