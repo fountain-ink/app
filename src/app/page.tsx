@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function HomePage() {
 	return (
 		<main className="flex flex-col items-center justify-center bg-background text-foreground">
@@ -99,6 +101,17 @@ export default function HomePage() {
 					<p>Embrace the calm.</p>
 					<p>Elevate your creativity.</p>
 					<p>Welcome to Fountain.</p>
+
+					<p className="pl-4">
+						{"- "}
+						<Link
+							className="hover:underline"
+							href="https://share.lens.xyz/u/lens/fountain"
+						>
+							@fountain
+						</Link>{" "}
+						team
+					</p>
 				</div>
 			</div>
 		</main>
