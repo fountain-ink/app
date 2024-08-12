@@ -28,7 +28,7 @@ type ThemeColors = {
 export const themes: Record<ThemeType, ThemeColors> = {
 	light: {
 		"--background": "217 71% 89%",
-		"--foreground": "18 35% 19%",
+		"--foreground": "15 33% 19%",
 		"--card": "218	8%	98%",
 		"--popover": "218	8%	98%",
 		"--primary": "213	18%	20%",
