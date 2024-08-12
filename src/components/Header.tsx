@@ -11,7 +11,7 @@ export const Header = () => {
 			</Link>
 			<div className="flex gap-2">
 				<Link href={"/write"} className="h-10 flex items-center justify-center">
-					<Button className="rounded-full px-6">Write</Button>
+					<Button className="rounded-full px-6 font-bold">Write</Button>
 				</Link>
 				<UserMenu />
 			</div>

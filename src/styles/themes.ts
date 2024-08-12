@@ -31,7 +31,7 @@ export const themes: Record<ThemeType, ThemeColors> = {
 		"--foreground": "18 35% 19%",
 		"--card": "218	8%	98%",
 		"--popover": "218	8%	98%",
-		"--primary": "222.2 47.4% 11.2%",
+		"--primary": "213	18%	20%",
 		"--secondary": "210 40% 96.1%",
 		"--muted": "210 40% 96.1%",
 		"--accent": "210 40% 96.1%",
