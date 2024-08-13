@@ -22,10 +22,10 @@ export const Header = () => {
 			<Link href={"/"} className="w-10 h-10 flex items-center justify-center">
 				<FountainLogo />
 			</Link>
-			<div className="flex gap-2">
+			<div className="flex gap-4">
 				<Sheet>
 					<SheetTrigger asChild>
-						<Button size="sm" variant="ghost">
+						<Button className="h-10 w-10 p-0" variant="ghost">
 							<TypeIcon />
 						</Button>
 					</SheetTrigger>

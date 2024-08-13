@@ -72,16 +72,14 @@ export function ProfileSelect({
 	});
 
 	if (loading) {
-		return <p>Loading...</p>;
+		return null;
 	}
 
 	if (error) {
-		return <p>{error.message}</p>;
+		toast.error(error.message);
+		return null;
 	}
 
-	if (profiles.length === 0) {
-		return <p>No profiles managed by this wallet.</p>;
-	}
 
 	return (
 		<Dialog defaultOpen>
@@ -89,6 +87,8 @@ export function ProfileSelect({
 				<DialogHeader>
 					<DialogTitle>Select profile</DialogTitle>
 				</DialogHeader>
+				{/* // TODO onboarding */}
+				{profiles.length === 0 &&  <p>No profiles managed by this wallet.</p> }
 				{profiles.map((profile) => (
 					<ProfileLoginButton
 						key={profile.id}
