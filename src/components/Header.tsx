@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FountainLogo } from "./Icons";
-import { ThemeEditor } from "./ThemeEditor";
+import { ThemeSidebar } from "./ThemeEditor";
 import { Button } from "./ui/button";
 import { UserMenu } from "./user/UserMenu";
 
@@ -11,7 +11,7 @@ export const Header = () => {
 				<FountainLogo />
 			</Link>
 			<div className="flex gap-4">
-				<ThemeEditor />
+				<ThemeSidebar />
 				<Link href={"/write"} className="h-10 flex items-center justify-center">
 					<Button className="rounded-full px-6 font-bold">Write</Button>
 				</Link>
