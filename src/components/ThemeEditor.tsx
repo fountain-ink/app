@@ -31,8 +31,15 @@ export const ThemeSidebar = () => {
 					<TypeIcon />
 				</Button>
 			</SheetTrigger>
+
 			<SheetContent>
-				<Tabs defaultValue="account" >
+				<SheetHeader>
+					<SheetTitle>Theme Editor</SheetTitle>
+					<SheetDescription>
+						Choose a preset or make your own theme.
+					</SheetDescription>
+				</SheetHeader>
+				<Tabs className="mt-4" defaultValue="account">
 					<TabsList className="grid w-full grid-cols-2">
 						<TabsTrigger value="presets">Presets</TabsTrigger>
 						<TabsTrigger value="custom">Custom</TabsTrigger>
@@ -41,31 +48,7 @@ export const ThemeSidebar = () => {
 						<ThemeButtons />
 					</TabsContent>
 					<TabsContent value="custom">
-						<SheetHeader>
-							<SheetTitle>Edit theme</SheetTitle>
-							<SheetDescription>
-								Make changes to your theme. Click save when you're done.
-							</SheetDescription>
-						</SheetHeader>
-						<div className="grid gap-4 py-4">
-							<div className="grid grid-cols-4 items-center gap-4">
-								<Label htmlFor="color" className="text-right">
-									Leading Color
-								</Label>
-								<Input id="color" value="#e2f3ab" className="col-span-3" />
-							</div>
-							<div className="grid grid-cols-4 items-center gap-4">
-								<Label htmlFor="background" className="text-right">
-									Background Color
-								</Label>
-								<Input id="background" value="#bbccaa" className="col-span-3" />
-							</div>
-						</div>
-						<SheetFooter>
-							<SheetClose asChild>
-								<Button type="submit">Save changes</Button>
-							</SheetClose>
-						</SheetFooter>
+						<ThemeEditor />
 					</TabsContent>
 				</Tabs>
 			</SheetContent>
@@ -73,4 +56,29 @@ export const ThemeSidebar = () => {
 	);
 };
 
-export const ThemeEditor = () => {};
+export const ThemeEditor = () => {
+	return (
+		<>
+			<div className="grid gap-4 py-4">
+				<div className="grid grid-cols-4 items-center gap-4">
+					<Label htmlFor="color" className="text-right">
+						Leading Color
+					</Label>
+					<Input id="color" value="#e2f3ab" className="col-span-3" />
+				</div>
+				<div className="grid grid-cols-4 items-center gap-4">
+					<Label htmlFor="background" className="text-right">
+						Background Color
+					</Label>
+					<Input id="background" value="#bbccaa" className="col-span-3" />
+				</div>
+			</div>
+
+			<SheetFooter>
+				<SheetClose asChild>
+					<Button type="submit">Save changes</Button>
+				</SheetClose>
+			</SheetFooter>
+		</>
+	);
+};
