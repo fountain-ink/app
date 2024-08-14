@@ -4,5 +4,5 @@ export const EditorDate = () => {
 	const formattedTime = today.toLocaleTimeString();
 	const formattedDateTime = `${formattedDate}`;
 
-	return <div className="font-mono text-sm">{formattedDateTime}</div>;
+	return <div className="font-mono text-sm py-2 pt-4">{formattedDateTime}</div>;
 };
