@@ -9,7 +9,7 @@ export default function HomePage() {
 					className={
 						"prose prose-sm sm:prose-base prose-img:rounded-xl prose-h1:text-foreground prose-h2:text-foreground prose-h1:font-martina \
 							prose-h1:my-8 prose-h1:text-6xl lg:prose-lg focus:outline-none rounded-lg \
-							prose-p:text-2xl prose-h2:font-martina prose-p:font-martina"
+							prose-p:text-xl prose-h2:font-martina prose-p:font-martina"
 					}
 				>
 					<div className="w-full h-auto">
