@@ -1,3 +1,4 @@
+import { GraphicHand, GraphicInk } from "@/components/Icons";
 import Link from "next/link";
 
 export default function HomePage() {
@@ -11,6 +12,9 @@ export default function HomePage() {
 							prose-p:text-2xl prose-h2:font-martina prose-p:font-martina"
 					}
 				>
+					<div className="w-full h-auto">
+						<GraphicHand />
+					</div>
 					<h1>Welcome To Fountain</h1>
 					<p>
 						In a world dominated by fast-paced social media and endless
@@ -112,6 +116,9 @@ export default function HomePage() {
 						</Link>{" "}
 						team
 					</p>
+					<div className="w-full h-auto">
+						<GraphicInk />
+					</div>
 				</div>
 			</div>
 		</main>
