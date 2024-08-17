@@ -62,7 +62,7 @@ const ProfileSuspense = () => {
 				<div className="grow w-[70%] p-4">
 					<div className="space-y-4">
 						{[1, 2, 3, 4, 5, 6, 7].map((i) => (
-							<ContentSuspense />
+							<ContentSuspense key={i} />
 						))}
 					</div>
 				</div>
