@@ -65,11 +65,7 @@ export default function HomePage() {
 					</p>
 					<h2>Join Us</h2>
 					<p>
-						Step into the calm. Fountain welcomes you. This is where creativity
-						blossoms and where every moment is savoured.
-					</p>
-					<p>
-						Join Fountain and be part of a community that values quality over
+						Join Waitlist and be part of a community that values quality over
 						quantity, depth over breadth, and authenticity over superficiality.
 					</p>
 					<p className="p-8">Embrace the calm,</p>

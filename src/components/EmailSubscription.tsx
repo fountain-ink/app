@@ -8,7 +8,7 @@ import { Input } from "./ui/input";
 export const EmailSubscription = () => {
 	const [success, setSuccess] = useState<boolean | undefined>(undefined);
 
-  // biome-ignore lint/suspicious/noExplicitAny: 
+	// biome-ignore lint/suspicious/noExplicitAny:
 	const handleSubmit = (event: any) => {
 		event.preventDefault();
 
@@ -36,7 +36,7 @@ export const EmailSubscription = () => {
 				<form onSubmit={handleSubmit}>
 					<div className="flex flex-row gap-2">
 						<Input
-							className=""
+							className="bg-secondary"
 							type="email"
 							name="email"
 							required
