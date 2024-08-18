@@ -1,3 +1,4 @@
+import { EmailSubscription } from "@/components/EmailSubscription";
 import { GraphicHand, GraphicInk } from "@/components/Icons";
 import Link from "next/link";
 
@@ -106,7 +107,7 @@ export default function HomePage() {
 					<p>Elevate your creativity.</p>
 					<p>Welcome to Fountain.</p>
 
-					<p className="pl-4">
+					{/* <p className="pl-4">
 						{"- "}
 						<Link
 							className="hover:underline"
@@ -115,9 +116,12 @@ export default function HomePage() {
 							@fountain
 						</Link>{" "}
 						team
-					</p>
-					<div className="w-full h-auto">
+					</p> */}
+					<div className="w-full h-auto -mt-20 relative">
 						<GraphicInk />
+						<div className="-mt-28 md:-mt-36 pl-0 md:pl-10 absolute">
+							<EmailSubscription />
+						</div>
 					</div>
 				</div>
 			</div>
