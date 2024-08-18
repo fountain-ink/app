@@ -8,7 +8,8 @@ import { Input } from "./ui/input";
 export const EmailSubscription = () => {
 	const [success, setSuccess] = useState<boolean | undefined>(undefined);
 
-	const handleSubmit = (event) => {
+  // biome-ignore lint/suspicious/noExplicitAny: 
+	const handleSubmit = (event: any) => {
 		event.preventDefault();
 
 		fetch(
