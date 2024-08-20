@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 
 export const Blur = () => {
 	const pathname = usePathname();
-	console.log(pathname);
 
 	if (pathname !== "/" && !pathname.startsWith("/p")) {
 		return null;
