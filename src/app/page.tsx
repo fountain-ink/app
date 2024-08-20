@@ -82,9 +82,9 @@ export default function HomePage() {
 						</Link>{" "}
 						team
 					</p> */}
-					<div className="w-full h-auto -mt-10 relative">
+					<div className="w-full h-auto -mt-10 mb-36 relative">
 						<GraphicInk />
-						<div className="-mt-28 md:-mt-36 pl-0 md:pl-10 absolute">
+						<div className="sm:-mt-28 md:-mt-36 w-full absolute">
 							<EmailSubscription />
 						</div>
 					</div>

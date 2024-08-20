@@ -31,32 +31,20 @@ export const EmailSubscription = () => {
 	};
 
 	return (
-		<div className="flex flex-col gap-4 place-content-center items-center justify-center w-fit">
+		<div className="flex flex-col gap-4 items-center sm:items-start justify-center w-full">
 			{success === undefined ? (
-				<form onSubmit={handleSubmit}>
-					<div className="flex flex-row gap-2">
+				<form onSubmit={handleSubmit} className="w-full sm:w-auto">
+					<div className="flex flex-row w-full gap-2">
 						<Input
-							className="bg-secondary"
+							className="bg-secondary w-full sm:w-auto lg:w-64"
 							type="email"
 							name="email"
 							required
 							placeholder="E-mail"
 						/>
 
-						<Button
-							className="hidden md:flex text-base"
-							name="submit"
-							type="submit"
-						>
+						<Button name="submit" type="submit">
 							Join Waitlist
-						</Button>
-						<Button
-							size="icon"
-							className="flex md:hidden px-2"
-							name="submit"
-							type="submit"
-						>
-							<Mail size={24} />
 						</Button>
 					</div>
 				</form>
