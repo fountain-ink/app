@@ -1,9 +1,12 @@
-.gradient-blur-bot {
-  backdrop-filter: blur(20px);
-  mask: linear-gradient(to bottom, transparent, black 80%);
+.gradient-blur-top {
+  backdrop-filter: blur(30px);
+  mask-image: linear-gradient(to top, transparent 0%, black 80%, black 100%);
+  pointer-events: none;
 }
 
-.gradient-blur-top {
-  backdrop-filter: blur(20px);
-  mask: linear-gradient(to top, transparent, black 80%);
+
+.gradient-blur-bot {
+  backdrop-filter: blur(30px);
+  mask: linear-gradient(to bottom, transparent, black 80%, black 100%);
+  pointer-events: none;
 }
