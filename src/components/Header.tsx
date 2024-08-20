@@ -6,7 +6,7 @@ import { UserMenu } from "./user/UserMenu";
 
 export const Header = () => {
 	return (
-		<div className="fixed w-full p-2 z-[50] flex justify-between items-center">
+		<div className="fixed w-full p-2 z-[300] flex justify-between items-center">
 			<Link href={"/"} className="w-10 h-10 flex items-center justify-center">
 				<FountainLogo />
 			</Link>

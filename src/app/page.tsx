@@ -1,11 +1,10 @@
 import { EmailSubscription } from "@/components/EmailSubscription";
 import { GraphicHand, GraphicInk } from "@/components/Icons";
-import Link from "next/link";
 
 export default function HomePage() {
 	return (
 		<main className="flex flex-col items-center justify-center bg-background text-foreground">
-			<div className="flex flex-col gap-12 px-4 py-16 max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl">
+			<div className="flex flex-col gap-12 px-4 py-16 mb-20 max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl">
 				<div
 					className={
 						"prose prose-sm sm:prose-base prose-img:rounded-xl prose-h1:text-foreground prose-h2:text-foreground prose-h1:font-martina \
