@@ -10,23 +10,21 @@ import {
 	EditorCommandItem,
 	EditorCommandList,
 	EditorContent,
-	EditorInstance,
+	type EditorInstance,
 	EditorRoot,
-	JSONContent,
+	type JSONContent,
 } from "novel";
 import { useState } from "react";
 import * as Y from "yjs";
 import { defaultExtensions } from "./extensions/EditorExtensions";
 import { slashCommand, suggestionItems } from "./extensions/SlashCommand";
 
+import { handleCommandNavigation } from "novel/extensions";
+import { useDebouncedCallback } from "use-debounce";
 import { ColorSelector } from "./selectors/ColorSelector";
 import { LinkSelector } from "./selectors/LinkSelector";
 import { NodeSelector } from "./selectors/NodeSelector";
 import { TextButtons } from "./selectors/TextSelector";
-
-import "@/styles/prosemirror.css";
-import { handleCommandNavigation } from "novel/extensions";
-import { useDebouncedCallback } from "use-debounce";
 
 const token = env.NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN;
 const colors = ["#958DF1", "#F98181", "#FBBC88", "#FAF594"];

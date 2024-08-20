@@ -1,0 +1,8 @@
+.gradient-blur {
+  overflow: hidden;
+  overflow-y: scroll;
+  position: relative;
+  z-index: 10;
+  -webkit-mask-image: linear-gradient(to bottom, black 10%, transparent 80%);
+  mask-image: linear-gradient(to bottom, black 10%, transparent 80%);
+}
