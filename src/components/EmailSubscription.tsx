@@ -48,7 +48,7 @@ export const EmailSubscription = () => {
 							name="submit"
 							type="submit"
 						>
-							Subscribe
+							Join Waitlist
 						</Button>
 						<Button
 							size="icon"
@@ -62,10 +62,10 @@ export const EmailSubscription = () => {
 				</form>
 			) : (
 				<div>
-					<Card className="p-4 w-full bg-background flex flex-row items-center justify-center gap-4">
-						Subscribed!
+					<div className="p-4 w-full flex flex-row items-center justify-center gap-4">
+						Joined!
 						<MailCheck size={24} />
-					</Card>
+					</div>
 				</div>
 			)}
 		</div>

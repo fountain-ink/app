@@ -64,8 +64,9 @@ export default function HomePage() {
 					</p>
 					<h2>Join Us</h2>
 					<p>
-						Join Waitlist and be part of a community that values quality over
-						quantity, depth over breadth, and authenticity over superficiality.
+						Join the Fountain waitlist and be part of a community that values
+						quality over quantity, depth over breadth, and authenticity over
+						superficiality.
 					</p>
 					<p className="p-8">Embrace the calm,</p>
 					<p className="text-center p-8">Elevate your creativity,</p>
