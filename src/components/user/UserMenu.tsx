@@ -5,6 +5,7 @@ import { ConnectKitButton } from "connectkit";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
+import { ConnectWalletButton } from "../auth/ConnectWallet";
 import { ProfileSelect } from "../auth/ProfileSelect";
 import { AvatarSuspense, SessionAvatar } from "./UserAvatar";
 
@@ -20,7 +21,7 @@ export const UserMenu = () => {
 	}
 
 	if (!isWalletConnected) {
-		return <ConnectKitButton />;
+		return <ConnectWalletButton />;
 	}
 
 	if (session.type !== SessionType.WithProfile) {

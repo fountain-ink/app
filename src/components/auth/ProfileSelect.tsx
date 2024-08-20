@@ -1,12 +1,19 @@
 import {
-	Profile,
+	type Profile,
 	useLogin,
 	useProfilesManaged,
 } from "@lens-protocol/react-web";
+import { PlusIcon, User2Icon, UserIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "../ui/dialog";
 
 export function ProfileLoginButton({
 	profile,
@@ -19,6 +26,7 @@ export function ProfileLoginButton({
 		if (!address) {
 			return;
 		}
+
 		const result = await execute({
 			address,
 			profileId: profile.id,
@@ -34,15 +42,14 @@ export function ProfileLoginButton({
 	const avatar =
 		profile?.metadata?.picture?.__typename === "ImageSet"
 			? profile?.metadata?.picture?.optimized?.uri ||
-			  profile?.metadata?.picture?.raw?.uri
+				profile?.metadata?.picture?.raw?.uri
 			: profile?.metadata?.picture?.image.optimized?.uri ||
-			  profile?.metadata?.picture?.image.raw?.uri;
+				profile?.metadata?.picture?.image.raw?.uri;
 
 	return (
 		<Button
 			variant="ghost"
-			size="lg"
-			className="flex items-center gap-2"
+			className="flex items-center justify-center gap-2"
 			disabled={loading}
 			onClick={login}
 		>
@@ -80,15 +87,19 @@ export function ProfileSelect({
 		return null;
 	}
 
-
 	return (
 		<Dialog defaultOpen>
-			<DialogContent>
+			<DialogTrigger>
+				<Button size="icon" variant="ghost">
+					<User2Icon />
+				</Button>
+			</DialogTrigger>
+			<DialogContent className="max-w-72">
 				<DialogHeader>
 					<DialogTitle>Select profile</DialogTitle>
 				</DialogHeader>
 				{/* // TODO onboarding */}
-				{profiles.length === 0 &&  <p>No profiles managed by this wallet.</p> }
+				{profiles.length === 0 && <p>No profiles found.</p>}
 				{profiles.map((profile) => (
 					<ProfileLoginButton
 						key={profile.id}
@@ -96,6 +107,10 @@ export function ProfileSelect({
 						onSuccess={onSuccess}
 					/>
 				))}
+				<Button variant="ghost" className="flex gap-2" onClick={() => toast.error("Not implemented yet")}>
+					<PlusIcon />
+					New Profile
+				</Button>
 			</DialogContent>
 		</Dialog>
 	);
