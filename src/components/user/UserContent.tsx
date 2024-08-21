@@ -1,7 +1,7 @@
 "use client";
 
 import {
-	Profile,
+	type Profile,
 	PublicationMetadataMainFocusType,
 	PublicationType,
 	usePublications,

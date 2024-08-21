@@ -3,6 +3,7 @@
 import { UserAvatar } from "@/components/user/UserAvatar";
 import { useProfile } from "@lens-protocol/react-web";
 import { toast } from "sonner";
+import { Button } from "../ui/button";
 import { UserBio } from "./UserBio";
 import { ContentSuspense, UserContent } from "./UserContent";
 import { UserCover } from "./UserCover";
@@ -28,7 +29,21 @@ export const UserProfile = ({ user }: { user: string }) => {
 		<div className="flex flex-col items-center justify-center w-[100%] sm:w-[70%] mx-auto">
 			<UserCover profile={profile} />
 			<div className="flex flex-row w-full">
-				<div className="grow w-[70%]">
+				<div className="grow w-[70%] flex-col gap-8">
+					<h1 className="text-4xl font-bold p-4">
+						{profile?.handle?.localName}'s blog
+					</h1>
+					<div className="flex flex-row gap-4">
+						<Button variant="ghost" className="text-lg">
+							Published
+						</Button>
+						<Button variant="ghost" className="text-lg">
+							Drafts
+						</Button>
+						<Button variant="ghost" className="text-lg">
+							All
+						</Button>
+					</div>
 					<UserContent profile={profile} />
 				</div>
 				<div className="w-[30%] p-4">
