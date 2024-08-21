@@ -1,6 +1,6 @@
 "use client";
 
-import { Profile, SessionType, useSession } from "@lens-protocol/react-web";
+import { type Profile, SessionType, useSession } from "@lens-protocol/react-web";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 

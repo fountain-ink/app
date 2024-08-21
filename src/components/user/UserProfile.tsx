@@ -1,7 +1,7 @@
 "use client";
 
 import { UserAvatar } from "@/components/user/UserAvatar";
-import { useProfile } from "@lens-protocol/react-web";
+import { SessionType, useProfile, useSession } from "@lens-protocol/react-web";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { UserBio } from "./UserBio";
@@ -15,8 +15,13 @@ import { UserSocials } from "./UserSocials";
 export const UserProfile = ({ user }: { user: string }) => {
 	const handle = `lens/${user}`;
 	const { data: profile, loading, error } = useProfile({ forHandle: handle });
+	const {
+		data: session,
+		loading: sessionLoading,
+		error: sessionError,
+	} = useSession();
 
-	if (loading) {
+	if (loading || sessionLoading) {
 		return <ProfileSuspense />;
 	}
 
@@ -24,6 +29,10 @@ export const UserProfile = ({ user }: { user: string }) => {
 		toast.error(error.message);
 		return null;
 	}
+
+	const isUserProfile =
+		session?.type === SessionType.WithProfile &&
+		session.profile.handle?.id === profile.id;
 
 	return (
 		<div className="flex flex-col items-center justify-center w-[100%] sm:w-[70%] mx-auto">
@@ -37,9 +46,12 @@ export const UserProfile = ({ user }: { user: string }) => {
 						<Button variant="ghost" className="text-lg">
 							Published
 						</Button>
-						<Button variant="ghost" className="text-lg">
-							Drafts
-						</Button>
+						{isUserProfile && (
+							<Button variant="ghost" className="text-lg">
+								Drafts
+							</Button>
+						)}
+
 						<Button variant="ghost" className="text-lg">
 							All
 						</Button>
