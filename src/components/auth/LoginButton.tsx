@@ -35,39 +35,7 @@ export function LoginButton({
 			return toast.error(result.error.message);
 		}
 
-		if (result.isSuccess()) {
-			try {
-				const refreshToken = await client.authentication.getRefreshToken();
-				if (refreshToken.isFailure()) {
-					return toast.error(refreshToken.error.message);
-				}
-				const { jwt } = await serverLogin(refreshToken.value);
-
-				if (!jwt) {
-					return toast.error("Failed to login!");
-				}
-
-				const supabase: SupabaseClient = createClient(
-					env.NEXT_PUBLIC_SUPABASE_URL,
-					env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-					{
-						global: {
-							headers: {
-								Authorization: `Bearer ${jwt}`,
-							},
-						},
-					},
-				);
-
-
-			} catch (error) {
-				if (error instanceof Error) {
-					return toast.error(error?.message);
-				}
-			}
-
-			return onSuccess(profile);
-		}
+		return onSuccess(profile);
 	};
 
 	return (
