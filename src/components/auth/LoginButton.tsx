@@ -1,12 +1,14 @@
 "use client";
 
 import { env } from "@/env";
+import { LensClient, development, production } from "@lens-protocol/client";
 import { type Profile, useLogin } from "@lens-protocol/react-web";
 import { type SupabaseClient, createClient } from "@supabase/supabase-js";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { Button } from "../ui/button";
 import { UserAvatar } from "../user/UserAvatar";
+import { serverLogin } from "./ServerLogin";
 
 const supabase: SupabaseClient = createClient(
 	env.NEXT_PUBLIC_SUPABASE_URL,
@@ -23,17 +25,30 @@ export function LoginButton({
 		return null;
 	}
 
+	const client = new LensClient({
+		environment: production,
+		storage: window?.localStorage,
+	});
+
 	const login = async () => {
 		const result = await lensLogin({
 			address,
 			profileId: profile.id,
 		});
 
-		if (result.isSuccess()) {
-			return onSuccess(profile);
+		if (result.isFailure()) {
+			return toast.error(result.error.message);
 		}
 
-		toast.error(result.error.message);
+		if (result.isSuccess()) {
+			const refreshToken = await client.authentication.getRefreshToken();
+			if (refreshToken.isFailure()) {
+				return toast.error(refreshToken.error.message);
+			}
+			serverLogin(refreshToken.value);
+
+			return onSuccess(profile);
+		}
 	};
 
 	return (

@@ -16,6 +16,7 @@
     "@hookform/resolvers": "^3.6.0",
     "@irys/arweave": "^0.0.3",
     "@irys/query": "^0.0.8",
+    "@lens-protocol/client": "^2.3.1",
     "@lens-protocol/react-web": "^2.3.1",
     "@lens-protocol/wagmi": "^4.1.4",
     "@radix-ui/react-accordion": "^1.2.0",

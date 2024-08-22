@@ -1,4 +1,4 @@
-import { Post } from "@lens-protocol/react-web";
+import type { Post } from "@lens-protocol/react-web";
 import { ArrowLeftRightIcon, HeartIcon, MessageSquareIcon } from "lucide-react";
 
 export const PostReactions = ({ post }: { post: Post }) => {

@@ -1,8 +1,8 @@
 "use client";
 
 import { env } from "@/env";
-import { LensProvider } from "@lens-protocol/react-web";
-import { LensConfig, production } from "@lens-protocol/react-web";
+import { LensProvider, development } from "@lens-protocol/react-web";
+import { type LensConfig, production } from "@lens-protocol/react-web";
 import { bindings } from "@lens-protocol/wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
@@ -27,6 +27,7 @@ const config = createConfig(
 const lensConfig: LensConfig = {
 	environment: production,
 	bindings: bindings(config),
+	storage: window?.localStorage,
 };
 
 const queryClient = new QueryClient();
