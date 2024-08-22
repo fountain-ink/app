@@ -1,7 +1,7 @@
 "use client";
 
 import { env } from "@/env";
-import { LensClient, development, production } from "@lens-protocol/client";
+import { LensClient, production } from "@lens-protocol/client";
 import { type Profile, useLogin } from "@lens-protocol/react-web";
 import { type SupabaseClient, createClient } from "@supabase/supabase-js";
 import { toast } from "sonner";
@@ -9,11 +9,6 @@ import { useAccount } from "wagmi";
 import { Button } from "../ui/button";
 import { UserAvatar } from "../user/UserAvatar";
 import { serverLogin } from "./ServerLogin";
-
-const supabase: SupabaseClient = createClient(
-	env.NEXT_PUBLIC_SUPABASE_URL,
-	env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-);
 
 export function LoginButton({
 	profile,
@@ -41,11 +36,35 @@ export function LoginButton({
 		}
 
 		if (result.isSuccess()) {
-			const refreshToken = await client.authentication.getRefreshToken();
-			if (refreshToken.isFailure()) {
-				return toast.error(refreshToken.error.message);
+			try {
+				const refreshToken = await client.authentication.getRefreshToken();
+				if (refreshToken.isFailure()) {
+					return toast.error(refreshToken.error.message);
+				}
+				const { jwt } = await serverLogin(refreshToken.value);
+
+				if (!jwt) {
+					return toast.error("Failed to login!");
+				}
+
+				const supabase: SupabaseClient = createClient(
+					env.NEXT_PUBLIC_SUPABASE_URL,
+					env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+					{
+						global: {
+							headers: {
+								Authorization: `Bearer ${jwt}`,
+							},
+						},
+					},
+				);
+
+
+			} catch (error) {
+				if (error instanceof Error) {
+					return toast.error(error?.message);
+				}
 			}
-			serverLogin(refreshToken.value);
 
 			return onSuccess(profile);
 		}

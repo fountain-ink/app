@@ -4,6 +4,8 @@ import { SmoothScroll } from "@/components/SmoothScroll";
 import { ThemeProvider } from "@/components/ThemeContext";
 import { Web3Providers } from "@/components/Web3Providers";
 import { Toaster } from "@/components/ui/sonner";
+import { CookiesProvider } from "next-client-cookies/server";
+
 import "@/styles/globals.css";
 
 export const metadata = {
@@ -16,16 +18,18 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 	return (
 		<html lang="en">
 			<body>
-				<Web3Providers>
-					<ThemeProvider>
-						<SmoothScroll>
-							<Toaster position="top-center" offset={16} />
-							<Header />
-							<Blur />
-							{children}
-						</SmoothScroll>
-					</ThemeProvider>
-				</Web3Providers>
+				<CookiesProvider>
+					<Web3Providers>
+						<ThemeProvider>
+							<SmoothScroll>
+								<Toaster position="top-center" offset={16} />
+								<Header />
+								<Blur />
+								{children}
+							</SmoothScroll>
+						</ThemeProvider>
+					</Web3Providers>
+				</CookiesProvider>
 			</body>
 		</html>
 	);

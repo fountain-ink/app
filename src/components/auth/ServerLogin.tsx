@@ -34,7 +34,7 @@ export async function serverLogin(refreshToken: string) {
 	const address = lensJwtData.evmAddress;
 
 	const supabaseJwt = jwt.sign(
-		{ profileId, address, role: "user" },
+		{ profileId, address, role: "authenticated" },
 		env.SUPABASE_JWT_SECRET,
 	);
 
@@ -46,4 +46,8 @@ export async function serverLogin(refreshToken: string) {
 		httpOnly: true,
 		sameSite: "lax",
 	});
+
+	return {
+		jwt: supabaseJwt,
+	};
 }
