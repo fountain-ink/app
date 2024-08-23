@@ -1,6 +1,6 @@
 import { getDatabase } from "@/lib/getDatabase";
 import { getLensClient } from "@/lib/getLensClient";
-import { NextResponse, type NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
 	const refreshToken = req.headers.get("Authorization");
@@ -19,7 +19,24 @@ export async function GET(req: NextRequest) {
 
 	const supabase = getDatabase();
 
-	return new NextResponse("success", { status: 200 });
+	const profileId = await lensClinet.authentication.getProfileId();
+	const {
+		count,
+		data: drafts,
+		status,
+		statusText,
+		error,
+	} = await supabase.from("drafts").select().eq("author_id", profileId);
+
+	if (error) {
+		return new NextResponse(error.message, { status: 500 });
+	}
+
+	if (status !== 200) {
+		return new NextResponse(statusText, { status: 500 });
+	}
+
+	return NextResponse.json({ drafts }, { status: 200 });
 }
 
 export async function POST(req: NextRequest) {}
