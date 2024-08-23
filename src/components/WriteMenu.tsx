@@ -1,10 +1,12 @@
 "use client";
 
-import { SessionType, useSession } from "@lens-protocol/react-web";
+import {
+	SessionType,
+	useRefreshToken,
+	useSession,
+} from "@lens-protocol/react-web";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
-import { toast } from "sonner";
-import { LoginButton } from "./auth/LoginButton";
 import { Button } from "./ui/button";
 import {
 	Dialog,
@@ -16,6 +18,16 @@ import {
 
 export const WriteMenu = () => {
 	const { data: session, loading, error } = useSession();
+	const refreshToken = useRefreshToken();
+
+	// const drafts = await fetch("/api/draft", {
+	// 	method: "GET",
+	// 	headers: {
+	// 		Authorization: `Bearer ${refreshToken}`,
+	// 		"Content-Type": "application/json",
+	// 	},
+	// });
+
 
 	if (loading || error) {
 		return null;
@@ -35,12 +47,12 @@ export const WriteMenu = () => {
 					<DialogTitle>Write an Article</DialogTitle>
 				</DialogHeader>
 
-				<Link href={"/write"}>
-					<Button variant="ghost" className="flex gap-2 text-md">
+				<Button variant="ghost" className="flex gap-2 text-md">
+					<Link href={"/write"}>
 						<PlusIcon />
 						New Article
-					</Button>
-				</Link>
+					</Link>
+				</Button>
 			</DialogContent>
 		</Dialog>
 	);

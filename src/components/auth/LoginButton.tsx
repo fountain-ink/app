@@ -1,14 +1,12 @@
 "use client";
 
-import { env } from "@/env";
+import { window } from "@/lib/globals";
 import { LensClient, production } from "@lens-protocol/client";
 import { type Profile, useLogin } from "@lens-protocol/react-web";
-import { type SupabaseClient, createClient } from "@supabase/supabase-js";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { Button } from "../ui/button";
 import { UserAvatar } from "../user/UserAvatar";
-import { serverLogin } from "./ServerLogin";
 
 export function LoginButton({
 	profile,

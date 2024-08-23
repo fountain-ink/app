@@ -36,7 +36,7 @@ export function ProfileSelect({
 
 	return (
 		<Dialog defaultOpen>
-			<DialogTrigger>
+			<DialogTrigger asChild>
 				<Button size="icon" variant="ghost">
 					<User2Icon />
 				</Button>
