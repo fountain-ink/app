@@ -39,9 +39,69 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-	// Implement POST logic here
+	try {
+		const refreshToken = req.headers.get("Authorization");
+		const { profileId, db } = await getAuthorizedClients(refreshToken);
+
+		const body = await req.json();
+		const { content, title } = body;
+
+		if (!content || !title) {
+			return NextResponse.json(
+				{ error: "Missing content or title" },
+				{ status: 400 },
+			);
+		}
+
+		const { data, error } = await db
+			.from("drafts")
+			.insert({ author_id: profileId, content, title })
+			.select()
+			.single();
+
+		if (error) {
+			throw new Error(error.message);
+		}
+
+		return NextResponse.json({ draft: data }, { status: 201 });
+	} catch (error) {
+		if (error instanceof Error) {
+			return NextResponse.json({ error: error.message }, { status: 500 });
+		}
+	}
 }
 
 export async function DELETE(req: NextRequest) {
-	// Implement DELETE logic here
+  try {
+    const refreshToken = req.headers.get("Authorization");
+    const { profileId, db } = await getAuthorizedClients(refreshToken);
+
+    const url = new URL(req.url);
+    const draftId = url.searchParams.get("id");
+
+    if (!draftId) {
+      return NextResponse.json({ error: "Missing draft ID" }, { status: 400 });
+    }
+
+    const { data, error } = await db
+      .from("drafts")
+      .delete()
+      .match({ id: draftId, author_id: profileId })
+      .select()
+      .single();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    if (!data) {
+      return NextResponse.json({ error: "Draft not found or not authorized" }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Draft deleted successfully" }, { status: 200 });
+  } catch (error) {
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+  }
 }
