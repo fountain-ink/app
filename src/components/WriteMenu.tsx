@@ -1,19 +1,18 @@
 'use client'
 
-import { SessionType, useRefreshToken, useSession } from "@lens-protocol/react-web"
-import { PlusIcon, FileEditIcon } from "lucide-react"
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog"
-import { Suspense, useState } from "react"
-import { useQuery } from "@tanstack/react-query"
 import { Skeleton } from "@/components/ui/skeleton"
+import { SessionType, useSession } from "@lens-protocol/react-web"
+import { PlusIcon } from "lucide-react"
+import Link from "next/link"
+import { Suspense, useState } from "react"
 import { DraftsList } from "./DraftsList"
 
 
