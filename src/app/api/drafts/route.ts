@@ -2,43 +2,46 @@ import { getDatabase } from "@/lib/getDatabase";
 import { getLensClient } from "@/lib/getLensClient";
 import { type NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
-	const refreshToken = req.headers.get("Authorization");
-
+async function getAuthorizedClients(refreshToken: string | null) {
 	if (!refreshToken) {
-		return new NextResponse("Unauthorized", { status: 401 });
+		throw new Error("Unauthorized");
 	}
 
-	const lensClinet = await getLensClient(refreshToken);
+	const lens = await getLensClient(refreshToken);
+	const isAuthenticated = await lens.authentication.isAuthenticated();
+	const profileId = await lens.authentication.getProfileId();
 
-	const isAuthenticated = await lensClinet.authentication.isAuthenticated();
-
-	if (!isAuthenticated) {
-		return new NextResponse("Unauthorized", { status: 401 });
+	if (!isAuthenticated || !profileId) {
+		throw new Error("Unauthenticated");
 	}
 
-	const supabase = getDatabase();
+	const db = getDatabase();
 
-	const profileId = await lensClinet.authentication.getProfileId();
-	const {
-		count,
-		data: drafts,
-		status,
-		statusText,
-		error,
-	} = await supabase.from("drafts").select().eq("author_id", profileId);
-
-	if (error) {
-		return new NextResponse(error.message, { status: 500 });
-	}
-
-	if (status !== 200) {
-		return new NextResponse(statusText, { status: 500 });
-	}
-
-	return NextResponse.json({ drafts }, { status: 200 });
+	return { lens, profileId, db };
 }
 
-export async function POST(req: NextRequest) {}
+export async function GET(req: NextRequest) {
+	try {
+		const refreshToken = req.headers.get("Authorization");
+		const { profileId, lens, db } = await getAuthorizedClients(refreshToken);
 
-export async function DELETE(req: NextRequest) {}
+		const { data: drafts, error } = await db
+			.from("drafts")
+			.select()
+			.eq("author_id", profileId);
+
+		return NextResponse.json({ drafts }, { status: 200 });
+	} catch (error) {
+		if (error instanceof Error) {
+			return NextResponse.json({ error: error.message }, { status: 500 });
+		}
+	}
+}
+
+export async function POST(req: NextRequest) {
+	// Implement POST logic here
+}
+
+export async function DELETE(req: NextRequest) {
+	// Implement DELETE logic here
+}

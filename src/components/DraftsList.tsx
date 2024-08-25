@@ -45,7 +45,6 @@ export const DraftsList = () => {
 	if (isLoading) return <Skeleton className="w-full h-24" />;
 	if (error) return <div>Error loading drafts: {error.message}</div>;
 	if (!drafts || drafts.length === 0) return <div>No drafts available</div>;
-	console.log(drafts);
 
 	return (
 		<div className="space-y-2">

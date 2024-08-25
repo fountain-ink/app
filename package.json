@@ -14,6 +14,7 @@
     "@biomejs/biome": "^1.8.1",
     "@hocuspocus/provider": "^2.13.2",
     "@hookform/resolvers": "^3.6.0",
+    "@instantdb/react": "^0.12.8",
     "@irys/arweave": "^0.0.3",
     "@irys/query": "^0.0.8",
     "@lens-protocol/client": "^2.3.1",
