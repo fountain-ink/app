@@ -69,7 +69,6 @@ export const Editor = ({
 	const [openColor, setOpenColor] = useState(false);
 	const [openAI, setOpenAI] = useState(false);
 	const [content, setContent] = useState<JSONContent | undefined>();
-	console.log(initialContent);
 
 	const debouncedUpdates = useDebouncedCallback(
 		async (editor: EditorInstance) => {
