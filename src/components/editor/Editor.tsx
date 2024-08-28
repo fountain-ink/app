@@ -26,6 +26,7 @@ import { ColorSelector } from "./selectors/ColorSelector";
 import { LinkSelector } from "./selectors/LinkSelector";
 import { NodeSelector } from "./selectors/NodeSelector";
 import { TextButtons } from "./selectors/TextSelector";
+import { LoadingSpinner } from "../LoadingSpinner";
 
 const token = env.NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN;
 const colors = ["#958DF1", "#F98181", "#FBBC88", "#FAF594"];
@@ -88,6 +89,7 @@ export const Editor = ({
 			setProvider(newProvider);
 
 			return () => {
+        newYDoc.destroy();
 				newProvider.destroy();
 			};
 		}
@@ -119,7 +121,7 @@ export const Editor = ({
 	);
 
 	if (!yDoc || !provider) {
-		return null; // or a loading indicator
+		return <LoadingSpinner />
 	}
 
 	return (
