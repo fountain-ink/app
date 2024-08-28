@@ -42,7 +42,6 @@ export function LoginButton({
 		}
 
 		const refreshToken = JSON.parse(credentials)?.data?.refreshToken;
-		console.log(refreshToken)
 
 		if (refreshToken) {
 			setCookie("refreshToken", refreshToken, {

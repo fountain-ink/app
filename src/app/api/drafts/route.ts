@@ -22,8 +22,6 @@ async function getAuthorizedClients(refreshToken: string | null | undefined) {
 }
 
 export async function GET(req: NextRequest) {
-  console.log(req)
-
 	try {
 		const refreshToken = cookies().get("refreshToken")?.value;
 
@@ -75,7 +73,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
 	try {
-		const refreshToken = req.cookies.get("refreshToken")?.value;
+		const refreshToken = cookies().get("refreshToken")?.value;
 		const { profileId, db } = await getAuthorizedClients(refreshToken);
 
 		const body = await req.json();
@@ -105,7 +103,7 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
 	try {
-		const refreshToken = req.headers.get("Authorization");
+		const refreshToken = cookies().get("refreshToken")?.value;
 		const { profileId, db } = await getAuthorizedClients(refreshToken);
 
 		const url = new URL(req.url);
@@ -159,7 +157,7 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
 	try {
-		const refreshToken = req.headers.get("Authorization");
+		const refreshToken = cookies().get("refreshToken")?.value;
 		const { profileId, db } = await getAuthorizedClients(refreshToken);
 
 		const url = new URL(req.url);

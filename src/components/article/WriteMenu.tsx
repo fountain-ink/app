@@ -52,6 +52,8 @@ export const WriteMenu = () => {
 			return;
 		}
 
+		setIsOpen(false);
+
 		router.push(`/write/${data.draft.id}`);
 	};
 
