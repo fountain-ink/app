@@ -1,8 +1,9 @@
 import { getDatabase } from "@/lib/getDatabase";
 import { getLensClient } from "@/lib/getLensClient";
+import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 
-async function getAuthorizedClients(refreshToken: string | null) {
+async function getAuthorizedClients(refreshToken: string | null | undefined) {
 	if (!refreshToken) {
 		throw new Error("Unauthorized");
 	}
@@ -21,15 +22,17 @@ async function getAuthorizedClients(refreshToken: string | null) {
 }
 
 export async function GET(req: NextRequest) {
+  console.log(req)
+
 	try {
-		const refreshToken = req.headers.get("Authorization");
+		const refreshToken = cookies().get("refreshToken")?.value;
+
 		const { profileId, db } = await getAuthorizedClients(refreshToken);
 
 		const url = new URL(req.url);
 		const draftId = url.searchParams.get("id");
 
 		if (draftId) {
-			// Fetch a single draft
 			const { data: draft, error } = await db
 				.from("drafts")
 				.select()
@@ -64,6 +67,7 @@ export async function GET(req: NextRequest) {
 		return NextResponse.json({ drafts }, { status: 200 });
 	} catch (error) {
 		if (error instanceof Error) {
+			console.error(error.message);
 			return NextResponse.json({ error: error.message }, { status: 500 });
 		}
 	}
@@ -71,22 +75,19 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
 	try {
-		const refreshToken = req.headers.get("Authorization");
+		const refreshToken = req.cookies.get("refreshToken")?.value;
 		const { profileId, db } = await getAuthorizedClients(refreshToken);
 
 		const body = await req.json();
-		const { content, title } = body;
+		const { title } = body;
 
-		if (!content || !title) {
-			return NextResponse.json(
-				{ error: "Missing content or title" },
-				{ status: 400 },
-			);
+		if (!title) {
+			return NextResponse.json({ error: "Missing title" }, { status: 400 });
 		}
 
 		const { data, error } = await db
 			.from("drafts")
-			.insert({ author_id: profileId, content, title })
+			.insert({ author_id: profileId, title })
 			.select()
 			.single();
 

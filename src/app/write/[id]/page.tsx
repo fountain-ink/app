@@ -7,19 +7,16 @@ import { cookies } from "next/headers";
 
 async function getDraft(id: string) {
 	const url = getBaseUrl();
-	const cookieStore = cookies();
-	const refreshToken = cookieStore.get("refreshToken")?.value;
-
-	if (!refreshToken) {
-		throw new Error("Refresh token not found");
-	}
+	const refreshToken = cookies().get("refreshToken")?.value;
 
 	const response = await fetch(`${url}/api/drafts?id=${id}`, {
 		method: "GET",
 		headers: {
-			Authorization: refreshToken,
+			Cookie: `refreshToken=${refreshToken}`,
 		},
 	});
+
+	console.log(response);
 
 	if (!response.ok) {
 		throw new Error("Failed to fetch draft");

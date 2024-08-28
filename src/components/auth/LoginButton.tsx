@@ -42,13 +42,12 @@ export function LoginButton({
 		}
 
 		const refreshToken = JSON.parse(credentials)?.data?.refreshToken;
+		console.log(refreshToken)
 
 		if (refreshToken) {
 			setCookie("refreshToken", refreshToken, {
 				secure: true,
 				sameSite: "lax",
-				expires: new Date(Date.now() + 3600 * 24 * 7), 
-				path: "/",
 			});
 		}
 

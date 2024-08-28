@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useRefreshToken } from "@lens-protocol/react-web";
 import { useQuery } from "@tanstack/react-query";
 import { FileEditIcon, TrashIcon } from "lucide-react";
 import Link from "next/link";
@@ -19,18 +18,10 @@ import {
 	DialogTrigger,
 } from "../ui/dialog";
 
-const fetchDrafts = async ({
-	queryKey,
-}: { queryKey: [string, string | null] }) => {
-	const [_, token] = queryKey;
-	if (!token) {
-		return [];
-	}
-
+const fetchDrafts = async ({ queryKey }: { queryKey: [string] }) => {
 	const response = await fetch("/api/drafts", {
 		method: "GET",
 		headers: {
-			Authorization: `Bearer ${token}`,
 			"Content-Type": "application/json",
 		},
 	})
@@ -43,14 +34,13 @@ const fetchDrafts = async ({
 };
 
 export const DraftsList = ({ onClick }: { onClick?: (id: string) => void }) => {
-	const refreshToken = useRefreshToken();
 	const {
 		data: drafts,
 		isLoading,
 		error,
 		refetch,
 	} = useQuery({
-		queryKey: ["drafts", refreshToken],
+		queryKey: ["drafts"],
 		queryFn: fetchDrafts,
 	});
 
@@ -69,9 +59,6 @@ export const DraftsList = ({ onClick }: { onClick?: (id: string) => void }) => {
 		try {
 			const res = await fetch(`/api/drafts?id=${draftToDelete.id}`, {
 				method: "DELETE",
-				headers: {
-					Authorization: `Bearer ${refreshToken}`,
-				},
 			});
 
 			if (res.ok) {
@@ -95,7 +82,11 @@ export const DraftsList = ({ onClick }: { onClick?: (id: string) => void }) => {
 						href={`/write/${draft.id}`}
 						className="flex gap-2 text-md w-full justify-start"
 					>
-						<Button onClick={() => onClick?.(draft.id)} variant="ghost" className="w-full justify-start">
+						<Button
+							onClick={() => onClick?.(draft.id)}
+							variant="ghost"
+							className="w-full justify-start"
+						>
 							<FileEditIcon className="h-5 w-5" />
 							{draft.title || "Untitled Draft"}
 						</Button>
