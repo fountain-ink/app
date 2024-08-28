@@ -3,6 +3,7 @@
 import { window } from "@/lib/globals";
 import { LensClient, production } from "@lens-protocol/client";
 import { type Profile, useLogin } from "@lens-protocol/react-web";
+import { setCookie } from "cookies-next";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { Button } from "../ui/button";
@@ -14,6 +15,7 @@ export function LoginButton({
 }: { profile: Profile; onSuccess: (profile: Profile) => void }) {
 	const { execute: lensLogin, loading } = useLogin();
 	const { address } = useAccount();
+
 	if (!address) {
 		return null;
 	}
@@ -31,6 +33,23 @@ export function LoginButton({
 
 		if (result.isFailure()) {
 			return toast.error(result.error.message);
+		}
+
+		// set a cookie from the local storage with the refresh token
+		const credentials = localStorage.getItem("lens.production.credentials");
+		if (!credentials) {
+			return toast.error("Failed to get credentials");
+		}
+
+		const refreshToken = JSON.parse(credentials)?.data?.refreshToken;
+
+		if (refreshToken) {
+			setCookie("refreshToken", refreshToken, {
+				secure: true,
+				sameSite: "lax",
+				expires: new Date(Date.now() + 3600 * 24 * 7), 
+				path: "/",
+			});
 		}
 
 		return onSuccess(profile);

@@ -4,8 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FountainLogo } from "./Icons";
 import { ThemeSidebar } from "./ThemeEditor";
-import { WriteMenu } from "./WriteMenu";
 import { UserMenu } from "./user/UserMenu";
+import { WriteMenu } from "./article/WriteMenu";
 
 export const Header = () => {
 	const pathname = usePathname();

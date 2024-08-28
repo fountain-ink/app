@@ -1,4 +1,5 @@
 "use client";
+
 import { env } from "@/env";
 import { TiptapCollabProvider } from "@hocuspocus/provider";
 import Collaboration from "@tiptap/extension-collaboration";
@@ -73,17 +74,21 @@ export const editorExtensionsList = [
 	}),
 ];
 
-export const Editor = ({ children }: { children?: React.ReactNode }) => {
+interface EditorProps {
+	document?: JSONContent;
+	children?: React.ReactNode;
+}
+
+export const Editor = ({ document, children }: EditorProps) => {
 	const [openNode, setOpenNode] = useState(false);
 	const [openLink, setOpenLink] = useState(false);
 	const [openColor, setOpenColor] = useState(false);
 	const [openAI, setOpenAI] = useState(false);
-	const [content, setContent] = useState<JSONContent | undefined>(undefined);
+	const [content, setContent] = useState<JSONContent | undefined>(document);
 
 	const debouncedUpdates = useDebouncedCallback(
 		async (editor: EditorInstance) => {
 			const json = editor.getJSON();
-
 			setContent(json);
 		},
 		500,
@@ -95,7 +100,7 @@ export const Editor = ({ children }: { children?: React.ReactNode }) => {
 				onUpdate={({ editor }) => {
 					debouncedUpdates(editor);
 				}}
-				initialContent={content}
+				initialContent={undefined}
 				editorProps={{
 					handleDOMEvents: {
 						keydown: (_view, event) => handleCommandNavigation(event),

@@ -98,6 +98,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "connectkit": "^1.8.2",
+    "cookies-next": "^4.2.1",
     "date-fns": "^3.6.0",
     "editorjs-html": "^3.4.3",
     "embla-carousel-react": "^8.1.5",
