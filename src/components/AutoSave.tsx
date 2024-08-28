@@ -1,13 +1,11 @@
 "use client";
 
-import { useRefreshToken } from "@lens-protocol/react-web";
 import { useEditor } from "novel";
 import { useCallback, useEffect } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
 export function AutoSave({ documentId }: { documentId: string | undefined }) {
 	const { editor } = useEditor();
-	const refreshToken = useRefreshToken();
 
 	const saveContent = useCallback(
 		async (content_json: object) => {
@@ -16,7 +14,6 @@ export function AutoSave({ documentId }: { documentId: string | undefined }) {
 					method: "PUT",
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: refreshToken || "",
 					},
 					body: JSON.stringify({ content: content_json }),
 				});
@@ -28,7 +25,7 @@ export function AutoSave({ documentId }: { documentId: string | undefined }) {
 				console.error("Error saving draft:", error);
 			}
 		},
-		[documentId, refreshToken],
+		[documentId],
 	);
 
 	const debouncedSave = useDebouncedCallback(saveContent, 5000);

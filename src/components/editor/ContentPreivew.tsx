@@ -1,16 +1,14 @@
-import { editorExtensionsList } from "@/components/editor/Editor";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-	Collapsible,
-	CollapsibleContent,
-	CollapsibleTrigger,
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
-import { generateJSON } from "@tiptap/html";
 import { ChevronDown, X } from "lucide-react";
 import { useEditor } from "novel";
-import React, { useState } from "react";
+import { useState } from "react";
 
 interface ForeignContent {
 	title: string;
@@ -41,8 +39,19 @@ export const ContentPreview = () => {
 				throw new Error("Failed to fetch content");
 			}
 			const data: ForeignContent = await response.json();
-			const json = generateJSON(data.content, [...editorExtensionsList]);
-			editor?.commands.setContent(json);
+			// const json = generateJSON(data.content, [...editorExtensionsList]); FIXME: Bring back editorExtensionList:
+			// const editorExtensionsList = [
+			// 	...defaultExtensions,
+			// 	slashCommand,
+			// 	Collaboration.configure({
+			// 		document: document,
+			// 	}),
+			// 	CollaborationCursor.configure({
+			// 		provider,
+			// 		user: getInitialUser(),
+			// 	}),
+   //    ];
+			// editor?.commands.setContent(json);
 			setUrl(fetchUrl);
 		} catch (err) {
 			setError("Error fetching content. Please try again.");

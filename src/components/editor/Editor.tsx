@@ -53,38 +53,23 @@ const getInitialUser = () => {
 	};
 };
 
-const document = new Y.Doc();
-
-const provider = new TiptapCollabProvider({
-	name: "document6",
-	appId: "v91rwzmo", //`baseURL` for on-premises
-	token,
-	document,
-});
-
-export const editorExtensionsList = [
-	...defaultExtensions,
-	slashCommand,
-	Collaboration.configure({
-		document: document,
-	}),
-	CollaborationCursor.configure({
-		provider,
-		user: getInitialUser(),
-	}),
-];
-
 interface EditorProps {
-	document?: JSONContent;
+	documentId?: string;
+	initialContent?: JSONContent;
 	children?: React.ReactNode;
 }
 
-export const Editor = ({ document, children }: EditorProps) => {
+export const Editor = ({
+	documentId,
+	children,
+	initialContent,
+}: EditorProps) => {
 	const [openNode, setOpenNode] = useState(false);
 	const [openLink, setOpenLink] = useState(false);
 	const [openColor, setOpenColor] = useState(false);
 	const [openAI, setOpenAI] = useState(false);
-	const [content, setContent] = useState<JSONContent | undefined>(document);
+	const [content, setContent] = useState<JSONContent | undefined>();
+	console.log(initialContent);
 
 	const debouncedUpdates = useDebouncedCallback(
 		async (editor: EditorInstance) => {
@@ -94,13 +79,40 @@ export const Editor = ({ document, children }: EditorProps) => {
 		500,
 	);
 
+	// const yDoc = new Y.Doc({ guid: documentId, autoLoad: false });
+
+	// const provider = new TiptapCollabProvider({
+	// 	name: `document-${documentId}`,
+	// 	appId: "v91rwzmo", //`baseURL` for on-premises
+	// 	token,
+	// 	document: yDoc,
+		
+	// });
+
+	const editorExtensionsList = [
+		...defaultExtensions,
+		slashCommand,
+		// Collaboration.configure({
+		// 	document: yDoc,
+		// 	onFirstRender: () => {
+		// 		console.log("onFirstRender");
+				
+		// 	}
+		// }),
+		// CollaborationCursor.configure({
+		// 	provider,
+		// 	user: getInitialUser(),
+		// }),
+	];
+
 	return (
 		<EditorRoot>
 			<EditorContent
+				immediatelyRender={false}
 				onUpdate={({ editor }) => {
 					debouncedUpdates(editor);
 				}}
-				initialContent={undefined}
+				initialContent={initialContent}
 				editorProps={{
 					handleDOMEvents: {
 						keydown: (_view, event) => handleCommandNavigation(event),
