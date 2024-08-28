@@ -17,7 +17,7 @@ async function getDraft(id: string) {
 	});
 
 	if (!response.ok) {
-		throw new Error(`Failed to fetch draft ${refreshToken} ${response}`);
+		throw new Error(`Failed to fetch draft ${response.body} ${response.statusText}`);
 	}
 
 	const { draft } = await response.json();
