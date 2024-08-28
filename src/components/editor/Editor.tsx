@@ -15,7 +15,7 @@ import {
 	EditorRoot,
 	type JSONContent,
 } from "novel";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import * as Y from "yjs";
 import { defaultExtensions } from "./extensions/EditorExtensions";
 import { slashCommand, suggestionItems } from "./extensions/SlashCommand";
@@ -70,6 +70,46 @@ export const Editor = ({
 	const [openAI, setOpenAI] = useState(false);
 	const [content, setContent] = useState<JSONContent | undefined>();
 
+	const [yDoc, setYDoc] = useState<Y.Doc | null>(null);
+	const [provider, setProvider] = useState<TiptapCollabProvider | null>(null);
+
+	// Create a new Y.js document and provider when documentId changes
+	useEffect(() => {
+		if (documentId) {
+			const newYDoc = new Y.Doc();
+			const newProvider = new TiptapCollabProvider({
+				name: `document-${documentId}`,
+				appId: "v91rwzmo",
+				token,
+				document: newYDoc,
+			});
+
+			setYDoc(newYDoc);
+			setProvider(newProvider);
+
+			return () => {
+				newProvider.destroy();
+			};
+		}
+	}, [documentId]);
+
+	const editorExtensionsList = useMemo(() => {
+		if (!yDoc || !provider) {
+			return defaultExtensions;
+		}
+		return [
+			...defaultExtensions,
+			slashCommand,
+			Collaboration.configure({
+				document: yDoc,
+			}),
+			CollaborationCursor.configure({
+				provider: provider,
+				user: getInitialUser(),
+			}),
+		];
+	}, [yDoc, provider]);
+
 	const debouncedUpdates = useDebouncedCallback(
 		async (editor: EditorInstance) => {
 			const json = editor.getJSON();
@@ -78,31 +118,9 @@ export const Editor = ({
 		500,
 	);
 
-	// const yDoc = new Y.Doc({ guid: documentId, autoLoad: false });
-
-	// const provider = new TiptapCollabProvider({
-	// 	name: `document-${documentId}`,
-	// 	appId: "v91rwzmo", //`baseURL` for on-premises
-	// 	token,
-	// 	document: yDoc,
-		
-	// });
-
-	const editorExtensionsList = [
-		...defaultExtensions,
-		slashCommand,
-		// Collaboration.configure({
-		// 	document: yDoc,
-		// 	onFirstRender: () => {
-		// 		console.log("onFirstRender");
-				
-		// 	}
-		// }),
-		// CollaborationCursor.configure({
-		// 	provider,
-		// 	user: getInitialUser(),
-		// }),
-	];
+	if (!yDoc || !provider) {
+		return null; // or a loading indicator
+	}
 
 	return (
 		<EditorRoot>

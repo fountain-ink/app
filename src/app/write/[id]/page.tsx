@@ -39,7 +39,7 @@ export default async function WriteDraft({
 				<div className="w-full min-h-screen py-4 my-10">
 					<EditorDate />
 					<EditorCollaborators />
-					<Editor initialContent={draft.content_json} documentId={draft.content}>
+					<Editor initialContent={draft.content_json} documentId={draft.id}>
 						<AutoSave documentId={params.id} />
 					</Editor>
 				</div>
