@@ -19,7 +19,9 @@ import {
 	DialogTrigger,
 } from "../ui/dialog";
 
-const fetchDrafts = async ({ queryKey, }: { queryKey: [string, string | null] }) => {
+const fetchDrafts = async ({
+	queryKey,
+}: { queryKey: [string, string | null] }) => {
 	const [_, token] = queryKey;
 	if (!token) {
 		return [];
@@ -40,7 +42,7 @@ const fetchDrafts = async ({ queryKey, }: { queryKey: [string, string | null] })
 	return drafts;
 };
 
-export const DraftsList = () => {
+export const DraftsList = ({ onClick }: { onClick?: (id: string) => void }) => {
 	const refreshToken = useRefreshToken();
 	const {
 		data: drafts,
@@ -89,12 +91,15 @@ export const DraftsList = () => {
 		<div className="space-y-2">
 			{drafts.map((draft: { id: string; title: string }) => (
 				<div key={draft.id} className="flex justify-between items-center">
-					<Button variant="ghost" className="w-full justify-start">
-						<Link href={`/write/${draft.id}`} className="flex gap-2 text-md">
+					<Link
+						href={`/write/${draft.id}`}
+						className="flex gap-2 text-md w-full justify-start"
+					>
+						<Button onClick={() => onClick?.(draft.id)} variant="ghost" className="w-full justify-start">
 							<FileEditIcon className="h-5 w-5" />
 							{draft.title || "Untitled Draft"}
-						</Link>
-					</Button>
+						</Button>
+					</Link>
 					<Dialog>
 						<DialogTrigger asChild>
 							<Button

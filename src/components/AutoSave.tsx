@@ -20,7 +20,6 @@ export function AutoSave({ documentId }: { documentId: string | undefined }) {
 					},
 					body: JSON.stringify({ content: content_json }),
 				});
-				console.log(response);
 
 				if (!response.ok) {
 					throw new Error(`${response.status} ${response.statusText}`);
