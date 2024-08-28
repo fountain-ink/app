@@ -2,18 +2,18 @@
 
 import { Button } from "@/components/ui/button";
 import {
-	Dialog,
-	DialogContent,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-	SessionType,
-	useRefreshToken,
-	useSession,
+    SessionType,
+    useRefreshToken,
+    useSession,
 } from "@lens-protocol/react-web";
 import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -54,7 +54,8 @@ export const WriteMenu = () => {
 
 		setIsOpen(false);
 
-		router.push(`/write/${data.draft.id}`);
+		router.refresh()
+		router.replace(`/write/${data.draft.id}`);
 	};
 
 	return (
