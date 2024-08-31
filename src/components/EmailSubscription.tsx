@@ -1,8 +1,7 @@
 "use client";
-import { Mail, MailCheck } from "lucide-react";
+import { MailCheck } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
-import { Card } from "./ui/card";
 import { Input } from "./ui/input";
 
 export const EmailSubscription = () => {
@@ -36,7 +35,7 @@ export const EmailSubscription = () => {
 				<form onSubmit={handleSubmit} className="w-full sm:w-auto">
 					<div className="flex flex-row w-full gap-2">
 						<Input
-							className="bg-secondary w-full sm:w-auto lg:w-64"
+							className="bg-secondary w-full rounded-xl sm:w-auto lg:w-64"
 							type="email"
 							name="email"
 							required

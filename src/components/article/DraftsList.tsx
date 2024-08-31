@@ -63,7 +63,7 @@ export const DraftsList = ({ onClick }: { onClick?: (id: string) => void }) => {
 
 			if (res.ok) {
 				toast.success("Draft deleted successfully");
-				refetch(); // Refetch drafts after successful deletion
+				refetch(); 
 			} else {
 				toast.error("Failed to delete draft");
 			}
@@ -80,7 +80,7 @@ export const DraftsList = ({ onClick }: { onClick?: (id: string) => void }) => {
 				<div key={draft.id} className="flex justify-between items-center">
 					<Link
 						href={`/write/${draft.id}`}
-						className="flex gap-2 text-md w-full justify-start"
+						className="flex gap-4 text-md w-full justify-start"
 					>
 						<Button
 							onClick={() => onClick?.(draft.id)}
