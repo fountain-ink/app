@@ -1,4 +1,4 @@
-import { Profile } from "@lens-protocol/react-web";
+import type { Profile } from "@lens-protocol/react-web";
 
 export const UserCover = ({
 	profile,
@@ -13,15 +13,17 @@ export const UserCover = ({
 		profile?.metadata?.coverPicture?.raw;
 
 	if (!cover) {
-		return <div className="w-full h-72 bg-card/20 rounded-b-xl" />;
+		return <div className="w-full h-64 bg-card/20 rounded-b-xl" />;
 	}
 
 	return (
-		<img
-			className="rounded-b-lg"
-			src={cover.uri}
-			alt={profile?.handle?.localName}
-		/>
+		<div className="w-full h-64 overflow-hidden rounded-b-lg">
+			<img
+				className="w-full h-full object-cover"
+				src={cover.uri}
+				alt={profile?.handle?.localName}
+			/>
+		</div>
 	);
 };
 
