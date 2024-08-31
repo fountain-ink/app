@@ -3,11 +3,17 @@
 import { useLogout } from "@lens-protocol/react-web";
 import { Button } from "../ui/button";
 
-export function LogoutButton() {
+export const logoutProfile = () => {
 	const { execute, loading } = useLogout();
 
+	if (loading) return;
+
+	execute();
+};
+
+export function LogoutButton() {
 	return (
-		<Button variant="default" disabled={loading} onClick={() => execute()}>
+		<Button variant="default" onClick={() => logoutProfile()}>
 			Log out
 		</Button>
 	);

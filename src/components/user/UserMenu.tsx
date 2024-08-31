@@ -1,10 +1,18 @@
 "use client";
 
-import { SessionType, useSession } from "@lens-protocol/react-web";
-import { ConnectKitButton } from "connectkit";
+import { Button } from "@/components/ui/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { clearCookies } from "@/lib/clearCookies";
+import { SessionType, useLogout, useSession } from "@lens-protocol/react-web";
+import { ArrowLeftRightIcon, LogOut, Settings, User } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
-import { useAccount } from "wagmi";
+import { useAccount, useDisconnect } from "wagmi";
 import { ConnectWalletButton } from "../auth/ConnectWallet";
 import { ProfileSelect } from "../auth/ProfileSelect";
 import { AvatarSuspense, SessionAvatar } from "./UserAvatar";
@@ -12,6 +20,8 @@ import { AvatarSuspense, SessionAvatar } from "./UserAvatar";
 export const UserMenu = () => {
 	const { data: session, loading, error } = useSession();
 	const { isConnected: isWalletConnected } = useAccount();
+	const { disconnect } = useDisconnect();
+	const { execute: logout, loading: logoutLoading } = useLogout();
 
 	if (loading) return <AvatarSuspense />;
 
@@ -28,9 +38,51 @@ export const UserMenu = () => {
 		return <ProfileSelect onSuccess={() => {}} />;
 	}
 
+	const handle = session.profile?.handle?.localName;
+
 	return (
-		<Link href={`/u/${session.profile?.handle?.localName}`}>
-			<SessionAvatar />
-		</Link>
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<Button variant="ghost" size="icon" className="rounded-full">
+					<SessionAvatar />
+				</Button>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent align="end" className="w-48 rounded-xl mt-1">
+				<Link href={`/u/${handle}`} passHref>
+					<DropdownMenuItem className="flex justify-end gap-2 items-center text-base">
+						<span>Profile</span>
+						<User className="h-5 w-5" />
+					</DropdownMenuItem>
+				</Link>
+				<DropdownMenuItem
+					onClick={() => {
+						logout();
+						clearCookies();
+					}}
+					disabled={logoutLoading}
+					className="flex justify-end gap-2 items-center text-base"
+				>
+					<span>Switch Profile</span>
+					<ArrowLeftRightIcon className="h-5 w-5" />
+				</DropdownMenuItem>
+				<Link href="/settings" passHref>
+					<DropdownMenuItem className="flex justify-end gap-2 items-center text-base">
+						<span>Settings</span>
+						<Settings className="h-5 w-5" />
+					</DropdownMenuItem>
+				</Link>
+
+				<DropdownMenuItem
+					onClick={() => {
+						disconnect();
+						clearCookies();
+					}}
+					className="flex justify-end gap-2 items-center text-base"
+				>
+					<span>Logout</span>
+					<LogOut className="h-5 w-5" />
+				</DropdownMenuItem>
+			</DropdownMenuContent>
+		</DropdownMenu>
 	);
 };
