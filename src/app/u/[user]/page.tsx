@@ -1,4 +1,6 @@
 import { UserProfile } from "@/components/user/UserProfile";
+import { getAuthorizedClients } from "@/lib/getAuthorizedClients";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({
 	params,
@@ -12,11 +14,17 @@ export async function generateMetadata({
 }
 
 const user = async ({ params }: { params: { user: string } }) => {
-	const user = params.user;
+	const username = params.user;
 
-	return (
-			<UserProfile user={user} />
-	);
+	const { lens } = await getAuthorizedClients();
+
+	const profile = await lens.profile.fetch({ forHandle: username });
+
+	if (!profile) {
+		return notFound();
+	}
+
+	return <UserProfile user={username} />;
 };
 
 export default user;

@@ -1,32 +1,11 @@
-import { getDatabase } from "@/lib/getDatabase";
-import { getLensClient } from "@/lib/getLensClient";
+import { getAuthorizedClients } from "@/lib/getAuthorizedClients";
 import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
-
-async function getAuthorizedClients(refreshToken: string | null | undefined) {
-	if (!refreshToken) {
-		throw new Error("Unauthorized");
-	}
-
-	const lens = await getLensClient(refreshToken);
-	const isAuthenticated = await lens.authentication.isAuthenticated();
-	const profileId = await lens.authentication.getProfileId();
-
-	if (!isAuthenticated || !profileId) {
-		throw new Error("Unauthenticated");
-	}
-
-	const db = getDatabase();
-
-	return { lens, profileId, db };
-}
-
 export async function GET(req: NextRequest) {
 	try {
 		const refreshToken = cookies().get("refreshToken")?.value;
 
-		const { profileId, db } = await getAuthorizedClients(refreshToken);
-
+		const { profileId, db } = await getAuthorizedClients();
 		const url = new URL(req.url);
 		const draftId = url.searchParams.get("id");
 
@@ -73,8 +52,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
 	try {
-		const refreshToken = cookies().get("refreshToken")?.value;
-		const { profileId, db } = await getAuthorizedClients(refreshToken);
+		const { profileId, db } = await getAuthorizedClients();
 
 		const body = await req.json();
 		const { title } = body;
@@ -103,8 +81,7 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
 	try {
-		const refreshToken = cookies().get("refreshToken")?.value;
-		const { profileId, db } = await getAuthorizedClients(refreshToken);
+		const { profileId, db } = await getAuthorizedClients();
 
 		const url = new URL(req.url);
 		const draftId = url.searchParams.get("id");
@@ -157,8 +134,7 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
 	try {
-		const refreshToken = cookies().get("refreshToken")?.value;
-		const { profileId, db } = await getAuthorizedClients(refreshToken);
+		const { profileId, db } = await getAuthorizedClients();
 
 		const url = new URL(req.url);
 		const draftId = url.searchParams.get("id");
