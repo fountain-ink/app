@@ -3,18 +3,20 @@ import { getLensClient } from "@/lib/getLensClient";
 import { getCookieAuth } from "./getCookieAuth";
 
 export async function getAuthorizedClients() {
-
-  const {isValid, refreshToken }= getCookieAuth()
-
-	if (!refreshToken || !isValid) {
-		throw new Error("Unauthorized");
-	}
+	const { isValid, refreshToken } = getCookieAuth();
 
 	const lens = await getLensClient(refreshToken);
+
+	if (!refreshToken || !isValid) {
+		return { lens, profileId: null, profile: null, handle: null, db: null };
+	}
+
 	const isAuthenticated = await lens.authentication.isAuthenticated();
 	const profileId = await lens.authentication.getProfileId();
-  const profile = await lens.profile.fetch({ forProfileId: profileId });
-  const handle = profile?.handle?.localName;
+	const profile = profileId
+		? await lens.profile.fetch({ forProfileId: profileId })
+		: null;
+	const handle = profile?.handle?.localName;
 
 	if (!isAuthenticated || !profileId) {
 		throw new Error("Unauthenticated");
@@ -24,5 +26,3 @@ export async function getAuthorizedClients() {
 
 	return { lens, profileId, profile, handle, db };
 }
-
-

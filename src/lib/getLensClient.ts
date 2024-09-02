@@ -1,8 +1,11 @@
 import { LensClient, production } from "@lens-protocol/client";
 
-export const getLensClient = async (refreshToken: string) => {
+export const getLensClient = async (refreshToken: string | null) => {
 	const client = new LensClient({ environment: production });
-	await client.authentication.authenticateWith({ refreshToken });
+
+	if (refreshToken) {
+		await client.authentication.authenticateWith({ refreshToken });
+	}
 
 	return client;
 };
