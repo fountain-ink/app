@@ -9,11 +9,12 @@ import {
 import { toast } from "sonner";
 import { PostView } from "../post/PostView";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "../ui/card";
+import type { ProfileFragment } from "@lens-protocol/client";
 
 export const UserContent = ({
 	profile,
 	loading,
-}: { profile?: Profile; loading?: boolean }) => {
+}: { profile?: Profile | ProfileFragment; loading?: boolean }) => {
 	if (loading || !profile) {
 		return <ContentSuspense />;
 	}

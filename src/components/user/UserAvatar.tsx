@@ -1,6 +1,11 @@
 "use client";
 
-import { type Profile, SessionType, useSession } from "@lens-protocol/react-web";
+import type { ProfileFragment } from "@lens-protocol/client";
+import {
+	type Profile,
+	SessionType,
+	useSession,
+} from "@lens-protocol/react-web";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
@@ -27,7 +32,7 @@ export const UserAvatar = ({
 	error,
 	className,
 }: {
-	profile?: Profile;
+	profile?: Profile | ProfileFragment;
 	loading?: boolean;
 	error?: Error;
 	className?: string;
@@ -44,9 +49,9 @@ export const UserAvatar = ({
 	const avatar =
 		profile?.metadata?.picture?.__typename === "ImageSet"
 			? profile?.metadata?.picture?.optimized?.uri ||
-			  profile?.metadata?.picture?.raw?.uri
+				profile?.metadata?.picture?.raw?.uri
 			: profile?.metadata?.picture?.image.optimized?.uri ||
-			  profile?.metadata?.picture?.image.raw?.uri;
+				profile?.metadata?.picture?.image.raw?.uri;
 
 	return (
 		<div className={className}>

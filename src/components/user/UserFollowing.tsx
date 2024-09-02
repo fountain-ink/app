@@ -1,6 +1,7 @@
 import { Profile, SessionType, useSession } from "@lens-protocol/react-web";
+import { ProfileFragment } from "@lens-protocol/react-web";
 
-export const UserFollowing = ({ profile }: { profile?: Profile }) => {
+export const UserFollowing = ({ profile }: { profile?: Profile | ProfileFragment }) => {
 	const following = profile?.stats.following;
 	const followers = profile?.stats.followers;
 

@@ -1,6 +1,7 @@
-import { Profile, SessionType, useSession } from "@lens-protocol/react-web";
+import type { ProfileFragment } from "@lens-protocol/client";
+import { type Profile, SessionType, useSession } from "@lens-protocol/react-web";
 
-export const UserHandle = ({ profile, }: { profile?: Profile}) => {
+export const UserHandle = ({ profile, }: { profile?: Profile | ProfileFragment }) => {
 	const handle = profile?.handle?.localName;
 	if (!handle) {
 		return null;

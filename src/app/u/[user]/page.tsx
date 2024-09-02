@@ -1,4 +1,12 @@
-import { UserProfile } from "@/components/user/UserProfile";
+import { Button } from "@/components/ui/button";
+import { UserAvatar } from "@/components/user/UserAvatar";
+import { UserBio } from "@/components/user/UserBio";
+import { UserContent } from "@/components/user/UserContent";
+import { UserCover } from "@/components/user/UserCover";
+import { UserFollowing } from "@/components/user/UserFollowing";
+import { UserHandle } from "@/components/user/UserHandle";
+import { UserName } from "@/components/user/UserName";
+import { UserSocials } from "@/components/user/UserSocials";
 import { getAuthorizedClients } from "@/lib/getAuthorizedClients";
 import { notFound } from "next/navigation";
 
@@ -14,16 +22,62 @@ export async function generateMetadata({
 }
 
 const user = async ({ params }: { params: { user: string } }) => {
-	const handle = params.user;
-	const { lens } = await getAuthorizedClients();
+	const { lens, profileId: userProfileId } = await getAuthorizedClients();
 
-	const profile = await lens.profile.fetch({ forHandle: `lens/${handle}` });
+	const pageHandle = `lens/${params.user}`;
+
+	const profile = await lens.profile.fetch({ forHandle: pageHandle });
 
 	if (!profile) {
 		return notFound();
 	}
 
-	return <UserProfile user={handle} />;
+	const isUserProfile = profile.id === userProfileId
+
+	return (
+		<div className="flex flex-col items-center justify-center w-[100%] sm:w-[70%] mx-auto">
+			<UserCover profile={profile} />
+			<div className="flex flex-row w-full">
+				<div className="grow w-[70%] flex-col gap-8">
+					<h1 className="text-4xl font-bold p-4">
+						{profile?.handle?.localName}'s blog
+					</h1>
+					<div className="flex flex-row gap-4">
+						<Button variant="ghost" className="text-lg">
+							Published
+						</Button>
+						{isUserProfile && (
+							<Button variant="ghost" className="text-lg">
+								Drafts
+							</Button>
+						)}
+
+						<Button variant="ghost" className="text-lg">
+							All
+						</Button>
+					</div>
+					<UserContent profile={profile} />
+				</div>
+				<div className="w-[30%] p-4">
+					<div className="sticky top-32 right-0 h-fit">
+						<UserAvatar
+							className="rounded-full ring-4 ring-background w-[100%] sm:w-[60%] h-auto aspect-square -translate-y-1/2"
+							profile={profile}
+						/>
+						<div className="-mt-[25%]">
+							<UserName profile={profile} />
+							<div className="mb-2">
+								<UserHandle profile={profile} />
+							</div>
+							<UserFollowing profile={profile} />
+							<UserBio profile={profile} />
+							<UserSocials profile={profile} />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default user;

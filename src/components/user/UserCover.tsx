@@ -1,9 +1,10 @@
+import type { ProfileFragment } from "@lens-protocol/client";
 import type { Profile } from "@lens-protocol/react-web";
 
 export const UserCover = ({
 	profile,
 	loading,
-}: { profile?: Profile; loading?: boolean }) => {
+}: { profile?: Profile | ProfileFragment; loading?: boolean }) => {
 	if (loading) {
 		return <UserCoverSuspense />;
 	}

@@ -1,6 +1,7 @@
-import { Profile, SessionType, useSession } from "@lens-protocol/react-web";
+import type { ProfileFragment } from "@lens-protocol/client";
+import { type Profile, SessionType, useSession } from "@lens-protocol/react-web";
 
-export const UserName = ({ profile, }: { profile?: Profile}) => {
+export const UserName = ({ profile }: { profile?: Profile | ProfileFragment}) => {
 	const name = profile?.metadata?.displayName;
 	if (!name) {
 		return null;

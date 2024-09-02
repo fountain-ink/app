@@ -1,10 +1,10 @@
 "use client";
 
-import { Profile, SessionType, useSession } from "@lens-protocol/react-web";
+import { Profile, ProfileFragment } from "@lens-protocol/react-web";
 
 export const UserBio = ({
 	profile,
-}: { profile?: Profile}) => {
+}: { profile?: Profile | ProfileFragment }) => {
 	const content = profile?.metadata?.bio;
 	return <div className="text-foreground">{content}</div>;
 };
