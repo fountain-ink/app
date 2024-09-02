@@ -14,17 +14,17 @@ export async function generateMetadata({
 }
 
 const user = async ({ params }: { params: { user: string } }) => {
-	const username = params.user;
+	const handle = params.user;
 
 	const { lens } = await getAuthorizedClients();
 
-	const profile = await lens.profile.fetch({ forHandle: username });
+	const profile = await lens.profile.fetch({ forHandle: `lens/${handle}` });
 
 	if (!profile) {
 		return notFound();
 	}
 
-	return <UserProfile user={username} />;
+	return <UserProfile user={handle} />;
 };
 
 export default user;
