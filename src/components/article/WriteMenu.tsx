@@ -2,23 +2,21 @@
 
 import { Button } from "@/components/ui/button";
 import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-    SessionType,
-    useRefreshToken,
-    useSession,
+	SessionType,
+	useRefreshToken,
+	useSession,
 } from "@lens-protocol/react-web";
 import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
-import { Input } from "../ui/input";
 import { DraftsList } from "./DraftsList";
 
 export const WriteMenu = () => {
@@ -41,21 +39,20 @@ export const WriteMenu = () => {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
-				Authorization: `Bearer ${refreshToken}`,
 			},
-			body: JSON.stringify({ title }),
+			body: JSON.stringify({}),
 		});
 
-		const data = await response.json();
+		const { draft } = await response.json();
 
-		if (!data.draft) {
+		if (!draft) {
 			return;
 		}
 
 		setIsOpen(false);
 
-		router.refresh()
-		router.replace(`/write/${data.draft.id}`);
+		router.refresh();
+		router.replace(`/write/${draft.id}`);
 	};
 
 	return (
@@ -68,25 +65,14 @@ export const WriteMenu = () => {
 					<DialogTitle>Write an Article</DialogTitle>
 				</DialogHeader>
 				<div className="space-y-4">
-					<Dialog>
-						<DialogTrigger asChild>
-							<Button variant="ghost" className="w-full justify-start">
-								<PlusIcon className="h-5 w-5 flex gap-2 text-md" />
-								New Article
-							</Button>
-						</DialogTrigger>
-						<DialogContent>
-							<DialogTitle>Create a New Article</DialogTitle>
-							<Input
-								placeholder="Title"
-								value={title}
-								onChange={(e) => setTitle(e.target.value)}
-							/>
-							<DialogFooter>
-								<Button onClick={handleCreate}>Create</Button>
-							</DialogFooter>
-						</DialogContent>
-					</Dialog>
+					<Button
+						onClick={handleCreate}
+						variant="ghost"
+						className="w-full justify-start"
+					>
+						<PlusIcon className="h-5 w-5 flex gap-2 text-md" />
+						New Article
+					</Button>
 					<div className="border-t pt-4">
 						<h3 className="mb-2 font-semibold">Continue writing</h3>
 						<Suspense fallback={<Skeleton className="w-full h-24" />}>

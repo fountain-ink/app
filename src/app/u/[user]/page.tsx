@@ -15,7 +15,6 @@ export async function generateMetadata({
 
 const user = async ({ params }: { params: { user: string } }) => {
 	const handle = params.user;
-
 	const { lens } = await getAuthorizedClients();
 
 	const profile = await lens.profile.fetch({ forHandle: `lens/${handle}` });
