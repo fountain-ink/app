@@ -1,15 +1,16 @@
 "use client";
 
+import type { ProfileFragment } from "@lens-protocol/client";
 import {
-	type Profile,
-	PublicationMetadataMainFocusType,
-	PublicationType,
-	usePublications,
+    type Profile,
+    type ProfileId,
+    PublicationMetadataMainFocusType,
+    PublicationType,
+    usePublications,
 } from "@lens-protocol/react-web";
 import { toast } from "sonner";
 import { PostView } from "../post/PostView";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "../ui/card";
-import type { ProfileFragment } from "@lens-protocol/client";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card";
 
 export const UserContent = ({
 	profile,
@@ -19,13 +20,14 @@ export const UserContent = ({
 		return <ContentSuspense />;
 	}
 
+
 	const {
 		data: publications,
 		loading: publicationsLoading,
 		error,
 	} = usePublications({
 		where: {
-			from: [profile.id],
+			from: [profile.id as ProfileId],
 			metadata: {
 				mainContentFocus: [PublicationMetadataMainFocusType.Article],
 			},

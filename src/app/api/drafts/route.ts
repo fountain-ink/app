@@ -3,12 +3,18 @@ import { type NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
 	try {
 		const { profileId, db } = await getAuthorizedClients();
+
+		if (!db) {
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+		}
+
 		const draftId = req.nextUrl.searchParams.get("id");
 
 		if (draftId) {
 			const { data: draft, error } = await db
 				.from("drafts")
 				.select()
+
 				.eq("id", draftId)
 				.eq("author_id", profileId)
 				.single();
@@ -48,6 +54,9 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
 	try {
 		const { profileId, db } = await getAuthorizedClients();
+		if (!db) {
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+		}
 		const body = await req.json();
 
 		const { data, error } = await db
@@ -76,6 +85,10 @@ export async function PUT(req: NextRequest) {
 
 		if (!draftId) {
 			return NextResponse.json({ error: "Missing draft ID" }, { status: 400 });
+		}
+
+		if (!db) {
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
 
 		const body = await req.json();
@@ -116,6 +129,10 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
 	try {
 		const { profileId, db } = await getAuthorizedClients();
+
+		if (!db) {
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+		}
 
 		const draftId = req.nextUrl.searchParams.get("id");
 
