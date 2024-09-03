@@ -1,7 +1,5 @@
 "use client";
 
-import { isDevEnvironment } from "@/lib/envCheck";
-import { getBaseUrl } from "@/lib/getBaseUrl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { WriteMenu } from "./article/WriteMenu";
@@ -11,10 +9,12 @@ import { UserMenu } from "./user/UserMenu";
 
 export const Header = () => {
 	const pathname = usePathname();
-
-	console.log(getBaseUrl());
+	const hostname =
+		typeof window !== "undefined" && window.location.hostname
+			? window.location.hostname
+			: "";
 	// FIXME: Temporary before release
-	if (!isDevEnvironment) {
+	if (!hostname.includes("dev")) {
 		return (
 			<div className="fixed w-full p-2 z-[300] flex justify-between items-center pointer-events-none">
 				<Link
