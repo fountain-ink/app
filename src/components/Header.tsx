@@ -1,13 +1,13 @@
 "use client";
 
+import { isDevEnvironment, isProdEnvironment } from "@/lib/envCheck";
+import { getBaseUrl } from "@/lib/getBaseUrl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { WriteMenu } from "./article/WriteMenu";
 import { FountainLogo } from "./Icons";
 import { ThemeSidebar } from "./ThemeEditor";
 import { UserMenu } from "./user/UserMenu";
-import { getBaseUrl } from "@/lib/getBaseUrl";
-import { isDevEnvironment, isProdEnvironment } from "@/lib/envCheck";
 
 export const Header = () => {
 	const pathname = usePathname();
