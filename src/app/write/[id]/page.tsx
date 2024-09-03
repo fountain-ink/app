@@ -8,7 +8,7 @@ import { cookies } from "next/headers";
 async function getDraft(id: string) {
 	const url = getBaseUrl();
 	const refreshToken = cookies().get("refreshToken")?.value;
-
+	
 	const response = await fetch(`${url}/api/drafts?id=${id}`, {
 		method: "GET",
 		headers: {
@@ -17,7 +17,7 @@ async function getDraft(id: string) {
 	});
 
 	if (!response.ok) {
-		throw new Error(`Failed to fetch draft ${response.body} ${response.statusText}`);
+		throw new Error(`Failed to fetch draft ${response.text} ${response.statusText}`);
 	}
 
 	const { draft } = await response.json();

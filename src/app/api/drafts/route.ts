@@ -1,5 +1,7 @@
 import { getAuthorizedClients } from "@/lib/getAuthorizedClients";
 import { type NextRequest, NextResponse } from "next/server";
+
+
 export async function GET(req: NextRequest) {
 	try {
 		const { profileId, db } = await getAuthorizedClients();
@@ -14,7 +16,6 @@ export async function GET(req: NextRequest) {
 			const { data: draft, error } = await db
 				.from("drafts")
 				.select()
-
 				.eq("id", draftId)
 				.eq("author_id", profileId)
 				.single();
