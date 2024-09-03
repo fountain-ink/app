@@ -50,12 +50,6 @@ const user = async ({ params }: { params: { user: string } }) => {
 							</Button>
 						</Link>
 
-						<Link href={`/u/${params.user}/all`}>
-							<Button variant="ghost" className="text-lg">
-								All
-							</Button>
-						</Link>
-
 						{isUserProfile && (
 							<Link href={`/u/${params.user}/drafts`}>
 								<Button variant="ghost" className="text-lg">
@@ -63,6 +57,12 @@ const user = async ({ params }: { params: { user: string } }) => {
 								</Button>
 							</Link>
 						)}
+
+						<Link href={`/u/${params.user}/all`}>
+							<Button variant="ghost" className="text-lg">
+								All
+							</Button>
+						</Link>
 					</div>
 					<UserContent profile={profile} />
 				</div>
