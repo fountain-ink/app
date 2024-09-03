@@ -21,7 +21,7 @@ import { useAccount } from "wagmi";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { UserDrafts } from "./user/UserDrafts";
 
-export const WriteMenu = () => {
+export const WriteMenu = ({text = "Write"}: {text?: string}) => {
 	const { data: session, loading, error } = useSession();
 	const refreshToken = useRefreshToken();
 	const [isOpen, setIsOpen] = useState(false);
@@ -36,7 +36,7 @@ export const WriteMenu = () => {
 	if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
 		return (
 			<Link href="/write/new">
-				<Button>Write</Button>
+				<Button>{text}</Button>
 			</Link>
 		);
 	}
@@ -65,7 +65,7 @@ export const WriteMenu = () => {
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			<DialogTrigger asChild>
-				<Button>Write</Button>
+        <Button>{text}</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>

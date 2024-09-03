@@ -17,6 +17,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "../ui/card";
+import { WriteMenu } from "../WriteMenu";
 
 export const UserContent = ({
 	profile,
@@ -67,6 +68,19 @@ export const UserContent = ({
 		if (publication.__typename === "Post")
 			return <PostView key={publication.id} post={publication} />;
 	});
+
+	if (posts.length === 0) {
+		return (
+			<Card className="m-20 rounded-xl bg-transparent group border-0 flex flex-col gap-4 items-center justify-center shadow-none drop-shadow-none">
+				<CardHeader>
+					<CardTitle>Nobody here but us chickens</CardTitle>
+				</CardHeader>
+				<CardFooter>
+					<WriteMenu text="Start Writing" />
+				</CardFooter>
+			</Card>
+		);
+	}
 
 	return <div className="flex flex-col gap-2 p-4">{posts}</div>;
 };
