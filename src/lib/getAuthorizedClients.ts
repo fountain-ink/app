@@ -7,6 +7,7 @@ export async function getAuthorizedClients() {
 
 	const lens = await getLensClient(refreshToken);
 
+	console.log(isValid, refreshToken);
 	if (!refreshToken || !isValid) {
 		return { lens, profileId: null, profile: null, handle: null, db: null };
 	}
@@ -18,6 +19,7 @@ export async function getAuthorizedClients() {
 		: null;
 	const handle = profile?.handle?.localName;
 
+	console.log(isAuthenticated, profileId, profile, handle);
 	if (!isAuthenticated || !profileId) {
 		throw new Error("Unauthenticated");
 	}
