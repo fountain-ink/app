@@ -6,6 +6,7 @@ import { WriteMenu } from "./article/WriteMenu";
 import { FountainLogo } from "./Icons";
 import { ThemeSidebar } from "./ThemeEditor";
 import { UserMenu } from "./user/UserMenu";
+import { isDevEnvironment } from "@/lib/envCheck";
 
 export const Header = () => {
 	const pathname = usePathname();
@@ -13,8 +14,9 @@ export const Header = () => {
 		typeof window !== "undefined" && window.location.hostname
 			? window.location.hostname
 			: "";
+	
 	// FIXME: Temporary before release
-	if (!hostname.includes("dev")) {
+	if (!hostname.includes("dev") && !isDevEnvironment) {
 		return (
 			<div className="fixed w-full p-2 z-[300] flex justify-between items-center pointer-events-none">
 				<Link

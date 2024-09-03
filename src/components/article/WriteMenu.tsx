@@ -18,20 +18,28 @@ import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import { DraftsList } from "./DraftsList";
+import { LoadingSpinner } from "../LoadingSpinner";
+import { useAccount } from "wagmi";
+import Link from "next/link";
 
 export const WriteMenu = () => {
-	const { data: session, loading, error } = useSession();
-	const refreshToken = useRefreshToken();
-	const [isOpen, setIsOpen] = useState(false);
-	const [title, setTitle] = useState("");
-	const router = useRouter();
+  const { data: session, loading, error } = useSession();
+  const refreshToken = useRefreshToken();
+  const [isOpen, setIsOpen] = useState(false);
+  const [title, setTitle] = useState("");
+  const { isConnected: isWalletConnected } = useAccount();
+  const router = useRouter();
 
 	if (loading || error) {
 		return null;
 	}
 
-	if (session?.type !== SessionType.WithProfile) {
-		return null;
+	if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
+		return (
+		<Link href="/write/new">
+			<Button>Write</Button>
+		</Link>
+		);
 	}
 
 	const handleCreate = async () => {
@@ -75,7 +83,7 @@ export const WriteMenu = () => {
 					</Button>
 					<div className="border-t pt-4">
 						<h3 className="mb-2 font-semibold">Continue writing</h3>
-						<Suspense fallback={<Skeleton className="w-full h-24" />}>
+						<Suspense fallback={<LoadingSpinner />}>
 							<DraftsList onClick={(_id) => setIsOpen(false)} />
 						</Suspense>
 					</div>

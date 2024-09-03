@@ -70,16 +70,15 @@ export const Editor = ({
 	const [openColor, setOpenColor] = useState(false);
 	const [openAI, setOpenAI] = useState(false);
 	const [content, setContent] = useState<JSONContent | undefined>();
-
 	const [yDoc, setYDoc] = useState<Y.Doc | null>(null);
 	const [provider, setProvider] = useState<TiptapCollabProvider | null>(null);
 
 	// Create a new Y.js document and provider when documentId changes
 	useEffect(() => {
-		if (documentId) {
 			const newYDoc = new Y.Doc();
+			const id = documentId ?? newYDoc.clientID;
 			const newProvider = new TiptapCollabProvider({
-				name: `document-${documentId}`,
+				name: `document-${id}`,
 				appId: "v91rwzmo",
 				token,
 				document: newYDoc,
@@ -92,7 +91,6 @@ export const Editor = ({
         newYDoc.destroy();
 				newProvider.destroy();
 			};
-		}
 	}, [documentId]);
 
 	const editorExtensionsList = useMemo(() => {

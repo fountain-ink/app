@@ -75,6 +75,7 @@ export const UserMenu = () => {
 				<DropdownMenuItem
 					onClick={() => {
 						disconnect();
+            logout();
 						clearCookies();
 					}}
 					className="flex justify-end gap-2 items-center text-base"

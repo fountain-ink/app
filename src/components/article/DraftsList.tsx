@@ -1,21 +1,22 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { SessionType, useSession } from "@lens-protocol/react-web";
 import { useQuery } from "@tanstack/react-query";
 import { FileEditIcon, TrashIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
+import { LoadingSpinner } from "../LoadingSpinner";
 import {
-	Dialog,
-	DialogClose,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "../ui/dialog";
 
 const fetchDrafts = async ({ queryKey }: { queryKey: [string] }) => {
@@ -36,7 +37,7 @@ const fetchDrafts = async ({ queryKey }: { queryKey: [string] }) => {
 export const DraftsList = ({ onClick }: { onClick?: (id: string) => void }) => {
 	const {
 		data: drafts,
-		isLoading,
+		isLoading: queryLoading,
 		error,
 		refetch,
 	} = useQuery({
@@ -44,12 +45,15 @@ export const DraftsList = ({ onClick }: { onClick?: (id: string) => void }) => {
 		queryFn: fetchDrafts,
 	});
 
+	const { data: session, loading: sessionLoading, error: sessionError } = useSession();
+
 	const [draftToDelete, setDraftToDelete] = useState<{
 		id: string;
 		title: string;
 	} | null>(null);
 
-	if (isLoading) return <Skeleton className="w-full h-24" />;
+	if (queryLoading && sessionLoading) return <LoadingSpinner />;
+	if (session?.type !== SessionType.WithProfile) return null;
 	if (error) return <div>Error loading drafts: {error.message}</div>;
 	if (!drafts || drafts.length === 0) return <div>No drafts available</div>;
 
@@ -63,7 +67,7 @@ export const DraftsList = ({ onClick }: { onClick?: (id: string) => void }) => {
 
 			if (res.ok) {
 				toast.success("Draft deleted successfully");
-				refetch(); 
+				refetch();
 			} else {
 				toast.error("Failed to delete draft");
 			}
