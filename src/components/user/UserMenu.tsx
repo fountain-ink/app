@@ -80,7 +80,7 @@ export const UserMenu = () => {
 					}}
 					className="flex justify-end gap-2 items-center text-base"
 				>
-					<span>Logout</span>
+					<span>Disconnect</span>
 					<LogOut className="h-5 w-5" />
 				</DropdownMenuItem>
 			</DropdownMenuContent>

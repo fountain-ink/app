@@ -18,7 +18,7 @@ export const Header = () => {
 	// FIXME: Temporary before release
 	if (!hostname.includes("dev") && !isDevEnvironment) {
 		return (
-			<div className="fixed w-full p-2 z-[300] flex justify-between items-center pointer-events-none">
+			<div className="fixed w-full p-2 z-[40] flex justify-between items-center pointer-events-none">
 				<Link
 					href={"/"}
 					className="w-10 h-10 flex items-center justify-center pointer-events-auto"
@@ -30,7 +30,7 @@ export const Header = () => {
 	}
 
 	return (
-		<div className="fixed w-full p-2 z-[300] flex justify-between items-center pointer-events-none">
+		<div className="fixed w-full p-2 z-[40] flex justify-between items-center pointer-events-none">
 			<Link
 				href={"/"}
 				className="w-10 h-10 flex items-center justify-center pointer-events-auto"
