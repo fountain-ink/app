@@ -44,9 +44,13 @@ export function LoginButton({
 		const refreshToken = JSON.parse(credentials)?.data?.refreshToken;
 
 		if (refreshToken) {
+			const isLocalhost = window?.location?.hostname === "localhost";
+			const domain = isLocalhost ? undefined : ".fountain.ink";
 			setCookie("refreshToken", refreshToken, {
+				domain,
 				secure: true,
 				sameSite: "lax",
+				path: "/",
 			});
 		}
 
