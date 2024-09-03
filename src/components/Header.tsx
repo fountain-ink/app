@@ -1,6 +1,6 @@
 "use client";
 
-import { isDevEnvironment, isProdEnvironment } from "@/lib/envCheck";
+import { isDevEnvironment } from "@/lib/envCheck";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,6 +12,7 @@ import { UserMenu } from "./user/UserMenu";
 export const Header = () => {
 	const pathname = usePathname();
 
+	console.log(getBaseUrl());
 	// FIXME: Temporary before release
 	if (!isDevEnvironment) {
 		return (
