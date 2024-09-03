@@ -11,13 +11,15 @@ async function getDraft(id: string) {
 	
 	const response = await fetch(`${url}/api/drafts?id=${id}`, {
 		method: "GET",
+		credentials: "include",
 		headers: {
 			Cookie: `refreshToken=${refreshToken}`,
 		},
 	});
 
 	if (!response.ok) {
-		throw new Error(`Failed to fetch draft ${response.text()} ${response.statusText}`);
+	console.error(response);
+		throw new Error(`Failed to fetch draft ${await response.text()} ${response.statusText}`);
 	}
 
 	const { draft } = await response.json();
