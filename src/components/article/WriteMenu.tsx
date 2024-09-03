@@ -8,27 +8,26 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
 	SessionType,
 	useRefreshToken,
 	useSession,
 } from "@lens-protocol/react-web";
 import { PlusIcon } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
-import { DraftsList } from "./DraftsList";
-import { LoadingSpinner } from "../LoadingSpinner";
 import { useAccount } from "wagmi";
-import Link from "next/link";
+import { LoadingSpinner } from "../LoadingSpinner";
+import { DraftsList } from "./DraftsList";
 
 export const WriteMenu = () => {
-  const { data: session, loading, error } = useSession();
-  const refreshToken = useRefreshToken();
-  const [isOpen, setIsOpen] = useState(false);
-  const [title, setTitle] = useState("");
-  const { isConnected: isWalletConnected } = useAccount();
-  const router = useRouter();
+	const { data: session, loading, error } = useSession();
+	const refreshToken = useRefreshToken();
+	const [isOpen, setIsOpen] = useState(false);
+	const [title, setTitle] = useState("");
+	const { isConnected: isWalletConnected } = useAccount();
+	const router = useRouter();
 
 	if (loading || error) {
 		return null;
@@ -36,9 +35,9 @@ export const WriteMenu = () => {
 
 	if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
 		return (
-		<Link href="/write/new">
-			<Button>Write</Button>
-		</Link>
+			<Link href="/write/new">
+				<Button>Write</Button>
+			</Link>
 		);
 	}
 
@@ -76,7 +75,7 @@ export const WriteMenu = () => {
 					<Button
 						onClick={handleCreate}
 						variant="ghost"
-						className="w-full justify-start"
+						className="w-full justify-start flex gap-2 p-2"
 					>
 						<PlusIcon className="h-5 w-5 flex gap-2 text-md" />
 						New Article
