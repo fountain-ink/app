@@ -1,4 +1,5 @@
 import { UserContent } from "@/components/user/UserContent";
+import { UserDrafts } from "@/components/user/UserDrafts";
 import { UserNavigation } from "@/components/user/UserNavigation";
 import { getAuthorizedClients } from "@/lib/getAuthorizedClients";
 
@@ -19,7 +20,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
         username={params.user}
         isUserProfile={isUserProfile}
       />
-      <UserContent profile={profile} />
+      <UserDrafts />
     </>
   );
 };

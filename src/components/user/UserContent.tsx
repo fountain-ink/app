@@ -2,25 +2,31 @@
 
 import type { ProfileFragment } from "@lens-protocol/client";
 import {
-    type Profile,
-    type ProfileId,
-    PublicationMetadataMainFocusType,
-    PublicationType,
-    usePublications,
+	type Profile,
+	type ProfileId,
+	PublicationMetadataMainFocusType,
+	PublicationType,
+	usePublications,
 } from "@lens-protocol/react-web";
 import { toast } from "sonner";
 import { PostView } from "../post/PostView";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card";
+import {
+	Card,
+	CardContent,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "../ui/card";
 
 export const UserContent = ({
 	profile,
 	loading,
-}: { profile?: Profile | ProfileFragment; loading?: boolean }) => {
-	if (loading || !profile) {
-		return <ContentSuspense />;
-	}
-
-
+	contentType = "articles",
+}: {
+	profile: Profile | ProfileFragment;
+	loading?: boolean;
+	contentType?: string;
+}) => {
 	const {
 		data: publications,
 		loading: publicationsLoading,
@@ -29,13 +35,26 @@ export const UserContent = ({
 		where: {
 			from: [profile.id as ProfileId],
 			metadata: {
-				mainContentFocus: [PublicationMetadataMainFocusType.Article],
+				mainContentFocus:
+					contentType === "articles"
+						? [PublicationMetadataMainFocusType.Article]
+						: [
+								PublicationMetadataMainFocusType.Article,
+								PublicationMetadataMainFocusType.Image,
+								PublicationMetadataMainFocusType.Audio,
+								PublicationMetadataMainFocusType.TextOnly,
+								PublicationMetadataMainFocusType.CheckingIn,
+								PublicationMetadataMainFocusType.Story,
+								PublicationMetadataMainFocusType.Video,
+								PublicationMetadataMainFocusType.Embed,
+								PublicationMetadataMainFocusType.Link,
+							],
 			},
 			publicationTypes: [PublicationType.Post],
 		},
 	});
 
-	if (publicationsLoading || !publications) {
+	if (loading || publicationsLoading || !publications) {
 		return <ContentSuspense />;
 	}
 
@@ -60,7 +79,6 @@ export const ContentSuspense = () => {
 					<div className="rounded-full bg-muted h-10 w-10" />
 					<div className="flex-1 space-y-2 py-1">
 						<div className="h-4 bg-muted rounded w-3/4" />
-						<div className="h-4 bg-muted rounded w-1/2" />
 					</div>
 				</div>
 				<CardTitle className="text-3xl h-8 bg-muted rounded w-1/2 mt-4" />
@@ -68,13 +86,10 @@ export const ContentSuspense = () => {
 			<CardContent>
 				<div className="space-y-4">
 					<div className="h-4 bg-muted rounded" />
-					<div className="h-4 bg-muted rounded w-5/6" />
-					<div className="h-4 bg-muted rounded w-3/4" />
 					<div className="h-4 bg-muted rounded w-2/3" />
 				</div>
 			</CardContent>
 			<CardFooter className="flex flex-row gap-4 text-sm text-muted-foreground">
-				<div className="h-4 bg-muted rounded w-1/4" />
 				<div className="h-4 bg-muted rounded w-1/4" />
 			</CardFooter>
 		</Card>

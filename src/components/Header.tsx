@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { WriteMenu } from "./article/WriteMenu";
 import { FountainLogo } from "./Icons";
 import { ThemeSidebar } from "./ThemeEditor";
 import { UserMenu } from "./user/UserMenu";
 import { isDevEnvironment } from "@/lib/envCheck";
+import { WriteMenu } from "./WriteMenu";
 
 export const Header = () => {
 	const pathname = usePathname();

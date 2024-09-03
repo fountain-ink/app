@@ -18,8 +18,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import { useAccount } from "wagmi";
-import { LoadingSpinner } from "../LoadingSpinner";
-import { DraftsList } from "./DraftsList";
+import { LoadingSpinner } from "./LoadingSpinner";
+import { UserDrafts } from "./user/UserDrafts";
 
 export const WriteMenu = () => {
 	const { data: session, loading, error } = useSession();
@@ -83,7 +83,7 @@ export const WriteMenu = () => {
 					<div className="border-t pt-4">
 						<h3 className="mb-2 font-semibold">Continue writing</h3>
 						<Suspense fallback={<LoadingSpinner />}>
-							<DraftsList onClick={(_id) => setIsOpen(false)} />
+							<UserDrafts onClick={() => setIsOpen(false)} />
 						</Suspense>
 					</div>
 				</div>

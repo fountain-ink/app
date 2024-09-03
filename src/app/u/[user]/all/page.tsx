@@ -19,7 +19,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
         username={params.user}
         isUserProfile={isUserProfile}
       />
-      <UserContent profile={profile} />
+      <UserContent contentType="all" profile={profile} />
     </>
   );
 };
