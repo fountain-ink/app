@@ -12,13 +12,6 @@ import { UserMenu } from "./user/UserMenu";
 export const Header = () => {
 	const pathname = usePathname();
 
-	console.log(
-		process.env.NODE_ENV,
-		isProdEnvironment,
-		isDevEnvironment,
-		getBaseUrl(),
-		pathname,
-	);
 	// FIXME: Temporary before release
 	if (!isDevEnvironment) {
 		return (
