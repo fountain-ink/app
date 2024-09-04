@@ -66,7 +66,7 @@ export const UserContent = ({
 
 	const posts = publications.map((publication) => {
 		if (publication.__typename === "Post")
-			return <PostView key={publication.id} post={publication} />;
+			return <PostView key={publication.id} authorIds={[publication.by.id]} post={publication} />;
 	});
 
 	if (posts.length === 0) {

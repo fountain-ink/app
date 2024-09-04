@@ -1,13 +1,14 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { SessionType, useSession } from "@lens-protocol/react-web";
+import { ProfileId, SessionType, useSession } from "@lens-protocol/react-web";
 import { useQuery } from "@tanstack/react-query";
-import { FileIcon, MoreVertical, TrashIcon } from "lucide-react";
+import { MoreVertical, TrashIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { LoadingSpinner } from "../LoadingSpinner";
+import { PostView } from "../post/PostView";
+import { Button } from "../ui/button";
 import {
 	Dialog,
 	DialogClose,
@@ -91,76 +92,72 @@ export const UserDrafts = ({ onClick }: { onClick?: (id: string) => void }) => {
 	};
 
 	return (
-		<div className="space-y-2">
-			{drafts.map((draft: { id: string; title: string }) => (
-				<div key={draft.id} className="flex justify-between items-center">
-					<Link href={`/write/${draft.id}`} className="text-md w-full">
-						<Button
-							onClick={() => onClick?.(draft.id)}
-							variant="ghost"
-							className="w-full flex gap-2 justify-between p-2"
-						>
-							<div className="flex gap-2">
-								<FileIcon className="h-5 w-5" />
-								{draft.title || "Untitled Draft"}
-							</div>
-							<div>
-								<Dialog>
-									<DropdownMenu>
-										<DropdownMenuTrigger asChild>
-											<Button
-												onClick={(e) => e.stopPropagation()}
-												variant="ghost"
-												className="hover:bg-accent hover:text-muted-foreground stroke-1 hover:stroke-2"
-												size="icon"
+		<div className="space-y-4">
+			{drafts.map(
+				(draft: {
+					id: string;
+					title: string;
+					content?: string;
+					author_id?: string;
+				}) => (
+					<div key={draft.id} className="relative">
+						<Link href={`/write/${draft.id}`}>
+							<PostView
+								post={draft}
+								isDraft={true}
+								authorIds={
+									draft.author_id ? [draft.author_id as ProfileId] : []
+								}
+							/>
+						</Link>
+
+						<div className="absolute top-2 right-2">
+							<Dialog>
+								<DropdownMenu>
+									<DropdownMenuTrigger asChild>
+										<Button
+											variant="ghost"
+											className="hover:bg-accent hover:text-muted-foreground stroke-1 hover:stroke-2"
+											size="icon"
+										>
+											<MoreVertical className="h-5 w-5" />
+										</Button>
+									</DropdownMenuTrigger>
+									<DropdownMenuContent className="rounded-xl text-base">
+										<DialogTrigger asChild>
+											<DropdownMenuItem
+												onClick={() => setDraftToDelete(draft)}
+												className="flex gap-2 items-center"
 											>
-												<MoreVertical className="h-5 w-5" />
-											</Button>
-										</DropdownMenuTrigger>
-										<DropdownMenuContent className="rounded-xl text-base">
-											<DialogTrigger
-												onClick={(e) => e.stopPropagation()}
-												asChild
-											>
-												<DropdownMenuItem
-													onClick={() => setDraftToDelete(draft)}
-													className="flex gap-2 items-center"
-												>
-													<TrashIcon className="h-5 w-5" />
-													Delete draft
-												</DropdownMenuItem>
-											</DialogTrigger>
-										</DropdownMenuContent>
-									</DropdownMenu>
-									<DialogContent>
-										<DialogHeader>
-											<DialogTitle>
-												Are you sure you want to delete this draft?
-											</DialogTitle>
-											<DialogDescription>
-												This action cannot be undone.
-											</DialogDescription>
-										</DialogHeader>
-										<DialogFooter>
-											<DialogClose asChild>
-												<Button
-													onClick={(e) => e.stopPropagation()}
-													variant="secondary"
-												>
-													Cancel
-												</Button>
-											</DialogClose>
-											<Button variant="destructive" onClick={handleDelete}>
-												Delete
-											</Button>
-										</DialogFooter>
-									</DialogContent>
-								</Dialog>
-							</div>
-						</Button>
-					</Link>
-				</div>
-			))}
+												<TrashIcon className="h-5 w-5" />
+												Delete draft
+											</DropdownMenuItem>
+										</DialogTrigger>
+									</DropdownMenuContent>
+								</DropdownMenu>
+								<DialogContent>
+									<DialogHeader>
+										<DialogTitle>
+											Are you sure you want to delete this draft?
+										</DialogTitle>
+										<DialogDescription>
+											This action cannot be undone.
+										</DialogDescription>
+									</DialogHeader>
+									<DialogFooter>
+										<DialogClose asChild>
+											<Button variant="secondary">Cancel</Button>
+										</DialogClose>
+										<Button variant="destructive" onClick={handleDelete}>
+											Delete
+										</Button>
+									</DialogFooter>
+								</DialogContent>
+							</Dialog>
+						</div>
+					</div>
+				),
+			)}
 		</div>
 	);
 };
