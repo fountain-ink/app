@@ -47,7 +47,7 @@ export const UserMenu = () => {
 					<SessionAvatar />
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end" className="w-48 rounded-xl mt-1">
+			<DropdownMenuContent align="end" className="w-48 mt-1">
 				<Link href={`/u/${handle}`} passHref>
 					<DropdownMenuItem className="flex justify-end gap-2 items-center text-base">
 						<span>Profile</span>

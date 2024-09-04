@@ -19,7 +19,7 @@ export const DraftView = ({ draft, authorId }: DraftViewProps) => {
   const authorIds = authorId ? [authorId] : [];
 
   return (
-    <Card className="rounded-xl bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none">
+    <Card className="bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none">
       <CardHeader>
         {authorId && <UserAuthorView profileIds={authorIds} />}
         <CardTitle className="text-3xl">{title}</CardTitle>

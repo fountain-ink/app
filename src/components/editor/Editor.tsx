@@ -136,7 +136,7 @@ export const Editor = ({
 					},
 					attributes: {
 						class:
-							"prose prose-sm sm:prose-base prose-img:rounded-xl prose-h1:font-martina prose-h1:my-8 prose-h1:text-center prose-h1:text-6xl lg:prose-lg focus:outline-none rounded-lg",
+							"prose prose-sm sm:prose-base prose-img:prose-h1:font-martina prose-h1:my-8 prose-h1:text-center prose-h1:text-6xl lg:prose-lg focus:outline-none rounded-lg",
 					},
 				}}
 				extensions={editorExtensionsList}

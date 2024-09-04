@@ -77,7 +77,7 @@ export const UserContent = ({
 
 	if (posts.length === 0) {
 		return (
-			<Card className="m-20 rounded-xl bg-transparent group border-0 flex flex-col gap-4 items-center justify-center shadow-none drop-shadow-none">
+			<Card className="m-20 bg-transparent group border-0 flex flex-col gap-4 items-center justify-center shadow-none drop-shadow-none">
 				<CardHeader>
 					<CardTitle>Nobody here but us chickens</CardTitle>
 				</CardHeader>
@@ -93,7 +93,7 @@ export const UserContent = ({
 
 export const ContentSuspense = () => {
 	return (
-		<Card className="rounded-xl bg-transparent hover:bg-card/50 hover:text-card-foreground group border-0 shadow-none animate-pulse">
+		<Card className="bg-transparent hover:bg-card/50 hover:text-card-foreground group border-0 shadow-none animate-pulse">
 			<CardHeader>
 				<div className="flex items-center space-x-4">
 					<div className="rounded-full bg-muted h-10 w-10" />

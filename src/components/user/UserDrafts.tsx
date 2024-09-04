@@ -121,7 +121,7 @@ export const UserDrafts = ({ onClick }: { onClick?: (id: string) => void }) => {
 											<MoreVertical className="h-5 w-5" />
 										</Button>
 									</DropdownMenuTrigger>
-									<DropdownMenuContent className="rounded-xl text-base">
+									<DropdownMenuContent className="text-base">
 										<DialogTrigger asChild>
 											<DropdownMenuItem
 												onClick={() => setDraftToDelete(draft)}

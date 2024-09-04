@@ -26,7 +26,7 @@ export const PostView = ({ post, authorIds }: PostViewProps) => {
 	});
 
 	return (
-		<Card className="rounded-xl bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none">
+		<Card className="bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none">
 			<CardHeader>
 				<UserAuthorView profileIds={authorIds} />
 				<CardTitle className="text-3xl">{title}</CardTitle>
