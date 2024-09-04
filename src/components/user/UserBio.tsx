@@ -1,8 +1,9 @@
 "use client";
 
 import type { ProfileFragment } from "@lens-protocol/client";
+import type { Profile } from "@lens-protocol/react-web";
 
-export const UserBio = ({ profile }: { profile?: ProfileFragment }) => {
+export const UserBio = ({ profile }: { profile?: ProfileFragment | Profile }) => {
 	if (!profile) {
 		return null;
 	}

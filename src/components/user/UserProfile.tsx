@@ -1,10 +1,11 @@
-import type { Profile, ProfileFragment } from "@lens-protocol/client";
+import type { Profile } from "@lens-protocol/react-web";
 import { UserAvatar } from "./UserAvatar";
 import { UserBio } from "./UserBio";
 import { UserFollowing } from "./UserFollowing";
 import { UserHandle } from "./UserHandle";
 import { UserName } from "./UserName";
 import { UserSocials } from "./UserSocials";
+import type { ProfileFragment } from "@lens-protocol/client";
 
 export const UserProfile = ({
 	profile,
