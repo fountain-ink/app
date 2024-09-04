@@ -4,6 +4,7 @@ import { UserCover } from "@/components/user/UserCover";
 import { UserFollowing } from "@/components/user/UserFollowing";
 import { UserHandle } from "@/components/user/UserHandle";
 import { UserName } from "@/components/user/UserName";
+import { UserNavigation } from "@/components/user/UserNavigation";
 import { UserSocials } from "@/components/user/UserSocials";
 import { getAuthorizedClients } from "@/lib/getAuthorizedClients";
 import { notFound } from "next/navigation";
@@ -28,9 +29,9 @@ const UserLayout = async ({
   children: React.ReactNode;
   params: { user: string };
 }) => {
-  const { lens } = await getAuthorizedClients();
-  const pageHandle = `lens/${params.user}`;
-  const profile = await lens.profile.fetch({ forHandle: pageHandle });
+  const { lens, handle: userHandle } = await getAuthorizedClients();
+  const profile = await lens.profile.fetch({ forHandle: `lens/${params.user}` });
+  const isUserProfile = userHandle === params.user
 
   if (!profile) {
     return notFound();
@@ -44,6 +45,7 @@ const UserLayout = async ({
           <h1 className="text-4xl font-bold p-4">
             {profile?.handle?.localName}'s blog
           </h1>
+          <UserNavigation username={params.user} isUserProfile={isUserProfile} />
           {children}
         </div>
         <div className="w-[30%] p-4">
