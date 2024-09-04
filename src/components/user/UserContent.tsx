@@ -66,7 +66,13 @@ export const UserContent = ({
 
 	const posts = publications.map((publication) => {
 		if (publication.__typename === "Post")
-			return <PostView key={publication.id} authorIds={[publication.by.id]} post={publication} />;
+			return (
+				<PostView
+					key={publication.id}
+					authorIds={[publication.by.id]}
+					post={publication}
+				/>
+			);
 	});
 
 	if (posts.length === 0) {
@@ -82,7 +88,7 @@ export const UserContent = ({
 		);
 	}
 
-	return <div className="flex flex-col gap-2 p-4">{posts}</div>;
+	return <>{posts}</>;
 };
 
 export const ContentSuspense = () => {

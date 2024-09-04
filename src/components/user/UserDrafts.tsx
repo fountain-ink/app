@@ -1,30 +1,34 @@
 "use client";
 
-import { type ProfileId, SessionType, useSession } from "@lens-protocol/react-web";
+import {
+	type ProfileId,
+	SessionType,
+	useSession,
+} from "@lens-protocol/react-web";
 import { useQuery } from "@tanstack/react-query";
 import { MoreVertical, TrashIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { LoadingSpinner } from "../LoadingSpinner";
+import { DraftView } from "../post/DraftView";
 import { Button } from "../ui/button";
 import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
 } from "../ui/dialog";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { DraftView } from "../post/DraftView";
 
 const fetchDrafts = async ({ queryKey }: { queryKey: [string] }) => {
 	const response = await fetch("/api/drafts", {
@@ -93,15 +97,17 @@ export const UserDrafts = ({ onClick }: { onClick?: (id: string) => void }) => {
 
 	return (
 		<div className="space-y-4">
-		{drafts.map((draft: { id: string; title: string; content?: string; authorId?: ProfileId }) => (
-  <div key={draft.id} className="relative">
-    <Link href={`/write/${draft.id}`}>
-      <DraftView
-        draft={draft}
-        authorId={draft.authorId}
-      />
-    </Link>
-
+			{drafts.map(
+				(draft: {
+					id: string;
+					title: string;
+					content_json?: string;
+					author_id?: ProfileId;
+				}) => (
+					<div key={draft.id} className="relative">
+						<Link href={`/write/${draft.id}`}>
+							<DraftView draft={draft} authorId={draft.author_id} />
+						</Link>
 
 						<div className="absolute top-2 right-2">
 							<Dialog>
