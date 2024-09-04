@@ -21,7 +21,7 @@ export const EditorCollaborators = () => {
 
 	return (
 		<div className="flex flex-row gap-4 items-center p-2">
-			<UserAuthorView profile={session.profile} />
+			<UserAuthorView profileIds={[session.profile.id]} />
 		</div>
 	);
 };

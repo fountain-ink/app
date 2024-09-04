@@ -18,6 +18,7 @@ export const UserAuthorView = ({
 		error,
 	} = useProfiles({ where: { profileIds } });
 
+
 	if (loading) {
 		return (
 			<div className="flex flex-wrap gap-2">
@@ -27,13 +28,13 @@ export const UserAuthorView = ({
 						className="flex flex-row gap-2 items-center"
 					>
 						{showAvatar && (
-							<div className="w-6 h-6 rounded-full bg-gray-200 animate-pulse" />
+							<div className="w-6 h-6 rounded-full bg-muted animate-pulse" />
 						)}
 						{showName && (
-							<div className="w-20 h-4 bg-gray-200 animate-pulse rounded" />
+							<div className="w-20 h-4 bg-muted animate-pulse rounded-full" />
 						)}
 						{showHandle && (
-							<div className="w-24 h-4 bg-gray-200 animate-pulse rounded" />
+							<div className="w-24 h-4 bg-muted animate-pulse rounded-full" />
 						)}
 					</span>
 				))}
