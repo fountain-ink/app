@@ -1,4 +1,5 @@
 import { LogoutButton } from "@/components/auth/LogoutButton";
+import SettingsPage from "@/components/settings/SettingsPage";
 
 export async function generateMetadata() {
 	const title = "Settings";
@@ -10,7 +11,7 @@ export async function generateMetadata() {
 const settings = async () => {
 	return (
 		<div className="w-full flex items-center justify-center p-8">
-			<LogoutButton />
+  		<SettingsPage />
 		</div>
 	);
 };
