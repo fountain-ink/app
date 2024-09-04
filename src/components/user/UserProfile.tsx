@@ -1,4 +1,4 @@
-import type { ProfileFragment } from "@lens-protocol/client";
+import type { Profile, ProfileFragment } from "@lens-protocol/client";
 import { UserAvatar } from "./UserAvatar";
 import { UserBio } from "./UserBio";
 import { UserFollowing } from "./UserFollowing";
