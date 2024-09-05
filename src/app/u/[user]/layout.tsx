@@ -6,9 +6,7 @@ import { notFound } from "next/navigation";
 
 export async function generateMetadata({
 	params,
-}: {
-	params: { user: string };
-}) {
+}: { params: { user: string } }) {
 	const handle = params.user;
 	const title = `${handle}`;
 	return {
@@ -49,7 +47,7 @@ const UserLayout = async ({
 					<div className="flex flex-col gap-4 p-4">{children}</div>
 				</div>
 				<div className="w-[30%] p-4">
-  				<UserProfile profile={profile} />
+					<UserProfile profile={profile} />
 				</div>
 			</div>
 		</div>

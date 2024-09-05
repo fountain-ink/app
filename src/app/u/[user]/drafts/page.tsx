@@ -7,14 +7,10 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
 	const profile = await lens.profile.fetch({ forHandle: pageHandle });
 
 	if (!profile) {
-		return null; // The layout will handle the notFound() case
+		return null;
 	}
 
-	return (
-		<>
-			<UserDrafts />
-		</>
-	);
+	return <UserDrafts />;
 };
 
 export default UserPage;

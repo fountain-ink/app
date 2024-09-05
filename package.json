@@ -129,7 +129,8 @@
     "viem": "^2.18.8",
     "wagmi": "^2.12.2",
     "yjs": "^13.6.18",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zustand": "^4.5.5"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.13",
