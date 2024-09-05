@@ -1,5 +1,6 @@
 "use client";
 
+import { useStorage } from "@/lib/useStorage";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckIcon } from "lucide-react";
 import { useEditor } from "novel";
@@ -7,11 +8,12 @@ import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { LoadingSpinner } from "./LoadingSpinner";
 
-export function AutoSave({ documentId }: { documentId: string | undefined }) {
+export function AutoSave({ documentId }: { documentId?: string }) {
 	const { editor } = useEditor();
 	const [isSaving, setIsSaving] = useState(false);
 	const [saveSuccess, setSaveSuccess] = useState(false);
 	const [isVisible, setIsVisible] = useState(false);
+	const { saveDocument } = useStorage();
 
 	const saveContent = useCallback(
 		async (content_json: object) => {
@@ -19,28 +21,33 @@ export function AutoSave({ documentId }: { documentId: string | undefined }) {
 			setIsVisible(true);
 			setSaveSuccess(false);
 			try {
-				const response = await fetch(`/api/drafts?id=${documentId}`, {
-					method: "PUT",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({ content: content_json }),
-				});
+				if (documentId) {
+					const response = await fetch(`/api/drafts?id=${documentId}`, {
+						method: "PUT",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({ content: content_json }),
+					});
 
-				if (!response.ok) {
-					throw new Error(`${response.status} ${response.statusText}`);
+					if (!response.ok) {
+						throw new Error(`${response.status} ${response.statusText}`);
+					}
+				} else {
+					// Save to local storage if no documentId is provided
+					saveDocument(`local-draft-${Date.now()}`, content_json);
 				}
 				setSaveSuccess(true);
 				setTimeout(() => {
 					setIsVisible(false);
-				}, 2000); // Hide after 2 seconds
+				}, 2000);
 			} catch (error) {
 				console.error("Error saving draft:", error);
 			} finally {
 				setIsSaving(false);
 			}
 		},
-		[documentId],
+		[documentId, saveDocument],
 	);
 
 	const debouncedSave = useDebouncedCallback(saveContent, 1000);
@@ -61,7 +68,7 @@ export function AutoSave({ documentId }: { documentId: string | undefined }) {
 	}, [editor, debouncedSave]);
 
 	return (
-		<div className="fixed bottom-4 right-4  z-50">
+		<div className="fixed bottom-4 right-4 z-50">
 			<AnimatePresence>
 				{isVisible && (
 					<motion.div

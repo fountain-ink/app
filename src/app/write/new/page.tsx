@@ -1,3 +1,4 @@
+import { AutoSave } from "@/components/AutoSave";
 import { Editor } from "@/components/editor/Editor";
 import { EditorCollaborators } from "@/components/editor/EditorCollaborators";
 import { EditorDate } from "@/components/editor/EditorDate";
@@ -11,7 +12,9 @@ export default async function WriteDraft({
 				<div className="w-full min-h-screen space-y-4 py-4 my-10">
 					<EditorDate />
 					<EditorCollaborators />
-					<Editor initialContent={undefined} documentId={undefined} />
+					<Editor initialContent={undefined} documentId={undefined}>
+						<AutoSave documentId={undefined} />
+					</Editor>
 				</div>
 			</div>
 		</div>
