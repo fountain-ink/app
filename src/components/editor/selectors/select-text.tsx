@@ -8,7 +8,7 @@ import {
 	UnderlineIcon,
 } from "lucide-react";
 import { EditorBubbleItem, useEditor } from "novel";
-import type { SelectorItem } from "./NodeSelector";
+import type { SelectorItem } from "./select-node";
 
 export const TextButtons = () => {
 	const { editor } = useEditor();

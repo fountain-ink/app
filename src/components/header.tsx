@@ -1,12 +1,12 @@
 "use client";
 
+import { isDevEnvironment } from "@/lib/envCheck";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FountainLogo } from "./Icons";
-import { ThemeSidebar } from "./ThemeEditor";
-import { UserMenu } from "./user/UserMenu";
-import { isDevEnvironment } from "@/lib/envCheck";
-import { WriteMenu } from "./WriteMenu";
+import { FountainLogo } from "./icons";
+import { ThemeSidebar } from "./theme-editor";
+import { UserMenu } from "./user/user-menu";
+import { WriteMenu } from "./write-menu";
 
 export const Header = () => {
 	const pathname = usePathname();
@@ -14,7 +14,7 @@ export const Header = () => {
 		typeof window !== "undefined" && window.location.hostname
 			? window.location.hostname
 			: "";
-	
+
 	// FIXME: Temporary before release
 	if (!hostname.includes("dev") && !isDevEnvironment) {
 		return (

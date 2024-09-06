@@ -1,5 +1,5 @@
-import { EmailSubscription } from "@/components/EmailSubscription";
-import { GraphicHand, GraphicInk } from "@/components/Icons";
+import { EmailSubscription } from "@/components/email-subscription";
+import { GraphicHand, GraphicInk } from "@/components/icons";
 
 export default function HomePage() {
 	return (

@@ -7,7 +7,7 @@ import { setCookie } from "cookies-next";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { Button } from "../ui/button";
-import { UserAvatar } from "../user/UserAvatar";
+import { UserAvatar } from "../user/user-avatar";
 
 export function LoginButton({
 	profile,

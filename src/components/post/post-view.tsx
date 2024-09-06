@@ -1,4 +1,8 @@
-import type { ArticleMetadataV3, Post, ProfileId } from "@lens-protocol/react-web";
+import type {
+	ArticleMetadataV3,
+	Post,
+	ProfileId,
+} from "@lens-protocol/react-web";
 import {
 	Card,
 	CardContent,
@@ -6,8 +10,8 @@ import {
 	CardHeader,
 	CardTitle,
 } from "../ui/card";
-import { UserAuthorView } from "../user/UserAuthorView";
-import { PostReactions } from "./PostReactions";
+import { UserAuthorView } from "../user/user-author-view";
+import { PostReactions } from "./post-reactions";
 
 interface PostViewProps {
 	post: Post;

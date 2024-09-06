@@ -1,14 +1,14 @@
-import { AutoSave } from "@/components/AutoSave";
-import { Editor } from "@/components/editor/Editor";
-import { EditorCollaborators } from "@/components/editor/EditorCollaborators";
-import { EditorDate } from "@/components/editor/EditorDate";
+import { AutoSave } from "@/components/auto-save";
+import { Editor } from "@/components/editor/editor";
+import { EditorCollaborators } from "@/components/editor/editor-collaborators";
+import { EditorDate } from "@/components/editor/editor-date";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import { cookies } from "next/headers";
 
 async function getDraft(id: string) {
 	const url = getBaseUrl();
 	const refreshToken = cookies().get("refreshToken")?.value;
-	
+
 	const response = await fetch(`${url}/api/drafts?id=${id}`, {
 		method: "GET",
 		headers: {
@@ -17,7 +17,9 @@ async function getDraft(id: string) {
 	});
 
 	if (!response.ok) {
-		throw new Error(`Failed to fetch draft ${await response.text()} ${response.statusText}`);
+		throw new Error(
+			`Failed to fetch draft ${await response.text()} ${response.statusText}`,
+		);
 	}
 
 	const { draft } = await response.json();

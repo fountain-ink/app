@@ -1,4 +1,4 @@
-import { UserDrafts } from "@/components/user/UserDrafts";
+import { UserDrafts } from "@/components/user/user-drafts-list";
 import { getAuthorizedClients } from "@/lib/getAuthorizedClients";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {

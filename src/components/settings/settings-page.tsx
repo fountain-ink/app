@@ -9,9 +9,9 @@ import {
 	Settings,
 	Users,
 } from "lucide-react";
-import { BlogSettings } from "./BlogSettings";
-import { GeneralSettings } from "./GeneralSettings";
-import { ThemeSettings } from "./ThemeSettings";
+import { BlogSettings } from "./settings-blog";
+import { GeneralSettings } from "./settings-general";
+import { ThemeSettings } from "./settings-theme";
 
 const tabData = [
 	{ id: "general", label: "General", icon: Settings, enabled: true },

@@ -1,11 +1,11 @@
-import type { Profile } from "@lens-protocol/react-web";
-import { UserAvatar } from "./UserAvatar";
-import { UserBio } from "./UserBio";
-import { UserFollowing } from "./UserFollowing";
-import { UserHandle } from "./UserHandle";
-import { UserName } from "./UserName";
-import { UserSocials } from "./UserSocials";
 import type { ProfileFragment } from "@lens-protocol/client";
+import type { Profile } from "@lens-protocol/react-web";
+import { UserBio } from "./user-bio";
+import { UserFollowing } from "./user-following";
+import { UserHandle } from "./user-handle";
+import { UserName } from "./user-name";
+import { UserSocials } from "./user-socials";
+import { UserAvatar } from "./user-avatar";
 
 export const UserProfile = ({
 	profile,

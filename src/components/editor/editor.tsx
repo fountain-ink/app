@@ -17,16 +17,16 @@ import {
 } from "novel";
 import { useEffect, useMemo, useState } from "react";
 import * as Y from "yjs";
-import { defaultExtensions } from "./extensions/EditorExtensions";
-import { slashCommand, suggestionItems } from "./extensions/SlashCommand";
+import { defaultExtensions } from "./extensions/editor-extensions";
+import { slashCommand, suggestionItems } from "./extensions/slash-command";
 
 import { handleCommandNavigation } from "novel/extensions";
 import { useDebouncedCallback } from "use-debounce";
-import { ColorSelector } from "./selectors/ColorSelector";
-import { LinkSelector } from "./selectors/LinkSelector";
-import { NodeSelector } from "./selectors/NodeSelector";
-import { TextButtons } from "./selectors/TextSelector";
-import { LoadingSpinner } from "../LoadingSpinner";
+import { LoadingSpinner } from "../loading-spinner";
+import { LinkSelector } from "./selectors/select-link";
+import { ColorSelector } from "./selectors/select-color";
+import { NodeSelector } from "./selectors/select-node";
+import { TextButtons } from "./selectors/select-text";
 
 const token = env.NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN;
 const colors = ["#958DF1", "#F98181", "#FBBC88", "#FAF594"];
@@ -75,22 +75,22 @@ export const Editor = ({
 
 	// Create a new Y.js document and provider when documentId changes
 	useEffect(() => {
-			const newYDoc = new Y.Doc();
-			const id = documentId ?? newYDoc.clientID;
-			const newProvider = new TiptapCollabProvider({
-				name: `document-${id}`,
-				appId: "v91rwzmo",
-				token,
-				document: newYDoc,
-			});
+		const newYDoc = new Y.Doc();
+		const id = documentId ?? newYDoc.clientID;
+		const newProvider = new TiptapCollabProvider({
+			name: `document-${id}`,
+			appId: "v91rwzmo",
+			token,
+			document: newYDoc,
+		});
 
-			setYDoc(newYDoc);
-			setProvider(newProvider);
+		setYDoc(newYDoc);
+		setProvider(newProvider);
 
-			return () => {
-        newYDoc.destroy();
-				newProvider.destroy();
-			};
+		return () => {
+			newYDoc.destroy();
+			newProvider.destroy();
+		};
 	}, [documentId]);
 
 	const editorExtensionsList = useMemo(() => {
@@ -119,7 +119,7 @@ export const Editor = ({
 	);
 
 	if (!yDoc || !provider) {
-		return <LoadingSpinner />
+		return <LoadingSpinner />;
 	}
 
 	return (

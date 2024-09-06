@@ -1,6 +1,6 @@
-import { BlogSettings } from "@/components/settings/BlogSettings";
-import { GeneralSettings } from "@/components/settings/GeneralSettings";
-import { ThemeSettings } from "@/components/settings/ThemeSettings";
+import { BlogSettings } from "@/components/settings/settings-blog";
+import { GeneralSettings } from "@/components/settings/settings-general";
+import { ThemeSettings } from "@/components/settings/settings-theme";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
 	DollarSign,

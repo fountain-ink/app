@@ -10,8 +10,8 @@ import { MoreVertical, TrashIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
-import { LoadingSpinner } from "../LoadingSpinner";
-import { DraftView } from "../post/DraftView";
+import { LoadingSpinner } from "../loading-spinner";
+import { DraftView } from "../post/draft-view";
 import { Button } from "../ui/button";
 import {
 	Dialog,

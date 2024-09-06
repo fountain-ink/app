@@ -9,7 +9,7 @@ import {
 	SheetTrigger,
 } from "@/components/ui/sheet";
 import { TypeIcon } from "lucide-react";
-import { ThemeButtons } from "./ThemeButtons";
+import { ThemeButtons } from "./theme-buttons";
 import { Button } from "./ui/button";
 import {
 	Card,

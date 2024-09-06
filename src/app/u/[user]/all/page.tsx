@@ -1,4 +1,4 @@
-import { UserContent } from "@/components/user/UserContent";
+import { UserContent } from "@/components/user/user-content";
 import { getAuthorizedClients } from "@/lib/getAuthorizedClients";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {

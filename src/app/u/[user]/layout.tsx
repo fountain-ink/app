@@ -1,6 +1,6 @@
-import { UserCover } from "@/components/user/UserCover";
-import { UserNavigation } from "@/components/user/UserNavigation";
-import { UserProfile } from "@/components/user/UserProfile";
+import { UserProfile } from "@/components/user/user-profile";
+import { UserCover } from "@/components/user/user-cover";
+import { UserNavigation } from "@/components/user/user-navigation";
 import { getAuthorizedClients } from "@/lib/getAuthorizedClients";
 import { notFound } from "next/navigation";
 

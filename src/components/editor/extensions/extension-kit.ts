@@ -26,11 +26,11 @@ import TextStyle from "@tiptap/extension-text-style";
 import Typography from "@tiptap/extension-typography";
 import Underline from "@tiptap/extension-underline";
 import StarterKit from "@tiptap/starter-kit";
-import BlockquoteFigure from "./BlockquoteFigure";
-import Figcaption from "./Figcaption";
-import FontSize from "./FontSize";
-import { Selection } from "./Selection";
-import { TrailingNode } from "./TrailingNode";
+import BlockquoteFigure from "./blockquote-figure";
+import Figcaption from "./figcaption";
+import FontSize from "./font-size";
+import { Selection } from "./selection";
+import { TrailingNode } from "./trailing-node";
 // import { CodeBlockLowlight } from '@tiptap/extension-code-block-lowlight'
 // import { ImageUpload } from './ImageUpload'
 // import { TableOfContentsNode } from './TableOfContentsNode'

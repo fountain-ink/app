@@ -13,9 +13,9 @@ import { ArrowLeftRightIcon, LogOut, Settings, User } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useAccount, useDisconnect } from "wagmi";
-import { ConnectWalletButton } from "../auth/ConnectWallet";
-import { ProfileSelect } from "../auth/ProfileSelect";
-import { AvatarSuspense, SessionAvatar } from "./UserAvatar";
+import { ConnectWalletButton } from "../auth/wallet-connect";
+import { ProfileSelect } from "../auth/profile-select";
+import { AvatarSuspense, SessionAvatar } from "./user-avatar";
 
 export const UserMenu = () => {
 	const { data: session, loading, error } = useSession();
@@ -75,7 +75,7 @@ export const UserMenu = () => {
 				<DropdownMenuItem
 					onClick={() => {
 						disconnect();
-            logout();
+						logout();
 						clearCookies();
 					}}
 					className="flex justify-end gap-2 items-center text-base"

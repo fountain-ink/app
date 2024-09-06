@@ -6,7 +6,7 @@ import { CheckIcon } from "lucide-react";
 import { useEditor } from "novel";
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { LoadingSpinner } from "./LoadingSpinner";
+import { LoadingSpinner } from "./loading-spinner";
 
 export function AutoSave({ documentId }: { documentId?: string }) {
 	const { editor } = useEditor();

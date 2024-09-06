@@ -1,7 +1,7 @@
-import { AutoSave } from "@/components/AutoSave";
-import { Editor } from "@/components/editor/Editor";
-import { EditorCollaborators } from "@/components/editor/EditorCollaborators";
-import { EditorDate } from "@/components/editor/EditorDate";
+import { AutoSave } from "@/components/auto-save";
+import { Editor } from "@/components/editor/editor";
+import { EditorCollaborators } from "@/components/editor/editor-collaborators";
+import { EditorDate } from "@/components/editor/editor-date";
 
 export default async function WriteDraft({
 	params,

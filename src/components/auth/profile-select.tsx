@@ -10,7 +10,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "../ui/dialog";
-import { LoginButton } from "./LoginButton";
+import { LoginButton } from "./login-button";
 
 export function ProfileSelect({
 	onSuccess,

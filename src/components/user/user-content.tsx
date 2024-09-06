@@ -9,7 +9,7 @@ import {
 	usePublications,
 } from "@lens-protocol/react-web";
 import { toast } from "sonner";
-import { PostView } from "../post/PostView";
+import { PostView } from "../post/post-view";
 import {
 	Card,
 	CardContent,
@@ -17,7 +17,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "../ui/card";
-import { WriteMenu } from "../WriteMenu";
+import { WriteMenu } from "../write-menu";
 
 export const UserContent = ({
 	profile,

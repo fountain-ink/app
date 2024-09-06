@@ -2,26 +2,26 @@
 
 import { Button } from "@/components/ui/button";
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-    SessionType,
-    useRefreshToken,
-    useSession,
+	SessionType,
+	useRefreshToken,
+	useSession,
 } from "@lens-protocol/react-web";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import { useAccount } from "wagmi";
-import { LoadingSpinner } from "./LoadingSpinner";
-import { UserDrafts } from "./user/UserDrafts";
+import { LoadingSpinner } from "./loading-spinner";
+import { UserDrafts } from "./user/user-drafts-list";
 
-export const WriteMenu = ({text = "Write"}: {text?: string}) => {
+export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
 	const { data: session, loading, error } = useSession();
 	const refreshToken = useRefreshToken();
 	const [isOpen, setIsOpen] = useState(false);
@@ -62,11 +62,10 @@ export const WriteMenu = ({text = "Write"}: {text?: string}) => {
 		router.replace(`/write/${draft.id}`);
 	};
 
-
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			<DialogTrigger asChild>
-        <Button>{text}</Button>
+				<Button>{text}</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>

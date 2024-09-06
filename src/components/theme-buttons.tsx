@@ -1,7 +1,7 @@
 "use client";
 
 import { themeNames, themes } from "@/styles/themes";
-import { useTheme } from "./ThemeContext";
+import { useTheme } from "./theme-context";
 import { Button } from "./ui/button";
 
 export const ThemeButtons = () => {

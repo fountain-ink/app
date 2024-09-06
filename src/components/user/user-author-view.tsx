@@ -1,5 +1,5 @@
 import { type ProfileId, useProfiles } from "@lens-protocol/react-web";
-import { UserAvatar } from "./UserAvatar";
+import { UserAvatar } from "./user-avatar";
 
 export const UserAuthorView = ({
 	profileIds,
@@ -17,7 +17,6 @@ export const UserAuthorView = ({
 		loading,
 		error,
 	} = useProfiles({ where: { profileIds } });
-
 
 	if (loading) {
 		return (
