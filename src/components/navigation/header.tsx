@@ -3,10 +3,10 @@
 import { isDevEnvironment } from "@/lib/envCheck";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FountainLogo } from "./icons";
-import { ThemeSidebar } from "./theme-editor";
-import { UserMenu } from "./user/user-menu";
-import { WriteMenu } from "./write-menu";
+import { FountainLogo } from "../custom-icons";
+import { ThemeSidebar } from "../theme/theme-editor";
+import { UserMenu } from "../user/user-menu";
+import { WriteMenu } from "./menu-write";
 
 export const Header = () => {
 	const pathname = usePathname();

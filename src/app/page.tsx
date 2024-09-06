@@ -1,5 +1,5 @@
+import { GraphicHand, GraphicInk } from "@/components/custom-icons";
 import { EmailSubscription } from "@/components/email-subscription";
-import { GraphicHand, GraphicInk } from "@/components/icons";
 
 export default function HomePage() {
 	return (

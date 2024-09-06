@@ -2,7 +2,7 @@
 
 import { themeNames, themes } from "@/styles/themes";
 import { useTheme } from "./theme-context";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 export const ThemeButtons = () => {
 	const { setTheme } = useTheme();

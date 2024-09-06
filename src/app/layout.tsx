@@ -1,9 +1,9 @@
-import { Web3Providers } from "@/components/web3-providers";
-import { Blur } from "@/components/blur";
-import { Header } from "@/components/header";
+import { Blur } from "@/components/navigation/gradient-blur";
+import { Header } from "@/components/navigation/header";
 import { SmoothScroll } from "@/components/smooth-scroll";
-import { ThemeProvider } from "@/components/theme-context";
+import { ThemeProvider } from "@/components/theme/theme-context";
 import { Toaster } from "@/components/ui/sonner";
+import { Web3Providers } from "@/components/web3-providers";
 
 import "@/styles/globals.css";
 

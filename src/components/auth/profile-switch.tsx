@@ -13,16 +13,17 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export function TeamSwitcher({
-	teams,
+
+export function AccountSwitcher({
+	accounts,
 }: {
-	teams: {
+	accounts: {
 		name: string;
-		logo: React.ElementType;
-		plan: string;
+		avatar: React.ElementType;
+		handle: string;
 	}[];
 }) {
-	const [activeTeam, setActiveTeam] = React.useState(teams[0]);
+	const [activeTeam, setActiveTeam] = React.useState(accounts[0]);
 
 	if (!activeTeam) {
 		return null;
@@ -33,7 +34,7 @@ export function TeamSwitcher({
 			<DropdownMenuTrigger className="w-full rounded-md ring-ring hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 data-[state=open]:bg-accent">
 				<div className="flex items-center gap-1.5 overflow-hidden px-2 py-1.5 text-left text-sm transition-all">
 					<div className="flex h-5 w-5 items-center justify-center rounded-sm bg-primary text-primary-foreground">
-						<activeTeam.logo className="h-3.5 w-3.5 shrink-0" />
+						<activeTeam.avatar className="h-3.5 w-3.5 shrink-0" />
 					</div>
 					<div className="line-clamp-1 flex-1 pr-2 font-medium">
 						{activeTeam.name}
@@ -48,21 +49,21 @@ export function TeamSwitcher({
 				sideOffset={4}
 			>
 				<DropdownMenuLabel className="text-xs text-muted-foreground">
-					Teams
+					Accounts
 				</DropdownMenuLabel>
-				{teams.map((team, index) => (
+				{accounts.map((acc, index) => (
 					<DropdownMenuItem
-						key={team.name}
-						onClick={() => setActiveTeam(team)}
+						key={acc.name}
+						onClick={() => setActiveTeam(acc)}
 						className="items-start gap-2 px-1.5"
 					>
 						<div className="flex h-8 w-8 items-center justify-center rounded-sm bg-primary text-primary-foreground">
-							<team.logo className="h-5 w-5 shrink-0" />
+							<acc.avatar className="h-5 w-5 shrink-0" />
 						</div>
 						<div className="grid flex-1 leading-tight">
-							<div className="line-clamp-1 font-medium">{team.name}</div>
+							<div className="line-clamp-1 font-medium">{acc.name}</div>
 							<div className="overflow-hidden text-xs text-muted-foreground">
-								<div className="line-clamp-1">{team.plan}</div>
+								<div className="line-clamp-1">{acc.handle}</div>
 							</div>
 						</div>
 						<DropdownMenuShortcut className="self-center">
@@ -75,7 +76,7 @@ export function TeamSwitcher({
 					<div className="flex h-8 w-8 items-center justify-center rounded-md border bg-background">
 						<Plus className="h-5 w-5" />
 					</div>
-					<div className="font-medium text-muted-foreground">Add workspace</div>
+					<div className="font-medium text-muted-foreground">Add account</div>
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>

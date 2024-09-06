@@ -18,8 +18,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import { useAccount } from "wagmi";
-import { LoadingSpinner } from "./loading-spinner";
-import { UserDrafts } from "./user/user-drafts-list";
+import { LoadingSpinner } from "../loading-spinner";
+import { UserDrafts } from "../user/user-drafts-list";
 
 export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
 	const { data: session, loading, error } = useSession();
