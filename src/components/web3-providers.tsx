@@ -1,7 +1,7 @@
 "use client";
 
 import { env } from "@/env";
-import { LensProvider, development } from "@lens-protocol/react-web";
+import { LensProvider } from "@lens-protocol/react-web";
 import { type LensConfig, production } from "@lens-protocol/react-web";
 import { bindings } from "@lens-protocol/wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

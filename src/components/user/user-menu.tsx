@@ -13,9 +13,9 @@ import { ArrowLeftRightIcon, LogOut, Settings, User } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useAccount, useDisconnect } from "wagmi";
-import { ConnectWalletButton } from "../auth/wallet-connect";
 import { ProfileSelect } from "../auth/profile-select";
 import { AvatarSuspense, SessionAvatar } from "./user-avatar";
+import { ConnectWalletButton } from "../auth/wallet-button";
 
 export const UserMenu = () => {
 	const { data: session, loading, error } = useSession();
