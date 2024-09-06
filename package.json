@@ -125,7 +125,7 @@
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "use-debounce": "^10.0.1",
-    "vaul": "^0.9.1",
+    "vaul": "^0.9.2",
     "viem": "^2.18.8",
     "wagmi": "^2.12.2",
     "yjs": "^13.6.18",
