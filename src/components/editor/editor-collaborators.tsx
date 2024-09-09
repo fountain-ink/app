@@ -10,7 +10,7 @@ export const EditorCollaborators = () => {
 
 	if (session?.type !== SessionType.WithProfile) {
 		return (
-			<Badge className="mt-0" variant="secondary">
+			<Badge className="mb-5 mt-4" variant="secondary">
 				Login to save changes
 			</Badge>
 		);

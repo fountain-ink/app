@@ -14,6 +14,7 @@ interface AppState {
 }
 
 export const useStorage = create<AppState>()(
+  
 	persist(
 		(set, get) => ({
 			isSmoothScrolling: true,

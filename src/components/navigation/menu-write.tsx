@@ -2,19 +2,19 @@
 
 import { Button } from "@/components/ui/button";
 import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog";
+import { getRandomUid } from "@/lib/getRandomUid";
 import {
-	SessionType,
-	useRefreshToken,
-	useSession,
+    SessionType,
+    useRefreshToken,
+    useSession,
 } from "@lens-protocol/react-web";
 import { PlusIcon } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import { useAccount } from "wagmi";
@@ -33,13 +33,14 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
 		return null;
 	}
 
-	if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
-		return (
-			<Link href="/write/new">
-				<Button>{text}</Button>
-			</Link>
-		);
-	}
+	const handleNew = () => {
+		const uid = getRandomUid();
+		const id = `local-${uid}`;
+
+		setIsOpen(false);
+		router.refresh();
+		router.replace(`/write/${id}`);
+	};
 
 	const handleCreate = async () => {
 		const response = await fetch("/api/drafts", {
@@ -61,6 +62,10 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
 		router.refresh();
 		router.replace(`/write/${draft.id}`);
 	};
+
+	if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
+		return <Button onClick={() => handleNew()}>{text}</Button>;
+	}
 
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>

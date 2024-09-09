@@ -8,7 +8,10 @@ import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { LoadingSpinner } from "../loading-spinner";
 
-export function AutoSave({ documentId }: { documentId?: string }) {
+export function AutoSave({
+	documentId,
+	isLocal,
+}: { documentId: string; isLocal?: boolean }) {
 	const { editor } = useEditor();
 	const [isSaving, setIsSaving] = useState(false);
 	const [saveSuccess, setSaveSuccess] = useState(false);
@@ -21,7 +24,7 @@ export function AutoSave({ documentId }: { documentId?: string }) {
 			setIsVisible(true);
 			setSaveSuccess(false);
 			try {
-				if (documentId) {
+				if (!isLocal) {
 					const response = await fetch(`/api/drafts?id=${documentId}`, {
 						method: "PUT",
 						headers: {
@@ -34,8 +37,8 @@ export function AutoSave({ documentId }: { documentId?: string }) {
 						throw new Error(`${response.status} ${response.statusText}`);
 					}
 				} else {
-					// Save to local storage if no documentId is provided
-					saveDocument(`local-draft-${Date.now()}`, content_json);
+					// Save to local storage if local
+					saveDocument(`${documentId}`, content_json);
 				}
 				setSaveSuccess(true);
 				setTimeout(() => {
@@ -47,7 +50,7 @@ export function AutoSave({ documentId }: { documentId?: string }) {
 				setIsSaving(false);
 			}
 		},
-		[documentId, saveDocument],
+		[documentId, saveDocument, isLocal],
 	);
 
 	const debouncedSave = useDebouncedCallback(saveContent, 1000);

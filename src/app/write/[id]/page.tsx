@@ -6,6 +6,12 @@ import { getBaseUrl } from "@/lib/getBaseUrl";
 import { cookies } from "next/headers";
 
 async function getDraft(id: string) {
+	const isLocal = id.startsWith("local-");
+
+	if (isLocal) {
+		return null;
+	}
+
 	const url = getBaseUrl();
 	const refreshToken = cookies().get("refreshToken")?.value;
 
@@ -28,12 +34,11 @@ async function getDraft(id: string) {
 
 export default async function WriteDraft({
 	params,
-}: { params: { id: string } }) {
-	const draft = await getDraft(params.id);
-
-	if (!draft) {
-		return <div>Draft not found</div>;
-	}
+}: {
+	params: { id: string };
+}) {
+	const isLocal = params.id.startsWith("local-");
+	const draft = isLocal ? null : await getDraft(params.id);
 
 	return (
 		<div className="flex min-h-screen flex-col items-center justify-center text-foreground bg-background">
@@ -41,8 +46,11 @@ export default async function WriteDraft({
 				<div className="w-full min-h-screen py-4 my-10">
 					<EditorDate />
 					<EditorCollaborators />
-					<Editor initialContent={draft.content_json} documentId={draft.id}>
-						<AutoSave documentId={params.id} />
+					<Editor
+						initialContent={isLocal ? undefined : draft?.content_json}
+						documentId={params.id}
+					>
+						<AutoSave isLocal={isLocal} documentId={params.id} />
 					</Editor>
 				</div>
 			</div>
