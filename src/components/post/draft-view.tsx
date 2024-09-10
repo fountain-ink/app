@@ -5,6 +5,7 @@ import { UserAuthorView } from "../user/user-author-view";
 interface DraftViewProps {
 	draft: { id: string; content_json?: string };
 	authorId?: ProfileId;
+	isCloud: boolean;
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: intended use
@@ -37,7 +38,7 @@ const extractTitle = (content: any): string => {
 	}
 };
 
-export const DraftView = ({ draft, authorId }: DraftViewProps) => {
+export const DraftView = ({ draft, authorId, isCloud }: DraftViewProps) => {
 	const content = draft.content_json || "";
 	const title = extractTitle(content);
 	const authorIds = authorId ? [authorId] : [];
@@ -46,7 +47,9 @@ export const DraftView = ({ draft, authorId }: DraftViewProps) => {
 		<Card className="bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none">
 			<CardHeader>
 				{authorId && <UserAuthorView profileIds={authorIds} />}
-				<CardTitle className="text-3xl">{title}</CardTitle>
+				<CardTitle className="text-3xl flex items-center gap-2">
+					{title}
+				</CardTitle>
 			</CardHeader>
 			<CardFooter className="flex flex-row gap-4 text-sm text-muted-foreground">
 				<span>Draft</span>

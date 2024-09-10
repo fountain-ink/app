@@ -2,9 +2,9 @@
 
 import { useStorage } from "@/lib/useStorage";
 import {
-	type ProfileId,
-	SessionType,
-	useSession,
+    type ProfileId,
+    SessionType,
+    useSession,
 } from "@lens-protocol/react-web";
 import { useQuery } from "@tanstack/react-query";
 import { MoreVertical, TrashIcon } from "lucide-react";
@@ -15,22 +15,21 @@ import { LoadingSpinner } from "../loading-spinner";
 import { DraftView } from "../post/draft-view";
 import { Button } from "../ui/button";
 import {
-	Dialog,
-	DialogClose,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "../ui/dialog";
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
 const fetchCloudDrafts = async ({ queryKey }: { queryKey: [string] }) => {
 	const response = await fetch("/api/drafts", {
@@ -122,7 +121,11 @@ export const DraftsList = ({ onClick }: { onClick?: (id: string) => void }) => {
 					}) => (
 						<div key={draft.id} className="relative">
 							<Link href={`/write/${draft.id}`}>
-								<DraftView draft={draft} authorId={draft.author_id} />
+								<DraftView
+									draft={draft}
+									authorId={draft.author_id}
+									isCloud={!isLocal}
+								/>
 							</Link>
 
 							<div className="absolute top-2 right-2">
@@ -177,31 +180,24 @@ export const DraftsList = ({ onClick }: { onClick?: (id: string) => void }) => {
 			</div>
 		);
 	};
-
 	return (
-		<Tabs defaultValue="cloud">
-			<TabsList className="grid w-full grid-cols-2">
-				<TabsTrigger value="cloud">Cloud Drafts</TabsTrigger>
-				<TabsTrigger value="local">Local Drafts</TabsTrigger>
-			</TabsList>
-			<TabsContent value="cloud">
+		<div className="space-y-8">
+			<div>
 				{queryLoading ? (
 					<LoadingSpinner />
 				) : (
 					renderDraftsList(cloudDrafts, false)
 				)}
-			</TabsContent>
-			<TabsContent value="local">
+			</div>
+			<div>
 				{renderDraftsList(
-					Object.entries(localDrafts).map(([id, content]) => {
-						return {
-							id,
-							content_json: content as unknown as string,
-						};
-					}),
+					Object.entries(localDrafts).map(([id, content]) => ({
+						id,
+						content_json: content as unknown as string,
+					})),
 					true,
 				)}
-			</TabsContent>
-		</Tabs>
+			</div>
+		</div>
 	);
 };
