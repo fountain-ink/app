@@ -32,6 +32,8 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
 	if (loading || error) {
 		return null;
 	}
+	
+	
 
 	const handleNew = () => {
 		const uid = getRandomUid();
