@@ -17,7 +17,7 @@ export const Header = () => {
 			: "";
 
 	// FIXME: Temporary before release
-	if (!hostname.includes("dev") && !isDevEnvironment) {
+	if (!hostname.includes("dev") || !hostname.includes("localhost")) {
 		return (
 			<div className="fixed w-full p-2 z-[40] flex justify-between items-center pointer-events-none">
 				<Link
