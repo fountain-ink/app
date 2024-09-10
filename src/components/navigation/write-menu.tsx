@@ -83,7 +83,7 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
 					}
 				>
 					<div className=" h-96 overflow-y-scroll">
-						<DraftsList onClick={() => setIsOpen(false)} />
+						<DraftsList />
 					</div>
 				</Suspense>
 
