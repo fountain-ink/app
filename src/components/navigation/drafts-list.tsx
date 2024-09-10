@@ -177,7 +177,6 @@ export const DraftsList = ({ onClick }: { onClick?: (id: string) => void }) => {
 			</div>
 		);
 	};
-	console.log(localDrafts);
 
 	return (
 		<Tabs defaultValue="cloud">

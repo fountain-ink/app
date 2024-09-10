@@ -2,15 +2,15 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface DocumentState {
-	[documentId: string]: object;
+	[documentId: string]: string;
 }
 
 interface AppState {
 	isSmoothScrolling: boolean;
 	documents: DocumentState;
 	toggleSmoothScrolling: () => void;
-	saveDocument: (documentId: string, content: object) => void;
-	getDocument: (documentId: string) => object | null;
+	saveDocument: (documentId: string, content: string) => void;
+	getDocument: (documentId: string) => string | null;
 }
 
 export const useStorage = create<AppState>()(
@@ -22,7 +22,7 @@ export const useStorage = create<AppState>()(
 			documents: {},
 			toggleSmoothScrolling: () =>
 				set((state) => ({ isSmoothScrolling: !state.isSmoothScrolling })),
-			saveDocument: (id: string, content_json: object) =>
+			saveDocument: (id: string, content_json: string) =>
 				set((state) => ({
 					documents: { ...state.documents, [id]: content_json },
 				})),
