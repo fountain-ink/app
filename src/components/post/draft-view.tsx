@@ -14,7 +14,7 @@ interface DraftViewProps {
 }
 
 export const DraftView = ({ draft, authorId }: DraftViewProps) => {
-	const title = draft.title || "Untitled Draft";
+	const title = "Untitled Draft";
 	const content = draft.content || "";
 	const authorIds = authorId ? [authorId] : [];
 
