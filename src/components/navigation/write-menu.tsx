@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogContent,
+	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -72,26 +73,29 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
 			<DialogTrigger asChild>
 				<Button>{text}</Button>
 			</DialogTrigger>
-			<DialogContent className="sm:max-w-[425px]">
+			<DialogContent className="sm:max-w-[425px] ">
 				<DialogHeader>
-					<DialogTitle>Write an Article</DialogTitle>
+					<DialogTitle>Write an article</DialogTitle>
 				</DialogHeader>
-				<div className="space-y-4">
-					<Button
-						onClick={handleCreate}
-						variant="ghost"
-						className="w-full justify-start flex gap-2 p-2"
-					>
-						<PlusIcon className="h-5 w-5 flex gap-2 text-md" />
-						New Article
-					</Button>
-					<div className="border-t pt-4">
-						<h3 className="mb-2 font-semibold">Continue writing</h3>
-						<Suspense fallback={<LoadingSpinner />}>
-							<DraftsList onClick={() => setIsOpen(false)} />
-						</Suspense>
+				<Suspense
+					fallback={
+						<LoadingSpinner className="w-full h-full items-center jusify-center" />
+					}
+				>
+					<div className=" h-96 overflow-y-scroll">
+						<DraftsList onClick={() => setIsOpen(false)} />
 					</div>
-				</div>
+				</Suspense>
+
+				<DialogFooter>
+					<div className="flex justify-between items-center w-full">
+						<Button variant="ghost">Cancel</Button>
+						<Button onClick={handleCreate} className="flex gap-2">
+							<PlusIcon className="h-5 w-5 flex gap-2 text-md" />
+							New Article
+						</Button>
+					</div>
+				</DialogFooter>
 			</DialogContent>
 		</Dialog>
 	);

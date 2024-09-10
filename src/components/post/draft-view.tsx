@@ -9,7 +9,7 @@ import {
 import { UserAuthorView } from "../user/user-author-view";
 
 interface DraftViewProps {
-	draft: { id: string; title: string; content?: string };
+	draft: { id: string; content?: string };
 	authorId?: ProfileId;
 }
 

@@ -22,9 +22,9 @@ export const useStorage = create<AppState>()(
 			documents: {},
 			toggleSmoothScrolling: () =>
 				set((state) => ({ isSmoothScrolling: !state.isSmoothScrolling })),
-			saveDocument: (documentId: string, content: object) =>
+			saveDocument: (id: string, content_json: object) =>
 				set((state) => ({
-					documents: { ...state.documents, [documentId]: content },
+					documents: { ...state.documents, [id]: content_json },
 				})),
 			getDocument: (documentId: string) => get().documents[documentId] || null,
 		}),
