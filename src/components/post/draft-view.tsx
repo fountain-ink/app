@@ -10,30 +10,26 @@ interface DraftViewProps {
 // biome-ignore lint/suspicious/noExplicitAny: intended use
 const extractTitle = (content: any): string => {
 	try {
-		// Check for h1
-		const h1Node = content.content.find((node: any) => node.type === "heading");
-		if (h1Node) {
-			return h1Node.content[0].text;
-		}
-
-		// Check for first paragraph
-		const firstParagraph = content.content.find(
-			(node: any) => node.type === "paragraph",
-		);
-		if (firstParagraph) {
-			return firstParagraph.content[0].text;
-		}
-
-		// Check for first sentence
 		const firstTextNode = content.content.find(
-			(node: any) => node.content?.[0]?.text,
+			(node: any) =>
+				node.type === "heading" ||
+				node.type === "paragraph" ||
+				node.type === "text" ||
+				node.content?.[0]?.text,
 		);
+
 		if (firstTextNode) {
+			if (
+				firstTextNode.type === "heading" ||
+				firstTextNode.type === "paragraph"
+			) {
+				return firstTextNode.content[0].text;
+			}
+
 			const sentence = firstTextNode.content[0].text.split(".")[0];
 			return sentence.length > 0 ? `${sentence}.` : "Untitled Draft";
 		}
 
-		// Default title
 		return "Untitled Draft";
 	} catch (error) {
 		console.error("Error parsing content:", error);
