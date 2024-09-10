@@ -74,7 +74,7 @@ export const PublishMenu = ({ text = "Publish" }: { text?: string }) => {
 						variant="ghost"
 						className="w-full justify-start flex gap-2 p-2"
 					>
-						Publish Article
+						Publish
 					</Button>
 				</div>
 			</DialogContent>

@@ -9,7 +9,7 @@ import {
 	usePublications,
 } from "@lens-protocol/react-web";
 import { toast } from "sonner";
-import { WriteMenu } from "../navigation/menu-write";
+import { WriteMenu } from "../navigation/write-menu";
 import { PostView } from "../post/post-view";
 import {
 	Card,

@@ -2,24 +2,24 @@
 
 import { Button } from "@/components/ui/button";
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
 } from "@/components/ui/dialog";
 import { getRandomUid } from "@/lib/getRandomUid";
 import {
-    SessionType,
-    useRefreshToken,
-    useSession,
+	SessionType,
+	useRefreshToken,
+	useSession,
 } from "@lens-protocol/react-web";
 import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import { useAccount } from "wagmi";
 import { LoadingSpinner } from "../loading-spinner";
-import { UserDrafts } from "../user/user-drafts-list";
+import { DraftsList } from "./drafts-list";
 
 export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
 	const { data: session, loading, error } = useSession();
@@ -32,8 +32,6 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
 	if (loading || error) {
 		return null;
 	}
-	
-	
 
 	const handleNew = () => {
 		const uid = getRandomUid();
@@ -90,7 +88,7 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
 					<div className="border-t pt-4">
 						<h3 className="mb-2 font-semibold">Continue writing</h3>
 						<Suspense fallback={<LoadingSpinner />}>
-							<UserDrafts onClick={() => setIsOpen(false)} />
+							<DraftsList onClick={() => setIsOpen(false)} />
 						</Suspense>
 					</div>
 				</div>

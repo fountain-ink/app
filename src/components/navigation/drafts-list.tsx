@@ -45,7 +45,7 @@ const fetchDrafts = async ({ queryKey }: { queryKey: [string] }) => {
 	return drafts;
 };
 
-export const UserDrafts = ({ onClick }: { onClick?: (id: string) => void }) => {
+export const DraftsList = ({ onClick }: { onClick?: (id: string) => void }) => {
 	const {
 		data: drafts,
 		isLoading: queryLoading,

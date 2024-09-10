@@ -1,4 +1,4 @@
-import { UserDrafts } from "@/components/user/user-drafts-list";
+import { DraftsList } from "@/components/navigation/drafts-list";
 import { getAuthorizedClients } from "@/lib/getAuthorizedClients";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
@@ -10,7 +10,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
 		return null;
 	}
 
-	return <UserDrafts />;
+	return <DraftsList />;
 };
 
 export default UserPage;

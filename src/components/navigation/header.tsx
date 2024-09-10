@@ -6,8 +6,8 @@ import { usePathname } from "next/navigation";
 import { FountainLogo } from "../custom-icons";
 import { ThemeSidebar } from "../theme/theme-editor";
 import { UserMenu } from "../user/user-menu";
-import { WriteMenu } from "./menu-write";
-import { PublishMenu } from "./menu-publish";
+import { PublishMenu } from "./publish-menu";
+import { WriteMenu } from "./write-menu";
 
 export const Header = () => {
 	const pathname = usePathname();
@@ -29,7 +29,7 @@ export const Header = () => {
 			</div>
 		);
 	}
-	
+
 	const isWritePage = pathname.startsWith("/write");
 
 	return (
