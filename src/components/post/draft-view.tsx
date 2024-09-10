@@ -7,7 +7,8 @@ interface DraftViewProps {
 	authorId?: ProfileId;
 }
 
-const extractTitle = (content: string): string => {
+// biome-ignore lint/suspicious/noExplicitAny: intended use
+const extractTitle = (content: any): string => {
 	try {
 		// Check for h1
 		const h1Node = content.content.find((node: any) => node.type === "heading");
