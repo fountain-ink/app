@@ -1,4 +1,7 @@
-import { getTransactionContent, getTransactionId } from "@/lib/arweave";
+import {
+	getTransactionContent,
+	getTransactionId,
+} from "@/lib/get-arweave-content";
 import { gql } from "graphql-request";
 
 const query = gql`

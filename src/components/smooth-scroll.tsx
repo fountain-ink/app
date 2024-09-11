@@ -1,6 +1,6 @@
 "use client";
 
-import { useStorage } from "@/lib/useStorage";
+import { useStorage } from "@/hooks/use-storage";
 import { type ReactNode, useEffect, useRef } from "react";
 
 export const SmoothScroll = ({
@@ -60,10 +60,10 @@ export const SmoothScroll = ({
 			scrollContainer.removeEventListener("wheel", handleWheel);
 		};
 	}, [speed, isSmoothScrolling, lerp]);
-	
+
 	if (!isSmoothScrolling) {
-    return <>{children}</>;
-  }
+		return <>{children}</>;
+	}
 
 	return (
 		<div ref={scrollContainerRef} className="h-screen overflow-hidden">

@@ -2,16 +2,16 @@ import { BlogSettings } from "@/components/settings/settings-blog";
 import { GeneralSettings } from "@/components/settings/settings-general";
 import { ThemeSettings } from "@/components/settings/settings-theme";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getAuthorizedClients } from "@/lib/getAuthorizedClients";
+import { getAuthorizedClients } from "@/lib/get-auth-clients";
 import {
-    DollarSign,
-    FileText,
-    LayoutGrid,
-    Mail,
-    Megaphone,
-    Palette,
-    Settings,
-    Users,
+	DollarSign,
+	FileText,
+	LayoutGrid,
+	Mail,
+	Megaphone,
+	Palette,
+	Settings,
+	Users,
 } from "lucide-react";
 
 export async function generateMetadata() {
@@ -78,7 +78,6 @@ export default async function settings() {
 
 				<TabsContent value="blog">
 					<BlogSettings profile={profile} />
-
 				</TabsContent>
 			</Tabs>
 		</div>

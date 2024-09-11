@@ -1,6 +1,6 @@
 "use client";
 
-import { useStorage } from "@/lib/useStorage";
+import { useStorage } from "@/hooks/use-storage";
 import {
 	type ProfileId,
 	SessionType,

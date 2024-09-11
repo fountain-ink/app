@@ -1,4 +1,4 @@
-import { getTransactionContent } from "@/lib/arweave";
+import { getTransactionContent } from "@/lib/get-arweave-content";
 import edjsHTML from "editorjs-html";
 import { JSDOM } from "jsdom";
 import { NextResponse } from "next/server";
@@ -72,7 +72,7 @@ export async function getT2Content(slug: string) {
 		const htmlContent = edjsParser.parse(content.body);
 
 		const post: T2Post = {
-			content: htmlContent.join(''),
+			content: htmlContent.join(""),
 			title: content.title,
 			subtitle: content.subtitle,
 			cover_img_url: content.cover_img_url,
@@ -87,9 +87,8 @@ export async function getT2Content(slug: string) {
 		};
 
 		return NextResponse.json(post, { status: 200 });
-
 	} catch (error) {
 		console.error("Error:", error);
-		throw error
+		throw error;
 	}
 }

@@ -5,21 +5,22 @@ import { TiptapCollabProvider } from "@hocuspocus/provider";
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import {
-    EditorBubble,
-    EditorCommand,
-    EditorCommandEmpty,
-    EditorCommandItem,
-    EditorCommandList,
-    EditorContent,
-    type EditorInstance,
-    EditorRoot,
-    type JSONContent,
+	EditorBubble,
+	EditorCommand,
+	EditorCommandEmpty,
+	EditorCommandItem,
+	EditorCommandList,
+	EditorContent,
+	type EditorInstance,
+	EditorRoot,
+	type JSONContent,
 } from "novel";
 import { useEffect, useMemo, useState } from "react";
 import * as Y from "yjs";
 import { defaultExtensions } from "./extensions/editor-extensions";
 import { slashCommand, suggestionItems } from "./extensions/slash-command";
 
+import { useStorage } from "@/hooks/use-storage";
 import { handleCommandNavigation } from "novel/extensions";
 import { useDebouncedCallback } from "use-debounce";
 import { LoadingSpinner } from "../loading-spinner";
@@ -27,7 +28,6 @@ import { ColorSelector } from "./selectors/select-color";
 import { LinkSelector } from "./selectors/select-link";
 import { NodeSelector } from "./selectors/select-node";
 import { TextButtons } from "./selectors/select-text";
-import { useStorage } from "@/lib/useStorage";
 
 const token = env.NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN;
 const colors = ["#958DF1", "#F98181", "#FBBC88", "#FAF594"];
@@ -73,16 +73,16 @@ export const Editor = ({
 	const [yDoc, setYDoc] = useState<Y.Doc | null>(null);
 	const [provider, setProvider] = useState<TiptapCollabProvider | null>(null);
 	const [content, setContent] = useState(initialContent);
-  const { getDocument } = useStorage();
-  
-  useEffect(() => {
-    if (documentId.startsWith("local-")) {
-      const localContent = getDocument(documentId);
-      if (localContent) {
-        setContent(localContent);
-      }
-    }
-  }, [documentId, getDocument]);
+	const { getDocument } = useStorage();
+
+	useEffect(() => {
+		if (documentId.startsWith("local-")) {
+			const localContent = getDocument(documentId);
+			if (localContent) {
+				setContent(localContent);
+			}
+		}
+	}, [documentId, getDocument]);
 
 	// Create a new Y.js document and provider when documentId changes
 	useEffect(() => {

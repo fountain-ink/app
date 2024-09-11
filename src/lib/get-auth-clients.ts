@@ -1,6 +1,6 @@
-import { getDatabase } from "@/lib/getDatabase";
-import { getLensClient } from "@/lib/getLensClient";
-import { getCookieAuth } from "./getCookieAuth";
+import { getDatabase } from "@/lib/get-database";
+import { getLensClient } from "@/lib/get-lens-client";
+import { getCookieAuth } from "./get-auth-cookies";
 
 export async function getAuthorizedClients() {
 	const { isValid, refreshToken } = getCookieAuth();

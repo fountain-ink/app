@@ -2,7 +2,7 @@ import { Editor } from "@/components/editor/editor";
 import { AutoSave } from "@/components/editor/editor-auto-save";
 import { EditorCollaborators } from "@/components/editor/editor-collaborators";
 import { EditorDate } from "@/components/editor/editor-date";
-import { getBaseUrl } from "@/lib/getBaseUrl";
+import { getBaseUrl } from "@/lib/get-base-url";
 import { cookies } from "next/headers";
 
 async function getDraft(id: string) {

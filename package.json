@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "generate-fonts": "node src/lib/generateFonts.js",
+    "generate-fonts": "node src/lib/generate-fonts.js",
     "dev": "npm run generate-fonts && next dev",
     "build": "npm run generate-fonts && next build",
     "lint": "next lint",

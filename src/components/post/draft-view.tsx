@@ -5,7 +5,7 @@ interface ContentNode {
 	content?: Array<{ text?: string }>;
 }
 
-import { useStorage } from "@/lib/useStorage";
+import { useStorage } from "@/hooks/use-storage";
 import type { ProfileId } from "@lens-protocol/react-web";
 import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";

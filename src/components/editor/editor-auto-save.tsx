@@ -1,6 +1,6 @@
 "use client";
 
-import { useStorage } from "@/lib/useStorage";
+import { useStorage } from "@/hooks/use-storage";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckIcon } from "lucide-react";
 import { useEditor } from "novel";

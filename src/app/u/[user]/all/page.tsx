@@ -1,5 +1,5 @@
 import { UserContent } from "@/components/user/user-content";
-import { getAuthorizedClients } from "@/lib/getAuthorizedClients";
+import { getAuthorizedClients } from "@/lib/get-auth-clients";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
 	const { lens } = await getAuthorizedClients();

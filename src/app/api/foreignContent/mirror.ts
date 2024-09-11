@@ -1,6 +1,9 @@
-import { getTransactionContent, getTransactionId } from "@/lib/arweave";
+import {
+	getTransactionContent,
+	getTransactionId,
+} from "@/lib/get-arweave-content";
 import { gql } from "graphql-request";
-import markdownit from 'markdown-it'
+import markdownit from "markdown-it";
 
 const query = gql`
   query GetMirrorTransactions($digest: String!) {
@@ -25,10 +28,10 @@ interface MirrorContent {
 }
 
 function stripImgTags(content: string): string {
-  const regex = /<p>\s*(<img[^>]+>)\s*<\/p>/g;
-  
-  // Replace matches with just the <img> tag
-  return content.replace(regex, '$1');
+	const regex = /<p>\s*(<img[^>]+>)\s*<\/p>/g;
+
+	// Replace matches with just the <img> tag
+	return content.replace(regex, "$1");
 }
 
 export async function getMirrorContent(slug: string) {
@@ -49,7 +52,7 @@ export async function getMirrorContent(slug: string) {
 
 		const parsedPost = JSON.parse(post);
 		const markdownContent = parsedPost.content.body;
-		const converter = markdownit()
+		const converter = markdownit();
 		const content = stripImgTags(converter.render(markdownContent));
 
 		return {

@@ -1,6 +1,6 @@
 "use client";
 
-import { window } from "@/lib/globals";
+import { window } from "@/lib/global-window";
 import { LensClient, production } from "@lens-protocol/client";
 import { type Profile, useLogin } from "@lens-protocol/react-web";
 import { setCookie } from "cookies-next";

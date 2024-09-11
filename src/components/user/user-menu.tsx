@@ -7,7 +7,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { clearCookies } from "@/lib/clearCookies";
+import { clearCookies } from "@/lib/clear-cookies";
 import { SessionType, useLogout, useSession } from "@lens-protocol/react-web";
 import { ArrowLeftRightIcon, LogOut, Settings, User } from "lucide-react";
 import Link from "next/link";

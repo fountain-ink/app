@@ -1,7 +1,7 @@
-import { UserProfile } from "@/components/user/user-profile";
 import { UserCover } from "@/components/user/user-cover";
 import { UserNavigation } from "@/components/user/user-navigation";
-import { getAuthorizedClients } from "@/lib/getAuthorizedClients";
+import { UserProfile } from "@/components/user/user-profile";
+import { getAuthorizedClients } from "@/lib/get-auth-clients";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata({

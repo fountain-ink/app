@@ -1,6 +1,5 @@
-import { getAuthorizedClients } from "@/lib/getAuthorizedClients";
+import { getAuthorizedClients } from "@/lib/get-auth-clients";
 import { type NextRequest, NextResponse } from "next/server";
-
 
 export async function GET(req: NextRequest) {
 	try {

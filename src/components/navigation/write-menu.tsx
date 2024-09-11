@@ -9,7 +9,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { getRandomUid } from "@/lib/getRandomUid";
+import { getRandomUid } from "@/lib/get-random-uid";
 import {
 	SessionType,
 	useRefreshToken,
