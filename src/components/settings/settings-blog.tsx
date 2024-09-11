@@ -1,72 +1,195 @@
+"use client";
+
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { uploadJson } from "@/lib/upload-utils";
+import type { ProfileFragment } from "@lens-protocol/client";
+import {
+	MetadataAttributeType,
+	profile as profileMetadata,
+} from "@lens-protocol/metadata";
+import { type Profile, useSetProfileMetadata } from "@lens-protocol/react-web";
+import { useCallback, useState } from "react";
+import { Button } from "../ui/button";
 
-export function BlogSettings() {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Blog Settings</CardTitle>
-        <CardDescription>
-          Customize your blog preferences.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="space-y-2">
-          <Label htmlFor="blog-title">Blog Title</Label>
-          <Input id="blog-title" placeholder="Your blog title" />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="blog-description">Blog Description</Label>
-          <Textarea
-            id="blog-description"
-            placeholder="Your blog description"
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="blog-background">Blog Background</Label>
-          <Input id="blog-background" type="file" accept="image/*" />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="default-category">Default Category</Label>
-          <Select>
-            <SelectTrigger id="default-category">
-              <SelectValue placeholder="Select a default category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="technology">Technology</SelectItem>
-              <SelectItem value="science">Science</SelectItem>
-              <SelectItem value="health">Health</SelectItem>
-              <SelectItem value="other">Other</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Switch id="comments" />
-          <Label htmlFor="comments">Enable comments on articles</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Switch id="auto-publish" />
-          <Label htmlFor="auto-publish">
-            Auto-publish scheduled articles
-          </Label>
-        </div>
-      </CardContent>
-    </Card>
-  );
+export function BlogSettings({
+	profile,
+}: { profile: Profile | ProfileFragment | null }) {
+	const currentMetadata = profile?.metadata;
+	const { execute: setProfileMetadata, loading } = useSetProfileMetadata();
+
+	const [blogTitle, setBlogTitle] = useState(
+		currentMetadata?.displayName || "",
+	);
+	const [blogDescription, setBlogDescription] = useState(
+		currentMetadata?.bio || "",
+	);
+	const [blogBackground, setBlogBackground] = useState(
+		currentMetadata?.coverPicture,
+	);
+	const [defaultCategory, setDefaultCategory] = useState(
+		currentMetadata?.attributes?.find((attr) => attr.key === "defaultCategory")
+			?.value || "",
+	);
+	const [enableComments, setEnableComments] = useState(
+		currentMetadata?.attributes?.find((attr) => attr.key === "enableComments")
+			?.value === "true",
+	);
+	const [autoPublish, setAutoPublish] = useState(
+		currentMetadata?.attributes?.find((attr) => attr.key === "autoPublish")
+			?.value === "true",
+	);
+
+	const handleSave = useCallback(async () => {
+		const attributes: Array<
+			| { value: string; type: MetadataAttributeType.STRING; key: string }
+			| {
+					value: "true" | "false";
+					type: MetadataAttributeType.BOOLEAN;
+					key: string;
+			  }
+		> = [
+			{
+				key: "defaultCategory",
+				type: MetadataAttributeType.STRING,
+				value: defaultCategory,
+			},
+
+			{
+				key: "enableComments",
+
+				type: MetadataAttributeType.BOOLEAN,
+				value: enableComments ? "true" : "false",
+			},
+			{
+				key: "autoPublish",
+				type: MetadataAttributeType.BOOLEAN,
+				value: autoPublish ? "true" : "false",
+			},
+		];
+
+		const metadata = profileMetadata({
+			name: blogTitle,
+			bio: blogDescription,
+			coverPicture: blogBackground?.raw.uri,
+			attributes,
+
+			appId: "fountain",
+		});
+
+		const metadataURI = await uploadJson(metadata);
+
+		const result = await setProfileMetadata({ metadataURI });
+
+		if (result.isFailure()) {
+			console.error("Failed to update profile metadata:", result.error);
+		} else {
+			console.log("Profile metadata updated successfully");
+		}
+	}, [
+		blogTitle,
+		blogDescription,
+		blogBackground,
+		defaultCategory,
+		enableComments,
+		autoPublish,
+		setProfileMetadata,
+	]);
+
+	const handleBackgroundChange = async (
+		e: React.ChangeEvent<HTMLInputElement>,
+	) => {
+		if (e.target.files?.[0]) {
+			const file = e.target.files[0];
+			const uploadedUri = await uploadJson(file);
+			// setBlogBackground(uploadedUri);
+		}
+	};
+
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Blog Settings</CardTitle>
+				<CardDescription>Customize your blog preferences.</CardDescription>
+			</CardHeader>
+			<CardContent className="space-y-6">
+				<div className="space-y-2">
+					<Label htmlFor="blog-title">Blog Title</Label>
+					<Input
+						id="blog-title"
+						value={blogTitle}
+						onChange={(e) => setBlogTitle(e.target.value)}
+						placeholder="Your blog title"
+					/>
+				</div>
+				<div className="space-y-2">
+					<Label htmlFor="blog-description">Blog Description</Label>
+					<Textarea
+						id="blog-description"
+						value={blogDescription}
+						onChange={(e) => setBlogDescription(e.target.value)}
+						placeholder="Your blog description"
+					/>
+				</div>
+				<div className="space-y-2">
+					<Label htmlFor="blog-background">Blog Background</Label>
+					<Input
+						id="blog-background"
+						type="file"
+						accept="image/*"
+						onChange={handleBackgroundChange}
+					/>
+				</div>
+				<div className="space-y-2">
+					<Label htmlFor="default-category">Default Category</Label>
+					<Select value={defaultCategory} onValueChange={setDefaultCategory}>
+						<SelectTrigger id="default-category">
+							<SelectValue placeholder="Select a default category" />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="technology">Technology</SelectItem>
+							<SelectItem value="science">Science</SelectItem>
+							<SelectItem value="health">Health</SelectItem>
+							<SelectItem value="other">Other</SelectItem>
+						</SelectContent>
+					</Select>
+				</div>
+				<div className="flex items-center space-x-2">
+					<Switch
+						id="comments"
+						checked={enableComments}
+						onCheckedChange={setEnableComments}
+					/>
+					<Label htmlFor="comments">Enable comments on articles</Label>
+				</div>
+				<div className="flex items-center space-x-2">
+					<Switch
+						id="auto-publish"
+						checked={autoPublish}
+						onCheckedChange={setAutoPublish}
+					/>
+					<Label htmlFor="auto-publish">Auto-publish scheduled articles</Label>
+				</div>
+				<Button onClick={handleSave} disabled={loading}>
+					{loading ? "Saving..." : "Save Settings"}
+				</Button>
+			</CardContent>
+		</Card>
+	);
 }

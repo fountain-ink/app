@@ -1,5 +1,10 @@
 "use client";
 
+interface ContentNode {
+	type: string;
+	content?: Array<{ text?: string }>;
+}
+
 import { useStorage } from "@/lib/useStorage";
 import type { ProfileId } from "@lens-protocol/react-web";
 import { useQueryClient } from "@tanstack/react-query";
@@ -21,7 +26,7 @@ interface DraftViewProps {
 const extractTitle = (content: any): string => {
 	try {
 		const firstTextNode = content.content.find(
-			(node: any) =>
+			(node: ContentNode) =>
 				node.type === "heading" ||
 				node.type === "paragraph" ||
 				node.type === "text" ||
@@ -86,26 +91,25 @@ export const DraftView = ({ draft, authorId, isCloud }: DraftViewProps) => {
 
 	return (
 		<div className="relative">
-		<Link href={`/write/${draft.id}`}>
-
-			<Card className="bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none">
-				<CardHeader>
-					{authorId && <UserAuthorView profileIds={authorIds} />}
-					<CardTitle className="text-3xl flex items-center gap-2">
-						{title}
-					</CardTitle>
-				</CardHeader>
-			</Card>
-			<div className="absolute top-2 right-2">
-				<DraftOptionsDropdown
-					onDeleteClick={() => setIsDeleteDialogOpen(true)}
+			<Link href={`/write/${draft.id}`}>
+				<Card className="bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none">
+					<CardHeader>
+						{authorId && <UserAuthorView profileIds={authorIds} />}
+						<CardTitle className="text-3xl flex items-center gap-2">
+							{title}
+						</CardTitle>
+					</CardHeader>
+				</Card>
+				<div className="absolute top-2 right-2">
+					<DraftOptionsDropdown
+						onDeleteClick={() => setIsDeleteDialogOpen(true)}
+					/>
+				</div>
+				<DraftDeleteDialog
+					isOpen={isDeleteDialogOpen}
+					onClose={() => setIsDeleteDialogOpen(false)}
+					onConfirm={handleDelete}
 				/>
-			</div>
-			<DraftDeleteDialog
-				isOpen={isDeleteDialogOpen}
-				onClose={() => setIsDeleteDialogOpen(false)}
-				onConfirm={handleDelete}
-			/>
 			</Link>
 		</div>
 	);

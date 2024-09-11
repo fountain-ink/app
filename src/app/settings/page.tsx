@@ -2,15 +2,16 @@ import { BlogSettings } from "@/components/settings/settings-blog";
 import { GeneralSettings } from "@/components/settings/settings-general";
 import { ThemeSettings } from "@/components/settings/settings-theme";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getAuthorizedClients } from "@/lib/getAuthorizedClients";
 import {
-	DollarSign,
-	FileText,
-	LayoutGrid,
-	Mail,
-	Megaphone,
-	Palette,
-	Settings,
-	Users,
+    DollarSign,
+    FileText,
+    LayoutGrid,
+    Mail,
+    Megaphone,
+    Palette,
+    Settings,
+    Users,
 } from "lucide-react";
 
 export async function generateMetadata() {
@@ -25,7 +26,7 @@ const tabData = [
 	{ id: "themes", label: "Themes", icon: Palette, enabled: true },
 	{ id: "blog", label: "Blog", icon: FileText, enabled: true },
 	{
-		id: "paid-subscriptions",
+		id: "subscriptions",
 		label: "Subscriptions",
 		icon: DollarSign,
 		enabled: false,
@@ -42,6 +43,8 @@ const tabData = [
 ];
 
 export default async function settings() {
+	const { profile } = await getAuthorizedClients();
+
 	return (
 		<div className="container mx-auto p-6 max-w-6xl">
 			<h1 className="text-3xl font-bold mb-8">Settings</h1>
@@ -74,7 +77,8 @@ export default async function settings() {
 				</TabsContent>
 
 				<TabsContent value="blog">
-					<BlogSettings />
+					<BlogSettings profile={profile} />
+
 				</TabsContent>
 			</Tabs>
 		</div>
