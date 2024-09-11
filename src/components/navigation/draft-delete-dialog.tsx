@@ -1,11 +1,11 @@
 import { Button } from "../ui/button";
 import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
 } from "../ui/dialog";
 
 export const DraftDeleteDialog = ({
@@ -13,8 +13,9 @@ export const DraftDeleteDialog = ({
 	onClose,
 	onConfirm,
 }: { isOpen: boolean; onClose: () => void; onConfirm: () => void }) => (
-	<Dialog open={isOpen} onOpenChange={onClose}>
-		<DialogContent>
+	<Dialog  open={isOpen} onOpenChange={onClose}>
+		<DialogContent onClick={(e) => e.stopPropagation()}>
+
 			<DialogHeader>
 				<DialogTitle>Are you sure you want to delete this draft?</DialogTitle>
 				<DialogDescription>This action cannot be undone.</DialogDescription>
