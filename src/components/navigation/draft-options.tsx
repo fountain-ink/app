@@ -1,10 +1,10 @@
 import { MoreVertical, TrashIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
 export const DraftOptionsDropdown = ({
@@ -14,7 +14,8 @@ export const DraftOptionsDropdown = ({
 		<DropdownMenuTrigger asChild>
 			<Button
 				variant="ghost"
-				className="hover:bg-accent hover:text-muted-foreground stroke-1 hover:stroke-2"
+				className="hover:bg-transparent hover:text-card-foreground opacity-0 group-hover:opacity-100
+            			 data-[state=open]:opacity-100 transition-all ease-in duration-100"
 				size="icon"
 			>
 				<MoreVertical className="h-5 w-5" />
@@ -33,5 +34,4 @@ export const DraftOptionsDropdown = ({
 			</DropdownMenuItem>
 		</DropdownMenuContent>
 	</DropdownMenu>
-
 );

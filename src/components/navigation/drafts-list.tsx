@@ -28,17 +28,6 @@ type Draft = {
 	isLocal: boolean;
 };
 
-const DraftItem = ({
-	draft,
-	onDelete,
-}: { draft: Draft; onDelete: () => void }) => (
-	<DraftView
-		draft={draft}
-		authorId={draft.author_id}
-		isCloud={!draft.isLocal}
-	/>
-);
-
 export const DraftsList = () => {
 	const { data: session, loading: sessionLoading } = useSession();
 	const { documents: localDrafts } = useStorage();
@@ -66,6 +55,7 @@ export const DraftsList = () => {
 	}));
 
 	const allDrafts = [...cloudDraftsList, ...localDraftsList];
+	const profileId = session?.profile.id;
 
 	return (
 		<div className="space-y-4">
@@ -75,7 +65,12 @@ export const DraftsList = () => {
 				<div>No drafts available</div>
 			) : (
 				allDrafts.map((draft) => (
-					<DraftItem key={draft.id} draft={draft} onDelete={() => {}} />
+					<DraftView
+						key={draft.id}
+						draft={draft}
+						authorId={draft.author_id || profileId}
+						isLocal={draft.isLocal}
+					/>
 				))
 			)}
 		</div>

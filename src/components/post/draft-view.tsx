@@ -19,7 +19,7 @@ import { UserAuthorView } from "../user/user-author-view";
 interface DraftViewProps {
 	draft: { id: string; content_json?: string };
 	authorId?: ProfileId;
-	isCloud: boolean;
+	isLocal: boolean;
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: intended use
@@ -52,7 +52,7 @@ const extractTitle = (content: any): string => {
 	}
 };
 
-export const DraftView = ({ draft, authorId, isCloud }: DraftViewProps) => {
+export const DraftView = ({ draft, authorId, isLocal }: DraftViewProps) => {
 	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 	const { saveDocument, documents: localDrafts } = useStorage();
 	const queryClient = useQueryClient();
@@ -62,7 +62,12 @@ export const DraftView = ({ draft, authorId, isCloud }: DraftViewProps) => {
 	const authorIds = authorId ? [authorId] : [];
 
 	const handleDelete = async () => {
-		if (isCloud) {
+		if (isLocal) {
+			const updatedDocuments = { ...useStorage.getState().documents };
+			delete updatedDocuments[draft.id];
+			saveDocument(draft.id, updatedDocuments);
+			toast.success("Draft deleted successfully");
+		} else {
 			try {
 				const res = await fetch(`/api/drafts?id=${draft.id}`, {
 					method: "DELETE",
@@ -80,27 +85,20 @@ export const DraftView = ({ draft, authorId, isCloud }: DraftViewProps) => {
 			} catch (err) {
 				toast.error("Error deleting draft");
 			}
-		} else {
-			const updatedDocuments = { ...useStorage.getState().documents };
-			delete updatedDocuments[draft.id];
-			saveDocument(draft.id, updatedDocuments);
-			toast.success("Draft deleted successfully");
 		}
 		setIsDeleteDialogOpen(false);
 	};
 
 	return (
-		<div className="relative">
-			<Link href={`/write/${draft.id}`}>
-				<Card className="bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none">
-					<CardHeader>
-						{authorId && <UserAuthorView profileIds={authorIds} />}
-						<CardTitle className="text-3xl flex items-center gap-2">
-							{title}
-						</CardTitle>
-					</CardHeader>
-				</Card>
-				<div className="absolute top-2 right-2">
+		<Link href={`/write/${draft.id}`}>
+			<Card className="bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none relative">
+				<CardHeader>
+					{authorId && <UserAuthorView profileIds={authorIds} />}
+					<CardTitle className="text-3xl flex items-center gap-2">
+						{title}
+					</CardTitle>
+				</CardHeader>
+				<div className="absolute top-2 right-2 ">
 					<DraftOptionsDropdown
 						onDeleteClick={() => setIsDeleteDialogOpen(true)}
 					/>
@@ -110,7 +108,7 @@ export const DraftView = ({ draft, authorId, isCloud }: DraftViewProps) => {
 					onClose={() => setIsDeleteDialogOpen(false)}
 					onConfirm={handleDelete}
 				/>
-			</Link>
-		</div>
+			</Card>
+		</Link>
 	);
 };

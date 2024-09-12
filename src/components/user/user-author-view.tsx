@@ -17,6 +17,10 @@ export const UserAuthorView = ({
 		loading,
 		error,
 	} = useProfiles({ where: { profileIds } });
+	
+	if (profiles?.length === 0) {
+		return null
+	}
 
 	if (loading) {
 		return (
