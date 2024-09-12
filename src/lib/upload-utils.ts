@@ -6,8 +6,7 @@ import type { LensClient } from "@lens-protocol/client";
 
 const accessKeyId = env.STORAGE_ACCESS_KEY;
 const secretAccessKey = env.STORAGE_SECRET_KEY;
-const MAX_DATA_SIZE = 149 * 1024; // 149KB
-const BUCKET_NAME = "pingpad-ar";
+const BUCKET_NAME = "fountain";
 
 const s3 = new S3({
 	endpoint: "https://endpoint.4everland.co",
