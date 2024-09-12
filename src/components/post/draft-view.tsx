@@ -94,7 +94,7 @@ export const DraftView = ({ draft, authorId, isLocal }: DraftViewProps) => {
 			<Card className="bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none relative">
 				<CardHeader>
 					{authorId && <UserAuthorView profileIds={authorIds} />}
-					<CardTitle className="text-3xl flex items-center gap-2">
+					<CardTitle className="text-3xl truncate inline-block w-[calc(100%)] whitespace-nowrap overflow-hidden text-ellipsis ">
 						{title}
 					</CardTitle>
 				</CardHeader>
