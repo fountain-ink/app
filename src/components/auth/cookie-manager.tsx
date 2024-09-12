@@ -1,3 +1,5 @@
+"use client";
+
 import { useRefreshToken } from "@lens-protocol/react-web";
 import { setCookie } from "cookies-next";
 import { useEffect } from "react";
