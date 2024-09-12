@@ -38,7 +38,6 @@ export function BlogSettings({
 	const {
 		execute: setProfileMetadata,
 		loading,
-		error,
 	} = useSetProfileMetadata();
 
 	const [blogTitle, setBlogTitle] = useState(

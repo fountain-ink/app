@@ -25,7 +25,7 @@ export const UserAuthorView = ({
 	if (loading) {
 		return (
 			<div className="flex flex-wrap gap-2">
-				{Array.from({ length: profileIds.length }).map((e, index) => (
+				{Array.from({ length: profileIds.length }).map((_e, index) => (
 					<span
 						key={`skeleton-${index}-${profileIds[index]}`}
 						className="flex flex-row gap-2 items-center"
