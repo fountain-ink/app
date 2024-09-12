@@ -30,7 +30,7 @@ export async function uploadMetadata(data: any, handle: string) {
     Key: key,
   });
 
-  const cid = result?.Metadata ? result.Metadata.cid : "Invalid CID";
+  const cid = result?.Metadata ? result.Metadata["ipfs-hash"] : "";
 
   return `ipfs://${cid}`;
 }
