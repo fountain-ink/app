@@ -1,3 +1,4 @@
+import { CookieManager } from "@/components/auth/cookie-manager";
 import { Blur } from "@/components/navigation/gradient-blur";
 import { Header } from "@/components/navigation/header";
 import { SmoothScroll } from "@/components/smooth-scroll";
@@ -20,6 +21,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 				<Web3Providers>
 					<ThemeProvider>
 						<SmoothScroll>
+							<CookieManager />
 							<Toaster position="top-center" offset={16} />
 							<Header />
 							<Blur />
