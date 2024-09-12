@@ -13,12 +13,12 @@ export const extractTitle = (content: any): string => {
       }
 
       const sentence = firstTextNode.content[0].text.split(".")[0];
-      return sentence.length > 0 ? `${sentence}.` : "Untitled Draft";
+      return sentence.length > 0 ? `${sentence}.` : "Untitled";
     }
 
-    return "Untitled Draft";
+    return "Untitled";
   } catch (error) {
     console.error("Error parsing content:", error);
-    return "Untitled Draft";
+    return "Untitled";
   }
 };

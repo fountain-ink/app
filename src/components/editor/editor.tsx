@@ -28,6 +28,7 @@ import { ColorSelector } from "./selectors/select-color";
 import { LinkSelector } from "./selectors/select-link";
 import { NodeSelector } from "./selectors/select-node";
 import { TextButtons } from "./selectors/select-text";
+import { Markdown } from "tiptap-markdown";
 
 const token = env.NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN;
 const colors = ["#958DF1", "#F98181", "#FBBC88", "#FAF594"];
@@ -106,6 +107,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
     return [
       ...defaultExtensions,
       slashCommand,
+      Markdown,
       Collaboration.configure({
         document: yDoc,
       }),

@@ -32,21 +32,19 @@ export const EditorPublishing = () => {
       return;
     }
 
-    const content = editor.getHTML();
-    console.log(content);
+    const content = editor.getJSON();
+    const markdown = editor.storage.markdown.getMarkdown();
     const title = extractTitle(content);
 
     try {
       const metadata = article({
         title,
-        content,
+        content: markdown,
         locale: "en",
         appId: "fountain",
       });
 
       const metadataURI = await uploadMetadata(metadata, handle);
-      console.log(metadataURI);
-
       const result = await execute({
         metadata: metadataURI,
       });
