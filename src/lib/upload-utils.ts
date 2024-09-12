@@ -34,3 +34,4 @@ export async function uploadMetadata(data: any, handle: string) {
 
   return `ipfs://${cid}`;
 }
+
