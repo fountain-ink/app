@@ -1,28 +1,28 @@
 "use client";
 
 import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { uploadJson } from "@/lib/upload-utils";
+import { uploadMetadata } from "@/lib/upload-utils";
 import type { ProfileFragment } from "@lens-protocol/client";
 import {
-	MetadataAttributeType,
-	profile as profileMetadata,
+    MetadataAttributeType,
+    profile as profileMetadata,
 } from "@lens-protocol/metadata";
 import { type Profile, useSetProfileMetadata } from "@lens-protocol/react-web";
 import { useCallback, useState } from "react";
@@ -31,8 +31,15 @@ import { Button } from "../ui/button";
 export function BlogSettings({
 	profile,
 }: { profile: Profile | ProfileFragment | null }) {
+	if (!profile) return null;
+
 	const currentMetadata = profile?.metadata;
-	const { execute: setProfileMetadata, loading } = useSetProfileMetadata();
+	const handle = profile?.handle?.localName || "";
+	const {
+		execute: setProfileMetadata,
+		loading,
+		error,
+	} = useSetProfileMetadata();
 
 	const [blogTitle, setBlogTitle] = useState(
 		currentMetadata?.displayName || "",
@@ -41,7 +48,7 @@ export function BlogSettings({
 		currentMetadata?.bio || "",
 	);
 	const [blogBackground, setBlogBackground] = useState(
-		currentMetadata?.coverPicture,
+		currentMetadata?.coverPicture?.raw.uri,
 	);
 	const [defaultCategory, setDefaultCategory] = useState(
 		currentMetadata?.attributes?.find((attr) => attr.key === "defaultCategory")
@@ -87,14 +94,13 @@ export function BlogSettings({
 		const metadata = profileMetadata({
 			name: blogTitle,
 			bio: blogDescription,
-			coverPicture: blogBackground?.raw.uri,
+			coverPicture: blogBackground,
 			attributes,
 
 			appId: "fountain",
 		});
 
-		const metadataURI = await uploadJson(metadata);
-
+		const metadataURI = await uploadMetadata(metadata, handle);
 		const result = await setProfileMetadata({ metadataURI });
 
 		if (result.isFailure()) {
@@ -103,7 +109,9 @@ export function BlogSettings({
 			console.log("Profile metadata updated successfully");
 		}
 	}, [
+		handle,
 		blogTitle,
+
 		blogDescription,
 		blogBackground,
 		defaultCategory,
@@ -115,10 +123,10 @@ export function BlogSettings({
 	const handleBackgroundChange = async (
 		e: React.ChangeEvent<HTMLInputElement>,
 	) => {
-		if (e.target.files?.[0]) {
+		if (e.target.files?.[0] && handle) {
 			const file = e.target.files[0];
-			const uploadedUri = await uploadJson(file);
-			// setBlogBackground(uploadedUri);
+			const uploadedUri = await uploadMetadata(file, handle);
+			setBlogBackground(uploadedUri);
 		}
 	};
 
