@@ -11,8 +11,8 @@ export const CookieManager = () => {
 		if (refreshToken) {
 			setCookie("refreshToken", refreshToken, {
 				maxAge: 30 * 24 * 60 * 60,
-				path: "/",
 				sameSite: "lax",
+				path: "/",
 			});
 		}
 	}, [refreshToken]);

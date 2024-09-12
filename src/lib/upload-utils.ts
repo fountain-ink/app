@@ -1,3 +1,5 @@
+"use server";
+
 import { env } from "@/env";
 import { S3 } from "@aws-sdk/client-s3";
 import type { LensClient } from "@lens-protocol/client";
@@ -35,9 +37,6 @@ export async function uploadMetadata(data: any, handle: string) {
 	return `ipfs://${cid}`;
 }
 
-async function createPost(
-	client: LensClient,
-	contentURI: string,
-) {
+async function createPost(client: LensClient, contentURI: string) {
 	return await client.publication.postOnchain({ contentURI });
 }
