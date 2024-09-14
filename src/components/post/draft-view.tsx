@@ -13,7 +13,7 @@ import { Card, CardHeader, CardTitle } from "../ui/card";
 import { UserAuthorView } from "../user/user-author-view";
 
 interface DraftViewProps {
-  draft: { id: string; content_json?: string };
+  draft: { document_id: string; content_json?: string };
   authorId?: ProfileId;
   isLocal: boolean;
 }
@@ -30,12 +30,12 @@ export const DraftView = ({ draft, authorId, isLocal }: DraftViewProps) => {
   const handleDelete = async () => {
     if (isLocal) {
       const updatedDocuments = { ...useStorage.getState().documents };
-      delete updatedDocuments[draft.id];
-      saveDocument(draft.id, updatedDocuments);
+      delete updatedDocuments[draft.document_id];
+      saveDocument(draft.document_id, updatedDocuments);
       toast.success("Draft deleted successfully");
     } else {
       try {
-        const res = await fetch(`/api/drafts?id=${draft.id}`, {
+        const res = await fetch(`/api/drafts?id=${draft.document_id}`, {
           method: "DELETE",
         });
 
@@ -58,7 +58,7 @@ export const DraftView = ({ draft, authorId, isLocal }: DraftViewProps) => {
   };
 
   return (
-    <Link href={`/write/${draft.id}`}>
+    <Link href={`/write/${draft.document_id}`}>
       <Card className="bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none relative">
         <CardHeader>
           {authorId && <UserAuthorView profileIds={authorIds} />}

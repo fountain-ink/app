@@ -24,9 +24,7 @@ import { DraftsList } from "./drafts-list";
 
 export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
 	const { data: session, loading, error } = useSession();
-	const refreshToken = useRefreshToken();
 	const [isOpen, setIsOpen] = useState(false);
-	const [title, setTitle] = useState("");
 	const { isConnected: isWalletConnected } = useAccount();
 	const router = useRouter();
 
@@ -49,7 +47,6 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({}),
 		});
 
 		const { draft } = await response.json();
@@ -61,7 +58,7 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
 		setIsOpen(false);
 
 		router.refresh();
-		router.replace(`/write/${draft.id}`);
+		router.replace(`/write/${draft.document_id}`);
 	};
 
 	if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
