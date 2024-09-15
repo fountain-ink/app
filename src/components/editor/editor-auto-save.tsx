@@ -19,7 +19,7 @@ export function AutoSave({
 	const { saveDocument } = useStorage();
 
 	const saveContent = useCallback(
-		async (content_json: object) => {
+		async (contentJson: object) => {
 			setIsSaving(true);
 			setIsVisible(true);
 			setSaveSuccess(false);
@@ -30,7 +30,7 @@ export function AutoSave({
 						headers: {
 							"Content-Type": "application/json",
 						},
-						body: JSON.stringify({ content: content_json }),
+						body: JSON.stringify({ content: contentJson }),
 					});
 
 					if (!response.ok) {
@@ -38,7 +38,7 @@ export function AutoSave({
 					}
 				} else {
 					// Save to local storage if local
-					saveDocument(`${documentId}`, content_json);
+					saveDocument(`${documentId}`, contentJson);
 				}
 				setSaveSuccess(true);
 				setTimeout(() => {

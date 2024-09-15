@@ -45,7 +45,7 @@ export default async function WriteDraft({
         <div className="w-full min-h-screen py-4 my-10">
           <EditorDate />
           <EditorCollaborators />
-          <Editor initialContent={isLocal ? undefined : draft?.content_json} documentId={params.id}>
+          <Editor initialContent={isLocal ? undefined : draft.contentJson} documentId={params.id}>
             <EditorPublishing />
             <AutoSave isLocal={isLocal} documentId={params.id} />
           </Editor>

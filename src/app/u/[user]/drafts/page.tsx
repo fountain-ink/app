@@ -1,4 +1,4 @@
-import { DraftsList } from "@/components/navigation/drafts-list";
+import { DraftsList } from "@/components/draft/draft-list";
 import { getAuthorizedClients } from "@/lib/get-auth-clients";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {

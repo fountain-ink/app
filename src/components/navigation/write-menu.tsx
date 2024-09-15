@@ -20,7 +20,7 @@ import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import { useAccount } from "wagmi";
 import { LoadingSpinner } from "../loading-spinner";
-import { DraftsList } from "./drafts-list";
+import { DraftsList } from "../draft/draft-list";
 
 export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
 	const { data: session, loading, error } = useSession();
@@ -58,7 +58,7 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
 		setIsOpen(false);
 
 		router.refresh();
-		router.replace(`/write/${draft.document_id}`);
+		router.replace(`/write/${draft.documentId}`);
 	};
 
 	if (session?.type !== SessionType.WithProfile || !isWalletConnected) {

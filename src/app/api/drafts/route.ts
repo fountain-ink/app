@@ -16,8 +16,8 @@ export async function GET(req: NextRequest) {
       const { data: draft, error } = await db
         .from("drafts")
         .select()
-        .eq("document_id", documentId)
-        .eq("author_id", profileId)
+        .eq("documentId", documentId)
+        .eq("authorId", profileId)
         .single();
 
       if (error) {
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ draft }, { status: 200 });
     }
 
-    const { data: drafts, error } = await db.from("drafts").select().eq("author_id", profileId);
+    const { data: drafts, error } = await db.from("drafts").select().eq("authorId", profileId);
 
     if (error) {
       throw new Error(error.message);
@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function POST(req: NextRequest) {
+export async function POST() {
   try {
     const { profileId, db, handle } = await getAuthorizedClients();
     if (!db) {
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
     const uid = getRandomUid();
     const documentId = `${handle}-${uid}`;
 
-    const { data, error } = await db.from("drafts").insert({ document_id: documentId, author_id: profileId }).select().single();
+    const { data, error } = await db.from("drafts").insert({ documentId, authorId: profileId }).select().single();
 
     if (error) {
       throw new Error(error.message);
@@ -91,13 +91,13 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Missing content" }, { status: 400 });
     }
 
-    const updateData: { content_json?: object } = {};
-    if (content) updateData.content_json = content;
+    const updateData: { contentJson?: object } = {};
+    if (content) updateData.contentJson = content;
 
     const { data, error } = await db
       .from("drafts")
       .update(updateData)
-      .match({ document_id: documentId, author_id: profileId })
+      .match({ documentId, authorId: profileId })
       .select()
       .single();
 
@@ -136,7 +136,7 @@ export async function DELETE(req: NextRequest) {
     const { data, error } = await db
       .from("drafts")
       .delete()
-      .match({ document_id: documentId, author_id: profileId })
+      .match({ documentId, authorId: profileId })
       .select()
       .single();
 
