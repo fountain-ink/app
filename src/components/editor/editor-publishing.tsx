@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { usePublishStore } from "@/hooks/use-publish-store";
 import { extractTitle } from "@/lib/get-article-title";
 import { uploadMetadata } from "@/lib/upload-utils";
-import { article } from "@lens-protocol/metadata";
+import { article, MetadataAttributeType } from "@lens-protocol/metadata";
 import { SessionType, useCreatePost, useSession } from "@lens-protocol/react-web";
 import { useRouter } from "next/navigation";
 import { useEditor } from "novel";
@@ -32,9 +32,10 @@ export const EditorPublishing = () => {
       return;
     }
 
-    const content = editor.getJSON();
+    const contentJson = editor.getJSON();
+    const contentHtml = editor.getHTML();
     const markdown = editor.storage.markdown.getMarkdown();
-    const title = extractTitle(content);
+    const title = extractTitle(contentJson);
 
     try {
       const metadata = article({
@@ -42,6 +43,11 @@ export const EditorPublishing = () => {
         content: markdown,
         locale: "en",
         appId: "fountain",
+
+        attributes: [
+          { key: "contentJson", type: MetadataAttributeType.JSON, value: JSON.stringify(contentJson) },
+          { key: "contentHtml", type: MetadataAttributeType.STRING, value: contentHtml },
+        ],
       });
 
       const metadataURI = await uploadMetadata(metadata, handle);
