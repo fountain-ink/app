@@ -6,9 +6,7 @@ const post = async ({ params }: { params: { post: string } }) => {
   const { lens } = await getAuthorizedClients();
 
   const id = params.post;
-  const post = await lens.publication.fetch({
-    forId: id,
-  });
+  const post = await lens.publication.fetch({ forId: id });
 
   if (!post) throw new Error("(╥_╥) Post not found");
 
@@ -29,8 +27,6 @@ const post = async ({ params }: { params: { post: string } }) => {
             className="prose prose-sm sm:prose-base prose-img:prose-h1:font-martina prose-h1:my-8 prose-h1:text-center prose-h1:text-6xl lg:prose-lg focus:outline-none rounded-lg"
             // biome-ignore lint/security/noDangerouslySetInnerHtml: intended use
             dangerouslySetInnerHTML={{ __html: sanitize(contentHtml) }}
-
-            
           />
         </div>
       </div>
