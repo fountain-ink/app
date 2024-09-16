@@ -130,12 +130,14 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
   return (
     <EditorRoot>
       <EditorContent
+      
         immediatelyRender={false}
         onUpdate={({ editor }) => {
           debouncedUpdates(editor);
         }}
         initialContent={content}
         editorProps={{
+          
           handleDOMEvents: {
             keydown: (_view, event) => handleCommandNavigation(event),
           },
