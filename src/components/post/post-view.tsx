@@ -1,5 +1,6 @@
 import type { ArticleMetadataV3, Post, ProfileId } from "@lens-protocol/react-web";
-import { TruncatedText } from "../content/truncated-text";
+import Link from "next/link";
+import Markdown from "../content/markdown";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { UserAuthorView } from "../user/user-author-view";
 import { PostReactions } from "./post-reactions";
@@ -21,18 +22,20 @@ export const PostView = ({ post, authorIds }: PostViewProps) => {
   });
 
   return (
-    <Card className="bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none">
-      <CardHeader>
-        <UserAuthorView profileIds={authorIds} />
-        <CardTitle className="text-3xl">{title}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <TruncatedText text={content} maxLength={500} isMarkdown={true} />
-      </CardContent>
-      <CardFooter className="flex flex-row gap-4 text-sm text-muted-foreground">
-        <span>{formattedDate}</span>
-        <PostReactions post={post} />
-      </CardFooter>
-    </Card>
+    <Link href={`/p/${post.id}`} prefetch>
+      <Card className="bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none">
+        <CardHeader>
+          <UserAuthorView profileIds={authorIds} />
+          <CardTitle className="text-3xl">{title}</CardTitle>
+        </CardHeader>
+        <CardContent className="truncate text-sm line-clamp-3 overflow-auto">
+          <Markdown content={content} />
+        </CardContent>
+        <CardFooter className="flex flex-row gap-4 text-sm text-muted-foreground">
+          <span>{formattedDate}</span>
+          <PostReactions post={post} />
+        </CardFooter>
+      </Card>
+    </Link>
   );
 };
