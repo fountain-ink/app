@@ -6,6 +6,10 @@ interface DocumentState {
 }
 
 interface AppState {
+  
+  isBlurEnabled: boolean;
+  toggleBlurEffect: () => void;  
+  
   isSmoothScrolling: boolean;
   documents: DocumentState;
   toggleSmoothScrolling: () => void;
@@ -17,9 +21,14 @@ export const useStorage = create<AppState>()(
   persist(
     (set, get) => ({
       isSmoothScrolling: true,
+      
+      isBlurEnabled: true,      
 
       documents: {},
       toggleSmoothScrolling: () => set((state) => ({ isSmoothScrolling: !state.isSmoothScrolling })),
+      
+      toggleBlurEffect: () => set((state) => ({ isBlurEnabled: !state.isBlurEnabled })),      
+      
       saveDocument: (documentId: string, contentJson: object) =>
         set((state) => ({
           documents: { ...state.documents, [documentId]: contentJson },

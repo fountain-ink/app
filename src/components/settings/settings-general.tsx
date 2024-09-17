@@ -13,7 +13,7 @@ import { useStorage } from "@/hooks/use-storage";
 import { Input } from "../ui/input";
 
 export function GeneralSettings() {
-	const { isSmoothScrolling, toggleSmoothScrolling } = useStorage();
+  const { isSmoothScrolling, toggleSmoothScrolling, isBlurEnabled, toggleBlurEffect } = useStorage();
 
 	return (
 		<Card>
@@ -38,6 +38,16 @@ export function GeneralSettings() {
 					/>
 					<Label htmlFor="smoothScrolling">Enable smooth scrolling</Label>
 				</div>
+				
+				<div className="flex items-center space-x-2">
+					<Switch
+						id="blurEffect"
+						checked={isBlurEnabled}
+						onCheckedChange={toggleBlurEffect}
+					/>
+					<Label htmlFor="blurEffect">Enable blur effect</Label>
+				</div>				
+				
 			</CardContent>
 		</Card>
 	);
