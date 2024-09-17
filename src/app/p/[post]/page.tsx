@@ -1,3 +1,5 @@
+import Markdown from "@/components/content/markdown";
+import ErrorPage from "@/components/ErrorPage";
 import { getAuthorizedClients } from "@/lib/get-auth-clients";
 
 import { sanitize } from "isomorphic-dompurify";
@@ -8,17 +10,23 @@ const post = async ({ params }: { params: { post: string } }) => {
   const id = params.post;
   const post = await lens.publication.fetch({ forId: id });
 
-  if (!post) throw new Error("(╥_╥) Post not found");
+  if (!post) return <ErrorPage error="Couldn't find post to show" />;
 
-  if (
-    post.__typename === "Post" &&
-    post.metadata.__typename === "ArticleMetadataV3" &&
-    post.metadata.appId === "fountain"
-  ) {
+  if (post.__typename === "Mirror" || post.metadata.__typename === "EventMetadataV3") {
+    return null;
+  }
+
+  if (post.metadata.appId !== "fountain") {
+    const markdown = post?.metadata?.content;
+
+    return <Markdown content={markdown} />;
+  }
+
+  if (post.metadata.appId === "fountain") {
     const _contentJson = post?.metadata?.attributes?.find((attr: any) => attr.key === "contentJson")?.value;
     const contentHtml = post?.metadata?.attributes?.find((attr: any) => attr.key === "contentHtml")?.value;
 
-    if (!contentHtml) throw new Error("(╥_╥) Post not found");
+    if (!contentHtml) throw new Error("Couldn't find content");
 
     return (
       <div className="container flex flex-col items-center justify-center w-full max-w-lg md:max-w-xl lg:max-w-2xl">
@@ -33,7 +41,7 @@ const post = async ({ params }: { params: { post: string } }) => {
     );
   }
 
-  return null;
+  return <ErrorPage error="Couldn't find content to show" />;
 };
 
 export default post;
