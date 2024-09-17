@@ -25,6 +25,7 @@ const UserLayout = async ({
 	const { lens, handle: userHandle } = await getAuthorizedClients();
 	const profile = await lens.profile.fetch({
 		forHandle: `lens/${params.user}`,
+		
 	});
 	const isUserProfile = userHandle === params.user;
 
