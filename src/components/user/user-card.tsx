@@ -32,7 +32,7 @@ export const UserCard = ({ children, handle }: PropsWithChildren & { handle?: st
           <div className="flex flex-col gap-2">
             <div className="flex flex-row items-center gap-2 text-sm">
               <div className="w-8 h-8">
-                <UserAvatar profile={user}  />
+                <UserAvatar profile={user} className="w-8 h-8" />
               </div>
               <span className="flex flex-col">
                 <span className="font-bold">{user.metadata?.displayName}</span>
