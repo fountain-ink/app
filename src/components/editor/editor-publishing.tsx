@@ -2,11 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { usePublishStore } from "@/hooks/use-publish-store";
+import { useStorage } from "@/hooks/use-storage";
 import { extractTitle } from "@/lib/get-article-title";
 import { uploadMetadata } from "@/lib/upload-utils";
 import { article, MetadataAttributeType } from "@lens-protocol/metadata";
 import { SessionType, useCreatePost, useSession } from "@lens-protocol/react-web";
-import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
+import { usePathname, useRouter } from "next/navigation";
 import { useEditor } from "novel";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
@@ -19,6 +21,11 @@ export const EditorPublishing = () => {
   const { execute } = useCreatePost();
   const { editor } = useEditor();
   const router = useRouter();
+  const { deleteDocument } = useStorage();
+  const queryClient = useQueryClient();
+  const pathname = usePathname()
+  const isLocal = pathname.includes("local");
+  const documentId = pathname.split("/").at(-1);
 
   if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
     return null;
@@ -65,6 +72,29 @@ export const EditorPublishing = () => {
       toast.success(`Post created successfully! ID: ${post.unwrap().id}`);
       setIsOpen(false);
       router.refresh();
+
+      // Delete draft after successful publication
+      if (isLocal) {
+        deleteDocument(documentId || "");
+      } else {
+        try {
+          const res = await fetch(`/api/drafts?id=${documentId}`, {
+            method: "DELETE",
+          });
+
+          if (res.ok) {
+            queryClient.invalidateQueries({
+              queryKey: ["drafts"],
+              refetchType: "active",
+            });
+          } else {
+            console.error("Failed to delete cloud draft after publication");
+          }
+        } catch (error) {
+          console.error("Error deleting cloud draft:", error);
+        }
+      }
+
     } catch (error) {
       console.error("Error creating post:", error);
       toast.error("An unexpected error occurred while creating the post.");

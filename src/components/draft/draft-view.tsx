@@ -27,7 +27,6 @@ export const DraftView = ({
   const queryClient = useQueryClient();
 
   const content = draft.contentJson;
-  console.log(draft)
   const title = extractTitle(content);
   const authorIds = authorId ? [authorId] : [];
 
@@ -36,7 +35,7 @@ export const DraftView = ({
       const { documents } = useStorage.getState();
       const updatedDocuments = { ...documents };
       delete updatedDocuments[draft.documentId];
-      deleteDocument(draft.documentId)
+      deleteDocument(draft.documentId);
       toast.success("Draft deleted successfully");
     } else {
       try {
