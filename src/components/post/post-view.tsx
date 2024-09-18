@@ -1,3 +1,4 @@
+import { formatDate } from "@/lib/utils";
 import type { ArticleMetadataV3, Post, ProfileId } from "@lens-protocol/react-web";
 import Link from "next/link";
 import Markdown from "../content/markdown";
@@ -13,12 +14,7 @@ interface PostViewProps {
 export const PostView = ({ post, authorIds }: PostViewProps) => {
   const metadata = post.metadata as ArticleMetadataV3;
   const content = metadata?.content || "";
-
-  const formattedDate = new Date(post.createdAt).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+  const formattedDate = formatDate(post.createdAt);
 
   return (
     <Link href={`/p/${post.id}`} prefetch>

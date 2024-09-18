@@ -5,9 +5,11 @@ import { extractTitle } from "@/lib/get-article-title";
 import type { ProfileId } from "@lens-protocol/react-web";
 import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
+
+import { formatTime } from "@/lib/utils";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Card, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { UserAuthorView } from "../user/user-author-view";
 import type { Draft } from "./draft";
 import { DraftDeleteDialog } from "./draft-delete-dialog";
@@ -61,6 +63,8 @@ export const DraftView = ({
     setIsDeleteDialogOpen(false);
   };
 
+  const formattedDate = formatTime(draft.updatedAt);
+
   return (
     <Link href={`/write/${draft.documentId}`}>
       <Card className="bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none relative">
@@ -73,6 +77,11 @@ export const DraftView = ({
         <div className="absolute top-2 right-2 ">
           <DraftOptionsDropdown onDeleteClick={() => setIsDeleteDialogOpen(true)} />
         </div>
+
+        <CardFooter className="flex flex-row gap-4 text-sm text-muted-foreground">
+          <span>Last modified {formattedDate}</span>
+        </CardFooter>
+
         <DraftDeleteDialog
           isOpen={isDeleteDialogOpen}
           onClose={() => setIsDeleteDialogOpen(false)}
