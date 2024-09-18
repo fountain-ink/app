@@ -8,6 +8,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { LoadingSpinner } from "../loading-spinner";
 
+import type { Draft } from "../draft/draft";
+
 export function AutoSave({
 	documentId,
 	isLocal,
@@ -16,7 +18,7 @@ export function AutoSave({
 	const [isSaving, setIsSaving] = useState(false);
 	const [saveSuccess, setSaveSuccess] = useState(false);
 	const [isVisible, setIsVisible] = useState(false);
-	const { saveDocument } = useStorage();
+	const { saveDocument, getDocument } = useStorage();
 
 	const saveContent = useCallback(
 		async (contentJson: object) => {
@@ -38,7 +40,17 @@ export function AutoSave({
 					}
 				} else {
 					// Save to local storage if local
-					saveDocument(`${documentId}`, contentJson);
+					const existingDraft = getDocument(documentId);
+					const updatedDraft: Draft = {
+						id: existingDraft?.id ?? 0,
+						isLocal: true, 
+						documentId,
+						authorId: existingDraft?.authorId ?? '', 
+						contentJson: JSON.stringify(contentJson),
+						updatedAt: new Date().toISOString(),
+						createdAt: existingDraft?.createdAt ?? new Date().toISOString(), 
+					};
+					saveDocument(documentId, updatedDraft);
 				}
 				setSaveSuccess(true);
 				setTimeout(() => {
@@ -50,7 +62,7 @@ export function AutoSave({
 				setIsSaving(false);
 			}
 		},
-		[documentId, saveDocument, isLocal],
+		[documentId, isLocal, saveDocument],
 	);
 
 	const debouncedSave = useDebouncedCallback(saveContent, 1000);

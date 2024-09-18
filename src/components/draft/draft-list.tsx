@@ -1,7 +1,7 @@
 "use client";
 
 import { useStorage } from "@/hooks/use-storage";
-import { SessionType, useSession } from "@lens-protocol/react-web";
+import { type ProfileId, SessionType, useSession } from "@lens-protocol/react-web";
 import { useQuery } from "@tanstack/react-query";
 import { LoadingSpinner } from "../loading-spinner";
 import { DraftView } from "./draft-view";
@@ -26,7 +26,7 @@ export const DraftsList = () => {
     data: cloudDrafts,
     isLoading: cloudDraftsLoading,
     error: cloudDraftsError,
-  } = useQuery({
+  } = useQuery<Draft[]>({
     queryKey: ["drafts"],
     queryFn: fetchCloudDrafts,
   });
@@ -35,12 +35,8 @@ export const DraftsList = () => {
   if (session?.type !== SessionType.WithProfile) return null;
   if (cloudDraftsError) return <div>Error loading drafts: {cloudDraftsError.message}</div>;
 
-  const cloudDraftsList = cloudDrafts?.map((draft: Draft) => ({ ...draft, isLocal: false })) || [];
-  const localDraftsList = Object.entries(localDrafts).map(([id, content]) => ({
-    id,
-    contentJson: content as unknown as string,
-    isLocal: true,
-  }));
+  const cloudDraftsList = cloudDrafts || [];
+  const localDraftsList = Object.values(localDrafts);
 
   const allDrafts = [...cloudDraftsList, ...localDraftsList];
   const profileId = session?.profile.id;
@@ -53,7 +49,7 @@ export const DraftsList = () => {
         <div>No drafts available</div>
       ) : (
         allDrafts.map((draft) => (
-          <DraftView key={draft.id} draft={draft} authorId={draft.authorId || profileId} isLocal={draft.isLocal} />
+          <DraftView key={draft.documentId} draft={draft} authorId={(draft.authorId || profileId) as ProfileId} isLocal={draft.isLocal} />
         ))
       )}
     </div>

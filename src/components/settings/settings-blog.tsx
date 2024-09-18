@@ -20,7 +20,7 @@ export function BlogSettings({ profile }: { profile: Profile | ProfileFragment |
 
   const currentMetadata = profile?.metadata;
   const handle = profile?.handle?.localName || "";
-  const { execute: setProfileMetadata, loading } = useSetProfileMetadata();
+  const { execute: setProfileMetadata } = useSetProfileMetadata();
 
   const [blogTitle, setBlogTitle] = useState(currentMetadata?.displayName || "");
   const [blogDescription, setBlogDescription] = useState(currentMetadata?.bio || "");

@@ -23,18 +23,20 @@ export const DraftView = ({
   isLocal: boolean;
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const { saveDocument } = useStorage();
+  const { deleteDocument } = useStorage();
   const queryClient = useQueryClient();
 
   const content = draft.contentJson;
+  console.log(draft)
   const title = extractTitle(content);
   const authorIds = authorId ? [authorId] : [];
 
   const handleDelete = async () => {
     if (isLocal) {
-      const updatedDocuments = { ...useStorage.getState().documents };
+      const { documents } = useStorage.getState();
+      const updatedDocuments = { ...documents };
       delete updatedDocuments[draft.documentId];
-      saveDocument(draft.documentId, updatedDocuments);
+      deleteDocument(draft.documentId)
       toast.success("Draft deleted successfully");
     } else {
       try {
