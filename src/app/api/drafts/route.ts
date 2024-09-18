@@ -91,8 +91,10 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Missing content" }, { status: 400 });
     }
 
-    const updateData: { contentJson?: object } = {};
-    if (content) updateData.contentJson = content;
+    const updateData = {
+      updatedAt: new Date().toISOString(),
+      contentJson: content,
+    };
 
     const { data, error } = await db
       .from("drafts")
