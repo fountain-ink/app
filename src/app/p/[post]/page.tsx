@@ -1,5 +1,5 @@
 import Markdown from "@/components/content/markdown";
-import ErrorPage from "@/components/ErrorPage";
+import ErrorPage from "@/components/error-page";
 import { getAuthorizedClients } from "@/lib/get-auth-clients";
 
 import { sanitize } from "isomorphic-dompurify";

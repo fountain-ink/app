@@ -1,5 +1,5 @@
 import { DraftsList } from "@/components/draft/draft-list";
-import ErrorPage from "@/components/ErrorPage";
+import ErrorPage from "@/components/error-page";
 import { getAuthorizedClients } from "@/lib/get-auth-clients";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
