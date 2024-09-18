@@ -3,12 +3,12 @@
 import { themeNames, themes } from "@/styles/themes";
 import { useTheme } from "./theme-context";
 import { Button } from "../ui/button";
+import { MoonIcon, SunIcon } from "lucide-react";
 
 export const ThemeButtons = () => {
 	const { setTheme } = useTheme();
 
 	const themeButtons = Object.values(themeNames).map((theme) => {
-		const accent = themes[theme]["--accent"];
 		const foreground = themes[theme]["--foreground"];
 		const background = themes[theme]["--background"];
 		const themeName = theme;
@@ -34,3 +34,4 @@ export const ThemeButtons = () => {
 
 	return <div className="flex flex-col gap-2">{themeButtons}</div>;
 };
+

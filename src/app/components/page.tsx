@@ -187,7 +187,7 @@ function ProfileForm() {
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof formSchema>) {}
+	function onSubmit(_values: z.infer<typeof formSchema>) {}
 
 	return (
 		<Form {...form}>
@@ -215,14 +215,10 @@ function ProfileForm() {
 }
 
 export default function ComponentsPage() {
-	const [isOpen, setIsOpen] = useState(false);
 	const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
 	const [isCommandDialogOpen, setIsCommandDialogOpen] = useState(false);
-	const [selectedValue, setSelectedValue] = useState<string | null>(null);
 	const [checked, setChecked] = useState(false);
 	const [selectedRadio, setSelectedRadio] = useState<string | null>(null);
-	const [isHoverCardOpen, setIsHoverCardOpen] = useState(false);
-	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const [date, setDate] = useState<Date>();
 
 	return (
@@ -362,7 +358,7 @@ export default function ComponentsPage() {
 					<Checkbox
 						id="terms"
 						checked={checked}
-						onCheckedChange={(e) => setChecked(!checked)}
+						onCheckedChange={(_e) => setChecked(!checked)}
 					/>
 					<label
 						htmlFor="terms"
