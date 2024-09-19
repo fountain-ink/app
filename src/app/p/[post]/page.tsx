@@ -11,7 +11,6 @@ const post = async ({ params }: { params: { post: string } }) => {
   const post = await lens.publication.fetch({ forId: id });
 
   if (!post) return <ErrorPage error="Couldn't find post to show" />;
-
   if (post.__typename === "Mirror" || post.metadata.__typename === "EventMetadataV3") {
     return null;
   }

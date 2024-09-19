@@ -13,8 +13,8 @@ interface AppSettings {
 export const useStorage = create<AppSettings>()(
   persist(
     (set) => ({
-      isSmoothScrolling: true,
-      isBlurEnabled: true,
+      isSmoothScrolling: false,
+      isBlurEnabled: false,
       isAutoSyncEnabled: false,
       toggleSmoothScrolling: () => set((state) => ({ isSmoothScrolling: !state.isSmoothScrolling })),
       toggleBlurEffect: () => set((state) => ({ isBlurEnabled: !state.isBlurEnabled })),
