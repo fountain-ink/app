@@ -3,7 +3,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { uploadMetadata } from "@/lib/upload-utils";
@@ -24,10 +23,7 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
 
   const [profileTitle, setProfileTitle] = useState(currentMetadata?.displayName || "");
   const [profileDescription, setProfileDescription] = useState(currentMetadata?.bio || "");
-
-  const [defaultCategory, setDefaultCategory] = useState(
-    currentMetadata?.attributes?.find((attr) => attr.key === "defaultCategory")?.value || "",
-  );
+  const [profileBackground, setProfileBackground] = useState(currentMetadata?.coverPicture?.raw.uri);
   const [enableComments, setEnableComments] = useState(
     currentMetadata?.attributes?.find((attr) => attr.key === "enableComments")?.value === "true",
   );
@@ -58,16 +54,10 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
       },
     ];
 
-    if (defaultCategory) {
-      attributes.push({
-        key: "defaultCategory",
-        type: MetadataAttributeType.STRING,
-        value: defaultCategory,
-      });
-    }
     const metadata = profileMetadata({
       name: profileTitle || undefined,
       bio: profileDescription || undefined,
+      coverPicture: profileBackground || undefined,
       attributes,
       appId: "fountain",
     });
@@ -90,17 +80,29 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
     } finally {
       setIsSaving(false);
     }
-  }, [handle, profileTitle, profileDescription, enableComments, autoPublish, setProfileMetadata]);
+  }, [handle, profileTitle, profileDescription, profileBackground, enableComments, autoPublish, setProfileMetadata]);
+
+  const handleBackgroundChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0] && handle) {
+      const file = e.target.files[0];
+      const uploadedUri = await uploadMetadata(file, handle);
+      setProfileBackground(uploadedUri);
+    }
+  };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Blog Settings</CardTitle>
-        <CardDescription>Customize your blog preferences.</CardDescription>
+        <CardTitle>Profile Settings</CardTitle>
+        <CardDescription>Customize your profile preferences.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="profile-title">Blog Title</Label>
+          <Label htmlFor="username">Username</Label>
+          <Input id="username" placeholder={handle} disabled />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="profile-title">Display name</Label>
           <Input
             id="profile-title"
             value={profileTitle}
@@ -109,7 +111,7 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="profile-description">Blog Description</Label>
+          <Label htmlFor="profile-description">Profile Description</Label>
           <Textarea
             id="profile-description"
             value={profileDescription}
@@ -118,18 +120,8 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="default-category">Default Category</Label>
-          <Select value={defaultCategory} onValueChange={setDefaultCategory}>
-            <SelectTrigger id="default-category">
-              <SelectValue placeholder="Select a default category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="technology">Technology</SelectItem>
-              <SelectItem value="science">Science</SelectItem>
-              <SelectItem value="health">Health</SelectItem>
-              <SelectItem value="other">Other</SelectItem>
-            </SelectContent>
-          </Select>
+          <Label htmlFor="profile-background">Profile Background</Label>
+          <Input id="profile-background" type="file" accept="image/*" onChange={handleBackgroundChange} />
         </div>
         <div className="flex items-center space-x-2">
           <Switch id="comments" checked={enableComments} onCheckedChange={setEnableComments} />

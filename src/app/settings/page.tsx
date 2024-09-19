@@ -1,5 +1,5 @@
-import { ProfileSettings } from "@/components/settings/settings-blog";
 import { GeneralSettings } from "@/components/settings/settings-general";
+import { ProfileSettings } from "@/components/settings/settings-profile";
 import { ThemeSettings } from "@/components/settings/settings-theme";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getAuthorizedClients } from "@/lib/get-auth-clients";
@@ -68,6 +68,9 @@ export default async function settings() {
         </TabsContent>
 
         <TabsContent value="profile">
+          <ProfileSettings profile={profile} />
+        </TabsContent>
+        <TabsContent value="blog">
           <ProfileSettings profile={profile} />
         </TabsContent>
       </Tabs>

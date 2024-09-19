@@ -24,10 +24,6 @@ export function GeneralSettings() {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="username">Username</Label>
-          <Input id="username" placeholder="Your username" disabled />
-        </div>
-        <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input id="email" type="email" placeholder="Your email" disabled />
         </div>
