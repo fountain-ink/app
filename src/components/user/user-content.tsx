@@ -31,7 +31,7 @@ export const UserContent = ({
     where: {
       from: [profile.id as ProfileId],
       metadata: {
-        publishedOn: [appId("fountain")],
+        publishedOn: contentType === "articles" ? [appId("fountain")] : undefined,
         mainContentFocus:
           contentType === "articles"
             ? [PublicationMetadataMainFocusType.Article]
