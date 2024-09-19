@@ -7,6 +7,7 @@ interface AppSettings {
   isAutoSyncEnabled: boolean;
   toggleBlurEffect: () => void;
   toggleSmoothScrolling: () => void;
+  toggleAutoSync: () => void;
 }
 
 export const useStorage = create<AppSettings>()(
@@ -17,7 +18,9 @@ export const useStorage = create<AppSettings>()(
       isAutoSyncEnabled: false,
       toggleSmoothScrolling: () => set((state) => ({ isSmoothScrolling: !state.isSmoothScrolling })),
       toggleBlurEffect: () => set((state) => ({ isBlurEnabled: !state.isBlurEnabled })),
+      toggleAutoSync: () => set((state) => ({ isAutoSyncEnabled: !state.isAutoSyncEnabled })),
     }),
+
     {
       name: "app-settings",
     },

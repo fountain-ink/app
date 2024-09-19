@@ -1,54 +1,51 @@
 "use client";
 
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useStorage } from "@/hooks/use-storage";
 import { Input } from "../ui/input";
 
 export function GeneralSettings() {
-  const { isSmoothScrolling, toggleSmoothScrolling, isBlurEnabled, toggleBlurEffect } = useStorage();
+  const {
+    isSmoothScrolling,
+    toggleSmoothScrolling,
+    isBlurEnabled,
+    toggleBlurEffect,
+    isAutoSyncEnabled,
+    toggleAutoSync,
+  } = useStorage();
 
-	return (
-		<Card>
-			<CardHeader>
-				<CardTitle>General Settings</CardTitle>
-				<CardDescription>Manage your general account settings.</CardDescription>
-			</CardHeader>
-			<CardContent className="space-y-4">
-				<div className="space-y-2">
-					<Label htmlFor="username">Username</Label>
-					<Input id="username" placeholder="Your username" disabled />
-				</div>
-				<div className="space-y-2">
-					<Label htmlFor="email">Email</Label>
-					<Input id="email" type="email" placeholder="Your email" disabled />
-				</div>
-				<div className="flex items-center space-x-2">
-					<Switch
-						id="smoothScrolling"
-						checked={isSmoothScrolling}
-						onCheckedChange={toggleSmoothScrolling}
-					/>
-					<Label htmlFor="smoothScrolling">Enable smooth scrolling</Label>
-				</div>
-				
-				<div className="flex items-center space-x-2">
-					<Switch
-						id="blurEffect"
-						checked={isBlurEnabled}
-						onCheckedChange={toggleBlurEffect}
-					/>
-					<Label htmlFor="blurEffect">Enable blur effect</Label>
-				</div>				
-				
-			</CardContent>
-		</Card>
-	);
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Application Settings</CardTitle>
+        <CardDescription>Manage your application settings.</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="username">Username</Label>
+          <Input id="username" placeholder="Your username" disabled />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="email">Email</Label>
+          <Input id="email" type="email" placeholder="Your email" disabled />
+        </div>
+        <div className="flex items-center space-x-2">
+          <Switch id="smoothScrolling" checked={isSmoothScrolling} onCheckedChange={toggleSmoothScrolling} />
+          <Label htmlFor="smoothScrolling">Enable smooth scrolling</Label>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Switch id="blurEffect" checked={isBlurEnabled} onCheckedChange={toggleBlurEffect} />
+          <Label htmlFor="blurEffect">Enable blur effect</Label>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Switch id="autoSync" checked={isAutoSyncEnabled} onCheckedChange={toggleAutoSync} />
+          <Label htmlFor="blurEffect">Enable Auto Sync</Label>
+        </div>
+      </CardContent>
+    </Card>
+  );
 }

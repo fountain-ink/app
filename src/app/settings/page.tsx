@@ -22,7 +22,7 @@ export async function generateMetadata() {
 }
 
 const tabData = [
-	{ id: "general", label: "General", icon: Settings, enabled: true },
+	{ id: "app", label: "Application", icon: Settings, enabled: true },
 	{ id: "themes", label: "Themes", icon: Palette, enabled: true },
 	{ id: "blog", label: "Blog", icon: FileText, enabled: true },
 	{
@@ -48,7 +48,7 @@ export default async function settings() {
 	return (
 		<div className="container mx-auto p-6 max-w-6xl">
 			<h1 className="text-3xl font-bold mb-8">Settings</h1>
-			<Tabs defaultValue="general" className="space-y-3 h-10">
+			<Tabs defaultValue="app" className="space-y-3 h-10">
 				<TabsList className="flex justify-start gap-2 bg-transparent">
 					{tabData.map((tab) => (
 						<TabsTrigger
@@ -68,7 +68,7 @@ export default async function settings() {
 					))}
 				</TabsList>
 
-				<TabsContent value="general">
+				<TabsContent value="app">
 					<GeneralSettings />
 				</TabsContent>
 
