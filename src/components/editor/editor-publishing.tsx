@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { usePublishStore } from "@/hooks/use-publish-store";
-import { useStorage } from "@/hooks/use-storage";
+import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { extractTitle } from "@/lib/get-article-title";
 import { uploadMetadata } from "@/lib/upload-utils";
 import { article, MetadataAttributeType } from "@lens-protocol/metadata";
@@ -21,7 +21,7 @@ export const EditorPublishing = () => {
   const { execute } = useCreatePost();
   const { editor } = useEditor();
   const router = useRouter();
-  const { deleteDocument } = useStorage();
+  const { deleteDocument } = useDocumentStorage();
   const queryClient = useQueryClient();
   const pathname = usePathname()
   const isLocal = pathname.includes("local");

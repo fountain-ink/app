@@ -51,12 +51,12 @@ export const UserContent = ({
     },
   });
 
-  if (loading || publicationsLoading || !publications) {
+  if (loading || publicationsLoading ) {
     return null;
   }
 
   if (error) {
-    toast.error(error);
+    toast.error(error.message);
     return null;
   }
 

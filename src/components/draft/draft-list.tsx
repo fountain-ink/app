@@ -1,11 +1,11 @@
 "use client";
 
-import { useStorage } from "@/hooks/use-storage";
+import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { type ProfileId, SessionType, useSession } from "@lens-protocol/react-web";
 import { useQuery } from "@tanstack/react-query";
 import { LoadingSpinner } from "../loading-spinner";
-import { DraftView } from "./draft-view";
 import type { Draft } from "./draft";
+import { DraftView } from "./draft-view";
 
 const fetchCloudDrafts = async () => {
   const response = await fetch("/api/drafts", {
@@ -20,7 +20,7 @@ const fetchCloudDrafts = async () => {
 
 export const DraftsList = () => {
   const { data: session, loading: sessionLoading } = useSession();
-  const { documents: localDrafts } = useStorage();
+  const { documents: localDrafts } = useDocumentStorage();
 
   const {
     data: cloudDrafts,
@@ -49,7 +49,12 @@ export const DraftsList = () => {
         <div>No drafts available</div>
       ) : (
         allDrafts.map((draft) => (
-          <DraftView key={draft.documentId} draft={draft} authorId={(draft.authorId || profileId) as ProfileId} isLocal={draft.isLocal} />
+          <DraftView
+            key={draft.documentId}
+            draft={draft}
+            authorId={(draft.authorId || profileId) as ProfileId}
+            isLocal={draft.isLocal}
+          />
         ))
       )}
     </div>

@@ -20,7 +20,7 @@ import * as Y from "yjs";
 import { defaultExtensions } from "./extensions/editor-extensions";
 import { slashCommand, suggestionItems } from "./extensions/slash-command";
 
-import { useStorage } from "@/hooks/use-storage";
+import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { handleCommandNavigation } from "novel/extensions";
 import { useDebouncedCallback } from "use-debounce";
 import { LoadingSpinner } from "../loading-spinner";
@@ -69,7 +69,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
   const [yDoc, setYDoc] = useState<Y.Doc | null>(null);
   const [provider, setProvider] = useState<TiptapCollabProvider | null>(null);
   const [content, setContent] = useState(initialContent);
-  const { getDocument } = useStorage();
+  const { getDocument } = useDocumentStorage();
 
   useEffect(() => {
     if (documentId.startsWith("local-")) {
@@ -130,14 +130,14 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
   return (
     <EditorRoot>
       <EditorContent
-      
+
         immediatelyRender={false}
         onUpdate={({ editor }) => {
           debouncedUpdates(editor);
         }}
         initialContent={content}
         editorProps={{
-          
+
           handleDOMEvents: {
             keydown: (_view, event) => handleCommandNavigation(event),
           },

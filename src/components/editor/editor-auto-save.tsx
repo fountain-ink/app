@@ -1,6 +1,6 @@
 "use client";
 
-import { useStorage } from "@/hooks/use-storage";
+import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckIcon } from "lucide-react";
 import { useEditor } from "novel";
@@ -18,7 +18,7 @@ export function AutoSave({
 	const [isSaving, setIsSaving] = useState(false);
 	const [saveSuccess, setSaveSuccess] = useState(false);
 	const [isVisible, setIsVisible] = useState(false);
-	const { saveDocument, getDocument } = useStorage();
+	const { saveDocument, getDocument } = useDocumentStorage();
 
 	const saveContent = useCallback(
 		async (contentJson: object) => {

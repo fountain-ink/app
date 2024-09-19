@@ -1,6 +1,6 @@
 "use client";
 
-import { useStorage } from "@/hooks/use-storage";
+import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { extractTitle } from "@/lib/get-article-title";
 import type { ProfileId } from "@lens-protocol/react-web";
 import { useQueryClient } from "@tanstack/react-query";
@@ -25,7 +25,7 @@ export const DraftView = ({
   isLocal: boolean;
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const { deleteDocument } = useStorage();
+  const { deleteDocument } = useDocumentStorage();
   const queryClient = useQueryClient();
 
   const content = draft.contentJson;
@@ -34,7 +34,7 @@ export const DraftView = ({
 
   const handleDelete = async () => {
     if (isLocal) {
-      const { documents } = useStorage.getState();
+      const { documents } = useDocumentStorage()
       const updatedDocuments = { ...documents };
       delete updatedDocuments[draft.documentId];
       deleteDocument(draft.documentId);
