@@ -15,16 +15,16 @@ import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 
-export function BlogSettings({ profile }: { profile: Profile | ProfileFragment | null }) {
+export function ProfileSettings({ profile }: { profile: Profile | ProfileFragment | null }) {
   if (!profile) return null;
 
   const currentMetadata = profile?.metadata;
   const handle = profile?.handle?.localName || "";
   const { execute: setProfileMetadata } = useSetProfileMetadata();
 
-  const [blogTitle, setBlogTitle] = useState(currentMetadata?.displayName || "");
-  const [blogDescription, setBlogDescription] = useState(currentMetadata?.bio || "");
-  const [blogBackground, setBlogBackground] = useState(currentMetadata?.coverPicture?.raw.uri);
+  const [profileTitle, setProfileTitle] = useState(currentMetadata?.displayName || "");
+  const [profileDescription, setProfileDescription] = useState(currentMetadata?.bio || "");
+  const [profileBackground, setProfileBackground] = useState(currentMetadata?.coverPicture?.raw.uri);
   const [defaultCategory, setDefaultCategory] = useState(
     currentMetadata?.attributes?.find((attr) => attr.key === "defaultCategory")?.value || "",
   );
@@ -65,11 +65,10 @@ export function BlogSettings({ profile }: { profile: Profile | ProfileFragment |
         value: defaultCategory,
       });
     }
-
     const metadata = profileMetadata({
-      name: blogTitle || undefined,
-      bio: blogDescription || undefined,
-      coverPicture: blogBackground || undefined,
+      name: profileTitle || undefined,
+      bio: profileDescription || undefined,
+      coverPicture: profileBackground || undefined,
       attributes,
       appId: "fountain",
     });
@@ -94,10 +93,9 @@ export function BlogSettings({ profile }: { profile: Profile | ProfileFragment |
     }
   }, [
     handle,
-    blogTitle,
-
-    blogDescription,
-    blogBackground,
+    profileTitle,
+    profileDescription,
+    profileBackground,
     defaultCategory,
     enableComments,
     autoPublish,
@@ -108,38 +106,38 @@ export function BlogSettings({ profile }: { profile: Profile | ProfileFragment |
     if (e.target.files?.[0] && handle) {
       const file = e.target.files[0];
       const uploadedUri = await uploadMetadata(file, handle);
-      setBlogBackground(uploadedUri);
+      setProfileBackground(uploadedUri);
     }
   };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Blog Settings</CardTitle>
-        <CardDescription>Customize your blog preferences.</CardDescription>
+        <CardTitle>Profile Settings</CardTitle>
+        <CardDescription>Customize your profile preferences.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="blog-title">Blog Title</Label>
+          <Label htmlFor="profile-title">Profile Title</Label>
           <Input
-            id="blog-title"
-            value={blogTitle}
-            onChange={(e) => setBlogTitle(e.target.value)}
-            placeholder="Your blog title"
+            id="profile-title"
+            value={profileTitle}
+            onChange={(e) => setProfileTitle(e.target.value)}
+            placeholder="Your profile title"
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="blog-description">Blog Description</Label>
+          <Label htmlFor="profile-description">Profile Description</Label>
           <Textarea
-            id="blog-description"
-            value={blogDescription}
-            onChange={(e) => setBlogDescription(e.target.value)}
-            placeholder="Your blog description"
+            id="profile-description"
+            value={profileDescription}
+            onChange={(e) => setProfileDescription(e.target.value)}
+            placeholder="Your profile description"
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="blog-background">Blog Background</Label>
-          <Input id="blog-background" type="file" accept="image/*" onChange={handleBackgroundChange} />
+          <Label htmlFor="profile-background">Profile Background</Label>
+          <Input id="profile-background" type="file" accept="image/*" onChange={handleBackgroundChange} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="default-category">Default Category</Label>
