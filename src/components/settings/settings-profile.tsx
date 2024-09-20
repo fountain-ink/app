@@ -11,7 +11,6 @@ import { MetadataAttributeType, profile as profileMetadata } from "@lens-protoco
 import { type Profile, useSetProfileMetadata } from "@lens-protocol/react-web";
 import { useCallback, useState } from "react";
 
-
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 
@@ -139,8 +138,6 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
     }
   };
 
-
-
   return (
     <Card>
       <CardHeader>
@@ -175,12 +172,7 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
             <Label>Profile Picture</Label>
             {profilePicture && (
               <div className="relative w-32 h-32 rounded-full overflow-hidden">
-                <img
-                  src={getOptimizedImageUrl(currentMetadata?.picture)}
-                  alt="Profile"
-                  layout="fill"
-                  objectFit="cover"
-                />
+                <img src={getOptimizedImageUrl(currentMetadata?.picture)} alt="Profile" objectFit="cover" />
               </div>
             )}
             <div className="flex space-x-2">
@@ -194,12 +186,7 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
             <Label>Cover Picture</Label>
             {coverPicture && (
               <div className="relative w-full h-48 rounded-lg overflow-hidden">
-                <img
-                  src={getOptimizedImageUrl(currentMetadata?.coverPicture)}
-                  alt="Cover picture"
-                  layout="fill"
-                  objectFit="cover"
-                />
+                <img src={getOptimizedImageUrl(currentMetadata?.coverPicture)} alt="Cover" objectFit="cover" />
               </div>
             )}
             <div className="flex space-x-2">
