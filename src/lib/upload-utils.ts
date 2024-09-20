@@ -13,6 +13,35 @@ const s3 = new S3({
   region: "4EVERLAND",
 });
 
+export async function uploadFile(formData: FormData) {
+  const file = formData.get("file") as File;
+  const handle = formData.get("handle") as string;
+
+  if (!file || !handle) {
+    throw new Error("File or handle is missing");
+  }
+
+  const fileBuffer = await file.arrayBuffer();
+  const date = new Date().toISOString();
+  const key = `users/${handle}/${date}_${file.name}`;
+
+  await s3.putObject({
+    ContentType: file.type,
+    Bucket: BUCKET_NAME,
+    Body: Buffer.from(fileBuffer),
+    Key: key,
+  });
+
+  const result = await s3.headObject({
+    Bucket: BUCKET_NAME,
+    Key: key,
+  });
+
+  const cid = result?.Metadata ? result.Metadata["ipfs-hash"] : "";
+
+  return `ipfs://${cid}`;
+}
+
 export async function uploadMetadata(data: any, handle: string) {
   const metadata = JSON.stringify(data);
   const date = new Date().toISOString();
@@ -34,4 +63,3 @@ export async function uploadMetadata(data: any, handle: string) {
 
   return `ipfs://${cid}`;
 }
-

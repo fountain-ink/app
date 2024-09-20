@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { uploadMetadata } from "@/lib/upload-utils";
+import { uploadFile, uploadMetadata } from "@/lib/upload-utils";
 import type { ProfileFragment } from "@lens-protocol/client";
 import { MetadataAttributeType, profile as profileMetadata } from "@lens-protocol/metadata";
 import { type Profile, useSetProfileMetadata } from "@lens-protocol/react-web";
@@ -23,14 +23,13 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
 
   const [profileTitle, setProfileTitle] = useState(currentMetadata?.displayName || "");
   const [profileDescription, setProfileDescription] = useState(currentMetadata?.bio || "");
-  const [profileBackground, setProfileBackground] = useState(currentMetadata?.coverPicture?.raw.uri);
+  const [coverPicture, setCoverPicture] = useState(currentMetadata?.coverPicture?.raw.uri);
   const [enableComments, setEnableComments] = useState(
     currentMetadata?.attributes?.find((attr) => attr.key === "enableComments")?.value === "true",
   );
   const [autoPublish, setAutoPublish] = useState(
     currentMetadata?.attributes?.find((attr) => attr.key === "autoPublish")?.value === "true",
   );
-
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = useCallback(async () => {
@@ -53,11 +52,12 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
         value: autoPublish ? "true" : "false",
       },
     ];
+    console.log(coverPicture);
 
     const metadata = profileMetadata({
       name: profileTitle || undefined,
       bio: profileDescription || undefined,
-      coverPicture: profileBackground || undefined,
+      coverPicture: coverPicture || undefined,
       attributes,
       appId: "fountain",
     });
@@ -80,13 +80,18 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
     } finally {
       setIsSaving(false);
     }
-  }, [handle, profileTitle, profileDescription, profileBackground, enableComments, autoPublish, setProfileMetadata]);
+  }, [handle, profileTitle, profileDescription, coverPicture, enableComments, autoPublish, setProfileMetadata]);
 
-  const handleBackgroundChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCoverChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0] && handle) {
       const file = e.target.files[0];
-      const uploadedUri = await uploadMetadata(file, handle);
-      setProfileBackground(uploadedUri);
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("handle", handle);
+
+      const uploadedUri = await uploadFile(formData);
+
+      setCoverPicture(uploadedUri);
     }
   };
 
@@ -120,8 +125,8 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="profile-background">Profile Background</Label>
-          <Input id="profile-background" type="file" accept="image/*" onChange={handleBackgroundChange} />
+          <Label htmlFor="profile-background">Profile Cover</Label>
+          <Input id="profile-background" type="file" accept="image/*" onChange={handleCoverChange} />
         </div>
         <div className="flex items-center space-x-2">
           <Switch id="comments" checked={enableComments} onCheckedChange={setEnableComments} />
