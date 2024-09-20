@@ -19,6 +19,8 @@ const getImageUrl = (uri: string | undefined): string => {
   return uri.startsWith("ipfs://") ? `https://fountain.4everland.link/ipfs/${uri.slice(7)}` : uri;
 };
 
+import { ImageCropper } from "@/components/ImageCropper";
+
 export function ProfileSettings({ profile }: { profile: Profile | ProfileFragment | null }) {
   if (!profile) return null;
 
@@ -28,13 +30,17 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
 
   const [profileTitle, setProfileTitle] = useState(currentMetadata?.displayName || "");
   const [profileDescription, setProfileDescription] = useState(currentMetadata?.bio || "");
-  const [coverPicture, setCoverPicture] = useState(currentMetadata?.coverPicture?.raw?.uri || "");
-
   const [profilePicture, setProfilePicture] = useState(
     currentMetadata?.picture?.__typename === "ImageSet"
       ? currentMetadata?.picture?.raw?.uri
       : currentMetadata?.picture?.image?.raw?.uri,
   );
+  const [tempProfilePicture, setTempProfilePicture] = useState<string | null>(null);
+  const [isCroppingProfile, setIsCroppingProfile] = useState(false);
+
+  const [coverPicture, setCoverPicture] = useState(currentMetadata?.coverPicture?.raw?.uri || "");
+  const [tempCoverPicture, setTempCoverPicture] = useState<string | null>(null);
+  const [isCroppingCover, setIsCroppingCover] = useState(false);
 
   const [enableComments, setEnableComments] = useState(
     currentMetadata?.attributes?.find((attr) => attr.key === "enableComments")?.value === "true",
@@ -101,31 +107,84 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
     autoPublish,
     setProfileMetadata,
   ]);
-
-  const handleProfilePictureChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0] && handle) {
+  const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) {
       const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          setTempProfilePicture(e.target.result as string);
+          setIsCroppingProfile(true);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          setTempCoverPicture(e.target.result as string);
+          setIsCroppingCover(true);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleProfileCropSave = async (croppedImage: string) => {
+    setIsCroppingProfile(false);
+    if (handle) {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", dataURItoBlob(croppedImage));
       formData.append("handle", handle);
 
       const uploadedUri = await uploadFile(formData);
-
       setProfilePicture(uploadedUri);
     }
   };
 
-  const handleCoverChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0] && handle) {
-      const file = e.target.files[0];
+  const handleCoverCropSave = async (croppedImage: string) => {
+    setIsCroppingCover(false);
+    if (handle) {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", dataURItoBlob(croppedImage));
       formData.append("handle", handle);
 
       const uploadedUri = await uploadFile(formData);
-
       setCoverPicture(uploadedUri);
     }
+  };
+  const dataURItoBlob = (dataURI: string) => {
+    const parts = dataURI.split(",");
+    const byteString = parts[1] ? atob(parts[1]) : "";
+    const mimeString = parts[0]?.split(":")[1]?.split(";")[0] || "application/octet-stream";
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], { type: mimeString });
+  };
+
+  const handleCropCancel = () => {
+    setIsCroppingProfile(false);
+    setIsCroppingCover(false);
+    setTempProfilePicture(null);
+    setTempCoverPicture(null);
+  };
+
+  const handleProfileImageDelete = () => {
+    setProfilePicture("");
+    setTempProfilePicture(null);
+  };
+
+  const handleCoverImageDelete = () => {
+    setCoverPicture("");
+    setTempCoverPicture(null);
   };
 
   return (
@@ -160,28 +219,44 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
         <div className="space-y-4">
           <div className="space-y-2">
             <Label>Profile Picture</Label>
-            {profilePicture && (
+
+            {isCroppingProfile ? (
+              <ImageCropper
+                initialImage={tempProfilePicture || ""}
+                onCroppedImage={handleProfileCropSave}
+                onCancel={handleCropCancel}
+                aspectRatio={1}
+              />
+            ) : profilePicture ? (
               <div className="relative w-32 h-32 rounded-full overflow-hidden">
                 <img src={getImageUrl(profilePicture)} alt="Profile" className="w-full h-full object-cover" />
               </div>
-            )}
+            ) : null}
             <div className="flex space-x-2">
               <Input id="profile-picture" type="file" accept="image/*" onChange={handleProfilePictureChange} />
-              <Button onClick={() => setProfilePicture("")} variant="outline">
+              <Button onClick={handleProfileImageDelete} variant="outline">
                 Delete
               </Button>
             </div>
           </div>
+
           <div className="space-y-2">
             <Label>Cover Picture</Label>
-            {coverPicture && (
+            {isCroppingCover ? (
+              <ImageCropper
+                initialImage={tempCoverPicture || ""}
+                onCroppedImage={handleCoverCropSave}
+                onCancel={handleCropCancel}
+                aspectRatio={3}
+              />
+            ) : coverPicture ? (
               <div className="relative w-full h-48 rounded-lg overflow-hidden">
                 <img src={getImageUrl(coverPicture)} alt="Cover" className="w-full h-full object-cover" />
               </div>
-            )}
+            ) : null}
             <div className="flex space-x-2">
               <Input id="profile-background" type="file" accept="image/*" onChange={handleCoverChange} />
-              <Button onClick={() => setCoverPicture("")} variant="outline">
+              <Button onClick={handleCoverImageDelete} variant="outline">
                 Delete
               </Button>
             </div>
