@@ -11,8 +11,20 @@ import { MetadataAttributeType, profile as profileMetadata } from "@lens-protoco
 import { type Profile, useSetProfileMetadata } from "@lens-protocol/react-web";
 import { useCallback, useState } from "react";
 
+
 import { toast } from "sonner";
 import { Button } from "../ui/button";
+
+const getOptimizedImageUrl = (imageSet: any): string => {
+  if (imageSet?.__typename === "ImageSet") {
+    return imageSet.optimized?.uri || imageSet.raw?.uri || "";
+  }
+
+  if (imageSet?.image?.__typename === "ImageSet") {
+    return imageSet.image.optimized?.uri || imageSet.image.raw?.uri || "";
+  }
+  return imageSet?.raw?.uri || "";
+};
 
 export function ProfileSettings({ profile }: { profile: Profile | ProfileFragment | null }) {
   if (!profile) return null;
@@ -23,7 +35,18 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
 
   const [profileTitle, setProfileTitle] = useState(currentMetadata?.displayName || "");
   const [profileDescription, setProfileDescription] = useState(currentMetadata?.bio || "");
-  const [coverPicture, setCoverPicture] = useState(currentMetadata?.coverPicture?.raw.uri);
+  const [coverPicture, setCoverPicture] = useState(
+    currentMetadata?.coverPicture?.__typename === "ImageSet"
+      ? currentMetadata?.coverPicture?.optimized?.uri
+      : currentMetadata?.coverPicture?.raw?.uri,
+  );
+
+  const [profilePicture, setProfilePicture] = useState(
+    currentMetadata?.picture?.__typename === "ImageSet"
+      ? currentMetadata?.picture?.optimized?.uri
+      : currentMetadata?.picture?.image?.optimized?.uri || currentMetadata?.picture?.image?.raw?.uri,
+  );
+
   const [enableComments, setEnableComments] = useState(
     currentMetadata?.attributes?.find((attr) => attr.key === "enableComments")?.value === "true",
   );
@@ -52,11 +75,11 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
         value: autoPublish ? "true" : "false",
       },
     ];
-
     const metadata = profileMetadata({
       name: profileTitle || undefined,
       bio: profileDescription || undefined,
       coverPicture: coverPicture || undefined,
+      picture: profilePicture || undefined,
       attributes,
       appId: "fountain",
     });
@@ -79,7 +102,29 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
     } finally {
       setIsSaving(false);
     }
-  }, [handle, profileTitle, profileDescription, coverPicture, enableComments, autoPublish, setProfileMetadata]);
+  }, [
+    handle,
+    profileTitle,
+    profileDescription,
+    coverPicture,
+    profilePicture,
+    enableComments,
+    autoPublish,
+    setProfileMetadata,
+  ]);
+
+  const handleProfilePictureChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0] && handle) {
+      const file = e.target.files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("handle", handle);
+
+      const uploadedUri = await uploadFile(formData);
+
+      setProfilePicture(uploadedUri);
+    }
+  };
 
   const handleCoverChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0] && handle) {
@@ -93,6 +138,8 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
       setCoverPicture(uploadedUri);
     }
   };
+
+
 
   return (
     <Card>
@@ -123,9 +170,45 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
             placeholder="Your profile description"
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="profile-background">Profile Cover</Label>
-          <Input id="profile-background" type="file" accept="image/*" onChange={handleCoverChange} />
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label>Profile Picture</Label>
+            {profilePicture && (
+              <div className="relative w-32 h-32 rounded-full overflow-hidden">
+                <img
+                  src={getOptimizedImageUrl(currentMetadata?.picture)}
+                  alt="Profile"
+                  layout="fill"
+                  objectFit="cover"
+                />
+              </div>
+            )}
+            <div className="flex space-x-2">
+              <Input id="profile-picture" type="file" accept="image/*" onChange={handleProfilePictureChange} />
+              <Button onClick={() => setProfilePicture(undefined)} variant="outline">
+                Delete
+              </Button>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label>Cover Picture</Label>
+            {coverPicture && (
+              <div className="relative w-full h-48 rounded-lg overflow-hidden">
+                <img
+                  src={getOptimizedImageUrl(currentMetadata?.coverPicture)}
+                  alt="Cover picture"
+                  layout="fill"
+                  objectFit="cover"
+                />
+              </div>
+            )}
+            <div className="flex space-x-2">
+              <Input id="profile-background" type="file" accept="image/*" onChange={handleCoverChange} />
+              <Button onClick={() => setCoverPicture(undefined)} variant="outline">
+                Delete
+              </Button>
+            </div>
+          </div>
         </div>
         <div className="flex items-center space-x-2">
           <Switch id="comments" checked={enableComments} onCheckedChange={setEnableComments} />

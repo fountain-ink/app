@@ -32,15 +32,14 @@ const tabData = [
   { id: "team", label: "Team", icon: Users, enabled: false },
   { id: "layouts", label: "Layouts", icon: LayoutGrid, enabled: false },
 ];
-
 export default async function settings() {
   const { profile } = await getAuthorizedClients();
 
   return (
-    <div className="container mx-auto p-6 max-w-6xl">
+    <div className="container mx-auto p-6 py-10 max-w-6xl">
       <h1 className="text-3xl font-bold mb-8">Settings</h1>
-      <Tabs defaultValue="app" className="space-y-3 h-10">
-        <TabsList className="flex justify-start gap-2 bg-transparent">
+      <Tabs defaultValue="app">
+        <TabsList className="flex flex-wrap justify-start gap-2 bg-transparent">
           {tabData.map((tab) => (
             <TabsTrigger
               key={tab.id}
