@@ -14,15 +14,9 @@ import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 
-const getOptimizedImageUrl = (imageSet: any): string => {
-  if (imageSet?.__typename === "ImageSet") {
-    return imageSet.optimized?.uri || imageSet.raw?.uri || "";
-  }
-
-  if (imageSet?.image?.__typename === "ImageSet") {
-    return imageSet.image.optimized?.uri || imageSet.image.raw?.uri || "";
-  }
-  return imageSet?.raw?.uri || "";
+const getImageUrl = (uri: string | undefined): string => {
+  if (!uri) return "";
+  return uri.startsWith("ipfs://") ? `https://fountain.4everland.link/ipfs/${uri.slice(7)}` : uri;
 };
 
 export function ProfileSettings({ profile }: { profile: Profile | ProfileFragment | null }) {
@@ -34,16 +28,12 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
 
   const [profileTitle, setProfileTitle] = useState(currentMetadata?.displayName || "");
   const [profileDescription, setProfileDescription] = useState(currentMetadata?.bio || "");
-  const [coverPicture, setCoverPicture] = useState(
-    currentMetadata?.coverPicture?.__typename === "ImageSet"
-      ? currentMetadata?.coverPicture?.optimized?.uri
-      : currentMetadata?.coverPicture?.raw?.uri,
-  );
+  const [coverPicture, setCoverPicture] = useState(currentMetadata?.coverPicture?.raw?.uri || "");
 
   const [profilePicture, setProfilePicture] = useState(
     currentMetadata?.picture?.__typename === "ImageSet"
-      ? currentMetadata?.picture?.optimized?.uri
-      : currentMetadata?.picture?.image?.optimized?.uri || currentMetadata?.picture?.image?.raw?.uri,
+      ? currentMetadata?.picture?.raw?.uri
+      : currentMetadata?.picture?.image?.raw?.uri,
   );
 
   const [enableComments, setEnableComments] = useState(
@@ -172,12 +162,12 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
             <Label>Profile Picture</Label>
             {profilePicture && (
               <div className="relative w-32 h-32 rounded-full overflow-hidden">
-                <img src={getOptimizedImageUrl(currentMetadata?.picture)} alt="Profile" />
+                <img src={getImageUrl(profilePicture)} alt="Profile" className="w-full h-full object-cover" />
               </div>
             )}
             <div className="flex space-x-2">
               <Input id="profile-picture" type="file" accept="image/*" onChange={handleProfilePictureChange} />
-              <Button onClick={() => setProfilePicture(undefined)} variant="outline">
+              <Button onClick={() => setProfilePicture("")} variant="outline">
                 Delete
               </Button>
             </div>
@@ -186,12 +176,12 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
             <Label>Cover Picture</Label>
             {coverPicture && (
               <div className="relative w-full h-48 rounded-lg overflow-hidden">
-                <img src={getOptimizedImageUrl(currentMetadata?.coverPicture)} alt="Cover" />
+                <img src={getImageUrl(coverPicture)} alt="Cover" className="w-full h-full object-cover" />
               </div>
             )}
             <div className="flex space-x-2">
               <Input id="profile-background" type="file" accept="image/*" onChange={handleCoverChange} />
-              <Button onClick={() => setCoverPicture(undefined)} variant="outline">
+              <Button onClick={() => setCoverPicture("")} variant="outline">
                 Delete
               </Button>
             </div>
