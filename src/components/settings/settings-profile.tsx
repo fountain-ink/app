@@ -52,7 +52,6 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
         value: autoPublish ? "true" : "false",
       },
     ];
-    console.log(coverPicture);
 
     const metadata = profileMetadata({
       name: profileTitle || undefined,
