@@ -172,7 +172,7 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
             <Label>Profile Picture</Label>
             {profilePicture && (
               <div className="relative w-32 h-32 rounded-full overflow-hidden">
-                <img src={getOptimizedImageUrl(currentMetadata?.picture)} alt="Profile" objectFit="cover" />
+                <img src={getOptimizedImageUrl(currentMetadata?.picture)} alt="Profile" />
               </div>
             )}
             <div className="flex space-x-2">
@@ -186,7 +186,7 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
             <Label>Cover Picture</Label>
             {coverPicture && (
               <div className="relative w-full h-48 rounded-lg overflow-hidden">
-                <img src={getOptimizedImageUrl(currentMetadata?.coverPicture)} alt="Cover" objectFit="cover" />
+                <img src={getOptimizedImageUrl(currentMetadata?.coverPicture)} alt="Cover" />
               </div>
             )}
             <div className="flex space-x-2">
