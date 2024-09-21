@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import AvatarEditor from "react-avatar-editor";
 
 interface ImageCropperProps {
@@ -12,11 +12,21 @@ interface ImageCropperProps {
   width?: number;
   height?: number;
 }
-
-export function ImageCropper({ initialImage, onCroppedImage, onCancel }: ImageCropperProps) {
+export function ImageCropper({ initialImage, onCroppedImage, onCancel, aspectRatio }: ImageCropperProps) {
   const [image, setImage] = useState<string | File>(initialImage);
   const [scale, setScale] = useState(1);
   const editorRef = useRef<AvatarEditor>(null);
+  const [cropperDimensions, setCropperDimensions] = useState({ width: 250, height: 250 });
+
+  useEffect(() => {
+    if (aspectRatio) {
+      if (aspectRatio > 1) {
+        setCropperDimensions({ width: 300, height: 300 / aspectRatio });
+      } else {
+        setCropperDimensions({ width: 300 * aspectRatio, height: 300 });
+      }
+    }
+  }, [aspectRatio]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -47,7 +57,14 @@ export function ImageCropper({ initialImage, onCroppedImage, onCancel }: ImageCr
       </div>
       {image && (
         <>
-          <AvatarEditor ref={editorRef} image={image} width={250} height={250} border={50} scale={scale} />
+          <AvatarEditor
+            ref={editorRef}
+            image={image}
+            width={cropperDimensions.width}
+            height={cropperDimensions.height}
+            border={50}
+            scale={scale}
+          />
           <div>
             <Label htmlFor="scale">Zoom</Label>
             <Input id="scale" type="range" onChange={handleScaleChange} min={1} max={2} step={0.01} defaultValue={1} />
