@@ -16,17 +16,40 @@ export function ImageCropper({ initialImage, onCroppedImage, onCancel, aspectRat
   const [image, setImage] = useState<string | File>(initialImage);
   const [scale, setScale] = useState(1);
   const editorRef = useRef<AvatarEditor>(null);
-  const [cropperDimensions, setCropperDimensions] = useState({ width: 250, height: 250 });
+  const [cropperDimensions, setCropperDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
-    if (aspectRatio) {
-      if (aspectRatio > 1) {
-        setCropperDimensions({ width: 300, height: 300 / aspectRatio });
-      } else {
-        setCropperDimensions({ width: 300 * aspectRatio, height: 300 });
+    const img = new Image();
+    img.onload = () => {
+      let width = img.width;
+      let height = img.height;
+
+      if (aspectRatio) {
+        if (width / height > aspectRatio) {
+          height = width / aspectRatio;
+        } else {
+          width = height * aspectRatio;
+        }
       }
-    }
-  }, [aspectRatio]);
+
+      // Limit the maximum size to prevent performance issues
+      const maxSize = 800;
+      if (width > maxSize || height > maxSize) {
+        const ratio = maxSize / Math.max(width, height);
+        width *= ratio;
+        height *= ratio;
+      }
+
+      setCropperDimensions({ width, height });
+    };
+    img.src = image instanceof File ? URL.createObjectURL(image) : image as string;
+
+    return () => {
+      if (image instanceof File) {
+        URL.revokeObjectURL(img.src);
+      }
+    };
+  }, [image, aspectRatio]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -55,7 +78,7 @@ export function ImageCropper({ initialImage, onCroppedImage, onCancel, aspectRat
         <Label htmlFor="image-upload">Upload Image</Label>
         <Input id="image-upload" type="file" onChange={handleFileChange} accept="image/*" />
       </div>
-      {image && (
+      {image && cropperDimensions.width > 0 && cropperDimensions.height > 0 && (
         <>
           <AvatarEditor
             ref={editorRef}
