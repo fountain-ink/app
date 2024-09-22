@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { uploadMetadata } from "@/lib/upload-utils";
-import { type ProfileFragment } from "@lens-protocol/client";
+import type { ProfileFragment } from "@lens-protocol/client";
 import { MetadataAttributeType } from "@lens-protocol/metadata";
 import { type Profile, useSetProfileMetadata } from "@lens-protocol/react-web";
 import { useCallback, useState } from "react";
@@ -15,11 +15,6 @@ import { Button } from "../ui/button";
 import { ImageUploader } from "./ImageUploader";
 
 import { profile as profileMetadata } from "@lens-protocol/metadata";
-
-const getImageUrl = (uri: string | undefined): string => {
-  if (!uri) return "";
-  return uri.startsWith("ipfs://") ? `https://fountain.4everland.link/ipfs/${uri.slice(7)}` : uri;
-};
 
 export function ProfileSettings({ profile }: { profile: Profile | ProfileFragment | null }) {
   const [profilePicture, setProfilePicture] = useState(
@@ -37,12 +32,6 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
 
   const [profileTitle, setProfileTitle] = useState(currentMetadata?.displayName || "");
   const [profileDescription, setProfileDescription] = useState(currentMetadata?.bio || "");
-  const [tempProfilePicture, setTempProfilePicture] = useState<string | null>(null);
-  const [isCroppingProfile, setIsCroppingProfile] = useState(false);
-
-  const [tempCoverPicture, setTempCoverPicture] = useState<string | null>(null);
-  const [isCroppingCover, setIsCroppingCover] = useState(false);
-
   const [enableComments, setEnableComments] = useState(
     currentMetadata?.attributes?.find((attr) => attr.key === "enableComments")?.value === "true",
   );
@@ -108,19 +97,6 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
     autoPublish,
     setProfileMetadata,
   ]);
-  const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0]) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        if (e.target?.result) {
-          setTempProfilePicture(e.target.result as string);
-          setIsCroppingProfile(true);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   return (
     <Card>
