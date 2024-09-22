@@ -12,7 +12,7 @@ const Markdown: React.FC<{ content: string }> = ({ content }) => {
   return (
     <ReactMarkdown
       className="prose dark:prose-invert prose-p:m-0 prose-p:inline 
-        prose-ul:m-0 prose-h2:m-0 prose-h1:m-0 prose-li:m-0 prose-li:whitespace-normal 
+        prose-ul:m-0 prose-h2:m-0 prose-h1:m-0 prose-li:m-0 prose-li:whitespace-normal prose-p:whitespace-normal
         prose-ul:leading-4 prose-ol:leading-4 prose-ol:m-0"
       remarkPlugins={[remarkGfm]}
       components={{
