@@ -11,12 +11,11 @@ const Markdown: React.FC<{ content: string }> = ({ content }) => {
   const processedText = replaceHandles(parseLinks(content));
   return (
     <ReactMarkdown
-      className="prose dark:prose-invert prose-p:m-0 prose-p:inline 
+      className="prose dark:prose-invert prose-p:m-0 prose-p:inline
         prose-ul:m-0 prose-h2:m-0 prose-h1:m-0 prose-li:m-0 prose-li:whitespace-normal prose-p:whitespace-normal
         prose-ul:leading-4 prose-ol:leading-4 prose-ol:m-0"
       remarkPlugins={[remarkGfm]}
       components={{
-        h1: "h2",
         a: CustomLink,
       }}
     >
@@ -41,7 +40,7 @@ const replaceHandles = (content: string): string => {
 const parseLinks = (content: string): string => {
   const linkRegex = /(https?:\/\/\S+)/gi;
   return content.replace(linkRegex, (match) => {
-    const linkWithoutProtocol = match.replace(/^https?:\/\//, '');
+    const linkWithoutProtocol = match.replace(/^https?:\/\//, "");
     return `[${linkWithoutProtocol}](${match})`;
   });
 };

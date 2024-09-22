@@ -5,23 +5,30 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { uploadFile, uploadMetadata } from "@/lib/upload-utils";
-import type { ProfileFragment } from "@lens-protocol/client";
-import { MetadataAttributeType, profile as profileMetadata } from "@lens-protocol/metadata";
+import { uploadMetadata } from "@/lib/upload-utils";
+import { type ProfileFragment } from "@lens-protocol/client";
+import { MetadataAttributeType } from "@lens-protocol/metadata";
 import { type Profile, useSetProfileMetadata } from "@lens-protocol/react-web";
 import { useCallback, useState } from "react";
-
 import { toast } from "sonner";
 import { Button } from "../ui/button";
+import { ImageUploader } from "./ImageUploader";
+
+import { profile as profileMetadata } from "@lens-protocol/metadata";
 
 const getImageUrl = (uri: string | undefined): string => {
   if (!uri) return "";
   return uri.startsWith("ipfs://") ? `https://fountain.4everland.link/ipfs/${uri.slice(7)}` : uri;
 };
 
-import { ImageCropper } from "@/components/ImageCropper";
-
 export function ProfileSettings({ profile }: { profile: Profile | ProfileFragment | null }) {
+  const [profilePicture, setProfilePicture] = useState(
+    profile?.metadata?.picture?.__typename === "ImageSet"
+      ? profile.metadata.picture.raw?.uri
+      : profile?.metadata?.picture?.image?.raw?.uri,
+  );
+  const [coverPicture, setCoverPicture] = useState(profile?.metadata?.coverPicture?.raw?.uri || "");
+
   if (!profile) return null;
 
   const currentMetadata = profile?.metadata;
@@ -30,15 +37,9 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
 
   const [profileTitle, setProfileTitle] = useState(currentMetadata?.displayName || "");
   const [profileDescription, setProfileDescription] = useState(currentMetadata?.bio || "");
-  const [profilePicture, setProfilePicture] = useState(
-    currentMetadata?.picture?.__typename === "ImageSet"
-      ? currentMetadata?.picture?.raw?.uri
-      : currentMetadata?.picture?.image?.raw?.uri,
-  );
   const [tempProfilePicture, setTempProfilePicture] = useState<string | null>(null);
   const [isCroppingProfile, setIsCroppingProfile] = useState(false);
 
-  const [coverPicture, setCoverPicture] = useState(currentMetadata?.coverPicture?.raw?.uri || "");
   const [tempCoverPicture, setTempCoverPicture] = useState<string | null>(null);
   const [isCroppingCover, setIsCroppingCover] = useState(false);
 
@@ -121,72 +122,6 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
     }
   };
 
-  const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0]) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        if (e.target?.result) {
-          setTempCoverPicture(e.target.result as string);
-          setIsCroppingCover(true);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleProfileCropSave = async (croppedImage: string) => {
-    setIsCroppingProfile(false);
-    if (handle) {
-      const formData = new FormData();
-      formData.append("file", dataURItoBlob(croppedImage));
-      formData.append("handle", handle);
-
-      const uploadedUri = await uploadFile(formData);
-      setProfilePicture(uploadedUri);
-    }
-  };
-
-  const handleCoverCropSave = async (croppedImage: string) => {
-    setIsCroppingCover(false);
-    if (handle) {
-      const formData = new FormData();
-      formData.append("file", dataURItoBlob(croppedImage));
-      formData.append("handle", handle);
-
-      const uploadedUri = await uploadFile(formData);
-      setCoverPicture(uploadedUri);
-    }
-  };
-  const dataURItoBlob = (dataURI: string) => {
-    const parts = dataURI.split(",");
-    const byteString = parts[1] ? atob(parts[1]) : "";
-    const mimeString = parts[0]?.split(":")[1]?.split(";")[0] || "application/octet-stream";
-    const ab = new ArrayBuffer(byteString.length);
-    const ia = new Uint8Array(ab);
-    for (let i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
-    }
-    return new Blob([ab], { type: mimeString });
-  };
-
-  const handleCropCancel = () => {
-    setIsCroppingProfile(false);
-    setIsCroppingCover(false);
-    setTempProfilePicture(null);
-    setTempCoverPicture(null);
-  };
-
-  const handleProfileImageDelete = () => {
-    setProfilePicture("");
-    setTempProfilePicture(null);
-  };
-
-  const handleCoverImageDelete = () => {
-    setCoverPicture("");
-    setTempCoverPicture(null);
-  };
-
   return (
     <Card>
       <CardHeader>
@@ -194,6 +129,20 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
         <CardDescription>Customize your profile preferences.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
+        <ImageUploader
+          label="Profile Picture"
+          initialImage={profilePicture || ""}
+          aspectRatio={1}
+          handle={profile?.handle?.localName || ""}
+          onImageChange={setProfilePicture}
+        />
+        <ImageUploader
+          label="Cover Picture"
+          initialImage={coverPicture || ""}
+          aspectRatio={3}
+          handle={profile?.handle?.localName || ""}
+          onImageChange={setCoverPicture}
+        />
         <div className="space-y-2">
           <Label htmlFor="username">Username</Label>
           <Input id="username" placeholder={handle} disabled />
@@ -215,52 +164,6 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
             onChange={(e) => setProfileDescription(e.target.value)}
             placeholder="Your profile description"
           />
-        </div>
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label>Profile Picture</Label>
-
-            {isCroppingProfile ? (
-              <ImageCropper
-                initialImage={tempProfilePicture || ""}
-                onCroppedImage={handleProfileCropSave}
-                onCancel={handleCropCancel}
-                aspectRatio={1}
-              />
-            ) : profilePicture ? (
-              <div className="relative w-32 h-32 rounded-full overflow-hidden">
-                <img src={getImageUrl(profilePicture)} alt="Profile" className="w-full h-full object-cover" />
-              </div>
-            ) : null}
-            <div className="flex space-x-2">
-              <Input id="profile-picture" type="file" accept="image/*" onChange={handleProfilePictureChange} />
-              <Button onClick={handleProfileImageDelete} variant="outline">
-                Delete
-              </Button>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Cover Picture</Label>
-            {isCroppingCover ? (
-              <ImageCropper
-                initialImage={tempCoverPicture || ""}
-                onCroppedImage={handleCoverCropSave}
-                onCancel={handleCropCancel}
-                aspectRatio={3}
-              />
-            ) : coverPicture ? (
-              <div className="relative w-full h-48 rounded-lg overflow-hidden">
-                <img src={getImageUrl(coverPicture)} alt="Cover" className="w-full h-full object-cover" />
-              </div>
-            ) : null}
-            <div className="flex space-x-2">
-              <Input id="profile-background" type="file" accept="image/*" onChange={handleCoverChange} />
-              <Button onClick={handleCoverImageDelete} variant="outline">
-                Delete
-              </Button>
-            </div>
-          </div>
         </div>
         <div className="flex items-center space-x-2">
           <Switch id="comments" checked={enableComments} onCheckedChange={setEnableComments} />
