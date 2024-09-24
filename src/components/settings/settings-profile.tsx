@@ -12,9 +12,9 @@ import { type Profile, useSetProfileMetadata } from "@lens-protocol/react-web";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
-import { ImageUploader } from "./ImageUploader";
 
 import { profile as profileMetadata } from "@lens-protocol/metadata";
+import { ImageUploader } from "../images/image-uploader";
 
 export function ProfileSettings({ profile }: { profile: Profile | ProfileFragment | null }) {
   const [profilePicture, setProfilePicture] = useState(
