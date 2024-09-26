@@ -1,5 +1,6 @@
 "use client";
 
+
 import { env } from "@/env";
 import { TiptapCollabProvider } from "@hocuspocus/provider";
 import Collaboration from "@tiptap/extension-collaboration";
@@ -29,6 +30,7 @@ import { LinkSelector } from "./selectors/select-link";
 import { NodeSelector } from "./selectors/select-node";
 import { TextButtons } from "./selectors/select-text";
 import { Markdown } from "tiptap-markdown";
+import { proseClasses } from "@/styles/prose";
 
 const token = env.NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN;
 const colors = ["#958DF1", "#F98181", "#FBBC88", "#FAF594"];
@@ -142,9 +144,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
             keydown: (_view, event) => handleCommandNavigation(event),
           },
           attributes: {
-            class:
-              "prose prose-sm sm:prose-base prose-img:prose-h1:font-martina \
-              prose-h1:my-8 prose-h1:text-center prose-h1:text-6xl lg:prose-lg focus:outline-none rounded-lg",
+            class: proseClasses,
           },
         }}
         extensions={editorExtensionsList}

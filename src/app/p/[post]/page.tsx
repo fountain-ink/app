@@ -1,6 +1,8 @@
 import Markdown from "@/components/content/markdown";
 import ErrorPage from "@/components/error-page";
 import { getAuthorizedClients } from "@/lib/get-auth-clients";
+import { proseClasses } from "@/styles/prose";
+
 
 import { sanitize } from "isomorphic-dompurify";
 
@@ -30,8 +32,8 @@ const post = async ({ params }: { params: { post: string } }) => {
     return (
       <div className="container flex flex-col items-center justify-center w-full max-w-lg md:max-w-xl lg:max-w-2xl">
         <div className="w-full min-h-screen py-4 my-10">
-          <div
-            className="prose prose-sm sm:prose-base prose-img:prose-h1:font-martina prose-h1:my-8 prose-h1:text-center prose-h1:text-6xl lg:prose-lg focus:outline-none rounded-lg"
+      <div
+        className={proseClasses}
             // biome-ignore lint/security/noDangerouslySetInnerHtml: intended use
             dangerouslySetInnerHTML={{ __html: sanitize(contentHtml) }}
           />
