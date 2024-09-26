@@ -1,10 +1,8 @@
 import { uploadFile } from "@/lib/upload-utils";
 
-import { Dialog, DialogContent, DialogFooter, DialogTrigger } from "../ui/dialog";
-
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+
 import { Label } from "../ui/label";
 
 const getImageUrl = (uri: string | undefined): string => {
@@ -20,9 +18,9 @@ interface ImageUploaderProps {
   onImageChange: (newImage: string) => void;
 }
 
-export function ImageUploader({ label, initialImage, aspectRatio, handle, onImageChange }: ImageUploaderProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+export const ImageUploader = ({ label, initialImage, aspectRatio, handle, onImageChange }: ImageUploaderProps) => {
   const [image, setImage] = useState(initialImage);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageDelete = () => {
     setImage("");
@@ -42,54 +40,34 @@ export function ImageUploader({ label, initialImage, aspectRatio, handle, onImag
     }
   };
 
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
     <div className="space-y-2">
       <Label>{label}</Label>
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogTrigger asChild>
-          <div
-            className={`relative ${aspectRatio === 1 ? "w-32 h-32 rounded-full" : "w-full h-48 rounded-lg"} overflow-hidden cursor-pointer`}
-          >
-            {image ? (
-              <img src={getImageUrl(image)} alt={label} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-500">Click to upload</span>
-              </div>
-            )}
+      <div
+        className={`relative ${
+          aspectRatio === 1 ? "w-32 h-32 rounded-full" : "w-full h-48 rounded-lg"
+        } overflow-hidden cursor-pointer`}
+        onClick={handleImageClick}
+        onKeyDown={handleImageClick}
+      >
+        {image ? (
+          <img src={getImageUrl(image)} alt={""} className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+            <span className="text-gray-500">Click to upload</span>
           </div>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-xl">
-          {image ? (
-            <div className="space-y-4">
-              <img src={getImageUrl(image)} alt={label} className="w-fit object-scale-down" />
-              <div className="flex space-x-2">
-                <label htmlFor={`${label.toLowerCase()}-input`} className="cursor-pointer">
-                  <Input
-                    id={`${label.toLowerCase()}-input`}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleUploadNewImage}
-                    className="hidden"
-                  />
-                </label>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              <Input id={`${label.toLowerCase()}-input`} type="file" accept="image/*" onChange={handleUploadNewImage} />
-            </div>
-          )}
-          <DialogFooter>
-            {image && (
-              <Button onClick={handleImageDelete} variant="outline">
-                Delete
-              </Button>
-            )}
-            <Button onClick={() => setIsModalOpen(false)}>Close</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        )}
+      </div>
+      <input ref={fileInputRef} type="file" accept="image/*" onChange={handleUploadNewImage} className="hidden" />
+      {image && (
+        <Button onClick={handleImageDelete} variant="outline">
+          Delete
+        </Button>
+      )}
     </div>
   );
-}
+};
