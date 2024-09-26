@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { uploadMetadata } from "@/lib/upload-utils";
+import { uploadFile, uploadMetadata } from "@/lib/upload-utils";
 import type { ProfileFragment } from "@lens-protocol/client";
 import { MetadataAttributeType } from "@lens-protocol/metadata";
 import { type Profile, useSetProfileMetadata } from "@lens-protocol/react-web";
@@ -17,12 +17,8 @@ import { profile as profileMetadata } from "@lens-protocol/metadata";
 import { ImageUploader } from "../images/image-uploader";
 
 export function ProfileSettings({ profile }: { profile: Profile | ProfileFragment | null }) {
-  const [profilePicture, setProfilePicture] = useState(
-    profile?.metadata?.picture?.__typename === "ImageSet"
-      ? profile.metadata.picture.raw?.uri
-      : profile?.metadata?.picture?.image?.raw?.uri,
-  );
-  const [coverPicture, setCoverPicture] = useState(profile?.metadata?.coverPicture?.raw?.uri || "");
+  const [profilePicture, setProfilePicture] = useState<File | null>(null);
+  const [coverPicture, setCoverPicture] = useState<File | null>(null);
 
   if (!profile) return null;
 
@@ -41,36 +37,56 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = useCallback(async () => {
-    const attributes: Array<
-      | { value: string; type: MetadataAttributeType.STRING; key: string }
-      | {
-          value: "true" | "false";
-          type: MetadataAttributeType.BOOLEAN;
-          key: string;
-        }
-    > = [
-      {
-        key: "enableComments",
-        type: MetadataAttributeType.BOOLEAN,
-        value: enableComments ? "true" : "false",
-      },
-      {
-        key: "autoPublish",
-        type: MetadataAttributeType.BOOLEAN,
-        value: autoPublish ? "true" : "false",
-      },
-    ];
-    const metadata = profileMetadata({
-      name: profileTitle || undefined,
-      bio: profileDescription || undefined,
-      coverPicture: coverPicture || undefined,
-      picture: profilePicture || undefined,
-      attributes,
-      appId: "fountain",
-    });
-
     setIsSaving(true);
     try {
+      let profilePictureUri = currentMetadata?.picture?.__typename === "ImageSet"
+        ? currentMetadata.picture.raw?.uri
+        : currentMetadata?.picture?.image?.raw?.uri;
+      let coverPictureUri = currentMetadata?.coverPicture?.raw?.uri;
+
+      if (profilePicture) {
+        const formData = new FormData();
+        formData.append("file", profilePicture);
+        formData.append("handle", handle);
+        profilePictureUri = await uploadFile(formData);
+      }
+
+      if (coverPicture) {
+        const formData = new FormData();
+        formData.append("file", coverPicture);
+        formData.append("handle", handle);
+        coverPictureUri = await uploadFile(formData);
+      }
+
+      const attributes: Array<
+        | { value: string; type: MetadataAttributeType.STRING; key: string }
+        | {
+            value: "true" | "false";
+            type: MetadataAttributeType.BOOLEAN;
+            key: string;
+          }
+      > = [
+        {
+          key: "enableComments",
+          type: MetadataAttributeType.BOOLEAN,
+          value: enableComments ? "true" : "false",
+        },
+        {
+          key: "autoPublish",
+          type: MetadataAttributeType.BOOLEAN,
+          value: autoPublish ? "true" : "false",
+        },
+      ];
+
+      const metadata = profileMetadata({
+        name: profileTitle || undefined,
+        bio: profileDescription || undefined,
+        coverPicture: coverPictureUri || undefined,
+        picture: profilePictureUri || undefined,
+        attributes,
+        appId: "fountain",
+      });
+
       const metadataURI = await uploadMetadata(metadata, handle);
       const result = await setProfileMetadata({ metadataURI });
 
@@ -96,6 +112,7 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
     enableComments,
     autoPublish,
     setProfileMetadata,
+    currentMetadata,
   ]);
 
   return (
@@ -107,16 +124,18 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
       <CardContent className="space-y-6">
         <ImageUploader
           label="Profile Picture"
-          initialImage={profilePicture || ""}
+          initialImage={
+            currentMetadata?.picture?.__typename === "ImageSet"
+              ? currentMetadata.picture.raw?.uri || ""
+              : currentMetadata?.picture?.image?.raw?.uri || ""
+          }
           aspectRatio={1}
-          handle={profile?.handle?.localName || ""}
           onImageChange={setProfilePicture}
         />
         <ImageUploader
           label="Cover Picture"
-          initialImage={coverPicture || ""}
+          initialImage={currentMetadata?.coverPicture?.raw?.uri || ""}
           aspectRatio={3}
-          handle={profile?.handle?.localName || ""}
           onImageChange={setCoverPicture}
         />
         <div className="space-y-2">

@@ -10,6 +10,10 @@ const config = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  images: {
+    domains: ["images.unsplash.com"],
+  },
+
   webpack: (config) => {
     config.resolve.fallback = { fs: false, net: false, tls: false };
 

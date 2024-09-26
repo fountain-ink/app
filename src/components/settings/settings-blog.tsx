@@ -73,6 +73,7 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
     });
 
     setIsSaving(true);
+
     try {
       const metadataURI = await uploadMetadata(metadata, handle);
       const result = await setProfileMetadata({ metadataURI });
@@ -82,7 +83,9 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
         toast.error("Failed to update profile settings. Please try again.");
       } else {
         console.log("Profile metadata updated successfully");
-        toast.success("Profile settings updated successfully!");
+        toast.success("Profile settings updated successfully!", {
+          description: "It might take a few seconds for the changes to take effect.",
+        });
       }
     } catch (error) {
       console.error("Error updating profile metadata:", error);
