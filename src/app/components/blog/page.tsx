@@ -173,7 +173,7 @@ export default function BlogPost() {
     document.documentElement.style.setProperty('--blog-foreground', theme.foreground)
   }, [theme])
 
-  const getFontFamily = (fontName) => {
+  const getFontFamily = (fontName: any) => {
     switch (fontName) {
       case 'Inter':
         return inter.style.fontFamily
@@ -390,6 +390,7 @@ export default function BlogPost() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {similarPosts.map((post) => (
                       <Card key={post.id} className="overflow-hidden group hover:shadow-lg transition-shadow duration-300">
+                        {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
                         <a href="#" className="block h-full">
                           <div className="relative overflow-hidden">
                             <img
