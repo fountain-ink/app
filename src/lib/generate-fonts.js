@@ -89,25 +89,34 @@ function updateTailwindConfig(configContent, fontFamilies) {
       if (ts.isPropertyAssignment(node) && node.name.getText() === "fontFamily") {
         const fontFamilyObj = node.initializer;
         if (ts.isObjectLiteralExpression(fontFamilyObj)) {
-          const newProperties = fontFamilyObj.properties.filter(
-            (prop) => !fontFamilies.some((family) => prop.name.getText() === family.replace(/\s+/g, "-").toLowerCase()),
+          const existingFonts = new Set(
+            fontFamilyObj.properties
+              .filter(ts.isPropertyAssignment)
+              .map((prop) => prop.name.getText().replace(/['"]/g, "")),
           );
 
-          // biome-ignore lint/complexity/noForEach: <explanation>
-          fontFamilies.forEach((family) => {
-            const variableName = family.replace(/\s+/g, "-").toLowerCase();
-            newProperties.push(
-              ts.factory.createPropertyAssignment(
-                ts.factory.createStringLiteral(variableName),
-                ts.factory.createArrayLiteralExpression([
-                  ts.factory.createStringLiteral(`var(--font-${variableName})`),
-                  ts.factory.createStringLiteral("sans-serif"),
-                ]),
-              ),
-            );
-          });
+          const newProperties = fontFamilyObj.properties.filter(ts.isPropertyAssignment);
 
-          return ts.factory.updatePropertyAssignment(node, node.name, ts.factory.createObjectLiteralExpression(newProperties, true));
+          for (const family of fontFamilies) {
+            const variableName = family.replace(/\s+/g, "-").toLowerCase();
+            if (!existingFonts.has(variableName)) {
+              newProperties.push(
+                ts.factory.createPropertyAssignment(
+                  ts.factory.createStringLiteral(variableName),
+                  ts.factory.createArrayLiteralExpression([
+                    ts.factory.createStringLiteral(`var(--font-${variableName})`),
+                    ts.factory.createStringLiteral("sans-serif"),
+                  ]),
+                ),
+              );
+            }
+          }
+
+          return ts.factory.updatePropertyAssignment(
+            node,
+            node.name,
+            ts.factory.createObjectLiteralExpression(newProperties, true),
+          );
         }
       }
       return ts.visitEachChild(node, visit, context);
