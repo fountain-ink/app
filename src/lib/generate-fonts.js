@@ -46,7 +46,7 @@ function generateFontFaces() {
 `;
           fontSources.push(`
     {
-      path: '../public/fonts/${fontFamilyName}/${file}',
+      path: '../../public/fonts/${fontFamilyName}/${file}',
       weight: '${weightMap[weight]}',
       style: '${style ? "italic" : "normal"}',
     }`);
