@@ -48,7 +48,7 @@ export const TestMartinaPlantijn = localFont({
       style: 'normal',
     }
   ],
-  variable: '--font-testmartinaplantijn',
+  variable: '--font-test-martina-plantijn',
 });
 
 export const TestMartinaPlantijnClass = TestMartinaPlantijn.variable;

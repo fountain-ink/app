@@ -1,6 +1,6 @@
 "use client";
 
-import { type ThemeType, themes } from "@/styles/themes";
+import { type ThemeType, globalThemes } from "@/styles/themes";
 import type React from "react";
 import {type 
 	ReactNode,
@@ -26,7 +26,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
 	useEffect(() => {
 		const root = document.documentElement;
-		const themeProperties = Object.entries(themes[theme]);
+		const themeProperties = Object.entries(globalThemes[theme]);
 
 		for (let i = 0; i < themeProperties.length; i++) {
 			// biome-ignore lint/style/noNonNullAssertion: inteded use

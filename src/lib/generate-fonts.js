@@ -20,13 +20,17 @@ const weightMap = {
 };
 
 function generateFontFaces() {
-  let cssContent = "";
+  let cssContent = ":root {\n";
+  let fontFacesContent = "";
   let tsContent = `import localFont from 'next/font/local';\n\n`;
   const fontFamilies = [];
 
   for (const fontDir of fontDirs) {
     const fontFamilyName = path.basename(fontDir);
     fontFamilies.push(fontFamilyName);
+
+    const variableName = fontFamilyName.replace(/\s+/g, "-").toLowerCase();
+    cssContent += `  --font-${variableName}: '${fontFamilyName}', sans-serif;\n`;
 
     const files = fs.readdirSync(fontDir);
     const fontSources = [];
@@ -36,7 +40,7 @@ function generateFontFaces() {
         const match = file.match(/-(light|regular|medium|bold|black)(-italic)?\.woff2$/);
         if (match) {
           const [, weight, style] = match;
-          cssContent += `
+          fontFacesContent += `
 @font-face {
   font-family: '${fontFamilyName}';
   src: url('/fonts/${fontFamilyName}/${file}') format('woff2');
@@ -55,16 +59,18 @@ function generateFontFaces() {
     }
 
     // Generate Next.js font variable
-    const variableName = fontFamilyName.replace(/\s+/g, "");
-    tsContent += `export const ${variableName} = localFont({
+    const nextJsVariableName = fontFamilyName.replace(/\s+/g, "");
+    tsContent += `export const ${nextJsVariableName} = localFont({
   src: [${fontSources.join(",")}
   ],
-  variable: '--font-${variableName.toLowerCase()}',
+  variable: '--font-${variableName}',
 });\n\n`;
 
     // Generate Tailwind class
-    tsContent += `export const ${variableName}Class = ${variableName}.variable;\n\n`;
+    tsContent += `export const ${nextJsVariableName}Class = ${nextJsVariableName}.variable;\n\n`;
   }
+
+  cssContent += `}\n\n${fontFacesContent}`;
 
   fs.writeFileSync(outputCSSFile, cssContent);
   fs.writeFileSync(outputTSFile, tsContent);

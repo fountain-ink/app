@@ -1,6 +1,6 @@
 "use client";
 
-import { themeNames, themes } from "@/styles/themes";
+import { themeNames, globalThemes } from "@/styles/themes";
 import { useTheme } from "./theme-context";
 import { Button } from "../ui/button";
 import { MoonIcon, SunIcon } from "lucide-react";
@@ -9,8 +9,8 @@ export const ThemeButtons = () => {
 	const { setTheme } = useTheme();
 
 	const themeButtons = Object.values(themeNames).map((theme) => {
-		const foreground = themes[theme]["--foreground"];
-		const background = themes[theme]["--background"];
+		const foreground = globalThemes[theme]["--foreground"];
+		const background = globalThemes[theme]["--background"];
 		const themeName = theme;
 		const placeholderText =
 			"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
