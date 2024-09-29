@@ -1,12 +1,16 @@
+import { useStorage } from "@/hooks/use-storage";
 import { MoonIcon, SunIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { useTheme } from "./theme-context";
 
 export const ThemeToggle = () => {
   const { theme, setTheme } = useTheme();
+  const { setTheme: setLocalTheme } = useStorage();
 
   const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    setLocalTheme(newTheme);
   };
 
   return (
