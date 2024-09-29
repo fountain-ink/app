@@ -48,7 +48,7 @@ export const UserMenu = () => {
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" className="w-48 mt-1">
-				<Link href={`/u/${handle}`} passHref>
+				<Link href={`/${handle}`} passHref>
 					<DropdownMenuItem className="flex justify-end gap-2 items-center text-base">
 						<span>Profile</span>
 						<User className="h-5 w-5" />

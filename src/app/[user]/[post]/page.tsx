@@ -4,7 +4,7 @@ import { getAuthorizedClients } from "@/lib/get-auth-clients";
 import { proseClasses } from "@/styles/prose";
 import { sanitize } from "isomorphic-dompurify";
 
-const post = async ({ params }: { params: { post: string } }) => {
+const post = async ({ params }: { params: { user: string, post: string } }) => {
   const { lens } = await getAuthorizedClients();
 
   const id = params.post;

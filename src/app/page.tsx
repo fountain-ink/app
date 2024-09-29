@@ -74,7 +74,7 @@ export default function HomePage() {
 						{"- "}
 						<Link
 							className="hover:underline"
-							href="https://share.lens.xyz/u/lens/fountain"
+							href="https://share.lens.xyz/lens/fountain"
 						>
 							@fountain
 						</Link>{" "}

@@ -15,9 +15,10 @@ export const PostView = ({ post, authorIds }: PostViewProps) => {
   const metadata = post.metadata as ArticleMetadataV3;
   const content = metadata?.content || "";
   const formattedDate = formatDate(post.createdAt);
+  const handle = post.by?.handle?.localName;
 
   return (
-    <Link href={`/p/${post.id}`} prefetch>
+    <Link href={`/${handle}/${post.id}`}>
       <Card className="bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none">
         <CardHeader className="pb-4">
           <UserAuthorView profileIds={authorIds} />

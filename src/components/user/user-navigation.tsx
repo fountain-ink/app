@@ -12,18 +12,18 @@ export const UserNavigation = ({
 
 	return (
 		<div className="flex flex-row gap-4">
-			<Link href={`/u/${username}`}>
+			<Link href={`/${username}`}>
 				<Button
-					variant={pathname === `/u/${username}` ? "secondary" : "ghost"}
+					variant={pathname === `/${username}` ? "secondary" : "ghost"}
 					className="text-lg"
 				>
 					Published
 				</Button>
 			</Link>
 
-			<Link href={`/u/${username}/all`}>
+			<Link href={`/${username}/all`}>
 				<Button
-					variant={pathname === `/u/${username}/all` ? "secondary" : "ghost"}
+					variant={pathname === `/${username}/all` ? "secondary" : "ghost"}
 					className="text-lg"
 				>
 					All
@@ -31,9 +31,9 @@ export const UserNavigation = ({
 			</Link>
 
 			{isUserProfile && (
-				<Link href={`/u/${username}/drafts`}>
+				<Link href={`/${username}/drafts`}>
 					<Button
-						variant={pathname === `/u/${username}/drafts` ? "secondary" : "ghost"}
+						variant={pathname === `/${username}/drafts` ? "secondary" : "ghost"}
 						className="text-lg"
 					>
 						Drafts

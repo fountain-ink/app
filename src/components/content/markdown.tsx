@@ -3,10 +3,9 @@ import type { Components } from "react-markdown/lib/ast-to-react";
 import remarkGfm from "remark-gfm";
 // import { CommunityHandle } from "./communities/CommunityHandle";
 
-
 import { getBaseUrl } from "@/lib/get-base-url";
-import { UserLazyHandle } from "../user/user-lazy-handle";
 import { proseClasses } from "@/styles/prose";
+import { UserLazyHandle } from "../user/user-lazy-handle";
 
 const BASE_URL = getBaseUrl();
 
@@ -33,7 +32,7 @@ const replaceHandles = (content: string): string => {
     .replace(userHandleRegex, (match) => {
       const parts = match.slice(1).split("/");
       const handle = parts.length > 1 ? parts[1] : parts[0];
-      return `${BASE_URL}u/${handle}`;
+      return `${BASE_URL}${handle}`;
     })
     .replace(communityHandleRegex, (match) => `${BASE_URL}c${match}`);
 };
@@ -49,8 +48,8 @@ const parseLinks = (content: string): string => {
 const CustomLink: Components["a"] = ({ node, ...props }) => {
   const { href, children } = props;
   if (href?.startsWith(BASE_URL)) {
-    if (href.startsWith(`${BASE_URL}u/`)) {
-      return <UserLazyHandle handle={href.split("/u/")[1] || ""} />;
+    if (href.startsWith(`${BASE_URL}`)) {
+      return <UserLazyHandle handle={href.split("//")[1]?.split("/")[1] || ""} />;
     }
     // if (href.startsWith(`${BASE_URL}c/`)) {
     //   return <CommunityHandle handle={href.split("/c/")[1]} />;

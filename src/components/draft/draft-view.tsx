@@ -14,6 +14,7 @@ import { UserAuthorView } from "../user/user-author-view";
 import type { Draft } from "./draft";
 import { DraftDeleteDialog } from "./draft-delete-dialog";
 import { DraftOptionsDropdown } from "./draft-options";
+import { getAuthorizedClients } from "@/lib/get-auth-clients";
 
 export const DraftView = ({
   draft,
