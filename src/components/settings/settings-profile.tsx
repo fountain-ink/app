@@ -15,6 +15,10 @@ import { Button } from "../ui/button";
 
 import { profile as profileMetadata } from "@lens-protocol/metadata";
 import { ImageUploader } from "../images/image-uploader";
+import { useTheme } from "../theme/theme-context";
+import { useStorage } from "@/hooks/use-storage";
+import { themeNames, type ThemeType } from "@/styles/themes";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export function ProfileSettings({ profile }: { profile: Profile | ProfileFragment | null }) {
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
@@ -35,6 +39,16 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
     currentMetadata?.attributes?.find((attr) => attr.key === "autoPublish")?.value === "true",
   );
   const [isSaving, setIsSaving] = useState(false);
+  
+  const { theme, setTheme } = useTheme();
+  const { setTheme: setStoredTheme } = useStorage();
+  const [selectedTheme, setSelectedTheme] = useState<ThemeType>(theme);
+
+  const handleThemeChange = (newTheme: ThemeType) => {
+    setSelectedTheme(newTheme);
+    setTheme(newTheme);
+    setStoredTheme(newTheme);
+  };  
 
   const handleSave = useCallback(async () => {
     setIsSaving(true);
@@ -57,7 +71,6 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
         formData.append("handle", handle);
         coverPictureUri = await uploadFile(formData);
       }
-
       const attributes: Array<
         | { value: string; type: MetadataAttributeType.STRING; key: string }
         | {
@@ -75,6 +88,11 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
           key: "autoPublish",
           type: MetadataAttributeType.BOOLEAN,
           value: autoPublish ? "true" : "false",
+        },
+        {
+          key: "theme",
+          type: MetadataAttributeType.STRING,
+          value: selectedTheme,
         },
       ];
 
@@ -168,7 +186,24 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
           <Switch id="auto-publish" checked={autoPublish} onCheckedChange={setAutoPublish} />
           <Label htmlFor="auto-publish">Auto-publish scheduled articles</Label>
         </div>
-        <Button onClick={handleSave} disabled={isSaving}>
+
+          <div className="space-y-2">
+            <Label htmlFor="theme">Select Theme</Label>
+            <Select onValueChange={handleThemeChange} value={selectedTheme}>
+              <SelectTrigger id="theme">
+                <SelectValue placeholder="Select a theme" />
+              </SelectTrigger>
+              <SelectContent>
+                {themeNames.map((themeName) => (
+                  <SelectItem key={themeName} value={themeName}>
+                    {themeName.charAt(0).toUpperCase() + themeName.slice(1)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>          
+          
+          <Button onClick={handleSave} disabled={isSaving}>
           {isSaving ? "Saving..." : "Save Settings"}
         </Button>
       </CardContent>

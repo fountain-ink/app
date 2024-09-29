@@ -1,9 +1,9 @@
 import { GeneralSettings } from "@/components/settings/settings-general";
 import { ProfileSettings } from "@/components/settings/settings-profile";
-import { ThemeSettings } from "@/components/settings/settings-theme";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getAuthorizedClients } from "@/lib/get-auth-clients";
-import { DollarSign, FileText, LayoutGrid, Mail, Megaphone, Palette, Settings, Users } from "lucide-react";
+import { DollarSign, FileText, LayoutGrid, Mail, Megaphone, Settings, Users } from "lucide-react";
 
 export async function generateMetadata() {
   const title = "Settings";
@@ -11,10 +11,8 @@ export async function generateMetadata() {
     title,
   };
 }
-
 const tabData = [
   { id: "app", label: "Application", icon: Settings, enabled: true },
-  { id: "themes", label: "Themes", icon: Palette, enabled: true },
   { id: "profile", label: "Profile", icon: FileText, enabled: true },
   {
     id: "subscriptions",
@@ -60,10 +58,6 @@ export default async function settings() {
 
         <TabsContent value="app">
           <GeneralSettings />
-        </TabsContent>
-
-        <TabsContent value="themes">
-          <ThemeSettings />
         </TabsContent>
 
         <TabsContent value="profile">
