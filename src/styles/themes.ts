@@ -1,6 +1,8 @@
 export const themeNames = ["light", "dark", "lightSaber"] as const;
-
 export type ThemeType = (typeof themeNames)[number];
+
+export const isValidTheme = (theme: unknown): theme is ThemeType => 
+  typeof theme === 'string' && themeNames.includes(theme as ThemeType);
 
 type ThemeColors = {
   "--font-title": string;

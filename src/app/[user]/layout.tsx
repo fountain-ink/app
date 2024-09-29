@@ -1,6 +1,7 @@
 import { UserCover } from "@/components/user/user-cover";
 import { UserNavigation } from "@/components/user/user-navigation";
 import { UserProfile } from "@/components/user/user-profile";
+import { UserTheme } from "@/components/user/user-theme";
 import { getAuthorizedClients } from "@/lib/get-auth-clients";
 import { notFound } from "next/navigation";
 
@@ -25,7 +26,6 @@ const UserLayout = async ({
 	const { lens, handle: userHandle } = await getAuthorizedClients();
 	const profile = await lens.profile.fetch({
 		forHandle: `lens/${params.user}`,
-		
 	});
 	const isUserProfile = userHandle === params.user;
 
@@ -35,6 +35,8 @@ const UserLayout = async ({
 
 	return (
 		<div className="flex flex-col items-center justify-center w-[100%] sm:w-[70%] mx-auto">
+
+		<UserTheme profile={profile}>
 			<UserCover profile={profile} />
 			<div className="flex flex-row w-full">
 				<div className="grow w-[70%] flex-col gap-8">
@@ -51,6 +53,8 @@ const UserLayout = async ({
 					<UserProfile profile={profile} />
 				</div>
 			</div>
+			
+			</UserTheme >
 		</div>
 	);
 };
