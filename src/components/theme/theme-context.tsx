@@ -2,13 +2,15 @@
 
 import { type ThemeType, globalThemes } from "@/styles/themes";
 import type React from "react";
-import {type 
-	ReactNode,
-	createContext,
-	useContext,
-	useEffect,
-	useState,
-} from "react"
+import {
+    type ReactNode,
+    createContext,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
+
+import { useStorage } from "@/hooks/use-storage";
 
 interface ThemeContextType {
 	theme: ThemeType;
@@ -22,7 +24,8 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-	const [theme, setTheme] = useState<ThemeType>("light");
+	const { theme: storedTheme, setTheme: setStoredTheme }= useStorage();
+	const [theme, setTheme] = useState<ThemeType>(storedTheme);
 
 	useEffect(() => {
 		const root = document.documentElement;
@@ -34,6 +37,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
 			root.style.setProperty(property, value);
 		}
+
 	}, [theme]);
 
 	return (
