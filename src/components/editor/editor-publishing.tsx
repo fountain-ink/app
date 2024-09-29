@@ -13,6 +13,7 @@ import { useEditor } from "novel";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import { useTheme } from "../theme/theme-context";
 
 export const EditorPublishing = () => {
   const { data: session } = useSession();

@@ -2,8 +2,6 @@ import Markdown from "@/components/content/markdown";
 import ErrorPage from "@/components/error-page";
 import { getAuthorizedClients } from "@/lib/get-auth-clients";
 import { proseClasses } from "@/styles/prose";
-
-
 import { sanitize } from "isomorphic-dompurify";
 
 const post = async ({ params }: { params: { post: string } }) => {
