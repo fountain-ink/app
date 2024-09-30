@@ -102,8 +102,10 @@ const dragHandle = GlobalDragHandle.configure({});
 
 const youtube = Youtube.configure({
   HTMLAttributes: {
-    class: cx("rounded-lg border border-muted"),
+    class: cx("rounded-lg border aspect-video w-full h-min m-4 flex items-center justify-center"),
   },
+  modestBranding: true,
+  progressBarColor: "hsl(var(--accent))",
 });
 
 const twitter = Twitter.configure({
