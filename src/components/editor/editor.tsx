@@ -110,6 +110,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
       ...defaultExtensions,
       slashCommand,
       Markdown,
+      
       Collaboration.configure({
         document: yDoc,
       }),
