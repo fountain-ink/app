@@ -70,7 +70,15 @@ const tiptapImage = TiptapImage.extend({
   },
 });
 
-const placeholder = Placeholder;
+const placeholder = Placeholder.configure({
+  placeholder: ({ node }) => {
+    if (node.type.name === "heading") {
+      return "What’s the title?";
+    }
+
+    return "Can you add some further context?";
+  },
+});
 const tiptapLink = TiptapLink.configure({
   HTMLAttributes: {
     class: cx(
