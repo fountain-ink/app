@@ -140,10 +140,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
         }}
         initialContent={content}
         editorProps={{
-          handlePaste: (view, event) => {
-            console.log(view, event);
-            handleImagePaste(view, event, uploadFn);
-          },
+          handlePaste: (view, event) => handleImagePaste(view, event, uploadFn),
           handleDrop: (view, event, _slice, moved) => handleImageDrop(view, event, moved, uploadFn),
           handleDOMEvents: {
             keydown: (_view, event) => handleCommandNavigation(event),

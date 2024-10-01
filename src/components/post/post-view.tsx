@@ -23,10 +23,10 @@ export const PostView = ({ post, authorIds }: PostViewProps) => {
         <CardHeader className="pb-4">
           <UserAuthorView profileIds={authorIds} />
         </CardHeader>
-        <CardContent className="whitespace-break-spaces truncate text-sm line-clamp-3 overflow-auto">
-          <Markdown content={content} />
+        <CardContent className="whitespace-break-spaces truncate text-sm line-clamp-3 overflow-auto prose-h1:m-0">
+          <Markdown compact content={content} />
         </CardContent>
-        <CardFooter className="flex flex-row gap-4 text-sm text-muted-foreground">
+        <CardFooter className="flex flex-row gap-4 pt-4 text-sm text-muted-foreground">
           <span>{formattedDate}</span>
           <PostReactions post={post} />
         </CardFooter>
