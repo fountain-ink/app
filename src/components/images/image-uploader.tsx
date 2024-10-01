@@ -1,8 +1,10 @@
+"use client";
+
 import { useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 
-const getImageUrl = (uri: string | undefined): string => {
+export const getIpfsImageUrl = (uri: string | undefined): string => {
   if (!uri) return "";
   return uri.startsWith("ipfs://") ? `https://fountain.4everland.link/ipfs/${uri.slice(7)}` : uri;
 };
@@ -49,7 +51,7 @@ export const ImageUploader = ({ label, initialImage, aspectRatio, onImageChange 
         onKeyDown={handleImageClick}
       >
         {localImage || image ? (
-          <img src={localImage || getImageUrl(image)} alt={""} className="w-full h-full object-cover" />
+          <img src={localImage || getIpfsImageUrl(image)} alt={""} className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full bg-gray-200 flex items-center justify-center">
             <span className="text-gray-500">Click to upload</span>

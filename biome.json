@@ -11,6 +11,11 @@
         "noUnusedVariables": "warn",
         "useExhaustiveDependencies": "off"
       },
+      "style": {
+        "useImportType": {
+          "level": "warn"
+        }
+      },
       "suspicious": {
         "noExplicitAny": "off"
       },

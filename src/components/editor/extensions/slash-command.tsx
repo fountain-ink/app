@@ -1,11 +1,13 @@
 "use client"
 
+import { uploadFn } from "@/lib/upload-file";
 import {
   CheckSquare,
   Code,
   Heading1,
   Heading2,
   Heading3,
+  ImageIcon,
   List,
   ListOrdered,
   MessageSquarePlus,
@@ -29,6 +31,28 @@ export const suggestionItems = createSuggestionItems([
         .run();
     },
   },
+  {
+          title: "Image",
+          description: "Upload an image from your computer.",
+          searchTerms: ["photo", "picture", "media"],
+          icon: <ImageIcon size={18} />,
+          command: ({ editor, range }) => {
+              editor.chain().focus().deleteRange(range).run();
+              // upload image
+              const input = document.createElement("input");
+              input.type = "file";
+              input.accept = "image/*";
+              input.onchange = async () => {
+                  if (input.files?.length) {
+                  const file = input.files[0];
+                  if (!file) return;
+                  const pos = editor.view.state.selection.from;
+                  uploadFn(file, editor.view, pos);
+                  }
+              };
+              input.click();
+          },
+      },
   {
     title: "To-do List",
     description: "Track tasks with a to-do list.",

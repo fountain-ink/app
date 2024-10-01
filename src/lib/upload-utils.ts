@@ -1,5 +1,6 @@
 "use server";
 
+import { getIpfsImageUrl } from "@/components/images/image-uploader";
 import { env } from "@/env";
 import { S3 } from "@aws-sdk/client-s3";
 
@@ -13,7 +14,7 @@ const s3 = new S3({
   region: "4EVERLAND",
 });
 
-export async function uploadFile(formData: FormData) {
+export async function uploadFileFormData(formData: FormData) {
   const file = formData.get("file") as File;
   const handle = formData.get("handle") as string;
 

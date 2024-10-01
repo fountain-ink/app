@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { uploadFile, uploadMetadata } from "@/lib/upload-utils";
+import { uploadFileFormData, uploadMetadata } from "@/lib/upload-utils";
 import type { ProfileFragment } from "@lens-protocol/client";
 import { MetadataAttributeType } from "@lens-protocol/metadata";
 import { type Profile, useSetProfileMetadata } from "@lens-protocol/react-web";
@@ -62,14 +62,14 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
         const formData = new FormData();
         formData.append("file", profilePicture);
         formData.append("handle", handle);
-        profilePictureUri = await uploadFile(formData);
+        profilePictureUri = await uploadFileFormData(formData);
       }
 
       if (coverPicture) {
         const formData = new FormData();
         formData.append("file", coverPicture);
         formData.append("handle", handle);
-        coverPictureUri = await uploadFile(formData);
+        coverPictureUri = await uploadFileFormData(formData);
       }
       const attributes: Array<
         | { value: string; type: MetadataAttributeType.STRING; key: string }

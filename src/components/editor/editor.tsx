@@ -1,6 +1,5 @@
 "use client";
 
-
 import { env } from "@/env";
 import { TiptapCollabProvider } from "@hocuspocus/provider";
 import Collaboration from "@tiptap/extension-collaboration";
@@ -22,15 +21,17 @@ import { defaultExtensions } from "./extensions/editor-extensions";
 import { slashCommand, suggestionItems } from "./extensions/slash-command";
 
 import { useDocumentStorage } from "@/hooks/use-document-storage";
+import { uploadFn } from "@/lib/upload-file";
+import { proseClasses } from "@/styles/prose";
 import { handleCommandNavigation } from "novel/extensions";
+import { handleImageDrop, handleImagePaste } from "novel/plugins";
+import { Markdown } from "tiptap-markdown";
 import { useDebouncedCallback } from "use-debounce";
 import { LoadingSpinner } from "../loading-spinner";
 import { ColorSelector } from "./selectors/select-color";
 import { LinkSelector } from "./selectors/select-link";
 import { NodeSelector } from "./selectors/select-node";
 import { TextButtons } from "./selectors/select-text";
-import { Markdown } from "tiptap-markdown";
-import { proseClasses } from "@/styles/prose";
 
 const token = env.NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN;
 const colors = ["#958DF1", "#F98181", "#FBBC88", "#FAF594"];
@@ -110,7 +111,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
       ...defaultExtensions,
       slashCommand,
       Markdown,
-      
+
       Collaboration.configure({
         document: yDoc,
       }),
@@ -133,14 +134,17 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
   return (
     <EditorRoot>
       <EditorContent
-
         immediatelyRender={false}
         onUpdate={({ editor }) => {
           debouncedUpdates(editor);
         }}
         initialContent={content}
         editorProps={{
-
+          handlePaste: (view, event) => {
+            console.log(view, event);
+            handleImagePaste(view, event, uploadFn);
+          },
+          handleDrop: (view, event, _slice, moved) => handleImageDrop(view, event, moved, uploadFn),
           handleDOMEvents: {
             keydown: (_view, event) => handleCommandNavigation(event),
           },

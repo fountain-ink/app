@@ -10,6 +10,7 @@ import {
   TiptapImage,
   TiptapLink,
   Twitter,
+  UpdatedImage,
   Youtube,
 } from "novel/extensions";
 import { UploadImagesPlugin } from "novel/plugins";
@@ -65,6 +66,12 @@ const tiptapImage = TiptapImage.extend({
   },
 }).configure({
   allowBase64: true,
+  HTMLAttributes: {
+    class: cx("rounded-lg border border-muted"),
+  },
+});
+
+const updatedImage = UpdatedImage.configure({
   HTMLAttributes: {
     class: cx("rounded-lg border border-muted"),
   },
@@ -129,6 +136,7 @@ export const defaultExtensions = [
   youtube,
   twitter,
   tiptapImage,
+  updatedImage,
   dragHandle,
   tiptapLink,
   taskList,
