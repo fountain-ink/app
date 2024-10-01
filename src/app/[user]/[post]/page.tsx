@@ -18,7 +18,7 @@ const post = async ({ params }: { params: { user: string, post: string } }) => {
   if (post.metadata.appId !== "fountain") {
     const markdown = post?.metadata?.content;
 
-    return <Markdown content={markdown} />;
+    return <Markdown compact={false} content={markdown} />;
   }
 
   if (post.metadata.appId === "fountain") {

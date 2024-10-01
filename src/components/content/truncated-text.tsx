@@ -24,7 +24,7 @@ export const TruncatedText = ({
       onKeyDown={() => setIsCollapsed(!isCollapsed)}
       onClick={() => setIsCollapsed(!isCollapsed)}
     >
-      {isMarkdown ? <Markdown content={truncatedText + ellipsis} /> : truncatedText + ellipsis}
+      {isMarkdown ? <Markdown compact={false} content={truncatedText + ellipsis} /> : truncatedText + ellipsis}
     </span>
   );
 };
