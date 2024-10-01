@@ -42,7 +42,6 @@ export const Header = () => {
 			</Link>
 			<div className="flex gap-4 pointer-events-auto">
 				{isWritePage && <ThemeSidebar />}
-				{!isWritePage && <ThemeToggle />}
 				{isWritePage && <PublishMenu />}
 				{!isWritePage && <WriteMenu />}
 				<UserMenu />

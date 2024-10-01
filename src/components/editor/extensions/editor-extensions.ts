@@ -76,7 +76,7 @@ const placeholder = Placeholder.configure({
       return "What’s the title?";
     }
 
-    return "Can you add some further context?";
+    return "";
   },
 });
 const tiptapLink = TiptapLink.configure({
@@ -106,7 +106,9 @@ const horizontalRule = HorizontalRule.configure({
   },
 });
 
-const dragHandle = GlobalDragHandle.configure({});
+const dragHandle = GlobalDragHandle.configure({class: {
+  
+}});
 
 const youtube = Youtube.configure({
   HTMLAttributes: {

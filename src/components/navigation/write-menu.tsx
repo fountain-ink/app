@@ -60,12 +60,12 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
       <DialogTrigger asChild>
         <Button>{text}</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] ">
+      <DialogContent className="sm:max-w-[425px] p-4">
         <DialogHeader>
           <DialogTitle>Write an article</DialogTitle>
         </DialogHeader>
         <Suspense fallback={<LoadingSpinner className="w-full h-full items-center jusify-center" />}>
-          <ScrollArea className="h-96 p-4">
+          <ScrollArea className="h-96">
             <DraftsList />
           </ScrollArea>
         </Suspense>
