@@ -23,7 +23,7 @@ import { slashCommand, suggestionItems } from "./extensions/slash-command";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { uploadFn } from "@/lib/upload-file";
 import { proseClasses } from "@/styles/prose";
-import { handleCommandNavigation } from "novel/extensions";
+import { handleCommandNavigation, ImageResizer } from "novel/extensions";
 import { handleImageDrop, handleImagePaste } from "novel/plugins";
 import { Markdown } from "tiptap-markdown";
 import { useDebouncedCallback } from "use-debounce";
@@ -150,6 +150,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
           },
         }}
         extensions={editorExtensionsList}
+        slotAfter={<ImageResizer />}
       >
         {children}
         <EditorCommand className="z-50 h-auto max-h-[330px]  w-72 overflow-y-auto rounded-md border border-muted bg-card px-1 py-2 shadow-md transition-all">

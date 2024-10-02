@@ -4,6 +4,7 @@ import { common, createLowlight } from "lowlight";
 import {
   CodeBlockLowlight,
   HorizontalRule,
+  ImageResizer,
   Placeholder,
   StarterKit,
   TaskItem,
