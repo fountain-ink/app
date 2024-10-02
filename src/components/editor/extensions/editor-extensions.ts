@@ -1,7 +1,8 @@
 "use client";
 import { cx } from "class-variance-authority";
+import { common, createLowlight } from "lowlight";
 import {
-  GlobalDragHandle,
+  CodeBlockLowlight,
   HorizontalRule,
   Placeholder,
   StarterKit,
@@ -14,6 +15,9 @@ import {
   Youtube,
 } from "novel/extensions";
 import { UploadImagesPlugin } from "novel/plugins";
+import AutoJoiner from "tiptap-extension-auto-joiner";
+import GlobalDragHandle from "tiptap-extension-global-drag-handle";
+import { DragAndDrop } from "./drag-handle";
 
 const starterKit = StarterKit.configure({
   history: false,
@@ -112,11 +116,14 @@ const horizontalRule = HorizontalRule.configure({
     class: cx("mt-4 mb-6 border-t border-muted-foreground"),
   },
 });
+const dragHandle = GlobalDragHandle.configure({
+  dragHandleWidth: 30,
+  scrollTreshold: 400,
 
-const dragHandle = GlobalDragHandle.configure({class: {
-  
-}});
+  HTMLAttributes: {},
+});
 
+const autoJoiner = AutoJoiner.configure({});
 const youtube = Youtube.configure({
   HTMLAttributes: {
     class: cx("rounded-lg border aspect-video w-full h-min m-4 flex items-center justify-center"),
@@ -130,6 +137,13 @@ const twitter = Twitter.configure({
   HTMLAttributes: { class: cx("rounded-lg w-full flex items-center justify-center") },
 });
 
+const dragAndDrop = DragAndDrop.configure({});
+
+const codeBlockLowlight = CodeBlockLowlight.configure({
+  // common: covers 37 language grammars which should be good enough in most cases
+  lowlight: createLowlight(common),
+});
+
 export const defaultExtensions = [
   starterKit,
   placeholder,
@@ -137,7 +151,10 @@ export const defaultExtensions = [
   twitter,
   tiptapImage,
   updatedImage,
-  dragHandle,
+  codeBlockLowlight,
+  // dragHandle,
+  dragAndDrop,
+  autoJoiner,
   tiptapLink,
   taskList,
   taskItem,
