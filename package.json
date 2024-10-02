@@ -65,6 +65,7 @@
     "@tiptap/extension-dropcursor": "^2.4.0",
     "@tiptap/extension-focus": "^2.4.0",
     "@tiptap/extension-font-family": "^2.4.0",
+    "@tiptap/extension-gapcursor": "^2.8.0",
     "@tiptap/extension-heading": "^2.4.0",
     "@tiptap/extension-highlight": "^2.4.0",
     "@tiptap/extension-horizontal-rule": "^2.4.0",

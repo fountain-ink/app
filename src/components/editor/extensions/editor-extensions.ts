@@ -1,5 +1,8 @@
 "use client";
 import { cx } from "class-variance-authority";
+
+import Dropcursor from "@tiptap/extension-dropcursor";
+import { Gapcursor } from "@tiptap/extension-gapcursor";
 import { common, createLowlight } from "lowlight";
 import {
   CodeBlockLowlight,
@@ -118,10 +121,10 @@ const horizontalRule = HorizontalRule.configure({
   },
 });
 const dragHandle = GlobalDragHandle.configure({
-  dragHandleWidth: 30,
+  dragHandleWidth: 300,
   scrollTreshold: 400,
-
-  HTMLAttributes: {},
+  dragHandleSelector: ".custom-drag-handle", // default is undefined
+  excludedTags: [],
 });
 
 const autoJoiner = AutoJoiner.configure({});
@@ -138,12 +141,19 @@ const twitter = Twitter.configure({
   HTMLAttributes: { class: cx("rounded-lg w-full flex items-center justify-center") },
 });
 
-const dragAndDrop = DragAndDrop.configure({});
+// const dragAndDrop = DragAndDrop.configure({});
 
 const codeBlockLowlight = CodeBlockLowlight.configure({
   // common: covers 37 language grammars which should be good enough in most cases
   lowlight: createLowlight(common),
 });
+
+const dropCursor = Dropcursor.configure({
+  color: "hsl(var(--accent))",
+  width: 4,
+});
+
+const gapCursor = Gapcursor.configure({});
 
 export const defaultExtensions = [
   starterKit,
@@ -153,8 +163,10 @@ export const defaultExtensions = [
   tiptapImage,
   updatedImage,
   codeBlockLowlight,
-  // dragHandle,
-  dragAndDrop,
+  dragHandle,
+  // dragAndDrop,
+  dropCursor,
+  gapCursor,
   autoJoiner,
   tiptapLink,
   taskList,
