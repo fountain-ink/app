@@ -1,8 +1,8 @@
 import { mergeAttributes, Node, nodeInputRule } from "@tiptap/core";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 
-import { getMediaPasteDropPlugin, type UploadFnType } from "./mediaPasteDropPlugin";
 import { ResizableMediaNodeView } from "./resizable-media-node-view";
+import { getMediaPasteDropPlugin, UploadFnType } from "./paste-drop-media";
 
 
 declare module "@tiptap/core" {

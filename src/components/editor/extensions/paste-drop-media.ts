@@ -83,7 +83,7 @@ export const getMediaPasteDropPlugin = (upload: UploadFnType) => {
 
           if (upload) {
             const node = schema.nodes.resizableMedia?.create({
-              src: upload(imageOrVideo),
+              src: upload(imageOrVideo).then((src) => src),
               "media-type": imageOrVideo.type.includes("image")
                 ? "img"
                 : "video",

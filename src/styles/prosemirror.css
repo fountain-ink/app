@@ -246,3 +246,128 @@ pre {
     font-weight: 700;
   }
 }
+
+.ProseMirror {
+  p.is-empty::before {
+    @apply text-slate-400 float-left h-0 pointer-events-none absolute ml-[2px];
+
+    content: attr(data-placeholder);
+  }
+
+  .media-node-view {
+    @apply flex relative w-full my-2;
+
+    &.f-left {
+      @apply float-left
+    }
+
+    &.f-right {
+      @apply float-right
+    }
+
+    &.align-left {
+      @apply justify-start
+    }
+
+    &.align-center {
+      @apply justify-center
+    }
+
+    &.align-right {
+      @apply justify-end
+    }
+
+    .horizontal-resize-handle {
+      @apply h-24 w-2.5 top-[50%] right-1 cursor-col-resize absolute z-50 opacity-50 translate-y-[-50%] rounded
+    }
+
+    .btn {
+      @apply inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200
+    }
+
+    .btn.active {
+      @apply bg-gray-300
+    }
+
+    .media-control-buttons {
+      @apply absolute top-2 right-2 bg-white transition-all duration-200 ease-linear shadow-xl rounded-sm overflow-hidden border border-slate-200 box-border
+    }
+  }
+
+
+  table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+    margin: 0;
+    overflow-x: hidden;
+
+    td,
+    th {
+      min-width: 1em;
+      border: 2px solid #ced4da;
+      padding: 3px 5px;
+      vertical-align: top;
+      box-sizing: border-box;
+      position: relative;
+
+      >* {
+        margin-bottom: 0;
+      }
+    }
+
+
+    tr {
+
+      div {
+        width: 100%;
+      }
+    }
+
+    th {
+      font-weight: bold;
+      text-align: left;
+      background-color: #f1f3f5;
+    }
+
+    .selectedCell:after {
+      z-index: 2;
+      position: absolute;
+      content: "";
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: rgba(200, 200, 255, 0.4);
+      pointer-events: none;
+    }
+
+    .column-resize-handle {
+      position: absolute;
+      right: -2px;
+      top: 0;
+      bottom: -2px;
+      width: 4px;
+      background-color: #adf;
+      pointer-events: none;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .d-block-button {
+    @apply bg-gray-200 hover:bg-gray-300 cursor-grab text-lg py-1 opacity-0 transition duration-200 ease-in-out text-black h-fit rounded flex justify-center items-center
+  }
+}
+
+.tableWrapper {
+  padding: 1rem 0;
+  overflow-x: auto;
+}
+
+.resize-cursor {
+  cursor: ew-resize;
+  cursor: col-resize;
+}

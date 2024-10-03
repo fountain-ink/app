@@ -14,7 +14,6 @@ export const uploadFn = createImageUpload({
     return getIpfsImageUrl( result);
   },
   validateFn: (file) => {
-    console.log(file);
     if (!file.type.includes("image/")) {
       console.error("File type not supported.");
       toast.error("File type not supported.");

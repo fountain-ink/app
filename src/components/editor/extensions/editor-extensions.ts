@@ -1,13 +1,15 @@
 "use client";
 import { cx } from "class-variance-authority";
 
+import { getIpfsImageUrl } from "@/components/images/image-uploader";
+import { uploadFileFormData } from "@/lib/upload-utils";
 import Dropcursor from "@tiptap/extension-dropcursor";
 import { Gapcursor } from "@tiptap/extension-gapcursor";
+import { ReactNodeViewRenderer } from "@tiptap/react";
 import { common, createLowlight } from "lowlight";
 import {
   CodeBlockLowlight,
   HorizontalRule,
-  ImageResizer,
   Placeholder,
   StarterKit,
   TaskItem,
@@ -21,7 +23,8 @@ import {
 import { UploadImagesPlugin } from "novel/plugins";
 import AutoJoiner from "tiptap-extension-auto-joiner";
 import GlobalDragHandle from "tiptap-extension-global-drag-handle";
-import { DragAndDrop } from "./drag-handle";
+import { ResizableMedia } from "./resizable-media";
+import { ResizableMediaNodeView } from "./resizable-media-node-view";
 import { TrailingNode } from "./trailing-node";
 
 const starterKit = StarterKit.configure({
@@ -80,11 +83,21 @@ const tiptapImage = TiptapImage.extend({
   },
 });
 
-const updatedImage = UpdatedImage.configure({
-  HTMLAttributes: {
-    class: cx("rounded-lg border border-muted"),
+const updatedImage = UpdatedImage.extend({
+  addProseMirrorPlugins() {
+    return [
+      UploadImagesPlugin({
+        imageClass: cx("opacity-40 rounded-lg border border-stone-200"),
+      }),
+    ];
   },
-});
+})
+  .extend({ addNodeView: () => ReactNodeViewRenderer(ResizableMediaNodeView) })
+  .configure({
+    HTMLAttributes: {
+      class: cx("rounded-lg border border-muted"),
+    },
+  });
 
 const placeholder = Placeholder.configure({
   placeholder: ({ node }) => {
@@ -160,16 +173,28 @@ const gapCursor = Gapcursor.configure({});
 
 const trailingNode = TrailingNode.configure({});
 
+const resizableMedia = ResizableMedia.configure({
+  uploadFn: async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("handle", "global");
+    const result = await uploadFileFormData(formData);
+    return getIpfsImageUrl(result);
+  },
+});
+
 export const defaultExtensions = [
   starterKit,
   placeholder,
   youtube,
   twitter,
-  tiptapImage,
   updatedImage,
+  // tiptapImage,
+  // ImageResizer,
   codeBlockLowlight,
-  dragHandle,
+  // dragHandle,
   // dragAndDrop,
+  // resizableMedia,
   dropCursor,
   trailingNode,
   gapCursor,
