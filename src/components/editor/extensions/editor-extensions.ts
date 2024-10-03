@@ -22,6 +22,7 @@ import { UploadImagesPlugin } from "novel/plugins";
 import AutoJoiner from "tiptap-extension-auto-joiner";
 import GlobalDragHandle from "tiptap-extension-global-drag-handle";
 import { DragAndDrop } from "./drag-handle";
+import { TrailingNode } from "./trailing-node";
 
 const starterKit = StarterKit.configure({
   history: false,
@@ -120,6 +121,7 @@ const horizontalRule = HorizontalRule.configure({
     class: cx("mt-4 mb-6 border-t border-muted-foreground"),
   },
 });
+
 const dragHandle = GlobalDragHandle.configure({
   dragHandleWidth: 300,
   scrollTreshold: 400,
@@ -155,6 +157,8 @@ const dropCursor = Dropcursor.configure({
 
 const gapCursor = Gapcursor.configure({});
 
+const trailingNode = TrailingNode.configure({});
+
 export const defaultExtensions = [
   starterKit,
   placeholder,
@@ -166,6 +170,7 @@ export const defaultExtensions = [
   dragHandle,
   // dragAndDrop,
   dropCursor,
+  trailingNode,
   gapCursor,
   autoJoiner,
   tiptapLink,
