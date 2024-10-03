@@ -95,6 +95,7 @@ const placeholder = Placeholder.configure({
     return "";
   },
 });
+
 const tiptapLink = TiptapLink.configure({
   HTMLAttributes: {
     class: cx(
