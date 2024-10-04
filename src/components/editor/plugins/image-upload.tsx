@@ -11,7 +11,8 @@ export const UploadImagesPlugin = ({ imageClass }: { imageClass: string }) =>
         return DecorationSet.empty;
       },
       apply(tr, set) {
-        set = set.map(tr.mapping, tr.doc);
+        let res: DecorationSet;
+        res = set.map(tr.mapping, tr.doc);
         // See if the transaction adds or removes any placeholders
         //@ts-expect-error - not yet sure what the type I need here
         const action = tr.getMeta(this);
@@ -27,12 +28,12 @@ export const UploadImagesPlugin = ({ imageClass }: { imageClass: string }) =>
           const deco = Decoration.widget(pos + 1, placeholder, {
             id,
           });
-          set = set.add(tr.doc, [deco]);
+          res = set.add(tr.doc, [deco]);
         } else if (action?.remove) {
           // biome-ignore lint/suspicious/noDoubleEquals: <explanation>
-          set = set.remove(set.find(undefined, undefined, (spec) => spec.id == action.remove.id));
+          res = set.remove(res.find(undefined, undefined, (spec) => spec.id == action.remove.id));
         }
-        return set;
+        return res;
       },
     },
     props: {

@@ -20,12 +20,12 @@ import {
   UpdatedImage,
   Youtube,
 } from "novel/extensions";
-import { UploadImagesPlugin } from "novel/plugins";
 import AutoJoiner from "tiptap-extension-auto-joiner";
 import GlobalDragHandle from "tiptap-extension-global-drag-handle";
 import ImageResize from "tiptap-extension-resize-image";
 import { ResizableMedia } from "./resizable-media";
 import { TrailingNode } from "./trailing-node";
+import { UploadImagesPlugin } from "../plugins/image-upload";
 
 const starterKit = StarterKit.configure({
   history: false,
@@ -191,7 +191,11 @@ const imageResize = ImageResize.extend({
   //     }),
   //   ];
   // },
-}).configure({});
+}).configure({
+  HTMLAttributes: {
+    class: cx("rounded-lg border border-muted"),
+  },
+});
 
 const image = Image.extend({
   addProseMirrorPlugins() {
