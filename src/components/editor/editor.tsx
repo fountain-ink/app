@@ -17,7 +17,6 @@ import {
 } from "novel";
 import { useEffect, useMemo, useState } from "react";
 import * as Y from "yjs";
-import { defaultExtensions } from "./extensions/editor-extensions";
 import { slashCommand, suggestionItems } from "./extensions/slash-command";
 
 import { useDocumentStorage } from "@/hooks/use-document-storage";
@@ -32,6 +31,7 @@ import { LinkSelector } from "./selectors/select-link";
 import { NodeSelector } from "./selectors/select-node";
 import { TextButtons } from "./selectors/select-text";
 import { handleImageDrop, handleImagePaste } from "./plugins/image-upload";
+import { defaultExtensions } from "./editor-extensions";
 
 const token = env.NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN;
 const colors = ["#958DF1", "#F98181", "#FBBC88", "#FAF594"];

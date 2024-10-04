@@ -1,11 +1,8 @@
 "use client";
 import { cx } from "class-variance-authority";
 
-import { getIpfsImageUrl } from "@/components/images/image-uploader";
-import { uploadFileFormData } from "@/lib/upload-utils";
 import Dropcursor from "@tiptap/extension-dropcursor";
 import { Gapcursor } from "@tiptap/extension-gapcursor";
-import { Image } from "@tiptap/extension-image";
 import { common, createLowlight } from "lowlight";
 import {
   CodeBlockLowlight,
@@ -14,7 +11,6 @@ import {
   StarterKit,
   TaskItem,
   TaskList,
-  TiptapImage,
   TiptapLink,
   Twitter,
   UpdatedImage,
@@ -23,9 +19,9 @@ import {
 import AutoJoiner from "tiptap-extension-auto-joiner";
 import GlobalDragHandle from "tiptap-extension-global-drag-handle";
 import ImageResize from "tiptap-extension-resize-image";
-import { ResizableMedia } from "./resizable-media";
-import { TrailingNode } from "./trailing-node";
-import { UploadImagesPlugin } from "../plugins/image-upload";
+import { TrailingNode } from "./extensions/trailing-node";
+import { UploadImagesPlugin } from "./plugins/image-upload";
+import { DragAndDrop } from "./extensions/drag-handle";
 
 const starterKit = StarterKit.configure({
   history: false,
@@ -68,21 +64,6 @@ const starterKit = StarterKit.configure({
   gapcursor: false,
 });
 
-const tiptapImage = TiptapImage.extend({
-  // addProseMirrorPlugins() {
-  //   return [
-  //     UploadImagesPlugin({
-  //       imageClass: cx("opacity-40 rounded-lg border border-stone-200"),
-  //     }),
-  //   ];
-  // },
-}).configure({
-  allowBase64: true,
-  HTMLAttributes: {
-    class: cx("rounded-lg border border-muted"),
-  },
-});
-
 const updatedImage = UpdatedImage.extend({
   addProseMirrorPlugins() {
     return [
@@ -92,6 +73,7 @@ const updatedImage = UpdatedImage.extend({
     ];
   },
 })
+
   // .extend({ addNodeView: () => ReactNodeViewRenderer(ResizableMediaNodeView) })
   .configure({
     HTMLAttributes: {
@@ -136,12 +118,6 @@ const horizontalRule = HorizontalRule.configure({
   },
 });
 
-const dragHandle = GlobalDragHandle.configure({
-  dragHandleWidth: 300,
-  scrollTreshold: 400,
-  dragHandleSelector: ".custom-drag-handle", // default is undefined
-  excludedTags: [],
-});
 
 const autoJoiner = AutoJoiner.configure({});
 const youtube = Youtube.configure({
@@ -157,7 +133,14 @@ const twitter = Twitter.configure({
   HTMLAttributes: { class: cx("rounded-lg w-full flex items-center justify-center") },
 });
 
-// const dragAndDrop = DragAndDrop.configure({});
+const dragAndDrop = DragAndDrop.configure({});
+
+const dragHandle = GlobalDragHandle.configure({
+  dragHandleWidth: 300,
+  scrollTreshold: 400,
+  dragHandleSelector: ".custom-drag-handle", // default is undefined
+  excludedTags: [],
+});
 
 const codeBlockLowlight = CodeBlockLowlight.configure({
   // common: covers 37 language grammars which should be good enough in most cases
@@ -173,65 +156,28 @@ const gapCursor = Gapcursor.configure({});
 
 const trailingNode = TrailingNode.configure({});
 
-const resizableMedia = ResizableMedia.configure({
-  uploadFn: async (file) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("handle", "global");
-    const result = await uploadFileFormData(formData);
-    return getIpfsImageUrl(result);
-  },
-});
-
-const imageResize = ImageResize.extend({
-  // addProseMirrorPlugins() {
-  //   return [
-  //     UploadImagesPlugin({
-  //       imageClass: cx("opacity-40 rounded-lg border border-stone-200"),
-  //     }),
-  //   ];
-  // },
-}).configure({
-  HTMLAttributes: {
-    class: cx("rounded-lg border border-muted"),
-  },
-});
-
-const image = Image.extend({
-  addProseMirrorPlugins() {
-    return [
-      UploadImagesPlugin({
-        imageClass: cx("opacity-40 rounded-lg border border-stone-200"),
-      }),
-    ];
-  },
-}).configure({
+const imageResize = ImageResize.extend({}).configure({
   HTMLAttributes: {
     class: cx("rounded-lg border border-muted"),
   },
 });
 
 export const defaultExtensions = [
+  // dragHandle,
+  // dragAndDrop,
   starterKit,
   placeholder,
   youtube,
   twitter,
   updatedImage,
-  // image,
-  // tiptapImage,
   imageResize,
-  // tiptapImage,
-  // ImageResizer,
   codeBlockLowlight,
-  // dragHandle,
-  // dragAndDrop,
-  // resizableMedia,
   dropCursor,
-  trailingNode,
   gapCursor,
   autoJoiner,
   tiptapLink,
   taskList,
   taskItem,
   horizontalRule,
+  trailingNode,
 ];

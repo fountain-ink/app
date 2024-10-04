@@ -11,8 +11,7 @@ export const UploadImagesPlugin = ({ imageClass }: { imageClass: string }) =>
         return DecorationSet.empty;
       },
       apply(tr, set) {
-        let res: DecorationSet;
-        res = set.map(tr.mapping, tr.doc);
+        set = set.map(tr.mapping, tr.doc);
         // See if the transaction adds or removes any placeholders
         //@ts-expect-error - not yet sure what the type I need here
         const action = tr.getMeta(this);
@@ -20,7 +19,7 @@ export const UploadImagesPlugin = ({ imageClass }: { imageClass: string }) =>
           const { id, pos, src } = action.add;
 
           const placeholder = document.createElement("div");
-          placeholder.setAttribute("class", "img-placeholder");
+          placeholder.setAttribute("class", "img-placeholder animate-pulse");
           const image = document.createElement("img");
           image.setAttribute("class", imageClass);
           image.src = src;
@@ -28,14 +27,15 @@ export const UploadImagesPlugin = ({ imageClass }: { imageClass: string }) =>
           const deco = Decoration.widget(pos + 1, placeholder, {
             id,
           });
-          res = set.add(tr.doc, [deco]);
+          set = set.add(tr.doc, [deco]);
         } else if (action?.remove) {
           // biome-ignore lint/suspicious/noDoubleEquals: <explanation>
-          res = set.remove(res.find(undefined, undefined, (spec) => spec.id == action.remove.id));
+          set = set.remove(set.find(undefined, undefined, (spec) => spec.id == action.remove.id));
         }
-        return res;
+        return set;
       },
     },
+    
     props: {
       decorations(state) {
         return this.getState(state);
@@ -82,34 +82,35 @@ export const createImageUpload =
       view.dispatch(tr);
     };
 
-    onUpload(file).then((src) => {
-      const { schema } = view.state;
+    onUpload(file).then(
+      (src) => {
+        const { schema } = view.state;
 
-      const pos = findPlaceholder(view.state, id);
+        const pos = findPlaceholder(view.state, id);
 
-      // If the content around the placeholder has been deleted, drop
-      // the image
-      if (pos == null) return;
+        // If the content around the placeholder has been deleted, drop
+        // the image
+        if (pos == null) return;
 
-      // Otherwise, insert it at the placeholder's position, and remove
-      // the placeholder
+        // Otherwise, insert it at the placeholder's position, and remove
+        // the placeholder
 
-      // When BLOB_READ_WRITE_TOKEN is not valid or unavailable, read
-      // the image locally
-      const imageSrc = typeof src === "object" ? reader.result : src;
+        // When BLOB_READ_WRITE_TOKEN is not valid or unavailable, read
+        // the image locally
+        const imageSrc = typeof src === "object" ? reader.result : src;
 
-      const node = schema.nodes.image?.create({ src: imageSrc });
-      if (!node) return;
+        const node = schema.nodes.image?.create({ src: imageSrc });
+        if (!node) return;
 
-      const transaction = view.state.tr.replaceWith(pos, pos, node).setMeta(uploadKey, { remove: { id } });
-      view.dispatch(transaction);
-    }, () => {
-      // Deletes the image placeholder on error
-      const transaction = view.state.tr
-        .delete(pos, pos)
-        .setMeta(uploadKey, { remove: { id } });
-      view.dispatch(transaction);
-    });
+        const transaction = view.state.tr.replaceWith(pos, pos, node).setMeta(uploadKey, { remove: { id } });
+        view.dispatch(transaction);
+      },
+      () => {
+        // Deletes the image placeholder on error
+        const transaction = view.state.tr.delete(pos, pos).setMeta(uploadKey, { remove: { id } });
+        view.dispatch(transaction);
+      },
+    );
   };
 
 export type UploadFn = (file: File, view: EditorView, pos: number) => void;
