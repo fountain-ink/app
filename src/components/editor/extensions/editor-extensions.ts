@@ -5,7 +5,7 @@ import { getIpfsImageUrl } from "@/components/images/image-uploader";
 import { uploadFileFormData } from "@/lib/upload-utils";
 import Dropcursor from "@tiptap/extension-dropcursor";
 import { Gapcursor } from "@tiptap/extension-gapcursor";
-import { ReactNodeViewRenderer } from "@tiptap/react";
+import { Image } from "@tiptap/extension-image";
 import { common, createLowlight } from "lowlight";
 import {
   CodeBlockLowlight,
@@ -23,8 +23,8 @@ import {
 import { UploadImagesPlugin } from "novel/plugins";
 import AutoJoiner from "tiptap-extension-auto-joiner";
 import GlobalDragHandle from "tiptap-extension-global-drag-handle";
+import ImageResize from "tiptap-extension-resize-image";
 import { ResizableMedia } from "./resizable-media";
-import { ResizableMediaNodeView } from "./resizable-media-node-view";
 import { TrailingNode } from "./trailing-node";
 
 const starterKit = StarterKit.configure({
@@ -69,13 +69,13 @@ const starterKit = StarterKit.configure({
 });
 
 const tiptapImage = TiptapImage.extend({
-  addProseMirrorPlugins() {
-    return [
-      UploadImagesPlugin({
-        imageClass: cx("opacity-40 rounded-lg border border-stone-200"),
-      }),
-    ];
-  },
+  // addProseMirrorPlugins() {
+  //   return [
+  //     UploadImagesPlugin({
+  //       imageClass: cx("opacity-40 rounded-lg border border-stone-200"),
+  //     }),
+  //   ];
+  // },
 }).configure({
   allowBase64: true,
   HTMLAttributes: {
@@ -92,7 +92,7 @@ const updatedImage = UpdatedImage.extend({
     ];
   },
 })
-  .extend({ addNodeView: () => ReactNodeViewRenderer(ResizableMediaNodeView) })
+  // .extend({ addNodeView: () => ReactNodeViewRenderer(ResizableMediaNodeView) })
   .configure({
     HTMLAttributes: {
       class: cx("rounded-lg border border-muted"),
@@ -183,12 +183,39 @@ const resizableMedia = ResizableMedia.configure({
   },
 });
 
+const imageResize = ImageResize.extend({
+  // addProseMirrorPlugins() {
+  //   return [
+  //     UploadImagesPlugin({
+  //       imageClass: cx("opacity-40 rounded-lg border border-stone-200"),
+  //     }),
+  //   ];
+  // },
+}).configure({});
+
+const image = Image.extend({
+  addProseMirrorPlugins() {
+    return [
+      UploadImagesPlugin({
+        imageClass: cx("opacity-40 rounded-lg border border-stone-200"),
+      }),
+    ];
+  },
+}).configure({
+  HTMLAttributes: {
+    class: cx("rounded-lg border border-muted"),
+  },
+});
+
 export const defaultExtensions = [
   starterKit,
   placeholder,
   youtube,
   twitter,
   updatedImage,
+  // image,
+  // tiptapImage,
+  imageResize,
   // tiptapImage,
   // ImageResizer,
   codeBlockLowlight,

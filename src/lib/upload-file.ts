@@ -1,9 +1,9 @@
 "use client";
 
-import { createImageUpload } from "novel/plugins";
 import { toast } from "sonner";
 import { uploadFileFormData } from "./upload-utils";
 import { getIpfsImageUrl } from "@/components/images/image-uploader";
+import { createImageUpload } from "@/components/editor/plugins/image-upload";
 
 export const uploadFn = createImageUpload({
   onUpload: async (file) => {
