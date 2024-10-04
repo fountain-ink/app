@@ -18,7 +18,6 @@ import {
 } from "novel/extensions";
 import AutoJoiner from "tiptap-extension-auto-joiner";
 import GlobalDragHandle from "tiptap-extension-global-drag-handle";
-import ImageResize from "tiptap-extension-resize-image";
 import { TrailingNode } from "./extensions/trailing-node";
 import { UploadImagesPlugin } from "./plugins/image-upload";
 import { DragAndDrop } from "./extensions/drag-handle";
@@ -155,6 +154,8 @@ const dropCursor = Dropcursor.configure({
 const gapCursor = Gapcursor.configure({});
 
 const trailingNode = TrailingNode.configure({});
+
+import { ImageResize } from "./extensions/image-resize";
 
 const imageResize = ImageResize.extend({}).configure({
   HTMLAttributes: {
