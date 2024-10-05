@@ -1,27 +1,27 @@
-import { mergeAttributes, Node } from '@tiptap/core'
+import { Node, mergeAttributes } from "@tiptap/core";
+import { ImageResize } from "./image-resize";
 
-import { Image } from './image'
 
 export const Figcaption = Node.create({
-  name: 'figcaption',
+  name: "figcaption",
 
   addOptions() {
     return {
       HTMLAttributes: {},
-    }
+    };
   },
 
-  content: 'inline*',
+  content: "inline*",
   selectable: false,
   draggable: false,
-  marks: 'link',
+  marks: "link",
 
   parseHTML() {
     return [
       {
-        tag: 'figcaption',
+        tag: "figcaption",
       },
-    ]
+    ];
   },
 
   addKeyboardShortcuts() {
@@ -32,21 +32,21 @@ export const Figcaption = Node.create({
           state: {
             selection: { $from, empty },
           },
-        } = editor
+        } = editor;
 
         if (!empty || $from.parent.type !== this.type) {
-          return false
+          return false;
         }
 
-        const isAtEnd = $from.parentOffset === $from.parent.nodeSize - 2
+        const isAtEnd = $from.parentOffset === $from.parent.nodeSize - 2;
 
         if (!isAtEnd) {
-          return false
+          return false;
         }
 
-        const pos = editor.state.selection.$from.end()
+        const pos = editor.state.selection.$from.end();
 
-        return editor.chain().focus(pos).insertContentAt(pos, { type: 'paragraph' }).run()
+        return editor.chain().focus(pos).insertContentAt(pos, { type: "paragraph" }).run();
       },
 
       // On Backspace at the beginning of line,
@@ -56,32 +56,32 @@ export const Figcaption = Node.create({
           state: {
             selection: { $from, empty },
           },
-        } = editor
+        } = editor;
 
         if (!empty || $from.parent.type !== this.type) {
-          return false
+          return false;
         }
 
-        const isAtStart = $from.parentOffset === 0
+        const isAtStart = $from.parentOffset === 0;
 
         if (!isAtStart) {
-          return false
+          return false;
         }
 
         // if the node before is of type image, don't do anything
-        const nodeBefore = editor.state.doc.nodeAt($from.pos - 2)
-        if (nodeBefore?.type.name === Image.name) {
-          return true
+        const nodeBefore = editor.state.doc.nodeAt($from.pos - 2);
+        if (nodeBefore?.type.name === ImageResize.name) {
+          return true;
         }
 
-        return false
+        return false;
       },
-    }
+    };
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ['figcaption', mergeAttributes(HTMLAttributes), 0]
+    return ["figcaption", mergeAttributes(HTMLAttributes), 0];
   },
-})
+});
 
-export default Figcaption
+export default Figcaption;

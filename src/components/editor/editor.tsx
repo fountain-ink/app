@@ -18,7 +18,7 @@ import * as Y from "yjs";
 import { suggestionItems } from "./extensions/slash-command";
 
 import { useDocumentStorage } from "@/hooks/use-document-storage";
-import { uploadFn } from "@/lib/upload-file";
+import { uploadFn } from "@/lib/upload-image";
 import { proseClasses } from "@/styles/prose";
 import { handleCommandNavigation } from "novel/extensions";
 import { useDebouncedCallback } from "use-debounce";

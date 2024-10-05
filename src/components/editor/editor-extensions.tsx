@@ -33,6 +33,7 @@ import type { Doc } from "yjs";
 import BlockquoteFigure from "./extensions/blockquote-figure";
 import Figcaption from "./extensions/figcaption";
 import { ImageResize } from "./extensions/image-resize";
+import Selection from "./extensions/selection";
 import { suggestionItems } from "./extensions/slash-command";
 import { TrailingNode } from "./extensions/trailing-node";
 import { UploadImagesPlugin } from "./plugins/image-upload";
@@ -189,5 +190,6 @@ export const defaultExtensions = ({
       class: cx("mt-4 mb-6 border-t border-muted-foreground"),
     },
   }),
+  Selection,
   TrailingNode.configure({}),
 ];
