@@ -17,21 +17,20 @@ import {
 } from "novel";
 import { useEffect, useMemo, useState } from "react";
 import * as Y from "yjs";
-import { slashCommand, suggestionItems } from "./extensions/slash-command";
+import { suggestionItems } from "./extensions/slash-command";
 
 import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { uploadFn } from "@/lib/upload-file";
 import { proseClasses } from "@/styles/prose";
-import { handleCommandNavigation, ImageResizer } from "novel/extensions";
-import { Markdown } from "tiptap-markdown";
+import { handleCommandNavigation } from "novel/extensions";
 import { useDebouncedCallback } from "use-debounce";
 import { LoadingSpinner } from "../loading-spinner";
+import { defaultExtensions } from "./editor-extensions";
+import { handleImageDrop, handleImagePaste } from "./plugins/image-upload";
 import { ColorSelector } from "./selectors/select-color";
 import { LinkSelector } from "./selectors/select-link";
 import { NodeSelector } from "./selectors/select-node";
 import { TextButtons } from "./selectors/select-text";
-import { handleImageDrop, handleImagePaste } from "./plugins/image-upload";
-import { defaultExtensions } from "./editor-extensions";
 
 const token = env.NEXT_PUBLIC_HOCUSPOCUS_JWT_TOKEN;
 const colors = ["#958DF1", "#F98181", "#FBBC88", "#FAF594"];
@@ -108,9 +107,9 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
       return defaultExtensions;
     }
     return [
-      ...defaultExtensions,
-      slashCommand,
-      Markdown,
+      ...defaultExtensions({
+        provider: provider,
+      }),
 
       Collaboration.configure({
         document: yDoc,
@@ -150,7 +149,6 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
           },
         }}
         extensions={editorExtensionsList}
-        // slotAfter={<ImageResizer />}
       >
         {children}
         <EditorCommand className="z-50 h-auto max-h-[330px]  w-72 overflow-y-auto rounded-md border border-muted bg-card px-1 py-2 shadow-md transition-all">

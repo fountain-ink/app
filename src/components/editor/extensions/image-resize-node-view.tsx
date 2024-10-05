@@ -1,10 +1,9 @@
 "use client";
 
-
 import { NodeViewWrapper } from '@tiptap/react';
-import Image from 'next/image';
 
 const ImageResizeComponent = (props: any) => {
+
   const handler = (mouseDownEvent: React.MouseEvent<HTMLImageElement>) => {
     const parent = (mouseDownEvent.target as HTMLElement).closest(
       '.image-resizer'
@@ -27,6 +26,7 @@ const ImageResizeComponent = (props: any) => {
     document.body.addEventListener('mousemove', onMouseMove);
     document.body.addEventListener('mouseup', onMouseUp, { once: true });
   };
+
   return (
     <NodeViewWrapper className="image-resizer">
       <img {...props.node.attrs} className="postimage" />

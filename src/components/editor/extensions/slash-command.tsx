@@ -10,11 +10,10 @@ import {
   ImageIcon,
   List,
   ListOrdered,
-  MessageSquarePlus,
   Text,
   TextQuote,
 } from "lucide-react";
-import { Command, createSuggestionItems, renderItems } from "novel/extensions";
+import { createSuggestionItems } from "novel/extensions";
 
 export const suggestionItems = createSuggestionItems([
   {
@@ -118,10 +117,3 @@ export const suggestionItems = createSuggestionItems([
     command: ({ editor, range }) => editor.chain().focus().deleteRange(range).toggleCodeBlock().run(),
   },
 ]);
-
-export const slashCommand = Command.configure({
-  suggestion: {
-    items: () => suggestionItems,
-    render: renderItems,
-  },
-});
