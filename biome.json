@@ -20,7 +20,8 @@
         "noExplicitAny": "off"
       },
       "a11y": {
-        "noSvgWithoutTitle": "off"
+        "noSvgWithoutTitle": "off",
+        "useAltText": "off"
       }
     },
     "ignore": [

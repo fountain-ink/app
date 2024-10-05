@@ -20,6 +20,7 @@ export const UploadImagesPlugin = ({ imageClass }: { imageClass: string }) =>
 
           const placeholder = document.createElement("div");
           placeholder.setAttribute("class", "img-placeholder animate-pulse");
+
           const image = document.createElement("img");
           image.setAttribute("class", imageClass);
           image.src = src;
@@ -99,7 +100,8 @@ export const createImageUpload =
         // the image locally
         const imageSrc = typeof src === "object" ? reader.result : src;
 
-        const node = schema.nodes.image?.create({ src: imageSrc });
+        // Create a resizableImage node
+        const node = schema.nodes.resizableImage?.create({ src: imageSrc });
         if (!node) return;
 
         const transaction = view.state.tr.replaceWith(pos, pos, node).setMeta(uploadKey, { remove: { id } });

@@ -18,9 +18,9 @@ import {
 } from "novel/extensions";
 import AutoJoiner from "tiptap-extension-auto-joiner";
 import GlobalDragHandle from "tiptap-extension-global-drag-handle";
+import { DragAndDrop } from "./extensions/drag-handle";
 import { TrailingNode } from "./extensions/trailing-node";
 import { UploadImagesPlugin } from "./plugins/image-upload";
-import { DragAndDrop } from "./extensions/drag-handle";
 
 const starterKit = StarterKit.configure({
   history: false,
@@ -67,7 +67,7 @@ const updatedImage = UpdatedImage.extend({
   addProseMirrorPlugins() {
     return [
       UploadImagesPlugin({
-        imageClass: cx("opacity-40 rounded-lg border border-stone-200"),
+        imageClass: cx("rounded-lg"),
       }),
     ];
   },
@@ -117,7 +117,6 @@ const horizontalRule = HorizontalRule.configure({
   },
 });
 
-
 const autoJoiner = AutoJoiner.configure({});
 const youtube = Youtube.configure({
   HTMLAttributes: {
@@ -157,11 +156,7 @@ const trailingNode = TrailingNode.configure({});
 
 import { ImageResize } from "./extensions/image-resize";
 
-const imageResize = ImageResize.extend({}).configure({
-  HTMLAttributes: {
-    class: cx("rounded-lg border border-muted"),
-  },
-});
+const imageResize = ImageResize.configure({ useFigure: true, resizeIcon: <>ResizeMe</> });
 
 export const defaultExtensions = [
   // dragHandle,
