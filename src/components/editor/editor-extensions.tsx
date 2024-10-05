@@ -32,6 +32,7 @@ import { ImageResize } from "./extensions/image-resize";
 import { suggestionItems } from "./extensions/slash-command";
 import { TrailingNode } from "./extensions/trailing-node";
 import { UploadImagesPlugin } from "./plugins/image-upload";
+import type { AnyExtension } from "@tiptap/react";
 
 interface EditorExtensionsProps {
   provider?: HocuspocusProvider | null;
@@ -45,7 +46,7 @@ export const defaultExtensions = ({
   userId = undefined,
   userName = "Maxi",
   userColor = "#000000",
-}: EditorExtensionsProps) => [
+}: EditorExtensionsProps): AnyExtension[] => [
   StarterKit.configure({
     history: false,
     bulletList: {
@@ -148,7 +149,7 @@ export const defaultExtensions = ({
       render: renderItems,
     },
   }),
-  Markdown,
+  Markdown.configure({ transformPastedText: true }),
   TextAlign.extend({
     addKeyboardShortcuts() {
       return {};

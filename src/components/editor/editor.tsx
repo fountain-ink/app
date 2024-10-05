@@ -104,9 +104,9 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
 
   const editorExtensionsList = useMemo(() => {
     if (!yDoc || !provider) {
-      return defaultExtensions;
+      return defaultExtensions({});
     }
-    return [
+    const extensions = [
       ...defaultExtensions({
         provider: provider,
       }),
@@ -119,6 +119,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
         user: getInitialUser(),
       }),
     ];
+    return extensions
   }, [yDoc, provider]);
 
   const debouncedUpdates = useDebouncedCallback(async (editor: EditorInstance) => {
