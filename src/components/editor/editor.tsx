@@ -2,8 +2,6 @@
 
 import { env } from "@/env";
 import { TiptapCollabProvider } from "@hocuspocus/provider";
-import Collaboration from "@tiptap/extension-collaboration";
-import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import {
   EditorBubble,
   EditorCommand,
@@ -103,23 +101,10 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
   }, [documentId]);
 
   const editorExtensionsList = useMemo(() => {
-    if (!yDoc || !provider) {
-      return defaultExtensions({});
-    }
-    const extensions = [
-      ...defaultExtensions({
-        provider: provider,
-      }),
-
-      Collaboration.configure({
-        document: yDoc,
-      }),
-      CollaborationCursor.configure({
-        provider: provider,
-        user: getInitialUser(),
-      }),
-    ];
-    return extensions
+    return defaultExtensions({
+      provider: provider,
+      document: yDoc,
+    });
   }, [yDoc, provider]);
 
   const debouncedUpdates = useDebouncedCallback(async (editor: EditorInstance) => {

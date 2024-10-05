@@ -2,11 +2,14 @@
 import { cx } from "class-variance-authority";
 
 import type { HocuspocusProvider } from "@hocuspocus/provider";
+import Collaboration from "@tiptap/extension-collaboration";
+import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import Dropcursor from "@tiptap/extension-dropcursor";
 import { Gapcursor } from "@tiptap/extension-gapcursor";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import TextAlign from "@tiptap/extension-text-align";
+import type { AnyExtension } from "@tiptap/react";
 import { common, createLowlight } from "lowlight";
 import { Maximize2Icon } from "lucide-react";
 import {
@@ -26,16 +29,17 @@ import {
 } from "novel/extensions";
 import AutoJoiner from "tiptap-extension-auto-joiner";
 import { Markdown } from "tiptap-markdown";
+import type { Doc } from "yjs";
 import BlockquoteFigure from "./extensions/blockquote-figure";
 import Figcaption from "./extensions/figcaption";
 import { ImageResize } from "./extensions/image-resize";
 import { suggestionItems } from "./extensions/slash-command";
 import { TrailingNode } from "./extensions/trailing-node";
 import { UploadImagesPlugin } from "./plugins/image-upload";
-import type { AnyExtension } from "@tiptap/react";
 
 interface EditorExtensionsProps {
   provider?: HocuspocusProvider | null;
+  document?: Doc | null;
   userId?: string;
   userName?: string;
   userColor?: string;
@@ -43,7 +47,8 @@ interface EditorExtensionsProps {
 
 export const defaultExtensions = ({
   provider,
-  userId = undefined,
+  document,
+  userId,
   userName = "Maxi",
   userColor = "#000000",
 }: EditorExtensionsProps): AnyExtension[] => [
@@ -86,6 +91,17 @@ export const defaultExtensions = ({
     },
     horizontalRule: false,
     gapcursor: false,
+  }),
+  Collaboration.configure({
+    document,
+  }),
+  CollaborationCursor.configure({
+    provider,
+    user: {
+      name: userName,
+      color: userColor,
+      id: userId,
+    },
   }),
   CharacterCount.configure({ limit: 50000 }),
   Subscript,
