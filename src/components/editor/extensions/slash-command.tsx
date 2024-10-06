@@ -1,25 +1,23 @@
 "use client";
 
 import { uploadFn } from "@/lib/upload-image";
-import {
-  CheckSquare,
-  Code,
-  Heading1,
-  Heading2,
-  Heading3,
-  ImageIcon,
-  List,
-  ListOrdered,
-  Text,
-  TextQuote,
-} from "lucide-react";
+import { CheckSquare, Code, HeadingIcon, ImageIcon, List, ListOrdered, Text, TextQuote } from "lucide-react";
 import { createSuggestionItems } from "novel/extensions";
 import { toast } from "sonner";
 
 export const suggestionItems = createSuggestionItems([
   {
+    title: "Heading",
+    description: "A section heading.",
+    searchTerms: ["title", "big", "large"],
+    icon: <HeadingIcon size={18} />,
+    command: ({ editor, range }) => {
+      editor.chain().focus().deleteRange(range).setNode("heading", { level: 3 }).run();
+    },
+  },
+  {
     title: "Text",
-    description: "Just start typing with plain text.",
+    description: "Simple paragraph.",
     searchTerms: ["p", "paragraph"],
     icon: <Text size={18} />,
     command: ({ editor, range }) => {
@@ -28,7 +26,7 @@ export const suggestionItems = createSuggestionItems([
   },
   {
     title: "Image",
-    description: "Upload an image.",
+    description: "Add an image.",
     searchTerms: ["photo", "picture", "media", "image"],
     icon: <ImageIcon size={18} />,
     command: ({ editor, range }) => {
@@ -48,33 +46,6 @@ export const suggestionItems = createSuggestionItems([
         }
       };
       input.click();
-    },
-  },
-  {
-    title: "Heading 1",
-    description: "Big section heading.",
-    searchTerms: ["title", "big", "large"],
-    icon: <Heading1 size={18} />,
-    command: ({ editor, range }) => {
-      editor.chain().focus().deleteRange(range).setNode("heading", { level: 1 }).run();
-    },
-  },
-  {
-    title: "Heading 2",
-    description: "Medium section heading.",
-    searchTerms: ["subtitle", "medium"],
-    icon: <Heading2 size={18} />,
-    command: ({ editor, range }) => {
-      editor.chain().focus().deleteRange(range).setNode("heading", { level: 2 }).run();
-    },
-  },
-  {
-    title: "Heading 3",
-    description: "Small section heading.",
-    searchTerms: ["subtitle", "small"],
-    icon: <Heading3 size={18} />,
-    command: ({ editor, range }) => {
-      editor.chain().focus().deleteRange(range).setNode("heading", { level: 3 }).run();
     },
   },
   {
