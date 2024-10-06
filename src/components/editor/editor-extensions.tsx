@@ -4,8 +4,10 @@ import { cx } from "class-variance-authority";
 import type { HocuspocusProvider } from "@hocuspocus/provider";
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
+import { Document } from "@tiptap/extension-document";
 import Dropcursor from "@tiptap/extension-dropcursor";
 import { Gapcursor } from "@tiptap/extension-gapcursor";
+import Heading from "@tiptap/extension-heading";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import TextAlign from "@tiptap/extension-text-align";
@@ -92,6 +94,23 @@ export const defaultExtensions = ({
     },
     horizontalRule: false,
     gapcursor: false,
+  }),
+  Heading.extend({
+    name: "title",
+    topNode: true,
+  }).configure({ levels: [1] }),
+  Heading.extend({
+    name: "subtitle",
+    topNode: true,
+  }).configure({
+    levels: [2],
+  }),
+  Heading.extend({
+    name: "heading",
+    group: "block",
+  }).configure({ levels: [3] }),
+  Document.extend({
+    content: "title subtitle block+",
   }),
   Collaboration.configure({
     document,
