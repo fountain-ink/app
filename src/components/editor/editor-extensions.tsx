@@ -149,6 +149,8 @@ export const defaultExtensions = ({
     HTMLAttributes: { class: cx("rounded-lg w-full flex items-center justify-center") },
   }),
   UpdatedImage.extend({
+    group: "block",
+    draggable: true,
     addProseMirrorPlugins() {
       return [
         UploadImagesPlugin({
@@ -161,7 +163,7 @@ export const defaultExtensions = ({
       class: cx("rounded-lg border border-muted"),
     },
   }),
-  ImageResize.configure({ resizeIcon: <Maximize2Icon /> }),
+  ImageResize.configure({ inline: false, resizeIcon: <Maximize2Icon className="rotate-90" /> }),
   CodeBlockLowlight.configure({
     // common: covers 37 language grammars which should be good enough in most cases
     lowlight: createLowlight(common),

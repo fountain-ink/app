@@ -32,15 +32,9 @@ export const ImageResize = Node.create<ImageOptions>({
     };
   },
 
-  inline() {
-    return this.options.inline;
-  },
-
-  group() {
-    return this.options.inline ? "inline" : "block";
-  },
-
-  draggable: false,
+  group: "block",
+  atom: true,
+  draggable: true,
 
   addAttributes() {
     return {
