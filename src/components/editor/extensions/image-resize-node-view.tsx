@@ -9,20 +9,24 @@ const ImageResizeComponent = (props: any) => {
     if (image === null) return;
     const startSize = { x: image.clientWidth, y: image.clientHeight };
     const startPosition = { x: mouseDownEvent.pageX, y: mouseDownEvent.pageY };
-
     function onMouseMove(mouseMoveEvent: MouseEvent) {
+      const minSize = 200;
+      const newWidth = Math.max(startSize.x - startPosition.x + mouseMoveEvent.pageX, minSize);
+      const newHeight = Math.max(startSize.y - startPosition.y + mouseMoveEvent.pageY, minSize);
+
       props.updateAttributes({
-        width: startSize.x - startPosition.x + mouseMoveEvent.pageX,
-        height: startSize.y - startPosition.y + mouseMoveEvent.pageY,
+        width: newWidth,
+        height: newHeight,
       });
     }
     function onMouseUp() {
       document.body.removeEventListener("mousemove", onMouseMove);
     }
 
-    mouseDownEvent.stopPropagation();
     document.body.addEventListener("mousemove", onMouseMove);
     document.body.addEventListener("mouseup", onMouseUp, { once: true });
+
+    mouseDownEvent.stopPropagation();
   };
 
   return (
@@ -35,7 +39,7 @@ const ImageResizeComponent = (props: any) => {
     >
       <img {...props.node.attrs} className="postimage" />
       <div
-        className="resize-trigger absolute -right-2 -bottom-2 opacity-0 transition-opacity duration-300 text-accent ease-in-out hover:opacity-100 group-hover:opacity-100"
+        className="resize-trigger absolute -right-2 -bottom-2 opacity-0 transition-opacity duration-300 text-accent ease-in-out hover:opacity-100 group-hover:opacity-100 cursor-move"
         onMouseDown={handler}
       >
         {props.extension.options.resizeIcon}
