@@ -1,12 +1,15 @@
 "use client";
 
 import { NodeViewWrapper } from "@tiptap/react";
+import { useRef } from "react";
 
 const ImageResizeComponent = (props: any) => {
-  const handler = (mouseDownEvent: React.MouseEvent<HTMLImageElement>) => {
-    const parent = (mouseDownEvent.target as HTMLElement).closest(".image-resizer");
-    const image = parent?.querySelector("img.postimage") ?? null;
-    if (image === null) return;
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
+
+  const handler = (mouseDownEvent: React.MouseEvent<HTMLDivElement>) => {
+    const image = imageRef.current;
+    if (!image) return;
     const startSize = { x: image.clientWidth, y: image.clientHeight };
     const startPosition = { x: mouseDownEvent.pageX, y: mouseDownEvent.pageY };
     function onMouseMove(mouseMoveEvent: MouseEvent) {
@@ -31,15 +34,18 @@ const ImageResizeComponent = (props: any) => {
 
   return (
     <NodeViewWrapper
+      ref={wrapperRef}
       class="drag-handle"
       contentEditable="false"
       data-drag-handle
       draggable="true"
-      className="inline-flex relative flex-grow-0 group hover:border-accent group-hover:border-2 rounded-xl image-resizer"
+      className="inline-flex relative flex-grow-0 group"
     >
-      <img {...props.node.attrs} className="postimage" />
+      <img ref={imageRef} {...props.node.attrs} className="border-2 border-secondary group-hover:border-primary transition-colors duration-300 ease-in-out" />
       <div
-        className="resize-trigger absolute -right-2 -bottom-2 opacity-0 transition-opacity duration-300 text-accent ease-in-out hover:opacity-100 group-hover:opacity-100 cursor-move"
+        className="absolute -right-2 -bottom-2 opacity-0 transition-opacity \
+        duration-300 ease-in-out hover:opacity-100 group-hover:opacity-100 \
+        cursor-move  text-primary hover:text-muted-foreground"
         onMouseDown={handler}
       >
         {props.extension.options.resizeIcon}
