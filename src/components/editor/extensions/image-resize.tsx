@@ -3,20 +3,24 @@ import { ReactNodeViewRenderer } from "@tiptap/react";
 import { createElement } from "react";
 import ImageResizeComponent from "./image-resize-node-view";
 
+type AlignmentOptions = "left" | "center" | "right";
+
 export interface ImageOptions {
   inline: boolean;
   allowBase64: boolean;
   HTMLAttributes: Record<string, any>;
   resizeIcon: React.ReactNode;
+  alignment?: AlignmentOptions;
 }
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     image: {
-      setImage: (options: { src: string; alt?: string; title?: string }) => ReturnType;
+      setImage: (options: { src: string; alt?: string; title?: string; alignment?: AlignmentOptions }) => ReturnType;
     };
   }
 }
+
 
 export const inputRegex = /(?:^|\s)(!\[(.+|:?)]\((\S+)(?:(?:\s+)["'](\S+)["'])?\))$/;
 
@@ -27,6 +31,7 @@ export const ImageResize = Node.create<ImageOptions>({
     return {
       inline: false,
       allowBase64: false,
+      alignment: "center",
       HTMLAttributes: {},
       resizeIcon: createElement("p", null, "⇲"),
     };
@@ -63,6 +68,15 @@ export const ImageResize = Node.create<ImageOptions>({
           };
         },
       },
+      alignment: {
+        default: 'center',
+        renderHTML: (attributes) => {
+          return {
+            style: `display: block; margin: 0 ${attributes.alignment === 'center' ? 'auto' : '0'}; float: ${attributes.alignment === 'center' ? 'none' : attributes.alignment};`,
+          };
+        },
+      },
+      
     };
   },
 

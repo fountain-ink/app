@@ -11,7 +11,9 @@ export const uploadFn = createImageUpload({
     const formData = new FormData();
     formData.append('file', file);
     formData.append('handle', 'global');
+    console.log(`Uploading file: ${file.name}`);
     const result = await uploadFileFormData(formData)
+    console.log(`Uploaded file: ${file.name} to ${result}`);
     return getIpfsImageUrl( result);
   },
   validateFn: (file) => {
