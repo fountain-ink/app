@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { NodeViewWrapper } from "@tiptap/react";
-import { AlignCenterIcon, AlignLeftIcon, AlignRightIcon, Trash2Icon } from "lucide-react";
+import { AlignCenterIcon, AlignLeftIcon, AlignRightIcon, MaximizeIcon, Trash2Icon } from "lucide-react";
 import { useRef } from "react";
 
 const ImageResizeComponent = (props: {
@@ -13,14 +13,14 @@ const ImageResizeComponent = (props: {
       title?: string;
       width: number | string;
       height: number | string;
-      alignment: "left" | "center" | "right";
+      alignment: "left" | "center" | "right" | "wide";
     };
   };
   updateAttributes: (
     attrs: Partial<{
       width: number | string;
       height: number | string;
-      alignment: "left" | "center" | "right";
+      alignment: "left" | "center" | "right" | "wide";
     }>,
   ) => void;
   deleteNode: () => void;
@@ -36,8 +36,10 @@ const ImageResizeComponent = (props: {
   const handler = (mouseDownEvent: React.MouseEvent<HTMLDivElement>) => {
     const image = imageRef.current;
     if (!image) return;
+
     const startSize = { x: image.clientWidth, y: image.clientHeight };
     const startPosition = { x: mouseDownEvent.pageX, y: mouseDownEvent.pageY };
+
     function onMouseMove(mouseMoveEvent: MouseEvent) {
       const minSize = 200;
       const newWidth = Math.max(startSize.x - startPosition.x + mouseMoveEvent.pageX, minSize);
@@ -48,6 +50,7 @@ const ImageResizeComponent = (props: {
         height: newHeight,
       });
     }
+
     function onMouseUp() {
       document.body.removeEventListener("mousemove", onMouseMove);
     }
@@ -57,26 +60,26 @@ const ImageResizeComponent = (props: {
 
     mouseDownEvent.stopPropagation();
   };
-
-  const handleAlign = (alignment: "left" | "center" | "right") => {
+  const handleAlign = (alignment: "left" | "center" | "right" | "wide") => {
     props.updateAttributes({ alignment });
   };
 
   const handleRemove = () => {
     props.deleteNode();
   };
-
   const getAlignmentClasses = (alignment: string) => {
     switch (alignment) {
       case "left":
-        return "float-left mr-4";
+        return "justify-start mr-4";
       case "right":
-        return "float-right ml-4";
+        return "justify-end ml-4";
+      case "wide":
+        return "w-screen max-w-none relative -translate-x-1/2 left-1/2 content-center justify-center";
       default:
-        return "mx-auto";
+        return "justify-center mx-auto";
     }
   };
-  
+
   const alignment = props.node.attrs.alignment || "center";
   const alignmentClass = getAlignmentClasses(alignment);
 
@@ -87,13 +90,13 @@ const ImageResizeComponent = (props: {
       contentEditable="false"
       data-drag-handle
       draggable="true"
-      className={`block relative ${alignment === "center" ? "flex justify-center" : ""}`}
+      className={`flex ${alignmentClass}`}
     >
-      <div className={`inline-block relative flex-grow-0 group ${alignmentClass}`}>
+      <div className={`inline-block relative flex-grow-0 group`}>
         <img
           ref={imageRef}
           {...props.node.attrs}
-          className="border-2 border-secondary group-hover:border-primary transition-colors duration-300 ease-in-out"
+          className={`border-2 border-secondary group-hover:border-primary transition-colors duration-300 ease-in-out ${alignment === "wide" ? "w-[80vw] max-w-none" : ""}`}
         />
         <div
           className="absolute -right-2 -bottom-2 opacity-0 transition-opacity \
@@ -112,6 +115,9 @@ const ImageResizeComponent = (props: {
           </Button>
           <Button size="sm" onClick={() => handleAlign("right")}>
             <AlignRightIcon size={16} />
+          </Button>
+          <Button size="sm" onClick={() => handleAlign("wide")}>
+            <MaximizeIcon size={16} />
           </Button>
         </div>
         <div className="absolute top-2 right-2 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-80 bg-background/0 rounded backdrop-blur-sm">

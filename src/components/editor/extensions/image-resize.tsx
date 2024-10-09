@@ -3,7 +3,7 @@ import { ReactNodeViewRenderer } from "@tiptap/react";
 import { createElement } from "react";
 import ImageResizeComponent from "./image-resize-node-view";
 
-type AlignmentOptions = "left" | "center" | "right";
+type AlignmentOptions = "left" | "center" | "right" | "wide";
 
 export interface ImageOptions {
   inline: boolean;
@@ -20,7 +20,6 @@ declare module "@tiptap/core" {
     };
   }
 }
-
 
 export const inputRegex = /(?:^|\s)(!\[(.+|:?)]\((\S+)(?:(?:\s+)["'](\S+)["'])?\))$/;
 
@@ -69,14 +68,30 @@ export const ImageResize = Node.create<ImageOptions>({
         },
       },
       alignment: {
-        default: 'center',
+        default: "center",
         renderHTML: (attributes) => {
-          return {
-            style: `display: block; margin: 0 ${attributes.alignment === 'center' ? 'auto' : '0'}; float: ${attributes.alignment === 'center' ? 'none' : attributes.alignment};`,
-          };
+          const alignment = attributes.alignment as AlignmentOptions;
+          let style = "";
+          let className = "";
+
+          switch (alignment) {
+            case "left":
+              style = "float: left; margin-right: 1rem;";
+              break;
+            case "right":
+              style = "float: right; margin-left: 1rem;";
+              break;
+            case "wide":
+              style = "width: 50vw; max-width: 100vw;";
+              className = "!max-w-none !w-screen relative left-1/2 right-1/2 -mx-[50vw]";
+              break;
+            default:
+              style = "display: block; margin: 0 auto;";
+          }
+
+          return { style, class: className };
         },
       },
-      
     };
   },
 
