@@ -131,12 +131,16 @@ export const defaultExtensions = ({
   BlockquoteFigure,
   Placeholder.configure({
     placeholder: ({ node }) => {
-      if (node.type.name === "heading" && node.attrs.level === 1) {
+      if (node.type.name === "title") {
         return "What’s the title?";
       }
-      
-      if (node.type.name === "heading" && node.attrs.level === 2) {
+
+      if (node.type.name === "subtitle") {
         return "What’s the subtitle?";
+      }
+
+      if (node.type.name === "heading") {
+        return "Section name";
       }
 
       return "Type `/` for commands";
