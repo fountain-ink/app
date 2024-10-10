@@ -17,7 +17,8 @@ export const uploadFile = async (file: File) => {
 
 export const uploadFn = createImageUpload({
   onUpload: async (file) => {
-    await uploadFile(file);
+    const link = await uploadFile(file);
+    return link
   },
   validateFn: (file) => {
     if (!file.type.includes("image/")) {
