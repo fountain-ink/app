@@ -131,11 +131,15 @@ export const defaultExtensions = ({
   BlockquoteFigure,
   Placeholder.configure({
     placeholder: ({ node }) => {
-      if (node.type.name === "heading") {
+      if (node.type.name === "heading" && node.attrs.level === 1) {
         return "What’s the title?";
       }
+      
+      if (node.type.name === "heading" && node.attrs.level === 2) {
+        return "What’s the subtitle?";
+      }
 
-      return "";
+      return "Type `/` for commands";
     },
   }),
   Youtube.configure({
