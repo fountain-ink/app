@@ -24,6 +24,12 @@ export const HeroImage = ImageResize.extend<ImageOptions>({
           class: "!max-w-none !w-screen relative left-1/2 right-1/2 -mx-[50vw]",
         }),
       },
+      src: {
+        default: "https://via.placeholder.com/1200x400?text=Add+Hero+Image",
+        renderHTML: (attributes) => ({
+          src: attributes.src,
+        }),
+      },
     };
   },
 
@@ -46,7 +52,7 @@ export const HeroImage = ImageResize.extend<ImageOptions>({
         ({ commands }) => {
           return commands.insertContent({
             type: this.name,
-            attrs: { ...options,showControls: false, alignment: "wide" },
+            attrs: { ...options, showControls: false, alignment: "wide" },
           });
         },
     };

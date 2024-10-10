@@ -34,6 +34,7 @@ import { Markdown } from "tiptap-markdown";
 import type { Doc } from "yjs";
 import BlockquoteFigure from "./extensions/blockquote-figure";
 import Figcaption from "./extensions/figcaption";
+import { HeroImage } from "./extensions/hero-image";
 import { ImageResize } from "./extensions/image-resize";
 import Selection from "./extensions/selection";
 import { suggestionItems } from "./extensions/slash-command";
@@ -110,7 +111,7 @@ export const defaultExtensions = ({
     group: "block",
   }).configure({ levels: [3] }),
   Document.extend({
-    content: "title subtitle block+",
+    content: "title subtitle heroImage block+",
   }),
   Collaboration.configure({
     document,
@@ -164,6 +165,13 @@ export const defaultExtensions = ({
     },
   }),
   ImageResize.configure({ inline: false, resizeIcon: <Maximize2Icon className="rotate-90" /> }),
+  HeroImage.extend({
+    name: "heroImage",
+  }).configure({
+    HTMLAttributes: {
+      class: cx("rounded-lg border border-muted"),
+    },
+  }),
   CodeBlockLowlight.configure({
     // common: covers 37 language grammars which should be good enough in most cases
     lowlight: createLowlight(common),
