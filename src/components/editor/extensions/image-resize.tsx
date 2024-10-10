@@ -17,11 +17,10 @@ export interface ImageOptions {
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     image: {
-      setImage: (options: { src: string; alt?: string; title?: string; alignment?: AlignmentOptions; showControls?: boolean }) => ReturnType;
+      setImage: (options: { src: string; alt?: string; title?: string; alignment?: AlignmentOptions }) => ReturnType;
     };
   }
 }
-
 
 export const inputRegex = /(?:^|\s)(!\[(.+|:?)]\((\S+)(?:(?:\s+)["'](\S+)["'])?\))$/;
 
@@ -69,33 +68,39 @@ export const ImageResize = Node.create<ImageOptions>({
           };
         },
       },
-      showControls: true,
+      showControls: {
+        default: true,
+        renderHTML: (attributes) => {
+          return {
+            showControls: attributes.showControls,
+          };
+        },
+      },
       alignment: {
-        default: 'center',
+        default: "center",
         renderHTML: (attributes) => {
           const alignment = attributes.alignment as AlignmentOptions;
-          let style = '';
-          let className = '';
+          let style = "";
+          let className = "";
 
           switch (alignment) {
-            case 'left':
-              style = 'float: left; margin-right: 1rem;';
+            case "left":
+              style = "float: left; margin-right: 1rem;";
               break;
-            case 'right':
-              style = 'float: right; margin-left: 1rem;';
+            case "right":
+              style = "float: right; margin-left: 1rem;";
               break;
-            case 'wide':
-              style = 'width: 50vw; max-width: 100vw;';
-              className = '!max-w-none !w-screen relative left-1/2 right-1/2 -mx-[50vw]';
+            case "wide":
+              style = "width: 50vw; max-width: 100vw;";
+              className = "!max-w-none !w-screen relative left-1/2 right-1/2 -mx-[50vw]";
               break;
             default:
-              style = 'display: block; margin: 0 auto;';
+              style = "display: block; margin: 0 auto;";
           }
 
           return { style, class: className };
         },
       },
-      
     };
   },
 
@@ -139,6 +144,6 @@ export const ImageResize = Node.create<ImageOptions>({
   },
 
   addNodeView() {
-    return ReactNodeViewRenderer(ImageResizeComponent );
+    return ReactNodeViewRenderer(ImageResizeComponent);
   },
 });

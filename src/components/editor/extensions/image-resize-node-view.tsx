@@ -85,7 +85,6 @@ const ImageResizeComponent = (props: {
   const alignment = props.node.attrs.alignment || "center";
   const showControls = props.node.attrs.showControls;
   const alignmentClass = getAlignmentClasses(alignment);
-  console.log(showControls);
 
   return (
     <NodeViewWrapper
