@@ -5,16 +5,19 @@ import { getIpfsImageUrl } from "@/components/images/image-uploader";
 import { toast } from "sonner";
 import { uploadFileFormData } from "./upload-utils";
 
+export const uploadFile = async (file: File) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('handle', 'global');
+  console.log(`Uploading file: ${file.name}`);
+  const result = await uploadFileFormData(formData)
+  console.log(`Uploaded file: ${file.name} to ${result}`);
+  return getIpfsImageUrl( result);
+}
 
 export const uploadFn = createImageUpload({
   onUpload: async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('handle', 'global');
-    console.log(`Uploading file: ${file.name}`);
-    const result = await uploadFileFormData(formData)
-    console.log(`Uploaded file: ${file.name} to ${result}`);
-    return getIpfsImageUrl( result);
+    await uploadFile(file);
   },
   validateFn: (file) => {
     if (!file.type.includes("image/")) {

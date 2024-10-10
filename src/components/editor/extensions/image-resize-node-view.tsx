@@ -2,8 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { NodeViewWrapper } from "@tiptap/react";
-import { AlignCenterIcon, AlignLeftIcon, AlignRightIcon, MaximizeIcon, Trash2Icon } from "lucide-react";
+import { AlignCenterIcon, AlignLeftIcon, AlignRightIcon, MaximizeIcon, Trash2Icon, UploadIcon } from "lucide-react";
 import { useRef } from "react";
+
+import { uploadFile } from "@/lib/upload-image";
 
 const ImageResizeComponent = (props: {
   suppressContentEditableWarning?: boolean;
@@ -23,6 +25,7 @@ const ImageResizeComponent = (props: {
     attrs: Partial<{
       width: number | string;
       height: number | string;
+      src: string;
       showControls: boolean;
       alignment: "left" | "center" | "right" | "wide";
     }>,
@@ -71,6 +74,25 @@ const ImageResizeComponent = (props: {
   const handleRemove = () => {
     props.deleteNode();
   };
+
+  const handleUpload = async () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = async (event) => {
+      const file = (event.target as HTMLInputElement).files?.[0];
+      if (file) {
+        try {
+          const newSrc = await uploadFile(file);
+          props.updateAttributes({ src: newSrc });
+        } catch (error) {
+          console.error("Error uploading image:", error);
+        }
+      }
+    };
+    input.click();
+  };
+
   const getAlignmentClasses = (alignment: string) => {
     switch (alignment) {
       case "left":
@@ -86,7 +108,6 @@ const ImageResizeComponent = (props: {
 
   const alignment = props.node.attrs.alignment || "center";
   const alignmentClass = getAlignmentClasses(alignment);
-
   const { showControls, ...imgAttributes } = props.node.attrs;
 
   return (
@@ -128,13 +149,16 @@ const ImageResizeComponent = (props: {
                 <MaximizeIcon size={16} />
               </Button>
             </div>
-            <div className="absolute top-2 right-2 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-80 bg-background/0 rounded backdrop-blur-sm">
-              <Button size="sm" onClick={handleRemove}>
-                <Trash2Icon size={16} />
-              </Button>
-            </div>
           </>
         )}
+        <div className="absolute top-2 right-2 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-80 bg-background/0 rounded backdrop-blur-sm flex">
+          <Button size="sm" onClick={handleUpload} className="mr-1">
+            <UploadIcon size={16} />
+          </Button>
+          <Button size="sm" onClick={handleRemove}>
+            <Trash2Icon size={16} />
+          </Button>
+        </div>
       </div>
     </NodeViewWrapper>
   );

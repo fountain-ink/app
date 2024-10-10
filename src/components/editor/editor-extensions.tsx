@@ -111,7 +111,7 @@ export const defaultExtensions = ({
     group: "block",
   }).configure({ levels: [3] }),
   Document.extend({
-    content: "title subtitle heroImage block+",
+    content: "title subtitle heroImage* block+",
   }),
   Collaboration.configure({
     document,
