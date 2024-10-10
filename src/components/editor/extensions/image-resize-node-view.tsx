@@ -6,6 +6,8 @@ import { AlignCenterIcon, AlignLeftIcon, AlignRightIcon, MaximizeIcon, Trash2Ico
 import { useRef } from "react";
 
 const ImageResizeComponent = (props: {
+  suppressContentEditableWarning?: boolean;
+
   node: {
     attrs: {
       src: string;
@@ -83,22 +85,23 @@ const ImageResizeComponent = (props: {
   };
 
   const alignment = props.node.attrs.alignment || "center";
-  const showControls = props.node.attrs.showControls;
   const alignmentClass = getAlignmentClasses(alignment);
+
+  const { showControls, ...imgAttributes } = props.node.attrs;
 
   return (
     <NodeViewWrapper
       ref={wrapperRef}
-      class="drag-handle"
+      className={`flex ${alignmentClass}`}
       contentEditable="false"
       data-drag-handle
       draggable="true"
-      className={`flex ${alignmentClass}`}
+      suppressContentEditableWarning={true}
     >
       <div className="inline-block relative flex-grow-0 group">
         <img
           ref={imageRef}
-          {...props.node.attrs}
+          {...imgAttributes}
           className={`border-2 border-secondary group-hover:border-primary transition-colors duration-300 ease-in-out ${alignment === "wide" ? "w-[80vw] max-w-none" : ""}`}
         />
         {showControls && (
