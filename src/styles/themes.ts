@@ -9,6 +9,7 @@ type ThemeColors = {
   "--font-subtitle": string;
   "--font-header": string;
   "--font-paragraph": string;
+  "--title-align": string;
   "--background": string;
   "--foreground": string;
   "--card": string;
@@ -37,6 +38,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--font-subtitle": "birra-2",
     "--font-header": "birra-2",
     "--font-paragraph": "Cantarell",
+    "--title-align": "text-center",
     "--background": "217 71% 89%",
     "--foreground": "15 33% 19%",
     "--card": "218	8%	98%",
@@ -63,6 +65,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--font-subtitle": "birra-2",
     "--font-header": "birra-2",
     "--font-paragraph": "Cantarell",
+    "--title-align": "text-center",
     "--background": "222.2 84% 4.9%",
     "--foreground": "110 40% 98%",
     "--card": "222.2 84% 4.9%",
@@ -89,6 +92,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--font-subtitle": "birra-2",
     "--font-header": "birra-2",
     "--font-paragraph": "Cantarell",
+    "--title-align": "left",
     "--background": "198 71% 89%",
     "--foreground": "19 33% 19%",
     "--card": "199	8%	98%",
