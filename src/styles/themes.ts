@@ -7,6 +7,8 @@ export const isValidTheme = (theme: unknown): theme is ThemeType =>
 type ThemeColors = {
   "--font-title": string;
   "--font-subtitle": string;
+  "--font-header": string;
+  "--font-paragraph": string;
   "--background": string;
   "--foreground": string;
   "--card": string;
@@ -33,6 +35,8 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
   light: {
     "--font-title": "birra-2",
     "--font-subtitle": "birra-2",
+    "--font-header": "birra-2",
+    "--font-paragraph": "Cantarell",
     "--background": "217 71% 89%",
     "--foreground": "15 33% 19%",
     "--card": "218	8%	98%",
@@ -57,6 +61,8 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
   dark: {
     "--font-title": "birra-2",
     "--font-subtitle": "birra-2",
+    "--font-header": "birra-2",
+    "--font-paragraph": "Cantarell",
     "--background": "222.2 84% 4.9%",
     "--foreground": "110 40% 98%",
     "--card": "222.2 84% 4.9%",
@@ -81,6 +87,8 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
   lightSaber: {
     "--font-title": "birra-2",
     "--font-subtitle": "birra-2",
+    "--font-header": "birra-2",
+    "--font-paragraph": "Cantarell",
     "--background": "198 71% 89%",
     "--foreground": "19 33% 19%",
     "--card": "199	8%	98%",
