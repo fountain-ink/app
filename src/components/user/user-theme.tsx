@@ -8,20 +8,20 @@ import { useTheme } from "../theme/theme-context";
 import { useStorage } from "@/hooks/use-storage";
 
 export const UserTheme = ({ children, profile }: { children: React.ReactNode; profile: ProfileFragment }) => {
-  const themeAttribute = profile?.metadata?.attributes?.find((attr) => attr.key === "theme")?.value;
+  const userTheme = profile?.metadata?.attributes?.find((attr) => attr.key === "theme")?.value;
   const { theme: currentTheme, setTheme } = useTheme();
   const { theme: defaultTheme } = useStorage();
 
   useEffect(() => {
-    if (themeAttribute && isValidTheme(themeAttribute)) {
-      setTheme(themeAttribute);
+    if (userTheme && isValidTheme(userTheme)) {
+      setTheme(userTheme);
     }
 
     return () => {
       // Revert to the default theme when unmounting
       setTheme(defaultTheme);
     };
-  }, [themeAttribute, setTheme, defaultTheme]);
+  }, [userTheme, setTheme, defaultTheme]);
 
   return <>{children}</>;
 };

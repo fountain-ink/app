@@ -1,11 +1,12 @@
 export const themeNames = ["light", "dark", "lightSaber"] as const;
 export type ThemeType = (typeof themeNames)[number];
 
-export const isValidTheme = (theme: unknown): theme is ThemeType => 
-  typeof theme === 'string' && themeNames.includes(theme as ThemeType);
+export const isValidTheme = (theme: unknown): theme is ThemeType =>
+  typeof theme === "string" && themeNames.includes(theme as ThemeType);
 
 type ThemeColors = {
   "--font-title": string;
+  "--font-subtitle": string;
   "--background": string;
   "--foreground": string;
   "--card": string;
@@ -30,7 +31,8 @@ type ThemeColors = {
 
 export const globalThemes: Record<ThemeType, ThemeColors> = {
   light: {
-    "--font-title": "Test Martina Plantijn",
+    "--font-title": "birra-2",
+    "--font-subtitle": "birra-2",
     "--background": "217 71% 89%",
     "--foreground": "15 33% 19%",
     "--card": "218	8%	98%",
@@ -53,7 +55,8 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--destructive-foreground": "210 40% 98%",
   },
   dark: {
-    "--font-title": "Test Martina Plantijn",
+    "--font-title": "birra-2",
+    "--font-subtitle": "birra-2",
     "--background": "222.2 84% 4.9%",
     "--foreground": "110 40% 98%",
     "--card": "222.2 84% 4.9%",
@@ -76,7 +79,8 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--destructive-foreground": "210 40% 98%",
   },
   lightSaber: {
-    "--font-title": "Test Martina Plantijn",
+    "--font-title": "birra-2",
+    "--font-subtitle": "birra-2",
     "--background": "198 71% 89%",
     "--foreground": "19 33% 19%",
     "--card": "199	8%	98%",
