@@ -34,9 +34,9 @@ type ThemeColors = {
 
 export const globalThemes: Record<ThemeType, ThemeColors> = {
   light: {
-    "--font-title": "birra-2",
-    "--font-subtitle": "birra-2",
-    "--font-header": "birra-2",
+    "--font-title": "Test Martina Plantijn",
+    "--font-subtitle": "Test Martina Plantijn",
+    "--font-header": "Test Martina Plantijn",
     "--font-paragraph": "Cantarell",
     "--title-align": "text-center",
     "--background": "217 71% 89%",
@@ -61,9 +61,9 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--destructive-foreground": "210 40% 98%",
   },
   dark: {
-    "--font-title": "birra-2",
-    "--font-subtitle": "birra-2",
-    "--font-header": "birra-2",
+    "--font-title": "Test Martina Plantijn",
+    "--font-subtitle": "Test Martina Plantijn",
+    "--font-header": "Test Martina Plantijn",
     "--font-paragraph": "Cantarell",
     "--title-align": "text-center",
     "--background": "222.2 84% 4.9%",
@@ -88,9 +88,9 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--destructive-foreground": "210 40% 98%",
   },
   lightSaber: {
-    "--font-title": "birra-2",
-    "--font-subtitle": "birra-2",
-    "--font-header": "birra-2",
+    "--font-title": "Test Martina Plantijn",
+    "--font-subtitle": "Test Martina Plantijn",
+    "--font-header": "Test Martina Plantijn",
     "--font-paragraph": "Cantarell",
     "--title-align": "left",
     "--background": "198 71% 89%",
