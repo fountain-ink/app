@@ -66,9 +66,9 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--accent-foreground": "222.2 47.4% 11.2%",
     "--destructive-foreground": "210 40% 98%",
 
-    "--margin-h1": "1rem",
+    "--margin-h1": "3rem",
     "--margin-h2": "1.5rem",
-    "--margin-h3": "1rem",
+    "--margin-h3": "2rem",
     "--margin-paragraph": "1rem",
     "--margin-list": "1rem",
   },

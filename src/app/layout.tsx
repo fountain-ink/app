@@ -18,7 +18,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
       <head>
-        <link href="https://use.typekit.net/plm1izr.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://use.typekit.net/ybe1bqw.css"/>
       </head>
       <body>
         <Web3Providers>
