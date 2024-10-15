@@ -74,7 +74,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--title-weight": "400",
     "--title-style": "italic",
 
-    "--margin-h1": "3rem",
+    "--margin-h1": "1rem",
     "--margin-h2": "1.5rem",
     "--margin-h3": "2rem",
     "--margin-paragraph": "1rem",
@@ -109,7 +109,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--title-weight": "400",
     "--title-style": "italic",
 
-    "--margin-h1": "2rem",
+    "--margin-h1": "1rem",
     "--margin-h2": "1.5rem",
     "--margin-h3": "1rem",
     "--margin-paragraph": "1rem",
@@ -145,7 +145,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--title-weight": "400",
     "--title-style": "normal",
 
-    "--margin-h1": "2rem",
+    "--margin-h1": "1rem",
     "--margin-h2": "1.5rem",
     "--margin-h3": "1rem",
     "--margin-paragraph": "1rem",
@@ -181,7 +181,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--title-weight": "400",
     "--title-style": "normal",
 
-    "--margin-h1": "2rem",
+    "--margin-h1": "1rem",
     "--margin-h2": "1.5rem",
     "--margin-h3": "1rem",
     "--margin-paragraph": "1rem",

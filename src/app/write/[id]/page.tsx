@@ -3,6 +3,7 @@ import { AutoSave } from "@/components/editor/editor-auto-save";
 import { EditorCollaborators } from "@/components/editor/editor-collaborators";
 import { EditorDate } from "@/components/editor/editor-date";
 import { EditorPublishing } from "@/components/editor/editor-publishing";
+import { EditorReadTime } from "@/components/editor/editor-read-time";
 import { getBaseUrl } from "@/lib/get-base-url";
 import { cookies } from "next/headers";
 
@@ -44,6 +45,7 @@ export default async function WriteDraft({
       <div className="container flex flex-col items-center justify-center w-full max-w-lg md:max-w-xl lg:max-w-2xl">
         <div className="w-full min-h-screen py-4 my-10">
           <EditorDate />
+          <EditorReadTime />
           <EditorCollaborators />
           <Editor initialContent={isLocal ? undefined : draft.contentJson} documentId={params.id}>
             <EditorPublishing />
