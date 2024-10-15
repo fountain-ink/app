@@ -9,7 +9,7 @@ type ThemeColors = {
   "--font-subtitle": string;
   "--font-header": string;
   "--font-paragraph": string;
-  "--title-align": string;
+  "--title-align": "left" | "center" | "right";
   "--background": string;
   "--foreground": string;
   "--card": string;
@@ -30,6 +30,12 @@ type ThemeColors = {
   "--muted-foreground": string;
   "--accent-foreground": string;
   "--destructive-foreground": string;
+
+  "--margin-h1": string;
+  "--margin-h2": string;
+  "--margin-h3": string;
+  "--margin-paragraph": string;
+  "--margin-list": string;
 };
 
 export const globalThemes: Record<ThemeType, ThemeColors> = {
@@ -38,7 +44,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--font-subtitle": "Test Martina Plantijn",
     "--font-header": "Test Martina Plantijn",
     "--font-paragraph": "Cantarell",
-    "--title-align": "text-center",
+    "--title-align": "center",
     "--background": "217 71% 89%",
     "--foreground": "15 33% 19%",
     "--card": "218	8%	98%",
@@ -59,13 +65,19 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--muted-foreground": "215.4 16.3% 46.9%",
     "--accent-foreground": "222.2 47.4% 11.2%",
     "--destructive-foreground": "210 40% 98%",
+
+    "--margin-h1": "1rem",
+    "--margin-h2": "1.5rem",
+    "--margin-h3": "1rem",
+    "--margin-paragraph": "1rem",
+    "--margin-list": "1rem",
   },
   dark: {
     "--font-title": "Test Martina Plantijn",
     "--font-subtitle": "Test Martina Plantijn",
     "--font-header": "Test Martina Plantijn",
     "--font-paragraph": "Cantarell",
-    "--title-align": "text-center",
+    "--title-align": "center",
     "--background": "222.2 84% 4.9%",
     "--foreground": "110 40% 98%",
     "--card": "222.2 84% 4.9%",
@@ -86,6 +98,12 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--muted-foreground": "215 20.2% 65.1%",
     "--accent-foreground": "210 40% 98%",
     "--destructive-foreground": "210 40% 98%",
+
+    "--margin-h1": "2rem",
+    "--margin-h2": "1.5rem",
+    "--margin-h3": "1rem",
+    "--margin-paragraph": "1rem",
+    "--margin-list": "1rem",
   },
   lightSaber: {
     "--font-title": "Test Martina Plantijn",
@@ -113,5 +131,11 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--muted-foreground": "215.4 16.3% 46.9%",
     "--accent-foreground": "222.2 47.4% 11.2%",
     "--destructive-foreground": "210 40% 98%",
+
+    "--margin-h1": "2rem",
+    "--margin-h2": "1.5rem",
+    "--margin-h3": "1rem",
+    "--margin-paragraph": "1rem",
+    "--margin-list": "1rem",
   },
 };

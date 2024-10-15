@@ -1,9 +1,10 @@
+@import "./fonts.css";
+@import "./prosemirror.css";
+@import "./blur.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import './fonts.css';
-@import './prosemirror.css';
-@import './blur.css';
 
 @layer base {
   html {
@@ -43,8 +44,6 @@
 
     --radius: 1.0rem;
   }
-
-
 
   .dark {
     --background: 222.2 84% 4.9%;
@@ -96,7 +95,6 @@
   position: relative;
   word-break: normal;
 }
-
 
 .collaboration-cursor__label {
   border-radius: 3px 3px 3px 0;
