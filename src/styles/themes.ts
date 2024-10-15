@@ -1,8 +1,10 @@
-export const themeNames = ["light", "dark", "lightSaber"] as const;
+export const themeNames = ["editorial", "editorial-dark", "minimal", "minimal-dark"] as const;
 export type ThemeType = (typeof themeNames)[number];
 
 export const isValidTheme = (theme: unknown): theme is ThemeType =>
   typeof theme === "string" && themeNames.includes(theme as ThemeType);
+
+export const defaultTheme = "editorial";
 
 type ThemeColors = {
   "--font-title": string;
@@ -39,11 +41,11 @@ type ThemeColors = {
 };
 
 export const globalThemes: Record<ThemeType, ThemeColors> = {
-  light: {
-    "--font-title": "Test Martina Plantijn",
-    "--font-subtitle": "Test Martina Plantijn",
-    "--font-header": "Test Martina Plantijn",
-    "--font-paragraph": "Cantarell",
+  editorial: {
+    "--font-title": "plantin",
+    "--font-subtitle": "plantin",
+    "--font-header": "plantin",
+    "--font-paragraph": "plantin",
     "--title-align": "center",
     "--background": "217 71% 89%",
     "--foreground": "15 33% 19%",
@@ -72,11 +74,11 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--margin-paragraph": "1rem",
     "--margin-list": "1rem",
   },
-  dark: {
-    "--font-title": "Test Martina Plantijn",
-    "--font-subtitle": "Test Martina Plantijn",
-    "--font-header": "Test Martina Plantijn",
-    "--font-paragraph": "Cantarell",
+  "editorial-dark": {
+    "--font-title": "plantin",
+    "--font-subtitle": "plantin",
+    "--font-header": "plantin",
+    "--font-paragraph": "plantin",
     "--title-align": "center",
     "--background": "222.2 84% 4.9%",
     "--foreground": "110 40% 98%",
@@ -105,11 +107,11 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--margin-paragraph": "1rem",
     "--margin-list": "1rem",
   },
-  lightSaber: {
-    "--font-title": "Test Martina Plantijn",
-    "--font-subtitle": "Test Martina Plantijn",
-    "--font-header": "Test Martina Plantijn",
-    "--font-paragraph": "Cantarell",
+  minimal: {
+    "--font-title": "plantin",
+    "--font-subtitle": "plantin",
+    "--font-header": "plantin",
+    "--font-paragraph": "plantin",
     "--title-align": "center",
     "--background": "198 71% 89%",
     "--foreground": "19 33% 19%",
@@ -130,6 +132,39 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--secondary-foreground": "222.2 47.4% 11.2%",
     "--muted-foreground": "215.4 16.3% 46.9%",
     "--accent-foreground": "222.2 47.4% 11.2%",
+    "--destructive-foreground": "210 40% 98%",
+
+    "--margin-h1": "2rem",
+    "--margin-h2": "1.5rem",
+    "--margin-h3": "1rem",
+    "--margin-paragraph": "1rem",
+    "--margin-list": "1rem",
+  },
+  "minimal-dark": {
+    "--font-title": "plantin",
+    "--font-subtitle": "plantin",
+    "--font-header": "plantin",
+    "--font-paragraph": "plantin",
+    "--title-align": "center",
+    "--background": "222.2 84% 4.9%",
+    "--foreground": "110 40% 98%",
+    "--card": "222.2 84% 4.9%",
+    "--popover": "222.2 84% 4.9%",
+    "--primary": "210 40% 98%",
+    "--secondary": "217.2 32.6% 17.5%",
+    "--muted": "217.2 32.6% 17.5%",
+    "--accent": "217.2 32.6% 17.5%",
+    "--destructive": "0 62.8% 30.6%",
+    "--border": "217.2 32.6% 17.5%",
+    "--input": "217.2 32.6% 17.5%",
+    "--ring": "212.7 26.8% 83.9%",
+    "--radius": "1.0rem",
+    "--card-foreground": "210 40% 98%",
+    "--popover-foreground": "210 40% 98%",
+    "--primary-foreground": "222.2 47.4% 11.2%",
+    "--secondary-foreground": "210 40% 98%",
+    "--muted-foreground": "215 20.2% 65.1%",
+    "--accent-foreground": "210 40% 98%",
     "--destructive-foreground": "210 40% 98%",
 
     "--margin-h1": "2rem",
