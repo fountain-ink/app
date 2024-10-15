@@ -2,7 +2,7 @@
 
 import { type ThemeType, globalThemes } from "@/styles/themes";
 import type React from "react";
-import { type ReactNode, createContext, useContext, useEffect, useState } from "react";
+import { type PropsWithChildren, type ReactNode, createContext, useContext, useEffect, useState } from "react";
 
 import { useStorage } from "@/hooks/use-storage";
 
@@ -15,10 +15,7 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-interface ThemeProviderProps {
-  children: ReactNode;
-}
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+export const ThemeProvider = ({ children }: PropsWithChildren) => {
   const { theme: storedTheme, setTheme: setStoredTheme } = useStorage();
   const [theme, setTheme] = useState<ThemeType>(() => (isValidTheme(storedTheme) ? storedTheme : defaultTheme));
   useEffect(() => {

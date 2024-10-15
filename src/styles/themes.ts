@@ -4,7 +4,7 @@ export type ThemeType = (typeof themeNames)[number];
 export const isValidTheme = (theme: unknown): theme is ThemeType =>
   typeof theme === "string" && themeNames.includes(theme as ThemeType);
 
-export const defaultTheme = "editorial";
+export const defaultTheme = themeNames[0];
 
 type ThemeColors = {
   "--font-title": string;
@@ -32,6 +32,9 @@ type ThemeColors = {
   "--muted-foreground": string;
   "--accent-foreground": string;
   "--destructive-foreground": string;
+
+  "--title-weight": "100" | "200" | "400" | "500" | "600" | "800" | "900";
+  "--title-style": "normal" | "italic";
 
   "--margin-h1": string;
   "--margin-h2": string;
@@ -68,6 +71,9 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--accent-foreground": "222.2 47.4% 11.2%",
     "--destructive-foreground": "210 40% 98%",
 
+    "--title-weight": "400",
+    "--title-style": "italic",
+
     "--margin-h1": "3rem",
     "--margin-h2": "1.5rem",
     "--margin-h3": "2rem",
@@ -100,6 +106,8 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--muted-foreground": "215 20.2% 65.1%",
     "--accent-foreground": "210 40% 98%",
     "--destructive-foreground": "210 40% 98%",
+    "--title-weight": "400",
+    "--title-style": "italic",
 
     "--margin-h1": "2rem",
     "--margin-h2": "1.5rem",
@@ -134,6 +142,9 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--accent-foreground": "222.2 47.4% 11.2%",
     "--destructive-foreground": "210 40% 98%",
 
+    "--title-weight": "400",
+    "--title-style": "normal",
+
     "--margin-h1": "2rem",
     "--margin-h2": "1.5rem",
     "--margin-h3": "1rem",
@@ -166,6 +177,9 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--muted-foreground": "215 20.2% 65.1%",
     "--accent-foreground": "210 40% 98%",
     "--destructive-foreground": "210 40% 98%",
+
+    "--title-weight": "400",
+    "--title-style": "normal",
 
     "--margin-h1": "2rem",
     "--margin-h2": "1.5rem",
