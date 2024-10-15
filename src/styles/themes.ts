@@ -48,6 +48,18 @@ type ThemeColors = {
   "--paragraph-style": "normal" | "italic";
   "--paragraph-size": string;
 
+  "--title-line-height": string;
+  "--title-letter-spacing": string;
+
+  "--subtitle-line-height": string;
+  "--subtitle-letter-spacing": string;
+
+  "--header-line-height": string;
+  "--header-letter-spacing": string;
+
+  "--paragraph-line-height": string;
+  "--paragraph-letter-spacing": string;
+
   "--margin-h1": string;
   "--margin-h2": string;
   "--margin-h3": string;
@@ -64,7 +76,6 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--border": "214.3 31.8% 91.4%",
     "--input": "214.3 31.8% 91.4%",
     "--ring": "222.2 84% 4.9%",
-    "--radius": "1.0rem",
     "--card-foreground": "222.2 84% 4.9%",
     "--popover-foreground": "222.2 84% 4.9%",
     "--primary-foreground": "210 40% 98%",
@@ -72,6 +83,8 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--muted-foreground": "215.4 16.3% 46.9%",
     "--accent-foreground": "222.2 47.4% 11.2%",
     "--destructive-foreground": "210 40% 98%",
+
+    "--radius": "1.0rem",
 
     "--foreground": "hsl(0, 0%, 11%)",
     "--background": "hsl(0, 0%, 96%)",
@@ -84,21 +97,29 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--title-style": "italic",
     "--title-align": "center",
     "--title-size": "3.3rem",
+    "--title-line-height": "1.2",
+    "--title-letter-spacing": "-0.02em",
 
     "--subtitle-font": "plantin",
     "--subtitle-weight": "100",
     "--subtitle-style": "normal",
     "--subtitle-size": "1.5rem",
+    "--subtitle-line-height": "1.4",
+    "--subtitle-letter-spacing": "normal",
 
     "--header-font": "plantin",
     "--header-weight": "100",
     "--header-style": "normal",
     "--header-size": "2rem",
+    "--header-line-height": "1.3",
+    "--header-letter-spacing": "-0.01em",
 
     "--paragraph-font": "plantin",
-    "--paragraph-weight": "100",
+    "--paragraph-weight": "400",
     "--paragraph-style": "normal",
-    "--paragraph-size": "1.5rem",
+    "--paragraph-size": "1.3rem",
+    "--paragraph-line-height": "1.3",
+    "--paragraph-letter-spacing": "normal",
 
     "--margin-h1": "1rem",
     "--margin-h2": "1.5rem",

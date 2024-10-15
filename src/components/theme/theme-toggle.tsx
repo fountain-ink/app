@@ -8,9 +8,9 @@ export const ThemeToggle = () => {
   const { setTheme: setLocalTheme } = useStorage();
 
   const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    setLocalTheme(newTheme);
+    // const newTheme = theme === "editorial" ? "editorial-dark" : "editorial";
+    // setTheme(newTheme);
+    // setLocalTheme(newTheme);
   };
 
   return (
@@ -19,7 +19,7 @@ export const ThemeToggle = () => {
       className="flex items-center justify-center hover:bg-transparent w-10 h-10 p-0"
       onClick={toggleTheme}
     >
-      {theme === "light" ? <MoonIcon className="w-6 h-6" /> : <SunIcon className="w-6 h-6" />}
+      {theme === "editorial" ? <MoonIcon className="w-6 h-6" /> : <SunIcon className="w-6 h-6" />}
     </Button>
   );
 };
