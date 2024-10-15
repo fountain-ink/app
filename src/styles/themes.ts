@@ -1,4 +1,4 @@
-export const themeNames = ["editorial", "editorial-dark", "minimal", "minimal-dark"] as const;
+export const themeNames = ["editorial"] as const;
 export type ThemeType = (typeof themeNames)[number];
 
 export const isValidTheme = (theme: unknown): theme is ThemeType =>
@@ -7,11 +7,6 @@ export const isValidTheme = (theme: unknown): theme is ThemeType =>
 export const defaultTheme = themeNames[0];
 
 type ThemeColors = {
-  "--font-title": string;
-  "--font-subtitle": string;
-  "--font-header": string;
-  "--font-paragraph": string;
-  "--title-align": "left" | "center" | "right";
   "--background": string;
   "--foreground": string;
   "--card": string;
@@ -32,9 +27,26 @@ type ThemeColors = {
   "--muted-foreground": string;
   "--accent-foreground": string;
   "--destructive-foreground": string;
-
-  "--title-weight": "100" | "200" | "400" | "500" | "600" | "800" | "900";
+  "--title-font": string;
+  "--title-weight": "100" | "200" | "300" | "400" | "500" | "600" | "800" | "900";
   "--title-style": "normal" | "italic";
+  "--title-align": "left" | "center" | "right";
+  "--title-size": string;
+
+  "--subtitle-font": string;
+  "--subtitle-weight": "100" | "200" | "300" | "400" | "500" | "600" | "800" | "900";
+  "--subtitle-style": "normal" | "italic";
+  "--subtitle-size": string;
+
+  "--header-font": string;
+  "--header-weight": "100" | "200" | "300" | "400" | "500" | "600" | "800" | "900";
+  "--header-style": "normal" | "italic";
+  "--header-size": string;
+
+  "--paragraph-font": string;
+  "--paragraph-weight": "100" | "200" | "300" | "400" | "500" | "600" | "800" | "900";
+  "--paragraph-style": "normal" | "italic";
+  "--paragraph-size": string;
 
   "--margin-h1": string;
   "--margin-h2": string;
@@ -45,19 +57,9 @@ type ThemeColors = {
 
 export const globalThemes: Record<ThemeType, ThemeColors> = {
   editorial: {
-    "--font-title": "plantin",
-    "--font-subtitle": "plantin",
-    "--font-header": "plantin",
-    "--font-paragraph": "plantin",
-    "--title-align": "center",
-    "--background": "217 71% 89%",
-    "--foreground": "15 33% 19%",
-    "--card": "218	8%	98%",
-    "--popover": "218	8%	98%",
-    "--primary": "213	18%	20%",
-    "--secondary": "210 40% 96.1%",
+    "--card": "0 0%	99%",
+    "--popover": "0 0% 99%",
     "--muted": "210 40% 96.1%",
-    "--accent": "210 40% 96.1%",
     "--destructive": "0 84.2% 60.2%",
     "--border": "214.3 31.8% 91.4%",
     "--input": "214.3 31.8% 91.4%",
@@ -66,124 +68,41 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--card-foreground": "222.2 84% 4.9%",
     "--popover-foreground": "222.2 84% 4.9%",
     "--primary-foreground": "210 40% 98%",
-    "--secondary-foreground": "222.2 47.4% 11.2%",
+    "--secondary-foreground": "222.2 47.4% 99.2%",
     "--muted-foreground": "215.4 16.3% 46.9%",
     "--accent-foreground": "222.2 47.4% 11.2%",
     "--destructive-foreground": "210 40% 98%",
 
-    "--title-weight": "400",
+    "--foreground": "hsl(0, 0%, 11%)",
+    "--background": "hsl(0, 0%, 96%)",
+    "--primary": "hsl(213, 18%, 20%)",
+    "--secondary": "hsl(210, 40%, 96%)",
+    "--accent": "hsl(210, 40%, 96%)",
+
+    "--title-font": "plantin",
+    "--title-weight": "300",
     "--title-style": "italic",
+    "--title-align": "center",
+    "--title-size": "3.3rem",
+
+    "--subtitle-font": "plantin",
+    "--subtitle-weight": "100",
+    "--subtitle-style": "normal",
+    "--subtitle-size": "1.5rem",
+
+    "--header-font": "plantin",
+    "--header-weight": "100",
+    "--header-style": "normal",
+    "--header-size": "2rem",
+
+    "--paragraph-font": "plantin",
+    "--paragraph-weight": "100",
+    "--paragraph-style": "normal",
+    "--paragraph-size": "1.5rem",
 
     "--margin-h1": "1rem",
     "--margin-h2": "1.5rem",
     "--margin-h3": "2rem",
-    "--margin-paragraph": "1rem",
-    "--margin-list": "1rem",
-  },
-  "editorial-dark": {
-    "--font-title": "plantin",
-    "--font-subtitle": "plantin",
-    "--font-header": "plantin",
-    "--font-paragraph": "plantin",
-    "--title-align": "center",
-    "--background": "222.2 84% 4.9%",
-    "--foreground": "110 40% 98%",
-    "--card": "222.2 84% 4.9%",
-    "--popover": "222.2 84% 4.9%",
-    "--primary": "210 40% 98%",
-    "--secondary": "217.2 32.6% 17.5%",
-    "--muted": "217.2 32.6% 17.5%",
-    "--accent": "217.2 32.6% 17.5%",
-    "--destructive": "0 62.8% 30.6%",
-    "--border": "217.2 32.6% 17.5%",
-    "--input": "217.2 32.6% 17.5%",
-    "--ring": "212.7 26.8% 83.9%",
-    "--radius": "1.0rem",
-    "--card-foreground": "210 40% 98%",
-    "--popover-foreground": "210 40% 98%",
-    "--primary-foreground": "222.2 47.4% 11.2%",
-    "--secondary-foreground": "210 40% 98%",
-    "--muted-foreground": "215 20.2% 65.1%",
-    "--accent-foreground": "210 40% 98%",
-    "--destructive-foreground": "210 40% 98%",
-    "--title-weight": "400",
-    "--title-style": "italic",
-
-    "--margin-h1": "1rem",
-    "--margin-h2": "1.5rem",
-    "--margin-h3": "1rem",
-    "--margin-paragraph": "1rem",
-    "--margin-list": "1rem",
-  },
-  minimal: {
-    "--font-title": "plantin",
-    "--font-subtitle": "plantin",
-    "--font-header": "plantin",
-    "--font-paragraph": "plantin",
-    "--title-align": "center",
-    "--background": "198 71% 89%",
-    "--foreground": "19 33% 19%",
-    "--card": "199	8%	98%",
-    "--popover": "199	8%	98%",
-    "--primary": "133	18%	20%",
-    "--secondary": "210 40% 96.1%",
-    "--muted": "10 40% 96.1%",
-    "--accent": "10 40% 96.1%",
-    "--destructive": "0 84.2% 60.2%",
-    "--border": "210 31.8% 91.4%",
-    "--input": "210 31.8% 91.4%",
-    "--ring": "222.2 84% 4.9%",
-    "--radius": "1.0rem",
-    "--card-foreground": "222.2 84% 4.9%",
-    "--popover-foreground": "222.2 84% 4.9%",
-    "--primary-foreground": "210 40% 98%",
-    "--secondary-foreground": "222.2 47.4% 11.2%",
-    "--muted-foreground": "215.4 16.3% 46.9%",
-    "--accent-foreground": "222.2 47.4% 11.2%",
-    "--destructive-foreground": "210 40% 98%",
-
-    "--title-weight": "400",
-    "--title-style": "normal",
-
-    "--margin-h1": "1rem",
-    "--margin-h2": "1.5rem",
-    "--margin-h3": "1rem",
-    "--margin-paragraph": "1rem",
-    "--margin-list": "1rem",
-  },
-  "minimal-dark": {
-    "--font-title": "plantin",
-    "--font-subtitle": "plantin",
-    "--font-header": "plantin",
-    "--font-paragraph": "plantin",
-    "--title-align": "center",
-    "--background": "222.2 84% 4.9%",
-    "--foreground": "110 40% 98%",
-    "--card": "222.2 84% 4.9%",
-    "--popover": "222.2 84% 4.9%",
-    "--primary": "210 40% 98%",
-    "--secondary": "217.2 32.6% 17.5%",
-    "--muted": "217.2 32.6% 17.5%",
-    "--accent": "217.2 32.6% 17.5%",
-    "--destructive": "0 62.8% 30.6%",
-    "--border": "217.2 32.6% 17.5%",
-    "--input": "217.2 32.6% 17.5%",
-    "--ring": "212.7 26.8% 83.9%",
-    "--radius": "1.0rem",
-    "--card-foreground": "210 40% 98%",
-    "--popover-foreground": "210 40% 98%",
-    "--primary-foreground": "222.2 47.4% 11.2%",
-    "--secondary-foreground": "210 40% 98%",
-    "--muted-foreground": "215 20.2% 65.1%",
-    "--accent-foreground": "210 40% 98%",
-    "--destructive-foreground": "210 40% 98%",
-
-    "--title-weight": "400",
-    "--title-style": "normal",
-
-    "--margin-h1": "1rem",
-    "--margin-h2": "1.5rem",
-    "--margin-h3": "1rem",
     "--margin-paragraph": "1rem",
     "--margin-list": "1rem",
   },
