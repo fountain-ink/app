@@ -18,5 +18,5 @@ export const proseClasses = [
   "prose-h3:font-[family-name:var(--font-header)]",
   "prose-p:font-[family-name:var(--font-paragraph)]",
   "prose-p:text-xl",
-  "focus:outline-none"
+  "focus:outline-none",
 ].join(" ");

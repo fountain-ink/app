@@ -110,7 +110,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--font-subtitle": "Test Martina Plantijn",
     "--font-header": "Test Martina Plantijn",
     "--font-paragraph": "Cantarell",
-    "--title-align": "left",
+    "--title-align": "center",
     "--background": "198 71% 89%",
     "--foreground": "19 33% 19%",
     "--card": "199	8%	98%",
