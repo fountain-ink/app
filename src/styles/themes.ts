@@ -64,6 +64,10 @@ type ThemeColors = {
   "--paragraph-line-height": string;
   "--paragraph-letter-spacing": string;
 
+  "--paragraph-first-letter-enabled": "true" | "false";
+  "--paragraph-first-letter-size": string;
+  "--paragraph-first-letter-padding-right": string;
+  
   "--margin-h1": string;
   "--margin-h2": string;
   "--margin-h3": string;
@@ -129,6 +133,10 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--paragraph-letter-spacing": "-0.3px",
     "--paragraph-color": "hsl(var(--foreground))",
 
+    "--paragraph-first-letter-enabled": "true",
+    "--paragraph-first-letter-size": "8rem",
+    "--paragraph-first-letter-padding-right": "1rem",
+    
     "--margin-h1": "1rem",
     "--margin-h2": "1.5rem",
     "--margin-h3": "2rem",

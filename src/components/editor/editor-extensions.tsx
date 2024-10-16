@@ -15,19 +15,19 @@ import type { AnyExtension } from "@tiptap/react";
 import { common, createLowlight } from "lowlight";
 import { Maximize2Icon } from "lucide-react";
 import {
-  CharacterCount,
-  CodeBlockLowlight,
-  Command,
-  HorizontalRule,
-  Placeholder,
-  StarterKit,
-  TaskItem,
-  TaskList,
-  TiptapLink,
-  Twitter,
-  UpdatedImage,
-  Youtube,
-  renderItems,
+    CharacterCount,
+    CodeBlockLowlight,
+    Command,
+    HorizontalRule,
+    Placeholder,
+    StarterKit,
+    TaskItem,
+    TaskList,
+    TiptapLink,
+    Twitter,
+    UpdatedImage,
+    Youtube,
+    renderItems,
 } from "novel/extensions";
 import AutoJoiner from "tiptap-extension-auto-joiner";
 import { Markdown } from "tiptap-markdown";
@@ -57,6 +57,15 @@ export const defaultExtensions = ({
   userColor = "#000000",
 }: EditorExtensionsProps): AnyExtension[] => [
   StarterKit.configure({
+    paragraph: {
+      HTMLAttributes: {
+        class: cx(`prose-p
+          first-of-type:first-letter:float-left
+          first-of-type:first-letter:[font-size:var(--paragraph-first-letter-size)]
+          first-of-type:first-letter:[padding-right:var(--paragraph-first-letter-padding-right)]
+          `),
+      },
+    },
     history: false,
     bulletList: {
       HTMLAttributes: {
