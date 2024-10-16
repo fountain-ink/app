@@ -27,27 +27,41 @@ export const suggestionItems = createSuggestionItems([
   {
     title: "Image",
     description: "Add an image.",
-    searchTerms: ["photo", "picture", "media", "image"],
+    searchTerms: ["photo", "picture", "media", "image", "placeholder"],
     icon: <ImageIcon size={18} />,
     command: ({ editor, range }) => {
-      editor.chain().focus().deleteRange(range).run();
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "image/*";
-      input.onchange = async () => {
-        if (input.files?.length) {
-          const file = input.files[0];
-          if (!file) {
-            toast.error("No file selected");
-            return;
-          }
-          const pos = editor.view.state.selection.from;
-          uploadFn(file, editor.view, pos);
-        }
-      };
-      input.click();
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .setImagePlaceholder({ width: "column" })
+        .run();
     },
   },
+  // {
+  //   title: "Image",
+  //   description: "Add an image.",
+  //   searchTerms: ["photo", "picture", "media", "image"],
+  //   icon: <ImageIcon size={18} />,
+  //   command: ({ editor, range }) => {
+  //     editor.chain().focus().deleteRange(range).run();
+  //     const input = document.createElement("input");
+  //     input.type = "file";
+  //     input.accept = "image/*";
+  //     input.onchange = async () => {
+  //       if (input.files?.length) {
+  //         const file = input.files[0];
+  //         if (!file) {
+  //           toast.error("No file selected");
+  //           return;
+  //         }
+  //         const pos = editor.view.state.selection.from;
+  //         uploadFn(file, editor.view, pos);
+  //       }
+  //     };
+  //     input.click();
+  //   },
+  // },
   {
     title: "Check List",
     description: "Track tasks with a check list.",

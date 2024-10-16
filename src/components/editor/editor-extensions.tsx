@@ -13,7 +13,7 @@ import Superscript from "@tiptap/extension-superscript";
 import TextAlign from "@tiptap/extension-text-align";
 import type { AnyExtension } from "@tiptap/react";
 import { common, createLowlight } from "lowlight";
-import { Maximize2Icon } from "lucide-react";
+import { Maximize2Icon, UploadIcon } from "lucide-react";
 import {
   CharacterCount,
   CodeBlockLowlight,
@@ -36,6 +36,9 @@ import BlockquoteFigure from "./extensions/blockquote-figure";
 import Figcaption from "./extensions/figcaption";
 import { HeroImage } from "./extensions/hero-image";
 import { ImageResize } from "./extensions/image-resize";
+
+import { ImagePlaceholder } from "./extensions/image-placeholder";
+
 import Selection from "./extensions/selection";
 import { suggestionItems } from "./extensions/slash-command";
 import { TrailingNode } from "./extensions/trailing-node";
@@ -238,6 +241,11 @@ export const defaultExtensions = ({
       class: cx("mt-4 mb-6 border-t border-muted-foreground"),
     },
   }),
+
+  ImagePlaceholder.configure({
+    uploadIcon: <UploadIcon className="w-12 h-12 text-muted-foreground" />,
+  }),  
+  
   Selection,
   TrailingNode.configure({}),
 ];
