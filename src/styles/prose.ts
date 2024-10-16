@@ -42,6 +42,7 @@ export const proseClasses = [
   "prose-p:[line-height:var(--paragraph-line-height)]",
   "prose-p:[letter-spacing:var(--paragraph-letter-spacing)]",
   "prose-p:[color:var(--paragraph-color)]",
+  "prose-h2:[letter-spacing:var(--subtitle-letter-spacing)]",
 
   "prose-ul:[margin-top:var(--margin-list)] prose-ul:[margin-bottom:var(--margin-list)]",
   "prose-ol:[margin-top:var(--margin-list)] prose-ol:[margin-bottom:var(--margin-list)]",

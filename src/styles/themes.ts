@@ -110,7 +110,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--subtitle-style": "normal",
     "--subtitle-size": "1.5rem",
     "--subtitle-line-height": "1.4",
-    "--subtitle-letter-spacing": "normal",
+    "--subtitle-letter-spacing": "-0.5px",
     "--subtitle-color": "hsl(var(--muted-foreground))",
 
     "--header-font": "plantin",
@@ -120,19 +120,19 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--header-line-height": "1.3",
     "--header-letter-spacing": "-0.01em",
     "--header-color": "hsl(var(--foreground))",
-
+    
     "--paragraph-font": "plantin",
     "--paragraph-weight": "400",
     "--paragraph-style": "normal",
-    "--paragraph-size": "1.3rem",
-    "--paragraph-line-height": "1.3",
-    "--paragraph-letter-spacing": "normal",
+    "--paragraph-size": "1.25rem",
+    "--paragraph-line-height": "1.6",
+    "--paragraph-letter-spacing": "-0.3px",
     "--paragraph-color": "hsl(var(--foreground))",
 
     "--margin-h1": "1rem",
     "--margin-h2": "1.5rem",
     "--margin-h3": "2rem",
-    "--margin-paragraph": "1rem",
+    "--margin-paragraph": "2rem",
     "--margin-list": "1rem",
   },
 };
