@@ -101,7 +101,7 @@ const ImageResizeComponent = (props: {
         return "w-[120%] -ml-[10%] max-w-[120%]";
       case "full":
         return "w-screen max-w-[90vw] relative -translate-x-1/2 left-1/2 content-center justify-center";
-      default: // column
+      default:
         return "w-full max-w-full";
     }
   };
@@ -136,15 +136,15 @@ const ImageResizeComponent = (props: {
               {props.extension.options.resizeIcon}
             </div>
             <div className="absolute top-2 left-2 space-x-1 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-80 rounded backdrop-blur-xl">
-            <Button size="sm" onClick={() => handleWidth("column")}>
-              <Minimize size={16} />
-            </Button>
-            <Button size="sm" onClick={() => handleWidth("wide")}>
-              <ArrowLeftRight size={16} />
-            </Button>
-            <Button size="sm" onClick={() => handleWidth("full")}>
-              <Maximize size={16} />
-            </Button>
+              <Button size="sm" onClick={() => handleWidth("column")}>
+                <Minimize size={16} />
+              </Button>
+              <Button size="sm" onClick={() => handleWidth("wide")}>
+                <ArrowLeftRight size={16} />
+              </Button>
+              <Button size="sm" onClick={() => handleWidth("full")}>
+                <Maximize size={16} />
+              </Button>
             </div>
           </>
         )}

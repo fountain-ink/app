@@ -31,8 +31,12 @@ export const ImagePlaceholder = Node.create<ImagePlaceholderOptions>({
 
   group: "block",
   draggable: true,
+
   addAttributes() {
     return {
+      src: {
+        default: null,
+      },
       width: {
         default: "column",
         renderHTML: (attributes) => {
@@ -79,7 +83,7 @@ export const ImagePlaceholder = Node.create<ImagePlaceholderOptions>({
         ({ commands }) => {
           return commands.insertContent({
             type: this.name,
-            attrs: options,
+            attrs: { ...options, src: null },
           });
         },
     };

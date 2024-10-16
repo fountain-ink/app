@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { NodeViewWrapper } from "@tiptap/react";
-import { ArrowLeftRight, Maximize, Minimize } from "lucide-react";
+import { ArrowLeftRight, Maximize, Minimize, Trash2Icon, UploadIcon } from "lucide-react";
 import { useRef } from "react";
 
 import { uploadFile } from "@/lib/upload-image";
@@ -10,10 +10,11 @@ import { uploadFile } from "@/lib/upload-image";
 const ImagePlaceholderComponent = (props: {
   node: {
     attrs: {
+      src: string | null;
       width: "column" | "wide" | "full";
     };
   };
-  updateAttributes: (attrs: Partial<{ width: "column" | "wide" | "full" }>) => void;
+  updateAttributes: (attrs: Partial<{ src: string | null; width: "column" | "wide" | "full" }>) => void;
   deleteNode: () => void;
   extension: {
     options: {
@@ -23,10 +24,12 @@ const ImagePlaceholderComponent = (props: {
   editor: any;
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
 
   const handleWidth = (width: "column" | "wide" | "full") => {
     props.updateAttributes({ width });
   };
+
   const handleUpload = async () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -36,13 +39,7 @@ const ImagePlaceholderComponent = (props: {
       if (file) {
         try {
           const newSrc = await uploadFile(file);
-          const { from, to } = props.editor.state.selection;
-          props.editor
-            .chain()
-            .focus()
-            .deleteRange({ from, to })
-            .setImage({ src: newSrc, width: props.node.attrs.width })
-            .run();
+          props.updateAttributes({ src: newSrc });
         } catch (error) {
           console.error("Error uploading image:", error);
         }
@@ -50,13 +47,18 @@ const ImagePlaceholderComponent = (props: {
     };
     input.click();
   };
+
+  const handleRemove = () => {
+    props.updateAttributes({ src: null });
+  };
+
   const getWidthClasses = (width: string) => {
     switch (width) {
       case "wide":
         return "w-[120%] -ml-[10%] max-w-[120%]";
       case "full":
         return "w-screen max-w-[90vw] relative -translate-x-1/2 left-1/2 content-center justify-center";
-      default: // column
+      default:
         return "w-full max-w-full";
     }
   };
@@ -71,11 +73,17 @@ const ImagePlaceholderComponent = (props: {
       contentEditable="false"
       data-drag-handle
     >
-      <div className="relative flex-grow-0 group border-2 border-dashed border-secondary hover:border-primary transition-colors duration-300 ease-in-out p-8 rounded-lg w-full aspect-video">
-        <div className="flex flex-col items-center justify-center space-y-2 w-full h-full">
-          {props.extension.options.uploadIcon}
-          <Button onClick={handleUpload}>Upload Image</Button>
-        </div>
+      <div
+        className={"relative flex-grow-0 group border-2 border-dashed border-secondary hover:border-primary transition-colors duration-300 ease-in-out rounded-lg w-full"}
+      >
+        {props.node.attrs.src ? (
+          <img ref={imageRef} src={props.node.attrs.src} className="w-full h-full object-cover" />
+        ) : (
+          <div className="flex flex-col items-center justify-center space-y-2 w-full aspect-video">
+            {props.extension.options.uploadIcon}
+            <Button onClick={handleUpload}>Upload Image</Button>
+          </div>
+        )}
         <div className="absolute top-2 left-2 space-x-1 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-80 rounded backdrop-blur-xl">
           <Button size="sm" onClick={() => handleWidth("column")}>
             <Minimize size={16} />
@@ -87,6 +95,16 @@ const ImagePlaceholderComponent = (props: {
             <Maximize size={16} />
           </Button>
         </div>
+        {props.node.attrs.src && (
+          <div className="absolute top-2 right-2 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-80 bg-background/0 rounded backdrop-blur-sm flex">
+            <Button size="sm" onClick={handleUpload} className="mr-1">
+              <UploadIcon size={16} />
+            </Button>
+            <Button size="sm" onClick={handleRemove}>
+              <Trash2Icon size={16} />
+            </Button>
+          </div>
+        )}
       </div>
     </NodeViewWrapper>
   );
