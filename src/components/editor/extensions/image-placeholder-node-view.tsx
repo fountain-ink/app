@@ -10,10 +10,10 @@ import { uploadFile } from "@/lib/upload-image";
 const ImagePlaceholderComponent = (props: {
   node: {
     attrs: {
-      width: "column" | "slightly-wider" | "full";
+      width: "column" | "wide" | "full";
     };
   };
-  updateAttributes: (attrs: Partial<{ width: "column" | "slightly-wider" | "full" }>) => void;
+  updateAttributes: (attrs: Partial<{ width: "column" | "wide" | "full" }>) => void;
   deleteNode: () => void;
   extension: {
     options: {
@@ -24,10 +24,9 @@ const ImagePlaceholderComponent = (props: {
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const handleWidth = (width: "column" | "slightly-wider" | "full") => {
+  const handleWidth = (width: "column" | "wide" | "full") => {
     props.updateAttributes({ width });
   };
-
   const handleUpload = async () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -38,7 +37,12 @@ const ImagePlaceholderComponent = (props: {
         try {
           const newSrc = await uploadFile(file);
           const { from, to } = props.editor.state.selection;
-          props.editor.chain().focus().deleteRange({ from, to }).setImage({ src: newSrc }).run();
+          props.editor
+            .chain()
+            .focus()
+            .deleteRange({ from, to })
+            .setImage({ src: newSrc, width: props.node.attrs.width })
+            .run();
         } catch (error) {
           console.error("Error uploading image:", error);
         }
@@ -46,15 +50,14 @@ const ImagePlaceholderComponent = (props: {
     };
     input.click();
   };
-
   const getWidthClasses = (width: string) => {
     switch (width) {
-      case "slightly-wider":
-        return "w-[110%] -ml-[5%]";
+      case "wide":
+        return "w-[120%] -ml-[10%] max-w-[120%]";
       case "full":
-        return "w-screen max-w-none relative left-1/2 right-1/2 -mx-[50vw]";
-      default:
-        return "w-full";
+        return "w-screen max-w-[90vw] relative -translate-x-1/2 left-1/2 content-center justify-center";
+      default: // column
+        return "w-full max-w-full";
     }
   };
 
@@ -77,7 +80,7 @@ const ImagePlaceholderComponent = (props: {
           <Button size="sm" onClick={() => handleWidth("column")}>
             <Minimize size={16} />
           </Button>
-          <Button size="sm" onClick={() => handleWidth("slightly-wider")}>
+          <Button size="sm" onClick={() => handleWidth("wide")}>
             <ArrowLeftRight size={16} />
           </Button>
           <Button size="sm" onClick={() => handleWidth("full")}>

@@ -5,19 +5,21 @@ import ImageResizeComponent from "./image-resize-node-view";
 
 type AlignmentOptions = "left" | "center" | "right" | "wide";
 
+type WidthOptions = "column" | "wide" | "full";
 export interface ImageOptions {
   inline: boolean;
   allowBase64: boolean;
   HTMLAttributes: Record<string, any>;
   resizeIcon: React.ReactNode;
   alignment?: AlignmentOptions;
+  width?: WidthOptions;
   showControls?: boolean;
 }
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     image: {
-      setImage: (options: { src: string; alt?: string; title?: string; alignment?: AlignmentOptions }) => ReturnType;
+      setImage: (options: { src: string; alt?: string; title?: string; alignment?: AlignmentOptions; width?: WidthOptions }) => ReturnType;
     };
   }
 }
@@ -32,6 +34,7 @@ export const ImageResize = Node.create<ImageOptions>({
       inline: false,
       allowBase64: false,
       alignment: "center",
+      width: "column",
       HTMLAttributes: {},
       resizeIcon: createElement("p", null, "⇲"),
     };
@@ -101,6 +104,30 @@ export const ImageResize = Node.create<ImageOptions>({
           return { style, class: className };
         },
       },
+      imageWidth: {
+        default: "column",
+        renderHTML: (attributes) => {
+          const width = attributes.imageWidth as WidthOptions;
+          let style = "margin: 0 auto;";
+          let className = "";
+
+          switch (width) {
+            case "wide":
+              style += "width: 120%;";
+              className = "!max-w-[120%] -ml-[10%]";
+              break;
+            case "full":
+              style += "width: 100vw; max-width: 1800px;";
+              className = "!w-screen !max-w-[1800px] mx-auto";
+              break;
+            default: // column width
+              style += "width: 100%;";
+              className = "!max-w-full";
+          }
+
+          return { style, class: className };
+        },
+      },
     };
   },
 
@@ -115,7 +142,6 @@ export const ImageResize = Node.create<ImageOptions>({
   renderHTML({ HTMLAttributes }) {
     return ["image-resizer", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)];
   },
-
   addCommands() {
     return {
       setImage:
@@ -123,7 +149,10 @@ export const ImageResize = Node.create<ImageOptions>({
         ({ commands }) => {
           return commands.insertContent({
             type: this.name,
-            attrs: options,
+            attrs: {
+              ...options,
+              imageWidth: options.width || 'column',
+            },
           });
         },
     };

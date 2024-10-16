@@ -1,9 +1,7 @@
 "use client";
 
-import { uploadFn } from "@/lib/upload-image";
 import { CheckSquare, Code, HeadingIcon, ImageIcon, List, ListOrdered, Text, TextQuote } from "lucide-react";
 import { createSuggestionItems } from "novel/extensions";
-import { toast } from "sonner";
 
 export const suggestionItems = createSuggestionItems([
   {
@@ -30,12 +28,7 @@ export const suggestionItems = createSuggestionItems([
     searchTerms: ["photo", "picture", "media", "image", "placeholder"],
     icon: <ImageIcon size={18} />,
     command: ({ editor, range }) => {
-      editor
-        .chain()
-        .focus()
-        .deleteRange(range)
-        .setImagePlaceholder({ width: "column" })
-        .run();
+      editor.chain().focus().deleteRange(range).setImagePlaceholder({ width: "column" }).run();
     },
   },
   // {

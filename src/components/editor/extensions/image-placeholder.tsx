@@ -3,7 +3,7 @@ import { ReactNodeViewRenderer } from "@tiptap/react";
 import { createElement } from "react";
 import ImagePlaceholderComponent from "./image-placeholder-node-view";
 
-type WidthOptions = "column" | "slightly-wider" | "full";
+type WidthOptions = "column" | "wide" | "full";
 export interface ImagePlaceholderOptions {
   HTMLAttributes: Record<string, any>;
   uploadIcon: React.ReactNode;
@@ -31,7 +31,6 @@ export const ImagePlaceholder = Node.create<ImagePlaceholderOptions>({
 
   group: "block",
   draggable: true,
-
   addAttributes() {
     return {
       width: {
@@ -42,13 +41,13 @@ export const ImagePlaceholder = Node.create<ImagePlaceholderOptions>({
           let className = "";
 
           switch (width) {
-            case "slightly-wider":
-              style += "width: 110%;";
-              className = "!max-w-[110%] -ml-[5%]";
+            case "wide":
+              style += "width: 120%;";
+              className = "!max-w-[120%] -ml-[10%]";
               break;
             case "full":
-              style += "width: 100vw;";
-              className = "!max-w-none !w-screen relative left-1/2 right-1/2 -mx-[50vw]";
+              style += "width: 100vw; max-width: 1800px;";
+              className = "!w-screen !max-w-[1800px] mx-auto";
               break;
             default: // column width
               style += "width: 100%;";

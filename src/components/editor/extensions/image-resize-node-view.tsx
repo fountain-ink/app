@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { NodeViewWrapper } from "@tiptap/react";
-import { AlignCenterIcon, AlignLeftIcon, AlignRightIcon, MaximizeIcon, Trash2Icon, UploadIcon } from "lucide-react";
+import { ArrowLeftRight, Maximize, Minimize, Trash2Icon, UploadIcon } from "lucide-react";
 import { useRef } from "react";
 
 import { uploadFile } from "@/lib/upload-image";
@@ -19,6 +19,7 @@ const ImageResizeComponent = (props: {
       height: number | string;
       showControls: boolean;
       alignment: "left" | "center" | "right" | "wide";
+      imageWidth: "column" | "wide" | "full";
     };
   };
   updateAttributes: (
@@ -28,6 +29,7 @@ const ImageResizeComponent = (props: {
       src: string;
       showControls: boolean;
       alignment: "left" | "center" | "right" | "wide";
+      imageWidth: "column" | "wide" | "full";
     }>,
   ) => void;
   deleteNode: () => void;
@@ -67,8 +69,9 @@ const ImageResizeComponent = (props: {
 
     mouseDownEvent.stopPropagation();
   };
-  const handleAlign = (alignment: "left" | "center" | "right" | "wide") => {
-    props.updateAttributes({ alignment });
+
+  const handleWidth = (imageWidth: "column" | "wide" | "full") => {
+    props.updateAttributes({ imageWidth });
   };
 
   const handleRemove = () => {
@@ -92,28 +95,25 @@ const ImageResizeComponent = (props: {
     };
     input.click();
   };
-
-  const getAlignmentClasses = (alignment: string) => {
-    switch (alignment) {
-      case "left":
-        return "justify-start mr-4";
-      case "right":
-        return "justify-end ml-4";
+  const getWidthClasses = (imageWidth: string) => {
+    switch (imageWidth) {
       case "wide":
-        return "w-screen max-w-none relative -translate-x-1/2 left-1/2 content-center justify-center";
-      default:
-        return "justify-center mx-auto";
+        return "w-[120%] -ml-[10%] max-w-[120%]";
+      case "full":
+        return "w-screen max-w-[90vw] relative -translate-x-1/2 left-1/2 content-center justify-center";
+      default: // column
+        return "w-full max-w-full";
     }
   };
 
-  const alignment = props.node.attrs.alignment || "center";
-  const alignmentClass = getAlignmentClasses(alignment);
+  const imageWidth = props.node.attrs.imageWidth || "column";
+  const widthClass = getWidthClasses(imageWidth);
   const { showControls, ...imgAttributes } = props.node.attrs;
 
   return (
     <NodeViewWrapper
       ref={wrapperRef}
-      className={`flex ${alignmentClass}`}
+      className={`flex justify-center ${widthClass}`}
       contentEditable="false"
       data-drag-handle
       draggable="true"
@@ -123,7 +123,7 @@ const ImageResizeComponent = (props: {
         <img
           ref={imageRef}
           {...imgAttributes}
-          className={`border-2 border-secondary group-hover:border-primary transition-colors duration-300 ease-in-out ${alignment === "wide" ? "w-[80vw] max-w-none" : ""}`}
+          className="border-2 border-secondary group-hover:border-primary transition-colors duration-300 ease-in-out"
         />
         {showControls && (
           <>
@@ -136,18 +136,15 @@ const ImageResizeComponent = (props: {
               {props.extension.options.resizeIcon}
             </div>
             <div className="absolute top-2 left-2 space-x-1 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-80 rounded backdrop-blur-xl">
-              <Button size="sm" onClick={() => handleAlign("left")}>
-                <AlignLeftIcon size={16} />
-              </Button>
-              <Button size="sm" onClick={() => handleAlign("center")}>
-                <AlignCenterIcon size={16} />
-              </Button>
-              <Button size="sm" onClick={() => handleAlign("right")}>
-                <AlignRightIcon size={16} />
-              </Button>
-              <Button size="sm" onClick={() => handleAlign("wide")}>
-                <MaximizeIcon size={16} />
-              </Button>
+            <Button size="sm" onClick={() => handleWidth("column")}>
+              <Minimize size={16} />
+            </Button>
+            <Button size="sm" onClick={() => handleWidth("wide")}>
+              <ArrowLeftRight size={16} />
+            </Button>
+            <Button size="sm" onClick={() => handleWidth("full")}>
+              <Maximize size={16} />
+            </Button>
             </div>
           </>
         )}
