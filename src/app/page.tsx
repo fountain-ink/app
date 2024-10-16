@@ -18,13 +18,9 @@ export default function HomePage() {
           </p>
           <h3> Rediscover the Joy of Writing </h3>
           <p>
-            Fountain a space where every word you write feels like a brushstroke on canvas. Transform the act of writing
-            into a meditative experience. Allow your thoughts to flow freely, unimpeded by intrusive notifications or
-            cluttered interfaces.
-          </p>
-          <p>
-            Immersing yourself in a state of flow. Fountain creates a calming backdrop for your creative process. This
-            is where your ideas can breathe, where your creativity can unfold naturally and beautifully.
+            Fountain is a space where every word you write feels like a brushstroke on canvas. Transform the act of
+            writing into a meditative experience. Allow your thoughts to flow freely, unimpeded by intrusive
+            notifications or cluttered interfaces.
           </p>
           <h3>A Reading Experience Like No Other</h3>
           <p>
