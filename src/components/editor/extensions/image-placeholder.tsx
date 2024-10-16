@@ -53,7 +53,7 @@ export const ImagePlaceholder = Node.create<ImagePlaceholderOptions>({
               style += "width: 100vw; max-width: 1800px;";
               className = "!w-screen !max-w-[1800px] mx-auto";
               break;
-            default: // column width
+            default: 
               style += "width: 100%;";
               className = "!max-w-full";
           }
