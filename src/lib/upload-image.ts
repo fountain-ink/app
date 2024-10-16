@@ -2,17 +2,29 @@
 
 import { createImageUpload } from "@/components/editor/plugins/image-upload";
 import { getIpfsImageUrl } from "@/components/images/image-uploader";
+import imageCompression from "browser-image-compression";
 import { toast } from "sonner";
 import { uploadFileFormData } from "./upload-utils";
 
 export const uploadFile = async (file: File) => {
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("handle", "global");
-  console.log(`Uploading file: ${file.name}`);
-  const result = await uploadFileFormData(formData);
-  console.log(`Uploaded file: ${file.name} to ${result}`);
-  return getIpfsImageUrl(result);
+  try {
+    const compressedFile = await imageCompression(file, {
+      maxSizeMB: 4.5,
+      useWebWorker: true,
+    });
+
+    console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+
+    const formData = new FormData();
+    formData.append("file", compressedFile);
+    formData.append("handle", "global");
+    console.log(`Uploading file: ${file.name}`);
+    const result = await uploadFileFormData(formData);
+    console.log(`Uploaded file: ${file.name} to ${result}`);
+    return getIpfsImageUrl(result);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export const uploadFn = createImageUpload({
