@@ -33,6 +33,11 @@ type ThemeColors = {
   "--title-align": "left" | "center" | "right";
   "--title-size": string;
   "--title-color": string;
+  
+    "--subtitle-align": "left" | "center" | "right";
+  "--header-align": "left" | "center" | "right";
+  "--paragraph-align": "left" | "center" | "right";
+  
   "--paragraph-color": string;
 
   "--subtitle-font": string;
@@ -109,6 +114,10 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--title-line-height": "1.2",
     "--title-letter-spacing": "-0.02em",
     "--title-color": "hsl(var(--foreground))",
+    
+    "--subtitle-align": "center",
+    "--header-align": "left",
+    "--paragraph-align": "left",    
 
     "--subtitle-font": "plantin",
     "--subtitle-weight": "100",

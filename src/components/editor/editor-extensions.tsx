@@ -40,8 +40,6 @@ import Selection from "./extensions/selection";
 import { suggestionItems } from "./extensions/slash-command";
 import { TrailingNode } from "./extensions/trailing-node";
 
-import { FirstParagraph } from "./extensions/first-paragraph";
-
 import Paragraph from "@tiptap/extension-paragraph";
 import { UploadImagesPlugin } from "./plugins/image-upload";
 import { FirstParagraphPlugin } from "./plugins/first-paragraph-plugin";
@@ -122,7 +120,7 @@ export const defaultExtensions = ({
     group: "block",
   }).configure({ levels: [3] }),
   Document.extend({
-    content: "title subtitle heroImage* firstParagraph* block+",
+    content: "title subtitle heroImage* block+",
   }),
   Collaboration.configure({
     document,
@@ -141,13 +139,15 @@ export const defaultExtensions = ({
   Figcaption,
   BlockquoteFigure,
   Placeholder.configure({
+    showOnlyCurrent: true,
+    showOnlyWhenEditable: false,
     placeholder: ({ node }) => {
       if (node.type.name === "title") {
-        return "What’s the title?";
+        return "Title";
       }
 
       if (node.type.name === "subtitle") {
-        return "What’s the subtitle?";
+        return "Add subtitle...";
       }
 
       if (node.type.name === "heading") {
@@ -238,7 +238,6 @@ export const defaultExtensions = ({
       class: cx("mt-4 mb-6 border-t border-muted-foreground"),
     },
   }),
-  FirstParagraph,
   Selection,
   TrailingNode.configure({}),
 ];

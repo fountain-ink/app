@@ -1,21 +1,56 @@
 /* .ProseMirror {
   @apply p-12 px-8 sm:px-12;
 } */
-
-.ProseMirror .is-editor-empty:first-child::before {
+.ProseMirror .is-editor-empty:first-child::before,
+.ProseMirror .is-empty::before {
   content: attr(data-placeholder);
-  float: left;
-  color: var(--novel-stone-400);
+  float: var(--title-align);
+  color: hsl(var(--muted-foreground));
   pointer-events: none;
   height: 0;
 }
 
-.ProseMirror .is-empty::before {
-  content: attr(data-placeholder);
-  float: left;
-  color: hsl(var(--muted-foreground));
-  pointer-events: none;
-  height: 0;
+.ProseMirror h1.is-empty::before {
+  text-align: var(--title-align);
+  font-family: var(--title-font);
+  font-weight: var(--title-weight);
+  font-style: var(--title-style);
+  font-size: var(--title-size);
+  line-height: var(--title-line-height);
+  letter-spacing: var(--title-letter-spacing);
+}
+
+.ProseMirror h2.is-empty::before {
+  text-align: var(--subtitle-align);
+  font-family: var(--subtitle-font);
+  font-weight: var(--subtitle-weight);
+  font-style: var(--subtitle-style);
+  font-size: var(--subtitle-size);
+  line-height: var(--subtitle-line-height);
+  letter-spacing: var(--subtitle-letter-spacing);
+}
+
+.ProseMirror h3.is-empty::before,
+.ProseMirror h4.is-empty::before,
+.ProseMirror h5.is-empty::before,
+.ProseMirror h6.is-empty::before {
+  text-align: var(--header-align);
+  font-family: var(--header-font);
+  font-weight: var(--header-weight);
+  font-style: var(--header-style);
+  font-size: var(--header-size);
+  line-height: var(--header-line-height);
+  letter-spacing: var(--header-letter-spacing);
+}
+
+.ProseMirror p.is-empty::before {
+  text-align: var(--paragraph-align);
+  font-family: var(--paragraph-font);
+  font-weight: var(--paragraph-weight);
+  font-style: var(--paragraph-style);
+  font-size: var(--paragraph-size);
+  line-height: var(--paragraph-line-height);
+  letter-spacing: var(--paragraph-letter-spacing);
 }
 
 /* Custom image styles */
@@ -253,7 +288,6 @@ pre {
 
     content: attr(data-placeholder);
   }
-
   .media-node-view {
     @apply flex relative w-full my-2;
 
