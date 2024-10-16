@@ -39,7 +39,12 @@ import { ImageResize } from "./extensions/image-resize";
 import Selection from "./extensions/selection";
 import { suggestionItems } from "./extensions/slash-command";
 import { TrailingNode } from "./extensions/trailing-node";
+
+import { FirstParagraph } from "./extensions/first-paragraph";
+
+import Paragraph from "@tiptap/extension-paragraph";
 import { UploadImagesPlugin } from "./plugins/image-upload";
+import { FirstParagraphPlugin } from "./plugins/first-paragraph-plugin";
 
 interface EditorExtensionsProps {
   provider?: HocuspocusProvider | null;
@@ -56,17 +61,13 @@ export const defaultExtensions = ({
   userName = "Maxi",
   userColor = "#000000",
 }: EditorExtensionsProps): AnyExtension[] => [
-  StarterKit.configure({
-    paragraph: {
-      HTMLAttributes: {
-        class: `prose-p
-          first-of-type:first-letter:[font-size:var(--paragraph-first-letter-size,inherit)]
-          first-of-type:first-letter:[float:var(--paragraph-first-letter-float,inherit)]
-          first-of-type:first-letter:[padding-right:var(--paragraph-first-letter-padding-right,0)]
-          first-of-type:first-letter:[padding-top:var(--paragraph-first-letter-padding-top,0)]
-          `,
-      },
+  Paragraph.extend({
+    addProseMirrorPlugins() {
+      return [FirstParagraphPlugin()];
     },
+  }),
+  StarterKit.configure({
+    paragraph: false,
     history: false,
     bulletList: {
       HTMLAttributes: {
@@ -121,7 +122,7 @@ export const defaultExtensions = ({
     group: "block",
   }).configure({ levels: [3] }),
   Document.extend({
-    content: "title subtitle heroImage* block+",
+    content: "title subtitle heroImage* firstParagraph* block+",
   }),
   Collaboration.configure({
     document,
@@ -237,6 +238,7 @@ export const defaultExtensions = ({
       class: cx("mt-4 mb-6 border-t border-muted-foreground"),
     },
   }),
+  FirstParagraph,
   Selection,
   TrailingNode.configure({}),
 ];

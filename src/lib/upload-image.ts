@@ -13,7 +13,7 @@ export const uploadFile = async (file: File) => {
       useWebWorker: true,
     });
 
-    console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+    console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); 
 
     const formData = new FormData();
     formData.append("file", compressedFile);

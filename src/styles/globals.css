@@ -6,6 +6,14 @@
 @tailwind components;
 @tailwind utilities;
 
+.first-paragraph:first-letter {
+
+  font-size: var(--paragraph-first-letter-size, inherit);
+  float: var(--paragraph-first-letter-float, inherit);
+  padding-right: var(--paragraph-first-letter-padding-right, 0);
+  padding-top: var(--paragraph-first-letter-padding-top, 0);
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
