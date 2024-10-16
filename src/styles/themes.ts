@@ -32,12 +32,16 @@ type ThemeColors = {
   "--title-style": "normal" | "italic";
   "--title-align": "left" | "center" | "right";
   "--title-size": string;
+  "--title-color": string;
+  "--paragraph-color": string;
 
   "--subtitle-font": string;
   "--subtitle-weight": "100" | "200" | "300" | "400" | "500" | "600" | "800" | "900";
   "--subtitle-style": "normal" | "italic";
   "--subtitle-size": string;
+  "--subtitle-color": string;
 
+  "--header-color": string;
   "--header-font": string;
   "--header-weight": "100" | "200" | "300" | "400" | "500" | "600" | "800" | "900";
   "--header-style": "normal" | "italic";
@@ -80,17 +84,17 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--popover-foreground": "222.2 84% 4.9%",
     "--primary-foreground": "210 40% 98%",
     "--secondary-foreground": "222.2 47.4% 99.2%",
-    "--muted-foreground": "215.4 16.3% 46.9%",
+    "--muted-foreground": "0, 0%, 39.6%",
     "--accent-foreground": "222.2 47.4% 11.2%",
     "--destructive-foreground": "210 40% 98%",
 
     "--radius": "1.0rem",
 
-    "--foreground": "hsl(0, 0%, 11%)",
-    "--background": "hsl(0, 0%, 96%)",
-    "--primary": "hsl(213, 18%, 20%)",
-    "--secondary": "hsl(210, 40%, 96%)",
-    "--accent": "hsl(210, 40%, 96%)",
+    "--foreground": "0, 0%, 11%",
+    "--background": "0, 0%, 96%",
+    "--primary": "213, 18%, 20%",
+    "--secondary": "210, 40%, 96%",
+    "--accent": "210, 40%, 96%",
 
     "--title-font": "plantin",
     "--title-weight": "300",
@@ -99,6 +103,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--title-size": "3.3rem",
     "--title-line-height": "1.2",
     "--title-letter-spacing": "-0.02em",
+    "--title-color": "hsl(var(--foreground))",
 
     "--subtitle-font": "plantin",
     "--subtitle-weight": "100",
@@ -106,6 +111,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--subtitle-size": "1.5rem",
     "--subtitle-line-height": "1.4",
     "--subtitle-letter-spacing": "normal",
+    "--subtitle-color": "hsl(var(--muted-foreground))",
 
     "--header-font": "plantin",
     "--header-weight": "100",
@@ -113,6 +119,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--header-size": "2rem",
     "--header-line-height": "1.3",
     "--header-letter-spacing": "-0.01em",
+    "--header-color": "hsl(var(--foreground))",
 
     "--paragraph-font": "plantin",
     "--paragraph-weight": "400",
@@ -120,6 +127,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--paragraph-size": "1.3rem",
     "--paragraph-line-height": "1.3",
     "--paragraph-letter-spacing": "normal",
+    "--paragraph-color": "hsl(var(--foreground))",
 
     "--margin-h1": "1rem",
     "--margin-h2": "1.5rem",
