@@ -67,7 +67,7 @@ type ThemeColors = {
   "--paragraph-first-letter-enabled": "true" | "false";
   "--paragraph-first-letter-size": string;
   "--paragraph-first-letter-padding-right": string;
-  
+
   "--margin-h1": string;
   "--margin-h2": string;
   "--margin-h3": string;
@@ -124,7 +124,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--header-line-height": "1.3",
     "--header-letter-spacing": "-0.01em",
     "--header-color": "hsl(var(--foreground))",
-    
+
     "--paragraph-font": "plantin",
     "--paragraph-weight": "400",
     "--paragraph-style": "normal",
@@ -134,9 +134,9 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--paragraph-color": "hsl(var(--foreground))",
 
     "--paragraph-first-letter-enabled": "true",
-    "--paragraph-first-letter-size": "8rem",
+    "--paragraph-first-letter-size": "6.5rem",
     "--paragraph-first-letter-padding-right": "1rem",
-    
+
     "--margin-h1": "1rem",
     "--margin-h2": "1.5rem",
     "--margin-h3": "2rem",
