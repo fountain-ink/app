@@ -18,6 +18,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const ThemeProvider = ({ children }: PropsWithChildren) => {
   const { theme: storedTheme, setTheme: setStoredTheme } = useStorage();
   const [theme, setTheme] = useState<ThemeType>(() => (isValidTheme(storedTheme) ? storedTheme : defaultTheme));
+  
   useEffect(() => {
     const root = document.documentElement;
     for (const [property, value] of Object.entries(globalThemes[theme])) {
@@ -27,18 +28,7 @@ export const ThemeProvider = ({ children }: PropsWithChildren) => {
     }
   }, [theme]);
 
-  const setValidTheme = (newTheme: ThemeType) => {
-    if (isValidTheme(newTheme)) {
-      setTheme(newTheme);
-      setStoredTheme(newTheme);
-    } else {
-      console.warn(`Invalid theme: ${newTheme}. Falling back to default theme.`);
-      setTheme(defaultTheme);
-      setStoredTheme(defaultTheme);
-    }
-  };
-
-  return <ThemeContext.Provider value={{ theme, setTheme: setValidTheme }}>{children}</ThemeContext.Provider>;
+  return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;
 };
 
 export const useTheme = (): ThemeContextType => {

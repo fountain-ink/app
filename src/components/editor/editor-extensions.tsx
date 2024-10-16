@@ -59,7 +59,7 @@ export const defaultExtensions = ({
   StarterKit.configure({
     paragraph: {
       HTMLAttributes: {
-        class: cx(`prose-p
+        class: (`prose-p
           first-of-type:first-letter:float-left
           first-of-type:first-letter:[font-size:var(--paragraph-first-letter-size)]
           first-of-type:first-letter:[padding-right:var(--paragraph-first-letter-padding-right)]
