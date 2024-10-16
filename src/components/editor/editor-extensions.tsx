@@ -15,19 +15,19 @@ import type { AnyExtension } from "@tiptap/react";
 import { common, createLowlight } from "lowlight";
 import { Maximize2Icon } from "lucide-react";
 import {
-    CharacterCount,
-    CodeBlockLowlight,
-    Command,
-    HorizontalRule,
-    Placeholder,
-    StarterKit,
-    TaskItem,
-    TaskList,
-    TiptapLink,
-    Twitter,
-    UpdatedImage,
-    Youtube,
-    renderItems,
+  CharacterCount,
+  CodeBlockLowlight,
+  Command,
+  HorizontalRule,
+  Placeholder,
+  StarterKit,
+  TaskItem,
+  TaskList,
+  TiptapLink,
+  Twitter,
+  UpdatedImage,
+  Youtube,
+  renderItems,
 } from "novel/extensions";
 import AutoJoiner from "tiptap-extension-auto-joiner";
 import { Markdown } from "tiptap-markdown";
@@ -59,11 +59,12 @@ export const defaultExtensions = ({
   StarterKit.configure({
     paragraph: {
       HTMLAttributes: {
-        class: (`prose-p
-          first-of-type:first-letter:float-left
-          first-of-type:first-letter:[font-size:var(--paragraph-first-letter-size)]
-          first-of-type:first-letter:[padding-right:var(--paragraph-first-letter-padding-right)]
-          `),
+        class: `prose-p
+          first-of-type:first-letter:[font-size:var(--paragraph-first-letter-size,inherit)]
+          first-of-type:first-letter:[float:var(--paragraph-first-letter-float,inherit)]
+          first-of-type:first-letter:[padding-right:var(--paragraph-first-letter-padding-right,0)]
+          first-of-type:first-letter:[padding-top:var(--paragraph-first-letter-padding-top,0)]
+          `,
       },
     },
     history: false,

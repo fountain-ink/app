@@ -48,6 +48,5 @@ export const proseClasses = [
   "prose-ul:[margin-top:var(--margin-list)] prose-ul:[margin-bottom:var(--margin-list)]",
   "prose-ol:[margin-top:var(--margin-list)] prose-ol:[margin-bottom:var(--margin-list)]",
 
-
   "focus:outline-none",
 ].join(" ");

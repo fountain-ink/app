@@ -64,9 +64,10 @@ type ThemeColors = {
   "--paragraph-line-height": string;
   "--paragraph-letter-spacing": string;
 
-  "--paragraph-first-letter-enabled": "true" | "false";
-  "--paragraph-first-letter-size": string;
-  "--paragraph-first-letter-padding-right": string;
+  "--paragraph-first-letter-size"?: string;
+  "--paragraph-first-letter-float"?: string;
+  "--paragraph-first-letter-padding-right"?: string;
+  "--paragraph-first-letter-padding-top"?: string;
 
   "--margin-h1": string;
   "--margin-h2": string;
@@ -133,9 +134,10 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--paragraph-letter-spacing": "-0.3px",
     "--paragraph-color": "hsl(var(--foreground))",
 
-    "--paragraph-first-letter-enabled": "true",
-    "--paragraph-first-letter-size": "6.5rem",
+    "--paragraph-first-letter-size": "7rem",
+    "--paragraph-first-letter-float": "left",
     "--paragraph-first-letter-padding-right": "1rem",
+    "--paragraph-first-letter-padding-top": "0.5rem",
 
     "--margin-h1": "1rem",
     "--margin-h2": "1.5rem",
