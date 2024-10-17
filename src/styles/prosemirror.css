@@ -214,7 +214,6 @@ ul[data-type="taskList"] li[data-checked="true"] > div > p {
 }
 
 /* Code blocks */
-
 pre {
   background: #0d0d0d;
   border-radius: 0.5rem;
@@ -405,3 +404,4 @@ pre {
   cursor: ew-resize;
   cursor: col-resize;
 }
+
