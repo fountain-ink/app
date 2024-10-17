@@ -7,7 +7,6 @@
 @tailwind utilities;
 
 .first-paragraph:first-letter {
-
   font-size: var(--paragraph-first-letter-size, inherit);
   float: var(--paragraph-first-letter-float, inherit);
   padding-right: var(--paragraph-first-letter-padding-right, 0);
@@ -17,7 +16,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-   	-webkit-font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 }
@@ -94,6 +93,16 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.placeholder-background {
+  background-image: url("/images/placeholder-tile.svg");
+  background-repeat: repeat;
+  background-size: 100px 100px;
+  opacity: 0.1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
 .collaboration-cursor__caret {

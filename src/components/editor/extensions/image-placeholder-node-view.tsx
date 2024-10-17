@@ -1,11 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { uploadFile } from "@/lib/upload-image";
 import { NodeViewWrapper } from "@tiptap/react";
 import { ArrowLeftRight, Maximize, Minimize, Trash2Icon, UploadIcon } from "lucide-react";
 import { useRef } from "react";
-
-import { uploadFile } from "@/lib/upload-image";
 
 const ImagePlaceholderComponent = (props: {
   node: {
@@ -14,6 +13,7 @@ const ImagePlaceholderComponent = (props: {
       width: "column" | "wide" | "full";
     };
   };
+
   updateAttributes: (attrs: Partial<{ src: string | null; width: "column" | "wide" | "full" }>) => void;
   deleteNode: () => void;
   extension: {
@@ -74,14 +74,19 @@ const ImagePlaceholderComponent = (props: {
       data-drag-handle
     >
       <div
-        className={"relative flex-grow-0 group border-2 border-dashed border-secondary hover:border-primary transition-colors duration-300 ease-in-out rounded-lg w-full"}
+        className={
+          "relative flex-grow-0 group border-2 border-secondary hover:border-primary transition-colors duration-300 ease-in-out rounded-lg w-full"
+        }
       >
         {props.node.attrs.src ? (
           <img ref={imageRef} src={props.node.attrs.src} className="w-full h-full object-cover" />
         ) : (
-          <div className="flex flex-col items-center justify-center space-y-2 w-full aspect-video">
+          <div className="flex flex-col items-center justify-center space-y-2 w-full aspect-video rounded">
             {props.extension.options.uploadIcon}
-            <Button onClick={handleUpload}>Upload Image</Button>
+            <Button className="z-20" onClick={handleUpload}>
+              Upload Image
+            </Button>
+            <div className="placeholder-background" />
           </div>
         )}
         <div className="absolute top-2 left-2 space-x-1 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-80 rounded backdrop-blur-xl">

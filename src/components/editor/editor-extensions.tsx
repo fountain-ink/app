@@ -16,19 +16,19 @@ import type { AnyExtension } from "@tiptap/react";
 import { common, createLowlight } from "lowlight";
 import { UploadIcon } from "lucide-react";
 import {
-    CharacterCount,
-    CodeBlockLowlight,
-    Command,
-    HorizontalRule,
-    Placeholder,
-    StarterKit,
-    TaskItem,
-    TaskList,
-    TiptapLink,
-    Twitter,
-    UpdatedImage,
-    Youtube,
-    renderItems,
+  CharacterCount,
+  CodeBlockLowlight,
+  Command,
+  HorizontalRule,
+  Placeholder,
+  StarterKit,
+  TaskItem,
+  TaskList,
+  TiptapLink,
+  Twitter,
+  UpdatedImage,
+  Youtube,
+  renderItems,
 } from "novel/extensions";
 import AutoJoiner from "tiptap-extension-auto-joiner";
 import { Markdown } from "tiptap-markdown";
@@ -236,11 +236,9 @@ export const defaultExtensions = ({
       class: cx("mt-4 mb-6 border-t border-muted-foreground"),
     },
   }),
-
   ImagePlaceholder.configure({
     uploadIcon: <UploadIcon className="w-12 h-12 text-muted-foreground" />,
   }),
-
   Selection,
   TrailingNode.configure({}),
 ];
