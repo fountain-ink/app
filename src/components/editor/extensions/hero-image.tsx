@@ -1,6 +1,7 @@
 import { mergeAttributes } from "@tiptap/core";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import { ImagePlaceholder, type ImagePlaceholderOptions } from "./image-placeholder";
+import ImagePlaceholderComponent from "./image-placeholder-node-view";
 
 export const HeroImage = ImagePlaceholder.extend<ImagePlaceholderOptions>({
   name: "heroImage",
@@ -58,7 +59,7 @@ export const HeroImage = ImagePlaceholder.extend<ImagePlaceholderOptions>({
   },
 
   addNodeView() {
-    return ReactNodeViewRenderer(ImageResizeComponent);
+    return ReactNodeViewRenderer(ImagePlaceholderComponent);
   },
 });
 

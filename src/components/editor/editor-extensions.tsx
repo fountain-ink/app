@@ -16,25 +16,26 @@ import type { AnyExtension } from "@tiptap/react";
 import { common, createLowlight } from "lowlight";
 import { UploadIcon } from "lucide-react";
 import {
-  CharacterCount,
-  CodeBlockLowlight,
-  Command,
-  HorizontalRule,
-  Placeholder,
-  StarterKit,
-  TaskItem,
-  TaskList,
-  TiptapLink,
-  Twitter,
-  UpdatedImage,
-  Youtube,
-  renderItems,
+    CharacterCount,
+    CodeBlockLowlight,
+    Command,
+    HorizontalRule,
+    Placeholder,
+    StarterKit,
+    TaskItem,
+    TaskList,
+    TiptapLink,
+    Twitter,
+    UpdatedImage,
+    Youtube,
+    renderItems,
 } from "novel/extensions";
 import AutoJoiner from "tiptap-extension-auto-joiner";
 import { Markdown } from "tiptap-markdown";
 import type { Doc } from "yjs";
 import BlockquoteFigure from "./extensions/blockquote-figure";
 import Figcaption from "./extensions/figcaption";
+import { HeroImage } from "./extensions/hero-image";
 import { ImagePlaceholder } from "./extensions/image-placeholder";
 import Selection from "./extensions/selection";
 import { suggestionItems } from "./extensions/slash-command";
