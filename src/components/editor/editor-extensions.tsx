@@ -8,12 +8,13 @@ import { Document } from "@tiptap/extension-document";
 import Dropcursor from "@tiptap/extension-dropcursor";
 import { Gapcursor } from "@tiptap/extension-gapcursor";
 import Heading from "@tiptap/extension-heading";
+import Paragraph from "@tiptap/extension-paragraph";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import TextAlign from "@tiptap/extension-text-align";
 import type { AnyExtension } from "@tiptap/react";
 import { common, createLowlight } from "lowlight";
-import { Maximize2Icon, UploadIcon } from "lucide-react";
+import { UploadIcon } from "lucide-react";
 import {
   CharacterCount,
   CodeBlockLowlight,
@@ -35,17 +36,12 @@ import type { Doc } from "yjs";
 import BlockquoteFigure from "./extensions/blockquote-figure";
 import Figcaption from "./extensions/figcaption";
 import { HeroImage } from "./extensions/hero-image";
-import { ImageResize } from "./extensions/image-resize";
-
 import { ImagePlaceholder } from "./extensions/image-placeholder";
-
 import Selection from "./extensions/selection";
 import { suggestionItems } from "./extensions/slash-command";
 import { TrailingNode } from "./extensions/trailing-node";
-
-import Paragraph from "@tiptap/extension-paragraph";
-import { UploadImagesPlugin } from "./plugins/image-upload";
 import { FirstParagraphPlugin } from "./plugins/first-paragraph-plugin";
+import { UploadImagesPlugin } from "./plugins/image-upload";
 
 interface EditorExtensionsProps {
   provider?: HocuspocusProvider | null;
@@ -186,7 +182,6 @@ export const defaultExtensions = ({
       class: cx("rounded-lg border border-muted"),
     },
   }),
-  ImageResize.configure({ inline: false, resizeIcon: <Maximize2Icon className="rotate-90" /> }),
   HeroImage.extend({
     name: "heroImage",
   }).configure({
@@ -244,8 +239,8 @@ export const defaultExtensions = ({
 
   ImagePlaceholder.configure({
     uploadIcon: <UploadIcon className="w-12 h-12 text-muted-foreground" />,
-  }),  
-  
+  }),
+
   Selection,
   TrailingNode.configure({}),
 ];
