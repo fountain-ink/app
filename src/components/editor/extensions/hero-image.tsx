@@ -1,9 +1,8 @@
 import { mergeAttributes } from "@tiptap/core";
 import { ReactNodeViewRenderer } from "@tiptap/react";
-import { type ImageOptions, ImageResize } from "./image-resize";
-import ImageResizeComponent from "./image-resize-node-view";
+import { ImagePlaceholder, type ImagePlaceholderOptions } from "./image-placeholder";
 
-export const HeroImage = ImageResize.extend<ImageOptions>({
+export const HeroImage = ImagePlaceholder.extend<ImagePlaceholderOptions>({
   name: "heroImage",
 
   addOptions() {

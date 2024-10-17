@@ -35,7 +35,6 @@ import { Markdown } from "tiptap-markdown";
 import type { Doc } from "yjs";
 import BlockquoteFigure from "./extensions/blockquote-figure";
 import Figcaption from "./extensions/figcaption";
-import { HeroImage } from "./extensions/hero-image";
 import { ImagePlaceholder } from "./extensions/image-placeholder";
 import Selection from "./extensions/selection";
 import { suggestionItems } from "./extensions/slash-command";
