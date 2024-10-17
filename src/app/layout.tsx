@@ -19,6 +19,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
     <html lang="en">
       <head>
         <link rel="stylesheet" href="https://use.typekit.net/ybe1bqw.css"/>
+        <script defer src="https://stats.pingpad.io/script.js" data-website-id="8e92ba2d-871c-4ebf-b339-e2931b8d6bed"/>
       </head>
       <body>
         <Web3Providers>
