@@ -7,7 +7,7 @@ export const proseClasses = [
 
   "prose-h1:[color:var(--title-color)]",
   "prose-h1:[margin-top:var(--margin-h1)] prose-h1:[margin-bottom:var(--margin-h1)]",
-      "prose-h1:text-6xl",
+  "prose-h1:text-6xl",
   "prose-h1:[text-align:var(--title-align)]",
   "prose-h1:font-[family-name:var(--title-font)]",
   "prose-h1:font-[var(--title-weight)]",
