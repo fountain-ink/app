@@ -2,9 +2,9 @@
 
 import { WidthColumn, WidthFull, WidthWide } from "@/components/custom-icons";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { uploadFile } from "@/lib/upload-image";
 import { NodeViewWrapper } from "@tiptap/react";
-import { Trash2Icon, UploadIcon } from "lucide-react";
 import { useRef } from "react";
 
 const ImageComponent = (props: {
@@ -90,29 +90,26 @@ const ImageComponent = (props: {
             <div className="placeholder-background" />
           </div>
         )}
-        <div className="absolute inset-x-0 -top-4 space-x-1 w-full flex justify-center opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-80 ">
-          <div className="w-fit rounded-md backdrop-blur-xl bg-card">
-            <Button size="icon" className="bg-transparent hover:text-primary hover:bg-transparent" onClick={() => handleWidth("column")}>
+        <div className="absolute inset-x-0 -top-4 space-x-1 w-full flex justify-center items-center h-fit opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100 ">
+          <div className="w-fit rounded-md border border-border backdrop-blur-xl bg-card flex justify-center items-center h-10">
+            <Button size="icon" variant="muted" onClick={() => handleWidth("column")}>
               <WidthColumn />
             </Button>
-            <Button size="icon" className="bg-transparent" onClick={() => handleWidth("wide")}>
+            <Button size="icon" variant="muted" onClick={() => handleWidth("wide")}>
               <WidthWide />
             </Button>
-            <Button size="icon" className="bg-transparent" onClick={() => handleWidth("full")}>
+            <Button size="icon" variant="muted" onClick={() => handleWidth("full")}>
               <WidthFull />
+            </Button>
+            <Separator className="m-2 h-6" orientation="vertical" />
+            <Button className="w-fit px-2" variant="muted" onClick={handleRemove}>
+              Remove
+            </Button>
+            <Button className="w-fit px-2" variant="muted" onClick={handleUpload}>
+              Change
             </Button>
           </div>
         </div>
-        {props.node.attrs.src && (
-          <div className="absolute top-2 right-2 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-80 bg-background/0 rounded backdrop-blur-sm flex">
-            <Button size="sm" onClick={handleUpload} className="mr-1">
-              <UploadIcon size={16} />
-            </Button>
-            <Button size="sm" onClick={handleRemove}>
-              <Trash2Icon size={16} />
-            </Button>
-          </div>
-        )}
       </div>
     </NodeViewWrapper>
   );

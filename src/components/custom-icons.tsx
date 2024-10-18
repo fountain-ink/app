@@ -66,39 +66,6 @@ export const GraphicHand = () => {
   );
 };
 
-export const WidthColumn = () => (
-  <svg width="36" height="37" viewBox="0 0 36 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g opacity="0.8">
-      <rect x="10" y="10.5" width="17" height="1.5" rx="0.75" fill="currentColor" />
-      <rect x="10" y="24.5" width="17" height="1.5" rx="0.75" fill="currentColor" />
-      <rect x="10" y="12.5" width="17" height="11.5" rx="2" fill="currentColor" />
-    </g>
-  </svg>
-);
-
-export const WidthFull = () => (
-  <svg width="36" height="37" viewBox="0 0 36 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g opacity="0.8">
-      <g opacity="0.4">
-        <rect x="13" y="24.5" width="11" height="1.5" rx="0.75" fill="currentColor" />
-        <rect x="9" y="10.5" width="19" height="13" fill="currentColor" />
-      </g>
-    </g>
-  </svg>
-);
-
-export const WidthWide = () => (
-  <svg width="36" height="37" viewBox="0 0 36 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g opacity="0.8">
-      <g opacity="0.4">
-        <rect x="13" y="10.5" width="11" height="1.5" rx="0.75" fill="currentColor" />
-        <rect x="13" y="24.5" width="11" height="1.5" rx="0.75" fill="currentColor" />
-        <rect x="10" y="12.5" width="17" height="11.5" rx="2" fill="currentColor" />
-      </g>
-    </g>
-  </svg>
-);
-
 export const GraphicInk = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, {
@@ -148,3 +115,36 @@ export const GraphicInk = () => {
     </svg>
   );
 };
+
+export const WidthColumn = () => (
+  <svg width="36" height="37" viewBox="0 0 36 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g>
+      <rect x="10" y="10.5" width="17" height="1.5" rx="0.75" fill="currentColor" />
+      <rect x="10" y="24.5" width="17" height="1.5" rx="0.75" fill="currentColor" />
+      <rect x="10" y="12.5" width="17" height="11.5" rx="2" fill="currentColor" />
+    </g>
+  </svg>
+);
+
+export const WidthFull = () => (
+  <svg width="36" height="37" viewBox="0 0 36 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g>
+      <g>
+        <rect x="13" y="24.5" width="11" height="1.5" rx="0.75" fill="currentColor" />
+        <rect x="9" y="10.5" width="19" height="13" fill="currentColor" />
+      </g>
+    </g>
+  </svg>
+);
+
+export const WidthWide = () => (
+  <svg width="36" height="37" viewBox="0 0 36 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g>
+      <g>
+        <rect x="13" y="10.5" width="11" height="1.5" rx="0.75" fill="currentColor" />
+        <rect x="13" y="24.5" width="11" height="1.5" rx="0.75" fill="currentColor" />
+        <rect x="10" y="12.5" width="17" height="11.5" rx="2" fill="currentColor" />
+      </g>
+    </g>
+  </svg>
+);
