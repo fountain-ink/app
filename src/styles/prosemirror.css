@@ -290,11 +290,11 @@ pre {
   }
 }
 
-
 .ProseMirror {
-  p.is-empty.is-editor-empty:first-child::before {
+  p.is-empty::before {
     @apply float-left h-0 pointer-events-none absolute ml-[2px];
-    content: "sfoaisjdf";
+
+    content: attr(data-placeholder);
   }
 
   h2.is-empty::before {

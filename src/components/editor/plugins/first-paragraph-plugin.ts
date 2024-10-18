@@ -12,11 +12,8 @@ export const FirstParagraphPlugin = () => {
       },
       apply(tr, oldSet) {
         let newSet = oldSet.map(tr.mapping, tr.doc);
-
-        // Remove all existing decorations
         newSet = newSet.remove(newSet.find());
 
-        // Find the first non-empty paragraph that is a direct child of the document
         let firstParagraphPos: number | null = null;
         tr.doc.forEach((node, pos) => {
           if (firstParagraphPos === null && node.type.name === "paragraph" && node.isBlock) {
