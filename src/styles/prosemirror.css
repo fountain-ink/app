@@ -290,19 +290,19 @@ pre {
   }
 }
 
-.ProseMirror {
-  p.is-empty::before {
-    @apply float-left h-0 pointer-events-none absolute ml-[2px];
 
-    content: attr(data-placeholder);
+.ProseMirror {
+  p.is-empty.is-editor-empty:first-child::before {
+    @apply float-left h-0 pointer-events-none absolute ml-[2px];
+    content: "sfoaisjdf";
   }
-  
+
   h2.is-empty::before {
     @apply pointer-events-none absolute ml-[2px];
 
     content: attr(data-placeholder);
   }
-  
+
   .media-node-view {
     @apply flex relative w-full my-2;
 

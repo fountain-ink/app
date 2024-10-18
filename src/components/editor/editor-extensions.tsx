@@ -20,7 +20,6 @@ import {
   CodeBlockLowlight,
   Command,
   HorizontalRule,
-  Placeholder,
   StarterKit,
   TaskItem,
   TaskList,
@@ -37,6 +36,7 @@ import BlockquoteFigure from "./extensions/blockquote-figure";
 import Figcaption from "./extensions/figcaption";
 import { HeroImage } from "./extensions/hero-image";
 import { Image } from "./extensions/image";
+import { Placeholder } from "./extensions/placeholder";
 import Selection from "./extensions/selection";
 import { suggestionItems } from "./extensions/slash-command";
 import { TrailingNode } from "./extensions/trailing-node";
@@ -137,9 +137,10 @@ export const defaultExtensions = ({
   Superscript,
   Figcaption,
   BlockquoteFigure,
+
   Placeholder.configure({
     showOnlyCurrent: true,
-    showOnlyWhenEditable: false,
+    alwaysShowForNodes: ["title", "subtitle"],
     placeholder: ({ node }) => {
       if (node.type.name === "title") {
         return "Title";
