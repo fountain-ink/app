@@ -94,15 +94,31 @@ const ImageComponent = (props: {
             <img ref={imageRef} src={props.node.attrs.src} className="w-full h-full object-cover" />
             <div className="absolute inset-x-0 -top-4 space-x-1 w-full flex justify-center items-center h-fit opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100 ">
               <div className="w-fit rounded-sm border border-border backdrop-blur-xl bg-card flex justify-center items-center h-10">
-                <Button size="icon" variant="muted" onClick={() => handleWidth("column")}>
+                <Button
+                  size="icon"
+                  variant="muted" 
+                  className={width === "column" ? "text-primary" : "muted"}
+                  onClick={() => handleWidth("column")}
+                >
                   <WidthColumn />
                 </Button>
-                <Button size="icon" variant="muted" onClick={() => handleWidth("wide")}>
+                <Button
+                  size="icon"
+                  variant="muted" 
+                  className={width === "wide" ? "text-primary" : "muted"}
+                  onClick={() => handleWidth("wide")}
+                >
                   <WidthWide />
                 </Button>
-                <Button size="icon" variant="muted" onClick={() => handleWidth("full")}>
+                <Button
+                  size="icon"
+                  variant="muted" 
+                  className={width === "full" ? "text-primary" : "muted"}
+                  onClick={() => handleWidth("full")}
+                >
                   <WidthFull />
                 </Button>
+
                 <Separator className="m-2 h-6" orientation="vertical" />
                 <Button className="w-fit px-2" variant="muted" onClick={handleUpload}>
                   {props.node.attrs.src ? "Change" : "Upload"}
