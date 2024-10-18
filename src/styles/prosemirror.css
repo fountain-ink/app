@@ -6,6 +6,19 @@
   pointer-events: none;
   height: 0;
 }
+.ProseMirror h1.is-empty,
+.ProseMirror h2.is-empty {
+  position: relative;
+}
+
+.ProseMirror h1.is-empty::before,
+.ProseMirror h2.is-empty::before {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  content: attr(data-placeholder);
+  pointer-events: none;
+}
 
 .ProseMirror h1.is-empty::before {
   text-align: var(--title-align);
@@ -78,8 +91,8 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    border: 3px solid var(--novel-stone-200);
-    border-top-color: var(--novel-stone-800);
+    border: 3px solid var(--muted);
+    border-top-color: var(--muted);
     animation: spinning 0.6s linear infinite;
   }
 }
@@ -280,7 +293,7 @@ pre {
 
 .ProseMirror {
   p.is-empty::before {
-    @apply text-slate-400 float-left h-0 pointer-events-none absolute ml-[2px];
+    @apply float-left h-0 pointer-events-none absolute ml-[2px];
 
     content: attr(data-placeholder);
   }

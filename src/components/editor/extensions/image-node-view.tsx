@@ -102,11 +102,11 @@ const ImageComponent = (props: {
               <WidthFull />
             </Button>
             <Separator className="m-2 h-6" orientation="vertical" />
-            <Button className="w-fit px-2" variant="muted" onClick={handleRemove}>
-              Remove
-            </Button>
             <Button className="w-fit px-2" variant="muted" onClick={handleUpload}>
               Change
+            </Button>
+            <Button className="w-fit px-2" variant="muted" onClick={handleRemove}>
+              Remove
             </Button>
           </div>
         </div>

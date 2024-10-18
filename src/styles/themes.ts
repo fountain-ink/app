@@ -85,26 +85,30 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
   editorial: {
     "--card": "0 0%	99%",
     "--popover": "0 0% 99%",
-    "--muted": "210 40% 96.1%",
     "--destructive": "0 84.2% 60.2%",
     "--border": "214.3 31.8% 91.4%",
     "--input": "214.3 31.8% 91.4%",
     "--ring": "222.2 84% 4.9%",
     "--card-foreground": "222.2 84% 4.9%",
     "--popover-foreground": "222.2 84% 4.9%",
+    
+    "--primary": "213 18% 20%",
     "--primary-foreground": "210 40% 98%",
+    "--secondary": "210 40%, 96%",
     "--secondary-foreground": "222.2 47.4% 99.2%",
-    "--muted-foreground": "0, 0%, 39.6%",
-    "--accent-foreground": "222.2 47.4% 11.2%",
+    "--muted": "210 40% 96.1%",
+    "--muted-foreground": "0 0% 56%",
+    
     "--destructive-foreground": "210 40% 98%",
 
     "--radius": "1.0rem",
 
     "--foreground": "0 0% 11%",
     "--background": "0 0% 96%",
-    "--primary": "213 18% 20%",
-    "--secondary": "210 40%, 96%",
+    
+    
     "--accent": "210 40% 96%",
+    "--accent-foreground": "222.2 47.4% 11.2%",
 
     "--title-font": "plantin",
     "--title-weight": "300",
