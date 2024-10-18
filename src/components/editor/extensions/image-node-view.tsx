@@ -78,7 +78,7 @@ const ImageComponent = (props: {
   return (
     <NodeViewWrapper
       ref={wrapperRef}
-      className={`flex relative justify-center ${widthClass}`}
+      className={`flex relative my-[length:--image-margin-y] justify-center ${widthClass}`}
       contentEditable="false"
       data-drag-handle
     >

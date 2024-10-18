@@ -74,6 +74,8 @@ type ThemeColors = {
   "--paragraph-first-letter-padding-right"?: string;
   "--paragraph-first-letter-padding-top"?: string;
 
+  "--image-margin-y": string;
+  
   "--margin-h1": string;
   "--margin-h2": string;
   "--margin-h3": string;
@@ -152,6 +154,8 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--paragraph-first-letter-padding-right": "1rem",
     "--paragraph-first-letter-padding-top": "0.5rem",
 
+    "--image-margin-y": "2rem",
+    
     "--margin-h1": "1rem",
     "--margin-h2": "1.5rem",
     "--margin-h3": "2rem",
