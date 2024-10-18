@@ -1,11 +1,14 @@
 "use client";
 
 import { WidthColumn, WidthFull, WidthWide } from "@/components/custom-icons";
+import { LoadingSpinner } from "@/components/loading-spinner";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { uploadFile } from "@/lib/upload-image";
 import { NodeViewWrapper } from "@tiptap/react";
 import { useRef } from "react";
+
+import { useState } from "react";
 
 const ImageComponent = (props: {
   node: {
@@ -26,6 +29,7 @@ const ImageComponent = (props: {
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleWidth = (width: "column" | "wide" | "full") => {
     props.updateAttributes({ width });
@@ -39,10 +43,13 @@ const ImageComponent = (props: {
       const file = (event.target as HTMLInputElement).files?.[0];
       if (file) {
         try {
+          setIsLoading(true);
           const newSrc = await uploadFile(file);
           props.updateAttributes({ src: newSrc });
         } catch (error) {
           console.error("Error uploading image:", error);
+        } finally {
+          setIsLoading(false);
         }
       }
     };
@@ -76,9 +83,11 @@ const ImageComponent = (props: {
       data-drag-handle
     >
       <div
-        className={
-          "flex-grow-0 group border-2 border-muted-foreground group-hover:border-primary transition-colors duration-300 ease-in-out rounded-lg w-full"
-        }
+        className={`
+        flex-grow-0 group border-2 border-muted-foreground group-hover:border-primary
+        transition-colors duration-300 ease-in-out rounded-lg w-full
+        ${isLoading ? "animate-pulse-slow transition-all duration-1000 delay-0" : ""}
+      `}
       >
         {props.node.attrs.src ? (
           <>
@@ -106,9 +115,18 @@ const ImageComponent = (props: {
           </>
         ) : (
           <div className="flex flex-col items-center justify-center space-y-2 w-full aspect-video rounded">
-            <Button className="z-20 flex gap-2" variant="muted" onClick={handleUpload}>
-              {props.extension.options.uploadIcon}
-              Upload Image
+            <Button className="z-20 flex gap-2" variant="muted" onClick={handleUpload} disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <LoadingSpinner />
+                  Uploading...
+                </>
+              ) : (
+                <>
+                  {props.extension.options.uploadIcon}
+                  Upload Image
+                </>
+              )}
             </Button>
             <div className="placeholder-background" />
           </div>
