@@ -1,10 +1,11 @@
 import { Node, mergeAttributes } from "@tiptap/core";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import { createElement } from "react";
-import ImagePlaceholderComponent from "./image-placeholder-node-view";
+import ImageComponent from "./image-node-view";
 
 type WidthOptions = "column" | "wide" | "full";
-export interface ImagePlaceholderOptions {
+
+export interface ImageOptions {
   HTMLAttributes: Record<string, any>;
   uploadIcon: React.ReactNode;
   width?: WidthOptions;
@@ -12,14 +13,14 @@ export interface ImagePlaceholderOptions {
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
-    imagePlaceholder: {
-      setImagePlaceholder: (options: { width?: WidthOptions }) => ReturnType;
+    image: {
+      setImage: (options: { width?: WidthOptions }) => ReturnType;
     };
   }
 }
 
-export const ImagePlaceholder = Node.create<ImagePlaceholderOptions>({
-  name: "imagePlaceholder",
+export const Image = Node.create<ImageOptions>({
+  name: "image",
 
   addOptions() {
     return {
@@ -53,7 +54,7 @@ export const ImagePlaceholder = Node.create<ImagePlaceholderOptions>({
               style += "width: 100vw; max-width: 1800px;";
               className = "!w-screen !max-w-[1800px] mx-auto";
               break;
-            default: 
+            default:
               style += "width: 100%;";
               className = "!max-w-full";
           }
@@ -67,18 +68,18 @@ export const ImagePlaceholder = Node.create<ImagePlaceholderOptions>({
   parseHTML() {
     return [
       {
-        tag: "image-placeholder",
+        tag: "image",
       },
     ];
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ["image-placeholder", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)];
+    return ["image", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)];
   },
 
   addCommands() {
     return {
-      setImagePlaceholder:
+      setImage:
         (options) =>
         ({ commands }) => {
           return commands.insertContent({
@@ -90,6 +91,6 @@ export const ImagePlaceholder = Node.create<ImagePlaceholderOptions>({
   },
 
   addNodeView() {
-    return ReactNodeViewRenderer(ImagePlaceholderComponent);
+    return ReactNodeViewRenderer(ImageComponent);
   },
 });

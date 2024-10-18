@@ -36,7 +36,7 @@ import type { Doc } from "yjs";
 import BlockquoteFigure from "./extensions/blockquote-figure";
 import Figcaption from "./extensions/figcaption";
 import { HeroImage } from "./extensions/hero-image";
-import { ImagePlaceholder } from "./extensions/image-placeholder";
+import { Image } from "./extensions/image";
 import Selection from "./extensions/selection";
 import { suggestionItems } from "./extensions/slash-command";
 import { TrailingNode } from "./extensions/trailing-node";
@@ -236,7 +236,7 @@ export const defaultExtensions = ({
       class: cx("mt-4 mb-6 border-t border-muted-foreground"),
     },
   }),
-  ImagePlaceholder.configure({
+  Image.configure({
     uploadIcon: <UploadIcon className="w-12 h-12 text-muted-foreground" />,
   }),
   Selection,

@@ -28,7 +28,7 @@ export const suggestionItems = createSuggestionItems([
     searchTerms: ["photo", "picture", "media", "image", "placeholder"],
     icon: <ImageIcon size={18} />,
     command: ({ editor, range }) => {
-      editor.chain().focus().deleteRange(range).setImagePlaceholder({ width: "column" }).run();
+      editor.chain().focus().deleteRange(range).setImage({ width: "column" }).run();
     },
   },
   // {

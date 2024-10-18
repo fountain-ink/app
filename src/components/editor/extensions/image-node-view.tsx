@@ -6,7 +6,7 @@ import { NodeViewWrapper } from "@tiptap/react";
 import { ArrowLeftRight, Maximize, Minimize, Trash2Icon, UploadIcon } from "lucide-react";
 import { useRef } from "react";
 
-const ImagePlaceholderComponent = (props: {
+const ImageComponent = (props: {
   node: {
     attrs: {
       src: string | null;
@@ -115,4 +115,4 @@ const ImagePlaceholderComponent = (props: {
   );
 };
 
-export default ImagePlaceholderComponent;
+export default ImageComponent;

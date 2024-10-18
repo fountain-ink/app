@@ -1,5 +1,5 @@
 import { Node, mergeAttributes } from "@tiptap/core";
-import { ImagePlaceholder } from "./image-placeholder";
+import { Image } from "./image";
 
 export const Figcaption = Node.create({
   name: "figcaption",
@@ -69,7 +69,7 @@ export const Figcaption = Node.create({
 
         // if the node before is of type image, don't do anything
         const nodeBefore = editor.state.doc.nodeAt($from.pos - 2);
-        if (nodeBefore?.type.name === ImagePlaceholder.name) {
+        if (nodeBefore?.type.name === Image.name) {
           return true;
         }
 
