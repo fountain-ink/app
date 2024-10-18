@@ -106,10 +106,12 @@ export const defaultExtensions = ({
   }),
   Heading.extend({
     name: "title",
+    group: "title",
     topNode: true,
   }).configure({ levels: [1] }),
   Heading.extend({
     name: "subtitle",
+    group: "subtitle",
     topNode: true,
   }).configure({
     levels: [2],
