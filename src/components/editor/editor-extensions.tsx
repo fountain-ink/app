@@ -240,7 +240,7 @@ export const defaultExtensions = ({
     },
   }),
   Image.configure({
-    uploadIcon: <UploadIcon className="w-12 h-12 text-muted-foreground" />,
+    uploadIcon: <UploadIcon  size={16} />,
   }),
   Selection,
   TrailingNode.configure({}),

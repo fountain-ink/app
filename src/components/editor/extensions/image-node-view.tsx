@@ -50,6 +50,7 @@ const ImageComponent = (props: {
   };
 
   const handleRemove = () => {
+    // TODO: Remove from ipfs
     props.updateAttributes({ src: null });
   };
 
@@ -76,40 +77,42 @@ const ImageComponent = (props: {
     >
       <div
         className={
-          "flex-grow-0 group border-2 border-secondary hover:border-primary transition-colors duration-300 ease-in-out rounded-lg w-full"
+          "flex-grow-0 group border-2 border-muted-foreground group-hover:border-primary transition-colors duration-300 ease-in-out rounded-lg w-full"
         }
       >
         {props.node.attrs.src ? (
-          <img ref={imageRef} src={props.node.attrs.src} className="w-full h-full object-cover" />
+          <>
+            <img ref={imageRef} src={props.node.attrs.src} className="w-full h-full object-cover" />
+            <div className="absolute inset-x-0 -top-4 space-x-1 w-full flex justify-center items-center h-fit opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100 ">
+              <div className="w-fit rounded-md border border-border backdrop-blur-xl bg-card flex justify-center items-center h-10">
+                <Button size="icon" variant="muted" onClick={() => handleWidth("column")}>
+                  <WidthColumn />
+                </Button>
+                <Button size="icon" variant="muted" onClick={() => handleWidth("wide")}>
+                  <WidthWide />
+                </Button>
+                <Button size="icon" variant="muted" onClick={() => handleWidth("full")}>
+                  <WidthFull />
+                </Button>
+                <Separator className="m-2 h-6" orientation="vertical" />
+                <Button className="w-fit px-2" variant="muted" onClick={handleUpload}>
+                  {props.node.attrs.src ? "Change" : "Upload"}
+                </Button>
+                <Button className="w-fit px-2" variant="muted" onClick={handleRemove}>
+                  Remove
+                </Button>
+              </div>
+            </div>
+          </>
         ) : (
           <div className="flex flex-col items-center justify-center space-y-2 w-full aspect-video rounded">
-            {props.extension.options.uploadIcon}
-            <Button className="z-20" onClick={handleUpload}>
+            <Button className="z-20 flex gap-2" variant="muted" onClick={handleUpload}>
+              {props.extension.options.uploadIcon}
               Upload Image
             </Button>
             <div className="placeholder-background" />
           </div>
         )}
-        <div className="absolute inset-x-0 -top-4 space-x-1 w-full flex justify-center items-center h-fit opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100 ">
-          <div className="w-fit rounded-md border border-border backdrop-blur-xl bg-card flex justify-center items-center h-10">
-            <Button size="icon" variant="muted" onClick={() => handleWidth("column")}>
-              <WidthColumn />
-            </Button>
-            <Button size="icon" variant="muted" onClick={() => handleWidth("wide")}>
-              <WidthWide />
-            </Button>
-            <Button size="icon" variant="muted" onClick={() => handleWidth("full")}>
-              <WidthFull />
-            </Button>
-            <Separator className="m-2 h-6" orientation="vertical" />
-            <Button className="w-fit px-2" variant="muted" onClick={handleUpload}>
-              Change
-            </Button>
-            <Button className="w-fit px-2" variant="muted" onClick={handleRemove}>
-              Remove
-            </Button>
-          </div>
-        </div>
       </div>
     </NodeViewWrapper>
   );
