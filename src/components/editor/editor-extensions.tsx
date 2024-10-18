@@ -137,10 +137,10 @@ export const defaultExtensions = ({
   Superscript,
   Figcaption,
   BlockquoteFigure,
-
   Placeholder.configure({
     showOnlyCurrent: true,
     alwaysShowForNodes: ["title", "subtitle"],
+    firstParagraphPlaceholder: "Write your story...",
     placeholder: ({ node }) => {
       if (node.type.name === "title") {
         return "Title";

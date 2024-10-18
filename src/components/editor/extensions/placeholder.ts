@@ -45,16 +45,31 @@ export interface PlaceholderOptions {
    * @default true
    */
 
-   /**
-    * **An array of node names for which the placeholder should always be shown**
-    *
-    * If provided, the placeholder will always be shown for these nodes, regardless of their content.
-    * @default []
-    */
-   alwaysShowForNodes: string[];
-   
-   
-   showOnlyWhenEditable: boolean;
+  /**
+   * **An array of node names for which the placeholder should always be shown**
+   *
+   * If provided, the placeholder will always be shown for these nodes, regardless of their content.
+   * @default []
+   */
+
+  /**
+   * **The placeholder content for the first paragraph**
+   *
+   * You can use a string or a function to return a dynamic placeholder for the first paragraph.
+   * @default undefined
+   */
+  firstParagraphPlaceholder?:
+    | ((PlaceholderProps: {
+        editor: Editor;
+        node: ProsemirrorNode;
+        pos: number;
+        hasAnchor: boolean;
+      }) => string)
+    | string;
+
+  alwaysShowForNodes: string[];
+
+  showOnlyWhenEditable: boolean;
 
   /**
    * **Checks if the placeholder should be only shown when the current node is empty.**
@@ -91,6 +106,7 @@ export const Placeholder = Extension.create<PlaceholderOptions>({
       showOnlyCurrent: true,
       includeChildren: false,
       alwaysShowForNodes: [],
+      firstParagraphPlaceholder: undefined,
     };
   },
 
@@ -109,6 +125,7 @@ export const Placeholder = Extension.create<PlaceholderOptions>({
             }
 
             const isEmptyDoc = this.editor.isEmpty;
+            let isFirstParagraph = true;
 
             doc.descendants((node, pos) => {
               const hasAnchor = anchor >= pos && anchor <= pos + node.nodeSize;
@@ -122,9 +139,20 @@ export const Placeholder = Extension.create<PlaceholderOptions>({
                   classes.push(this.options.emptyEditorClass);
                 }
 
-                const decoration = Decoration.node(pos, pos + node.nodeSize, {
-                  class: classes.join(" "),
-                  "data-placeholder":
+                let placeholderText: string;
+                if (isFirstParagraph && node.type.name === "paragraph" && this.options.firstParagraphPlaceholder) {
+                  placeholderText =
+                    typeof this.options.firstParagraphPlaceholder === "function"
+                      ? this.options.firstParagraphPlaceholder({
+                          editor: this.editor,
+                          node,
+                          pos,
+                          hasAnchor,
+                        })
+                      : this.options.firstParagraphPlaceholder;
+                  isFirstParagraph = false;
+                } else {
+                  placeholderText =
                     typeof this.options.placeholder === "function"
                       ? this.options.placeholder({
                           editor: this.editor,
@@ -132,10 +160,19 @@ export const Placeholder = Extension.create<PlaceholderOptions>({
                           pos,
                           hasAnchor,
                         })
-                      : this.options.placeholder,
+                      : this.options.placeholder;
+                }
+
+                const decoration = Decoration.node(pos, pos + node.nodeSize, {
+                  class: classes.join(" "),
+                  "data-placeholder": placeholderText,
                 });
 
                 decorations.push(decoration);
+              }
+
+              if (node.type.name === "paragraph" && !isEmpty) {
+                isFirstParagraph = false;
               }
 
               return this.options.includeChildren;
