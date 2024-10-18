@@ -16,20 +16,25 @@ export const FirstParagraphPlugin = () => {
         // Remove all existing decorations
         newSet = newSet.remove(newSet.find());
 
-        // Find the first paragraph
+        // Find the first non-empty paragraph that is a direct child of the document
         let firstParagraphPos: number | null = null;
-        tr.doc.nodesBetween(0, tr.doc.content.size, (node, pos) => {
-          if (firstParagraphPos === null && node.type.name === "paragraph") {
-            firstParagraphPos = pos;
-            return false; // Stop searching
+        tr.doc.forEach((node, pos) => {
+          if (firstParagraphPos === null && node.type.name === "paragraph" && node.isBlock) {
+            const content = node.textContent.trim();
+
+            if (content.length > 0 && /^[a-zA-Z0-9]/.test(content)) {
+              firstParagraphPos = pos;
+              return false; // Stop searching
+            }
           }
-          return true;
         });
 
         if (firstParagraphPos !== null) {
           const node = tr.doc.nodeAt(firstParagraphPos);
           if (node) {
-            const decoration = Decoration.node(firstParagraphPos, firstParagraphPos + node.nodeSize, { class: "first-paragraph" });
+            const decoration = Decoration.node(firstParagraphPos, firstParagraphPos + node.nodeSize, {
+              class: "first-paragraph",
+            });
             newSet = newSet.add(tr.doc, [decoration]);
           }
         }

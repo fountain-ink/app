@@ -13,6 +13,11 @@
   padding-top: var(--paragraph-first-letter-padding-top, 0);
 }
 
+p.first-paragraph {
+  min-height: 4rem;
+  overflow: hidden;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
