@@ -133,7 +133,11 @@ export const Placeholder = Extension.create<PlaceholderOptions>({
               const shouldAlwaysShow = this.options.alwaysShowForNodes.includes(node.type.name);
 
               if ((hasAnchor || !this.options.showOnlyCurrent || shouldAlwaysShow) && (isEmpty || shouldAlwaysShow)) {
-                const classes = [this.options.emptyNodeClass];
+                const classes = [];
+
+                if (isEmpty) {
+                  classes.push(this.options.emptyNodeClass);
+                }
 
                 if (isEmptyDoc) {
                   classes.push(this.options.emptyEditorClass);
@@ -163,12 +167,14 @@ export const Placeholder = Extension.create<PlaceholderOptions>({
                       : this.options.placeholder;
                 }
 
-                const decoration = Decoration.node(pos, pos + node.nodeSize, {
-                  class: classes.join(" "),
-                  "data-placeholder": placeholderText,
-                });
+                if (classes.length > 0 || placeholderText) {
+                  const decoration = Decoration.node(pos, pos + node.nodeSize, {
+                    class: classes.join(" "),
+                    "data-placeholder": placeholderText,
+                  });
 
-                decorations.push(decoration);
+                  decorations.push(decoration);
+                }
               }
 
               if (node.type.name === "paragraph" && !isEmpty) {
