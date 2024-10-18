@@ -78,9 +78,12 @@ const ImageComponent = (props: {
   return (
     <NodeViewWrapper
       ref={wrapperRef}
-      className={`flex relative my-[--image-margin-y] justify-center ${widthClass}`}
+      className={`
+        flex rounded-sm focus:ring-2 focus:ring-primary relative my-[--image-margin-y] justify-center ${widthClass}
+      `}
       contentEditable="false"
       data-drag-handle
+      tabIndex={0}
     >
       <div
         className={`
@@ -96,7 +99,7 @@ const ImageComponent = (props: {
               <div className="w-fit rounded-sm border border-border backdrop-blur-xl bg-card flex justify-center items-center h-10">
                 <Button
                   size="icon"
-                  variant="muted" 
+                  variant="muted"
                   className={width === "column" ? "text-primary" : "muted"}
                   onClick={() => handleWidth("column")}
                 >
@@ -104,7 +107,7 @@ const ImageComponent = (props: {
                 </Button>
                 <Button
                   size="icon"
-                  variant="muted" 
+                  variant="muted"
                   className={width === "wide" ? "text-primary" : "muted"}
                   onClick={() => handleWidth("wide")}
                 >
@@ -112,7 +115,7 @@ const ImageComponent = (props: {
                 </Button>
                 <Button
                   size="icon"
-                  variant="muted" 
+                  variant="muted"
                   className={width === "full" ? "text-primary" : "muted"}
                   onClick={() => handleWidth("full")}
                 >

@@ -3,17 +3,19 @@
 import { env } from "@/env";
 import { TiptapCollabProvider } from "@hocuspocus/provider";
 import {
-  EditorBubble,
-  EditorCommand,
-  EditorCommandEmpty,
-  EditorCommandItem,
-  EditorCommandList,
-  EditorContent,
-  type EditorInstance,
-  EditorRoot,
-  type JSONContent,
+    EditorBubble,
+    EditorCommand,
+    EditorCommandEmpty,
+    EditorCommandItem,
+    EditorCommandList,
+    EditorContent,
+    type EditorInstance,
+    EditorRoot,
+    type JSONContent,
 } from "novel";
 import { useEffect, useMemo, useState } from "react";
+
+
 import * as Y from "yjs";
 import { suggestionItems } from "./extensions/slash-command";
 
@@ -125,6 +127,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
         }}
         initialContent={content}
         editorProps={{
+          
           handlePaste: (view, event) => handleImagePaste(view, event, uploadFn),
           handleDrop: (view, event, _slice, moved) => handleImageDrop(view, event, moved, uploadFn),
           handleDOMEvents: {
