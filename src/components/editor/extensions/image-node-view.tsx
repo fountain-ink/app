@@ -1,9 +1,10 @@
 "use client";
 
+import { WidthColumn, WidthFull, WidthWide } from "@/components/custom-icons";
 import { Button } from "@/components/ui/button";
 import { uploadFile } from "@/lib/upload-image";
 import { NodeViewWrapper } from "@tiptap/react";
-import { ArrowLeftRight, Maximize, Minimize, Trash2Icon, UploadIcon } from "lucide-react";
+import { Trash2Icon, UploadIcon } from "lucide-react";
 import { useRef } from "react";
 
 const ImageComponent = (props: {
@@ -69,13 +70,13 @@ const ImageComponent = (props: {
   return (
     <NodeViewWrapper
       ref={wrapperRef}
-      className={`flex justify-center ${widthClass}`}
+      className={`flex relative justify-center ${widthClass}`}
       contentEditable="false"
       data-drag-handle
     >
       <div
         className={
-          "relative flex-grow-0 group border-2 border-secondary hover:border-primary transition-colors duration-300 ease-in-out rounded-lg w-full"
+          "flex-grow-0 group border-2 border-secondary hover:border-primary transition-colors duration-300 ease-in-out rounded-lg w-full"
         }
       >
         {props.node.attrs.src ? (
@@ -89,16 +90,18 @@ const ImageComponent = (props: {
             <div className="placeholder-background" />
           </div>
         )}
-        <div className="absolute top-2 left-2 space-x-1 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-80 rounded backdrop-blur-xl">
-          <Button size="sm" onClick={() => handleWidth("column")}>
-            <Minimize size={16} />
-          </Button>
-          <Button size="sm" onClick={() => handleWidth("wide")}>
-            <ArrowLeftRight size={16} />
-          </Button>
-          <Button size="sm" onClick={() => handleWidth("full")}>
-            <Maximize size={16} />
-          </Button>
+        <div className="absolute inset-x-0 -top-4 space-x-1 w-full flex justify-center opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-80 ">
+          <div className="w-fit rounded-md backdrop-blur-xl bg-card">
+            <Button size="icon" className="bg-transparent hover:text-primary hover:bg-transparent" onClick={() => handleWidth("column")}>
+              <WidthColumn />
+            </Button>
+            <Button size="icon" className="bg-transparent" onClick={() => handleWidth("wide")}>
+              <WidthWide />
+            </Button>
+            <Button size="icon" className="bg-transparent" onClick={() => handleWidth("full")}>
+              <WidthFull />
+            </Button>
+          </div>
         </div>
         {props.node.attrs.src && (
           <div className="absolute top-2 right-2 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-80 bg-background/0 rounded backdrop-blur-sm flex">
