@@ -15,7 +15,6 @@
 .ProseMirror h2.is-empty::before {
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
   content: attr(data-placeholder);
   pointer-events: none;
 }
@@ -297,6 +296,13 @@ pre {
 
     content: attr(data-placeholder);
   }
+  
+  h2.is-empty::before {
+    @apply pointer-events-none absolute ml-[2px];
+
+    content: attr(data-placeholder);
+  }
+  
   .media-node-view {
     @apply flex relative w-full my-2;
 
