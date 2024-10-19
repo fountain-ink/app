@@ -16,17 +16,17 @@ import type { AnyExtension } from "@tiptap/react";
 import { common, createLowlight } from "lowlight";
 import { UploadIcon } from "lucide-react";
 import {
-    CharacterCount,
-    CodeBlockLowlight,
-    Command,
-    HorizontalRule,
-    StarterKit,
-    TaskItem,
-    TaskList,
-    TiptapLink,
-    Twitter,
-    Youtube,
-    renderItems
+  CharacterCount,
+  CodeBlockLowlight,
+  Command,
+  HorizontalRule,
+  StarterKit,
+  TaskItem,
+  TaskList,
+  TiptapLink,
+  Twitter,
+  Youtube,
+  renderItems,
 } from "novel/extensions";
 import AutoJoiner from "tiptap-extension-auto-joiner";
 import { Footnote, FootnoteReference, Footnotes } from "tiptap-footnotes";
@@ -38,8 +38,8 @@ import { Image } from "./extensions/image";
 import { Placeholder } from "./extensions/placeholder";
 import Selection from "./extensions/selection";
 import { suggestionItems } from "./extensions/slash-command";
-import { FirstParagraphPlugin } from "./plugins/first-paragraph-plugin";
 import { TrailingNode } from "./extensions/trailing-node";
+import { FirstParagraphPlugin } from "./plugins/first-paragraph-plugin";
 
 interface EditorExtensionsProps {
   provider?: HocuspocusProvider | null;
@@ -104,6 +104,26 @@ export const defaultExtensions = ({
     name: "title",
     marks: "",
     group: "title",
+    addKeyboardShortcuts() {
+      return {
+        Enter: () => {
+          const { editor } = this;
+          if (editor.isActive("title")) {
+            const endPos = editor.$node("title", { level: 1 })?.after?.pos || 3;
+            editor
+              .chain()
+              .focus()
+              .insertContentAt(endPos, { type: "paragraph" })
+              .focus(endPos)
+              .setNode("subtitle", { level: 2 })
+              .run();
+            return true;
+          }
+
+          return false;
+        },
+      };
+    },
   }).configure({ levels: [1] }),
   Heading.extend({
     name: "subtitle",

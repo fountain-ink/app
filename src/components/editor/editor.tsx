@@ -107,7 +107,6 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
   }, [documentId]);
   
   useEffect(() => {
-    console.log(synced, editor, content);
     if (synced && editor && content) {
       setTimeout(() => {
         editor.commands?.setContent(content);
