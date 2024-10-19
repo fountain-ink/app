@@ -111,10 +111,10 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
     if (synced && editor && content) {
       setTimeout(() => {
         editor.commands.setContent(content);
+        
+        const lastChildPos = editor.$doc.lastChild?.pos;
+        editor.commands.focus(lastChildPos, { scrollIntoView: true });
       });
-      const lastChildPos = editor.$doc.lastChild?.pos;
-
-      editor.commands.focus(lastChildPos, { scrollIntoView: true });
     }
   }, [synced, editor]);
 
