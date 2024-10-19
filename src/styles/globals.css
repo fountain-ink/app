@@ -22,6 +22,8 @@ p.first-paragraph {
 
 @layer base {
   html {
+    font-variant-ligatures: none;
+
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

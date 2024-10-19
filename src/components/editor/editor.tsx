@@ -21,6 +21,7 @@ import { suggestionItems } from "./extensions/slash-command";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { uploadFn } from "@/lib/upload-image";
 import { proseClasses } from "@/styles/prose";
+import { TextSelection } from "@tiptap/pm/state";
 import { Heading2 } from "lucide-react";
 import { handleCommandNavigation } from "novel/extensions";
 import { useDebouncedCallback } from "use-debounce";
@@ -132,8 +133,24 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
   }, [yDoc, provider]);
 
   const debouncedUpdates = useDebouncedCallback(async (editor: EditorInstance) => {
-    const json = editor.getJSON();
-    setContent(json);
+    const content = editor.getJSON();
+    // Save cursor position
+    const { from, to } = editor.state.selection;
+
+    // Update content
+    editor.commands.setContent(content);
+
+    // Restore cursor position
+    const newFrom = Math.min(from, editor.state.doc.content.size);
+    const newTo = Math.min(to, editor.state.doc.content.size);
+    const textSelection = new TextSelection(
+      editor.state.doc.resolve(newFrom),
+      editor.state.doc.resolve(newTo)
+    );
+    editor.view.dispatch(editor.state.tr.setSelection(textSelection));
+
+
+    setContent(content);
   }, 500);
   if (!yDoc || !provider) {
     console.warn("YDoc or provider not initialized");
