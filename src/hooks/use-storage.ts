@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { ThemeType } from "@/styles/themes";
+import { defaultTheme, type ThemeType } from "@/styles/themes";
 
 interface AppSettings {
   isBlurEnabled: boolean;
@@ -19,7 +19,7 @@ export const useStorage = create<AppSettings>()(
       isSmoothScrolling: false,
       isBlurEnabled: false,
       isAutoSyncEnabled: false,
-      theme: "light" as ThemeType,
+      theme: defaultTheme,
       toggleSmoothScrolling: () => set((state) => ({ isSmoothScrolling: !state.isSmoothScrolling })),
       toggleBlurEffect: () => set((state) => ({ isBlurEnabled: !state.isBlurEnabled })),
       toggleAutoSync: () => set((state) => ({ isAutoSyncEnabled: !state.isAutoSyncEnabled })),
