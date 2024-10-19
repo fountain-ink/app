@@ -92,7 +92,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
       token,
       document: newYDoc,
 
-      onSynced({ state }) {
+      onSynced() {
         setSynced(true);
       },
     });
@@ -105,18 +105,19 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
       newProvider.destroy();
     };
   }, [documentId]);
-
   useEffect(() => {
     console.log(synced, editor, content);
     if (synced && editor && content) {
       setTimeout(() => {
-        editor.commands.setContent(content);
+        editor.commands?.setContent(content);
 
-        const lastChildPos = editor.$doc.lastChild?.pos;
-        editor.commands.focus(lastChildPos, { scrollIntoView: true });
+        const lastChildPos = editor.$doc?.lastChild?.pos;
+        if (lastChildPos !== undefined) {
+          editor.commands?.focus(lastChildPos, { scrollIntoView: true });
+        }
       });
     }
-  }, [synced, editor]);
+  }, [synced, editor, content]);
 
   const editorExtensionsList = useMemo(() => {
     return defaultExtensions({
@@ -129,8 +130,13 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
     const json = editor.getJSON();
     setContent(json);
   }, 500);
-
   if (!yDoc || !provider) {
+    console.warn("YDoc or provider not initialized");
+    return <LoadingSpinner />;
+  }
+
+  if (!yDoc.share || !provider.awareness) {
+    console.warn("YDoc or provider not fully initialized");
     return <LoadingSpinner />;
   }
 
