@@ -21,6 +21,7 @@ import { suggestionItems } from "./extensions/slash-command";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { uploadFn } from "@/lib/upload-image";
 import { proseClasses } from "@/styles/prose";
+import { Heading2 } from "lucide-react";
 import { handleCommandNavigation } from "novel/extensions";
 import { useDebouncedCallback } from "use-debounce";
 import { LoadingSpinner } from "../loading-spinner";
@@ -62,9 +63,9 @@ interface EditorProps {
 }
 
 export const Editor = ({ documentId, children, initialContent }: EditorProps) => {
+  const [editor, setEditor] = useState<EditorInstance | null>(null);
   const [openNode, setOpenNode] = useState(false);
   const [openLink, setOpenLink] = useState(false);
-  const [openColor, setOpenColor] = useState(false);
   const [openAI, _setOpenAI] = useState(false);
   const [yDoc, setYDoc] = useState<Y.Doc | null>(null);
   const [provider, setProvider] = useState<TiptapCollabProvider | null>(null);
@@ -126,6 +127,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
           debouncedUpdates(editor);
         }}
         onCreate={({ editor }) => {
+          setEditor(editor);
           if (initialContent) {
             editor.commands.setContent(initialContent);
           }
@@ -151,6 +153,34 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
         <EditorCommand className="z-50 h-auto max-h-[330px]  w-72 overflow-y-auto rounded-md border border-muted bg-card px-1 py-2 shadow-md transition-all">
           <EditorCommandEmpty className="px-2 text-muted-foreground">No results</EditorCommandEmpty>
           <EditorCommandList>
+            {editor && !editor?.$node("subtitle") && (
+              <EditorCommandItem
+                value="Add subtitle"
+                onCommand={({ editor, range }) => {
+                  const endPos = editor?.$node("title", { level: 1 })?.after?.pos || 3;
+                  editor
+                    .chain()
+                    .focus()
+                    .deleteRange(range)
+                    .insertContentAt(endPos, { type: "paragraph" })
+                    .focus(endPos)
+                    .setNode("subtitle", { level: 2 })
+                    .run();
+                }}
+                className={
+                  "flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm hover:bg-accent aria-selected:bg-accent "
+                }
+                key="subtitle"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-md border border-muted bg-background">
+                  <Heading2 />
+                </div>
+                <div>
+                  <p className="font-medium">Add subtitle</p>
+                  <p className="text-xs text-muted-foreground">Add subtitle to the document</p>
+                </div>
+              </EditorCommandItem>
+            )}
             {suggestionItems.map((item) => (
               <EditorCommandItem
                 value={item.title}
