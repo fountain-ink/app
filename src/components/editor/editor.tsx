@@ -92,7 +92,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
       token,
       document: newYDoc,
 
-      onSynced({ state }) {
+      onSynced() {
         setSynced(true);
       },
     });
@@ -135,7 +135,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
   return (
     <EditorRoot>
       <EditorContent
-        immediatelyRender={true}
+        immediatelyRender={false}
         onUpdate={({ editor }) => {
           debouncedUpdates(editor);
         }}
