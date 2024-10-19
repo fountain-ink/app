@@ -30,6 +30,7 @@ import {
   renderItems,
 } from "novel/extensions";
 import AutoJoiner from "tiptap-extension-auto-joiner";
+import { Footnote, FootnoteReference, Footnotes } from "tiptap-footnotes";
 import { Markdown } from "tiptap-markdown";
 import type { Doc } from "yjs";
 import BlockquoteFigure from "./extensions/blockquote-figure";
@@ -64,6 +65,7 @@ export const defaultExtensions = ({
     },
   }),
   StarterKit.configure({
+    document: false,
     paragraph: false,
     history: false,
     bulletList: {
@@ -121,7 +123,7 @@ export const defaultExtensions = ({
     group: "block",
   }).configure({ levels: [3] }),
   Document.extend({
-    content: "title subtitle heroImage* block+",
+    content: "title subtitle heroImage* block+ footnotes?",
   }),
   Collaboration.configure({
     document,
@@ -240,8 +242,11 @@ export const defaultExtensions = ({
     },
   }),
   Image.configure({
-    uploadIcon: <UploadIcon  size={16} />,
+    uploadIcon: <UploadIcon size={16} />,
   }),
   Selection,
   TrailingNode.configure({}),
+  Footnotes,
+  Footnote,
+  FootnoteReference,
 ];
