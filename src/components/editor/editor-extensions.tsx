@@ -39,6 +39,7 @@ import { Placeholder } from "./extensions/placeholder";
 import Selection from "./extensions/selection";
 import { suggestionItems } from "./extensions/slash-command";
 import { FirstParagraphPlugin } from "./plugins/first-paragraph-plugin";
+import { TrailingNode } from "./extensions/trailing-node";
 
 interface EditorExtensionsProps {
   provider?: HocuspocusProvider | null;
@@ -236,4 +237,5 @@ export const defaultExtensions = ({
   Footnotes,
   Footnote,
   FootnoteReference,
+  TrailingNode,
 ];
