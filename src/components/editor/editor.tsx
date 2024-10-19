@@ -105,17 +105,24 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
       newProvider.destroy();
     };
   }, [documentId]);
-  
   useEffect(() => {
     if (synced && editor && content) {
-      setTimeout(() => {
-        editor.commands?.setContent(content);
+      let hasRun = false;
+      const timer = setTimeout(() => {
+        if (!hasRun) {
+          hasRun = true;
+          editor.commands?.setContent(content);
 
-        const lastChildPos = editor.$doc?.lastChild?.pos;
-        if (lastChildPos !== undefined) {
-          editor.commands?.focus(lastChildPos, { scrollIntoView: true });
+          const lastChildPos = editor.$doc?.lastChild?.pos;
+          if (lastChildPos !== undefined) {
+            editor.commands?.focus(lastChildPos, { scrollIntoView: true });
+          }
         }
       });
+
+      return () => {
+        clearTimeout(timer);
+      };
     }
   }, [synced, editor, content]);
 
