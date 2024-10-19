@@ -1,4 +1,7 @@
 "use client";
+
+import type { Editor } from '@tiptap/core';
+
 import { cx } from "class-variance-authority";
 
 import type { HocuspocusProvider } from "@hocuspocus/provider";
@@ -49,6 +52,22 @@ interface EditorExtensionsProps {
   userColor?: string;
 }
 
+const handleArrowDown = (editor: Editor) => {
+  const { selection } = editor.state;
+  const { $anchor } = selection;
+  const currentNode = $anchor.parent;
+
+  if (currentNode.type.name === 'subtitle' || currentNode.type.name === 'title') {
+    const nextNode = $anchor.doc.nodeAt($anchor.after());
+    if (nextNode && nextNode.type.name === 'paragraph') {
+      editor.commands.setTextSelection($anchor.after() + 1);
+      return true;
+    }
+  }
+
+  return false;
+};
+
 export const defaultExtensions = ({
   provider,
   document,
@@ -62,6 +81,11 @@ export const defaultExtensions = ({
   Paragraph.extend({
     addProseMirrorPlugins() {
       return [FirstParagraphPlugin()];
+    },
+    addKeyboardShortcuts() {
+      return {
+        ArrowDown: () => handleArrowDown(this.editor),
+      };
     },
   }),
   StarterKit.configure({
@@ -103,15 +127,12 @@ export const defaultExtensions = ({
   Heading.extend({
     name: "title",
     marks: "",
-    group: "title",
     addKeyboardShortcuts() {
       return {
         Enter: () => {
           const { editor } = this;
-          console.log(editor.isActive("title"));
           if (editor.isActive("title")) {
             const endPos = editor.$node("title", { level: 1 })?.after?.pos || 3;
-            console.log(endPos)
             editor
               .chain()
               .focus()
@@ -130,13 +151,11 @@ export const defaultExtensions = ({
   Heading.extend({
     name: "subtitle",
     marks: "",
-    group: "subtitle",
   }).configure({
     levels: [2],
   }),
   Heading.extend({
     name: "heading",
-    group: "block",
   }).configure({ levels: [3] }),
   Collaboration.configure({
     document,
