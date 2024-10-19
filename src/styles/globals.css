@@ -6,11 +6,13 @@
 @tailwind components;
 @tailwind utilities;
 
-.first-paragraph:first-letter {
+.first-paragraph::first-letter {
+  initial-letter: var(--paragraph-first-letter-initial, 3);
   font-size: var(--paragraph-first-letter-size, inherit);
   float: var(--paragraph-first-letter-float, inherit);
   padding-right: var(--paragraph-first-letter-padding-right, 0);
   padding-top: var(--paragraph-first-letter-padding-top, 0);
+  height: min-content;
 }
 
 p.first-paragraph {

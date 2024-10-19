@@ -108,8 +108,10 @@ export const defaultExtensions = ({
       return {
         Enter: () => {
           const { editor } = this;
+          console.log(editor.isActive("title"));
           if (editor.isActive("title")) {
             const endPos = editor.$node("title", { level: 1 })?.after?.pos || 3;
+            console.log(endPos)
             editor
               .chain()
               .focus()

@@ -73,9 +73,10 @@ type ThemeColors = {
   "--paragraph-first-letter-float"?: string;
   "--paragraph-first-letter-padding-right"?: string;
   "--paragraph-first-letter-padding-top"?: string;
+  "--paragraph-first-letter-initial"?: string;
 
   "--image-margin-y": string;
-  
+
   "--margin-h1": string;
   "--margin-h2": string;
   "--margin-h3": string;
@@ -93,22 +94,21 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--ring": "222.2 84% 4.9%",
     "--card-foreground": "222.2 84% 4.9%",
     "--popover-foreground": "222.2 84% 4.9%",
-    
+
     "--primary": "213 18% 20%",
     "--primary-foreground": "210 40% 98%",
     "--secondary": "210 40%, 96%",
     "--secondary-foreground": "222.2 47.4% 99.2%",
     "--muted": "210 40% 96.1%",
     "--muted-foreground": "0 0% 56%",
-    
+
     "--destructive-foreground": "210 40% 98%",
 
     "--radius": "1.0rem",
 
     "--foreground": "0 0% 11%",
     "--background": "0 0% 96%",
-    
-    
+
     "--accent": "210 40% 96%",
     "--accent-foreground": "222.2 47.4% 11.2%",
 
@@ -153,9 +153,10 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--paragraph-first-letter-float": "left",
     "--paragraph-first-letter-padding-right": "1rem",
     "--paragraph-first-letter-padding-top": "0.5rem",
+    "--paragraph-first-letter-initial": "3",
 
     "--image-margin-y": "2rem",
-    
+
     "--margin-h1": "1rem",
     "--margin-h2": "1.5rem",
     "--margin-h3": "2rem",
