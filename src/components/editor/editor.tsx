@@ -92,7 +92,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
       token,
       document: newYDoc,
 
-      onSynced() {
+      onSynced({ state }) {
         setSynced(true);
       },
     });
@@ -109,7 +109,9 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
   useEffect(() => {
     console.log(synced, editor, content);
     if (synced && editor && content) {
-      editor.commands.setContent(content);
+      setTimeout(() => {
+        editor.commands.setContent(content);
+      });
       const lastChildPos = editor.$doc.lastChild?.pos;
 
       editor.commands.focus(lastChildPos, { scrollIntoView: true });
@@ -135,7 +137,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
   return (
     <EditorRoot>
       <EditorContent
-        immediatelyRender={false}
+        immediatelyRender={true}
         onUpdate={({ editor }) => {
           debouncedUpdates(editor);
         }}
