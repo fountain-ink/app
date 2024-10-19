@@ -105,6 +105,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
       newProvider.destroy();
     };
   }, [documentId]);
+  
   useEffect(() => {
     console.log(synced, editor, content);
     if (synced && editor && content) {
