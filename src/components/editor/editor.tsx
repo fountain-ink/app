@@ -64,6 +64,7 @@ interface EditorProps {
 
 export const Editor = ({ documentId, children, initialContent }: EditorProps) => {
   const [editor, setEditor] = useState<EditorInstance | null>(null);
+  const [synced, setSynced] = useState(false);
   const [openNode, setOpenNode] = useState(false);
   const [openLink, setOpenLink] = useState(false);
   const [openAI, _setOpenAI] = useState(false);
@@ -91,7 +92,9 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
       token,
       document: newYDoc,
 
-      onSynced() {},
+      onSynced({ state }) {
+        setSynced(true);
+      },
     });
 
     setYDoc(newYDoc);
@@ -102,6 +105,13 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
       newProvider.destroy();
     };
   }, [documentId]);
+
+  useEffect(() => {
+    console.log(synced, editor, content);
+    if (synced && editor && content) {
+      editor.commands.setContent(content);
+    }
+  }, [synced, editor]);
 
   const editorExtensionsList = useMemo(() => {
     return defaultExtensions({
@@ -128,9 +138,6 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
         }}
         onCreate={({ editor }) => {
           setEditor(editor);
-          if (initialContent) {
-            editor.commands.setContent(initialContent);
-          }
         }}
         initialContent={content}
         onContentError={({ editor }) => {
