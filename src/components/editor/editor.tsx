@@ -22,7 +22,6 @@ import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { uploadFn } from "@/lib/upload-image";
 import { proseClasses } from "@/styles/prose";
 import { TextSelection } from "@tiptap/pm/state";
-import { Heading2 } from "lucide-react";
 import { handleCommandNavigation } from "novel/extensions";
 import { useDebouncedCallback } from "use-debounce";
 import { LoadingSpinner } from "../loading-spinner";
@@ -143,12 +142,8 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
     // Restore cursor position
     const newFrom = Math.min(from, editor.state.doc.content.size);
     const newTo = Math.min(to, editor.state.doc.content.size);
-    const textSelection = new TextSelection(
-      editor.state.doc.resolve(newFrom),
-      editor.state.doc.resolve(newTo)
-    );
+    const textSelection = new TextSelection(editor.state.doc.resolve(newFrom), editor.state.doc.resolve(newTo));
     editor.view.dispatch(editor.state.tr.setSelection(textSelection));
-
 
     setContent(content);
   }, 500);
@@ -194,34 +189,6 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
         <EditorCommand className="z-50 h-auto max-h-[330px]  w-72 overflow-y-auto rounded-md border border-muted bg-card px-1 py-2 shadow-md transition-all">
           <EditorCommandEmpty className="px-2 text-muted-foreground">No results</EditorCommandEmpty>
           <EditorCommandList>
-            {editor && !editor?.$node("subtitle") && (
-              <EditorCommandItem
-                value="Add subtitle"
-                onCommand={({ editor, range }) => {
-                  const endPos = editor?.$node("title", { level: 1 })?.after?.pos || 3;
-                  editor
-                    .chain()
-                    .focus()
-                    .deleteRange(range)
-                    .insertContentAt(endPos, { type: "paragraph" })
-                    .focus(endPos)
-                    .setNode("subtitle", { level: 2 })
-                    .run();
-                }}
-                className={
-                  "flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm hover:bg-accent aria-selected:bg-accent "
-                }
-                key="subtitle"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-md border border-muted bg-background">
-                  <Heading2 />
-                </div>
-                <div>
-                  <p className="font-medium">Add subtitle</p>
-                  <p className="text-xs text-muted-foreground">Add subtitle to the document</p>
-                </div>
-              </EditorCommandItem>
-            )}
             {suggestionItems.map((item) => (
               <EditorCommandItem
                 value={item.title}
