@@ -16,7 +16,6 @@ const config = {
 
   webpack: (config) => {
     config.resolve.fallback = { fs: false, net: false, tls: false };
-    config.optimization.minimize = false;
 
     return config;
   },
