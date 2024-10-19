@@ -105,24 +105,17 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
       newProvider.destroy();
     };
   }, [documentId]);
-  useEffect(() => {
-    if (synced && editor && content) {
-      let hasRun = false;
-      const timer = setTimeout(() => {
-        if (!hasRun) {
-          hasRun = true;
-          editor.commands?.setContent(content);
 
-          const lastChildPos = editor.$doc?.lastChild?.pos;
-          if (lastChildPos !== undefined) {
-            editor.commands?.focus(lastChildPos, { scrollIntoView: true });
-          }
+  useEffect(() => {
+    if (synced && editor && initialContent) {
+      setTimeout(() => {
+        editor.commands?.setContent(initialContent);
+
+        const lastChildPos = editor.$doc?.lastChild?.pos;
+        if (lastChildPos !== undefined) {
+          editor.commands?.focus(lastChildPos, { scrollIntoView: true });
         }
       });
-
-      return () => {
-        clearTimeout(timer);
-      };
     }
   }, [synced, editor, content]);
 
