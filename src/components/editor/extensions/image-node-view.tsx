@@ -81,7 +81,7 @@ const ImageComponent = (props: {
       className={`
         flex rounded-sm focus:ring-2 focus:ring-primary relative my-[--image-margin-y] justify-center ${widthClass}
       `}
-      contentEditable="false"
+      suppressContentEditableWarning
       data-drag-handle
       tabIndex={0}
     >

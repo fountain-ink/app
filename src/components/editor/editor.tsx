@@ -111,7 +111,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
     if (synced && editor && content) {
       setTimeout(() => {
         editor.commands.setContent(content);
-        
+
         const lastChildPos = editor.$doc.lastChild?.pos;
         editor.commands.focus(lastChildPos, { scrollIntoView: true });
       });
@@ -146,7 +146,8 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
         }}
         initialContent={content}
         onContentError={({ editor }) => {
-          console.log("Content Error: ", editor.$doc.content.toJSON());
+          console.error("Content Error: ");
+          console.error(editor);
         }}
         editorProps={{
           handlePaste: (view, event) => handleImagePaste(view, event, uploadFn),

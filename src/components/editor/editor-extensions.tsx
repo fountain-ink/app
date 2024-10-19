@@ -102,10 +102,12 @@ export const defaultExtensions = ({
   }),
   Heading.extend({
     name: "title",
+    marks: "",
     group: "title",
   }).configure({ levels: [1] }),
   Heading.extend({
     name: "subtitle",
+    marks: "",
     group: "subtitle",
   }).configure({
     levels: [2],
