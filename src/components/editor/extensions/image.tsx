@@ -68,13 +68,13 @@ export const Image = Node.create<ImageOptions>({
   parseHTML() {
     return [
       {
-        tag: "image",
+        tag: "img",
       },
     ];
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ["image", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)];
+    return ["img", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)];
   },
 
   addCommands() {

@@ -56,7 +56,36 @@ export async function POST() {
     const uid = getRandomUid();
     const documentId = `${handle}-${uid}`;
 
-    const { data, error } = await db.from("drafts").insert({ documentId, authorId: profileId }).select().single();
+    const contentJson = {
+      "type": "doc",
+      "content": [
+        {
+          "type": "title",
+          "attrs": {
+            "level": 1
+          }
+        },
+        {
+          "type": "subtitle",
+          "attrs": {
+            "level": 2
+          }
+        },
+        {
+          "type": "image",
+          "attrs": {
+            "src": null,
+            "width": "wide"
+          }
+        }
+      ]
+    }
+      
+    const { data, error } = await db
+      .from("drafts")
+      .insert({ contentJson, documentId, authorId: profileId })
+      .select()
+      .single();
 
     if (error) {
       throw new Error(error.message);

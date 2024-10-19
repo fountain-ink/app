@@ -36,13 +36,13 @@ export const HeroImage = Image.extend<ImageOptions>({
   parseHTML() {
     return [
       {
-        tag: "hero-image",
+        tag: "img",
       },
     ];
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ["hero-image", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)];
+    return ["img", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)];
   },
 
   addCommands() {

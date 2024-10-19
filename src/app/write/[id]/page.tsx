@@ -1,8 +1,6 @@
 import { Editor } from "@/components/editor/editor";
 import { AutoSave } from "@/components/editor/editor-auto-save";
-import { EditorCollaborators } from "@/components/editor/editor-collaborators";
 import { EditorPublishing } from "@/components/editor/editor-publishing";
-import { EditorReadTime } from "@/components/editor/editor-read-time";
 import { getBaseUrl } from "@/lib/get-base-url";
 import { cookies } from "next/headers";
 
@@ -31,11 +29,7 @@ async function getDraft(id: string) {
   return draft;
 }
 
-export default async function WriteDraft({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function WriteDraft({ params }: { params: { id: string } }) {
   const isLocal = params.id.startsWith("local-");
   const draft = isLocal ? null : await getDraft(params.id);
 

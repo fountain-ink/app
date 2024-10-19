@@ -3,18 +3,17 @@
 import { env } from "@/env";
 import { TiptapCollabProvider } from "@hocuspocus/provider";
 import {
-    EditorBubble,
-    EditorCommand,
-    EditorCommandEmpty,
-    EditorCommandItem,
-    EditorCommandList,
-    EditorContent,
-    type EditorInstance,
-    EditorRoot,
-    type JSONContent,
+  EditorBubble,
+  EditorCommand,
+  EditorCommandEmpty,
+  EditorCommandItem,
+  EditorCommandList,
+  EditorContent,
+  type EditorInstance,
+  EditorRoot,
+  type JSONContent,
 } from "novel";
 import { useEffect, useMemo, useState } from "react";
-
 
 import * as Y from "yjs";
 import { suggestionItems } from "./extensions/slash-command";
@@ -27,7 +26,6 @@ import { useDebouncedCallback } from "use-debounce";
 import { LoadingSpinner } from "../loading-spinner";
 import { defaultExtensions } from "./editor-extensions";
 import { handleImageDrop, handleImagePaste } from "./plugins/image-upload";
-import { ColorSelector } from "./selectors/select-color";
 import { LinkSelector } from "./selectors/select-link";
 import { NodeSelector } from "./selectors/select-node";
 import { TextButtons } from "./selectors/select-text";
@@ -91,6 +89,8 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
       appId: "v91rwzmo",
       token,
       document: newYDoc,
+
+      onSynced() {},
     });
 
     setYDoc(newYDoc);
@@ -121,13 +121,20 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
   return (
     <EditorRoot>
       <EditorContent
-        immediatelyRender={false}
+        immediatelyRender={true}
         onUpdate={({ editor }) => {
           debouncedUpdates(editor);
         }}
+        onCreate={({ editor }) => {
+          if (initialContent) {
+            editor.commands.setContent(initialContent);
+          }
+        }}
         initialContent={content}
+        onContentError={({ editor }) => {
+          console.log("Content Error: ", editor.$doc.content.toJSON());
+        }}
         editorProps={{
-          
           handlePaste: (view, event) => handleImagePaste(view, event, uploadFn),
           handleDrop: (view, event, _slice, moved) => handleImageDrop(view, event, moved, uploadFn),
           handleDOMEvents: {
@@ -138,6 +145,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
           },
         }}
         extensions={editorExtensionsList}
+        enableContentCheck={true}
       >
         {children}
         <EditorCommand className="z-50 h-auto max-h-[330px]  w-72 overflow-y-auto rounded-md border border-muted bg-card px-1 py-2 shadow-md transition-all">
@@ -172,7 +180,6 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
           <NodeSelector open={openNode} onOpenChange={setOpenNode} />
           <LinkSelector open={openLink} onOpenChange={setOpenLink} />
           <TextButtons />
-          <ColorSelector open={openColor} onOpenChange={setOpenColor} />
         </EditorBubble>
       </EditorContent>
     </EditorRoot>

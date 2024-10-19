@@ -16,18 +16,17 @@ import type { AnyExtension } from "@tiptap/react";
 import { common, createLowlight } from "lowlight";
 import { UploadIcon } from "lucide-react";
 import {
-  CharacterCount,
-  CodeBlockLowlight,
-  Command,
-  HorizontalRule,
-  StarterKit,
-  TaskItem,
-  TaskList,
-  TiptapLink,
-  Twitter,
-  UpdatedImage,
-  Youtube,
-  renderItems,
+    CharacterCount,
+    CodeBlockLowlight,
+    Command,
+    HorizontalRule,
+    StarterKit,
+    TaskItem,
+    TaskList,
+    TiptapLink,
+    Twitter,
+    Youtube,
+    renderItems
 } from "novel/extensions";
 import AutoJoiner from "tiptap-extension-auto-joiner";
 import { Footnote, FootnoteReference, Footnotes } from "tiptap-footnotes";
@@ -35,13 +34,11 @@ import { Markdown } from "tiptap-markdown";
 import type { Doc } from "yjs";
 import BlockquoteFigure from "./extensions/blockquote-figure";
 import Figcaption from "./extensions/figcaption";
-import { HeroImage } from "./extensions/hero-image";
 import { Image } from "./extensions/image";
 import { Placeholder } from "./extensions/placeholder";
 import Selection from "./extensions/selection";
 import { suggestionItems } from "./extensions/slash-command";
 import { FirstParagraphPlugin } from "./plugins/first-paragraph-plugin";
-import { UploadImagesPlugin } from "./plugins/image-upload";
 
 interface EditorExtensionsProps {
   provider?: HocuspocusProvider | null;
@@ -59,8 +56,8 @@ export const defaultExtensions = ({
   userColor = "#000000",
 }: EditorExtensionsProps): AnyExtension[] => [
   Document.extend({
-    content: "title subtitle image+ block+ footnotes?",
-  }),
+    content: "title subtitle? image? block+ footnotes?",
+  }).configure({}),
   Paragraph.extend({
     addProseMirrorPlugins() {
       return [FirstParagraphPlugin()];
@@ -70,6 +67,7 @@ export const defaultExtensions = ({
     document: false,
     paragraph: false,
     history: false,
+    heading: false,
     bulletList: {
       HTMLAttributes: {
         class: cx("list-disc list-outside leading-3 -mt-2"),
@@ -90,33 +88,24 @@ export const defaultExtensions = ({
         class: cx("border-l-4 border-primary"),
       },
     },
-    codeBlock: {
-      HTMLAttributes: {
-        class: cx("rounded-sm bg-muted border p-5 font-mono font-medium"),
-      },
-    },
+    codeBlock: false,
     code: {
       HTMLAttributes: {
         class: cx("rounded-md bg-muted  px-1.5 py-1 font-mono font-medium"),
         spellcheck: "false",
       },
     },
-    dropcursor: {
-      color: "hsl(var(--accent))",
-      width: 4,
-    },
+    dropcursor: false,
     horizontalRule: false,
     gapcursor: false,
   }),
   Heading.extend({
     name: "title",
     group: "title",
-    topNode: true,
   }).configure({ levels: [1] }),
   Heading.extend({
     name: "subtitle",
     group: "subtitle",
-    topNode: true,
   }).configure({
     levels: [2],
   }),
@@ -171,28 +160,28 @@ export const defaultExtensions = ({
     addPasteHandler: true,
     HTMLAttributes: { class: cx("rounded-lg w-full flex items-center justify-center") },
   }),
-  UpdatedImage.extend({
-    group: "block",
-    draggable: true,
-    addProseMirrorPlugins() {
-      return [
-        UploadImagesPlugin({
-          imageClass: cx("rounded-lg"),
-        }),
-      ];
-    },
-  }).configure({
-    HTMLAttributes: {
-      class: cx("rounded-lg border border-muted"),
-    },
-  }),
-  HeroImage.extend({
-    name: "heroImage",
-  }).configure({
-    HTMLAttributes: {
-      class: cx("rounded-lg border border-muted"),
-    },
-  }),
+  // UpdatedImage.extend({
+  //   group: "block",
+  //   draggable: true,
+  //   addProseMirrorPlugins() {
+  //     return [
+  //       UploadImagesPlugin({
+  //         imageClass: cx("rounded-lg"),
+  //       }),
+  //     ];
+  //   },
+  // }).configure({
+  //   HTMLAttributes: {
+  //     class: cx("rounded-lg border border-muted"),
+  //   },
+  // }),
+  // HeroImage.extend({
+  //   name: "heroImage",
+  // }).configure({
+  //   HTMLAttributes: {
+  //     class: cx("rounded-lg border border-muted"),
+  //   },
+  // }),
   CodeBlockLowlight.configure({
     // common: covers 37 language grammars which should be good enough in most cases
     lowlight: createLowlight(common),
