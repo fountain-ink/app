@@ -1,9 +1,3 @@
-"use client";
-
-import type { Editor } from '@tiptap/core';
-
-import { cx } from "class-variance-authority";
-
 import type { HocuspocusProvider } from "@hocuspocus/provider";
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
@@ -16,6 +10,7 @@ import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import TextAlign from "@tiptap/extension-text-align";
 import type { AnyExtension } from "@tiptap/react";
+import { cx } from "class-variance-authority";
 import { common, createLowlight } from "lowlight";
 import { UploadIcon } from "lucide-react";
 import {
@@ -35,6 +30,7 @@ import AutoJoiner from "tiptap-extension-auto-joiner";
 import { Footnote, FootnoteReference, Footnotes } from "tiptap-footnotes";
 import { Markdown } from "tiptap-markdown";
 import type { Doc } from "yjs";
+import { arrowHandlers } from "./arrow-handlers";
 import BlockquoteFigure from "./extensions/blockquote-figure";
 import Figcaption from "./extensions/figcaption";
 import { Image } from "./extensions/image";
@@ -52,22 +48,6 @@ interface EditorExtensionsProps {
   userColor?: string;
 }
 
-const handleArrowDown = (editor: Editor) => {
-  const { selection } = editor.state;
-  const { $anchor } = selection;
-  const currentNode = $anchor.parent;
-
-  if (currentNode.type.name === 'subtitle' || currentNode.type.name === 'title') {
-    const nextNode = $anchor.doc.nodeAt($anchor.after());
-    if (nextNode && nextNode.type.name === 'paragraph') {
-      editor.commands.setTextSelection($anchor.after() + 1);
-      return true;
-    }
-  }
-
-  return false;
-};
-
 export const defaultExtensions = ({
   provider,
   document,
@@ -84,7 +64,8 @@ export const defaultExtensions = ({
     },
     addKeyboardShortcuts() {
       return {
-        ArrowDown: () => handleArrowDown(this.editor),
+        ArrowDown: () => arrowHandlers.handleArrowDown(this.editor),
+        ArrowUp: () => arrowHandlers.handleArrowUp(this.editor),
       };
     },
   }),
