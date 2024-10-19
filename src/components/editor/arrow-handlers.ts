@@ -1,11 +1,5 @@
 import type { Editor } from "@tiptap/core";
 
-const handleImageSelection = (editor: Editor, pos: number) => {
-  editor.commands.setNodeSelection(pos);
-  editor.commands.focus();
-  editor.emit('imageSelected');
-  return true;
-};
 const handleArrowDown = (editor: Editor) => {
   const { selection } = editor.state;
   const { $anchor } = selection;
