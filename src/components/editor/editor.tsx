@@ -64,7 +64,8 @@ interface EditorProps {
 
 export const Editor = ({ documentId, children, initialContent }: EditorProps) => {
   const [editor, setEditor] = useState<EditorInstance | null>(null);
-  const [synced, setSynced] = useState(false);
+  const [collabSynced, setCollabSynced] = useState(false);
+  const [contentSynced, setContentSynced] = useState(false);
   const [openNode, setOpenNode] = useState(false);
   const [openLink, setOpenLink] = useState(false);
   const [openAI, _setOpenAI] = useState(false);
@@ -77,7 +78,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
     if (documentId.startsWith("local-")) {
       const localContent = getDocument(documentId);
       if (localContent) {
-        setContent(localContent);
+        setContent(JSON.parse(localContent.contentJson));
       }
     }
   }, [documentId, getDocument]);
@@ -93,7 +94,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
       document: newYDoc,
 
       onSynced() {
-        setSynced(true);
+        setCollabSynced(true);
       },
     });
 
@@ -107,17 +108,21 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
   }, [documentId]);
 
   useEffect(() => {
-    if (synced && editor && initialContent) {
+    if (contentSynced) return;
+
+    if (collabSynced && editor && content) {
       setTimeout(() => {
-        editor.commands?.setContent(initialContent);
+        editor.commands?.setContent(content);
 
         const lastChildPos = editor.$doc?.lastChild?.pos;
+        console.log("lastChildPos", lastChildPos);
         if (lastChildPos !== undefined) {
           editor.commands?.focus(lastChildPos, { scrollIntoView: true });
         }
       });
+      setContentSynced(true);
     }
-  }, [synced, editor, content]);
+  }, [collabSynced, editor, content]);
 
   const editorExtensionsList = useMemo(() => {
     return defaultExtensions({
