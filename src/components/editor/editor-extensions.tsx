@@ -40,7 +40,6 @@ import { Image } from "./extensions/image";
 import { Placeholder } from "./extensions/placeholder";
 import Selection from "./extensions/selection";
 import { suggestionItems } from "./extensions/slash-command";
-import { TrailingNode } from "./extensions/trailing-node";
 import { FirstParagraphPlugin } from "./plugins/first-paragraph-plugin";
 import { UploadImagesPlugin } from "./plugins/image-upload";
 
@@ -59,6 +58,9 @@ export const defaultExtensions = ({
   userName = "Maxi",
   userColor = "#000000",
 }: EditorExtensionsProps): AnyExtension[] => [
+  Document.extend({
+    content: "title subtitle image+ block+ footnotes?",
+  }),
   Paragraph.extend({
     addProseMirrorPlugins() {
       return [FirstParagraphPlugin()];
@@ -122,9 +124,6 @@ export const defaultExtensions = ({
     name: "heading",
     group: "block",
   }).configure({ levels: [3] }),
-  Document.extend({
-    content: "title subtitle heroImage* block+ footnotes?",
-  }),
   Collaboration.configure({
     document,
   }),
@@ -245,7 +244,6 @@ export const defaultExtensions = ({
     uploadIcon: <UploadIcon size={16} />,
   }),
   Selection,
-  TrailingNode.configure({}),
   Footnotes,
   Footnote,
   FootnoteReference,

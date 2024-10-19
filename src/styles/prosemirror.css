@@ -421,3 +421,14 @@ pre {
   cursor: ew-resize;
   cursor: col-resize;
 }
+
+ol.footnotes {
+  margin-top: 20px;
+  padding: 20px 0;
+  list-style-type: decimal;
+  padding-left: 20px;
+}
+
+ol.footnotes:has(li) {
+  border-top: 1px solid black;
+}

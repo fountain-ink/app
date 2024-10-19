@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckSquare, Code, HeadingIcon, ImageIcon, List, ListOrdered, Text, TextQuote } from "lucide-react";
+import { Asterisk, CheckSquare, Code, HeadingIcon, ImageIcon, List, ListOrdered, Text, TextQuote } from "lucide-react";
 import { createSuggestionItems } from "novel/extensions";
 
 export const suggestionItems = createSuggestionItems([
@@ -31,30 +31,6 @@ export const suggestionItems = createSuggestionItems([
       editor.chain().focus().deleteRange(range).setImage({ width: "column" }).run();
     },
   },
-  // {
-  //   title: "Image",
-  //   description: "Add an image.",
-  //   searchTerms: ["photo", "picture", "media", "image"],
-  //   icon: <ImageIcon size={18} />,
-  //   command: ({ editor, range }) => {
-  //     editor.chain().focus().deleteRange(range).run();
-  //     const input = document.createElement("input");
-  //     input.type = "file";
-  //     input.accept = "image/*";
-  //     input.onchange = async () => {
-  //       if (input.files?.length) {
-  //         const file = input.files[0];
-  //         if (!file) {
-  //           toast.error("No file selected");
-  //           return;
-  //         }
-  //         const pos = editor.view.state.selection.from;
-  //         uploadFn(file, editor.view, pos);
-  //       }
-  //     };
-  //     input.click();
-  //   },
-  // },
   {
     title: "Check List",
     description: "Track tasks with a check list.",
@@ -96,5 +72,12 @@ export const suggestionItems = createSuggestionItems([
     searchTerms: ["codeblock"],
     icon: <Code size={18} />,
     command: ({ editor, range }) => editor.chain().focus().deleteRange(range).toggleCodeBlock().run(),
+  },
+  {
+    title: "Footnote",
+    description: "Add a footnote.",
+    searchTerms: ["footnote", "footnotes", "reference", "source"],
+    icon: <Asterisk size={18} />,
+    command: ({ editor, range }) => editor.chain().focus().deleteRange(range).addFootnote().run(),
   },
 ]);
