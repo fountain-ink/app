@@ -168,7 +168,7 @@ export const defaultExtensions = ({
       }
 
       if (node.type.name === "heading") {
-        return "Section name";
+        return "Heading";
       }
 
       return "Type `/` for commands";

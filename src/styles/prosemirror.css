@@ -7,12 +7,14 @@
   height: 0;
 }
 .ProseMirror h1.is-empty,
-.ProseMirror h2.is-empty {
+.ProseMirror h2.is-empty, 
+.ProseMirror h3.is-empty {
   position: relative;
 }
 
 .ProseMirror h1.is-empty::before,
-.ProseMirror h2.is-empty::before {
+.ProseMirror h2.is-empty::before,
+.ProseMirror h3.is-empty::before {
   position: absolute;
   left: 0;
   right: 0;

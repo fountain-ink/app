@@ -23,7 +23,6 @@ export const proseClasses = [
   "prose-h2:font-[var(--subtitle-weight)]",
   "prose-h2:[font-style:var(--subtitle-style)]",
   "prose-h2:[font-size:var(--subtitle-size)]",
-  "prose-h2:[color:var(--subtitle-color)]",
   "prose-h2:[line-height:var(--subtitle-line-height)]",
   "prose-h2:[letter-spacing:var(--subtitle-letter-spacing)]",
 
