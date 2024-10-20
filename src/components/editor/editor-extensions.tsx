@@ -9,6 +9,7 @@ import Paragraph from "@tiptap/extension-paragraph";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import TextAlign from "@tiptap/extension-text-align";
+import Underline from "@tiptap/extension-underline";
 import type { AnyExtension } from "@tiptap/react";
 import { cx } from "class-variance-authority";
 import { common, createLowlight } from "lowlight";
@@ -39,7 +40,6 @@ import Selection from "./extensions/selection";
 import { suggestionItems } from "./extensions/slash-command";
 import { TrailingNode } from "./extensions/trailing-node";
 import { FirstParagraphPlugin } from "./plugins/first-paragraph-plugin";
-import Underline from "@tiptap/extension-underline";
 
 interface EditorExtensionsProps {
   provider?: HocuspocusProvider | null;
@@ -77,17 +77,17 @@ export const defaultExtensions = ({
     heading: false,
     bulletList: {
       HTMLAttributes: {
-        class: cx("list-disc list-outside leading-3 -mt-2"),
+        class: cx("text-foreground list-disc list-outside leading-3 -mt-2"),
       },
     },
     orderedList: {
       HTMLAttributes: {
-        class: cx("list-decimal list-outside leading-3 -mt-2"),
+        class: cx("text-foreground list-decimal list-outside leading-3 -mt-2"),
       },
     },
     listItem: {
       HTMLAttributes: {
-        class: cx("leading-normal -mb-2"),
+        class: cx("text-foreground leading-normal -mb-2"),
       },
     },
     blockquote: {
@@ -185,10 +185,10 @@ export const defaultExtensions = ({
   Twitter.configure({
     addPasteHandler: true,
     HTMLAttributes: { class: cx("rounded-lg w-full flex items-center justify-center") },
-  }), 
+  }),
   Underline,
   CodeBlockLowlight.configure({
-    // common: covers 37 language grammars 
+    // common: covers 37 language grammars
     lowlight: createLowlight(common),
   }),
   Dropcursor.configure({
@@ -203,6 +203,11 @@ export const defaultExtensions = ({
         "text-muted-foreground underline underline-offset-[3px] hover:text-primary transition-colors cursor-pointer",
       ),
     },
+    openOnClick: false,
+    linkOnPaste: true,
+    autolink: true,
+    protocols: ["http", "https", "mailto", "tel"],
+    validate: (href) => /^https?:\/\//.test(href),
   }),
   Command.configure({
     suggestion: {

@@ -211,7 +211,13 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
         </EditorCommand>
         <EditorBubble
           tippyOptions={{
-            placement: openAI ? "bottom-start" : "top",
+            sticky: false,
+            placement: "top-start",
+          }}
+          shouldShow={({ editor }) => {
+            return (
+              editor.isActive("textStyle") || editor.isActive("link") || editor.view.state.selection.empty === false
+            );
           }}
           className="flex w-fit max-w-[90vw] overflow-hidden rounded-md border border-muted bg-card shadow-xl"
         >
