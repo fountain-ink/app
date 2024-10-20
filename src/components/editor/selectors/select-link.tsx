@@ -50,13 +50,13 @@ export const LinkSelector = ({ open, onOpenChange }: LinkSelectorProps) => {
   return (
     <Popover modal={true} open={open} onOpenChange={onOpenChange}>
       <PopoverTrigger asChild>
-        <Button variant="ghost">
+        <Button variant="ghost" className="rounded-none ">
           <p
             className={cn("underline decoration-foreground underline-offset-4", {
               "text-blue-500": editor.isActive("link"),
             })}
           >
-            <LinkIcon size={16} />
+            <LinkIcon className="h-4 w-4" />
           </p>
         </Button>
       </PopoverTrigger>
