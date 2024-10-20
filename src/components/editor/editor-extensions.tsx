@@ -39,6 +39,7 @@ import Selection from "./extensions/selection";
 import { suggestionItems } from "./extensions/slash-command";
 import { TrailingNode } from "./extensions/trailing-node";
 import { FirstParagraphPlugin } from "./plugins/first-paragraph-plugin";
+import Underline from "@tiptap/extension-underline";
 
 interface EditorExtensionsProps {
   provider?: HocuspocusProvider | null;
@@ -184,7 +185,8 @@ export const defaultExtensions = ({
   Twitter.configure({
     addPasteHandler: true,
     HTMLAttributes: { class: cx("rounded-lg w-full flex items-center justify-center") },
-  }),
+  }), 
+  Underline,
   // UpdatedImage.extend({
   //   group: "block",
   //   draggable: true,
