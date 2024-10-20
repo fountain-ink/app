@@ -213,7 +213,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
           tippyOptions={{
             placement: openAI ? "bottom-start" : "top",
           }}
-          className="flex w-fit max-w-[90vw] overflow-hidden rounded border border-muted bg-card shadow-xl"
+          className="flex w-fit max-w-[90vw] overflow-hidden rounded-md border border-muted bg-card shadow-xl"
         >
           <NodeSelector open={openNode} onOpenChange={setOpenNode} />
           <LinkSelector open={openLink} onOpenChange={setOpenLink} />

@@ -187,30 +187,8 @@ export const defaultExtensions = ({
     HTMLAttributes: { class: cx("rounded-lg w-full flex items-center justify-center") },
   }), 
   Underline,
-  // UpdatedImage.extend({
-  //   group: "block",
-  //   draggable: true,
-  //   addProseMirrorPlugins() {
-  //     return [
-  //       UploadImagesPlugin({
-  //         imageClass: cx("rounded-lg"),
-  //       }),
-  //     ];
-  //   },
-  // }).configure({
-  //   HTMLAttributes: {
-  //     class: cx("rounded-lg border border-muted"),
-  //   },
-  // }),
-  // HeroImage.extend({
-  //   name: "heroImage",
-  // }).configure({
-  //   HTMLAttributes: {
-  //     class: cx("rounded-lg border border-muted"),
-  //   },
-  // }),
   CodeBlockLowlight.configure({
-    // common: covers 37 language grammars which should be good enough in most cases
+    // common: covers 37 language grammars 
     lowlight: createLowlight(common),
   }),
   Dropcursor.configure({

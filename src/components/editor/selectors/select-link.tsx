@@ -1,10 +1,12 @@
-import { cn } from "@/lib/utils";
-import { useEditor } from "novel";
-import { Check, Trash } from "lucide-react";
-import { type Dispatch, type FC, type SetStateAction, useEffect, useRef } from "react";
-import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { PopoverContent } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
+import { Check, LinkIcon, Trash } from "lucide-react";
+import { useEditor } from "novel";
+import { useEffect, useRef } from "react";
 
 export function isValidUrl(url: string) {
   try {
@@ -29,60 +31,69 @@ interface LinkSelectorProps {
   onOpenChange: (open: boolean) => void;
 }
 
+import { useState } from "react";
+
 export const LinkSelector = ({ open, onOpenChange }: LinkSelectorProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const { editor } = useEditor();
+  const [inputValue, setInputValue] = useState("");
 
-  // Autofocus on input by default
   useEffect(() => {
-    inputRef.current?.focus();
-  });
+    if (open) {
+      inputRef.current?.focus();
+      setInputValue(editor?.getAttributes("link").href || "");
+    }
+  }, [open, editor]);
+
   if (!editor) return null;
 
   return (
     <Popover modal={true} open={open} onOpenChange={onOpenChange}>
       <PopoverTrigger asChild>
-        <Button variant='ghost' className='gap-2 rounded-none border-none'>
-          <p className='text-base'>↗</p>
+        <Button variant="ghost">
           <p
-            className={cn("underline decoration-stone-400 underline-offset-4", {
+            className={cn("underline decoration-foreground underline-offset-4", {
               "text-blue-500": editor.isActive("link"),
-            })}>
-            Link
+            })}
+          >
+            <LinkIcon size={16} />
           </p>
         </Button>
       </PopoverTrigger>
-      <PopoverContent align='start' className='w-60 p-0' sideOffset={10}>
+      <PopoverContent align="start" className="p-0 z-50" sideOffset={5}>
         <form
           onSubmit={(e) => {
-            const target = e.currentTarget as HTMLFormElement;
             e.preventDefault();
-            const input = target[0] as HTMLInputElement;
-            const url = getUrlFromString(input.value);
+            const url = getUrlFromString(inputValue);
             url && editor.chain().focus().setLink({ href: url }).run();
           }}
-          className='flex  p-1 '>
+          className="flex p-1 gap-2"
+        >
           <input
             ref={inputRef}
-            type='text'
-            placeholder='Paste a link'
-            className='flex-1 bg-background p-1 text-sm outline-none'
-            defaultValue={editor.getAttributes("link").href || ""}
+            type="text"
+            placeholder="Paste a link"
+            className="flex-1 bg-background p-1 text-sm outline-none focus:ring-2 focus:ring-accent rounded-sm transition-all duration-200 ease-in-out"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            style={{ width: "100%" }}
           />
           {editor.getAttributes("link").href ? (
             <Button
-              size='icon'
-              variant='outline'
-              type='button'
-              className='flex h-8 items-center rounded-sm p-1 text-red-600 transition-all hover:bg-red-100 dark:hover:bg-red-800'
+              size="icon"
+              variant="outline"
+              type="button"
+              className="flex h-8 items-center rounded-sm p-1 text-red-600 transition-all hover:bg-red-100 dark:hover:bg-red-800"
               onClick={() => {
                 editor.chain().focus().unsetLink().run();
-              }}>
-              <Trash className='h-4 w-4' />
+                setInputValue("");
+              }}
+            >
+              <Trash className="h-4 w-4" />
             </Button>
           ) : (
-            <Button size='icon' className='h-8'>
-              <Check className='h-4 w-4' />
+            <Button size="icon" className="h-8">
+              <Check className="h-4 w-4" />
             </Button>
           )}
         </form>
