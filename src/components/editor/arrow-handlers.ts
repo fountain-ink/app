@@ -6,7 +6,7 @@ const handleArrowDown = (editor: Editor) => {
 
   const currentNode = $anchor.parent;
 
-  if (["title", "subtitle"].includes(currentNode.type.name)) {
+  if (["title", "subtitle", "paragraph"].includes(currentNode.type.name)) {
     const pos = $anchor.after();
     const nextNode = editor.state.doc.nodeAt(pos);
 
