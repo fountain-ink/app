@@ -15,17 +15,17 @@ import { cx } from "class-variance-authority";
 import { common, createLowlight } from "lowlight";
 import { UploadIcon } from "lucide-react";
 import {
-    CharacterCount,
-    CodeBlockLowlight,
-    Command,
-    HorizontalRule,
-    StarterKit,
-    TaskItem,
-    TaskList,
-    TiptapLink,
-    Twitter,
-    Youtube,
-    renderItems,
+  CharacterCount,
+  CodeBlockLowlight,
+  Command,
+  HorizontalRule,
+  StarterKit,
+  TaskItem,
+  TaskList,
+  TiptapLink,
+  Twitter,
+  Youtube,
+  renderItems,
 } from "novel/extensions";
 import AutoJoiner from "tiptap-extension-auto-joiner";
 import { Footnote, FootnoteReference, Footnotes } from "tiptap-footnotes";
@@ -67,8 +67,8 @@ export const defaultExtensions = ({
       return {
         ArrowDown: () => arrowHandlers.handleArrowDown(this.editor),
         ArrowUp: () => arrowHandlers.handleArrowUp(this.editor),
-        'Shift-Enter': () => this.editor.commands.enter(),
-        'Mod-Enter': () => this.editor.commands.enter(),
+        "Shift-Enter": () => this.editor.commands.enter(),
+        "Mod-Enter": () => this.editor.commands.enter(),
       };
     },
   }),
@@ -184,14 +184,14 @@ export const defaultExtensions = ({
   }),
   Youtube.configure({
     HTMLAttributes: {
-      class: cx("rounded-lg border aspect-video w-full h-min m-4 flex items-center justify-center"),
+      class: cx("rounded-lg border aspect-video w-full h-min m-4 flex items-center justify-center not-prose "),
     },
     modestBranding: true,
     progressBarColor: "hsl(var(--accent))",
   }),
   Twitter.configure({
     addPasteHandler: true,
-    HTMLAttributes: { class: cx("rounded-lg w-full flex items-center justify-center") },
+    HTMLAttributes: { class: cx("rounded-lg w-full flex items-center justify-center not-prose") },
   }),
   Underline,
   CodeBlockLowlight.configure({

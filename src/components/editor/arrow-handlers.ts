@@ -5,7 +5,7 @@ const handleArrowDown = (editor: Editor) => {
   const { $anchor } = selection;
   const currentNode = $anchor.parent;
 
-  if (["title", "subtitle", "paragraph", "quoteCaption"].includes(currentNode.type.name)) {
+  if (["title", "subtitle", "paragraph", "quoteCaption", "heading"].includes(currentNode.type.name)) {
     const pos = $anchor.after();
     const nextNode = editor.state.doc.nodeAt(pos);
 
@@ -16,7 +16,7 @@ const handleArrowDown = (editor: Editor) => {
   }
 
   // Allow default behavior for text-based nodes
-  if (["paragraph", "title", "subtitle", "quoteCaption"].includes(currentNode.type.name)) {
+  if (["paragraph", "title", "subtitle", "quoteCaption", "heading"].includes(currentNode.type.name)) {
     return false;
   }
 
@@ -59,7 +59,7 @@ const handleArrowUp = (editor: Editor) => {
     return true; // Prevent default behavior
   }
 
-  if (["title", "subtitle", "paragraph", "quoteCaption"].includes(currentNode.type.name)) {
+  if (["title", "subtitle", "paragraph", "quoteCaption", "heading"].includes(currentNode.type.name)) {
     const pos = $anchor.before();
     // Ensure pos is not negative
     if (pos > 0) {
@@ -73,7 +73,7 @@ const handleArrowUp = (editor: Editor) => {
   }
 
   // Allow default behavior for text-based nodes
-  if (["paragraph", "title", "subtitle", "quoteCaption"].includes(currentNode.type.name)) {
+  if (["paragraph", "title", "subtitle", "quoteCaption", "heading"].includes(currentNode.type.name)) {
     return false;
   }
 
