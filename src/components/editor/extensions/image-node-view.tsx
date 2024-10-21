@@ -55,10 +55,8 @@ const ImageComponent = (props: {
     };
     input.click();
   };
-
   const handleRemove = () => {
-    // TODO: Remove from ipfs
-    props.updateAttributes({ src: null });
+    props.deleteNode();
   };
 
   const getWidthClasses = (width: string) => {
