@@ -91,12 +91,12 @@ const ImageComponent = (props: {
         {props.node.attrs.src ? (
           <>
             {isLoading ? (
-              <div className="flex flex-col items-center justify-center space-y-2 w-full aspect-video rounded animate-pulse-slow transition-all duration-1000 delay-0">
+              <div className="flex flex-col items-center justify-center w-full aspect-video rounded animate-pulse-slow transition-all duration-1000 delay-0">
                 <Button className={"z-20 flex gap-2"} variant="muted" disabled>
                   <LoadingSpinner />
                   Uploading...
                 </Button>
-                <div className="placeholder-background" />
+                <div className="placeholder-background rounded-sm" />
               </div>
             ) : (
               <img ref={imageRef} src={props.node.attrs.src} className="w-full h-full object-cover" />
@@ -139,7 +139,7 @@ const ImageComponent = (props: {
             </div>
           </>
         ) : (
-          <div className="flex flex-col items-center justify-center space-y-2 w-full aspect-video rounded">
+          <div className="flex flex-col items-center justify-center w-full aspect-video rounded">
             <Button className="z-20 flex gap-2" variant="muted" onClick={handleUpload} disabled={isLoading}>
               {isLoading ? (
                 <>
@@ -153,7 +153,7 @@ const ImageComponent = (props: {
                 </>
               )}
             </Button>
-            <div className="placeholder-background" />
+            <div className="placeholder-background rounded-sm" />
           </div>
         )}
       </div>

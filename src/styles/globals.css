@@ -110,6 +110,7 @@ p.first-paragraph {
   background-size: 100px 100px;
   opacity: 0.1;
   position: absolute;
+  margin: 0;
   width: 100%;
   height: 100%;
 }
