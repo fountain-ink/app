@@ -15,17 +15,17 @@ import { cx } from "class-variance-authority";
 import { common, createLowlight } from "lowlight";
 import { UploadIcon } from "lucide-react";
 import {
-  CharacterCount,
-  CodeBlockLowlight,
-  Command,
-  HorizontalRule,
-  StarterKit,
-  TaskItem,
-  TaskList,
-  TiptapLink,
-  Twitter,
-  Youtube,
-  renderItems,
+    CharacterCount,
+    CodeBlockLowlight,
+    Command,
+    HorizontalRule,
+    StarterKit,
+    TaskItem,
+    TaskList,
+    TiptapLink,
+    Twitter,
+    Youtube,
+    renderItems,
 } from "novel/extensions";
 import AutoJoiner from "tiptap-extension-auto-joiner";
 import { Footnote, FootnoteReference, Footnotes } from "tiptap-footnotes";
@@ -67,6 +67,8 @@ export const defaultExtensions = ({
       return {
         ArrowDown: () => arrowHandlers.handleArrowDown(this.editor),
         ArrowUp: () => arrowHandlers.handleArrowUp(this.editor),
+        'Shift-Enter': () => this.editor.commands.enter(),
+        'Mod-Enter': () => this.editor.commands.enter(),
       };
     },
   }),
