@@ -134,10 +134,10 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--subtitle-color": "hsl(var(--muted-foreground))",
 
     "--header-font": "plantin",
-    "--header-weight": "100",
+    "--header-weight": "600",
     "--header-style": "normal",
-    "--header-size": "2rem",
-    "--header-line-height": "1.3",
+    "--header-size": "1.5rem",
+    "--header-line-height": "1.2",
     "--header-letter-spacing": "-0.01em",
     "--header-color": "hsl(var(--foreground))",
 
