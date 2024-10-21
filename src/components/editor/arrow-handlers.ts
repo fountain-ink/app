@@ -4,7 +4,6 @@ const handleArrowDown = (editor: Editor) => {
   const { selection } = editor.state;
   const { $anchor } = selection;
   const currentNode = $anchor.parent;
-  console.log(currentNode.type.name, $anchor);
 
   if (["title", "subtitle", "paragraph", "quoteCaption"].includes(currentNode.type.name)) {
     const pos = $anchor.after();
@@ -55,13 +54,21 @@ const handleArrowUp = (editor: Editor) => {
   const currentNode = $anchor.parent;
   console.log(currentNode.type.name, $anchor);
 
+  // Check if we're at the start of the document
+  if ($anchor.pos === 0) {
+    return true; // Prevent default behavior
+  }
+
   if (["title", "subtitle", "paragraph", "quoteCaption"].includes(currentNode.type.name)) {
     const pos = $anchor.before();
-    const prevNode = editor.state.doc.nodeAt(pos - 1);
+    // Ensure pos is not negative
+    if (pos > 0) {
+      const prevNode = editor.state.doc.nodeAt(pos - 1);
 
-    if (prevNode && prevNode.type.name === "paragraph") {
-      editor.commands.setTextSelection(pos - 1);
-      return true;
+      if (prevNode && prevNode.type.name === "paragraph") {
+        editor.commands.setTextSelection(pos - 1);
+        return true;
+      }
     }
   }
 

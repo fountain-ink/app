@@ -117,10 +117,8 @@ export const defaultExtensions = ({
               const subtitleNode = editor.state.doc.nodeAt(endPos);
 
               if (subtitleNode && subtitleNode.type.name === "subtitle") {
-                // If subtitle exists, focus on it
                 editor.commands.focus(endPos + 1);
               } else {
-                // If subtitle doesn't exist, create it
                 editor
                   .chain()
                   .focus()
