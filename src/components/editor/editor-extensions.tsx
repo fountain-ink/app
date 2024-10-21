@@ -111,17 +111,26 @@ export const defaultExtensions = ({
         Enter: () => {
           const { editor } = this;
           if (editor.isActive("title")) {
-            const endPos = editor.$node("title", { level: 1 })?.after?.pos || 3;
-            editor
-              .chain()
-              .focus()
-              .insertContentAt(endPos, { type: "paragraph" })
-              .focus(endPos)
-              .setNode("subtitle", { level: 2 })
-              .run();
-            return true;
-          }
+            const titleNode = editor.state.doc.firstChild;
+            if (titleNode) {
+              const endPos = titleNode.nodeSize;
+              const subtitleNode = editor.state.doc.nodeAt(endPos);
 
+              if (subtitleNode && subtitleNode.type.name === "subtitle") {
+                // If subtitle exists, focus on it
+                editor.commands.focus(endPos + 1);
+              } else {
+                // If subtitle doesn't exist, create it
+                editor
+                  .chain()
+                  .focus()
+                  .insertContentAt(endPos, { type: "subtitle", attrs: { level: 2 } })
+                  .focus(endPos + 1)
+                  .run();
+              }
+              return true;
+            }
+          }
           return false;
         },
       };
