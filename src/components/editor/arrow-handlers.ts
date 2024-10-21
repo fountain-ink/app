@@ -3,10 +3,10 @@ import type { Editor } from "@tiptap/core";
 const handleArrowDown = (editor: Editor) => {
   const { selection } = editor.state;
   const { $anchor } = selection;
-
   const currentNode = $anchor.parent;
+  console.log(currentNode.type.name, $anchor);
 
-  if (["title", "subtitle", "paragraph"].includes(currentNode.type.name)) {
+  if (["title", "subtitle", "paragraph", "quoteCaption"].includes(currentNode.type.name)) {
     const pos = $anchor.after();
     const nextNode = editor.state.doc.nodeAt(pos);
 
@@ -17,7 +17,7 @@ const handleArrowDown = (editor: Editor) => {
   }
 
   // Allow default behavior for text-based nodes
-  if (["paragraph", "title", "subtitle"].includes(currentNode.type.name)) {
+  if (["paragraph", "title", "subtitle", "quoteCaption"].includes(currentNode.type.name)) {
     return false;
   }
 
@@ -49,15 +49,24 @@ const handleArrowDown = (editor: Editor) => {
 
   return false;
 };
-
 const handleArrowUp = (editor: Editor) => {
   const { selection } = editor.state;
   const { $anchor } = selection;
-
   const currentNode = $anchor.parent;
+  console.log(currentNode.type.name, $anchor);
+
+  if (["title", "subtitle", "paragraph", "quoteCaption"].includes(currentNode.type.name)) {
+    const pos = $anchor.before();
+    const prevNode = editor.state.doc.nodeAt(pos - 1);
+
+    if (prevNode && prevNode.type.name === "paragraph") {
+      editor.commands.setTextSelection(pos - 1);
+      return true;
+    }
+  }
 
   // Allow default behavior for text-based nodes
-  if (["paragraph", "title", "subtitle"].includes(currentNode.type.name)) {
+  if (["paragraph", "title", "subtitle", "quoteCaption"].includes(currentNode.type.name)) {
     return false;
   }
 

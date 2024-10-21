@@ -90,11 +90,7 @@ export const defaultExtensions = ({
         class: cx("text-foreground leading-normal -mb-2"),
       },
     },
-    blockquote: {
-      HTMLAttributes: {
-        class: cx("border-l-4 border-primary"),
-      },
-    },
+    blockquote: false,
     codeBlock: false,
     code: {
       HTMLAttributes: {
@@ -108,6 +104,7 @@ export const defaultExtensions = ({
   }),
   Heading.extend({
     name: "title",
+    group: "title",
     marks: "",
     addKeyboardShortcuts() {
       return {
@@ -132,6 +129,7 @@ export const defaultExtensions = ({
   }).configure({ levels: [1] }),
   Heading.extend({
     name: "subtitle",
+    group: "title",
     marks: "",
   }).configure({
     levels: [2],

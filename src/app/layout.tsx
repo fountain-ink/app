@@ -18,7 +18,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
       <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta httpEquiv="Content-Type" content="text/html; charset=utf-8"/>
         <link rel="stylesheet" href="https://use.typekit.net/ybe1bqw.css"/>
         <script defer src="https://stats.pingpad.io/script.js" data-website-id="8e92ba2d-871c-4ebf-b339-e2931b8d6bed"/>
       </head>
