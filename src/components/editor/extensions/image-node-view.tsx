@@ -31,6 +31,12 @@ const ImageComponent = (props: {
   const imageRef = useRef<HTMLImageElement>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuVisible(!isMenuVisible);
+  };
+
   const handleWidth = (width: "column" | "wide" | "full") => {
     props.updateAttributes({ width });
   };
@@ -76,7 +82,8 @@ const ImageComponent = (props: {
     <NodeViewWrapper
       ref={wrapperRef}
       className={`
-        flex rounded-sm focus:ring-2 focus:ring-primary relative my-[--image-margin-y] justify-center ${widthClass}
+
+        flex rounded-sm  relative my-[--image-margin-y] justify-center ${widthClass} ${isMenuVisible && "ring-2 ring-primary"}
       `}
       suppressContentEditableWarning
       data-drag-handle
@@ -99,9 +106,24 @@ const ImageComponent = (props: {
                 <div className="placeholder-background rounded-sm" />
               </div>
             ) : (
-              <img ref={imageRef} src={props.node.attrs.src} className="w-full h-full object-cover" />
+              <img
+                ref={imageRef}
+                src={props.node.attrs.src}
+                className="w-full h-full object-cover cursor-pointer"
+                onClick={toggleMenu}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleMenu();
+                  }
+                }}
+              />
             )}
-            <div className="absolute inset-x-0 -top-4 space-x-1 w-full flex justify-center items-center h-fit opacity-0 transition-opacity ease-in-out group-hover:opacity-100 ">
+            <div
+              className={`absolute inset-x-0 -top-4 space-x-1 w-full flex justify-center items-center h-fit transition-opacity duration-300 ease-in-out ${
+                isMenuVisible ? "opacity-100" : "opacity-0 pointer-events-none"
+              }`}
+            >
               <div className="w-fit rounded-sm border border-border backdrop-blur-xl bg-card flex justify-center items-center h-10">
                 <Button
                   size="icon"
