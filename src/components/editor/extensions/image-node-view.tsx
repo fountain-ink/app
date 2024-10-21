@@ -34,7 +34,6 @@ const ImageComponent = (props: {
   const handleWidth = (width: "column" | "wide" | "full") => {
     props.updateAttributes({ width });
   };
-
   const handleUpload = async () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -42,8 +41,8 @@ const ImageComponent = (props: {
     input.onchange = async (event) => {
       const file = (event.target as HTMLInputElement).files?.[0];
       if (file) {
+        setIsLoading(true);
         try {
-          setIsLoading(true);
           const newSrc = await uploadFile(file);
           props.updateAttributes({ src: newSrc });
         } catch (error) {
@@ -87,13 +86,22 @@ const ImageComponent = (props: {
         className={`
         flex-grow-0 group border-2 border-muted-foreground group-hover:border-primary
         transition-colors duration-300 ease-in-out rounded-sm w-full
-        ${isLoading ? "animate-pulse-slow transition-all duration-1000 delay-0" : ""}
       `}
       >
         {props.node.attrs.src ? (
           <>
-            <img ref={imageRef} src={props.node.attrs.src} className="w-full h-full object-cover" />
-            <div className="absolute inset-x-0 -top-4 space-x-1 w-full flex justify-center items-center h-fit opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100 ">
+            {isLoading ? (
+              <div className="flex flex-col items-center justify-center space-y-2 w-full aspect-video rounded animate-pulse-slow transition-all duration-1000 delay-0">
+                <Button className={"z-20 flex gap-2"} variant="muted" disabled>
+                  <LoadingSpinner />
+                  Uploading...
+                </Button>
+                <div className="placeholder-background" />
+              </div>
+            ) : (
+              <img ref={imageRef} src={props.node.attrs.src} className="w-full h-full object-cover" />
+            )}
+            <div className="absolute inset-x-0 -top-4 space-x-1 w-full flex justify-center items-center h-fit opacity-0 transition-opacity ease-in-out group-hover:opacity-100 ">
               <div className="w-fit rounded-sm border border-border backdrop-blur-xl bg-card flex justify-center items-center h-10">
                 <Button
                   size="icon"
@@ -121,8 +129,8 @@ const ImageComponent = (props: {
                 </Button>
 
                 <Separator className="m-2 h-6" orientation="vertical" />
-                <Button className="w-fit px-2" variant="muted" onClick={handleUpload}>
-                  {props.node.attrs.src ? "Change" : "Upload"}
+                <Button className="w-fit px-2" variant="muted" onClick={handleUpload} disabled={isLoading}>
+                  {isLoading ? "Uploading..." : "Change"}
                 </Button>
                 <Button className="w-fit px-2" variant="muted" onClick={handleRemove}>
                   Remove
