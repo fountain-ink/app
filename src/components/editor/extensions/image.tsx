@@ -13,10 +13,14 @@ export interface ImageOptions {
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
-    image: {
-      setImage: (options: { width?: WidthOptions }) => ReturnType;
-    };
-  }
+      image: {
+        setImage: (options: {
+          src: string;
+          alt?: string;
+          title?: string;
+        }) => ReturnType;
+      };
+    }
 }
 
 export const Image = Node.create<ImageOptions>({
