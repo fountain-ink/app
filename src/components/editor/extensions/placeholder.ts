@@ -51,21 +51,13 @@ export interface PlaceholderOptions {
    * If provided, the placeholder will always be shown for these nodes, regardless of their content.
    * @default []
    */
-
   /**
    * **The placeholder content for the first paragraph**
    *
-   * You can use a string or a function to return a dynamic placeholder for the first paragraph.
+   * You can use a string to set a placeholder for the first paragraph.
    * @default undefined
    */
-  firstParagraphPlaceholder?:
-    | ((PlaceholderProps: {
-        editor: Editor;
-        node: ProsemirrorNode;
-        pos: number;
-        hasAnchor: boolean;
-      }) => string)
-    | string;
+  firstParagraphPlaceholder?: string;
 
   alwaysShowForNodes: string[];
 
@@ -96,7 +88,6 @@ export interface PlaceholderOptions {
  */
 export const Placeholder = Extension.create<PlaceholderOptions>({
   name: "placeholder",
-
   addOptions() {
     return {
       emptyEditorClass: "is-editor-empty",
@@ -109,7 +100,6 @@ export const Placeholder = Extension.create<PlaceholderOptions>({
       firstParagraphPlaceholder: undefined,
     };
   },
-
   addProseMirrorPlugins() {
     return [
       new Plugin({
@@ -131,8 +121,15 @@ export const Placeholder = Extension.create<PlaceholderOptions>({
               const hasAnchor = anchor >= pos && anchor <= pos + node.nodeSize;
               const isEmpty = !node.isLeaf && isNodeEmpty(node);
               const shouldAlwaysShow = this.options.alwaysShowForNodes.includes(node.type.name);
+              const isFirstParagraphWithPlaceholder =
+                isFirstParagraph &&
+                node.type.name === "paragraph" &&
+                this.options.firstParagraphPlaceholder !== undefined;
 
-              if ((hasAnchor || !this.options.showOnlyCurrent || shouldAlwaysShow) && (isEmpty || shouldAlwaysShow)) {
+              if (
+                (hasAnchor || !this.options.showOnlyCurrent || shouldAlwaysShow || isFirstParagraphWithPlaceholder) &&
+                (isEmpty || shouldAlwaysShow || isFirstParagraphWithPlaceholder)
+              ) {
                 const classes = [];
 
                 if (isEmpty) {
@@ -144,16 +141,8 @@ export const Placeholder = Extension.create<PlaceholderOptions>({
                 }
 
                 let placeholderText: string;
-                if (isFirstParagraph && node.type.name === "paragraph" && this.options.firstParagraphPlaceholder) {
-                  placeholderText =
-                    typeof this.options.firstParagraphPlaceholder === "function"
-                      ? this.options.firstParagraphPlaceholder({
-                          editor: this.editor,
-                          node,
-                          pos,
-                          hasAnchor,
-                        })
-                      : this.options.firstParagraphPlaceholder;
+                if (isFirstParagraphWithPlaceholder) {
+                  placeholderText = this.options.firstParagraphPlaceholder as string;
                   isFirstParagraph = false;
                 } else {
                   placeholderText =
