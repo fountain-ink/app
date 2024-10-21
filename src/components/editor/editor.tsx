@@ -69,6 +69,8 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
   const [openNode, setOpenNode] = useState(false);
   const [openLink, setOpenLink] = useState(false);
   const [openAI, _setOpenAI] = useState(false);
+  const [showEditorCommands, setShowEditorCommands] = useState(true);
+
   const [yDoc, setYDoc] = useState<Y.Doc | null>(null);
   const [provider, setProvider] = useState<TiptapCollabProvider | null>(null);
   const [content, setContent] = useState(initialContent);
@@ -176,7 +178,11 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
           handlePaste: (view, event) => handleImagePaste(view, event, uploadFn),
           handleDrop: (view, event, _slice, moved) => handleImageDrop(view, event, moved, uploadFn),
           handleDOMEvents: {
-            keydown: (_view, event) => handleCommandNavigation(event),
+            keydown: (view, event) => {
+              const node = view.state.selection.$head.parent.type.name;
+              setShowEditorCommands(node !== "title" && node !== "subtitle" && node !== "doc");
+              handleCommandNavigation(event);
+            },
           },
           attributes: {
             class: proseClasses,
@@ -186,36 +192,35 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
         enableContentCheck={true}
       >
         {children}
-        <EditorCommand
-          className="z-50 h-auto max-h-[330px]  w-72 overflow-y-auto rounded-md border border-muted bg-card px-1 py-2 shadow-md transition-all"
 
-          // shouldShow={({ editor }) => {
-          //   const currentNode = editor.state.selection.$from.parent;
-          //   return !['title', 'subtitle'].includes(currentNode.type.name);
-          // }}
-        >
-          <EditorCommandEmpty className="px-2 text-muted-foreground">No results</EditorCommandEmpty>
-          <EditorCommandList>
-            {suggestionItems.map((item) => (
-              <EditorCommandItem
-                value={item.title}
-                onCommand={(val) => item.command?.(val) ?? null}
-                className={
-                  "flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm hover:bg-accent aria-selected:bg-accent "
-                }
-                key={item.title}
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-md border border-muted bg-background">
-                  {item.icon}
-                </div>
-                <div>
-                  <p className="font-medium">{item.title}</p>
-                  <p className="text-xs text-muted-foreground">{item.description}</p>
-                </div>
-              </EditorCommandItem>
-            ))}
-          </EditorCommandList>
-        </EditorCommand>
+        {showEditorCommands && (
+          <EditorCommand
+            className="z-50 h-auto max-h-[330px]  w-72 overflow-y-auto rounded-md border border-muted bg-card px-1 py-2 shadow-md transition-all"
+            vimBindings={true}
+          >
+            <EditorCommandEmpty className="px-2 text-muted-foreground">No results</EditorCommandEmpty>
+            <EditorCommandList>
+              {suggestionItems.map((item) => (
+                <EditorCommandItem
+                  value={item.title}
+                  onCommand={(val) => item.command?.(val) ?? null}
+                  className={
+                    "flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm hover:bg-accent aria-selected:bg-accent "
+                  }
+                  key={item.title}
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-md border border-muted bg-background">
+                    {item.icon}
+                  </div>
+                  <div>
+                    <p className="font-medium">{item.title}</p>
+                    <p className="text-xs text-muted-foreground">{item.description}</p>
+                  </div>
+                </EditorCommandItem>
+              ))}
+            </EditorCommandList>
+          </EditorCommand>
+        )}
 
         <EditorBubble
           tippyOptions={{
