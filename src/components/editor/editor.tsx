@@ -186,7 +186,14 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
         enableContentCheck={true}
       >
         {children}
-        <EditorCommand className="z-50 h-auto max-h-[330px]  w-72 overflow-y-auto rounded-md border border-muted bg-card px-1 py-2 shadow-md transition-all">
+        <EditorCommand
+          className="z-50 h-auto max-h-[330px]  w-72 overflow-y-auto rounded-md border border-muted bg-card px-1 py-2 shadow-md transition-all"
+
+          // shouldShow={({ editor }) => {
+          //   const currentNode = editor.state.selection.$from.parent;
+          //   return !['title', 'subtitle'].includes(currentNode.type.name);
+          // }}
+        >
           <EditorCommandEmpty className="px-2 text-muted-foreground">No results</EditorCommandEmpty>
           <EditorCommandList>
             {suggestionItems.map((item) => (
@@ -209,13 +216,18 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
             ))}
           </EditorCommandList>
         </EditorCommand>
+
         <EditorBubble
           tippyOptions={{
             sticky: false,
             placement: "top-start",
           }}
           shouldShow={({ editor }) => {
-            return editor.isActive("image") || editor.isActive("link") || editor.view.state.selection.empty === false;
+            const node = editor.view.state.selection.$head.parent.type.name;
+            if (node === "title" || node === "subtitle" || node === "doc") {
+              return false;
+            }
+            return editor.isActive("link") || editor.view.state.selection.empty === false;
           }}
           className="flex w-fit max-w-[90vw] overflow-hidden rounded-md border border-muted bg-card shadow-xl"
         >

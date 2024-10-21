@@ -1,3 +1,8 @@
+.ProseMirror h1 {
+    text-rendering: geometricPrecision;
+
+}
+
 .ProseMirror .is-editor-empty:first-child::before,
 .ProseMirror .is-empty::before {
   content: attr(data-placeholder);
@@ -6,8 +11,9 @@
   pointer-events: none;
   height: 0;
 }
+
 .ProseMirror h1.is-empty,
-.ProseMirror h2.is-empty, 
+.ProseMirror h2.is-empty,
 .ProseMirror h3.is-empty {
   position: relative;
 }
