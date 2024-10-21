@@ -3,7 +3,7 @@
 import type { ProfileFragment } from "@lens-protocol/client";
 import { type Profile, SessionType, useSession } from "@lens-protocol/react-web";
 import { toast } from "sonner";
-import { Avatar, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export const SessionAvatar = () => {
   const { data: session, loading, error } = useSession();
@@ -44,6 +44,9 @@ export const UserAvatar = ({
     <div className={className}>
       <Avatar className="w-full h-full m-0">
         <AvatarImage className="m-0" src={avatar} />
+        <AvatarFallback>
+          <AvatarSuspense />
+        </AvatarFallback>
       </Avatar>
     </div>
   );
