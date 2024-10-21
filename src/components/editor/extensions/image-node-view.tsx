@@ -61,7 +61,7 @@ const ImageComponent = (props: {
   const getWidthClasses = (width: string) => {
     switch (width) {
       case "wide":
-        return "w-[120%] -ml-[10%] max-w-[120%]";
+        return "w-[160%] -ml-[30%]";
       case "full":
         return "w-screen max-w-[90vw] relative -translate-x-1/2 left-1/2 content-center justify-center";
       default:
