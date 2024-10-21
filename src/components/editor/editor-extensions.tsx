@@ -179,6 +179,10 @@ export const defaultExtensions = ({
         return "Heading";
       }
 
+      if (node.type.name === "codeBlock") {
+        return "";
+      }
+
       return "Type `/` for commands";
     },
   }),
