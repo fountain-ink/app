@@ -108,7 +108,7 @@ const ImageComponent = (props: {
         {props.node.attrs.src ? (
           <>
             {isLoading ? (
-              <div className="flex flex-col items-center justify-center w-full aspect-video rounded-sm animate-pulse-slow transition-all duration-1000 delay-0 border-2 border-muted-foreground/50 group-hover:border-primary">
+              <div className="flex flex-col items-center justify-center w-full aspect-video rounded-sm animate-pulse-slow transition-all duration-1000 delay-0 border-2 border-muted-foreground/10 group-hover:border-primary">
                 <Button className={"z-20 flex gap-2"} variant="muted" disabled>
                   <LoadingSpinner />
                   Uploading...
@@ -119,7 +119,7 @@ const ImageComponent = (props: {
               <img
                 ref={imageRef}
                 src={props.node.attrs.src}
-                className={`w-full h-full object-cover cursor-pointer rounded-sm border-2 border-muted-foreground/50 group-hover:border-primary ${isMenuVisible && "ring-2 ring-primary border-0"} `}
+                className={`w-full h-full object-cover cursor-pointer rounded-sm border-2 border-muted-foreground/10 group-hover:border-primary ${isMenuVisible && "ring-2 ring-primary border-0"} `}
                 onClick={toggleMenu}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
@@ -171,7 +171,7 @@ const ImageComponent = (props: {
             </div>
           </>
         ) : (
-          <div className="flex flex-col items-center justify-center w-full aspect-video rounded-sm border-2 border-muted-foreground/50 group-hover:border-primary">
+          <div className="flex flex-col items-center justify-center w-full aspect-video rounded-sm border-2 border-muted-foreground/10 group-hover:border-primary">
             <Button className="z-20 flex gap-2" variant="muted" onClick={handleUpload} disabled={isLoading}>
               {isLoading ? (
                 <>

@@ -44,8 +44,40 @@ export const proseClasses = [
   "prose-p:[letter-spacing:var(--paragraph-letter-spacing)]",
   "prose-p:[color:var(--paragraph-color)]",
 
-  "prose-ul:[margin-top:var(--list-margin)] prose-ul:[margin-bottom:var(--list-margin)]",
-  "prose-ol:[margin-top:var(--list-margin)] prose-ol:[margin-bottom:var(--list-margin)]",
+  "prose-ul:font-[family-name:var(--list-font)]",
+  "prose-ul:font-[var(--list-weight)]",
+  "prose-ul:[font-style:var(--list-style)]",
+  "prose-ul:[font-size:var(--list-size)]",
+  "prose-ul:[line-height:var(--list-line-height)]",
+  "prose-ul:[letter-spacing:var(--list-letter-spacing)]",
+  "prose-ul:[color:var(--list-color)]",
+  "prose-ul:[margin-top:var(--list-margin-top)]",
+  "prose-ul:[margin-bottom:var(--list-margin-bottom)]",
 
+  "prose-ol:font-[family-name:var(--list-font)]",
+  "prose-ol:font-[var(--list-weight)]",
+  "prose-ol:[font-style:var(--list-style)]",
+  "prose-ol:[font-size:var(--list-size)]",
+  "prose-ol:[line-height:var(--list-line-height)]",
+  "prose-ol:[letter-spacing:var(--list-letter-spacing)]",
+  "prose-ol:[color:var(--list-color)]",
+  "prose-ol:[margin-top:var(--list-margin-top)]",
+  "prose-ol:[margin-bottom:var(--list-margin-bottom)]",
+
+  "prose-li:font-[family-name:var(--list-font)]",
+  "prose-li:font-[var(--list-weight)]",
+  "prose-li:[font-style:var(--list-style)]",
+  "prose-li:[font-size:var(--list-size)]",
+  "prose-li:[line-height:var(--list-line-height)]",
+  "prose-li:[letter-spacing:var(--list-letter-spacing)]",
+  "prose-li:[color:var(--list-color)]",
+
+  "prose-ul:[--tw-prose-bullets:var(--list-color)]",
+  "prose-ol:[--tw-prose-bullets:var(--list-color)]",
+  "prose-ul:[--tw-prose-counters:var(--list-color)]",
+  "prose-ol:[--tw-prose-counters:var(--list-color)]",
+  
+
+  
   "focus:outline-none",
 ].join(" ");

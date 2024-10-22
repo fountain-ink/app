@@ -136,6 +136,7 @@ ul[data-type="taskList"] li > label input[type="checkbox"] {
   margin-right: 0.3rem;
   display: grid;
   place-content: center;
+  border-radius: 4px;
 
   &:hover {
     background-color: hsl(var(--accent));
@@ -439,4 +440,15 @@ ol.footnotes {
 
 ol.footnotes:has(li) {
   border-top: 1px solid black;
+}
+
+.ProseMirror li p,
+.ProseMirror li p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.ProseMirror li {
+  margin-top: 0;
+  margin-bottom: 0;
 }

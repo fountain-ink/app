@@ -77,26 +77,13 @@ export const defaultExtensions = ({
     paragraph: false,
     history: false,
     heading: false,
-    bulletList: {
-      HTMLAttributes: {
-        class: cx("text-foreground list-disc list-outside leading-3 -mt-2"),
-      },
-    },
-    orderedList: {
-      HTMLAttributes: {
-        class: cx("text-foreground list-decimal list-outside leading-3 -mt-2"),
-      },
-    },
-    listItem: {
-      HTMLAttributes: {
-        class: cx("text-foreground leading-normal -mb-2"),
-      },
-    },
+    bulletList: {},
+    orderedList: {},
+    listItem: {},
     blockquote: false,
     codeBlock: false,
     code: {
       HTMLAttributes: {
-        class: cx("rounded-md bg-muted  px-1.5 py-1 font-mono font-medium"),
         spellcheck: "false",
       },
     },
@@ -263,12 +250,12 @@ export const defaultExtensions = ({
   }),
   TaskList.configure({
     HTMLAttributes: {
-      class: cx("not-prose pl-2"),
+      class: cx("not-prose"),
     },
   }),
   TaskItem.configure({
     HTMLAttributes: {
-      class: cx("flex items-start my-4"),
+      class: cx("flex items-start pl-1.5 my-2"),
     },
     nested: true,
   }),

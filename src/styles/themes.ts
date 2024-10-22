@@ -81,7 +81,18 @@ type ThemeColors = {
   "--subtitle-margin": string;
   "--header-margin": string;
   "--paragraph-margin": string;
+
   "--list-margin": string;
+  "--list-font": string;
+  "--list-weight": string | "100" | "200" | "300" | "400" | "500" | "600" | "800" | "900";
+  "--list-style": string | "normal" | "italic";
+  "--list-size": string;
+  "--list-line-height": string;
+  "--list-letter-spacing": string;
+  "--list-color": string;
+  "--list-indent": string;
+  "--list-item-margin": string;
+  "--list-item-spacing": string;
 };
 
 export const globalThemes: Record<ThemeType, ThemeColors> = {
@@ -163,5 +174,16 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--header-margin": "2rem",
     "--paragraph-margin": "2rem",
     "--list-margin": "1rem",
+
+    "--list-font": "var(--paragraph-font)",
+    "--list-weight": "var(--paragraph-weight)",
+    "--list-style": "var(--paragraph-style)",
+    "--list-size": "var(--paragraph-size)",
+    "--list-line-height": "var(--paragraph-line-height)",
+    "--list-letter-spacing": "var(--paragraph-letter-spacing)",
+    "--list-color": "var(--paragraph-color)",
+    "--list-indent": "1.5em",
+    "--list-item-margin": "0.5em",
+    "--list-item-spacing": "1.25em",
   },
 };
