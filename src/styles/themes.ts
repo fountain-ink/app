@@ -93,10 +93,9 @@ type ThemeColors = {
   "--list-indent": string;
   "--list-item-margin": string;
   "--list-item-spacing": string;
-  
+
   "--strong-weight": "600" | "700" | "800" | "900";
 };
-
 
 export const globalThemes: Record<ThemeType, ThemeColors> = {
   editorial: {
@@ -160,7 +159,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--paragraph-style": "normal",
     "--paragraph-size": "1.25rem",
     "--paragraph-line-height": "1.6",
-    "--paragraph-letter-spacing": "-0.3px",
+    "--paragraph-letter-spacing": "-1%",
     "--paragraph-color": "hsl(var(--foreground))",
 
     "--paragraph-first-letter-size": "7rem",
@@ -189,7 +188,6 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--list-item-margin": "0.5em",
     "--list-item-spacing": "1.25em",
 
-    "--strong-weight": "700",    
-    
+    "--strong-weight": "700",
   },
 };

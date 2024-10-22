@@ -193,19 +193,7 @@ export const defaultExtensions = ({
         return "Heading";
       }
 
-      if (node.type.name === "codeBlock") {
-        return "";
-      }
-
-      if (node.type.name === "bulletList") {
-        return "";
-      }
-
-      if (node.type.name === "taskList") {
-        return "";
-      }
-
-      if (node.type.name === "orderedList") {
+      if (["codeBlock", "bulletList", "taskList", "orderedList"].includes(node.type.name)) {
         return "";
       }
 
@@ -217,6 +205,7 @@ export const defaultExtensions = ({
       class: cx("rounded-lg border aspect-video w-full h-min m-4 flex items-center justify-center not-prose "),
     },
     modestBranding: true,
+    
     progressBarColor: "hsl(var(--accent))",
   }),
   Twitter.configure({
