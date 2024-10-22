@@ -93,7 +93,10 @@ type ThemeColors = {
   "--list-indent": string;
   "--list-item-margin": string;
   "--list-item-spacing": string;
+  
+  "--strong-weight": "600" | "700" | "800" | "900";
 };
+
 
 export const globalThemes: Record<ThemeType, ThemeColors> = {
   editorial: {
@@ -185,5 +188,8 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--list-indent": "1.5em",
     "--list-item-margin": "0.5em",
     "--list-item-spacing": "1.25em",
+
+    "--strong-weight": "700",    
+    
   },
 };

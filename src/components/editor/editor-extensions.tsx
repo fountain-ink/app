@@ -197,6 +197,18 @@ export const defaultExtensions = ({
         return "";
       }
 
+      if (node.type.name === "bulletList") {
+        return "";
+      }
+
+      if (node.type.name === "taskList") {
+        return "";
+      }
+
+      if (node.type.name === "orderedList") {
+        return "";
+      }
+
       return "Type `/` for commands";
     },
   }),

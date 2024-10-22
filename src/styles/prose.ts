@@ -76,8 +76,8 @@ export const proseClasses = [
   "prose-ol:[--tw-prose-bullets:var(--list-color)]",
   "prose-ul:[--tw-prose-counters:var(--list-color)]",
   "prose-ol:[--tw-prose-counters:var(--list-color)]",
-  
 
-  
+  "prose-strong:font-[var(--strong-weight)]",
+
   "focus:outline-none",
 ].join(" ");
