@@ -158,8 +158,8 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--image-margin-y": "4rem",
     "--image-border-radius": "1rem",
 
-    "--title-margin": "2rem",
-    "--subtitle-margin": "1.5rem",
+    "--title-margin": "3rem",
+    "--subtitle-margin": "2rem",
     "--header-margin": "2rem",
     "--paragraph-margin": "2rem",
     "--list-margin": "1rem",
