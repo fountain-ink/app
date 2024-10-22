@@ -10,6 +10,8 @@ import { useRef } from "react";
 
 import { useState } from "react";
 
+import { useEffect } from "react";
+
 const ImageComponent = (props: {
   node: {
     attrs: {
@@ -32,6 +34,19 @@ const ImageComponent = (props: {
   const [isLoading, setIsLoading] = useState(false);
 
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+  
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setIsMenuVisible(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);  
 
   const toggleMenu = () => {
     setIsMenuVisible(!isMenuVisible);
