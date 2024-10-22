@@ -98,7 +98,7 @@ const ImageComponent = (props: {
       ref={wrapperRef}
       className={`
 
-        flex rounded-sm  relative my-[--image-margin-y] justify-center ${widthClass} ${isMenuVisible && "ring-2 ring-primary"}
+        flex rounded-sm  relative my-[--image-margin-y] justify-center ${widthClass}}
       `}
       suppressContentEditableWarning
       data-drag-handle
@@ -119,7 +119,7 @@ const ImageComponent = (props: {
               <img
                 ref={imageRef}
                 src={props.node.attrs.src}
-                className="w-full h-full object-cover cursor-pointer rounded-sm border-2 border-muted-foreground/50 group-hover:border-primary"
+                className={`w-full h-full object-cover cursor-pointer rounded-sm border-2 border-muted-foreground/50 group-hover:border-primary ${isMenuVisible && "ring-2 ring-primary border-0"} `}
                 onClick={toggleMenu}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
