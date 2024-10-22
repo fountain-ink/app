@@ -181,7 +181,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
             keydown: (view, event) => {
               const node = view.state.selection.$head.parent.type.name;
               setShowEditorCommands(node !== "title" && node !== "subtitle" && node !== "doc");
-              handleCommandNavigation(event);
+              return handleCommandNavigation(event);
             },
           },
           attributes: {

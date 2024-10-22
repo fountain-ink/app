@@ -132,7 +132,7 @@ export const defaultExtensions = ({
             }
           }
 
-          return true;
+          return false;
         },
       };
     },
@@ -156,12 +156,13 @@ export const defaultExtensions = ({
               if (nextNode) {
                 this.editor.commands.focus(endPos + 1);
               } else {
-                this.editor.commands.insertContentAt(endPos, { type: 'paragraph' });
+                this.editor.commands.insertContentAt(endPos, { type: "paragraph" });
                 this.editor.commands.focus(endPos + 1);
               }
               return true;
             }
           }
+
           return false;
         },
       };

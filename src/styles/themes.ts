@@ -116,9 +116,9 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--title-weight": "300",
     "--title-style": "italic",
     "--title-align": "center",
-    "--title-size": "3.3rem",
-    "--title-line-height": "1.2",
-    "--title-letter-spacing": "-0.02em",
+    "--title-size": "3.875rem",
+    "--title-line-height": "3.875rem",
+    "--title-letter-spacing": "-0.075rem",
     "--title-color": "hsl(var(--foreground))",
 
     "--subtitle-align": "center",
