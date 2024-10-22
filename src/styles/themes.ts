@@ -76,6 +76,7 @@ type ThemeColors = {
   "--paragraph-first-letter-initial"?: string;
 
   "--image-margin-y": string;
+  "--image-border-radius": string;
 
   "--margin-h1": string;
   "--margin-h2": string;
@@ -156,6 +157,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--paragraph-first-letter-initial": "3",
 
     "--image-margin-y": "2rem",
+    "--image-border-radius": "1rem",
 
     "--margin-h1": "1rem",
     "--margin-h2": "1.5rem",

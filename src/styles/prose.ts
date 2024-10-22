@@ -3,7 +3,8 @@ import "./fonts";
 export const proseClasses = [
   "prose prose-sm sm:prose-base lg:prose-lg",
 
-  "prose-img:rounded-xl prose-img:m-0",
+  "prose-img:[radius:var(--image-border-radius)]",
+  "prose-img:m-0",
 
   "prose-h1:[color:var(--title-color)]",
   "prose-h1:[margin-top:var(--margin-h1)] prose-h1:[margin-bottom:var(--margin-h1)]",
