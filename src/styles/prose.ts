@@ -5,9 +5,8 @@ export const proseClasses = [
 
   "prose-img:[radius:var(--image-border-radius)]",
   "prose-img:m-0",
-
   "prose-h1:[color:var(--title-color)]",
-  "prose-h1:[margin-top:var(--margin-h1)] prose-h1:[margin-bottom:var(--margin-h1)]",
+  "prose-h1:[margin-top:var(--header-margin)] prose-h1:[margin-bottom:var(--header-margin)]",
   "prose-h1:text-6xl",
   "prose-h1:[text-align:var(--title-align)]",
   "prose-h1:font-[family-name:var(--title-font)]",
@@ -18,7 +17,7 @@ export const proseClasses = [
   "prose-h1:[letter-spacing:var(--title-letter-spacing)]",
 
   "prose-h2:[color:var(--subtitle-color)]",
-  "prose-h2:[margin-top:var(--margin-h2)] prose-h2:[margin-bottom:var(--margin-h2)]",
+  "prose-h2:[margin-top:var(--header-margin)] prose-h2:[margin-bottom:var(--header-margin)]",
   "prose-h2:[text-align:var(--title-align)]",
   "prose-h2:font-[family-name:var(--subtitle-font)]",
   "prose-h2:font-[var(--subtitle-weight)]",
@@ -28,7 +27,7 @@ export const proseClasses = [
   "prose-h2:[letter-spacing:var(--subtitle-letter-spacing)]",
 
   "prose-h3:[color:var(--header-color)]",
-  "prose-h3:[margin-top:var(--margin-h3)] prose-h3:[margin-bottom:var(--margin-h3)]",
+  "prose-h3:[margin-top:var(--header-margin)] prose-h3:[margin-bottom:var(--header-margin)]",
   "prose-h3:font-[family-name:var(--header-font)]",
   "prose-h3:font-[var(--header-weight)]",
   "prose-h3:[font-style:var(--header-style)]",
@@ -36,7 +35,7 @@ export const proseClasses = [
   "prose-h3:[line-height:var(--header-line-height)]",
   "prose-h3:[letter-spacing:var(--header-letter-spacing)]",
 
-  "prose-p:[margin-top:var(--margin-paragraph)] prose-p:[margin-bottom:var(--margin-paragraph)]",
+  "prose-p:[margin-top:var(--paragraph-margin)] prose-p:[margin-bottom:var(--paragraph-margin)]",
   "prose-p:font-[family-name:var(--paragraph-font)]",
   "prose-p:font-[var(--paragraph-weight)]",
   "prose-p:[font-style:var(--paragraph-style)]",
@@ -45,8 +44,8 @@ export const proseClasses = [
   "prose-p:[letter-spacing:var(--paragraph-letter-spacing)]",
   "prose-p:[color:var(--paragraph-color)]",
 
-  "prose-ul:[margin-top:var(--margin-list)] prose-ul:[margin-bottom:var(--margin-list)]",
-  "prose-ol:[margin-top:var(--margin-list)] prose-ol:[margin-bottom:var(--margin-list)]",
+  "prose-ul:[margin-top:var(--list-margin)] prose-ul:[margin-bottom:var(--list-margin)]",
+  "prose-ol:[margin-top:var(--list-margin)] prose-ol:[margin-bottom:var(--list-margin)]",
 
   "focus:outline-none",
 ].join(" ");

@@ -77,12 +77,11 @@ type ThemeColors = {
 
   "--image-margin-y": string;
   "--image-border-radius": string;
-
-  "--margin-h1": string;
-  "--margin-h2": string;
-  "--margin-h3": string;
-  "--margin-paragraph": string;
-  "--margin-list": string;
+  "--title-margin": string;
+  "--subtitle-margin": string;
+  "--header-margin": string;
+  "--paragraph-margin": string;
+  "--list-margin": string;
 };
 
 export const globalThemes: Record<ThemeType, ThemeColors> = {
@@ -156,13 +155,13 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--paragraph-first-letter-padding-top": "0.5rem",
     "--paragraph-first-letter-initial": "3",
 
-    "--image-margin-y": "2rem",
+    "--image-margin-y": "4rem",
     "--image-border-radius": "1rem",
 
-    "--margin-h1": "1rem",
-    "--margin-h2": "1.5rem",
-    "--margin-h3": "2rem",
-    "--margin-paragraph": "2rem",
-    "--margin-list": "1rem",
+    "--title-margin": "2rem",
+    "--subtitle-margin": "1.5rem",
+    "--header-margin": "2rem",
+    "--paragraph-margin": "2rem",
+    "--list-margin": "1rem",
   },
 };

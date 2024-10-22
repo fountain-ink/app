@@ -131,7 +131,8 @@ export const defaultExtensions = ({
               return true;
             }
           }
-          return false;
+
+          return true;
         },
       };
     },
@@ -140,6 +141,31 @@ export const defaultExtensions = ({
     name: "subtitle",
     group: "title",
     marks: "",
+    addKeyboardShortcuts() {
+      return {
+        Enter: () => {
+          if (this.editor.isActive("subtitle")) {
+            const { state } = this.editor;
+            const subtitlePos = state.selection.$from.start() - 1;
+            const subtitleNode = state.doc.nodeAt(subtitlePos);
+
+            if (subtitleNode) {
+              const endPos = subtitlePos + subtitleNode.nodeSize;
+              const nextNode = state.doc.nodeAt(endPos);
+
+              if (nextNode) {
+                this.editor.commands.focus(endPos + 1);
+              } else {
+                this.editor.commands.insertContentAt(endPos, { type: 'paragraph' });
+                this.editor.commands.focus(endPos + 1);
+              }
+              return true;
+            }
+          }
+          return false;
+        },
+      };
+    },
   }).configure({
     levels: [2],
   }),

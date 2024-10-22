@@ -34,7 +34,7 @@ const ImageComponent = (props: {
   const [isLoading, setIsLoading] = useState(false);
 
   const [isMenuVisible, setIsMenuVisible] = useState(false);
-  
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
@@ -46,7 +46,7 @@ const ImageComponent = (props: {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);  
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuVisible(!isMenuVisible);
@@ -108,7 +108,7 @@ const ImageComponent = (props: {
         {props.node.attrs.src ? (
           <>
             {isLoading ? (
-              <div className="flex flex-col items-center justify-center w-full aspect-video rounded-sm animate-pulse-slow transition-all duration-1000 delay-0">
+              <div className="flex flex-col items-center justify-center w-full aspect-video rounded-sm animate-pulse-slow transition-all duration-1000 delay-0 border-2 border-muted-foreground/50 group-hover:border-primary">
                 <Button className={"z-20 flex gap-2"} variant="muted" disabled>
                   <LoadingSpinner />
                   Uploading...
@@ -171,7 +171,7 @@ const ImageComponent = (props: {
             </div>
           </>
         ) : (
-          <div className="flex flex-col items-center justify-center w-full aspect-video rounded-sm">
+          <div className="flex flex-col items-center justify-center w-full aspect-video rounded-sm border-2 border-muted-foreground/50 group-hover:border-primary">
             <Button className="z-20 flex gap-2" variant="muted" onClick={handleUpload} disabled={isLoading}>
               {isLoading ? (
                 <>
