@@ -7,9 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { uploadFile } from "@/lib/upload-image";
 import { NodeViewWrapper } from "@tiptap/react";
 import { useRef } from "react";
-
 import { useState } from "react";
-
 import { useEffect } from "react";
 
 const ImageComponent = (props: {
@@ -75,8 +73,10 @@ const ImageComponent = (props: {
     };
     input.click();
   };
+  
   const handleRemove = () => {
     props.deleteNode();
+    props.editor.commands.focus();
   };
 
   const getWidthClasses = (width: string) => {
