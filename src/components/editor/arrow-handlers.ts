@@ -52,7 +52,6 @@ const handleArrowUp = (editor: Editor) => {
   const { selection } = editor.state;
   const { $anchor } = selection;
   const currentNode = $anchor.parent;
-  console.log(currentNode.type.name, $anchor);
 
   // Check if we're at the start of the document
   if ($anchor.pos === 0) {

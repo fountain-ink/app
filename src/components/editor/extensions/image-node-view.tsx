@@ -10,6 +10,8 @@ import { useRef } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 
+import { useCallback } from "react";
+
 const ImageComponent = (props: {
   node: {
     attrs: {
@@ -30,8 +32,11 @@ const ImageComponent = (props: {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuVisible(!isMenuVisible);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -46,13 +51,10 @@ const ImageComponent = (props: {
     };
   }, []);
 
-  const toggleMenu = () => {
-    setIsMenuVisible(!isMenuVisible);
-  };
-
   const handleWidth = (width: "column" | "wide" | "full") => {
     props.updateAttributes({ width });
   };
+
   const handleUpload = async () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -73,7 +75,7 @@ const ImageComponent = (props: {
     };
     input.click();
   };
-  
+
   const handleRemove = () => {
     props.deleteNode();
     props.editor.commands.focus();
@@ -97,18 +99,21 @@ const ImageComponent = (props: {
     <NodeViewWrapper
       ref={wrapperRef}
       className={`
-
-        flex rounded-sm  relative my-[--image-margin-y] justify-center ${widthClass}}
+        flex rounded-sm relative my-[--image-margin-y] justify-center ${widthClass}
       `}
       suppressContentEditableWarning
-      data-drag-handle
-      tabIndex={0}
+      onKeyDown={(e: any) => {
+        if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+          e.preventDefault();
+          setIsMenuVisible(false);
+        }
+      }}
     >
       <div className={" flex-grow-0 group transition-colors duration-300 ease-in-out rounded-sm w-full "}>
         {props.node.attrs.src ? (
           <>
             {isLoading ? (
-              <div className="flex flex-col items-center justify-center w-full aspect-video rounded-sm animate-pulse-slow transition-all duration-1000 delay-0 border-2 border-muted-foreground/10 group-hover:border-primary">
+              <div className="flex flex-col items-center justify-center w-full aspect-[16/8] rounded-sm animate-pulse-slow transition-all duration-1000 delay-0 border-2 border-muted-foreground/10 group-hover:border-primary">
                 <Button className={"z-20 flex gap-2"} variant="muted" disabled>
                   <LoadingSpinner />
                   Uploading...
@@ -116,17 +121,12 @@ const ImageComponent = (props: {
                 <div className="placeholder-background rounded-sm" />
               </div>
             ) : (
+              // biome-ignore lint/a11y/useKeyWithClickEvents:
               <img
                 ref={imageRef}
                 src={props.node.attrs.src}
-                className={`w-full h-full object-cover cursor-pointer rounded-sm border-2 border-muted-foreground/10 group-hover:border-primary ${isMenuVisible && "ring-2 ring-primary border-primary"} `}
                 onClick={toggleMenu}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    toggleMenu();
-                  }
-                }}
+                className={`w-full h-full object-cover cursor-pointer rounded-sm border-2 border-muted-foreground/10 group-hover:border-primary ${isMenuVisible && "ring-2 ring-primary border-primary"} `}
               />
             )}
             <div
@@ -171,7 +171,7 @@ const ImageComponent = (props: {
             </div>
           </>
         ) : (
-          <div className="flex flex-col items-center justify-center w-full aspect-video rounded-sm border-2 border-muted-foreground/10 group-hover:border-primary">
+          <div className="flex flex-col items-center justify-center w-full aspect-[16/8] rounded-sm border-2 border-muted-foreground/10 group-hover:border-primary">
             <Button className="z-20 flex gap-2" variant="muted" onClick={handleUpload} disabled={isLoading}>
               {isLoading ? (
                 <>
