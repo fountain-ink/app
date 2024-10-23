@@ -34,13 +34,17 @@ const ImageComponent = (props: {
   const [isLoading, setIsLoading] = useState(false);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
 
+  const [isClicked, setIsClicked] = useState(false);
+
   const toggleMenu = () => {
-    setIsMenuVisible(!isMenuVisible);
+    setIsClicked(!isClicked);
+    setIsMenuVisible(true);
   };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setIsClicked(false);
         setIsMenuVisible(false);
       }
     };
@@ -81,6 +85,18 @@ const ImageComponent = (props: {
     props.editor.commands.focus();
   };
 
+  const handleMouseEnter = () => {
+    if (!isClicked) {
+      setIsMenuVisible(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (!isClicked) {
+      setIsMenuVisible(false);
+    }
+  };
+
   const getWidthClasses = (width: string) => {
     switch (width) {
       case "wide":
@@ -101,13 +117,9 @@ const ImageComponent = (props: {
       className={`
         flex rounded-sm relative my-[--image-margin-y] justify-center ${widthClass}
       `}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       suppressContentEditableWarning
-      onKeyDown={(e: any) => {
-        if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-          e.preventDefault();
-          setIsMenuVisible(false);
-        }
-      }}
     >
       <div className={" flex-grow-0 group transition-colors duration-300 ease-in-out rounded-sm w-full "}>
         {props.node.attrs.src ? (
@@ -121,16 +133,23 @@ const ImageComponent = (props: {
                 <div className="placeholder-background rounded-sm" />
               </div>
             ) : (
-              // biome-ignore lint/a11y/useKeyWithClickEvents:
               <img
                 ref={imageRef}
                 src={props.node.attrs.src}
                 onClick={toggleMenu}
-                className={`w-full h-full object-cover cursor-pointer rounded-sm border-2 border-muted-foreground/10 group-hover:border-primary ${isMenuVisible && "ring-2 ring-primary border-primary"} `}
+                onKeyDown={(e: any) => {
+                  console.log(e);
+                  if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+                    e.preventDefault();
+                    setIsMenuVisible(false);
+                    setIsClicked(false);
+                  }
+                }}
+                className={`w-full h-full object-cover cursor-pointer rounded-sm border-2 border-muted-foreground/10 group-hover:border-primary ${isMenuVisible && "border-primary"} ${isClicked && "ring-2 ring-primary "}`}
               />
             )}
             <div
-              className={`absolute inset-x-0 -top-4 space-x-1 w-full flex justify-center items-center h-fit transition-opacity duration-300 ease-in-out ${
+              className={`absolute inset-x-0 -top-5 space-x-1 w-full flex justify-center items-center h-fit transition-opacity duration-300 ease-in-out ${
                 isMenuVisible ? "opacity-100" : "opacity-0 pointer-events-none"
               }`}
             >
