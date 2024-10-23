@@ -202,10 +202,10 @@ export const defaultExtensions = ({
   }),
   Youtube.configure({
     HTMLAttributes: {
-      class: cx("rounded-lg border aspect-video w-full h-min m-4 flex items-center justify-center not-prose "),
+      class: cx("rounded-lg border aspect-video w-full h-min flex items-center justify-center"),
     },
     modestBranding: true,
-    
+
     progressBarColor: "hsl(var(--accent))",
   }),
   Twitter.configure({
