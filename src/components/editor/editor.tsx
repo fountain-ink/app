@@ -221,7 +221,6 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
             </EditorCommandList>
           </EditorCommand>
         )}
-
         <EditorBubble
           tippyOptions={{
             sticky: false,
@@ -229,7 +228,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
           }}
           shouldShow={({ editor }) => {
             const node = editor.view.state.selection.$head.parent.type.name;
-            if (node === "title" || node === "subtitle" || node === "doc") {
+            if (node === "title" || node === "subtitle" || node === "doc" || node === "codeBlock") {
               return false;
             }
             return editor.isActive("link") || editor.view.state.selection.empty === false;
