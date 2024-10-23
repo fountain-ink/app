@@ -119,7 +119,7 @@ const ImageComponent = (props: {
               <img
                 ref={imageRef}
                 src={props.node.attrs.src}
-                className={`w-full h-full object-cover cursor-pointer rounded-sm border-2 border-muted-foreground/10 group-hover:border-primary ${isMenuVisible && "ring-2 ring-primary border-0"} `}
+                className={`w-full h-full object-cover cursor-pointer rounded-sm border-2 border-muted-foreground/10 group-hover:border-primary ${isMenuVisible && "ring-2 ring-primary border-primary"} `}
                 onClick={toggleMenu}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
