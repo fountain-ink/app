@@ -193,7 +193,7 @@ export const defaultExtensions = ({
         return "Heading";
       }
 
-      if (["codeBlock", "bulletList", "taskList", "orderedList"].includes(node.type.name)) {
+      if (["codeBlock", "bulletList", "taskList", "orderedList", "blockquoteFigure"].includes(node.type.name)) {
         return "";
       }
 
@@ -221,7 +221,9 @@ export const defaultExtensions = ({
     color: "hsl(var(--accent))",
     width: 4,
   }),
-  Gapcursor.configure({}),
+  Gapcursor.configure({
+    
+  }),
   AutoJoiner.configure({}),
   TiptapLink.configure({
     HTMLAttributes: {

@@ -139,7 +139,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--paragraph-align": "left",
 
     "--subtitle-font": "plantin",
-    "--subtitle-weight": "100",
+    "--subtitle-weight": "400",
     "--subtitle-style": "normal",
     "--subtitle-size": "1.5rem",
     "--subtitle-line-height": "1.4",
