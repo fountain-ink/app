@@ -13,20 +13,25 @@ export interface ImageOptions {
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
-      image: {
-        setImage: (options: {
-          src: string;
-          alt?: string;
-          title?: string;
-        }) => ReturnType;
-      };
-    }
+    image: {
+      setImage: (options: {
+        src: string;
+        alt?: string;
+        title?: string;
+      }) => ReturnType;
+    };
+  }
 }
 
 export const Image = Node.create<ImageOptions>({
   name: "image",
-  
-  isolating: false,  
+  group: "block",
+
+  isolating: false,
+  atom: true,
+  leaf: true,
+  draggable: true,
+  selectable: true,
 
   addOptions() {
     return {
@@ -35,9 +40,6 @@ export const Image = Node.create<ImageOptions>({
       width: "column",
     };
   },
-
-  group: "block",
-  draggable: true,
 
   addAttributes() {
     return {
@@ -72,11 +74,7 @@ export const Image = Node.create<ImageOptions>({
   },
 
   parseHTML() {
-    return [
-      {
-        tag: "img",
-      },
-    ];
+    return [{ tag: "img" }];
   },
 
   renderHTML({ HTMLAttributes }) {

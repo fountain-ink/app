@@ -6,11 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { uploadFile } from "@/lib/upload-image";
 import { NodeViewWrapper } from "@tiptap/react";
-import { useRef } from "react";
-import { useState } from "react";
-import { useEffect } from "react";
-
-import { useCallback } from "react";
+import { useRef, useState } from "react";
 
 const ImageComponent = (props: {
   node: {
@@ -19,7 +15,6 @@ const ImageComponent = (props: {
       width: "column" | "wide" | "full";
     };
   };
-
   updateAttributes: (attrs: Partial<{ src: string | null; width: "column" | "wide" | "full" }>) => void;
   deleteNode: () => void;
   extension: {
@@ -32,28 +27,6 @@ const ImageComponent = (props: {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isMenuVisible, setIsMenuVisible] = useState(false);
-
-  const [isClicked, setIsClicked] = useState(false);
-
-  const toggleMenu = () => {
-    setIsClicked(!isClicked);
-    setIsMenuVisible(true);
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
-        setIsClicked(false);
-        setIsMenuVisible(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   const handleWidth = (width: "column" | "wide" | "full") => {
     props.updateAttributes({ width });
@@ -85,18 +58,6 @@ const ImageComponent = (props: {
     props.editor.commands.focus();
   };
 
-  const handleMouseEnter = () => {
-    if (!isClicked) {
-      setIsMenuVisible(true);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (!isClicked) {
-      setIsMenuVisible(false);
-    }
-  };
-
   const getWidthClasses = (width: string) => {
     switch (width) {
       case "wide":
@@ -117,41 +78,39 @@ const ImageComponent = (props: {
       className={`
         flex rounded-sm relative my-[--image-margin-y] justify-center ${widthClass}
       `}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
       suppressContentEditableWarning
     >
-      <div className={" flex-grow-0 group transition-colors duration-300 ease-in-out rounded-sm w-full "}>
-        {props.node.attrs.src ? (
-          <>
-            {isLoading ? (
-              <div className="flex flex-col items-center justify-center w-full aspect-[16/8] rounded-sm animate-pulse-slow transition-all duration-1000 delay-0 border-2 border-muted-foreground/10 group-hover:border-primary">
-                <Button className={"z-20 flex gap-2"} variant="muted" disabled>
+      <div className="flex-grow-0 group transition-colors duration-300 ease-in-out rounded-sm w-full">
+        {isLoading || !props.node.attrs.src ? (
+          <div className="flex flex-col items-center justify-center w-full aspect-[16/8] rounded-sm border-2 border-muted-foreground/10 group-hover:border-primary">
+            <Button
+              className="z-20 flex gap-2"
+              variant="muted"
+              onClick={!isLoading ? handleUpload : undefined}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
                   <LoadingSpinner />
                   Uploading...
-                </Button>
-                <div className="placeholder-background rounded-sm" />
-              </div>
-            ) : (
-              <img
-                ref={imageRef}
-                src={props.node.attrs.src}
-                onClick={toggleMenu}
-                onKeyDown={(e: any) => {
-                  console.log(e);
-                  if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-                    e.preventDefault();
-                    setIsMenuVisible(false);
-                    setIsClicked(false);
-                  }
-                }}
-                className={`w-full h-full object-cover cursor-pointer rounded-sm border-2 border-muted-foreground/10 group-hover:border-primary ${isMenuVisible && "border-primary"} ${isClicked && "ring-2 ring-primary "}`}
-              />
-            )}
+                </>
+              ) : (
+                <>
+                  {props.extension.options.uploadIcon}
+                  Upload Image
+                </>
+              )}
+            </Button>
+            <div className="placeholder-background rounded-sm" />
+          </div>
+        ) : (
+          <>
+            <img ref={imageRef} src={props.node.attrs.src} className="rounded-sm w-full" />
             <div
-              className={`absolute inset-x-0 -top-5 space-x-1 w-full flex justify-center items-center h-fit transition-opacity duration-300 ease-in-out ${
-                isMenuVisible ? "opacity-100" : "opacity-0 pointer-events-none"
-              }`}
+              className="absolute inset-x-0 -top-5 space-x-1 w-full flex justify-center items-center
+            h-fit transition-opacity duration-300 ease-in-out opacity-0 pointer-events-none
+            group-hover:opacity-100 group-hover:pointer-events-auto
+            [.has-focus_&]:opacity-100 [.has-focus_&]:pointer-events-auto"
             >
               <div className="w-fit rounded-sm border border-border backdrop-blur-xl bg-card flex justify-center items-center h-10">
                 <Button
@@ -178,10 +137,9 @@ const ImageComponent = (props: {
                 >
                   <WidthFull />
                 </Button>
-
                 <Separator className="m-2 h-6" orientation="vertical" />
                 <Button className="w-fit px-2" variant="muted" onClick={handleUpload} disabled={isLoading}>
-                  {isLoading ? "Uploading..." : "Change"}
+                  Change
                 </Button>
                 <Button className="w-fit px-2" variant="muted" onClick={handleRemove}>
                   Remove
@@ -189,23 +147,6 @@ const ImageComponent = (props: {
               </div>
             </div>
           </>
-        ) : (
-          <div className="flex flex-col items-center justify-center w-full aspect-[16/8] rounded-sm border-2 border-muted-foreground/10 group-hover:border-primary">
-            <Button className="z-20 flex gap-2" variant="muted" onClick={handleUpload} disabled={isLoading}>
-              {isLoading ? (
-                <>
-                  <LoadingSpinner />
-                  Uploading...
-                </>
-              ) : (
-                <>
-                  {props.extension.options.uploadIcon}
-                  Upload Image
-                </>
-              )}
-            </Button>
-            <div className="placeholder-background rounded-sm" />
-          </div>
         )}
       </div>
     </NodeViewWrapper>

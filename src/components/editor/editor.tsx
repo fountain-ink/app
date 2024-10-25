@@ -163,6 +163,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
     <EditorRoot>
       <EditorContent
         immediatelyRender={true}
+        autofocus={true}
         onUpdate={({ editor }) => {
           debouncedUpdates(editor);
         }}

@@ -3,6 +3,7 @@ import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import { Document } from "@tiptap/extension-document";
 import Dropcursor from "@tiptap/extension-dropcursor";
+import Focus from "@tiptap/extension-focus";
 import Heading from "@tiptap/extension-heading";
 import Paragraph from "@tiptap/extension-paragraph";
 import Subscript from "@tiptap/extension-subscript";
@@ -33,13 +34,13 @@ import type { Doc } from "yjs";
 import { arrowHandlers } from "./arrow-handlers";
 import BlockquoteFigure from "./extensions/blockquote-figure";
 import Figcaption from "./extensions/figcaption";
+import { Gapcursor } from "./extensions/gapcursor";
 import { Image } from "./extensions/image";
 import { Placeholder } from "./extensions/placeholder";
 import Selection from "./extensions/selection";
 import { suggestionItems } from "./extensions/slash-command";
 import { TrailingNode } from "./extensions/trailing-node";
 import { FirstParagraphPlugin } from "./plugins/first-paragraph-plugin";
-import { Gapcursor } from "./extensions/gapcursor";
 
 interface EditorExtensionsProps {
   provider?: HocuspocusProvider | null;
@@ -81,7 +82,7 @@ export const defaultExtensions = ({
     bulletList: {},
     orderedList: {},
     listItem: {},
-    
+
     blockquote: false,
     codeBlock: false,
     code: {
@@ -223,6 +224,10 @@ export const defaultExtensions = ({
     width: 4,
   }),
   Gapcursor,
+  Focus.configure({
+    className: "has-focus",
+    mode: "deepest",
+  }),
   AutoJoiner.configure({}),
   TiptapLink.configure({
     HTMLAttributes: {
