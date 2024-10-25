@@ -25,6 +25,8 @@ declare module "@tiptap/core" {
 
 export const Image = Node.create<ImageOptions>({
   name: "image",
+  
+  isolating: false,  
 
   addOptions() {
     return {

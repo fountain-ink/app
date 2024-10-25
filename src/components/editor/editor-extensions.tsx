@@ -3,7 +3,6 @@ import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import { Document } from "@tiptap/extension-document";
 import Dropcursor from "@tiptap/extension-dropcursor";
-import { Gapcursor } from "@tiptap/extension-gapcursor";
 import Heading from "@tiptap/extension-heading";
 import Paragraph from "@tiptap/extension-paragraph";
 import Subscript from "@tiptap/extension-subscript";
@@ -40,6 +39,7 @@ import Selection from "./extensions/selection";
 import { suggestionItems } from "./extensions/slash-command";
 import { TrailingNode } from "./extensions/trailing-node";
 import { FirstParagraphPlugin } from "./plugins/first-paragraph-plugin";
+import { Gapcursor } from "./extensions/gapcursor";
 
 interface EditorExtensionsProps {
   provider?: HocuspocusProvider | null;
@@ -73,6 +73,7 @@ export const defaultExtensions = ({
     },
   }),
   StarterKit.configure({
+    gapcursor: false,
     document: false,
     paragraph: false,
     history: false,
@@ -80,6 +81,7 @@ export const defaultExtensions = ({
     bulletList: {},
     orderedList: {},
     listItem: {},
+    
     blockquote: false,
     codeBlock: false,
     code: {
@@ -89,7 +91,6 @@ export const defaultExtensions = ({
     },
     dropcursor: false,
     horizontalRule: false,
-    gapcursor: false,
   }),
   Heading.extend({
     name: "title",
@@ -221,9 +222,7 @@ export const defaultExtensions = ({
     color: "hsl(var(--accent))",
     width: 4,
   }),
-  Gapcursor.configure({
-    
-  }),
+  Gapcursor,
   AutoJoiner.configure({}),
   TiptapLink.configure({
     HTMLAttributes: {
