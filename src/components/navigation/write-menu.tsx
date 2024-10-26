@@ -34,11 +34,11 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
         <DropdownMenuItem asChild>
           <DraftCreate variant="ghost" />
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/drafts">
-            <Button className="flex gap-2" variant="ghost">
-              <FileTextIcon className="h-5 w-5" />
-              My Drafts
+        <DropdownMenuItem className="p-0">
+          <Link href="/drafts" className="w-full">
+            <Button variant="ghost" className="w-full justify-start flex gap-2 text-md h-10 px-4 py-2 ">
+              <FileTextIcon className="h-5 w-5 " />
+              Drafts
             </Button>
           </Link>
         </DropdownMenuItem>
