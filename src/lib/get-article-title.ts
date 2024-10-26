@@ -1,41 +1,26 @@
-import type { ContentNode } from "./types";
+interface ArticleMetadata {
+  title: string;
+  subtitle: string;
+  coverImage: string | null;
+}
 
-export const extractTitle = (content: any): string => {
-  try {
-    if (!content || !content.content || !Array.isArray(content.content)) {
-      return "Untitled";
-    }
-
-    const firstTextNode = content.content.find((node: ContentNode) => {
-      return (
-        node.type === "heading" ||
-        node.type === "paragraph" ||
-        node.type === "text" ||
-        (node.content && Array.isArray(node.content) && node.content[0]?.text)
-      );
-    });
-
-    if (!firstTextNode) {
-      return "Untitled";
-    }
-
-    if (firstTextNode.type === "heading" || firstTextNode.type === "paragraph") {
-      return firstTextNode.content?.[0]?.text || "Untitled";
-    }
-
-    if (firstTextNode.type === "text") {
-      const sentence = firstTextNode.text?.split(".")[0] || "";
-      return sentence.length > 0 ? `${sentence}.` : "Untitled";
-    }
-
-    if (firstTextNode.content && Array.isArray(firstTextNode.content)) {
-      const sentence = firstTextNode.content[0]?.text?.split(".")[0] || "";
-      return sentence.length > 0 ? `${sentence}.` : "Untitled";
-    }
-
-    return "Untitled";
-  } catch (error) {
-    console.error("Error parsing content:", error);
-    return "Untitled";
+export const extractMetadata = (contentJson: any): ArticleMetadata => {
+  if (!contentJson?.content || !Array.isArray(contentJson.content)) {
+    return {
+      title: "Untitled",
+      subtitle: "",
+      coverImage: null,
+    };
   }
+
+  const titleNode = contentJson.content.find((node) => node.type === "title");
+  const subtitleNode = contentJson.content.find((node) => node.type === "subtitle");
+  const imageNode = contentJson.content.find((node) => node.type === "image");
+
+  // console.log(titleNode.content?.[0]?.text);
+  return {
+    title: titleNode ? titleNode.content?.[0]?.text ?? "Untitled" : "Untitled",
+    subtitle: subtitleNode ? subtitleNode.content?.[0]?.text ?? "" : "",
+    coverImage: imageNode?.attrs?.src ?? null,
+  };
 };

@@ -1,25 +1,25 @@
 "use client";
 
 import { useDocumentStorage } from "@/hooks/use-document-storage";
-import { extractTitle } from "@/lib/get-article-title";
+import { extractMetadata } from "@/lib/get-article-title";
 import type { ProfileId } from "@lens-protocol/react-web";
 import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 
-import { formatTime } from "@/lib/utils";
 import { useState } from "react";
 import { toast } from "sonner";
 import { PastDateLabel } from "../content/date-label";
-import { Card, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { UserAuthorView } from "../user/user-author-view";
 import type { Draft } from "./draft";
 import { DraftDeleteDialog } from "./draft-delete-dialog";
 import { DraftOptionsDropdown } from "./draft-options";
 
 interface DraftViewOptions {
+  showDate?: boolean;
   showAuthor?: boolean;
   showTitle?: boolean;
-  showDate?: boolean;
+  showSubtitle?: boolean;
   showPreview?: boolean;
 }
 
@@ -37,6 +37,7 @@ export const DraftView = ({
   options = {
     showAuthor: false,
     showTitle: true,
+    showSubtitle: true,
     showDate: true,
     showPreview: true,
   },
@@ -46,7 +47,8 @@ export const DraftView = ({
   const queryClient = useQueryClient();
 
   const content = draft.contentJson;
-  const title = extractTitle(content);
+
+  const { title, subtitle, coverImage } = extractMetadata(content);
   const authorIds = authorId ? [authorId] : [];
 
   const handleDelete = async () => {
@@ -80,13 +82,20 @@ export const DraftView = ({
     setIsDeleteDialogOpen(false);
   };
 
-  const formattedDate = formatTime(draft.updatedAt);
-
   return (
-    <Link href={`/write/${draft.documentId}`}>
-      <Card className="bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none relative">
+    <Link href={`/write/${draft.documentId}`} className="flex flex-row items-center justify-center gap-4">
+      {options.showPreview && (
+        <div className="h-full max-h-40 p-2 w-auto aspect-square bg-muted rounded-lg mb-4 overflow-hidden">
+          {coverImage ? (
+            <img src={coverImage} alt="Cover" className="w-full h-full object-cover" />
+          ) : (
+            <span className="text-muted-foreground">No cover image</span>
+          )}
+        </div>
+      )}
+      <Card className="bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none relative w-full">
         <CardHeader>
-          {options.showDate && ( <PastDateLabel updatedAt={draft.updatedAt} /> )}
+          {options.showDate && <PastDateLabel updatedAt={draft.updatedAt} />}
           {options.showAuthor && authorId && <UserAuthorView profileIds={authorIds} />}
           {options.showTitle && (
             <CardTitle className="text-3xl truncate inline-block w-[calc(100%)] whitespace-nowrap overflow-hidden text-ellipsis">
@@ -94,6 +103,13 @@ export const DraftView = ({
             </CardTitle>
           )}
         </CardHeader>
+        <CardContent>
+          {options.showSubtitle && (
+            <CardTitle className="text-xl truncate inline-block w-[calc(100%)] whitespace-nowrap overflow-hidden text-ellipsis">
+              {subtitle}
+            </CardTitle>
+          )}
+        </CardContent>
         <div className="absolute top-2 right-2">
           <DraftOptionsDropdown onDeleteClick={() => setIsDeleteDialogOpen(true)} />
         </div>
