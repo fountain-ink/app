@@ -16,11 +16,9 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: PropsWithChildren) => {
   const { theme: storedTheme, setTheme: setStoredTheme } = useStorage();
-  console.log("Stored theme:", storedTheme);
 
   const [theme, setTheme] = useState<ThemeType>(() => {
     const initialTheme = isValidTheme(storedTheme) ? storedTheme : defaultTheme;
-    console.log("Initial theme:", initialTheme);
     return initialTheme;
   });
 
