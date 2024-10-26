@@ -9,7 +9,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { PastDateLabel } from "../content/date-label";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { UserAuthorView } from "../user/user-author-view";
 import type { Draft } from "./draft";
 import { DraftDeleteDialog } from "./draft-delete-dialog";
@@ -83,9 +82,9 @@ export const DraftView = ({
   };
 
   return (
-    <Link href={`/write/${draft.documentId}`} className="flex flex-row items-center justify-center gap-4">
+    <Link href={`/write/${draft.documentId}`} className="flex flex-row items-center justify-center p-4 gap-4">
       {options.showPreview && (
-        <div className="h-full max-h-40 p-2 w-auto aspect-square bg-muted rounded-lg mb-4 overflow-hidden">
+        <div className="h-full max-h-64 w-auto aspect-square rounded-lg mb-4 overflow-hidden">
           {coverImage ? (
             <img src={coverImage} alt="Cover" className="w-full h-full object-cover" />
           ) : (
@@ -93,23 +92,19 @@ export const DraftView = ({
           )}
         </div>
       )}
-      <Card className="bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none relative w-full">
-        <CardHeader>
-          {options.showDate && <PastDateLabel updatedAt={draft.updatedAt} />}
-          {options.showAuthor && authorId && <UserAuthorView profileIds={authorIds} />}
-          {options.showTitle && (
-            <CardTitle className="text-3xl truncate inline-block w-[calc(100%)] whitespace-nowrap overflow-hidden text-ellipsis">
-              {title}
-            </CardTitle>
-          )}
-        </CardHeader>
-        <CardContent>
-          {options.showSubtitle && (
-            <CardTitle className="text-xl truncate inline-block w-[calc(100%)] whitespace-nowrap overflow-hidden text-ellipsis">
-              {subtitle}
-            </CardTitle>
-          )}
-        </CardContent>
+      <div className="bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none relative w-full">
+        {options.showDate && <PastDateLabel updatedAt={draft.updatedAt} />}
+        {options.showAuthor && authorId && <UserAuthorView profileIds={authorIds} />}
+        {options.showTitle && (
+          <div className="text-2xl font-[family-name:--title-font] truncate inline-block w-[calc(100%)] whitespace-nowrap overflow-hidden text-ellipsis">
+            {title}
+          </div>
+        )}
+        {options.showSubtitle && (
+          <div className="text-xl font-[family-name:--subtitle-font] text-muted-foreground truncate inline-block w-[calc(100%)] whitespace-nowrap overflow-hidden text-ellipsis">
+            {subtitle}
+          </div>
+        )}
         <div className="absolute top-2 right-2">
           <DraftOptionsDropdown onDeleteClick={() => setIsDeleteDialogOpen(true)} />
         </div>
@@ -119,7 +114,7 @@ export const DraftView = ({
           onClose={() => setIsDeleteDialogOpen(false)}
           onConfirm={handleDelete}
         />
-      </Card>
+      </div>
     </Link>
   );
 };
