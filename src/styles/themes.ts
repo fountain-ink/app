@@ -110,7 +110,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
 
     "--primary": "213 18% 20%",
     "--primary-foreground": "210 40% 98%",
-    "--secondary": "210 40%, 96%",
+    "--secondary": "0 0% 66%",
     "--secondary-foreground": "222.2 47.4% 99.2%",
     "--muted": "210 40% 96.1%",
     "--muted-foreground": "0 0% 56%",

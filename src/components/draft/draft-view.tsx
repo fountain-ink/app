@@ -82,17 +82,22 @@ export const DraftView = ({
   };
 
   return (
-    <Link href={`/write/${draft.documentId}`} className="flex flex-row items-center justify-center p-4 gap-4">
+    <Link
+      href={`/write/${draft.documentId}`}
+      className="flex flex-row items-start justify-start gap-4 bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none relative w-full rounded-sm p-2"
+    >
       {options.showPreview && (
-        <div className="h-full max-h-64 w-auto aspect-square rounded-lg mb-4 overflow-hidden">
+        <div className="h-48 w-48 aspect-square rounded-sm overflow-hidden">
           {coverImage ? (
             <img src={coverImage} alt="Cover" className="w-full h-full object-cover" />
           ) : (
-            <span className="text-muted-foreground">No cover image</span>
+            <div className="h-full w-auto relative">
+              <div className="placeholder-background rounded-sm" />
+            </div>
           )}
         </div>
       )}
-      <div className="bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none relative w-full">
+      <div className="p-2">
         {options.showDate && <PastDateLabel updatedAt={draft.updatedAt} />}
         {options.showAuthor && authorId && <UserAuthorView profileIds={authorIds} />}
         {options.showTitle && (
