@@ -160,7 +160,7 @@ export const defaultExtensions = ({
   }),
   Heading.extend({
     name: "heading",
-  }).configure({ levels: [3] }),
+  }).configure({ levels: [3, 4] }),
   Collaboration.configure({
     document,
   }),

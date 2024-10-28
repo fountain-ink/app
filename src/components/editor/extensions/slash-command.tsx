@@ -1,16 +1,36 @@
 "use client";
 
-import { Asterisk, CheckSquare, Code, HeadingIcon, ImageIcon, List, ListOrdered, Text, TextQuote } from "lucide-react";
+import {
+  Asterisk,
+  CheckSquare,
+  Code,
+  Heading2Icon,
+  HeadingIcon,
+  ImageIcon,
+  List,
+  ListOrdered,
+  Text,
+  TextQuote,
+} from "lucide-react";
 import { createSuggestionItems } from "novel/extensions";
 
 export const suggestionItems = createSuggestionItems([
   {
     title: "Heading",
     description: "A section heading.",
-    searchTerms: ["title", "big", "large"],
+    searchTerms: ["title", "big", "large", "heading"],
     icon: <HeadingIcon size={18} />,
     command: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).setNode("heading", { level: 3 }).run();
+    },
+  },
+  {
+    title: "Heading 2",
+    description: "A smaller section heading.",
+    searchTerms: ["heading2", "two", "middle"],
+    icon: <Heading2Icon size={18} />,
+    command: ({ editor, range }) => {
+      editor.chain().focus().deleteRange(range).setNode("heading", { level: 4 }).run();
     },
   },
   {

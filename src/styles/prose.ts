@@ -35,6 +35,15 @@ export const proseClasses = [
   "prose-h3:[line-height:var(--header-line-height)]",
   "prose-h3:[letter-spacing:var(--header-letter-spacing)]",
 
+  "prose-h4:[color:var(--header-color)]",
+  "prose-h4:[margin-top:var(--header-margin)] prose-h4:[margin-bottom:var(--header-margin)]",
+  "prose-h4:font-[family-name:var(--header-font)]",
+  "prose-h4:font-[var(--header-weight)]",
+  "prose-h4:[font-style:var(--header-style)]",
+  "prose-h4:[font-size:1.3rem]",
+  "prose-h4:[line-height:var(--header-line-height)]",
+  "prose-h4:[letter-spacing:var(--header-letter-spacing)]",
+
   "prose-p:[margin-top:var(--paragraph-margin)] prose-p:[margin-bottom:var(--paragraph-margin)]",
   "prose-p:font-[family-name:var(--paragraph-font)]",
   "prose-p:font-[var(--paragraph-weight)]",
