@@ -28,7 +28,18 @@ export const EditorPublishing = () => {
   const documentId = pathname.split("/").at(-1);
 
   if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
-    return null;
+    return (
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Login to publish</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p>To publish an article, please select a profile.</p>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
   }
 
   const handle = session?.profile?.handle?.localName || "";
@@ -96,7 +107,7 @@ export const EditorPublishing = () => {
       }
     } catch (error) {
       console.error("Error creating post:", error);
-      toast.error("An unexpected error occurred while creating the post.");
+      toast.error("An error occurred while creating the post. See console for details");
     }
   };
 
