@@ -101,7 +101,11 @@ export const DraftView = ({
         {options.showDate && <PastDateLabel updatedAt={draft.updatedAt} />}
         {options.showAuthor && authorId && <UserAuthorView profileIds={authorIds} />}
         {options.showTitle && (
-          <div className="text-2xl font-[family-name:--title-font] truncate inline-block w-[calc(100%)] whitespace-nowrap overflow-hidden text-ellipsis">
+          <div
+            className="text-2xl py-1 font-[family-name:--title-font] \
+            font-[letter-spacing:var(--title-letter-spacing)] font-[family-name:var(--title-font) font-[var(--title-weight)] font-[color:var(--title-color)] \
+            truncate inline-block w-[calc(100%)] whitespace-nowrap overflow-hidden text-ellipsis"
+          >
             {title}
           </div>
         )}

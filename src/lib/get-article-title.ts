@@ -13,9 +13,9 @@ export const extractMetadata = (contentJson: any): ArticleMetadata => {
     };
   }
 
-  const titleNode = contentJson.content.find((node) => node.type === "title");
-  const subtitleNode = contentJson.content.find((node) => node.type === "subtitle");
-  const imageNode = contentJson.content.find((node) => node.type === "image");
+  const titleNode = contentJson.content.find((node: any) => node.type === "title");
+  const subtitleNode = contentJson.content.find((node: any) => node.type === "subtitle");
+  const imageNode = contentJson.content.find((node: any) => node.type === "image");
 
   // console.log(titleNode.content?.[0]?.text);
   return {
