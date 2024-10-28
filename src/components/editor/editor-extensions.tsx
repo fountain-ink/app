@@ -82,7 +82,6 @@ export const defaultExtensions = ({
     bulletList: {},
     orderedList: {},
     listItem: {},
-
     blockquote: false,
     codeBlock: false,
     code: {
@@ -204,7 +203,7 @@ export const defaultExtensions = ({
   }),
   Youtube.configure({
     HTMLAttributes: {
-      class: cx("rounded-lg border aspect-video w-full h-min flex items-center justify-center"),
+      class: cx("rounded-sm border aspect-video w-full h-min flex items-center justify-center"),
     },
     modestBranding: true,
 
