@@ -1,8 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { usePublishStore } from "@/hooks/use-publish-store";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
+import { usePublishStore } from "@/hooks/use-publish-store";
 import { extractMetadata } from "@/lib/get-article-title";
 import { uploadMetadata } from "@/lib/upload-utils";
 import { article, MetadataAttributeType } from "@lens-protocol/metadata";
@@ -13,7 +13,6 @@ import { useEditor } from "novel";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
-import { useTheme } from "../theme/theme-context";
 
 export const EditorPublishing = () => {
   const { data: session } = useSession();
@@ -24,7 +23,7 @@ export const EditorPublishing = () => {
   const router = useRouter();
   const { deleteDocument } = useDocumentStorage();
   const queryClient = useQueryClient();
-  const pathname = usePathname()
+  const pathname = usePathname();
   const isLocal = pathname.includes("local");
   const documentId = pathname.split("/").at(-1);
 
@@ -43,7 +42,7 @@ export const EditorPublishing = () => {
     const contentJson = editor.getJSON();
     const contentHtml = editor.getHTML();
     const markdown = editor.storage.markdown.getMarkdown();
-    const {title} = extractMetadata(contentJson);
+    const { title } = extractMetadata(contentJson);
 
     try {
       const metadata = article({
@@ -95,7 +94,6 @@ export const EditorPublishing = () => {
           console.error("Error deleting cloud draft:", error);
         }
       }
-
     } catch (error) {
       console.error("Error creating post:", error);
       toast.error("An unexpected error occurred while creating the post.");

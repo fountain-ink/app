@@ -22,7 +22,7 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
   }
 
   if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
-    return <DraftCreate />;
+    return <DraftCreate isLocal={true} text="Write" />;
   }
 
   return (
@@ -32,7 +32,7 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>
-          <DraftCreate variant="ghost" />
+          <DraftCreate isLocal={false} text="New Article" variant="ghost" />
         </DropdownMenuItem>
         <DropdownMenuItem className="p-0">
           <Link href="/drafts" className="w-full">

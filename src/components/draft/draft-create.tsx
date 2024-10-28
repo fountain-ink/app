@@ -35,7 +35,14 @@ const defaultContent: JSONContent = {
 export const DraftCreate = ({
   onSuccess,
   variant = "default",
-}: { onSuccess?: () => void; variant?: "default" | "ghost" }) => {
+  text = "New Article",
+  isLocal = false,
+}: {
+  onSuccess?: () => void;
+  variant?: "default" | "ghost";
+  text?: string;
+  isLocal?: boolean;
+}) => {
   const { saveDocument } = useDocumentStorage();
   const router = useRouter();
 
@@ -76,10 +83,13 @@ export const DraftCreate = ({
     onSuccess?.();
   };
 
-  return (
+  return isLocal ? (
+    <Button onClick={handleNew} variant={variant} className="flex gap-2">
+      {text}
+    </Button>
+  ) : (
     <Button onClick={handleCreate} variant={variant} className="flex gap-2">
-      <PlusIcon className="h-5 w-5 flex gap-2 text-md" />
-      New Article
+      {text}
     </Button>
   );
 };
