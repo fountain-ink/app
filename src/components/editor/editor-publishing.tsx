@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { usePublishStore } from "@/hooks/use-publish-store";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
-import { extractTitle } from "@/lib/get-article-title";
+import { extractMetadata } from "@/lib/get-article-title";
 import { uploadMetadata } from "@/lib/upload-utils";
 import { article, MetadataAttributeType } from "@lens-protocol/metadata";
 import { SessionType, useCreatePost, useSession } from "@lens-protocol/react-web";
@@ -43,7 +43,7 @@ export const EditorPublishing = () => {
     const contentJson = editor.getJSON();
     const contentHtml = editor.getHTML();
     const markdown = editor.storage.markdown.getMarkdown();
-    const title = extractTitle(contentJson);
+    const {title} = extractMetadata(contentJson);
 
     try {
       const metadata = article({
