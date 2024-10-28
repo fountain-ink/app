@@ -155,7 +155,7 @@ const ImageComponent = (props: {
             )}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center w-full aspect-[16/8] rounded-sm border-2 border-muted-foreground/10 group-hover:border-primary">
+          <div className="flex flex-col items-center justify-center w-full aspect-[16/8] rounded-sm border-2 border-muted-foreground/10 group-hover:border-primary [.has-focus_&]:border-primary">
             <Button className="z-20 flex gap-2" variant="muted" onClick={handleUpload} disabled={isLoading}>
               {isLoading ? (
                 <>
