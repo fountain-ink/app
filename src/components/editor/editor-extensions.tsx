@@ -203,7 +203,7 @@ export const defaultExtensions = ({
   }),
   Youtube.configure({
     HTMLAttributes: {
-      class: cx("rounded-sm border aspect-video w-full h-min flex items-center justify-center"),
+      class: cx("rounded-sm border aspect-video w-full h-min flex items-center justify-center my-10"),
     },
     modestBranding: true,
 
@@ -211,7 +211,7 @@ export const defaultExtensions = ({
   }),
   Twitter.configure({
     addPasteHandler: true,
-    HTMLAttributes: { class: cx("rounded-lg w-full flex items-center justify-center not-prose") },
+    HTMLAttributes: { class: cx("rounded-lg w-full flex items-center justify-center not-prose my-10") },
   }),
   Underline,
   CodeBlockLowlight.configure({

@@ -168,14 +168,14 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--paragraph-first-letter-padding-top": "0.5rem",
     "--paragraph-first-letter-initial": "3",
 
-    "--image-margin-y": "4rem",
     "--image-border-radius": "1rem",
+    "--image-margin-y": "2.5rem",
 
     "--title-margin": "3rem",
     "--subtitle-margin": "2rem",
     "--header-margin": "2rem",
     "--paragraph-margin": "2rem",
-    "--list-margin": "1rem",
+    "--list-margin": "2rem",
 
     "--list-font": "var(--paragraph-font)",
     "--list-weight": "var(--paragraph-weight)",
