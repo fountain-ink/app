@@ -6,7 +6,86 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { uploadFile } from "@/lib/upload-image";
 import { NodeViewWrapper } from "@tiptap/react";
-import { useRef, useState } from "react";
+import { useState } from "react";
+
+const ImageActions = ({
+  handleUpload,
+  handleRemove,
+  isLoading,
+}: {
+  handleUpload: () => void;
+  handleRemove: () => void;
+  isLoading: boolean;
+}) => {
+  return (
+    <div className="flex gap-1">
+      <Button className="w-fit px-2" variant="muted" onClick={handleUpload} disabled={isLoading}>
+        Change
+      </Button>
+      <Button className="w-fit px-2" variant="muted" onClick={handleRemove}>
+        Remove
+      </Button>
+    </div>
+  );
+};
+
+const ImageMenu = ({
+  width,
+  handleWidth,
+  handleUpload,
+  handleRemove,
+  isLoading,
+  isPlaceholder,
+}: {
+  width: "column" | "wide" | "full";
+  handleWidth: (width: "column" | "wide" | "full") => void;
+  handleUpload: () => void;
+  handleRemove: () => void;
+  isLoading: boolean;
+  isPlaceholder: boolean;
+}) => {
+  return (
+    <div
+      className="absolute inset-x-0 -top-5 space-x-1 w-full flex justify-center items-center
+      h-fit transition-opacity duration-300 ease-in-out opacity-0 pointer-events-none
+      group-hover:opacity-100 group-hover:pointer-events-auto
+      [.has-focus_&]:opacity-100 [.has-focus_&]:pointer-events-auto"
+    >
+      <div className="w-fit rounded-sm border border-border backdrop-blur-xl bg-card flex justify-center items-center h-10">
+        <Button
+          size="icon"
+          variant="muted"
+          className={width === "column" ? "text-primary" : "muted"}
+          onClick={() => handleWidth("column")}
+        >
+          <WidthColumn />
+        </Button>
+        <Button
+          size="icon"
+          variant="muted"
+          className={width === "wide" ? "text-primary" : "muted"}
+          onClick={() => handleWidth("wide")}
+        >
+          <WidthWide />
+        </Button>
+        <Button
+          size="icon"
+          variant="muted"
+          className={width === "full" ? "text-primary" : "muted"}
+          onClick={() => handleWidth("full")}
+        >
+          <WidthFull />
+        </Button>
+        {!isPlaceholder && (
+          <>
+            <Separator className="m-2 h-6" orientation="vertical" />
+            <ImageActions handleUpload={handleUpload} handleRemove={handleRemove} isLoading={isLoading} />
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const ImageComponent = (props: {
   node: {
@@ -24,13 +103,8 @@ const ImageComponent = (props: {
   };
   editor: any;
 }) => {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLImageElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleWidth = (width: "column" | "wide" | "full") => {
-    props.updateAttributes({ width });
-  };
+  const width = props.node.attrs.width || "column";
 
   const handleUpload = async () => {
     const input = document.createElement("input");
@@ -58,37 +132,31 @@ const ImageComponent = (props: {
     props.editor.commands.focus();
   };
 
-  const getWidthClasses = (width: string) => {
-    switch (width) {
-      case "wide":
-        return "w-[160%] -ml-[30%] max-w-[160%]";
-      case "full":
-        return "w-screen max-w-[90vw] relative -translate-x-1/2 left-1/2 content-center justify-center";
-      default:
-        return "w-full max-w-full";
-    }
-  };
-
-  const width = props.node.attrs.width || "column";
-  const widthClass = getWidthClasses(width);
+  const widthClass = {
+    wide: "w-[160%] -ml-[30%] max-w-[160%]",
+    full: "w-screen max-w-[90vw] relative -translate-x-1/2 left-1/2 content-center justify-center",
+    column: "w-full max-w-full",
+  }[width];
 
   return (
-    <NodeViewWrapper
-      ref={wrapperRef}
-      className={`
-        flex rounded-sm relative my-[--image-margin-y] justify-center ${widthClass}
-      `}
-      suppressContentEditableWarning
-    >
+    <NodeViewWrapper className={`flex rounded-sm relative my-[--image-margin-y] justify-center ${widthClass}`}>
       <div className="flex-grow-0 group transition-colors duration-300 ease-in-out rounded-sm w-full">
-        {isLoading || !props.node.attrs.src ? (
+        {props.node.attrs.src ? (
+          <div className="relative">
+            <img
+              src={props.node.attrs.src}
+              className={`rounded-sm w-full ${isLoading ? "animate-pulse opacity-50" : ""}`}
+            />
+            {isLoading && (
+              <div className="absolute inset-0 flex items-center justify-center gap-2">
+                <LoadingSpinner />
+                Uploading...
+              </div>
+            )}
+          </div>
+        ) : (
           <div className="flex flex-col items-center justify-center w-full aspect-[16/8] rounded-sm border-2 border-muted-foreground/10 group-hover:border-primary">
-            <Button
-              className="z-20 flex gap-2"
-              variant="muted"
-              onClick={!isLoading ? handleUpload : undefined}
-              disabled={isLoading}
-            >
+            <Button className="z-20 flex gap-2" variant="muted" onClick={handleUpload} disabled={isLoading}>
               {isLoading ? (
                 <>
                   <LoadingSpinner />
@@ -103,54 +171,24 @@ const ImageComponent = (props: {
             </Button>
             <div className="placeholder-background rounded-sm" />
           </div>
-        ) : (
-          <>
-            <img ref={imageRef} src={props.node.attrs.src} className="rounded-sm w-full" />
-            <div
-              className="absolute inset-x-0 -top-5 space-x-1 w-full flex justify-center items-center
-            h-fit transition-opacity duration-300 ease-in-out opacity-0 pointer-events-none
-            group-hover:opacity-100 group-hover:pointer-events-auto
-            [.has-focus_&]:opacity-100 [.has-focus_&]:pointer-events-auto"
-            >
-              <div className="w-fit rounded-sm border border-border backdrop-blur-xl bg-card flex justify-center items-center h-10">
-                <Button
-                  size="icon"
-                  variant="muted"
-                  className={width === "column" ? "text-primary" : "muted"}
-                  onClick={() => handleWidth("column")}
-                >
-                  <WidthColumn />
-                </Button>
-                <Button
-                  size="icon"
-                  variant="muted"
-                  className={width === "wide" ? "text-primary" : "muted"}
-                  onClick={() => handleWidth("wide")}
-                >
-                  <WidthWide />
-                </Button>
-                <Button
-                  size="icon"
-                  variant="muted"
-                  className={width === "full" ? "text-primary" : "muted"}
-                  onClick={() => handleWidth("full")}
-                >
-                  <WidthFull />
-                </Button>
-                <Separator className="m-2 h-6" orientation="vertical" />
-                <Button className="w-fit px-2" variant="muted" onClick={handleUpload} disabled={isLoading}>
-                  Change
-                </Button>
-                <Button className="w-fit px-2" variant="muted" onClick={handleRemove}>
-                  Remove
-                </Button>
-              </div>
-            </div>
-          </>
         )}
+
+        <div
+          className="transition-opacity duration-300 ease-in-out opacity-0 pointer-events-none
+          group-hover:opacity-100 group-hover:pointer-events-auto
+          [.has-focus_&]:opacity-100 [.has-focus_&]:pointer-events-auto"
+        >
+          <ImageMenu
+            width={width}
+            handleWidth={(w) => props.updateAttributes({ width: w })}
+            handleUpload={handleUpload}
+            handleRemove={handleRemove}
+            isLoading={isLoading}
+            isPlaceholder={props.node.attrs.src === null}
+          />
+        </div>
       </div>
     </NodeViewWrapper>
   );
 };
-
 export default ImageComponent;
