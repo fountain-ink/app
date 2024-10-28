@@ -30,7 +30,7 @@
 }
 
 .has-focus img {
-    box-shadow: 0 0 0 3px hsl(var(--primary))
+    box-shadow: 0 0 0 1px hsl(var(--primary))
 }
 
 .ProseMirror h1 {

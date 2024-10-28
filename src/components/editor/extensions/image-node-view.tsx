@@ -145,7 +145,7 @@ const ImageComponent = (props: {
           <div className="relative">
             <img
               src={props.node.attrs.src}
-              className={`rounded-sm w-full ${isLoading ? "animate-pulse opacity-50" : ""}`}
+              className={`rounded-sm w-full border-2 group-hover:border-primary [.has-focus_&]:border-primary  ${isLoading ? "animate-pulse opacity-50" : ""}`}
             />
             {isLoading && (
               <div className="absolute inset-0 flex items-center justify-center gap-2">
@@ -155,7 +155,7 @@ const ImageComponent = (props: {
             )}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center w-full aspect-[16/8] rounded-sm border-2 border-muted-foreground/10 group-hover:border-primary [.has-focus_&]:border-primary">
+          <div className="flex flex-col items-center justify-center w-full aspect-[16/8] rounded-sm border-2 border-muted-foreground/10 group-hover:border-primary [.has-focus_&]:border-primary [.has-focus_&]:ring-1 [.has-focus_&]:ring-primary">
             <Button className="z-20 flex gap-2" variant="muted" onClick={handleUpload} disabled={isLoading}>
               {isLoading ? (
                 <>
