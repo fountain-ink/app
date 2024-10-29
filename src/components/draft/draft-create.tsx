@@ -89,6 +89,7 @@ export const DraftCreate = ({
     </Button>
   ) : (
     <Button onClick={handleCreate} variant={variant} className="flex gap-2">
+      <PlusIcon className="w-4 h-4" />
       {text}
     </Button>
   );
