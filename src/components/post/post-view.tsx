@@ -50,20 +50,20 @@ export const PostView = ({
           </div>
         )}
         <div className="p-2">
-          {options.showDate && <span className="text-sm text-muted-foreground">{formattedDate}</span>}
+          {options.showDate && <span className="text-sm font-[family-name:--date-font] ">{formattedDate}</span>}
           {options.showAuthor && <UserAuthorView profileIds={authorIds} />}
           {options.showTitle && (
             <div className="text-2xl py-1 font-[family-name:--title-font] font-[letter-spacing:var(--title-letter-spacing)] font-[family-name:var(--title-font) font-[var(--title-weight)] font-[color:var(--title-color)] truncate inline-block w-[calc(100%)] whitespace-nowrap overflow-hidden text-ellipsis">
               {title}
             </div>
           )}
-          {options.showSubtitle && (
+          {options.showSubtitle && subtitle !== "" && (
             <div className="text-xl font-[family-name:--subtitle-font] text-muted-foreground truncate inline-block w-[calc(100%)] whitespace-nowrap overflow-hidden text-ellipsis">
               {subtitle}
             </div>
           )}
           {options.showContent && (
-            <div className="whitespace-break-spaces truncate text-sm line-clamp-3 overflow-auto">
+            <div className="whitespace-normal truncate text-sm line-clamp-3 overflow-auto font-[family-name:--paragraph-font] font-[letter-spacing:var(--paragraph-letter-spacing)] font-[family-name:var(--paragraph-font) font-[var(--paragraph-weight)] font-[color:var(--paragraph-color)]">
               <Markdown
                 content={content}
                 className="prose prose-sm sm:prose-base lg:prose-lg prose-headings:mt-0 prose-headings:mb-0 prose-p:my-0 prose-tight"

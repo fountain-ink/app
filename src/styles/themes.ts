@@ -38,8 +38,6 @@ type ThemeColors = {
   "--header-align": "left" | "center" | "right";
   "--paragraph-align": "left" | "center" | "right";
 
-  "--paragraph-color": string;
-
   "--subtitle-font": string;
   "--subtitle-weight": "100" | "200" | "300" | "400" | "500" | "600" | "800" | "900";
   "--subtitle-style": "normal" | "italic";
@@ -69,6 +67,7 @@ type ThemeColors = {
   "--paragraph-line-height": string;
   "--paragraph-letter-spacing": string;
 
+  "--paragraph-color": string;
   "--paragraph-first-letter-size"?: string;
   "--paragraph-first-letter-float"?: string;
   "--paragraph-first-letter-padding-right"?: string;
@@ -81,6 +80,8 @@ type ThemeColors = {
   "--subtitle-margin": string;
   "--header-margin": string;
   "--paragraph-margin": string;
+  
+  "--date-font": string;
 
   "--list-margin": string;
   "--list-font": string;
@@ -189,5 +190,6 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--list-item-spacing": "1.25em",
 
     "--strong-weight": "700",
+    "--date-font": "proxima-nova-wide",
   },
 };

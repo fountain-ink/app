@@ -12,5 +12,5 @@ export const DateLabel = () => {
 export const PastDateLabel = ({ updatedAt }: { updatedAt: string }) => {
   const formattedDate = formatTime(updatedAt);
 
-  return <div className="tk-proxima-nova-wide text-sm">Last modified {formattedDate}</div>;
+  return <div className="font-[family-name:--date-font] text-sm">Last modified {formattedDate}</div>;
 };
