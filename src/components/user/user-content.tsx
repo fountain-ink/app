@@ -51,7 +51,7 @@ export const UserContent = ({
     },
   });
 
-  if (loading || publicationsLoading ) {
+  if (loading || publicationsLoading) {
     return null;
   }
 
@@ -61,8 +61,40 @@ export const UserContent = ({
   }
 
   const posts = publications.map((publication) => {
-    if (publication.__typename === "Post")
-      return <PostView key={publication.id} authorIds={[publication.by.id]} post={publication} />;
+    if (publication.__typename === "Post") {
+      if (contentType === "articles") {
+        return (
+          <PostView
+            options={{
+              showContent: false,
+              showAuthor: true,
+              showTitle: true,
+              showSubtitle: true,
+              showDate: true,
+              showPreview: true,
+            }}
+            key={publication.id}
+            authorIds={[publication.by.id]}
+            post={publication}
+          />
+        );
+      }
+      return (
+        <PostView
+          options={{
+            showContent: true,
+            showAuthor: true,
+            showTitle: false,
+            showSubtitle: false,
+            showDate: true,
+            showPreview: true,
+          }}
+          key={publication.id}
+          authorIds={[publication.by.id]}
+          post={publication}
+        />
+      );
+    }
   });
 
   if (posts.length === 0) {

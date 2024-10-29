@@ -9,9 +9,9 @@ import { UserLazyHandle } from "../user/user-lazy-handle";
 
 const BASE_URL = getBaseUrl();
 
-const Markdown: React.FC<{ content: string; compact: boolean }> = ({ content, compact = false }) => {
+const Markdown: React.FC<{ content: string; proseStyling?: boolean; className?: string; }> = ({ content, proseStyling = false, className }) => {
   const processedText = replaceHandles(parseLinks(content));
-  const styles = proseClasses + (compact ? " prose-p:my-0 prose-h1:my-0 prose:line-clamp-3 prose-h1:text-5xl" : "");
+  const styles = (proseStyling ? proseClasses : "") + (className ? ` ${className}` : "");
   return (
     <ReactMarkdown
       className={styles}
