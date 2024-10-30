@@ -11,7 +11,7 @@ import { SparklesIcon } from 'lucide-react';
 
 import { Icons } from '@/components/icons';
 
-import { AIToolbarButton } from './ai-toolbar-button';
+// import { AIToolbarButton } from './ai-toolbar-button';
 import { CommentToolbarButton } from './comment-toolbar-button';
 import { LinkToolbarButton } from './link-toolbar-button';
 import { MarkToolbarButton } from './mark-toolbar-button';
@@ -27,13 +27,13 @@ export function FloatingToolbarButtons() {
       {!readOnly && (
         <>
           <ToolbarGroup>
-            <AIToolbarButton
+            {/* <AIToolbarButton
               className="text-purple-500 hover:text-purple-600"
               tooltip="Edit, generate, and more"
             >
               <SparklesIcon className="mr-1.5 !size-3.5" />
               Ask AI
-            </AIToolbarButton>
+            </AIToolbarButton> */}
           </ToolbarGroup>
 
           <ToolbarGroup>
