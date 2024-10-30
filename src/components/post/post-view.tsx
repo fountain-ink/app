@@ -5,7 +5,6 @@ import Link from "next/link";
 import Markdown from "../content/markdown";
 import { UserAuthorView } from "../user/user-author-view";
 import { PostReactions } from "./post-reactions";
-import { JSONContent } from "novel";
 
 interface PostViewOptions {
   showDate?: boolean;
@@ -45,9 +44,16 @@ export const PostView = ({
   return (
     <Link href={`/${handle}/${post.id}`}>
       <div className="flex flex-row items-start justify-start gap-4 bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none relative w-full rounded-sm p-4">
-        {options.showPreview && coverImage && (
-          <div className="h-48 w-48 aspect-square rounded-sm overflow-hidden">
-            <img src={coverImage} alt="Cover" className="w-full h-full object-cover" />
+
+        {options.showPreview && (
+          <div className="h-48 w-48 shrink-0 aspect-square rounded-sm overflow-hidden">
+            {coverImage ? (
+              <img src={coverImage} alt="Cover" className="w-full h-full object-cover" />
+            ) : (
+              <div className="h-full w-auto relative">
+                <div className="placeholder-background rounded-sm" />
+              </div>
+            )}
           </div>
         )}
         <div className="flex flex-col gap-2 w-full">
