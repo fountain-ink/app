@@ -46,7 +46,6 @@ export const DraftView = ({
   const queryClient = useQueryClient();
 
   const content = draft.contentJson;
-
   const { title, subtitle, coverImage } = extractMetadata(content);
   const authorIds = authorId ? [authorId] : [];
 

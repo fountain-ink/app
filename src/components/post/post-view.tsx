@@ -5,6 +5,7 @@ import Link from "next/link";
 import Markdown from "../content/markdown";
 import { UserAuthorView } from "../user/user-author-view";
 import { PostReactions } from "./post-reactions";
+import { JSONContent } from "novel";
 
 interface PostViewOptions {
   showDate?: boolean;
@@ -37,8 +38,9 @@ export const PostView = ({
   const content = metadata?.content || "";
   const formattedDate = formatDate(post.createdAt);
   const handle = post.by?.handle?.localName;
-  const contentJson = metadata?.attributes?.find((attr) => attr.key === "contentJson")
-  const { title, subtitle, coverImage } = extractMetadata( contentJson?.value );
+  const contentJson = metadata?.attributes?.find((attr) => attr.key === "contentJson");
+  if (!contentJson) { return null; }
+  const { title, subtitle, coverImage } = extractMetadata(JSON.parse(contentJson?.value));
 
   return (
     <Link href={`/${handle}/${post.id}`}>
