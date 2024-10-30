@@ -58,7 +58,7 @@ export const DraftCreate = ({
       isLocal: true,
       documentId: id,
       authorId: "",
-      contentJson: JSON.stringify(defaultContent),
+      contentJson: defaultContent,
       updatedAt: "",
       createdAt: "",
     });

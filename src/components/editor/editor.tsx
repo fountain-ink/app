@@ -80,7 +80,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
     if (documentId.startsWith("local-")) {
       const localContent = getDocument(documentId);
       if (localContent) {
-        setContent(JSON.parse(localContent.contentJson));
+        setContent(localContent.contentJson);
       }
     }
   }, [documentId, getDocument]);
