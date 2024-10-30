@@ -33,6 +33,7 @@ export function Cursor({
       {!disableSelection &&
         selectionRects.map((position, i) => (
           <div
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
             key={i}
             className={cn(
               'pointer-events-none absolute z-10 opacity-30',

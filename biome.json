@@ -12,6 +12,9 @@
         "useExhaustiveDependencies": "off"
       },
       "style": {
+        "noNonNullAssertion": {
+          "level": "warn"
+        },
         "useImportType": {
           "level": "warn"
         }

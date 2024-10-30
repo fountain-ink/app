@@ -218,7 +218,7 @@ export type MyRootBlock =
   | MyBlockquoteElement
   | MyBulletedListElement
   | MyCodeBlockElement
-  | MyExcalidrawElement
+  // | MyExcalidrawElement
   | MyH1Element
   | MyH2Element
   | MyH3Element
