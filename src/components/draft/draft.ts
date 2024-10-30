@@ -1,4 +1,4 @@
-import { JSONContent } from "novel";
+import type { JSONContent } from "novel";
 
 export type Draft = {
   id: number;
@@ -8,4 +8,4 @@ export type Draft = {
   contentJson: JSONContent;
   updatedAt: string;
   createdAt: string;
-}
+};

@@ -46,7 +46,7 @@ export function AutoSave({
 						isLocal: true, 
 						documentId,
 						authorId: existingDraft?.authorId ?? '', 
-						contentJson: JSON.stringify(contentJson),
+						contentJson: contentJson,
 						updatedAt: new Date().toISOString(),
 						createdAt: existingDraft?.createdAt ?? new Date().toISOString(), 
 					};

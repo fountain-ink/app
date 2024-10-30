@@ -49,7 +49,7 @@ const getRandomElement = (list: string[]) => list[Math.floor(Math.random() * lis
 const getRandomColor = () => getRandomElement(colors);
 const getRandomName = () => getRandomElement(names);
 
-const getInitialUser = () => {
+const _getInitialUser = () => {
   return {
     name: getRandomName(),
     color: getRandomColor(),
@@ -68,7 +68,7 @@ export const Editor = ({ documentId, children, initialContent }: EditorProps) =>
   const [contentSynced, setContentSynced] = useState(false);
   const [openNode, setOpenNode] = useState(false);
   const [openLink, setOpenLink] = useState(false);
-  const [openAI, _setOpenAI] = useState(false);
+  const [_openAI, _setOpenAI] = useState(false);
   const [showEditorCommands, setShowEditorCommands] = useState(true);
 
   const [yDoc, setYDoc] = useState<Y.Doc | null>(null);
