@@ -113,6 +113,7 @@
     "@udecode/plate-dnd": "^39.0.0",
     "@udecode/plate-docx": "^39.2.13",
     "@udecode/plate-emoji": "^39.0.0",
+    "@udecode/plate-excalidraw": "^39.0.0",
     "@udecode/plate-font": "^39.0.0",
     "@udecode/plate-heading": "^39.0.0",
     "@udecode/plate-highlight": "^39.0.0",
