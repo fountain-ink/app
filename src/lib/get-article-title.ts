@@ -4,7 +4,16 @@ interface ArticleMetadata {
   coverImage: string | null;
 }
 
-export const extractMetadata = (contentJson: any): ArticleMetadata => {
+export const extractMetadata = (content: string | undefined): ArticleMetadata => {
+  if (!content) {
+    return {
+      title: "Untitled",
+      subtitle: "",
+      coverImage: null,
+    };
+  }
+  const contentJson = JSON.parse(content);
+
   if (!contentJson?.content || !Array.isArray(contentJson.content)) {
     return {
       title: "Untitled",
@@ -13,8 +22,12 @@ export const extractMetadata = (contentJson: any): ArticleMetadata => {
     };
   }
 
-  const titleNode = contentJson.content.find((node: any) => node.type === "title");
-  const subtitleNode = contentJson.content.find((node: any) => node.type === "subtitle");
+  const titleNode = contentJson.content.find(
+    (node: any) => node.type === "title" || (node.type === "heading" && node.attrs?.level === 1),
+  );
+  const subtitleNode = contentJson.content.find(
+    (node: any) => node.type === "subtitle" || (node.type === "heading" && node.attrs?.level === 2),
+  );
   const imageNode = contentJson.content.find((node: any) => node.type === "image");
 
   // console.log(titleNode.content?.[0]?.text);
