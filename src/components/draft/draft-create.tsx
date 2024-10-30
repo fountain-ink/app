@@ -3,9 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { getRandomUid } from "@/lib/get-random-uid";
+
 import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { JSONContent } from "novel";
+import { useState } from "react";
+import { LoadingSpinner } from "../loading-spinner";
 
 const defaultContent: JSONContent = {
   type: "doc",
@@ -44,6 +47,7 @@ export const DraftCreate = ({
   isLocal?: boolean;
 }) => {
   const { saveDocument } = useDocumentStorage();
+  const [isCreating, setIsCreating] = useState(false);
   const router = useRouter();
 
   const handleNew = () => {
@@ -65,6 +69,7 @@ export const DraftCreate = ({
   };
 
   const handleCreate = async () => {
+    setIsCreating(true);
     const response = await fetch("/api/drafts", {
       method: "POST",
       headers: {
@@ -73,6 +78,7 @@ export const DraftCreate = ({
     });
 
     const { draft } = await response.json();
+    setIsCreating(false);
 
     if (!draft) {
       return;
@@ -88,8 +94,12 @@ export const DraftCreate = ({
       {text}
     </Button>
   ) : (
-    <Button onClick={handleCreate} variant={variant} className="flex gap-2">
-      <PlusIcon className="w-4 h-4" />
+    <Button onClick={handleCreate} variant={variant} className="flex items-center jusitfy-center gap-2">
+      {isCreating ? (
+        <LoadingSpinner size={20} className="w-4 h-4 flex items-center justify-center" />
+      ) : (
+        <PlusIcon className="w-4 h-4" />
+      )}
       {text}
     </Button>
   );
