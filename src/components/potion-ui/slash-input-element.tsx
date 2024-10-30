@@ -29,14 +29,14 @@ interface SlashCommandRule {
 }
 
 const rules: SlashCommandRule[] = [
-  {
-    focusEditor: false,
-    icon: Icons.ai,
-    value: 'AI',
-    onSelect: (editor) => {
-      editor.getApi(AIChatPlugin).aiChat.show();
-    },
-  },
+  // {
+  //   focusEditor: false,
+  //   icon: Icons.ai,
+  //   value: 'AI',
+  //   onSelect: (editor) => {
+  //     editor.getApi(AIChatPlugin).aiChat.show();
+  //   },
+  // },
   {
     icon: Icons.h1,
     value: 'Heading 1',
