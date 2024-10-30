@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { uploadFile } from "@/lib/upload-image";
 import { NodeViewWrapper } from "@tiptap/react";
 import { useState } from "react";
+import { IMAGE_WIDTH_CLASSES } from "./image";
 
 const ImageActions = ({
   handleUpload,
@@ -132,16 +133,12 @@ const ImageComponent = (props: {
     props.editor.commands.focus();
   };
 
-  const widthClass = {
-    wide: "w-[160%] -ml-[30%] max-w-[160%]",
-    full: "w-screen max-w-[90vw] relative -translate-x-1/2 left-1/2 content-center justify-center",
-    column: "w-full max-w-full",
-  }[width];
+  const widthClass = IMAGE_WIDTH_CLASSES[width];
 
   return (
     <NodeViewWrapper className={`flex rounded-sm relative my-[--image-margin-y] justify-center ${widthClass}`}>
       <div className="flex-grow-0 group transition-colors duration-300 ease-in-out rounded-sm w-full">
-        {props.node.attrs.src ? (
+        {props.node.attrs.src && (
           <div className="relative">
             <img
               src={props.node.attrs.src}
@@ -154,7 +151,8 @@ const ImageComponent = (props: {
               </div>
             )}
           </div>
-        ) : (
+        )}
+        {!props.node.attrs.src && (
           <div className="flex flex-col items-center justify-center w-full aspect-[16/8] rounded-sm border-2 border-muted-foreground/10 group-hover:border-primary [.has-focus_&]:border-primary [.has-focus_&]:ring-1 [.has-focus_&]:ring-primary">
             <Button className="z-20 flex gap-2" variant="muted" onClick={handleUpload} disabled={isLoading}>
               {isLoading ? (

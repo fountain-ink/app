@@ -23,6 +23,14 @@ declare module "@tiptap/core" {
   }
 }
 
+export type ImageWidthOptions = "column" | "wide" | "full";
+
+export const IMAGE_WIDTH_CLASSES = {
+  wide: "w-[160%] -ml-[30%] max-w-[160%]",
+  full: "w-screen max-w-[90vw] relative -translate-x-1/2 left-1/2 content-center justify-center",
+  column: "w-full max-w-full",
+} as const;
+
 export const Image = Node.create<ImageOptions>({
   name: "image",
   group: "block",
@@ -49,25 +57,10 @@ export const Image = Node.create<ImageOptions>({
       width: {
         default: "column",
         renderHTML: (attributes) => {
-          const width = attributes.width as WidthOptions;
-          let style = "margin: 0 auto;";
-          let className = "";
-
-          switch (width) {
-            case "wide":
-              style += "width: 120%;";
-              className = "!max-w-[120%] -ml-[10%]";
-              break;
-            case "full":
-              style += "width: 100vw; max-width: 1800px;";
-              className = "!w-screen !max-w-[1800px] mx-auto";
-              break;
-            default:
-              style += "width: 100%;";
-              className = "!max-w-full";
-          }
-
-          return { style, class: className };
+          const width = attributes.width as ImageWidthOptions;
+          return {
+            class: IMAGE_WIDTH_CLASSES[width],
+          };
         },
       },
     };
@@ -78,7 +71,13 @@ export const Image = Node.create<ImageOptions>({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ["img", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)];
+    const { src, ...rest } = HTMLAttributes;
+
+    if (!src) {
+      return ["div", { class: "image-placeholder" }];
+    }
+
+    return ["img", mergeAttributes(this.options.HTMLAttributes, { src, ...rest })];
   },
 
   addCommands() {

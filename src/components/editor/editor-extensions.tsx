@@ -246,7 +246,7 @@ export const defaultExtensions = ({
       render: renderItems,
     },
   }),
-  Markdown.configure({ transformPastedText: true }),
+  Markdown.configure({ transformPastedText: true, html: false }),
   TextAlign.extend({
     addKeyboardShortcuts() {
       return {};

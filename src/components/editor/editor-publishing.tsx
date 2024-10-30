@@ -51,6 +51,16 @@ export const EditorPublishing = () => {
     }
 
     const contentJson = editor.getJSON();
+
+    const hasIncompleteImages = contentJson.content?.some((node: any) => node.type === "image" && !node.attrs?.src);
+
+    if (hasIncompleteImages) {
+      toast.error("Cannot publish with image placeholders", {
+        description: "Please fill in all images or remove the placeholders.",
+      });
+      return;
+    }
+
     const contentHtml = editor.getHTML();
     const markdown = editor.storage.markdown.getMarkdown();
     const { title } = extractMetadata(contentJson);
