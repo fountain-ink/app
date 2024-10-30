@@ -50,7 +50,7 @@ import {
 } from '@udecode/plate-table/react';
 import { TogglePlugin } from '@udecode/plate-toggle/react';
 
-import { AILeaf } from '@/components/potion-ui/ai-leaf';
+// import { AILeaf } from '@/components/potion-ui/ai-leaf';
 import { BlockquoteElement } from '@/components/potion-ui/blockquote-element';
 // import { CalloutElement } from '@/components/potion-ui/callout-element';
 import { CodeBlockElement } from '@/components/potion-ui/code-block-element';
@@ -91,7 +91,7 @@ import { withDraggables } from '@/components/potion-ui/with-draggables';
 export const createPotionUI = () => {
   return withPlaceholders(
     withDraggables({
-      [AIPlugin.key]: AILeaf,
+      // [AIPlugin.key]: AILeaf,
       // [AudioPlugin.key]: MediaAudioElement,
       [BlockquotePlugin.key]: BlockquoteElement,
       [BoldPlugin.key]: withProps(PlateLeaf, { as: 'strong' }),
