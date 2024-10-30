@@ -56,7 +56,7 @@ export const EmojiInputElement = withRef<typeof PlateElement>(
                 value={emoji.name}
                 onClick={() => insertEmoji(editor, emoji)}
               >
-                {emoji.skins[0].native} {emoji.name}
+                {emoji?.skins[0]?.native} {emoji.name}
               </InlineComboboxItem>
             ))}
           </InlineComboboxContent>
