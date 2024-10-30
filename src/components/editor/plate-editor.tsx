@@ -90,7 +90,7 @@ import { TrailingBlockPlugin } from '@udecode/plate-trailing-block';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { FixedToolbar } from '../potion-ui/fixed-toolbar';
-import { AILeaf } from '../potion-ui/ai-leaf';
+// import { AILeaf } from '../potion-ui/ai-leaf';
 import { BlockContextMenu } from '../potion-ui/block-context-menu';
 import { BlockquoteElement } from '../potion-ui/blockquote-element';
 import { CodeBlockElement } from '../potion-ui/code-block-element';
@@ -425,7 +425,7 @@ export const useMyEditor = () => {
     override: {
       components: withDraggables(
         withPlaceholders({
-          [AIPlugin.key]: AILeaf,
+          // [AIPlugin.key]: AILeaf,
           [DatePlugin.key]: DateElement,
           [SlashInputPlugin.key]: SlashInputElement,
           [TogglePlugin.key]: ToggleElement,
