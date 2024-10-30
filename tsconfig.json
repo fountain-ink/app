@@ -10,12 +10,7 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "checkJs": true,
-    "lib": [
-      "es5",
-      "es6",
-      "dom",
-      "dom.iterable"
-    ],
+    "lib": ["es5", "es6", "dom", "dom.iterable"],
     "noEmit": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
@@ -28,9 +23,7 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     }
   },
   "include": [
@@ -45,7 +38,5 @@
     "**/*.js",
     ".next/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }
