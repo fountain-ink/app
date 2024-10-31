@@ -25,12 +25,12 @@ import { LinkPlugin } from "@udecode/plate-link/react";
 import { MarkdownPlugin } from "@udecode/plate-markdown";
 import { EquationPlugin, InlineEquationPlugin } from "@udecode/plate-math/react";
 import {
-  AudioPlugin,
-  FilePlugin,
-  ImagePlugin,
-  MediaEmbedPlugin,
-  PlaceholderPlugin,
-  VideoPlugin,
+    AudioPlugin,
+    FilePlugin,
+    ImagePlugin,
+    MediaEmbedPlugin,
+    PlaceholderPlugin,
+    VideoPlugin,
 } from "@udecode/plate-media/react";
 import { MentionPlugin } from "@udecode/plate-mention/react";
 import { NodeIdPlugin } from "@udecode/plate-node-id";
@@ -44,7 +44,6 @@ import Prism from "prismjs";
 
 // import { aiPlugins } from '@/example/ai-plugins';
 import { BlockContextMenu } from "@/components/potion-ui/block-context-menu";
-import { CommentsPopover } from "@/components/potion-ui/comments-popover";
 import { DragOverCursorPlugin, SelectionOverlayPlugin } from "@/components/potion-ui/cursor-overlay";
 import { ImageElement } from "@/components/potion-ui/image-element";
 import { ImagePreview } from "@/components/potion-ui/image-preview";
@@ -53,16 +52,16 @@ import { LinkFloatingToolbar } from "@/components/potion-ui/link-floating-toolba
 import { AlignPlugin } from "@udecode/plate-alignment/react";
 import { AutoformatPlugin } from "@udecode/plate-autoformat/react";
 import {
-  BoldPlugin,
-  CodePlugin,
-  ItalicPlugin,
-  StrikethroughPlugin,
-  SubscriptPlugin,
-  SuperscriptPlugin,
-  UnderlinePlugin,
+    BoldPlugin,
+    CodePlugin,
+    ItalicPlugin,
+    StrikethroughPlugin,
+    SubscriptPlugin,
+    SuperscriptPlugin,
+    UnderlinePlugin,
 } from "@udecode/plate-basic-marks/react";
 import { isCodeBlockEmpty, isSelectionAtCodeBlockStart, unwrapCodeBlock } from "@udecode/plate-code-block";
-import { CodeBlockPlugin, CodeLinePlugin, CodeSyntaxPlugin } from "@udecode/plate-code-block/react";
+import { CodeBlockPlugin, CodeSyntaxPlugin } from "@udecode/plate-code-block/react";
 import { isBlockAboveEmpty, isSelectionAtBlockStart, someNode } from "@udecode/plate-common";
 import { FontSizePlugin } from "@udecode/plate-font/react";
 import { TodoListPlugin } from "@udecode/plate-list/react";
@@ -73,8 +72,6 @@ import { TableCellHeaderPlugin, TableRowPlugin } from "@udecode/plate-table/reac
 import { YjsPlugin } from "@udecode/plate-yjs/react";
 import { autoformatRules } from "./plate-autoformat";
 import { RenderAboveEditableYjs } from "./yjs-above-editable";
-
-// import { resetNodePlugin } from './reset-node-plugin';
 
 export const commonPlugins = [
   YjsPlugin.configure({
@@ -115,6 +112,7 @@ export const commonPlugins = [
   MentionPlugin.configure({
     options: { triggerPreviousCharPattern: /^$|^[\s"']$/ },
   }),
+
   SlashPlugin,
   TablePlugin.configure({ options: { enableMerging: true } }),
   TogglePlugin,
@@ -272,7 +270,6 @@ export const commonPlugins = [
     },
   }),
   NodeIdPlugin,
-  // resetNodePlugin,
   SelectOnBackspacePlugin.configure({
     options: {
       query: {
@@ -300,21 +297,6 @@ export const commonPlugins = [
   DragOverCursorPlugin,
   SelectionOverlayPlugin,
 
-  // Collaboration
-  CommentsPlugin.configure({
-    options: {
-      myUserId: "1",
-      users: {
-        1: {
-          id: "1",
-          avatarUrl: "https://avatars.githubusercontent.com/u/19695832?s=96&v=4",
-          name: "zbeyens",
-        },
-      },
-    },
-    render: { afterEditable: () => <CommentsPopover /> },
-  }),
-
   // Deserialization
   DocxPlugin,
   MarkdownPlugin.configure({
@@ -322,30 +304,14 @@ export const commonPlugins = [
       indentList: true,
     },
   }),
-  HeadingPlugin,
-  TocPlugin,
-  BlockquotePlugin,
-  CodeBlockPlugin,
-  CodeLinePlugin,
+  JuicePlugin,
+
   CodeSyntaxPlugin,
-  HorizontalRulePlugin,
-  LinkPlugin.configure({
-    render: { afterEditable: () => <LinkFloatingToolbar /> },
-  }),
-  ImagePlugin,
-  MediaEmbedPlugin,
-  CaptionPlugin.configure({
-    options: { plugins: [ImagePlugin, MediaEmbedPlugin] },
-  }),
-  MentionPlugin,
   MentionInputPlugin,
-  TablePlugin,
   TableRowPlugin,
   TableCellPlugin,
   TableCellHeaderPlugin,
-  TodoListPlugin,
   // ExcalidrawPlugin,
-  ColumnPlugin,
   ColumnItemPlugin,
 
   // Marks
@@ -356,39 +322,8 @@ export const commonPlugins = [
   CodePlugin,
   SubscriptPlugin,
   SuperscriptPlugin,
-  FontColorPlugin,
-  FontBackgroundColorPlugin,
   FontSizePlugin,
-  HighlightPlugin,
-  KbdPlugin,
 
-  // Block Style
-  DatePlugin,
-  TogglePlugin,
-  AlignPlugin.configure({
-    inject: {
-      targetPlugins: [ParagraphPlugin.key, ...HEADING_LEVELS],
-    },
-  }),
-  IndentPlugin.configure({
-    inject: {
-      targetPlugins: [ParagraphPlugin.key, BlockquotePlugin.key, CodeBlockPlugin.key, ...HEADING_LEVELS],
-    },
-  }),
-  IndentListPlugin.configure({
-    inject: {
-      targetPlugins: [ParagraphPlugin.key, BlockquotePlugin.key, CodeBlockPlugin.key, ...HEADING_LEVELS],
-    },
-    options: {
-      listStyleTypes: {
-        todo: {
-          liComponent: TodoLi,
-          markerComponent: TodoMarker,
-          type: "todo",
-        },
-      },
-    },
-  }),
   // LineHeightPlugin.configure({
   //   inject: {
   //     nodeProps: {
@@ -400,60 +335,6 @@ export const commonPlugins = [
   // }),
 
   // Functionality
-  SlashPlugin,
-  AutoformatPlugin.configure({
-    options: {
-      rules: autoformatRules,
-      enableUndoOnDelete: true,
-    },
-  }),
-  BlockSelectionPlugin.configure({
-    options: {
-      areaOptions: {
-        behaviour: {
-          scrolling: {
-            startScrollMargins: { x: 0, y: 0 },
-          },
-        },
-        boundaries: "#scroll_container",
-        container: "#scroll_container",
-        selectables: "#scroll_container .slate-selectable",
-        selectionAreaClass: "slate-selection-area",
-      },
-      enableContextMenu: true,
-    },
-  }),
-  BlockMenuPlugin.configure({
-    render: { aboveEditable: BlockContextMenu },
-  }),
-  DndPlugin.configure({
-    options: { enableScroller: true },
-  }),
-  EmojiPlugin,
-  ExitBreakPlugin.configure({
-    options: {
-      rules: [
-        {
-          hotkey: "mod+enter",
-        },
-        {
-          hotkey: "mod+shift+enter",
-          before: true,
-        },
-        {
-          hotkey: "enter",
-          query: {
-            start: true,
-            end: true,
-            allow: HEADING_LEVELS,
-          },
-          relative: true,
-          level: 1,
-        },
-      ],
-    },
-  }),
-  NodeIdPlugin,
   ResetNodePlugin.configure({
     options: {
       rules: [
@@ -486,26 +367,6 @@ export const commonPlugins = [
       ],
     },
   }),
-  SelectOnBackspacePlugin.configure({
-    options: {
-      query: {
-        allow: [ImagePlugin.key, HorizontalRulePlugin.key],
-      },
-    },
-  }),
-  SoftBreakPlugin.configure({
-    options: {
-      rules: [
-        { hotkey: "shift+enter" },
-        {
-          hotkey: "enter",
-          query: {
-            allow: [CodeBlockPlugin.key, BlockquotePlugin.key, TableCellPlugin.key, TableCellHeaderPlugin.key],
-          },
-        },
-      ],
-    },
-  }),
   TabbablePlugin.configure(({ editor }) => ({
     options: {
       query: () => {
@@ -522,12 +383,6 @@ export const commonPlugins = [
       },
     },
   })),
-  TrailingBlockPlugin.configure({
-    options: { type: ParagraphPlugin.key },
-  }),
-  SelectionOverlayPlugin,
-  DragOverCursorPlugin,
-  // Collaboration
   CommentsPlugin.configure({
     options: {
       users: {
@@ -540,9 +395,4 @@ export const commonPlugins = [
       myUserId: "1",
     },
   }),
-
-  // Deserialization
-  DocxPlugin,
-  MarkdownPlugin,
-  JuicePlugin,
 ];
