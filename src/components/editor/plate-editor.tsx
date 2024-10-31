@@ -99,6 +99,7 @@ import { NormalizeTypesPlugin } from '@udecode/plate-normalizers';
 import * as Y from "yjs";
 import { commonPlugins } from "./plate-plugins";
 import { proseClasses } from "@/styles/prose";
+import { createPotionUI } from "./plate-create-ui";
 
 export default function PlateEditor() {
   const containerRef = useRef(null);
@@ -144,69 +145,25 @@ export const useMyEditor = () => {
       ...commonPlugins,
     ],
     override: {
-      components: withDraggables(
-        withPlaceholders({
-          // [AIPlugin.key]: AILeaf,
-          [DatePlugin.key]: DateElement,
-          [SlashInputPlugin.key]: SlashInputElement,
-          [TogglePlugin.key]: ToggleElement,
-          [BlockquotePlugin.key]: BlockquoteElement,
-          [CodeBlockPlugin.key]: CodeBlockElement,
-          [CodeLinePlugin.key]: CodeLineElement,
-          [TocPlugin.key]: TocElement,
-          [ColumnItemPlugin.key]: ColumnElement,
-          [ColumnPlugin.key]: ColumnGroupElement,
-          [CodeSyntaxPlugin.key]: CodeSyntaxLeaf,
-          [HorizontalRulePlugin.key]: HrElement,
-          [HEADING_KEYS.h1]: withProps(HeadingElement, { variant: "h1" }),
-          [HEADING_KEYS.h2]: withProps(HeadingElement, { variant: "h2" }),
-          [HEADING_KEYS.h3]: withProps(HeadingElement, { variant: "h3" }),
-          [HEADING_KEYS.h4]: withProps(HeadingElement, { variant: "h4" }),
-          [HEADING_KEYS.h5]: withProps(HeadingElement, { variant: "h5" }),
-          [HEADING_KEYS.h6]: withProps(HeadingElement, { variant: "h6" }),
-          [ImagePlugin.key]: ImageElement,
-          [LinkPlugin.key]: LinkElement,
-          [MediaEmbedPlugin.key]: MediaEmbedElement,
-          [MentionPlugin.key]: MentionElement,
-          [MentionInputPlugin.key]: MentionInputElement,
-          [ParagraphPlugin.key]: ParagraphElement,
-          [TablePlugin.key]: TableElement,
-          [TableRowPlugin.key]: TableRowElement,
-          [TableCellPlugin.key]: TableCellElement,
-          [TableCellHeaderPlugin.key]: TableCellHeaderElement,
-          [TodoListPlugin.key]: TodoListElement,
-          // [ExcalidrawPlugin.key]: ExcalidrawElement,
-          [BoldPlugin.key]: withProps(PlateLeaf, { as: "strong" }),
-          [CodePlugin.key]: CodeLeaf,
-          [HighlightPlugin.key]: HighlightLeaf,
-          [ItalicPlugin.key]: withProps(PlateLeaf, { as: "em" }),
-          [KbdPlugin.key]: KbdLeaf,
-          [StrikethroughPlugin.key]: withProps(PlateLeaf, { as: "s" }),
-          [SubscriptPlugin.key]: withProps(PlateLeaf, { as: "sub" }),
-          [SuperscriptPlugin.key]: withProps(PlateLeaf, { as: "sup" }),
-          [UnderlinePlugin.key]: withProps(PlateLeaf, { as: "u" }),
-          [CommentsPlugin.key]: CommentLeaf,
-        }),
-
-      ),
+      components: createPotionUI(),
+      // value: [
+      //   {
+      //     id: "1",
+      //     type: "h1",
+      //     children: [{ text: "Playground" }],
+      //   },
+      //   {
+      //     id: "2",
+      //     type: ParagraphPlugin.key,
+      //     children: [
+      //       { text: "A rich-text editor with AI capabilities. Try the " },
+      //       { text: "AI commands", bold: true },
+      //       { text: " or use " },
+      //       { text: "Cmd+J", kbd: true },
+      //       { text: " to open the AI menu." },
+      //     ],
+      //   },
+      // ],
     },
-    // value: [
-    //   {
-    //     id: "1",
-    //     type: "h1",
-    //     children: [{ text: "Playground" }],
-    //   },
-    //   {
-    //     id: "2",
-    //     type: ParagraphPlugin.key,
-    //     children: [
-    //       { text: "A rich-text editor with AI capabilities. Try the " },
-    //       { text: "AI commands", bold: true },
-    //       { text: " or use " },
-    //       { text: "Cmd+J", kbd: true },
-    //       { text: " to open the AI menu." },
-    //     ],
-    //   },
-    // ],
   });
 };
