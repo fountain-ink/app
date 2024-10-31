@@ -18,6 +18,8 @@ import { PlateElement } from './plate-element';
 
 import type { ComponentType, SVGProps } from 'react';
 import type { PlateEditor } from '@udecode/plate-common/react';
+import { Heading2Icon, HeadingIcon, ImageIcon } from 'lucide-react';
+import { ImagePlugin } from '@udecode/plate-media/react';
 
 interface SlashCommandRule {
   icon: ComponentType<SVGProps<SVGSVGElement>>;
@@ -37,25 +39,42 @@ const rules: SlashCommandRule[] = [
   //     editor.getApi(AIChatPlugin).aiChat.show();
   //   },
   // },
+  // {
+  //   icon: Icons.h1,
+  //   value: 'Heading 1',
+  //   onSelect: (editor) => {
+  //     editor.tf.toggle.block({ type: HEADING_KEYS.h1 });
+  //   },
+  // },
+  // {
+  //   icon: Icons.h2,
+  //   value: 'Heading 2',
+  //   onSelect: (editor) => {
+  //     editor.tf.toggle.block({ type: HEADING_KEYS.h2 });
+  //   },
+  // },
   {
-    icon: Icons.h1,
-    value: 'Heading 1',
-    onSelect: (editor) => {
-      editor.tf.toggle.block({ type: HEADING_KEYS.h1 });
-    },
-  },
-  {
-    icon: Icons.h2,
-    value: 'Heading 2',
-    onSelect: (editor) => {
-      editor.tf.toggle.block({ type: HEADING_KEYS.h2 });
-    },
-  },
-  {
-    icon: Icons.h3,
-    value: 'Heading 3',
+    icon: HeadingIcon,
+    value: 'Heading',
+    keywords: ['heading', "big", "huge", "section", "h1", "one"],
     onSelect: (editor) => {
       editor.tf.toggle.block({ type: HEADING_KEYS.h3 });
+    },
+  },
+  {
+    icon: Heading2Icon,
+    value: 'Heading',
+    keywords: ['heading', "mid", "section", "h2", "two"],
+    onSelect: (editor) => {
+      editor.tf.toggle.block({ type: HEADING_KEYS.h4 });
+    },
+  },
+  {
+    icon: ImageIcon,
+    value: 'Image',
+    keywords: ['image', 'img', 'picture', 'png', 'photo', 'jpg', 'jpeg'],
+    onSelect: (editor) => {
+      editor.tf.toggle.block({ type: ImagePlugin.key });
     },
   },
   {
