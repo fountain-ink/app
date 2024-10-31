@@ -5,7 +5,7 @@ import { ResizableProvider, useResizableStore } from "@udecode/plate-resizable";
 import React from "react";
 
 import { Caption, CaptionTextarea } from "./caption";
-import { MediaPopover } from "./media-popover";
+import { ImagePopover } from "./image-popover";
 import { PlateElement } from "./plate-element";
 import { mediaResizeHandleVariants, Resizable, ResizeHandle } from "./resizable";
 
@@ -21,10 +21,11 @@ export const ImageElement = withHOC(
     const { align = "center", focused, readOnly, selected } = useMediaState();
     const width = useResizableStore().get.width();
     const [isImageLoaded, setIsImageLoaded] = React.useState(false);
-    const showPlaceholder = !nodeProps?.url || !isImageLoaded;
+    const url = props.element.url
+    const showPlaceholder = !url;
 
     return (
-      <MediaPopover plugin={ImagePlugin}>
+      <ImagePopover plugin={ImagePlugin}>
         <PlateElement ref={ref} className={cn("py-2.5", className)} {...props}>
           <figure className="group relative m-0" contentEditable={false}>
             <Resizable
@@ -67,7 +68,7 @@ export const ImageElement = withHOC(
 
           {children}
         </PlateElement>
-      </MediaPopover>
+      </ImagePopover>
     );
   }),
 );
