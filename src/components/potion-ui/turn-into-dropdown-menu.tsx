@@ -70,7 +70,7 @@ const items = [
   },
 ];
 
-const defaultItem = items.find((item) => item.value === ParagraphPlugin.key)!;
+const defaultItem = items.find((item) => item.value === ParagraphPlugin.key);
 
 export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
   const value: string = useEditorSelector((editor) => {
@@ -82,8 +82,8 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
     });
     const nodes = Array.from(codeBlockEntries);
 
-    if (nodes.length > 0) {
-      initialNodeType = nodes[0][0].type as string;
+    if (nodes.length > 0 && nodes[0]?.[0]) {
+      initialNodeType = nodes[0]?.[0].type as string;
       allNodesMatchInitialNodeType = nodes.every(([node]) => {
         const type: string = (node?.type as string) || ParagraphPlugin.key;
 
@@ -99,6 +99,11 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
 
   const selectedItem =
     items.find((item) => item.value === value) ?? defaultItem;
+
+  if (!selectedItem) {
+    return null;
+  }
+
   const { icon: SelectedItemIcon, label: selectedItemLabel } = selectedItem;
 
   return (
