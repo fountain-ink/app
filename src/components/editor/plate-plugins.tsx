@@ -74,25 +74,25 @@ import { autoformatRules } from "./plate-autoformat";
 import { RenderAboveEditableYjs } from "./yjs-above-editable";
 
 export const commonPlugins = [
-  YjsPlugin.configure({
-    render: {
-      aboveEditable: RenderAboveEditableYjs,
-    },
-    options: {
-      cursorOptions: {
-        autoSend: true,
-        data: {
-          name: "kualta",
-          color: "#ff0000",
-        },
-      },
-      disableCursors: false,
-      hocuspocusProviderOptions: {
-        url: "ws://0.0.0.0:1234",
-        name: "woirgjsodfijgs",
-      },
-    },
-  }),
+  // YjsPlugin.configure({
+  //   render: {
+  //     aboveEditable: RenderAboveEditableYjs,
+  //   },
+  //   options: {
+  //     cursorOptions: {
+  //       autoSend: true,
+  //       data: {
+  //         name: "kualta",
+  //         color: "#ff0000",
+  //       },
+  //     },
+  //     disableCursors: false,
+  //     hocuspocusProviderOptions: {
+  //       url: "ws://0.0.0.0:1234",
+  //       name: "woirgjsodfijgs",
+  //     },
+  //   },
+  // }),
   // Nodes
   HeadingPlugin.configure({ options: { levels: 3 } }),
   BlockquotePlugin,
