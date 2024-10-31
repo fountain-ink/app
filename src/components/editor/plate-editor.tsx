@@ -96,6 +96,9 @@ import { withDraggables } from "../potion-ui/with-draggables";
 import { autoformatRules } from "./plate-autoformat";
 import { RenderAboveEditableYjs } from "./yjs-above-editable";
 import { NormalizeTypesPlugin } from '@udecode/plate-normalizers';
+import * as Y from "yjs";
+import { commonPlugins } from "./plate-plugins";
+import { proseClasses } from "@/styles/prose";
 
 export default function PlateEditor() {
   const containerRef = useRef(null);
@@ -117,7 +120,7 @@ export default function PlateEditor() {
             <FixedToolbarButtons />
           </FixedToolbar>
 
-          <Editor autoFocus focusRing={false} variant="demo" size="md" />
+          <Editor disableDefaultStyles className={proseClasses} autoFocus focusRing={false} />
 
           <FloatingToolbar>
             <FloatingToolbarButtons />
@@ -134,8 +137,6 @@ export default function PlateEditor() {
   );
 }
 
-import * as Y from "yjs";
-import { commonPlugins } from "./plate-plugins";
 
 export const useMyEditor = () => {
   return usePlateEditor({
