@@ -94,7 +94,8 @@ import { TodoListElement } from "../potion-ui/todo-list-element";
 import { ToggleElement } from "../potion-ui/toggle-element";
 import { withDraggables } from "../potion-ui/with-draggables";
 import { autoformatRules } from "./plate-autoformat";
-import { YjsAboveEditable } from "./yjs-above-editable";
+import { RenderAboveEditableYjs } from "./yjs-above-editable";
+import { NormalizeTypesPlugin } from '@udecode/plate-normalizers';
 
 export default function PlateEditor() {
   const containerRef = useRef(null);
@@ -133,6 +134,8 @@ export default function PlateEditor() {
   );
 }
 
+import * as Y from "yjs";
+
 export const useMyEditor = () => {
   return usePlateEditor({
     plugins: [
@@ -141,7 +144,7 @@ export const useMyEditor = () => {
       // ...copilotPlugins,
       YjsPlugin.configure({
         render: {
-          aboveEditable: YjsAboveEditable,
+          aboveEditable: RenderAboveEditableYjs,
         },
         options: {
           cursorOptions: {
@@ -149,7 +152,7 @@ export const useMyEditor = () => {
             data: {
               name: "kualta",
               color: "#ff0000",
-            }
+            },
           },
           disableCursors: false,
           hocuspocusProviderOptions: {
@@ -158,6 +161,12 @@ export const useMyEditor = () => {
           },
         },
       }),
+      // TrailingBlockPlugin.configure({ options: { type: ParagraphPlugin.key } }),
+      // NormalizeTypesPlugin.configure({
+      //   options: {
+      //     rules: [{ path: [0], strictType: "h1",  }],
+      //   },
+      // }),
       // Nodes
       HeadingPlugin,
       TocPlugin,
