@@ -120,7 +120,7 @@ export default function PlateEditor() {
             <FixedToolbarButtons />
           </FixedToolbar>
 
-          <Editor disableDefaultStyles className={proseClasses} autoFocus focusRing={false} />
+          <Editor disableDefaultStyles className={proseClasses} autoFocus focusRing={false} variant="ghost" />
 
           <FloatingToolbar>
             <FloatingToolbarButtons />
@@ -187,7 +187,7 @@ export const useMyEditor = () => {
           [UnderlinePlugin.key]: withProps(PlateLeaf, { as: "u" }),
           [CommentsPlugin.key]: CommentLeaf,
         }),
-        
+
       ),
     },
     // value: [
