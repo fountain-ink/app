@@ -25,17 +25,19 @@ export function CommentsPopoverContent(props: FloatingCommentsContentProps) {
 
   const { activeCommentId, hasNoComment, myUserId, ref } =
     useFloatingCommentsContentState();
+  
+  if (!activeCommentId) return null;
 
   return (
     <CommentProvider
-      id={activeCommentId!}
+      id={activeCommentId}
       key={activeCommentId}
       scope={SCOPE_ACTIVE_COMMENT}
     >
       <div ref={ref} className={cn(popoverVariants(), 'relative w-[310px]')}>
         {!hasNoComment && (
           <>
-            <CommentItem key={activeCommentId} commentId={activeCommentId!} />
+            <CommentItem key={activeCommentId} commentId={activeCommentId} />
 
             <CommentReplyItems />
           </>
