@@ -1,14 +1,9 @@
-import React from 'react';
-import { cn } from '@udecode/cn';
-import {
-  createNodeHOC,
-  createNodesHOC,
-  ParagraphPlugin,
-  usePlaceholderState,
-} from '@udecode/plate-common/react';
-import { HEADING_KEYS } from '@udecode/plate-heading';
+import { cn } from "@udecode/cn";
+import { createNodeHOC, createNodesHOC, ParagraphPlugin, usePlaceholderState } from "@udecode/plate-common/react";
+import { HEADING_KEYS } from "@udecode/plate-heading";
+import React from "react";
 
-import type { PlaceholderProps } from '@udecode/plate-common/react';
+import type { PlaceholderProps } from "@udecode/plate-common/react";
 
 export const Placeholder = (props: PlaceholderProps) => {
   const { children, nodeProps, placeholder } = props;
@@ -21,8 +16,7 @@ export const Placeholder = (props: PlaceholderProps) => {
       nodeProps: {
         ...nodeProps,
         className: cn(
-          enabled &&
-            'before:absolute before:cursor-text before:opacity-30 before:content-[attr(placeholder)]'
+          enabled && "before:absolute before:cursor-text before:opacity-30 before:content-[attr(placeholder)]",
         ),
         placeholder,
       },
@@ -39,7 +33,7 @@ export const withPlaceholders = (components: any) =>
     {
       key: ParagraphPlugin.key,
       hideOnBlur: true,
-      placeholder: 'Type a paragraph',
+      placeholder: `Type '/' for commands...`,
       query: {
         maxLevel: 1,
       },
@@ -47,6 +41,11 @@ export const withPlaceholders = (components: any) =>
     {
       key: HEADING_KEYS.h1,
       hideOnBlur: false,
-      placeholder: 'Untitled',
+      placeholder: "Title",
+    },
+    {
+      key: HEADING_KEYS.h2,
+      hideOnBlur: false,
+      placeholder: "Subtitle",
     },
   ]);
