@@ -67,7 +67,7 @@ export function ImagePopover({ children, plugin }: ImagePopoverProps) {
         <div className="box-content flex h-9 items-center gap-1">
           <Button
             size="icon"
-            // variant="muted"
+            variant="muted"
             className={width === "column" ? "text-primary" : "muted"}
             onClick={() => handleWidth("column")}
           >
@@ -75,7 +75,7 @@ export function ImagePopover({ children, plugin }: ImagePopoverProps) {
           </Button>
           <Button
             size="icon"
-            // variant="muted"
+            variant="muted"
             className={width === "wide" ? "text-primary" : "muted"}
             onClick={() => handleWidth("wide")}
           >
@@ -83,7 +83,7 @@ export function ImagePopover({ children, plugin }: ImagePopoverProps) {
           </Button>
           <Button
             size="icon"
-            // variant="muted"
+            variant="muted"
             className={width === "full" ? "text-primary" : "muted"}
             onClick={() => handleWidth("full")}
           >
