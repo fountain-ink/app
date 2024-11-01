@@ -1,7 +1,6 @@
 import { cn, withRef } from "@udecode/cn";
 import { useElement, useRemoveNodeButton } from "@udecode/plate-common/react";
 import { ColumnItemPlugin, useColumnState, useDebouncePopoverOpen } from "@udecode/plate-layout/react";
-import React from "react";
 import { useReadOnly } from "slate-react";
 
 import { Button } from "./button";
@@ -10,7 +9,8 @@ import { Popover, PopoverAnchor, PopoverContent } from "./popover";
 import { Separator } from "./separator";
 
 import type { TColumnElement } from "@udecode/plate-layout";
-import { BedDoubleIcon, Columns2Icon, Columns3Icon, Columns4Icon, DeleteIcon } from "lucide-react";
+import { Columns2Icon, Columns3Icon } from "lucide-react";
+import { Icons } from "../icons";
 
 export const ColumnGroupElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
   return (
@@ -59,18 +59,19 @@ export function ColumnFloatingToolbar({ children }: React.PropsWithChildren) {
             <Columns3Icon />
           </Button>
           <Button size="sms" variant="ghost" onClick={setRightSideDoubleColumn}>
-            <Columns3Icon />
+            <Icons.rightSideDoubleColumn />
           </Button>
           <Button size="sms" variant="ghost" onClick={setLeftSideDoubleColumn}>
-            <Columns4Icon />
+            <Icons.leftSideDoubleColumn />
           </Button>
           <Button size="sms" variant="ghost" onClick={setDoubleSideDoubleColumn}>
-            <BedDoubleIcon />
+            <Icons.doubleSideDoubleColumn />
           </Button>
 
           <Separator orientation="vertical" className="my-1" />
-          <Button size="sms" variant="ghost" {...buttonProps}>
-            <DeleteIcon />
+
+          <Button variant="ghost" {...buttonProps}>
+            Remove
           </Button>
         </div>
       </PopoverContent>

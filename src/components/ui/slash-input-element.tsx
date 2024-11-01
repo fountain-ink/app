@@ -39,6 +39,12 @@ import { ParagraphPlugin } from "@udecode/plate-common/react";
 import { insertEmptyCodeBlock } from "@udecode/plate-code-block";
 import { CodeIcon } from "lucide-react";
 
+import { insertColumnGroup } from "@udecode/plate-layout";
+import { LayoutIcon } from "lucide-react";
+
+import { HorizontalRulePlugin } from "@udecode/plate-horizontal-rule/react";
+import { SeparatorHorizontalIcon } from "lucide-react";
+
 interface SlashCommandRule {
   icon: ComponentType<SVGProps<SVGSVGElement>>;
   onSelect: (editor: PlateEditor) => void;
@@ -174,6 +180,25 @@ const rules: SlashCommandRule[] = [
     value: "Date",
     onSelect: (editor) => {
       editor.getTransforms(DatePlugin).insert.date();
+    },
+  },
+  {
+    icon: LayoutIcon,
+    value: "Columns",
+    keywords: ["column", "layout", "grid", "split"],
+    onSelect: (editor) => {
+      insertColumnGroup(editor);
+    },
+  },
+  {
+    icon: SeparatorHorizontalIcon,
+    value: "Divider",
+    keywords: ["divider", "separator", "hr", "horizontal rule", "line"],
+    onSelect: (editor) => {
+      insertEmptyElement(editor, HorizontalRulePlugin.key, {
+        nextBlock: true,
+        select: true,
+      });
     },
   },
 ];
