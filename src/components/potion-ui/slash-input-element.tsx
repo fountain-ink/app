@@ -22,8 +22,22 @@ import {
   ListChecksIcon,
   ListIcon,
   ListOrderedIcon,
+  PilcrowIcon,
 } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
+
+import { insertMedia } from "@udecode/plate-media";
+import { MediaEmbedPlugin } from "@udecode/plate-media/react";
+import { YoutubeIcon } from "lucide-react";
+
+import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
+import { QuoteIcon } from "lucide-react";
+
+import { insertEmptyElement } from "@udecode/plate-common";
+import { ParagraphPlugin } from "@udecode/plate-common/react";
+
+import { insertEmptyCodeBlock } from "@udecode/plate-code-block";
+import { CodeIcon } from "lucide-react";
 
 interface SlashCommandRule {
   icon: ComponentType<SVGProps<SVGSVGElement>>;
@@ -74,11 +88,54 @@ const rules: SlashCommandRule[] = [
     },
   },
   {
+    icon: PilcrowIcon,
+    value: "Paragraph",
+    keywords: ["paragraph", "text", "p", "plain"],
+    onSelect: (editor) => {
+      insertEmptyElement(editor, ParagraphPlugin.key, {
+        nextBlock: true,
+        select: true,
+      });
+    },
+  },
+  {
     icon: ImageIcon,
     value: "Image",
     keywords: ["image", "img", "picture", "png", "photo", "jpg", "jpeg"],
     onSelect: (editor) => {
       editor.tf.toggle.block({ type: ImagePlugin.key });
+    },
+  },
+  {
+    icon: YoutubeIcon,
+    value: "Embed",
+    keywords: ["embed", "youtube", "video", "media", "iframe"],
+    onSelect: async (editor) => {
+      await insertMedia(editor, {
+        select: true,
+        type: MediaEmbedPlugin.key,
+      });
+    },
+  },
+  {
+    icon: QuoteIcon,
+    value: "Quote",
+    keywords: ["quote", "blockquote", "citation"],
+    onSelect: (editor) => {
+      insertEmptyElement(editor, BlockquotePlugin.key, {
+        nextBlock: true,
+        select: true,
+      });
+    },
+  },
+  {
+    icon: CodeIcon,
+    value: "Code Block",
+    keywords: ["code", "codeblock", "snippet", "pre"],
+    onSelect: (editor) => {
+      insertEmptyCodeBlock(editor, {
+        insertNodesOptions: { select: true },
+      });
     },
   },
   {

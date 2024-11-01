@@ -43,18 +43,18 @@ const items = [
         label: 'Paragraph',
         value: ParagraphPlugin.key,
       },
-      {
-        description: 'Heading 1',
-        icon: Icons.h1,
-        label: 'Heading 1',
-        value: HEADING_KEYS.h1,
-      },
-      {
-        description: 'Heading 2',
-        icon: Icons.h2,
-        label: 'Heading 2',
-        value: HEADING_KEYS.h2,
-      },
+      // {
+      //   description: 'Heading 1',
+      //   icon: Icons.h1,
+      //   label: 'Heading 1',
+      //   value: HEADING_KEYS.h1,
+      // },
+      // {
+      //   description: 'Heading 2',
+      //   icon: Icons.h2,
+      //   label: 'Heading 2',
+      //   value: HEADING_KEYS.h2,
+      // },
       {
         description: 'Heading 3',
         icon: Icons.h3,
