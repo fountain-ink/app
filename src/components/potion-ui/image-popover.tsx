@@ -2,18 +2,25 @@ import { uploadFile } from "@/lib/upload-image";
 import { isSelectionExpanded, WithRequiredKey } from "@udecode/plate-common";
 import { setNode, useEditorRef, useEditorSelector, useElement, useRemoveNodeButton } from "@udecode/plate-common/react";
 import { UploadIcon } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { useReadOnly, useSelected } from "slate-react";
 import { LoadingSpinner } from "../loading-spinner";
 import { Button } from "./button";
 import { CaptionButton } from "./caption";
 import { Popover, PopoverAnchor, PopoverContent } from "./popover";
 import { Separator } from "./separator";
+import { WidthColumn, WidthColumn, WidthFull, WidthWide } from "../custom-icons";
 
 export interface ImagePopoverProps {
   children: React.ReactNode;
   plugin: WithRequiredKey;
 }
+
+const IMAGE_WIDTH_CLASSES = {
+  wide: "w-[160%] -ml-[30%] max-w-[160%]",
+  full: "w-screen max-w-[90vw] relative -translate-x-1/2 left-1/2 content-center justify-center",
+  column: "w-full max-w-full",
+} as const;
 
 export function ImagePopover({ children, plugin }: ImagePopoverProps) {
   const readOnly = useReadOnly();
@@ -21,11 +28,12 @@ export function ImagePopover({ children, plugin }: ImagePopoverProps) {
   const editor = useEditorRef();
   const element = useElement();
   const { props: buttonProps } = useRemoveNodeButton({ element });
-  const [isUploading, setIsUploading] = React.useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [width, setWidth] = useState(element?.width || "column");
+  const [url, setUrl] = useState(element?.url);
 
   const selectionCollapsed = useEditorSelector((editor) => !isSelectionExpanded(editor), []);
   const isOpen = !readOnly && selected && selectionCollapsed;
-  const url = element?.url;
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -35,11 +43,17 @@ export function ImagePopover({ children, plugin }: ImagePopoverProps) {
     try {
       const url = await uploadFile(file);
       if (url) {
-        setNode(editor, element, { url });
+        setUrl(url);
+        setNode(editor, element, { url, width });
       }
     } finally {
       setIsUploading(false);
     }
+  };
+
+  const handleWidth = (width: "column" | "wide" | "full") => {
+    setWidth(width);
+    setNode(editor, element, { url, width });
   };
 
   if (readOnly) return <>{children}</>;
@@ -50,6 +64,30 @@ export function ImagePopover({ children, plugin }: ImagePopoverProps) {
 
       <PopoverContent sideOffset={0} className="w-auto p-1" onOpenAutoFocus={(e) => e.preventDefault()}>
         <div className="box-content flex h-9 items-center gap-1">
+          <Button
+            size="icon"
+            // variant="muted"
+            className={width === "column" ? "text-primary" : "muted"}
+            onClick={() => handleWidth("column")}
+          >
+            <WidthColumn />
+          </Button>
+          <Button
+            size="icon"
+            // variant="muted"
+            className={width === "wide" ? "text-primary" : "muted"}
+            onClick={() => handleWidth("wide")}
+          >
+            <WidthWide />
+          </Button>
+          <Button
+            size="icon"
+            // variant="muted"
+            className={width === "full" ? "text-primary" : "muted"}
+            onClick={() => handleWidth("full")}
+          >
+            <WidthFull />
+          </Button>
           <Separator orientation="vertical" className="my-1" />
 
           <Button size="sm" variant="ghost" disabled={isUploading}>
