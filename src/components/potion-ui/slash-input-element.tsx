@@ -1,11 +1,7 @@
-import React from 'react';
-import { withRef } from '@udecode/cn';
-import { AIChatPlugin } from '@udecode/plate-ai/react';
-import { DatePlugin } from '@udecode/plate-date/react';
-import { HEADING_KEYS } from '@udecode/plate-heading';
-import { ListStyleType, toggleIndentList } from '@udecode/plate-indent-list';
-
-import { Icons } from '@/components/icons';
+import { withRef } from "@udecode/cn";
+import { DatePlugin } from "@udecode/plate-date/react";
+import { HEADING_KEYS } from "@udecode/plate-heading";
+import { INDENT_LIST_KEYS, ListStyleType, toggleIndentList } from "@udecode/plate-indent-list";
 
 import {
   InlineCombobox,
@@ -13,13 +9,21 @@ import {
   InlineComboboxEmpty,
   InlineComboboxInput,
   InlineComboboxItem,
-} from './inline-combobox';
-import { PlateElement } from './plate-element';
+} from "./inline-combobox";
+import { PlateElement } from "./plate-element";
 
-import type { ComponentType, SVGProps } from 'react';
-import type { PlateEditor } from '@udecode/plate-common/react';
-import { Heading2Icon, HeadingIcon, ImageIcon } from 'lucide-react';
-import { ImagePlugin } from '@udecode/plate-media/react';
+import type { PlateEditor } from "@udecode/plate-common/react";
+import { ImagePlugin } from "@udecode/plate-media/react";
+import {
+  CalendarIcon,
+  Heading2Icon,
+  HeadingIcon,
+  ImageIcon,
+  ListChecksIcon,
+  ListIcon,
+  ListOrderedIcon,
+} from "lucide-react";
+import type { ComponentType, SVGProps } from "react";
 
 interface SlashCommandRule {
   icon: ComponentType<SVGProps<SVGSVGElement>>;
@@ -55,32 +59,32 @@ const rules: SlashCommandRule[] = [
   // },
   {
     icon: HeadingIcon,
-    value: 'Heading',
-    keywords: ['heading', "big", "huge", "section", "h1", "one"],
+    value: "Heading",
+    keywords: ["heading", "big", "huge", "section", "h1", "one"],
     onSelect: (editor) => {
       editor.tf.toggle.block({ type: HEADING_KEYS.h3 });
     },
   },
   {
     icon: Heading2Icon,
-    value: 'Heading',
-    keywords: ['heading', "mid", "section", "h2", "two"],
+    value: "Subheading",
+    keywords: ["sub", "heading", "mid", "section", "h2", "two"],
     onSelect: (editor) => {
       editor.tf.toggle.block({ type: HEADING_KEYS.h4 });
     },
   },
   {
     icon: ImageIcon,
-    value: 'Image',
-    keywords: ['image', 'img', 'picture', 'png', 'photo', 'jpg', 'jpeg'],
+    value: "Image",
+    keywords: ["image", "img", "picture", "png", "photo", "jpg", "jpeg"],
     onSelect: (editor) => {
       editor.tf.toggle.block({ type: ImagePlugin.key });
     },
   },
   {
-    icon: Icons.ul,
-    keywords: ['ul', 'unordered list'],
-    value: 'Bulleted list',
+    icon: ListIcon,
+    keywords: ["ul", "unordered list"],
+    value: "Bulleted list",
     onSelect: (editor) => {
       toggleIndentList(editor, {
         listStyleType: ListStyleType.Disc,
@@ -88,9 +92,9 @@ const rules: SlashCommandRule[] = [
     },
   },
   {
-    icon: Icons.ol,
-    keywords: ['ol', 'ordered list'],
-    value: 'Numbered list',
+    icon: ListOrderedIcon,
+    keywords: ["ol", "ordered list"],
+    value: "Numbered list",
     onSelect: (editor) => {
       toggleIndentList(editor, {
         listStyleType: ListStyleType.Decimal,
@@ -98,53 +102,52 @@ const rules: SlashCommandRule[] = [
     },
   },
   {
-    icon: Icons.add,
-    keywords: ['inline', 'date'],
-    value: 'Date',
+    icon: ListChecksIcon,
+    keywords: ["todo", "checks list", "toggle"],
+    value: "Checks list",
+    onSelect: (editor) => {
+      toggleIndentList(editor, {
+        listStyleType: INDENT_LIST_KEYS.todo,
+      });
+    },
+  },
+  {
+    icon: CalendarIcon,
+    keywords: ["inline", "date"],
+    value: "Date",
     onSelect: (editor) => {
       editor.getTransforms(DatePlugin).insert.date();
     },
   },
 ];
 
-export const SlashInputElement = withRef<typeof PlateElement>(
-  ({ className, ...props }, ref) => {
-    const { children, editor, element } = props;
+export const SlashInputElement = withRef<typeof PlateElement>(({ className, ...props }, ref) => {
+  const { children, editor, element } = props;
 
-    return (
-      <PlateElement
-        ref={ref}
-        as="span"
-        data-slate-value={element.value}
-        {...props}
-      >
-        <InlineCombobox element={element} trigger="/">
-          <InlineComboboxInput />
+  return (
+    <PlateElement ref={ref} as="span" data-slate-value={element.value} {...props}>
+      <InlineCombobox element={element} trigger="/">
+        <InlineComboboxInput />
 
-          <InlineComboboxContent>
-            <InlineComboboxEmpty>
-              No matching commands found
-            </InlineComboboxEmpty>
+        <InlineComboboxContent>
+          <InlineComboboxEmpty>No matching commands found</InlineComboboxEmpty>
 
-            {rules.map(
-              ({ focusEditor, icon: Icon, keywords, value, onSelect }) => (
-                <InlineComboboxItem
-                  key={value}
-                  value={value}
-                  onClick={() => onSelect(editor)}
-                  focusEditor={focusEditor}
-                  keywords={keywords}
-                >
-                  <Icon className="mr-2 size-4" aria-hidden />
-                  {value}
-                </InlineComboboxItem>
-              )
-            )}
-          </InlineComboboxContent>
-        </InlineCombobox>
+          {rules.map(({ focusEditor, icon: Icon, keywords, value, onSelect }) => (
+            <InlineComboboxItem
+              key={value}
+              value={value}
+              onClick={() => onSelect(editor)}
+              focusEditor={focusEditor}
+              keywords={keywords}
+            >
+              <Icon className="mr-2 size-4" aria-hidden />
+              {value}
+            </InlineComboboxItem>
+          ))}
+        </InlineComboboxContent>
+      </InlineCombobox>
 
-        {children}
-      </PlateElement>
-    );
-  }
-);
+      {children}
+    </PlateElement>
+  );
+});
