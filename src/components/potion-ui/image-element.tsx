@@ -21,14 +21,13 @@ export const ImageElement = withHOC(
     const { align = "center", focused, readOnly, selected } = useMediaState();
     const width = useResizableStore().get.width();
     const [isImageLoaded, setIsImageLoaded] = React.useState(false);
-    const url = props.element.url
+    const url = props.element.url;
     const showPlaceholder = !url;
 
     return (
       <ImagePopover plugin={ImagePlugin}>
-        
-        <PlateElement ref={ref} className={cn("py-2.5", className)} {...props}>
-          <figure className="group relative m-0" contentEditable={false}>
+        <PlateElement ref={ref} className={cn(className)} {...props}>
+          <figure className="group relative py-2" contentEditable={false}>
             <Resizable
               align={align}
               options={{

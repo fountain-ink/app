@@ -46,7 +46,7 @@ export function ImagePopover({ children, plugin }: ImagePopoverProps) {
     <Popover open={isOpen} modal={false}>
       <PopoverAnchor>{children}</PopoverAnchor>
 
-      <PopoverContent className="w-auto p-1" onOpenAutoFocus={(e) => e.preventDefault()}>
+      <PopoverContent sideOffset={0} className="w-auto p-1" onOpenAutoFocus={(e) => e.preventDefault()}>
         <div className="box-content flex h-9 items-center gap-1">
           <div className="relative">
             <input

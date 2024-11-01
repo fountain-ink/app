@@ -129,7 +129,7 @@ export const SlashInputElement = withRef<typeof PlateElement>(({ className, ...p
       <InlineCombobox element={element} trigger="/">
         <InlineComboboxInput />
 
-        <InlineComboboxContent>
+        <InlineComboboxContent className="max-w-64">
           <InlineComboboxEmpty>No matching commands found</InlineComboboxEmpty>
 
           {rules.map(({ focusEditor, icon: Icon, keywords, value, onSelect }) => (
