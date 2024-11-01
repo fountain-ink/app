@@ -26,6 +26,7 @@ export const ImageElement = withHOC(
 
     return (
       <ImagePopover plugin={ImagePlugin}>
+        
         <PlateElement ref={ref} className={cn("py-2.5", className)} {...props}>
           <figure className="group relative m-0" contentEditable={false}>
             <Resizable

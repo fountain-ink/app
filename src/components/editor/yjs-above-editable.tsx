@@ -12,6 +12,7 @@ export const RenderAboveEditableYjs: React.FC<{
 
   const provider = useOption("provider");
   const isSynced = useOption("isSynced");
+  
   useMemo(() => {
     const { normalizeNode } = editor;
     editor.normalizeNode = (entry: any) => {

@@ -1,11 +1,11 @@
 import { Icons } from "@/components/icons";
+import { uploadFile } from "@/lib/upload-image";
 import { isSelectionExpanded, WithRequiredKey } from "@udecode/plate-common";
 import { setNode, useEditorRef, useEditorSelector, useElement, useRemoveNodeButton } from "@udecode/plate-common/react";
 import { UploadIcon } from "lucide-react";
 import React from "react";
 import { useReadOnly, useSelected } from "slate-react";
 import { Button } from "./button";
-import { ImageUploadModal } from "./image-upload-modal";
 import { Popover, PopoverAnchor, PopoverContent } from "./popover";
 import { Separator } from "./separator";
 
@@ -20,51 +20,63 @@ export function ImagePopover({ children, plugin }: ImagePopoverProps) {
   const editor = useEditorRef();
   const element = useElement();
   const { props: buttonProps } = useRemoveNodeButton({ element });
-
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isUploading, setIsUploading] = React.useState(false);
 
   const selectionCollapsed = useEditorSelector((editor) => !isSelectionExpanded(editor), []);
   const isOpen = !readOnly && selected && selectionCollapsed;
 
-  const handleImageUploaded = (url: string) => {
-    // editor.setNodes({ url }, { at: editor.selection });
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    console.log(editor, element, url)
-    setNode(editor, element, { url })
+    setIsUploading(true);
+    try {
+      const url = await uploadFile(file);
+      if (url) {
+        setNode(editor, element, { url });
+      }
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   if (readOnly) return <>{children}</>;
 
   return (
-    <>
-      <Popover open={isOpen} modal={false}>
-        <PopoverAnchor>{children}</PopoverAnchor>
+    <Popover open={isOpen} modal={false}>
+      <PopoverAnchor>{children}</PopoverAnchor>
 
-        <PopoverContent className="w-auto p-1" onOpenAutoFocus={(e) => e.preventDefault()}>
-          <div className="box-content flex h-9 items-center gap-1">
+      <PopoverContent className="w-auto p-1" onOpenAutoFocus={(e) => e.preventDefault()}>
+        <div className="box-content flex h-9 items-center gap-1">
+          <div className="relative">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileSelect}
+              className="absolute inset-0 cursor-pointer opacity-0"
+              disabled={isUploading}
+            />
             <Button
               size="sm"
               variant="ghost"
-              onClick={() => setIsModalOpen(true)}
+              disabled={isUploading}
             >
-              <UploadIcon className="size-4 mr-2" />
+              {isUploading ? (
+                <Icons.spinner className="size-4 mr-2 animate-spin" />
+              ) : (
+                <UploadIcon className="size-4 mr-2" />
+              )}
               Upload Image
             </Button>
-
-            <Separator orientation="vertical" className="my-1" />
-
-            <Button size="sm" variant="ghost" {...buttonProps}>
-              <Icons.delete className="size-4" />
-            </Button>
           </div>
-        </PopoverContent>
-      </Popover>
 
-      <ImageUploadModal
-        open={isModalOpen}
-        onOpenChange={setIsModalOpen}
-        onImageUploaded={handleImageUploaded}
-      />
-    </>
+          <Separator orientation="vertical" className="my-1" />
+
+          <Button size="sm" variant="ghost" {...buttonProps}>
+            <Icons.delete className="size-4" />
+          </Button>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }
