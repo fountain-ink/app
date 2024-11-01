@@ -2,12 +2,11 @@ import { cn, withRef } from "@udecode/cn";
 import { withHOC } from "@udecode/plate-common/react";
 import { Image, ImagePlugin, useMediaState } from "@udecode/plate-media/react";
 import { ResizableProvider, useResizableStore } from "@udecode/plate-resizable";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { Caption, CaptionTextarea } from "./caption";
 import { ImagePopover } from "./image-popover";
 import { PlateElement } from "./plate-element";
-import { mediaResizeHandleVariants, Resizable, ResizeHandle } from "./resizable";
 
 const ImagePlaceholder = () => (
   <div className="flex relative aspect-video w-full rounded-sm">
@@ -15,55 +14,70 @@ const ImagePlaceholder = () => (
   </div>
 );
 
+type ImageWidth = "column" | "wide" | "full";
+
+const IMAGE_WIDTH_CLASSES: Record<ImageWidth, string> = {
+  wide: "w-[160%] -ml-[30%] max-w-[160%]",
+  full: "w-screen max-w-[90vw] relative -translate-x-1/2 left-1/2 content-center justify-center",
+  column: "w-full max-w-full",
+} as const;
+
 export const ImageElement = withHOC(
   ResizableProvider,
   withRef<typeof PlateElement>(({ children, className, nodeProps, ...props }, ref) => {
     const { align = "center", focused, readOnly, selected } = useMediaState();
-    const width = useResizableStore().get.width();
+    const pixelWidth = useResizableStore().get.width();
     const [isImageLoaded, setIsImageLoaded] = React.useState(false);
-    const url = props.element.url;
-    const showPlaceholder = !url;
-    console.log(nodeProps, props);
+    const [url, setUrl] = useState(props.element.url);
+    const [width, setWidth] = useState("");
+
+    useEffect(() => {
+      if (props.element?.width) {
+        const imageWidth = props.element?.width as ImageWidth;
+        setWidth(IMAGE_WIDTH_CLASSES[imageWidth]);
+      }
+    }, [props.element.width]);
 
     return (
       <ImagePopover plugin={ImagePlugin}>
-        <PlateElement ref={ref} className={cn(className)} {...props}>
+        <PlateElement ref={ref} className={cn(className, width)} {...props}>
           <figure className="group relative py-2" contentEditable={false}>
-            <Resizable
+            {/* <Resizable
               align={align}
               options={{
                 align,
                 readOnly,
               }}
-            >
-              <ResizeHandle
+            > */}
+            {/* <ResizeHandle
                 className={mediaResizeHandleVariants({ direction: "left" })}
                 options={{ direction: "left" }}
+              /> */}
+            {!url ? (
+              <div className={cn("rounded-sm", focused && selected && "ring-2 ring-ring ring-offset-2")}>
+                <ImagePlaceholder />
+              </div>
+            ) : (
+              <Image
+                className={cn(
+                  "block w-full max-w-full cursor-pointer object-cover px-0",
+                  "rounded-sm",
+                  focused && selected && "ring-2 ring-ring ring-offset-2",
+                )}
+                alt=""
+                {...nodeProps}
+                onLoad={() => setIsImageLoaded(true)}
               />
-              {showPlaceholder ? (
-                <div className={cn("rounded-sm", focused && selected && "ring-2 ring-ring ring-offset-2")}>
-                  <ImagePlaceholder />
-                </div>
-              ) : (
-                <Image
-                  className={cn(
-                    "block w-full max-w-full cursor-pointer object-cover px-0",
-                    "rounded-sm",
-                    focused && selected && "ring-2 ring-ring ring-offset-2",
-                  )}
-                  alt=""
-                  onLoad={() => setIsImageLoaded(true)}
-                />
-              )}
-              <ResizeHandle
+            )}
+            {/* <ResizeHandle
                 className={mediaResizeHandleVariants({
                   direction: "right",
                 })}
                 options={{ direction: "right" }}
-              />
-            </Resizable>
+              /> */}
+            {/* </Resizable> */}
 
-            <Caption style={{ width }} align={align}>
+            <Caption style={{ width: pixelWidth }} align={align}>
               <CaptionTextarea readOnly={readOnly} placeholder="Write a caption..." />
             </Caption>
           </figure>

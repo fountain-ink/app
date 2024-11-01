@@ -114,14 +114,14 @@ export default function PlateEditor() {
           className={cn(
             "relative",
             // Block selection
-            "[&_.slate-start-area-left]:!w-[64px] [&_.slate-start-area-right]:!w-[64px] [&_.slate-start-area-top]:!h-4",
+            "[&_.slate-start-area-left]:!w-[64px] [&_.slate-start-area-right]:!w-[64px] [&_.slate-start-area-top]:!h-4 overflow-visible",
           )}
         >
           <FixedToolbar>
             <FixedToolbarButtons />
           </FixedToolbar>
 
-          <Editor disableDefaultStyles className={proseClasses} autoFocus focusRing={false} variant="ghost" />
+          <Editor disableDefaultStyles className={"overflow-visible"} autoFocus focusRing={false} variant="ghost" />
 
           <FloatingToolbar>
             <FloatingToolbarButtons />
