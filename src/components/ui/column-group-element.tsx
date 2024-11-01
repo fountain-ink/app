@@ -16,7 +16,7 @@ export const ColumnGroupElement = withRef<typeof PlateElement>(({ children, clas
   return (
     <PlateElement ref={ref} className={cn(className, "my-2")} {...props}>
       <ColumnFloatingToolbar>
-        <div className={cn("flex size-full gap-4 rounded")}>{children}</div>
+        <div className={cn("flex size-full gap-4 rounded-sm")}>{children}</div>
       </ColumnFloatingToolbar>
     </PlateElement>
   );
