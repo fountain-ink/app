@@ -23,6 +23,7 @@ export const ImageElement = withHOC(
     const [isImageLoaded, setIsImageLoaded] = React.useState(false);
     const url = props.element.url;
     const showPlaceholder = !url;
+    console.log(nodeProps, props);
 
     return (
       <ImagePopover plugin={ImagePlugin}>
@@ -40,7 +41,9 @@ export const ImageElement = withHOC(
                 options={{ direction: "left" }}
               />
               {showPlaceholder ? (
-                <ImagePlaceholder />
+                <div className={cn("rounded-sm", focused && selected && "ring-2 ring-ring ring-offset-2")}>
+                  <ImagePlaceholder />
+                </div>
               ) : (
                 <Image
                   className={cn(
@@ -49,7 +52,6 @@ export const ImageElement = withHOC(
                     focused && selected && "ring-2 ring-ring ring-offset-2",
                   )}
                   alt=""
-                  {...nodeProps}
                   onLoad={() => setIsImageLoaded(true)}
                 />
               )}

@@ -1,4 +1,3 @@
-import { Icons } from "@/components/icons";
 import { uploadFile } from "@/lib/upload-image";
 import { isSelectionExpanded, WithRequiredKey } from "@udecode/plate-common";
 import { setNode, useEditorRef, useEditorSelector, useElement, useRemoveNodeButton } from "@udecode/plate-common/react";
@@ -51,6 +50,8 @@ export function ImagePopover({ children, plugin }: ImagePopoverProps) {
 
       <PopoverContent sideOffset={0} className="w-auto p-1" onOpenAutoFocus={(e) => e.preventDefault()}>
         <div className="box-content flex h-9 items-center gap-1">
+          <Separator orientation="vertical" className="my-1" />
+
           <Button size="sm" variant="ghost" disabled={isUploading}>
             <div className="relative flex gap-1 items-center justify-center">
               <input
@@ -67,10 +68,8 @@ export function ImagePopover({ children, plugin }: ImagePopoverProps) {
 
           <CaptionButton variant="ghost">Caption</CaptionButton>
 
-          <Separator orientation="vertical" className="my-1" />
-
           <Button size="sm" variant="ghost" {...buttonProps}>
-            <Icons.delete className="size-4" />
+            Remove
           </Button>
         </div>
       </PopoverContent>
