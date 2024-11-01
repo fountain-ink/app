@@ -43,12 +43,12 @@ import { TrailingBlockPlugin } from "@udecode/plate-trailing-block";
 import Prism from "prismjs";
 
 // import { aiPlugins } from '@/example/ai-plugins';
-import { BlockContextMenu } from "@/components/potion-ui/block-context-menu";
-import { DragOverCursorPlugin, SelectionOverlayPlugin } from "@/components/potion-ui/cursor-overlay";
-import { ImageElement } from "@/components/potion-ui/image-element";
-import { ImagePreview } from "@/components/potion-ui/image-preview";
-import { TodoLi, TodoMarker } from "@/components/potion-ui/indent-todo-marker";
-import { LinkFloatingToolbar } from "@/components/potion-ui/link-floating-toolbar";
+import { BlockContextMenu } from "@/components/ui/block-context-menu";
+import { DragOverCursorPlugin, SelectionOverlayPlugin } from "@/components/ui/cursor-overlay";
+import { ImageElement } from "@/components/ui/image-element";
+import { ImagePreview } from "@/components/ui/image-preview";
+import { TodoLi, TodoMarker } from "@/components/ui/indent-todo-marker";
+import { LinkFloatingToolbar } from "@/components/ui/link-floating-toolbar";
 import { AlignPlugin } from "@udecode/plate-alignment/react";
 import { AutoformatPlugin } from "@udecode/plate-autoformat/react";
 import {

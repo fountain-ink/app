@@ -1,15 +1,16 @@
 import { uploadFile } from "@/lib/upload-image";
-import { isSelectionExpanded, WithRequiredKey } from "@udecode/plate-common";
+import { type WithRequiredKey, isSelectionExpanded } from "@udecode/plate-common";
 import { setNode, useEditorRef, useEditorSelector, useElement, useRemoveNodeButton } from "@udecode/plate-common/react";
 import { UploadIcon } from "lucide-react";
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import { useReadOnly, useSelected } from "slate-react";
+import { WidthColumn, WidthFull, WidthWide } from "../custom-icons";
 import { LoadingSpinner } from "../loading-spinner";
 import { Button } from "./button";
 import { CaptionButton } from "./caption";
 import { Popover, PopoverAnchor, PopoverContent } from "./popover";
 import { Separator } from "./separator";
-import { WidthColumn, WidthColumn, WidthFull, WidthWide } from "../custom-icons";
 
 export interface ImagePopoverProps {
   children: React.ReactNode;

@@ -1,5 +1,6 @@
 "use client";
 
+import { proseClasses } from "@/styles/prose";
 import { cn, withProps } from "@udecode/cn";
 import { AlignPlugin } from "@udecode/plate-alignment/react";
 import { AutoformatPlugin } from "@udecode/plate-autoformat/react";
@@ -24,8 +25,6 @@ import { DatePlugin } from "@udecode/plate-date/react";
 import { DndPlugin } from "@udecode/plate-dnd";
 import { DocxPlugin } from "@udecode/plate-docx";
 import { EmojiPlugin } from "@udecode/plate-emoji/react";
-import { YjsPlugin } from "@udecode/plate-yjs/react";
-import { useRef } from "react";
 // import { ExcalidrawPlugin } from '@udecode/plate-excalidraw/react';
 import { FontBackgroundColorPlugin, FontColorPlugin, FontSizePlugin } from "@udecode/plate-font/react";
 import { HEADING_KEYS, HEADING_LEVELS } from "@udecode/plate-heading";
@@ -44,6 +43,7 @@ import { MarkdownPlugin } from "@udecode/plate-markdown";
 import { ImagePlugin, MediaEmbedPlugin } from "@udecode/plate-media/react";
 import { MentionInputPlugin, MentionPlugin } from "@udecode/plate-mention/react";
 import { NodeIdPlugin } from "@udecode/plate-node-id";
+import { NormalizeTypesPlugin } from "@udecode/plate-normalizers";
 import { ResetNodePlugin } from "@udecode/plate-reset-node/react";
 import { SelectOnBackspacePlugin } from "@udecode/plate-select";
 import { BlockMenuPlugin, BlockSelectionPlugin } from "@udecode/plate-selection/react";
@@ -52,54 +52,54 @@ import { TabbablePlugin } from "@udecode/plate-tabbable/react";
 import { TableCellHeaderPlugin, TableCellPlugin, TablePlugin, TableRowPlugin } from "@udecode/plate-table/react";
 import { TogglePlugin } from "@udecode/plate-toggle/react";
 import { TrailingBlockPlugin } from "@udecode/plate-trailing-block";
+import { YjsPlugin } from "@udecode/plate-yjs/react";
+import { useRef } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { FixedToolbar } from "../potion-ui/fixed-toolbar";
-// import { AILeaf } from '../potion-ui/ai-leaf';
-import { BlockContextMenu } from "../potion-ui/block-context-menu";
-import { BlockquoteElement } from "../potion-ui/blockquote-element";
-import { CodeBlockElement } from "../potion-ui/code-block-element";
-import { CodeLeaf } from "../potion-ui/code-leaf";
-import { CodeLineElement } from "../potion-ui/code-line-element";
-import { CodeSyntaxLeaf } from "../potion-ui/code-syntax-leaf";
-import { ColumnElement } from "../potion-ui/column-element";
-import { ColumnGroupElement } from "../potion-ui/column-group-element";
-import { CommentLeaf } from "../potion-ui/comment-leaf";
-import { CommentsPopover } from "../potion-ui/comments-popover";
-import { CursorOverlay, DragOverCursorPlugin, SelectionOverlayPlugin } from "../potion-ui/cursor-overlay";
-import { DateElement } from "../potion-ui/date-element";
-import { Editor } from "../potion-ui/editor";
-import { FixedToolbarButtons } from "../potion-ui/fixed-toolbar-buttons";
-import { FloatingToolbar } from "../potion-ui/floating-toolbar";
-import { FloatingToolbarButtons } from "../potion-ui/floating-toolbar-buttons";
-import { HeadingElement } from "../potion-ui/heading-element";
-import { HighlightLeaf } from "../potion-ui/highlight-leaf";
-import { HrElement } from "../potion-ui/hr-element";
-import { ImageElement } from "../potion-ui/image-element";
-import { TodoLi, TodoMarker } from "../potion-ui/indent-todo-marker";
-import { KbdLeaf } from "../potion-ui/kbd-leaf";
-import { LinkElement } from "../potion-ui/link-element";
-import { LinkFloatingToolbar } from "../potion-ui/link-floating-toolbar";
-import { MediaEmbedElement } from "../potion-ui/media-embed-element";
-import { MentionElement } from "../potion-ui/mention-element";
-import { MentionInputElement } from "../potion-ui/mention-input-element";
-import { ParagraphElement } from "../potion-ui/paragraph-element";
-import { withPlaceholders } from "../potion-ui/placeholder";
-import { SlashInputElement } from "../potion-ui/slash-input-element";
-import { TableCellElement, TableCellHeaderElement } from "../potion-ui/table-cell-element";
-import { TableElement } from "../potion-ui/table-element";
-import { TableRowElement } from "../potion-ui/table-row-element";
-import { TocElement } from "../potion-ui/toc-element";
-import { TodoListElement } from "../potion-ui/todo-list-element";
-import { ToggleElement } from "../potion-ui/toggle-element";
-import { withDraggables } from "../potion-ui/with-draggables";
-import { autoformatRules } from "./plate-autoformat";
-import { RenderAboveEditableYjs } from "./yjs-above-editable";
-import { NormalizeTypesPlugin } from '@udecode/plate-normalizers';
 import * as Y from "yjs";
-import { commonPlugins } from "./plate-plugins";
-import { proseClasses } from "@/styles/prose";
+// import { AILeaf } from '../ui/ai-leaf';
+import { BlockContextMenu } from "../ui/block-context-menu";
+import { BlockquoteElement } from "../ui/blockquote-element";
+import { CodeBlockElement } from "../ui/code-block-element";
+import { CodeLeaf } from "../ui/code-leaf";
+import { CodeLineElement } from "../ui/code-line-element";
+import { CodeSyntaxLeaf } from "../ui/code-syntax-leaf";
+import { ColumnElement } from "../ui/column-element";
+import { ColumnGroupElement } from "../ui/column-group-element";
+import { CommentLeaf } from "../ui/comment-leaf";
+import { CommentsPopover } from "../ui/comments-popover";
+import { CursorOverlay, DragOverCursorPlugin, SelectionOverlayPlugin } from "../ui/cursor-overlay";
+import { DateElement } from "../ui/date-element";
+import { Editor } from "../ui/editor";
+import { FixedToolbar } from "../ui/fixed-toolbar";
+import { FixedToolbarButtons } from "../ui/fixed-toolbar-buttons";
+import { FloatingToolbar } from "../ui/floating-toolbar";
+import { FloatingToolbarButtons } from "../ui/floating-toolbar-buttons";
+import { HeadingElement } from "../ui/heading-element";
+import { HighlightLeaf } from "../ui/highlight-leaf";
+import { HrElement } from "../ui/hr-element";
+import { ImageElement } from "../ui/image-element";
+import { TodoLi, TodoMarker } from "../ui/indent-todo-marker";
+import { KbdLeaf } from "../ui/kbd-leaf";
+import { LinkElement } from "../ui/link-element";
+import { LinkFloatingToolbar } from "../ui/link-floating-toolbar";
+import { MediaEmbedElement } from "../ui/media-embed-element";
+import { MentionElement } from "../ui/mention-element";
+import { MentionInputElement } from "../ui/mention-input-element";
+import { ParagraphElement } from "../ui/paragraph-element";
+import { withPlaceholders } from "../ui/placeholder";
+import { SlashInputElement } from "../ui/slash-input-element";
+import { TableCellElement, TableCellHeaderElement } from "../ui/table-cell-element";
+import { TableElement } from "../ui/table-element";
+import { TableRowElement } from "../ui/table-row-element";
+import { TocElement } from "../ui/toc-element";
+import { TodoListElement } from "../ui/todo-list-element";
+import { ToggleElement } from "../ui/toggle-element";
+import { withDraggables } from "../ui/with-draggables";
+import { autoformatRules } from "./plate-autoformat";
 import { createPotionUI } from "./plate-create-ui";
+import { commonPlugins } from "./plate-plugins";
+import { RenderAboveEditableYjs } from "./yjs-above-editable";
 
 export default function PlateEditor() {
   const containerRef = useRef(null);
@@ -138,12 +138,9 @@ export default function PlateEditor() {
   );
 }
 
-
 export const useMyEditor = () => {
   return usePlateEditor({
-    plugins: [
-      ...commonPlugins,
-    ],
+    plugins: [...commonPlugins],
     override: {
       components: createPotionUI(),
       // value: [
