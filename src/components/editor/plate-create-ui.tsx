@@ -58,7 +58,7 @@ import { TocElement } from "@/components/ui/toc-element";
 import { ToggleElement } from "@/components/ui/toggle-element";
 import { withDraggables } from "@/components/ui/with-draggables";
 
-export const createPotionUI = () => {
+export const getUiComponents = () => {
   return withPlaceholders(
     withDraggables({
       [DatePlugin.key]: DateElement,
