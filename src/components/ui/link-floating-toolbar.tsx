@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { cn } from '@udecode/cn';
-import { useFormInputProps } from '@udecode/plate-common/react';
-import { flip, offset } from '@udecode/plate-floating';
+import React from "react";
+import { cn } from "@udecode/cn";
+import { useFormInputProps } from "@udecode/plate-common/react";
+import { flip, offset } from "@udecode/plate-floating";
 import {
   FloatingLinkUrlInput,
   LinkOpenButton,
@@ -11,27 +11,27 @@ import {
   useFloatingLinkEditState,
   useFloatingLinkInsert,
   useFloatingLinkInsertState,
-} from '@udecode/plate-link/react';
+} from "@udecode/plate-link/react";
 
-import { Icons } from '@/components/icons';
+import { Icons } from "@/components/icons";
 
-import { buttonVariants } from './button';
-import { inputVariants } from './input';
-import { popoverVariants } from './popover';
-import { Separator } from './separator';
+import { buttonVariants } from "./button";
+import { inputVariants } from "./input";
+import { popoverVariants } from "./popover";
+import { Separator } from "./separator";
 
-import type { UseVirtualFloatingOptions } from '@udecode/plate-floating';
-import type { LinkFloatingToolbarState } from '@udecode/plate-link/react';
+import type { UseVirtualFloatingOptions } from "@udecode/plate-floating";
+import type { LinkFloatingToolbarState } from "@udecode/plate-link/react";
 
 const floatingOptions: UseVirtualFloatingOptions = {
   middleware: [
     offset(12),
     flip({
-      fallbackPlacements: ['bottom-end', 'top-start', 'top-end'],
+      fallbackPlacements: ["bottom-end", "top-start", "top-end"],
       padding: 12,
     }),
   ],
-  placement: 'bottom-start',
+  placement: "bottom-start",
 };
 
 export interface LinkFloatingToolbarProps {
@@ -46,12 +46,7 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
       ...state?.floatingOptions,
     },
   });
-  const {
-    hidden,
-    props: insertProps,
-    ref: insertRef,
-    textInputProps,
-  } = useFloatingLinkInsert(insertState);
+  const { hidden, props: insertProps, ref: insertRef, textInputProps } = useFloatingLinkInsert(insertState);
 
   const editState = useFloatingLinkEditState({
     ...state,
@@ -60,12 +55,7 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
       ...state?.floatingOptions,
     },
   });
-  const {
-    editButtonProps,
-    props: editProps,
-    ref: editRef,
-    unlinkButtonProps,
-  } = useFloatingLinkEdit(editState);
+  const { editButtonProps, props: editProps, ref: editRef, unlinkButtonProps } = useFloatingLinkEdit(editState);
   const inputProps = useFormInputProps({
     preventDefaultOnEnterKeydown: true,
   });
@@ -79,10 +69,7 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
           <Icons.link className="size-4" />
         </div>
 
-        <FloatingLinkUrlInput
-          className={inputVariants({ h: 'sm', variant: 'ghost' })}
-          placeholder="Paste link"
-        />
+        <FloatingLinkUrlInput className={inputVariants({ h: "sm", variant: "ghost" })} placeholder="Paste link" />
       </div>
       <Separator />
       <div className="flex items-center">
@@ -90,7 +77,7 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
           <Icons.text className="size-4" />
         </div>
         <input
-          className={inputVariants({ h: 'sm', variant: 'ghost' })}
+          className={inputVariants({ h: "sm", variant: "ghost" })}
           placeholder="Text to display"
           {...textInputProps}
         />
@@ -102,11 +89,7 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
     input
   ) : (
     <div className="box-content flex h-9 items-center gap-1">
-      <button
-        className={buttonVariants({ size: 'sm', variant: 'ghost' })}
-        type="button"
-        {...editButtonProps}
-      >
+      <button className={buttonVariants({ size: "sm", variant: "ghost" })} type="button" {...editButtonProps}>
         Edit link
       </button>
 
@@ -114,8 +97,8 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
 
       <LinkOpenButton
         className={buttonVariants({
-          size: 'sms',
-          variant: 'ghost',
+          size: "sms",
+          variant: "ghost",
         })}
       >
         <Icons.externalLink width={18} />
@@ -125,8 +108,8 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
 
       <button
         className={buttonVariants({
-          size: 'sms',
-          variant: 'ghost',
+          size: "sms",
+          variant: "ghost",
         })}
         type="button"
         {...unlinkButtonProps}
@@ -138,19 +121,11 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
 
   return (
     <>
-      <div
-        ref={insertRef}
-        className={cn(popoverVariants(), 'w-auto p-1')}
-        {...insertProps}
-      >
+      <div ref={insertRef} className={cn(popoverVariants(), "w-auto p-1")} {...insertProps}>
         {input}
       </div>
 
-      <div
-        ref={editRef}
-        className={cn(popoverVariants(), 'w-auto p-1')}
-        {...editProps}
-      >
+      <div ref={editRef} className={cn(popoverVariants(), "w-auto p-1")} {...editProps}>
         {editContent}
       </div>
     </>

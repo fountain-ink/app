@@ -57,30 +57,30 @@ export async function POST() {
     const documentId = `${handle}-${uid}`;
 
     const contentJson = {
-      "type": "doc",
-      "content": [
+      type: "doc",
+      content: [
         {
-          "type": "title",
-          "attrs": {
-            "level": 1
-          }
+          type: "title",
+          attrs: {
+            level: 1,
+          },
         },
         {
-          "type": "subtitle",
-          "attrs": {
-            "level": 2
-          }
+          type: "subtitle",
+          attrs: {
+            level: 2,
+          },
         },
         {
-          "type": "image",
-          "attrs": {
-            "src": null,
-            "width": "wide"
-          }
-        }
-      ]
-    }
-      
+          type: "image",
+          attrs: {
+            src: null,
+            width: "wide",
+          },
+        },
+      ],
+    };
+
     const { data, error } = await db
       .from("drafts")
       .insert({ contentJson, documentId, authorId: profileId })

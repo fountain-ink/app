@@ -1,4 +1,4 @@
-const ENDPOINT = 'https://api-v2.lens.dev';
+const ENDPOINT = "https://api-v2.lens.dev";
 
 const graphqlQuery = {
   query: `
@@ -15,18 +15,18 @@ query GetArticles {
 }
   `,
   variables: {
-    orderBy: "TOP_REACTED"
-  }
+    orderBy: "TOP_REACTED",
+  },
 };
 
 const response = await fetch(ENDPOINT, {
-  method: 'POST',
+  method: "POST",
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
     // 'Authorization': 'Bearer YOUR_ACCESS_TOKEN', // Include this if your API request requires authentication
   },
-  body: JSON.stringify(graphqlQuery)
-})
+  body: JSON.stringify(graphqlQuery),
+});
 
 const { data } = await response.json();
 

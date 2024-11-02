@@ -39,13 +39,12 @@ export const buttonVariants = cva(
   },
 );
 
-export const Button = withRef<
-  "button",
-  {
-    asChild?: boolean;
-  } & VariantProps<typeof buttonVariants>
->(({ asChild = false, className, isMenu, size, variant, ...props }, ref) => {
-  const Comp = asChild ? Slot : "button";
+export type ButtonProps = VariantProps < typeof buttonVariants >
 
-  return <Comp ref={ref} className={cn(buttonVariants({ className, isMenu, size, variant }))} {...props} />;
-});
+export const Button = withRef<"button", { asChild?: boolean } & ButtonProps>(
+  ({ asChild = false, className, isMenu, size, variant, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+
+    return <Comp ref={ref} className={cn(buttonVariants({ className, isMenu, size, variant }))} {...props} />;
+  },
+);

@@ -39,7 +39,7 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
     currentMetadata?.attributes?.find((attr) => attr.key === "autoPublish")?.value === "true",
   );
   const [isSaving, setIsSaving] = useState(false);
-  
+
   const { theme, setTheme } = useTheme();
   const { setTheme: setStoredTheme } = useStorage();
   const [selectedTheme, setSelectedTheme] = useState<ThemeType>(theme);
@@ -48,14 +48,15 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
     setSelectedTheme(newTheme);
     setTheme(newTheme);
     setStoredTheme(newTheme);
-  };  
+  };
 
   const handleSave = useCallback(async () => {
     setIsSaving(true);
     try {
-      let profilePictureUri = currentMetadata?.picture?.__typename === "ImageSet"
-        ? currentMetadata.picture.raw?.uri
-        : currentMetadata?.picture?.image?.raw?.uri;
+      let profilePictureUri =
+        currentMetadata?.picture?.__typename === "ImageSet"
+          ? currentMetadata.picture.raw?.uri
+          : currentMetadata?.picture?.image?.raw?.uri;
       let coverPictureUri = currentMetadata?.coverPicture?.raw?.uri;
 
       if (profilePicture) {
@@ -187,23 +188,23 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
           <Label htmlFor="auto-publish">Auto-publish scheduled articles</Label>
         </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="theme">Select Theme</Label>
-            <Select onValueChange={handleThemeChange} value={selectedTheme}>
-              <SelectTrigger id="theme">
-                <SelectValue placeholder="Select a theme" />
-              </SelectTrigger>
-              <SelectContent>
-                {themeNames.map((themeName) => (
-                  <SelectItem key={themeName} value={themeName}>
-                    {themeName.charAt(0).toUpperCase() + themeName.slice(1)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>          
-          
-          <Button onClick={handleSave} disabled={isSaving}>
+        <div className="space-y-2">
+          <Label htmlFor="theme">Select Theme</Label>
+          <Select onValueChange={handleThemeChange} value={selectedTheme}>
+            <SelectTrigger id="theme">
+              <SelectValue placeholder="Select a theme" />
+            </SelectTrigger>
+            <SelectContent>
+              {themeNames.map((themeName) => (
+                <SelectItem key={themeName} value={themeName}>
+                  {themeName.charAt(0).toUpperCase() + themeName.slice(1)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <Button onClick={handleSave} disabled={isSaving}>
           {isSaving ? "Saving..." : "Save Settings"}
         </Button>
       </CardContent>

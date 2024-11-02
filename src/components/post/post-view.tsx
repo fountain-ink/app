@@ -38,13 +38,14 @@ export const PostView = ({
   const formattedDate = formatDate(post.createdAt);
   const handle = post.by?.handle?.localName;
   const contentJson = metadata?.attributes?.find((attr) => attr.key === "contentJson");
-  if (!contentJson) { return null; }
+  if (!contentJson) {
+    return null;
+  }
   const { title, subtitle, coverImage } = extractMetadata(JSON.parse(contentJson?.value));
 
   return (
     <Link href={`/${handle}/${post.id}`}>
       <div className="flex flex-row items-start justify-start gap-4 bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none relative w-full rounded-sm p-4">
-
         {options.showPreview && (
           <div className="h-48 w-48 shrink-0 aspect-square rounded-sm overflow-hidden">
             {coverImage ? (

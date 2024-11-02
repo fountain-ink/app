@@ -80,7 +80,7 @@ type ThemeColors = {
   "--subtitle-margin": string;
   "--header-margin": string;
   "--paragraph-margin": string;
-  
+
   "--date-font": string;
 
   "--list-margin": string;

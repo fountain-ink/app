@@ -24,7 +24,7 @@ export const UploadImagesPlugin = ({ imageClass }: { imageClass: string }) =>
           const image = document.createElement("img");
           image.setAttribute("class", imageClass);
           image.src = src;
-          
+
           placeholder.appendChild(image);
           const deco = Decoration.widget(pos + 1, placeholder, {
             id,

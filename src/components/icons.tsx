@@ -1,5 +1,5 @@
-import React from 'react';
-import { cva } from 'class-variance-authority';
+import React from "react";
+import { cva } from "class-variance-authority";
 import {
   Album,
   AlignCenter,
@@ -91,10 +91,10 @@ import {
   Wand,
   WrapText,
   X,
-} from 'lucide-react';
+} from "lucide-react";
 
-import type { IconProps } from '@radix-ui/react-icons/dist/types';
-import type { LucideIcon, LucideProps } from 'lucide-react';
+import type { IconProps } from "@radix-ui/react-icons/dist/types";
+import type { LucideIcon, LucideProps } from "lucide-react";
 
 export type Icon = LucideIcon;
 
@@ -189,14 +189,7 @@ const borderTop = (props: LucideProps) => (
 );
 
 const discord = (props: LucideProps) => (
-  <svg
-    fill="none"
-    height="24"
-    viewBox="0 0 24 24"
-    width="24"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
+  <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg" {...props}>
     <g clipPath="url(#clip0_2423_12080)">
       <path
         d="M20.317 4.6556C18.7873 3.95371 17.147 3.4366 15.4319 3.14043C15.4007 3.13471 15.3695 3.14899 15.3534 3.17756C15.1424 3.55278 14.9087 4.04228 14.7451 4.42702C12.9004 4.15085 11.0652 4.15085 9.25832 4.42702C9.09465 4.03373 8.85248 3.55278 8.64057 3.17756C8.62449 3.14995 8.59328 3.13566 8.56205 3.14043C6.84791 3.43565 5.20756 3.95277 3.67693 4.6556C3.66368 4.66131 3.65233 4.67084 3.64479 4.68321C0.533392 9.33157 -0.31895 13.8657 0.0991801 18.3436C0.101072 18.3655 0.11337 18.3864 0.130398 18.3998C2.18321 19.9073 4.17171 20.8225 6.12328 21.4291C6.15451 21.4387 6.18761 21.4272 6.20748 21.4015C6.66913 20.7711 7.08064 20.1064 7.43348 19.4073C7.4543 19.3664 7.43442 19.3178 7.39186 19.3016C6.73913 19.054 6.1176 18.7521 5.51973 18.4093C5.47244 18.3817 5.46865 18.314 5.51216 18.2816C5.63797 18.1874 5.76382 18.0893 5.88396 17.9902C5.90569 17.9722 5.93598 17.9683 5.96153 17.9798C9.88928 19.773 14.1415 19.773 18.023 17.9798C18.0485 17.9674 18.0788 17.9712 18.1015 17.9893C18.2216 18.0883 18.3475 18.1874 18.4742 18.2816C18.5177 18.314 18.5149 18.3817 18.4676 18.4093C17.8697 18.7588 17.2482 19.054 16.5945 19.3007C16.552 19.3169 16.533 19.3664 16.5538 19.4073C16.9143 20.1054 17.3258 20.7701 17.7789 21.4006C17.7978 21.4272 17.8319 21.4387 17.8631 21.4291C19.8241 20.8225 21.8126 19.9073 23.8654 18.3998C23.8834 18.3864 23.8948 18.3664 23.8967 18.3445C24.3971 13.1676 23.0585 8.67066 20.3482 4.68416C20.3416 4.67084 20.3303 4.66131 20.317 4.6556ZM8.02002 15.617C6.8375 15.617 5.86313 14.5314 5.86313 13.1981C5.86313 11.8648 6.8186 10.7791 8.02002 10.7791C9.23087 10.7791 10.1958 11.8743 10.1769 13.1981C10.1769 14.5314 9.22141 15.617 8.02002 15.617ZM15.9947 15.617C14.8123 15.617 13.8379 14.5314 13.8379 13.1981C13.8379 11.8648 14.7933 10.7791 15.9947 10.7791C17.2056 10.7791 18.1705 11.8743 18.1516 13.1981C18.1516 14.5314 17.2056 15.617 15.9947 15.617Z"
@@ -231,10 +224,7 @@ const npm = (props: LucideProps) => (
 
 const radix = (props: LucideProps) => (
   <svg fill="none" viewBox="0 0 25 25" {...props}>
-    <path
-      d="M12 25C7.58173 25 4 21.4183 4 17C4 12.5817 7.58173 9 12 9V25Z"
-      fill="currentcolor"
-    />
+    <path d="M12 25C7.58173 25 4 21.4183 4 17C4 12.5817 7.58173 9 12 9V25Z" fill="currentcolor" />
     <path d="M12 0H4V8H12V0Z" fill="currentcolor" />
     <path
       d="M17 8C19.2091 8 21 6.20914 21 4C21 1.79086 19.2091 0 17 0C14.7909 0 13 1.79086 13 4C13 6.20914 14.7909 8 17 8Z"
@@ -269,14 +259,7 @@ const yarn = (props: LucideProps) => (
 );
 
 export const DoubleColumnOutlined = (props: LucideProps) => (
-  <svg
-    fill="none"
-    height="16"
-    viewBox="0 0 16 16"
-    width="16"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
+  <svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       clipRule="evenodd"
       d="M8.5 3H13V13H8.5V3ZM7.5 2H8.5H13C13.5523 2 14 2.44772 14 3V13C14 13.5523 13.5523 14 13 14H8.5H7.5H3C2.44772 14 2 13.5523 2 13V3C2 2.44772 2.44772 2 3 2H7.5ZM7.5 13H3L3 3H7.5V13Z"
@@ -287,14 +270,7 @@ export const DoubleColumnOutlined = (props: LucideProps) => (
 );
 
 export const ThreeColumnOutlined = (props: LucideProps) => (
-  <svg
-    fill="none"
-    height="16"
-    viewBox="0 0 16 16"
-    width="16"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
+  <svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       clipRule="evenodd"
       d="M9.25 3H6.75V13H9.25V3ZM9.25 2H6.75H5.75H3C2.44772 2 2 2.44772 2 3V13C2 13.5523 2.44772 14 3 14H5.75H6.75H9.25H10.25H13C13.5523 14 14 13.5523 14 13V3C14 2.44772 13.5523 2 13 2H10.25H9.25ZM10.25 3V13H13V3H10.25ZM3 13H5.75V3H3L3 13Z"
@@ -305,14 +281,7 @@ export const ThreeColumnOutlined = (props: LucideProps) => (
 );
 
 export const RightSideDoubleColumnOutlined = (props: LucideProps) => (
-  <svg
-    fill="none"
-    height="16"
-    viewBox="0 0 16 16"
-    width="16"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
+  <svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       clipRule="evenodd"
       d="M11.25 3H13V13H11.25V3ZM10.25 2H11.25H13C13.5523 2 14 2.44772 14 3V13C14 13.5523 13.5523 14 13 14H11.25H10.25H3C2.44772 14 2 13.5523 2 13V3C2 2.44772 2.44772 2 3 2H10.25ZM10.25 13H3L3 3H10.25V13Z"
@@ -323,14 +292,7 @@ export const RightSideDoubleColumnOutlined = (props: LucideProps) => (
 );
 
 export const LeftSideDoubleColumnOutlined = (props: LucideProps) => (
-  <svg
-    fill="none"
-    height="16"
-    viewBox="0 0 16 16"
-    width="16"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
+  <svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       clipRule="evenodd"
       d="M5.75 3H13V13H5.75V3ZM4.75 2H5.75H13C13.5523 2 14 2.44772 14 3V13C14 13.5523 13.5523 14 13 14H5.75H4.75H3C2.44772 14 2 13.5523 2 13V3C2 2.44772 2.44772 2 3 2H4.75ZM4.75 13H3L3 3H4.75V13Z"
@@ -341,14 +303,7 @@ export const LeftSideDoubleColumnOutlined = (props: LucideProps) => (
 );
 
 export const DoubleSideDoubleColumnOutlined = (props: LucideProps) => (
-  <svg
-    fill="none"
-    height="16"
-    viewBox="0 0 16 16"
-    width="16"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
+  <svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       clipRule="evenodd"
       d="M10.25 3H5.75V13H10.25V3ZM10.25 2H5.75H4.75H3C2.44772 2 2 2.44772 2 3V13C2 13.5523 2.44772 14 3 14H4.75H5.75H10.25H11.25H13C13.5523 14 14 13.5523 14 13V3C14 2.44772 13.5523 2 13 2H11.25H10.25ZM11.25 3V13H13V3H11.25ZM3 13H4.75V3H3L3 13Z"
@@ -499,13 +454,7 @@ export const Icons = {
   trash: Trash,
   tryAgain: CornerUpLeft,
   twitter: (props: IconProps) => (
-    <svg
-      {...props}
-      height="23"
-      viewBox="0 0 1200 1227"
-      width="23"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg {...props} height="23" viewBox="0 0 1200 1227" width="23" xmlns="http://www.w3.org/2000/svg">
       <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z" />
     </svg>
   ),
@@ -517,16 +466,16 @@ export const Icons = {
   yarn,
 };
 
-export const iconVariants = cva('', {
+export const iconVariants = cva("", {
   defaultVariants: {},
   variants: {
     size: {
-      md: 'mr-2 size-6',
-      sm: 'mr-2 size-4',
+      md: "mr-2 size-6",
+      sm: "mr-2 size-4",
     },
     variant: {
-      menuItem: 'mr-2 size-5',
-      toolbar: 'size-5',
+      menuItem: "mr-2 size-5",
+      toolbar: "size-5",
     },
   },
 });

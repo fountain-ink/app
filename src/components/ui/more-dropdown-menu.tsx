@@ -1,11 +1,8 @@
-import React from 'react';
-import {
-  SubscriptPlugin,
-  SuperscriptPlugin,
-} from '@udecode/plate-basic-marks/react';
-import { focusEditor, useEditorRef } from '@udecode/plate-common/react';
+import React from "react";
+import { SubscriptPlugin, SuperscriptPlugin } from "@udecode/plate-basic-marks/react";
+import { focusEditor, useEditorRef } from "@udecode/plate-common/react";
 
-import { Icons } from '@/components/icons';
+import { Icons } from "@/components/icons";
 
 import {
   DropdownMenu,
@@ -13,10 +10,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   useOpenState,
-} from './dropdown-menu';
-import { ToolbarButton } from './toolbar';
+} from "./dropdown-menu";
+import { ToolbarButton } from "./toolbar";
 
-import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
 export function MoreDropdownMenu(props: DropdownMenuProps) {
   const editor = useEditorRef();
@@ -30,10 +27,7 @@ export function MoreDropdownMenu(props: DropdownMenuProps) {
         </ToolbarButton>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent
-        className="flex max-h-[500px] min-w-[180px] flex-col gap-0.5 overflow-y-auto"
-        align="start"
-      >
+      <DropdownMenuContent className="flex max-h-[500px] min-w-[180px] flex-col gap-0.5 overflow-y-auto" align="start">
         <DropdownMenuItem
           onSelect={() => {
             editor.tf.toggle.mark({

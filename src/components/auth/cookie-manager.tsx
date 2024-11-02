@@ -5,17 +5,17 @@ import { setCookie } from "cookies-next";
 import { useEffect } from "react";
 
 export const CookieManager = () => {
-	const refreshToken = useRefreshToken();
+  const refreshToken = useRefreshToken();
 
-	useEffect(() => {
-		if (refreshToken) {
-			setCookie("refreshToken", refreshToken, {
-				maxAge: 30 * 24 * 60 * 60,
-				sameSite: "lax",
-				path: "/",
-			});
-		}
-	}, [refreshToken]);
+  useEffect(() => {
+    if (refreshToken) {
+      setCookie("refreshToken", refreshToken, {
+        maxAge: 30 * 24 * 60 * 60,
+        sameSite: "lax",
+        path: "/",
+      });
+    }
+  }, [refreshToken]);
 
-	return null;
+  return null;
 };

@@ -1,17 +1,14 @@
-'use client';
+"use client";
 
-import React from 'react';
-import {
-  useColorsCustom,
-  useColorsCustomState,
-} from '@udecode/plate-font/react';
+import React from "react";
+import { useColorsCustom, useColorsCustomState } from "@udecode/plate-font/react";
 
-import { buttonVariants } from './button';
-import { ColorDropdownMenuItems } from './color-dropdown-menu-items';
-import { ColorInput } from './color-input';
-import { DropdownMenuItem } from './dropdown-menu';
+import { buttonVariants } from "./button";
+import { ColorDropdownMenuItems } from "./color-dropdown-menu-items";
+import { ColorInput } from "./color-input";
+import { DropdownMenuItem } from "./dropdown-menu";
 
-import type { TColor } from './color-dropdown-menu';
+import type { TColor } from "./color-dropdown-menu";
 
 type ColorsCustomProps = {
   colors: TColor[];
@@ -21,13 +18,7 @@ type ColorsCustomProps = {
   color?: string;
 };
 
-export function ColorsCustom({
-  color,
-  colors,
-  customColors,
-  updateColor,
-  updateCustomColor,
-}: ColorsCustomProps) {
+export function ColorsCustom({ color, colors, customColors, updateColor, updateCustomColor }: ColorsCustomProps) {
   const state = useColorsCustomState({
     color,
     colors,
@@ -42,7 +33,7 @@ export function ColorsCustom({
         <DropdownMenuItem
           className={buttonVariants({
             isMenu: true,
-            variant: 'outline',
+            variant: "outline",
           })}
           {...menuItemProps}
         >
@@ -50,11 +41,7 @@ export function ColorsCustom({
         </DropdownMenuItem>
       </ColorInput>
 
-      <ColorDropdownMenuItems
-        color={color}
-        colors={state.computedColors}
-        updateColor={updateColor}
-      />
+      <ColorDropdownMenuItems color={color} colors={state.computedColors} updateColor={updateColor} />
     </div>
   );
 }

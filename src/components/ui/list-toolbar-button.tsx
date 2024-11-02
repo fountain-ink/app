@@ -1,14 +1,10 @@
-import React from 'react';
-import { withRef } from '@udecode/cn';
-import {
-  BulletedListPlugin,
-  useListToolbarButton,
-  useListToolbarButtonState,
-} from '@udecode/plate-list/react';
+import React from "react";
+import { withRef } from "@udecode/cn";
+import { BulletedListPlugin, useListToolbarButton, useListToolbarButtonState } from "@udecode/plate-list/react";
 
-import { Icons } from '@/components/icons';
+import { Icons } from "@/components/icons";
 
-import { ToolbarButton } from './toolbar';
+import { ToolbarButton } from "./toolbar";
 
 export const ListToolbarButton = withRef<
   typeof ToolbarButton,
@@ -22,9 +18,7 @@ export const ListToolbarButton = withRef<
   return (
     <ToolbarButton
       ref={ref}
-      tooltip={
-        nodeType === BulletedListPlugin.key ? 'Bulleted List' : 'Numbered List'
-      }
+      tooltip={nodeType === BulletedListPlugin.key ? "Bulleted List" : "Numbered List"}
       {...props}
       {...rest}
     >

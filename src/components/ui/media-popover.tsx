@@ -5,7 +5,8 @@ import {
   FloatingMedia as FloatingMediaPrimitive,
   useFloatingMediaSelectors,
 } from "@udecode/plate-media/react";
-import React, { useEffect } from "react";
+import type React from "react";
+import { useEffect } from "react";
 import { useReadOnly, useSelected } from "slate-react";
 
 import { Icons } from "@/components/icons";
@@ -37,7 +38,6 @@ export function MediaPopover({ children, plugin }: MediaPopoverProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
-  
 
   const element = useElement();
   const { props: buttonProps } = useRemoveNodeButton({ element });

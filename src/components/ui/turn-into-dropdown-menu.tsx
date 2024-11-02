@@ -1,16 +1,11 @@
-import React from 'react';
-import { BlockquotePlugin } from '@udecode/plate-block-quote/react';
-import { getNodeEntries, isBlock } from '@udecode/plate-common';
-import {
-  focusEditor,
-  ParagraphPlugin,
-  useEditorRef,
-  useEditorSelector,
-} from '@udecode/plate-common/react';
-import { HEADING_KEYS } from '@udecode/plate-heading';
-import { ListStyleType, toggleIndentList } from '@udecode/plate-indent-list';
+import React from "react";
+import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
+import { getNodeEntries, isBlock } from "@udecode/plate-common";
+import { focusEditor, ParagraphPlugin, useEditorRef, useEditorSelector } from "@udecode/plate-common/react";
+import { HEADING_KEYS } from "@udecode/plate-heading";
+import { ListStyleType, toggleIndentList } from "@udecode/plate-indent-list";
 
-import { Icons } from '@/components/icons';
+import { Icons } from "@/components/icons";
 
 import {
   DropdownMenu,
@@ -20,52 +15,52 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
   useOpenState,
-} from './dropdown-menu';
-import { ToolbarButton } from './toolbar';
+} from "./dropdown-menu";
+import { ToolbarButton } from "./toolbar";
 
-import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
 const items = [
   {
-    description: 'Paragraph',
+    description: "Paragraph",
     icon: Icons.paragraph,
-    label: 'Paragraph',
+    label: "Paragraph",
     value: ParagraphPlugin.key,
   },
   {
-    description: 'Heading 1',
+    description: "Heading 1",
     icon: Icons.h1,
-    label: 'Heading 1',
+    label: "Heading 1",
     value: HEADING_KEYS.h1,
   },
   {
-    description: 'Heading 2',
+    description: "Heading 2",
     icon: Icons.h2,
-    label: 'Heading 2',
+    label: "Heading 2",
     value: HEADING_KEYS.h2,
   },
   {
-    description: 'Heading 3',
+    description: "Heading 3",
     icon: Icons.h3,
-    label: 'Heading 3',
+    label: "Heading 3",
     value: HEADING_KEYS.h3,
   },
   {
-    description: 'Quote (⌘+⇧+.)',
+    description: "Quote (⌘+⇧+.)",
     icon: Icons.blockquote,
-    label: 'Quote',
+    label: "Quote",
     value: BlockquotePlugin.key,
   },
   {
-    description: 'Bulleted list',
+    description: "Bulleted list",
     icon: Icons.ul,
-    label: 'Bulleted list',
+    label: "Bulleted list",
     value: ListStyleType.Disc,
   },
   {
-    description: 'Numbered list',
+    description: "Numbered list",
     icon: Icons.ol,
-    label: 'Numbered list',
+    label: "Numbered list",
     value: ListStyleType.Decimal,
   },
 ];
@@ -78,7 +73,7 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
     let allNodesMatchInitialNodeType = false;
     const codeBlockEntries = getNodeEntries(editor, {
       match: (n) => isBlock(editor, n),
-      mode: 'highest',
+      mode: "highest",
     });
     const nodes = Array.from(codeBlockEntries);
 
@@ -97,8 +92,7 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
   const editor = useEditorRef();
   const openState = useOpenState();
 
-  const selectedItem =
-    items.find((item) => item.value === value) ?? defaultItem;
+  const selectedItem = items.find((item) => item.value === value) ?? defaultItem;
 
   if (!selectedItem) {
     return null;
@@ -115,10 +109,7 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
         </ToolbarButton>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent
-        className="ignore-click-outside/toolbar min-w-0"
-        align="start"
-      >
+      <DropdownMenuContent className="ignore-click-outside/toolbar min-w-0" align="start">
         <DropdownMenuLabel>Turn into</DropdownMenuLabel>
 
         <DropdownMenuRadioGroup
@@ -137,11 +128,7 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
           }}
         >
           {items.map(({ icon: Icon, label, value: itemValue }) => (
-            <DropdownMenuRadioItem
-              key={itemValue}
-              className="min-w-[180px]"
-              value={itemValue}
-            >
+            <DropdownMenuRadioItem key={itemValue} className="min-w-[180px]" value={itemValue}>
               <Icon className="mr-2 size-5" />
               {label}
             </DropdownMenuRadioItem>

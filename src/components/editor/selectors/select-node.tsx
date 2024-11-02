@@ -67,7 +67,7 @@ export const NodeSelector = ({ open, onOpenChange }: NodeSelectorProps) => {
         </Button>
       </PopoverTrigger>
       <PopoverContent sideOffset={5} align="start" className="w-48 p-1">
-        {items.map((item, index) => (
+        {items.map((item, _index) => (
           <EditorBubbleItem
             key={item.name}
             onSelect={(editor) => {

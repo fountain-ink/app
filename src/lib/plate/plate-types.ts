@@ -8,7 +8,7 @@ import type { ParagraphPlugin } from "@udecode/plate-common/react";
 import type React from "react";
 // import type { TExcalidrawElement } from '@udecode/plate-excalidraw';
 // import type { ExcalidrawPlugin } from '@udecode/plate-excalidraw/react';
-import { useMyEditor } from "@/components/editor/plate-editor";
+import type { useMyEditor } from "@/components/editor/plate-editor";
 import type { HEADING_KEYS } from "@udecode/plate-heading";
 import type { HorizontalRulePlugin } from "@udecode/plate-horizontal-rule/react";
 import type { TLinkElement } from "@udecode/plate-link";

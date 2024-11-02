@@ -1,21 +1,16 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { cn } from '@udecode/cn';
+import type React from "react";
+import { cn } from "@udecode/cn";
 
-import { Icons } from '@/components/icons';
+import { Icons } from "@/components/icons";
 
-import { buttonVariants } from './button';
-import { DropdownMenuItem } from './dropdown-menu';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from './tooltip';
+import { buttonVariants } from "./button";
+import { DropdownMenuItem } from "./dropdown-menu";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 
-import type { TColor } from './color-dropdown-menu';
-import type { DropdownMenuItemProps } from '@radix-ui/react-dropdown-menu';
+import type { TColor } from "./color-dropdown-menu";
+import type { DropdownMenuItemProps } from "@radix-ui/react-dropdown-menu";
 
 type ColorDropdownMenuItemProps = {
   isBrightColor: boolean;
@@ -39,11 +34,11 @@ export function ColorDropdownMenuItem({
       className={cn(
         buttonVariants({
           isMenu: true,
-          variant: 'outline',
+          variant: "outline",
         }),
-        'size-6 border border-solid border-muted p-0',
-        !isBrightColor && 'border-transparent text-white',
-        className
+        "size-6 border border-solid border-muted p-0",
+        !isBrightColor && "border-transparent text-white",
+        className,
       )}
       style={{ backgroundColor: value }}
       onSelect={(e) => {
@@ -80,10 +75,7 @@ export function ColorDropdownMenuItems({
   ...props
 }: ColorDropdownMenuItemsProps) {
   return (
-    <div
-      className={cn('grid grid-cols-[repeat(10,1fr)] gap-1', className)}
-      {...props}
-    >
+    <div className={cn("grid grid-cols-[repeat(10,1fr)] gap-1", className)} {...props}>
       <TooltipProvider>
         {colors.map(({ isBrightColor, name, value }) => (
           <ColorDropdownMenuItem

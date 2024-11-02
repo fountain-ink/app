@@ -1,25 +1,21 @@
-import React from 'react';
-import { useEmojiDropdownMenuState } from '@udecode/plate-emoji/react';
+import type React from "react";
+import { useEmojiDropdownMenuState } from "@udecode/plate-emoji/react";
 
-import { Icons } from '@/components/icons';
+import { Icons } from "@/components/icons";
 
-import { emojiCategoryIcons, emojiSearchIcons } from './emoji-icons';
-import { EmojiPicker } from './emoji-picker';
-import { EmojiToolbarDropdown } from './emoji-toolbar-dropdown';
-import { ToolbarButton } from './toolbar';
+import { emojiCategoryIcons, emojiSearchIcons } from "./emoji-icons";
+import { EmojiPicker } from "./emoji-picker";
+import { EmojiToolbarDropdown } from "./emoji-toolbar-dropdown";
+import { ToolbarButton } from "./toolbar";
 
-import type { EmojiDropdownMenuOptions } from '@udecode/plate-emoji/react';
+import type { EmojiDropdownMenuOptions } from "@udecode/plate-emoji/react";
 
 type EmojiDropdownMenuProps = {
   options?: EmojiDropdownMenuOptions;
 } & React.ComponentPropsWithoutRef<typeof ToolbarButton>;
 
-export function EmojiDropdownMenu({
-  options,
-  ...props
-}: EmojiDropdownMenuProps) {
-  const { emojiPickerState, isOpen, setIsOpen } =
-    useEmojiDropdownMenuState(options);
+export function EmojiDropdownMenu({ options, ...props }: EmojiDropdownMenuProps) {
+  const { emojiPickerState, isOpen, setIsOpen } = useEmojiDropdownMenuState(options);
 
   return (
     <EmojiToolbarDropdown

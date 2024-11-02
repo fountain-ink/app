@@ -27,8 +27,8 @@ export const ImageElement = withHOC(
   withRef<typeof PlateElement>(({ children, className, nodeProps, ...props }, ref) => {
     const { align = "center", focused, readOnly, selected } = useMediaState();
     const pixelWidth = useResizableStore().get.width();
-    const [isImageLoaded, setIsImageLoaded] = React.useState(false);
-    const [url, setUrl] = useState(props.element.url);
+    const [_isImageLoaded, setIsImageLoaded] = React.useState(false);
+    const [url, _setUrl] = useState(props.element.url);
     const [width, setWidth] = useState("");
 
     useEffect(() => {
