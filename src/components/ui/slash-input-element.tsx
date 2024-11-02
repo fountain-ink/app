@@ -204,7 +204,7 @@ export const SlashInputElement = withRef<typeof PlateElement>(({ className, ...p
         <InlineComboboxInput />
 
         <InlineComboboxContent className="max-w-64 py-1">
-          <InlineComboboxEmpty>No matching commands found</InlineComboboxEmpty>
+          <InlineComboboxEmpty>No matching items found</InlineComboboxEmpty>
 
           {rules.map(({ focusEditor, icon: Icon, keywords, value, onSelect, description }) => (
             <InlineComboboxItem

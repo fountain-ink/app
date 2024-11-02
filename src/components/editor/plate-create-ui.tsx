@@ -83,7 +83,7 @@ export const getUiComponents = () => {
       [MediaEmbedPlugin.key]: MediaEmbedElement,
       [MentionPlugin.key]: MentionElement,
       [MentionInputPlugin.key]: MentionInputElement,
-      [ParagraphPlugin.key]: ParagraphElement,
+      [ParagraphPlugin.key]: withProps(ParagraphElement, { as: "p" }),
       [TablePlugin.key]: TableElement,
       [TableRowPlugin.key]: TableRowElement,
       [TableCellPlugin.key]: TableCellElement,
