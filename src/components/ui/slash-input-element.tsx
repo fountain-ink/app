@@ -56,31 +56,10 @@ interface SlashCommandRule {
 }
 
 const rules: SlashCommandRule[] = [
-  // {
-  //   focusEditor: false,
-  //   icon: Icons.ai,
-  //   value: 'AI',
-  //   onSelect: (editor) => {
-  //     editor.getApi(AIChatPlugin).aiChat.show();
-  //   },
-  // },
-  // {
-  //   icon: Icons.h1,
-  //   value: 'Heading 1',
-  //   onSelect: (editor) => {
-  //     editor.tf.toggle.block({ type: HEADING_KEYS.h1 });
-  //   },
-  // },
-  // {
-  //   icon: Icons.h2,
-  //   value: 'Heading 2',
-  //   onSelect: (editor) => {
-  //     editor.tf.toggle.block({ type: HEADING_KEYS.h2 });
-  //   },
-  // },
   {
     icon: HeadingIcon,
     value: "Heading",
+    description: "Add a section.",
     keywords: ["heading", "big", "huge", "section", "h1", "one"],
     onSelect: (editor) => {
       editor.tf.toggle.block({ type: HEADING_KEYS.h3 });
@@ -89,6 +68,7 @@ const rules: SlashCommandRule[] = [
   {
     icon: Heading2Icon,
     value: "Subheading",
+    description: "Add a subsection.",
     keywords: ["sub", "heading", "mid", "section", "h2", "two"],
     onSelect: (editor) => {
       editor.tf.toggle.block({ type: HEADING_KEYS.h4 });
@@ -97,6 +77,7 @@ const rules: SlashCommandRule[] = [
   {
     icon: PilcrowIcon,
     value: "Paragraph",
+    description: "Add a paragraph.",
     keywords: ["paragraph", "text", "p", "plain"],
     onSelect: (editor) => {
       insertEmptyElement(editor, ParagraphPlugin.key, {
@@ -108,6 +89,7 @@ const rules: SlashCommandRule[] = [
   {
     icon: ImageIcon,
     value: "Image",
+    description: "Add an image.",
     keywords: ["image", "img", "picture", "png", "photo", "jpg", "jpeg"],
     onSelect: (editor) => {
       editor.tf.toggle.block({ type: ImagePlugin.key });
@@ -116,7 +98,8 @@ const rules: SlashCommandRule[] = [
   {
     icon: YoutubeIcon,
     value: "Embed",
-    keywords: ["embed", "youtube", "video", "media", "iframe"],
+    description: "Add a embed (YouTube, X, etc).",
+    keywords: ["embed", "youtube", "video", "media", "iframe", "x", "twitter", "facebook", "instagram"],
     onSelect: async (editor) => {
       await insertMedia(editor, {
         select: true,
@@ -127,6 +110,7 @@ const rules: SlashCommandRule[] = [
   {
     icon: QuoteIcon,
     value: "Quote",
+    description: "Capture a quote.",
     keywords: ["quote", "blockquote", "citation"],
     onSelect: (editor) => {
       insertEmptyElement(editor, BlockquotePlugin.key, {
@@ -138,6 +122,7 @@ const rules: SlashCommandRule[] = [
   {
     icon: CodeIcon,
     value: "Code Block",
+    description: "Add a code block.",
     keywords: ["code", "codeblock", "snippet", "pre"],
     onSelect: (editor) => {
       insertEmptyCodeBlock(editor, {
@@ -149,6 +134,7 @@ const rules: SlashCommandRule[] = [
     icon: ListIcon,
     keywords: ["ul", "unordered list"],
     value: "Bulleted list",
+    description: "Add a bullet list.",
     onSelect: (editor) => {
       toggleIndentList(editor, {
         listStyleType: ListStyleType.Disc,
@@ -159,6 +145,7 @@ const rules: SlashCommandRule[] = [
     icon: ListOrderedIcon,
     keywords: ["ol", "ordered list"],
     value: "Numbered list",
+    description: "Add a numbered list.",
     onSelect: (editor) => {
       toggleIndentList(editor, {
         listStyleType: ListStyleType.Decimal,
@@ -169,6 +156,7 @@ const rules: SlashCommandRule[] = [
     icon: ListChecksIcon,
     keywords: ["todo", "checks list", "toggle"],
     value: "Checks list",
+    description: "Add a todo list.",
     onSelect: (editor) => {
       toggleIndentList(editor, {
         listStyleType: INDENT_LIST_KEYS.todo,
@@ -178,6 +166,7 @@ const rules: SlashCommandRule[] = [
   {
     icon: CalendarIcon,
     keywords: ["inline", "date"],
+    description: "Add a date.",
     value: "Date",
     onSelect: (editor) => {
       editor.getTransforms(DatePlugin).insert.date();
@@ -186,6 +175,7 @@ const rules: SlashCommandRule[] = [
   {
     icon: LayoutIcon,
     value: "Columns",
+    description: "Split the page into columns.",
     keywords: ["column", "layout", "grid", "split"],
     onSelect: (editor) => {
       insertColumnGroup(editor);
@@ -194,6 +184,7 @@ const rules: SlashCommandRule[] = [
   {
     icon: SeparatorHorizontalIcon,
     value: "Divider",
+    description: "Horizontal divider.",
     keywords: ["divider", "separator", "hr", "horizontal rule", "line"],
     onSelect: (editor) => {
       insertEmptyElement(editor, HorizontalRulePlugin.key, {
@@ -215,7 +206,7 @@ export const SlashInputElement = withRef<typeof PlateElement>(({ className, ...p
         <InlineComboboxContent className="max-w-64 py-1">
           <InlineComboboxEmpty>No matching commands found</InlineComboboxEmpty>
 
-          {rules.map(({ focusEditor, icon: Icon, keywords, value, onSelect }) => (
+          {rules.map(({ focusEditor, icon: Icon, keywords, value, onSelect, description }) => (
             <InlineComboboxItem
               key={value}
               value={value}
@@ -228,7 +219,10 @@ export const SlashInputElement = withRef<typeof PlateElement>(({ className, ...p
                 <Icon className="w-4 h-4" aria-hidden />
               </div>
 
-              {value}
+              <div className="flex flex-col">
+                <span>{value}</span>
+                {description && <span className="text-xs text-muted-foreground">{description}</span>}
+              </div>
             </InlineComboboxItem>
           ))}
         </InlineComboboxContent>
