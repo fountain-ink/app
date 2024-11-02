@@ -15,7 +15,7 @@ import { FloatingToolbarButtons } from "../ui/floating-toolbar-buttons";
 import { getUiComponents } from "./plate-create-ui";
 import { commonPlugins } from "./plate-plugins";
 
-export default function PlateEditor() {
+export default function PlateEditor({ showToolbar = false }: { showToolbar?: boolean }) {
   const containerRef = useRef(null);
   const editor = useMyEditor();
 
@@ -31,9 +31,11 @@ export default function PlateEditor() {
             "[&_.slate-start-area-left]:!w-[64px] [&_.slate-start-area-right]:!w-[64px] [&_.slate-start-area-top]:!h-4 overflow-visible",
           )}
         >
-          <FixedToolbar>
-            <FixedToolbarButtons />
-          </FixedToolbar>
+          {showToolbar && (
+            <FixedToolbar>
+              <FixedToolbarButtons />
+            </FixedToolbar>
+          )}
 
           <Editor disableDefaultStyles className={"overflow-visible"} autoFocus focusRing={false} variant="ghost" />
 

@@ -282,6 +282,7 @@ const InlineComboboxEmpty = ({ children, className }: HTMLAttributes<HTMLDivElem
   const { setHasEmpty } = useContext(InlineComboboxContext);
   const store = useComboboxContext();
   const items = store?.useState("items");
+  
 
   useEffect(() => {
     setHasEmpty(true);
@@ -292,6 +293,7 @@ const InlineComboboxEmpty = ({ children, className }: HTMLAttributes<HTMLDivElem
   }, [setHasEmpty]);
 
   if (!items?.length) return null;
+  if (items?.length > 0) return null;
 
   return <div className={cn(comboboxItemVariants({ interactive: false }), className)}>{children}</div>;
 };
