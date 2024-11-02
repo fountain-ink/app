@@ -71,7 +71,12 @@ import { TabbablePlugin } from "@udecode/plate-tabbable/react";
 import { TableCellHeaderPlugin, TableRowPlugin } from "@udecode/plate-table/react";
 import { autoformatRules } from "./plate-autoformat";
 
+import { NormalizePlugin } from "./plate-normalization";
+
 export const commonPlugins = [
+  
+  NormalizePlugin,  
+  
   // YjsPlugin.configure({
   //   render: {
   //     aboveEditable: RenderAboveEditableYjs,

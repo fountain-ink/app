@@ -1,5 +1,5 @@
 import { YjsEditor } from "@slate-yjs/core";
-import { type TElement, insertNodes, isEditor, removeNodes } from "@udecode/plate-common";
+import { type TElement, isEditor } from "@udecode/plate-common";
 import { useEditorPlugin } from "@udecode/plate-common/react";
 import { type YjsConfig, BaseYjsPlugin } from "@udecode/plate-yjs";
 import { useEffect, useMemo } from "react";
@@ -13,61 +13,7 @@ export const RenderAboveEditableYjs: React.FC<{
   const provider = useOption("provider");
   const isSynced = useOption("isSynced");
 
-  useMemo(() => {
-    const { normalizeNode } = editor;
-    editor.normalizeNode = (entry: any) => {
-      const [node] = entry;
-      const children = node.children as TElement[];
 
-      if (isEditor(node)) {
-        let normalized = false;
-
-        // Handle empty document case
-        if (children.length === 0) {
-          insertNodes(
-            editor,
-            [
-              { type: "h1", children: [{ text: "" }] },
-              { type: "h2", children: [{ text: "" }] },
-            ],
-            { at: [0] },
-          );
-          normalized = true;
-        }
-
-        // Ensure first node is h1
-        if (!normalized && children?.[0]?.type !== "h1") {
-          const existingContent = children[0]?.children || [{ text: "" }];
-          removeNodes(editor, { at: [0] });
-          insertNodes(editor, { type: "h1", children: existingContent }, { at: [0] });
-          normalized = true;
-        }
-
-        // Process remaining nodes in a single pass
-        if (!normalized) {
-          const updatedNodes = children.map((child, index) => {
-            if (index === 0) return child; // Keep h1
-            if (index === 1) return child; // Keep index 1 as-is
-            if (child.type === "h1" || child.type === "h2") {
-              return { type: "p", children: child.children };
-            }
-            return child;
-          });
-
-          if (JSON.stringify(children) !== JSON.stringify(updatedNodes)) {
-            editor.children = updatedNodes;
-            normalized = true;
-          }
-        }
-
-        if (!normalized) {
-          normalizeNode(entry);
-        }
-      } else {
-        normalizeNode(entry);
-      }
-    };
-  }, []);
 
   useEffect(() => {
     void provider.connect();

@@ -291,7 +291,7 @@ const InlineComboboxEmpty = ({ children, className }: HTMLAttributes<HTMLDivElem
     };
   }, [setHasEmpty]);
 
-  if (items?.length > 0) return null;
+  if (!items?.length) return null;
 
   return <div className={cn(comboboxItemVariants({ interactive: false }), className)}>{children}</div>;
 };
