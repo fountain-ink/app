@@ -17,7 +17,7 @@ export interface ImagePopoverProps {
   plugin: WithRequiredKey;
 }
 
-export function ImagePopover({ children, plugin }: ImagePopoverProps) {
+export function ImagePopover({ children }: ImagePopoverProps) {
   const readOnly = useReadOnly();
   const selected = useSelected();
   const editor = useEditorRef();
