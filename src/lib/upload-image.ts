@@ -1,6 +1,5 @@
 "use client";
 
-import { createImageUpload } from "@/components/editor/plugins/image-upload";
 import { getIpfsImageUrl } from "@/components/images/image-uploader";
 import imageCompression from "browser-image-compression";
 import { toast } from "sonner";
@@ -27,21 +26,3 @@ export const uploadFile = async (file: File) => {
   }
 };
 
-export const uploadFn = createImageUpload({
-  onUpload: async (file) => {
-    return await uploadFile(file);
-  },
-  validateFn: (file) => {
-    if (!file.type.includes("image/")) {
-      console.error("File type not supported.");
-      toast.error("File type not supported.");
-      return false;
-    }
-    if (file.size / 1024 / 1024 > 20) {
-      console.error("File size too big (max 20MB).");
-      toast.error("File size too big (max 20MB).");
-      return false;
-    }
-    return true;
-  },
-});
