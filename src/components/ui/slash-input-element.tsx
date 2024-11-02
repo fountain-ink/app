@@ -49,6 +49,7 @@ interface SlashCommandRule {
   icon: ComponentType<SVGProps<SVGSVGElement>>;
   onSelect: (editor: PlateEditor) => void;
   value: string;
+  description?: string;
   className?: string;
   focusEditor?: boolean;
   keywords?: string[];
@@ -211,7 +212,7 @@ export const SlashInputElement = withRef<typeof PlateElement>(({ className, ...p
       <InlineCombobox element={element} trigger="/">
         <InlineComboboxInput />
 
-        <InlineComboboxContent className="max-w-64">
+        <InlineComboboxContent className="max-w-64 py-1">
           <InlineComboboxEmpty>No matching commands found</InlineComboboxEmpty>
 
           {rules.map(({ focusEditor, icon: Icon, keywords, value, onSelect }) => (
@@ -221,8 +222,12 @@ export const SlashInputElement = withRef<typeof PlateElement>(({ className, ...p
               onClick={() => onSelect(editor)}
               focusEditor={focusEditor}
               keywords={keywords}
+              className="mx-2 my-1 p-0 px-0 h-full"
             >
-              <Icon className="mr-2 size-4" aria-hidden />
+              <div className="flex items-center justify-center p-3 bg-muted/30 rounded-sm mr-2">
+                <Icon className="w-4 h-4" aria-hidden />
+              </div>
+
               {value}
             </InlineComboboxItem>
           ))}

@@ -1,4 +1,3 @@
-import { useCallback, useState } from "react";
 import { AIChatPlugin } from "@udecode/plate-ai/react";
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { unsetNodes } from "@udecode/plate-common";
@@ -6,17 +5,18 @@ import { focusEditor, ParagraphPlugin, useEditorPlugin } from "@udecode/plate-co
 import { HEADING_KEYS } from "@udecode/plate-heading";
 import { IndentListPlugin } from "@udecode/plate-indent-list/react";
 import { BLOCK_CONTEXT_MENU_ID, BlockMenuPlugin, BlockSelectionPlugin } from "@udecode/plate-selection/react";
+import { useCallback, useState } from "react";
 
 import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuSeparator,
-  ContextMenuShortcut,
-  ContextMenuSub,
-  ContextMenuSubContent,
-  ContextMenuSubTrigger,
-  ContextMenuTrigger,
+    ContextMenu,
+    ContextMenuContent,
+    ContextMenuItem,
+    ContextMenuSeparator,
+    ContextMenuShortcut,
+    ContextMenuSub,
+    ContextMenuSubContent,
+    ContextMenuSubTrigger,
+    ContextMenuTrigger,
 } from "./context-menu";
 
 type Value = "askAI" | null;
@@ -25,18 +25,18 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
   const { api, editor } = useEditorPlugin(BlockMenuPlugin);
   const [value, setValue] = useState<Value>(null);
 
+
   const handleTurnInto = useCallback(
     (type: string) => {
-      editor
+      for (const [node, path] of editor
         .getApi(BlockSelectionPlugin)
-        .blockSelection.getNodes()
-        .forEach(([node, path]) => {
+        .blockSelection.getNodes()) {
           if (node[IndentListPlugin.key]) {
             unsetNodes(editor, [IndentListPlugin.key, "indent"], { at: path });
           }
 
           editor.tf.toggle.block({ type }, { at: path });
-        });
+        }
     },
     [editor],
   );

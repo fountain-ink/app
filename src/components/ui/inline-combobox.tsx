@@ -175,8 +175,8 @@ const InlineComboboxInput = forwardRef<HTMLInputElement, HTMLAttributes<HTMLInpu
   ({ className, ...props }, propRef) => {
     const { inputProps, inputRef: contextRef, showTrigger, trigger } = useContext(InlineComboboxContext);
 
-    const store = useComboboxContext()!;
-    const value = store.useState("value");
+    const store = useComboboxContext();
+    const value = store?.useState("value");
 
     const ref = useComposedRef(propRef, contextRef);
 
@@ -253,13 +253,11 @@ const InlineComboboxItem = ({
   ...props
 }: InlineComboboxItemProps) => {
   const { value } = props;
-
   const { filter, removeInput } = useContext(InlineComboboxContext);
 
-  const store = useComboboxContext()!;
-
+  const store = useComboboxContext();
   // Optimization: Do not subscribe to value if filter is false
-  const search = filter && store.useState("value");
+  const search = filter && store?.useState("value");
 
   const visible = useMemo(
     () => !filter || filter({ keywords, value }, search as string),
@@ -282,8 +280,8 @@ const InlineComboboxItem = ({
 
 const InlineComboboxEmpty = ({ children, className }: HTMLAttributes<HTMLDivElement>) => {
   const { setHasEmpty } = useContext(InlineComboboxContext);
-  const store = useComboboxContext()!;
-  const items = store.useState("items");
+  const store = useComboboxContext();
+  const items = store?.useState("items");
 
   useEffect(() => {
     setHasEmpty(true);
@@ -293,7 +291,7 @@ const InlineComboboxEmpty = ({ children, className }: HTMLAttributes<HTMLDivElem
     };
   }, [setHasEmpty]);
 
-  if (items.length > 0) return null;
+  if (items?.length > 0) return null;
 
   return <div className={cn(comboboxItemVariants({ interactive: false }), className)}>{children}</div>;
 };
