@@ -30,7 +30,7 @@ export const ImageElement = withHOC(
     const [_isImageLoaded, setIsImageLoaded] = React.useState(false);
     const [url, setUrl] = useState(props.element.url);
     const [width, setWidth] = useState("");
-    
+
     useEffect(() => {
       if (props.element?.url) {
         setUrl(props.element.url);
@@ -48,17 +48,6 @@ export const ImageElement = withHOC(
       <ImagePopover plugin={ImagePlugin}>
         <PlateElement ref={ref} className={cn(className, width)} {...props}>
           <figure className="group relative py-2" contentEditable={false}>
-            {/* <Resizable
-              align={align}
-              options={{
-                align,
-                readOnly,
-              }}
-            > */}
-            {/* <ResizeHandle
-                className={mediaResizeHandleVariants({ direction: "left" })}
-                options={{ direction: "left" }}
-              /> */}
             {!url ? (
               <div className={cn("rounded-sm", focused && selected && "ring-2 ring-ring ring-offset-2")}>
                 <ImagePlaceholder />
@@ -75,14 +64,6 @@ export const ImageElement = withHOC(
                 onLoad={() => setIsImageLoaded(true)}
               />
             )}
-            {/* <ResizeHandle
-                className={mediaResizeHandleVariants({
-                  direction: "right",
-                })}
-                options={{ direction: "right" }}
-              /> */}
-            {/* </Resizable> */}
-
             <Caption style={{ width: pixelWidth }} align={align}>
               <CaptionTextarea readOnly={readOnly} placeholder="Write a caption..." />
             </Caption>

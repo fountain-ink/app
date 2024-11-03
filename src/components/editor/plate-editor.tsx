@@ -2,7 +2,7 @@
 
 import { cn } from "@udecode/cn";
 import { Plate, usePlateEditor } from "@udecode/plate-common/react";
-import { useRef } from "react";
+import { PropsWithChildren, useRef } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { CommentsPopover } from "../ui/comments-popover";
@@ -15,13 +15,14 @@ import { FloatingToolbarButtons } from "../ui/floating-toolbar-buttons";
 import { getUiComponents } from "./plate-create-ui";
 import { commonPlugins } from "./plate-plugins";
 
-export default function PlateEditor({ showToolbar = false }: { showToolbar?: boolean }) {
+export default function PlateEditor(props: PropsWithChildren & { showToolbar?: boolean }) {
   const containerRef = useRef(null);
   const editor = useMyEditor();
 
   return (
     <DndProvider backend={HTML5Backend}>
       <Plate editor={editor}>
+        {props.children}
         <div
           id="scroll_container"
           ref={containerRef}
@@ -31,7 +32,7 @@ export default function PlateEditor({ showToolbar = false }: { showToolbar?: boo
             "[&_.slate-start-area-left]:!w-[64px] [&_.slate-start-area-right]:!w-[64px] [&_.slate-start-area-top]:!h-4 overflow-visible",
           )}
         >
-          {showToolbar && (
+          {props.showToolbar && (
             <FixedToolbar>
               <FixedToolbarButtons />
             </FixedToolbar>

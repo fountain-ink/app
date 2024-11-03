@@ -1,3 +1,4 @@
+import { EditorPublishing } from "@/components/editor/editor-publishing";
 import PlateEditor from "@/components/editor/plate-editor";
 import { getBaseUrl } from "@/lib/get-base-url";
 import { proseClasses } from "@/styles/prose";
@@ -31,13 +32,15 @@ async function getDraft(id: string) {
 export default async function WriteDraft({ params }: { params: { id: string } }) {
   const isLocal = params.id.startsWith("local-");
   const draft = isLocal ? null : await getDraft(params.id);
-  
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center text-foreground bg-background">
       <div className="container flex flex-col items-center justify-center w-full max-w-lg md:max-w-xl lg:max-w-2xl">
         <div className="w-full min-h-screen py-4 my-20">
           <div className={proseClasses}>
-            <PlateEditor />
+            <PlateEditor>
+              <EditorPublishing />
+            </PlateEditor>
           </div>
         </div>
       </div>

@@ -219,7 +219,7 @@ export const TableElement = withHOC(
             <colgroup {...colGroupProps}>
               {colSizes.map((width, index) => (
                 <col
-                  key={index}
+                  key={`lateTableCol-${index}-${width}`}
                   style={{
                     minWidth: minColumnWidth,
                     width: width || undefined,

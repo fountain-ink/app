@@ -1,5 +1,5 @@
-import { type TElement, insertNodes, isEditor, removeNodes, setNodes } from "@udecode/plate-common";
-import { createPlatePlugin, ParagraphPlugin, setNode } from "@udecode/plate-common/react";
+import { type TElement, insertNodes, isEditor, removeNodes } from "@udecode/plate-common";
+import { createPlatePlugin } from "@udecode/plate-common/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
 
 export interface NormalizePluginOptions {
@@ -20,7 +20,6 @@ export const NormalizePlugin = createPlatePlugin({
 
     editor.normalizeNode = (entry) => {
       const [node] = entry;
-      console.log(node.children)
       const nodes = node.children as TElement[];
 
       if (isEditor(node)) {

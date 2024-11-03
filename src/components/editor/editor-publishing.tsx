@@ -8,8 +8,9 @@ import { uploadMetadata } from "@/lib/upload-utils";
 import { article, MetadataAttributeType } from "@lens-protocol/metadata";
 import { SessionType, useCreatePost, useSession } from "@lens-protocol/react-web";
 import { useQueryClient } from "@tanstack/react-query";
+import { useEditorPlugin } from "@udecode/plate-common/react";
+import { MarkdownConfig, MarkdownPlugin } from "@udecode/plate-markdown";
 import { usePathname, useRouter } from "next/navigation";
-import { useEditor } from "novel";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
@@ -19,7 +20,7 @@ export const EditorPublishing = () => {
   const { isConnected: isWalletConnected } = useAccount();
   const { isOpen, setIsOpen } = usePublishStore();
   const { execute } = useCreatePost();
-  const { editor } = useEditor();
+  const editor = useEditorPlugin<MarkdownConfig>(MarkdownPlugin);
   const router = useRouter();
   const { deleteDocument } = useDocumentStorage();
   const queryClient = useQueryClient();
@@ -50,19 +51,18 @@ export const EditorPublishing = () => {
       return;
     }
 
-    const contentJson = editor.getJSON();
+    // const contentJson = editor.getJSON();
+    const contentJson = {};
 
-    const hasIncompleteImages = contentJson.content?.some((node: any) => node.type === "image" && !node.attrs?.src);
+    // if (hasIncompleteImages) {
+    //   toast.error("Cannot publish with image placeholders", {
+    //     description: "Please fill in all images or remove the placeholders.",
+    //   });
+    //   return;
+    // }
 
-    if (hasIncompleteImages) {
-      toast.error("Cannot publish with image placeholders", {
-        description: "Please fill in all images or remove the placeholders.",
-      });
-      return;
-    }
-
-    const contentHtml = editor.getHTML();
-    const markdown = editor.storage.markdown.getMarkdown();
+    // const contentHtml = editor.getHTML();
+    const markdown = editor.api.markdown.serialize();
     const { title } = extractMetadata(contentJson);
 
     try {
@@ -74,7 +74,7 @@ export const EditorPublishing = () => {
 
         attributes: [
           { key: "contentJson", type: MetadataAttributeType.JSON, value: JSON.stringify(contentJson) },
-          { key: "contentHtml", type: MetadataAttributeType.STRING, value: contentHtml },
+          // { key: "contentHtml", type: MetadataAttributeType.STRING, value: contentHtml },
         ],
       });
 

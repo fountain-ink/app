@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 import { cn, withProps, withRef } from '@udecode/cn';
 import {
   useTableCellElement,
@@ -61,10 +59,10 @@ export const TableCellElement = withRef<
             borders &&
               cn(
                 borders.bottom?.size &&
-                  `before:border-b before:border-b-border`,
-                borders.right?.size && `before:border-r before:border-r-border`,
-                borders.left?.size && `before:border-l before:border-l-border`,
-                borders.top?.size && `before:border-t before:border-t-border`
+                  "before:border-b before:border-b-border",
+                borders.right?.size && "before:border-r before:border-r-border",
+                borders.left?.size && "before:border-l before:border-l-border",
+                borders.top?.size && "before:border-t before:border-t-border"
               )
           ),
         className
