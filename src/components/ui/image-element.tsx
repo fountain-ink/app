@@ -28,8 +28,14 @@ export const ImageElement = withHOC(
     const { align = "center", focused, readOnly, selected } = useMediaState();
     const pixelWidth = useResizableStore().get.width();
     const [_isImageLoaded, setIsImageLoaded] = React.useState(false);
-    const [url, _setUrl] = useState(props.element.url);
+    const [url, setUrl] = useState(props.element.url);
     const [width, setWidth] = useState("");
+    
+    useEffect(() => {
+      if (props.element?.url) {
+        setUrl(props.element.url);
+      }
+    }, [props.element.url]);
 
     useEffect(() => {
       if (props.element?.width) {
