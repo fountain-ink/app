@@ -1,17 +1,21 @@
-import React from "react";
-import { withRef } from "@udecode/cn";
-import { useOutdentButton } from "@udecode/plate-indent/react";
+'use client';
 
-import { Icons } from "@/components/icons";
+import React from 'react';
 
-import { ToolbarButton } from "./toolbar";
+import { withRef } from '@udecode/cn';
+import { useOutdentButton } from '@udecode/plate-indent/react';
+import { Outdent } from 'lucide-react';
 
-export const OutdentToolbarButton = withRef<typeof ToolbarButton>((rest, ref) => {
-  const { props } = useOutdentButton();
+import { ToolbarButton } from './toolbar';
 
-  return (
-    <ToolbarButton ref={ref} tooltip="Outdent" {...props} {...rest}>
-      <Icons.outdent />
-    </ToolbarButton>
-  );
-});
+export const OutdentToolbarButton = withRef<typeof ToolbarButton>(
+  (rest, ref) => {
+    const { props } = useOutdentButton();
+
+    return (
+      <ToolbarButton ref={ref} tooltip="Outdent" {...props} {...rest}>
+        <Outdent />
+      </ToolbarButton>
+    );
+  }
+);

@@ -1,10 +1,15 @@
-import React from "react";
-import { withRef } from "@udecode/cn";
-import { useLinkToolbarButton, useLinkToolbarButtonState } from "@udecode/plate-link/react";
+'use client';
 
-import { Icons } from "@/components/icons";
+import React from 'react';
 
-import { ToolbarButton } from "./toolbar";
+import { withRef } from '@udecode/cn';
+import {
+  useLinkToolbarButton,
+  useLinkToolbarButtonState,
+} from '@udecode/plate-link/react';
+import { Link } from 'lucide-react';
+
+import { ToolbarButton } from './toolbar';
 
 export const LinkToolbarButton = withRef<typeof ToolbarButton>((rest, ref) => {
   const state = useLinkToolbarButtonState();
@@ -12,7 +17,7 @@ export const LinkToolbarButton = withRef<typeof ToolbarButton>((rest, ref) => {
 
   return (
     <ToolbarButton ref={ref} tooltip="Link" {...props} {...rest}>
-      <Icons.link />
+      <Link />
     </ToolbarButton>
   );
 });

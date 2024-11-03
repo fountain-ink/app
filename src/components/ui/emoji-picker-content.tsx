@@ -1,9 +1,11 @@
-import { memo, useCallback } from "react";
-import { cn } from "@udecode/cn";
-import { EmojiSettings } from "@udecode/plate-emoji";
+"use client";
 
-import type { Emoji, GridRow } from "@udecode/plate-emoji";
+import { memo, useCallback } from "react";
+
 import type { UseEmojiPickerType } from "@udecode/plate-emoji/react";
+
+import { cn } from "@udecode/cn";
+import { type Emoji, type GridRow, EmojiSettings } from "@udecode/plate-emoji";
 
 export type EmojiPickerContentProps = Pick<
   UseEmojiPickerType,
@@ -36,14 +38,14 @@ const Button = memo(({ emoji, index, onMouseOver, onSelect }: EmojiButtonProps) 
       onClick={() => onSelect(emoji)}
       onMouseEnter={() => onMouseOver(emoji)}
       onMouseLeave={() => onMouseOver()}
-      aria-label={emoji?.skins[0]?.native}
-      dataj-index={index}
+      aria-label={emoji?.skins?.[0]?.native}
+      data-index={index}
       tabIndex={-1}
       type="button"
     >
       <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100" aria-hidden="true" />
-      <span style={{ position: "relative" }} data-emoji-set="native">
-        {emoji?.skins[0]?.native}
+      <span className="relative" data-emoji-set="native">
+        {emoji?.skins?.[0]?.native}
       </span>
     </button>
   );

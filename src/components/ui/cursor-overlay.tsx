@@ -1,11 +1,18 @@
-import React, { useEffect } from "react";
+"use client";
+
+import { useEffect } from "react";
+
 import { cn } from "@udecode/cn";
 import { createPlatePlugin, findEventRange, useEditorPlugin, useEditorRef } from "@udecode/plate-common/react";
-import { CursorOverlay as CursorOverlayPrimitive } from "@udecode/plate-cursor";
+import {
+  type CursorData,
+  type CursorOverlayProps,
+  type CursorProps,
+  type CursorState,
+  CursorOverlay as CursorOverlayPrimitive,
+} from "@udecode/plate-cursor";
 import { DndPlugin } from "@udecode/plate-dnd";
 import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
-
-import type { CursorData, CursorOverlayProps, CursorProps, CursorState } from "@udecode/plate-cursor";
 
 export function Cursor({
   caretPosition,
@@ -22,8 +29,7 @@ export function Cursor({
       {!disableSelection &&
         selectionRects.map((position, i) => (
           <div
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            key={i}
+            key={`selectionrects-${i}-${position}`}
             className={cn("pointer-events-none absolute z-10 opacity-30", classNames?.selectionRect)}
             style={{
               ...selectionStyle,

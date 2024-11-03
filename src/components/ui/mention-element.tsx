@@ -1,14 +1,17 @@
-import React from "react";
-import { cn, withRef } from "@udecode/cn";
-import { getHandler, IS_APPLE } from "@udecode/plate-common";
-import { useElement } from "@udecode/plate-common/react";
-import { useFocused, useSelected } from "slate-react";
+'use client';
 
-import { useMounted } from "@/hooks/use-mounted";
+import React from 'react';
 
-import { PlateElement } from "./plate-element";
+import type { TMentionElement } from '@udecode/plate-mention';
 
-import type { TMentionElement } from "@udecode/plate-mention";
+import { cn, withRef } from '@udecode/cn';
+import { IS_APPLE, getHandler } from '@udecode/plate-common';
+import { useElement } from '@udecode/plate-common/react';
+import { useFocused, useSelected } from 'slate-react';
+
+import { useMounted } from '@/hooks/use-mounted';
+
+import { PlateElement } from './plate-element';
 
 export const MentionElement = withRef<
   typeof PlateElement,
@@ -27,12 +30,12 @@ export const MentionElement = withRef<
     <PlateElement
       ref={ref}
       className={cn(
-        "inline-block cursor-pointer rounded-md bg-muted px-1.5 py-0.5 align-baseline text-sm font-medium",
-        selected && focused && "ring-2 ring-ring",
-        element?.children[0]?.bold === true && "font-bold",
-        element?.children[0]?.italic === true && "italic",
-        element?.children[0]?.underline === true && "underline",
-        className,
+        'inline-block cursor-pointer rounded-md bg-muted px-1.5 py-0.5 align-baseline text-sm font-medium',
+        selected && focused && 'ring-2 ring-ring',
+        element?.children?.[0]?.bold === true && 'font-bold',
+        element?.children?.[0]?.italic === true && 'italic',
+        element?.children?.[0]?.underline === true && 'underline',
+        className
       )}
       onClick={getHandler(onClick, element)}
       data-slate-value={element.value}

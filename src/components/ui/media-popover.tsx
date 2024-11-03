@@ -1,23 +1,29 @@
-import { isSelectionExpanded } from "@udecode/plate-common";
-import { setNode, useEditorSelector, useElement, useRemoveNodeButton } from "@udecode/plate-common/react";
+'use client';
+
+import React, { useEffect } from 'react';
+
 import {
-  floatingMediaActions,
+  type WithRequiredKey,
+  isSelectionExpanded,
+} from '@udecode/plate-common';
+import {
+  useEditorSelector,
+  useElement,
+  useRemoveNodeButton,
+} from '@udecode/plate-common/react';
+import {
   FloatingMedia as FloatingMediaPrimitive,
+  floatingMediaActions,
   useFloatingMediaSelectors,
-} from "@udecode/plate-media/react";
-import type React from "react";
-import { useEffect } from "react";
-import { useReadOnly, useSelected } from "slate-react";
+} from '@udecode/plate-media/react';
+import { Link, Trash2Icon } from 'lucide-react';
+import { useReadOnly, useSelected } from 'slate-react';
 
-import { Icons } from "@/components/icons";
-
-import { Button, buttonVariants } from "./button";
-import { CaptionButton } from "./caption";
-import { inputVariants } from "./input";
-import { Popover, PopoverAnchor, PopoverContent } from "./popover";
-import { Separator } from "./separator";
-
-import type { WithRequiredKey } from "@udecode/plate-common";
+import { Button, buttonVariants } from './button';
+import { CaptionButton } from './caption';
+import { inputVariants } from './input';
+import { Popover, PopoverAnchor, PopoverContent } from './popover';
+import { Separator } from './separator';
 
 export interface MediaPopoverProps {
   children: React.ReactNode;
@@ -28,7 +34,10 @@ export function MediaPopover({ children, plugin }: MediaPopoverProps) {
   const readOnly = useReadOnly();
   const selected = useSelected();
 
-  const selectionCollapsed = useEditorSelector((editor) => !isSelectionExpanded(editor), []);
+  const selectionCollapsed = useEditorSelector(
+    (editor) => !isSelectionExpanded(editor),
+    []
+  );
   const isOpen = !readOnly && selected && selectionCollapsed;
   const isEditing = useFloatingMediaSelectors().isEditing();
 
@@ -48,33 +57,38 @@ export function MediaPopover({ children, plugin }: MediaPopoverProps) {
     <Popover open={isOpen} modal={false}>
       <PopoverAnchor>{children}</PopoverAnchor>
 
-      <PopoverContent className="w-auto p-1" onOpenAutoFocus={(e) => e.preventDefault()}>
+      <PopoverContent
+        className="w-auto p-1"
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         {isEditing ? (
           <div className="flex w-[330px] flex-col">
             <div className="flex items-center">
-              <div className="flex items-center pl-3 text-muted-foreground">
-                <Icons.link className="size-4" />
+              <div className="flex items-center pl-2 pr-1 text-muted-foreground">
+                <Link className="size-4" />
               </div>
 
               <FloatingMediaPrimitive.UrlInput
-                className={inputVariants({ h: "sm", variant: "ghost" })}
+                className={inputVariants({ h: 'sm', variant: 'ghost' })}
                 placeholder="Paste the embed link..."
                 options={{ plugin }}
               />
             </div>
           </div>
         ) : (
-          <div className="box-content flex h-9 items-center gap-1">
-            <FloatingMediaPrimitive.EditButton className={buttonVariants({ size: "sm", variant: "ghost" })}>
+          <div className="box-content flex items-center">
+            <FloatingMediaPrimitive.EditButton
+              className={buttonVariants({ size: 'sm', variant: 'ghost' })}
+            >
               Edit link
             </FloatingMediaPrimitive.EditButton>
 
             <CaptionButton variant="ghost">Caption</CaptionButton>
 
-            <Separator orientation="vertical" className="my-1" />
+            <Separator orientation="vertical" className="mx-1 h-6" />
 
-            <Button size="sms" variant="ghost" {...buttonProps}>
-              <Icons.delete className="size-4" />
+            <Button size="icon" variant="ghost" {...buttonProps}>
+              <Trash2Icon />
             </Button>
           </div>
         )}

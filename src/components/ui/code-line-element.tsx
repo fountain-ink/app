@@ -1,8 +1,11 @@
-"use client";
+'use client';
 
-import React from "react";
-import { withRef } from "@udecode/cn";
+import React from 'react';
 
-import { PlateElement } from "./plate-element";
+import { withRef } from '@udecode/cn';
 
-export const CodeLineElement = withRef<typeof PlateElement>((props, ref) => <PlateElement ref={ref} {...props} />);
+import { PlateElement } from './plate-element';
+
+export const CodeLineElement = withRef<typeof PlateElement>((props, ref) => (
+  <PlateElement ref={ref} {...props} />
+));

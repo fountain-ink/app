@@ -25,12 +25,12 @@ import { LinkPlugin } from "@udecode/plate-link/react";
 import { MarkdownPlugin } from "@udecode/plate-markdown";
 import { EquationPlugin, InlineEquationPlugin } from "@udecode/plate-math/react";
 import {
-    AudioPlugin,
-    FilePlugin,
-    ImagePlugin,
-    MediaEmbedPlugin,
-    PlaceholderPlugin,
-    VideoPlugin,
+  AudioPlugin,
+  FilePlugin,
+  ImagePlugin,
+  MediaEmbedPlugin,
+  PlaceholderPlugin,
+  VideoPlugin,
 } from "@udecode/plate-media/react";
 import { MentionPlugin } from "@udecode/plate-mention/react";
 import { NodeIdPlugin } from "@udecode/plate-node-id";
@@ -46,19 +46,18 @@ import Prism from "prismjs";
 import { BlockContextMenu } from "@/components/ui/block-context-menu";
 import { DragOverCursorPlugin, SelectionOverlayPlugin } from "@/components/ui/cursor-overlay";
 import { ImageElement } from "@/components/ui/image-element";
-import { ImagePreview } from "@/components/ui/image-preview";
 import { TodoLi, TodoMarker } from "@/components/ui/indent-todo-marker";
 import { LinkFloatingToolbar } from "@/components/ui/link-floating-toolbar";
 import { AlignPlugin } from "@udecode/plate-alignment/react";
 import { AutoformatPlugin } from "@udecode/plate-autoformat/react";
 import {
-    BoldPlugin,
-    CodePlugin,
-    ItalicPlugin,
-    StrikethroughPlugin,
-    SubscriptPlugin,
-    SuperscriptPlugin,
-    UnderlinePlugin,
+  BoldPlugin,
+  CodePlugin,
+  ItalicPlugin,
+  StrikethroughPlugin,
+  SubscriptPlugin,
+  SuperscriptPlugin,
+  UnderlinePlugin,
 } from "@udecode/plate-basic-marks/react";
 import { isCodeBlockEmpty, isSelectionAtCodeBlockStart, unwrapCodeBlock } from "@udecode/plate-code-block";
 import { CodeBlockPlugin, CodeSyntaxPlugin } from "@udecode/plate-code-block/react";
@@ -69,16 +68,15 @@ import { MentionInputPlugin } from "@udecode/plate-mention/react";
 import { ResetNodePlugin } from "@udecode/plate-reset-node/react";
 import { TabbablePlugin } from "@udecode/plate-tabbable/react";
 import { TableCellHeaderPlugin, TableRowPlugin } from "@udecode/plate-table/react";
+import { YjsPlugin } from "@udecode/plate-yjs/react";
 import { autoformatRules } from "./plate-autoformat";
 import { NormalizePlugin } from "./plate-normalization";
 import { RenderAboveEditableYjs } from "./yjs-above-editable";
-import { YjsPlugin } from '@udecode/plate-yjs/react';
 
 export const commonPlugins = [
   NormalizePlugin,
 
   YjsPlugin.configure({
-    
     render: {
       aboveEditable: RenderAboveEditableYjs,
     },
@@ -106,7 +104,7 @@ export const commonPlugins = [
     render: { afterEditable: () => <LinkFloatingToolbar /> },
   }),
   ImagePlugin.extend({
-    render: { afterEditable: ImagePreview },
+    // render: { afterEditable: ImagePreview },
   }),
   MediaEmbedPlugin,
   CaptionPlugin.configure({
@@ -130,7 +128,7 @@ export const commonPlugins = [
   PlaceholderPlugin,
   ImagePlugin.extend({
     render: {
-      afterEditable: ImagePreview,
+      // afterEditable: ImagePreview,
       node: ImageElement,
     },
   }),

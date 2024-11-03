@@ -1,7 +1,16 @@
-import React from "react";
-import { focusEditor, useEditorReadOnly, useEditorRef, usePlateStore } from "@udecode/plate-common/react";
+'use client';
 
-import { Icons } from "@/components/icons";
+import React from 'react';
+
+import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+
+import {
+  focusEditor,
+  useEditorReadOnly,
+  useEditorRef,
+  usePlateStore,
+} from '@udecode/plate-common/react';
+import { Eye, Pen } from 'lucide-react';
 
 import {
   DropdownMenu,
@@ -10,10 +19,8 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
   useOpenState,
-} from "./dropdown-menu";
-import { ToolbarButton } from "./toolbar";
-
-import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
+} from './dropdown-menu';
+import { ToolbarButton } from './toolbar';
 
 export function ModeDropdownMenu(props: DropdownMenuProps) {
   const editor = useEditorRef();
@@ -21,20 +28,20 @@ export function ModeDropdownMenu(props: DropdownMenuProps) {
   const readOnly = useEditorReadOnly();
   const openState = useOpenState();
 
-  let value = "editing";
+  let value = 'editing';
 
-  if (readOnly) value = "viewing";
+  if (readOnly) value = 'viewing';
 
   const item: any = {
     editing: (
       <>
-        <Icons.editing className="mr-2 size-5" />
+        <Pen />
         <span className="hidden lg:inline">Editing</span>
       </>
     ),
     viewing: (
       <>
-        <Icons.viewing className="mr-2 size-5" />
+        <Eye />
         <span className="hidden lg:inline">Viewing</span>
       </>
     ),
@@ -43,34 +50,41 @@ export function ModeDropdownMenu(props: DropdownMenuProps) {
   return (
     <DropdownMenu modal={false} {...openState} {...props}>
       <DropdownMenuTrigger asChild>
-        <ToolbarButton pressed={openState.open} tooltip="Editing mode" isDropdown>
+        <ToolbarButton
+          pressed={openState.open}
+          tooltip="Editing mode"
+          isDropdown
+        >
           {item[value]}
         </ToolbarButton>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="min-w-[180px]" align="start">
         <DropdownMenuRadioGroup
-          className="flex flex-col gap-0.5"
           value={value}
           onValueChange={(newValue) => {
-            if (newValue !== "viewing") {
+            if (newValue !== 'viewing') {
               setReadOnly(false);
             }
-            if (newValue === "viewing") {
+            if (newValue === 'viewing') {
               setReadOnly(true);
 
               return;
             }
-            if (newValue === "editing") {
+            if (newValue === 'editing') {
               focusEditor(editor);
 
               return;
             }
           }}
         >
-          <DropdownMenuRadioItem value="editing">{item.editing}</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="editing">
+            {item.editing}
+          </DropdownMenuRadioItem>
 
-          <DropdownMenuRadioItem value="viewing">{item.viewing}</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="viewing">
+            {item.viewing}
+          </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

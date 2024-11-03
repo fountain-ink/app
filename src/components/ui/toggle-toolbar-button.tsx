@@ -1,18 +1,25 @@
-import React from "react";
-import { withRef } from "@udecode/cn";
-import { useToggleToolbarButton, useToggleToolbarButtonState } from "@udecode/plate-toggle/react";
+'use client';
 
-import { Icons } from "@/components/icons";
+import React from 'react';
 
-import { ToolbarButton } from "./toolbar";
+import { withRef } from '@udecode/cn';
+import {
+  useToggleToolbarButton,
+  useToggleToolbarButtonState,
+} from '@udecode/plate-toggle/react';
+import { ChevronRightIcon } from 'lucide-react';
 
-export const ToggleToolbarButton = withRef<typeof ToolbarButton>((rest, ref) => {
-  const state = useToggleToolbarButtonState();
-  const { props } = useToggleToolbarButton(state);
+import { ToolbarButton } from './toolbar';
 
-  return (
-    <ToolbarButton ref={ref} tooltip="Toggle" {...props} {...rest}>
-      <Icons.chevronDown />
-    </ToolbarButton>
-  );
-});
+export const ToggleToolbarButton = withRef<typeof ToolbarButton>(
+  (rest, ref) => {
+    const state = useToggleToolbarButtonState();
+    const { props } = useToggleToolbarButton(state);
+
+    return (
+      <ToolbarButton ref={ref} tooltip="Toggle" {...props} {...rest}>
+        <ChevronRightIcon />
+      </ToolbarButton>
+    );
+  }
+);

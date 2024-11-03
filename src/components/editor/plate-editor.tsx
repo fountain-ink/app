@@ -37,7 +37,7 @@ export default function PlateEditor({ showToolbar = false }: { showToolbar?: boo
             </FixedToolbar>
           )}
 
-          <Editor disableDefaultStyles className={"overflow-visible"} autoFocus focusRing={false} variant="ghost" />
+          <Editor disableDefaultStyles className={"overflow-visible"} autoFocus variant="fullWidth" />
 
           <FloatingToolbar>
             <FloatingToolbarButtons />

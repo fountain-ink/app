@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { cn } from "@udecode/cn";
 import { CommentEditActions, CommentEditTextarea } from "@udecode/plate-comments/react";
 
@@ -13,11 +12,11 @@ export function CommentValue() {
       <CommentEditTextarea className={cn(inputVariants(), "min-h-[60px]")} />
 
       <div className="flex space-x-2">
-        <CommentEditActions.CancelButton className={buttonVariants({ size: "xs", variant: "outline" })}>
+        <CommentEditActions.CancelButton className={buttonVariants({ size: "sm", variant: "outline" })}>
           Cancel
         </CommentEditActions.CancelButton>
 
-        <CommentEditActions.SaveButton className={buttonVariants({ size: "xs", variant: "default" })}>
+        <CommentEditActions.SaveButton className={buttonVariants({ size: "sm", variant: "default" })}>
           Save
         </CommentEditActions.SaveButton>
       </div>
