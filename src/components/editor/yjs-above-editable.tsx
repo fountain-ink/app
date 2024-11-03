@@ -5,6 +5,7 @@ import { type YjsConfig, BaseYjsPlugin } from "@udecode/plate-yjs";
 import { useEffect, useMemo } from "react";
 import { RemoteCursorOverlay } from "./yjs-overlay";
 
+
 export const RenderAboveEditableYjs: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {

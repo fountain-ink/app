@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "collab": "tsx src/srv/collaboration.ts",
+    "collab": "npx tsx src/srv/collaboration.ts",
     "generate-fonts": "node src/lib/generate-fonts.js",
     "dev": "npm run generate-fonts && next dev",
     "build": "npm run generate-fonts && next build",
