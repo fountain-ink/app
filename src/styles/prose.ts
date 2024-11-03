@@ -44,7 +44,7 @@ export const proseClasses = [
   "prose-h4:[line-height:var(--header-line-height)]",
   "prose-h4:[letter-spacing:var(--header-letter-spacing)]",
 
-  "prose-p:[margin-top:var(--paragraph-margin)] prose-p:[margin-bottom:var(--paragraph-margin)]",
+  // "prose-p:[margin-top:var(--paragraph-margin)] prose-p:[margin-bottom:var(--paragraph-margin)]",
   "prose-p:font-[family-name:var(--paragraph-font)]",
   "prose-p:font-[var(--paragraph-weight)]",
   "prose-p:[font-style:var(--paragraph-style)]",
@@ -62,6 +62,7 @@ export const proseClasses = [
   "prose-ul:[color:var(--list-color)]",
   "prose-ul:[margin-top:var(--list-margin-top)]",
   "prose-ul:[margin-bottom:var(--list-margin-bottom)]",
+  "prose-ul:[padding-inline-start:0px]",
 
   "prose-ol:font-[family-name:var(--list-font)]",
   "prose-ol:font-[var(--list-weight)]",
@@ -72,6 +73,7 @@ export const proseClasses = [
   "prose-ol:[color:var(--list-color)]",
   "prose-ol:[margin-top:var(--list-margin-top)]",
   "prose-ol:[margin-bottom:var(--list-margin-bottom)]",
+  "prose-ol:[padding-inline-start:0px]",
 
   "prose-li:font-[family-name:var(--list-font)]",
   "prose-li:font-[var(--list-weight)]",
@@ -80,6 +82,7 @@ export const proseClasses = [
   "prose-li:[line-height:var(--list-line-height)]",
   "prose-li:[letter-spacing:var(--list-letter-spacing)]",
   "prose-li:[color:var(--list-color)]",
+  "prose-li:[padding-inline-start:0px]",
 
   "prose-ul:[--tw-prose-bullets:var(--list-color)]",
   "prose-ol:[--tw-prose-bullets:var(--list-color)]",

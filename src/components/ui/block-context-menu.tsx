@@ -29,16 +29,13 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
 
   const handleTurnInto = useCallback(
     (type: string) => {
-      editor
-        .getApi(BlockSelectionPlugin)
-        .blockSelection.getNodes()
-        .forEach(([node, path]) => {
-          if (node[IndentListPlugin.key]) {
-            unsetNodes(editor, [IndentListPlugin.key, "indent"], { at: path });
-          }
+      for (const [node, path] of editor.getApi(BlockSelectionPlugin).blockSelection.getNodes()) {
+        if (node[IndentListPlugin.key]) {
+          unsetNodes(editor, [IndentListPlugin.key, "indent"], { at: path });
+        }
 
-          editor.tf.toggle.block({ type }, { at: path });
-        });
+        editor.tf.toggle.block({ type }, { at: path });
+      }
     },
     [editor],
   );

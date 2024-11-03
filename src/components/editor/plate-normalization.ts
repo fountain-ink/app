@@ -1,5 +1,5 @@
-import { type TElement, insertNodes, isEditor, removeNodes } from "@udecode/plate-common";
-import { createPlatePlugin } from "@udecode/plate-common/react";
+import { type TElement, insertNodes, isEditor, removeNodes, setNodes } from "@udecode/plate-common";
+import { createPlatePlugin, ParagraphPlugin, setNode } from "@udecode/plate-common/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
 
 export interface NormalizePluginOptions {
@@ -20,27 +20,28 @@ export const NormalizePlugin = createPlatePlugin({
 
     editor.normalizeNode = (entry) => {
       const [node] = entry;
-      const children = node.children as TElement[];
+      console.log(node.children)
+      const nodes = node.children as TElement[];
 
       if (isEditor(node)) {
         let normalized = false;
 
         // Handle empty document case
-        if (children.length === 0) {
-          insertNodes(
-            editor,
-            [
-              { type: HEADING_KEYS.h1, children: [{ text: "" }] },
-              { type: HEADING_KEYS.h2, children: [{ text: "" }] },
-            ],
-            { at: [0] },
-          );
-          normalized = true;
-        }
+        // if (children.length === 0) {
+        //   insertNodes(
+        //     editor,
+        //     [
+        //       { type: HEADING_KEYS.h1, children: [{ text: "" }] },
+        //       { type: HEADING_KEYS.h2, children: [{ text: "" }] },
+        //     ],
+        //     { at: [0] },
+        //   );
+        //   normalized = true;
+        // }
 
         // Ensure first node is h1
-        if (!normalized && children?.[0]?.type !== HEADING_KEYS.h1) {
-          const existingContent = children[0]?.children || [{ text: "" }];
+        if (!normalized && nodes?.[0]?.type !== HEADING_KEYS.h1) {
+          const existingContent = nodes[0]?.children || [{ text: "" }];
           removeNodes(editor, { at: [0] });
           insertNodes(editor, { type: HEADING_KEYS.h1, children: existingContent }, { at: [0] });
           normalized = true;
@@ -48,12 +49,36 @@ export const NormalizePlugin = createPlatePlugin({
 
         // Process remaining nodes
         if (!normalized) {
-          for (let i = 2; i < children.length; i++) {
-            const child = children[i];
-            if (child?.type === HEADING_KEYS.h1 || child?.type === HEADING_KEYS.h2) {
-              editor.removeNodes({ at: [i] });
-              normalized = true;
+          for (let i = 0; i < nodes.length; i++) {
+            const node = nodes[i];
+            // console.log(node);
+
+            if (node?.type === HEADING_KEYS.h1 || node?.type === HEADING_KEYS.h2) {
+              if (i >= 2) {
+                editor.removeNodes({ at: [i] });
+                normalized = true;
+                break;
+              }
             }
+
+            // Handle paragraphs containing lists
+            // if (node?.type === ParagraphPlugin.key) {
+            //   // const childElements = child.children as TElement[];
+            //   // const hasListChild = childElements.some((elem) => {
+            //   //   return elem.type === "ul" || elem.type === "li";
+            //   // });
+
+            //   const hasListChild = node.listStyleType !== undefined;
+
+            //   if (hasListChild) {
+            //     console.log(node)
+            //     // setNodes(editor,   { ...node, type: "span" }, {at: [i]});
+            //     // removeNodes(editor, { at: [i] });
+            //     // insertNodes(editor, { ...node, type: "span",  }, { at: [i] });
+            //     normalized = true;
+            //     break;
+            //   }
+            // }
           }
         }
 

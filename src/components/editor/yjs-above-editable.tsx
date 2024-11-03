@@ -1,10 +1,8 @@
 import { YjsEditor } from "@slate-yjs/core";
-import { type TElement, isEditor } from "@udecode/plate-common";
 import { useEditorPlugin } from "@udecode/plate-common/react";
 import { type YjsConfig, BaseYjsPlugin } from "@udecode/plate-yjs";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { RemoteCursorOverlay } from "./yjs-overlay";
-
 
 export const RenderAboveEditableYjs: React.FC<{
   children: React.ReactNode;
@@ -13,8 +11,6 @@ export const RenderAboveEditableYjs: React.FC<{
 
   const provider = useOption("provider");
   const isSynced = useOption("isSynced");
-
-
 
   useEffect(() => {
     void provider.connect();
