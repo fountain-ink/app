@@ -14,12 +14,18 @@ import { FloatingToolbar } from "../ui/floating-toolbar";
 import { FloatingToolbarButtons } from "../ui/floating-toolbar-buttons";
 import { getUiComponents } from "./plate-create-ui";
 import { editorPlugins } from "./plate-plugins";
+import { usePathname } from "next/navigation";
+import { useSession } from "@lens-protocol/react-web";
 
 export default function PlateEditor(props: PropsWithChildren & { showToolbar?: boolean }) {
   const containerRef = useRef(null);
   const editorRef = useRef(null);
+  const pathname = usePathname()
+  const documentId = pathname.split("/").at(-1);
+  const {data: session} = useSession()
+  
   const editor = createPlateEditor({
-    plugins: [...editorPlugins],
+    plugins: [...editorPlugins( documentId)],
     override: {
       components: getUiComponents(),
     },
@@ -65,7 +71,7 @@ export default function PlateEditor(props: PropsWithChildren & { showToolbar?: b
 
 export const useMyEditor = () => {
   return usePlateEditor({
-    plugins: [...editorPlugins],
+    plugins: [...editorPlugins()],
     override: {
       components: getUiComponents(),
     },

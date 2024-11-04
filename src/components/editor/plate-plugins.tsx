@@ -24,12 +24,12 @@ import { LinkPlugin } from "@udecode/plate-link/react";
 import { MarkdownPlugin } from "@udecode/plate-markdown";
 import { EquationPlugin, InlineEquationPlugin } from "@udecode/plate-math/react";
 import {
-  AudioPlugin,
-  FilePlugin,
-  ImagePlugin,
-  MediaEmbedPlugin,
-  PlaceholderPlugin,
-  VideoPlugin,
+    AudioPlugin,
+    FilePlugin,
+    ImagePlugin,
+    MediaEmbedPlugin,
+    PlaceholderPlugin,
+    VideoPlugin,
 } from "@udecode/plate-media/react";
 import { MentionPlugin } from "@udecode/plate-mention/react";
 import { NodeIdPlugin } from "@udecode/plate-node-id";
@@ -49,13 +49,13 @@ import { LinkFloatingToolbar } from "@/components/ui/link-floating-toolbar";
 import { AlignPlugin } from "@udecode/plate-alignment/react";
 import { AutoformatPlugin } from "@udecode/plate-autoformat/react";
 import {
-  BoldPlugin,
-  CodePlugin,
-  ItalicPlugin,
-  StrikethroughPlugin,
-  SubscriptPlugin,
-  SuperscriptPlugin,
-  UnderlinePlugin,
+    BoldPlugin,
+    CodePlugin,
+    ItalicPlugin,
+    StrikethroughPlugin,
+    SubscriptPlugin,
+    SuperscriptPlugin,
+    UnderlinePlugin,
 } from "@udecode/plate-basic-marks/react";
 import { isCodeBlockEmpty, isSelectionAtCodeBlockStart, unwrapCodeBlock } from "@udecode/plate-code-block";
 import { CodeBlockPlugin, CodeSyntaxPlugin } from "@udecode/plate-code-block/react";
@@ -74,7 +74,7 @@ import { autoformatRules } from "./plate-autoformat";
 import { NormalizePlugin } from "./plate-normalization";
 import { RenderAboveEditableYjs } from "./yjs-above-editable";
 
-export const editorPlugins = [
+export const editorPlugins = (path?: string, handle?: string) => [
   NormalizePlugin,
   YjsPlugin.configure({
     render: {
@@ -84,14 +84,15 @@ export const editorPlugins = [
       cursorOptions: {
         autoSend: true,
         data: {
-          name: "kualta",
+          name: handle || "kualta",
           color: "#ff0000",
         },
       },
       disableCursors: false,
       hocuspocusProviderOptions: {
         url: "https://collab.fountain.ink",
-        name: "woirgjsodfijgs",
+        name: path ?? "no-path",
+
       },
     },
   }),
@@ -393,7 +394,7 @@ export const editorPlugins = [
       users: {
         1: {
           id: "1",
-          name: "zbeyens",
+          name: handle || "kualta",
           avatarUrl: "https://avatars.githubusercontent.com/u/19695832?s=96&v=4",
         },
       },
