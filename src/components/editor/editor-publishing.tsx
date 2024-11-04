@@ -42,7 +42,8 @@ export const EditorPublishing = () => {
   //   );
   // }
 
-  const handle = session?.profile?.handle?.localName || "";
+  const handle = "";
+  // const handle = session?.profile?.handle?.localName || "";
 
   const handlePublish = async () => {
     if (!editor) {
