@@ -15,12 +15,14 @@ const DEFAULT_OPTIONS: NormalizePluginOptions = {
 export const NormalizePlugin = createPlatePlugin({
   key: "normalize",
   options: DEFAULT_OPTIONS,
+
   extendEditor: ({ editor }) => {
     const { normalizeNode } = editor;
 
     editor.normalizeNode = (entry) => {
       const [node] = entry;
       const nodes = node.children as TElement[];
+
 
       if (isEditor(node)) {
         let normalized = false;

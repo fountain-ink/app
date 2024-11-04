@@ -1,5 +1,6 @@
 "use client";
 
+import { HtmlReactPlugin } from '@udecode/plate-html/react';
 import { BasicMarksPlugin } from "@udecode/plate-basic-marks/react";
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { ExitBreakPlugin, SoftBreakPlugin } from "@udecode/plate-break/react";
@@ -73,9 +74,8 @@ import { IndentPlugin } from "@udecode/plate-indent/react";
 import { IndentListPlugin } from "@udecode/plate-indent-list/react";
 import { TodoLi, TodoMarker } from "../ui/indent-todo-marker";
 
-export const commonPlugins = [
+export const editorPlugins = [
   NormalizePlugin,
-
   YjsPlugin.configure({
     render: {
       aboveEditable: RenderAboveEditableYjs,
@@ -310,7 +310,7 @@ export const commonPlugins = [
     },
   }),
   JuicePlugin,
-
+  HtmlReactPlugin,
   CodeSyntaxPlugin,
   MentionInputPlugin,
   TableRowPlugin,
