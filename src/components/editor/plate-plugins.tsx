@@ -1,6 +1,5 @@
 "use client";
 
-import { HtmlReactPlugin } from '@udecode/plate-html/react';
 import { BasicMarksPlugin } from "@udecode/plate-basic-marks/react";
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { ExitBreakPlugin, SoftBreakPlugin } from "@udecode/plate-break/react";
@@ -17,6 +16,7 @@ import { HEADING_KEYS, HEADING_LEVELS } from "@udecode/plate-heading";
 import { HeadingPlugin, TocPlugin } from "@udecode/plate-heading/react";
 import { HighlightPlugin } from "@udecode/plate-highlight/react";
 import { HorizontalRulePlugin } from "@udecode/plate-horizontal-rule/react";
+import { HtmlReactPlugin } from "@udecode/plate-html/react";
 import { JuicePlugin } from "@udecode/plate-juice";
 import { KbdPlugin } from "@udecode/plate-kbd/react";
 import { ColumnItemPlugin, ColumnPlugin } from "@udecode/plate-layout/react";
@@ -61,18 +61,18 @@ import { isCodeBlockEmpty, isSelectionAtCodeBlockStart, unwrapCodeBlock } from "
 import { CodeBlockPlugin, CodeSyntaxPlugin } from "@udecode/plate-code-block/react";
 import { isBlockAboveEmpty, isSelectionAtBlockStart, someNode } from "@udecode/plate-common";
 import { FontSizePlugin } from "@udecode/plate-font/react";
-import { ListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
+import { IndentListPlugin } from "@udecode/plate-indent-list/react";
+import { IndentPlugin } from "@udecode/plate-indent/react";
+import { TodoListPlugin } from "@udecode/plate-list/react";
 import { MentionInputPlugin } from "@udecode/plate-mention/react";
 import { ResetNodePlugin } from "@udecode/plate-reset-node/react";
 import { TabbablePlugin } from "@udecode/plate-tabbable/react";
 import { TableCellHeaderPlugin, TableRowPlugin } from "@udecode/plate-table/react";
 import { YjsPlugin } from "@udecode/plate-yjs/react";
+import { TodoLi, TodoMarker } from "../ui/indent-todo-marker";
 import { autoformatRules } from "./plate-autoformat";
 import { NormalizePlugin } from "./plate-normalization";
 import { RenderAboveEditableYjs } from "./yjs-above-editable";
-import { IndentPlugin } from "@udecode/plate-indent/react";
-import { IndentListPlugin } from "@udecode/plate-indent-list/react";
-import { TodoLi, TodoMarker } from "../ui/indent-todo-marker";
 
 export const editorPlugins = [
   NormalizePlugin,
@@ -90,7 +90,7 @@ export const editorPlugins = [
       },
       disableCursors: false,
       hocuspocusProviderOptions: {
-        url: "ws://0.0.0.0:1234",
+        url: "https://collab.fountain.ink",
         name: "woirgjsodfijgs",
       },
     },
