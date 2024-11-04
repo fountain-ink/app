@@ -21,65 +21,39 @@ export const NormalizePlugin = createPlatePlugin({
 
     editor.normalizeNode = (entry) => {
       const [node] = entry;
-      const nodes = node.children as TElement[];
-
 
       if (isEditor(node)) {
+        const nodes = node.children as TElement[];
         let normalized = false;
 
-        // Handle empty document case
-        // if (children.length === 0) {
-        //   insertNodes(
-        //     editor,
-        //     [
-        //       { type: HEADING_KEYS.h1, children: [{ text: "" }] },
-        //       { type: HEADING_KEYS.h2, children: [{ text: "" }] },
-        //     ],
-        //     { at: [0] },
-        //   );
-        //   normalized = true;
-        // }
-
         // Ensure first node is h1
-        if (!normalized && nodes?.[0]?.type !== HEADING_KEYS.h1) {
+        if (!normalized && (nodes.length === 0 || nodes[0]?.type !== HEADING_KEYS.h1)) {
           const existingContent = nodes[0]?.children || [{ text: "" }];
-          removeNodes(editor, { at: [0] });
+          if (nodes.length > 0) {
+            removeNodes(editor, { at: [0] });
+          }
           insertNodes(editor, { type: HEADING_KEYS.h1, children: existingContent }, { at: [0] });
           normalized = true;
         }
 
-        // Process remaining nodes
+        // Ensure second node is h2
+        if (!normalized && (nodes.length < 2 || nodes[1]?.type !== HEADING_KEYS.h2)) {
+          const existingContent = nodes[1]?.children || [{ text: "" }];
+          if (nodes.length > 1) {
+            removeNodes(editor, { at: [1] });
+          }
+          insertNodes(editor, { type: HEADING_KEYS.h2, children: existingContent }, { at: [1] });
+          normalized = true;
+        }
+
+        // Remove any additional h1 or h2 nodes
         if (!normalized) {
-          for (let i = 0; i < nodes.length; i++) {
-            const node = nodes[i];
-            // console.log(node);
-
-            if (node?.type === HEADING_KEYS.h1 || node?.type === HEADING_KEYS.h2) {
-              if (i >= 2) {
-                editor.removeNodes({ at: [i] });
-                normalized = true;
-                break;
-              }
+          for (let i = 2; i < nodes.length; i++) {
+            if (nodes[i]?.type === HEADING_KEYS.h1 || nodes[i]?.type === HEADING_KEYS.h2) {
+              removeNodes(editor, { at: [i] });
+              normalized = true;
+              break;
             }
-
-            // Handle paragraphs containing lists
-            // if (node?.type === ParagraphPlugin.key) {
-            //   // const childElements = child.children as TElement[];
-            //   // const hasListChild = childElements.some((elem) => {
-            //   //   return elem.type === "ul" || elem.type === "li";
-            //   // });
-
-            //   const hasListChild = node.listStyleType !== undefined;
-
-            //   if (hasListChild) {
-            //     console.log(node)
-            //     // setNodes(editor,   { ...node, type: "span" }, {at: [i]});
-            //     // removeNodes(editor, { at: [i] });
-            //     // insertNodes(editor, { ...node, type: "span",  }, { at: [i] });
-            //     normalized = true;
-            //     break;
-            //   }
-            // }
           }
         }
 
