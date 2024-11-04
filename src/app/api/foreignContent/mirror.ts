@@ -1,7 +1,4 @@
-import {
-	getTransactionContent,
-	getTransactionId,
-} from "@/lib/get-arweave-content";
+import { getTransactionContent, getTransactionId } from "@/lib/get-arweave-content";
 import { gql } from "graphql-request";
 import markdownit from "markdown-it";
 
@@ -21,48 +18,48 @@ const query = gql`
 `;
 
 interface MirrorContent {
-	title: string;
-	content: string;
-	timestamp: number;
-	slug: string;
+  title: string;
+  content: string;
+  timestamp: number;
+  slug: string;
 }
 
 function stripImgTags(content: string): string {
-	const regex = /<p>\s*(<img[^>]+>)\s*<\/p>/g;
+  const regex = /<p>\s*(<img[^>]+>)\s*<\/p>/g;
 
-	// Replace matches with just the <img> tag
-	return content.replace(regex, "$1");
+  // Replace matches with just the <img> tag
+  return content.replace(regex, "$1");
 }
 
 export async function getMirrorContent(slug: string) {
-	if (!slug) {
-		throw new Error("Digest parameter is required");
-	}
+  if (!slug) {
+    throw new Error("Digest parameter is required");
+  }
 
-	try {
-		const transactionId = await getTransactionId(query, { digest: slug });
-		if (!transactionId) {
-			throw new Error("No transaction found for this digest");
-		}
+  try {
+    const transactionId = await getTransactionId(query, { digest: slug });
+    if (!transactionId) {
+      throw new Error("No transaction found for this digest");
+    }
 
-		const post = await getTransactionContent(transactionId);
-		if (!post) {
-			throw new Error("Failed to decode content");
-		}
+    const post = await getTransactionContent(transactionId);
+    if (!post) {
+      throw new Error("Failed to decode content");
+    }
 
-		const parsedPost = JSON.parse(post);
-		const markdownContent = parsedPost.content.body;
-		const converter = markdownit();
-		const content = stripImgTags(converter.render(markdownContent));
+    const parsedPost = JSON.parse(post);
+    const markdownContent = parsedPost.content.body;
+    const converter = markdownit();
+    const content = stripImgTags(converter.render(markdownContent));
 
-		return {
-			title: parsedPost.content.title,
-			content: content,
-			timestamp: parsedPost.content.timestamp,
-			slug: parsedPost.digest,
-		} as MirrorContent;
-	} catch (error) {
-		console.error("Error:", error);
-		throw error;
-	}
+    return {
+      title: parsedPost.content.title,
+      content: content,
+      timestamp: parsedPost.content.timestamp,
+      slug: parsedPost.digest,
+    } as MirrorContent;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
 }

@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const env = createEnv({
   /**
-   * server-side environment variables schema 
+   * server-side environment variables schema
    */
   server: {
     NODE_ENV: z.enum(["development", "test", "production"]),

@@ -1,35 +1,45 @@
-"use client"
+"use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { AnimatePresence, motion } from "framer-motion"
-import { Facebook, Heart, Link, Linkedin, MessageCircle, Share2, ShoppingBag, X } from "lucide-react"
-import { Albert_Sans, Alegreya, DM_Sans, Inter, Onest, Plus_Jakarta_Sans } from 'next/font/google'
-import Image from "next/image"
-import { type PropsWithChildren, useEffect, useState } from 'react'
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { AnimatePresence, motion } from "framer-motion";
+import { Facebook, Heart, Link, Linkedin, MessageCircle, Share2, ShoppingBag, X } from "lucide-react";
+import { Albert_Sans, Alegreya, DM_Sans, Inter, Onest, Plus_Jakarta_Sans } from "next/font/google";
+import Image from "next/image";
+import { type PropsWithChildren, useEffect, useState } from "react";
 
-const inter = Inter({ weight: ['400', '700'], subsets: ['latin'], display: 'swap' })
-const albertSans = Albert_Sans({ weight: ['400', '700'], subsets: ['latin'], display: 'swap' })
-const onest = Onest({ weight: ['400', '700'], subsets: ['latin'], display: 'swap' })
-const plusJakartaSans = Plus_Jakarta_Sans({ weight: ['400', '700'], subsets: ['latin'], display: 'swap' })
-const alegreya = Alegreya({ weight: ['400', '700'], subsets: ['latin'], display: 'swap' })
-const dmSans = DM_Sans({ weight: ['400', '700'], subsets: ['latin'], display: 'swap' })
+const inter = Inter({ weight: ["400", "700"], subsets: ["latin"], display: "swap" });
+const albertSans = Albert_Sans({ weight: ["400", "700"], subsets: ["latin"], display: "swap" });
+const onest = Onest({ weight: ["400", "700"], subsets: ["latin"], display: "swap" });
+const plusJakartaSans = Plus_Jakarta_Sans({ weight: ["400", "700"], subsets: ["latin"], display: "swap" });
+const alegreya = Alegreya({ weight: ["400", "700"], subsets: ["latin"], display: "swap" });
+const dmSans = DM_Sans({ weight: ["400", "700"], subsets: ["latin"], display: "swap" });
 
-const HighlightedText = ({ children, color = 'yellow' }: PropsWithChildren<{ color?: string }>) => (
-  <span className={`box-decoration-clone bg-${color}-500 bg-opacity-20 px-1 py-0 rounded-sm`}>
-    {children}
-  </span>
-)
+const HighlightedText = ({ children, color = "yellow" }: PropsWithChildren<{ color?: string }>) => (
+  <span className={`box-decoration-clone bg-${color}-500 bg-opacity-20 px-1 py-0 rounded-sm`}>{children}</span>
+);
 
 // Mock data for comments
 const comments = [
@@ -39,11 +49,12 @@ const comments = [
     user: {
       name: "Emma Rodriguez",
       handle: "@emma_travels",
-      avatar: "https://xsgames.co/randomusers/avatar.php?g=female"
+      avatar: "https://xsgames.co/randomusers/avatar.php?g=female",
     },
-    comment: "This post brought back so many memories! I visited Kurokawa last year and it was magical. The rotenburo overlooking the forest was an experience I'll never forget.",
+    comment:
+      "This post brought back so many memories! I visited Kurokawa last year and it was magical. The rotenburo overlooking the forest was an experience I'll never forget.",
     likes: 42,
-    replies: 7
+    replies: 7,
   },
   {
     id: 2,
@@ -51,11 +62,12 @@ const comments = [
     user: {
       name: "Olivia Chen",
       handle: "@olivia_foodie",
-      avatar: "https://xsgames.co/randomusers/avatar.php?g=female"
+      avatar: "https://xsgames.co/randomusers/avatar.php?g=female",
     },
-    comment: "As a sake enthusiast, I'm amazed I didn't know about these small breweries. I'm definitely adding Niigata to my travel list. Any recommendations for specific brands to try?",
+    comment:
+      "As a sake enthusiast, I'm amazed I didn't know about these small breweries. I'm definitely adding Niigata to my travel list. Any recommendations for specific brands to try?",
     likes: 38,
-    replies: 5
+    replies: 5,
   },
   {
     id: 3,
@@ -63,13 +75,14 @@ const comments = [
     user: {
       name: "Sophia Kwesi",
       handle: "@sophia_adventures",
-      avatar: "https://xsgames.co/randomusers/avatar.php?g=female"
+      avatar: "https://xsgames.co/randomusers/avatar.php?g=female",
     },
-    comment: "I've done parts of the Camino de Santiago, but the Kumano Kodo seems like it offers a completely different experience. The idea of walking through ancient cedar forests and discovering hidden shrines is so appealing.",
+    comment:
+      "I've done parts of the Camino de Santiago, but the Kumano Kodo seems like it offers a completely different experience. The idea of walking through ancient cedar forests and discovering hidden shrines is so appealing.",
     likes: 56,
-    replies: 9
-  }
-]
+    replies: 9,
+  },
+];
 
 // Mock data for similar posts
 const similarPosts = [
@@ -79,10 +92,11 @@ const similarPosts = [
     teaser: "Step back in time and discover the hidden world of geishas and traditional tea ceremonies.",
     author: {
       name: "Alice Johnson",
-      avatar: "https://xsgames.co/randomusers/avatar.php?g=female"
+      avatar: "https://xsgames.co/randomusers/avatar.php?g=female",
     },
     date: "June 2, 2023",
-    image: "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+    image:
+      "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
   },
   {
     id: 2,
@@ -90,10 +104,11 @@ const similarPosts = [
     teaser: "Discover world-class waves and empty lineups on Japan's often overlooked island.",
     author: {
       name: "Mia Thompson",
-      avatar: "https://xsgames.co/randomusers/avatar.php?g=female"
+      avatar: "https://xsgames.co/randomusers/avatar.php?g=female",
     },
     date: "May 28, 2023",
-    image: "https://images.unsplash.com/photo-1514317915517-800231a6a880?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+    image:
+      "https://images.unsplash.com/photo-1514317915517-800231a6a880?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
   },
   {
     id: 3,
@@ -101,10 +116,11 @@ const similarPosts = [
     teaser: "Join local chefs on a culinary adventure through Japan's northern forests and coastlines.",
     author: {
       name: "Elena Rodríguez",
-      avatar: "https://xsgames.co/randomusers/avatar.php?g=female"
+      avatar: "https://xsgames.co/randomusers/avatar.php?g=female",
     },
     date: "May 25, 2023",
-    image: "https://images.unsplash.com/photo-1542640244-7e672d6cef4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+    image:
+      "https://images.unsplash.com/photo-1542640244-7e672d6cef4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
   },
   {
     id: 4,
@@ -112,14 +128,15 @@ const similarPosts = [
     teaser: "Experience true Japanese hospitality in these hidden gems far from the tourist trail.",
     author: {
       name: "David Lee",
-      avatar: "https://xsgames.co/randomusers/avatar.php?g=male"
+      avatar: "https://xsgames.co/randomusers/avatar.php?g=male",
     },
     date: "May 22, 2023",
-    image: "https://images.unsplash.com/photo-1578469645742-46cae010e5d4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
-  }
-]
+    image:
+      "https://images.unsplash.com/photo-1578469645742-46cae010e5d4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+  },
+];
 
-const UserTooltip = ({ user }: {user: any}) => (
+const UserTooltip = ({ user }: { user: any }) => (
   <Card className="w-[320px] p-4">
     <CardContent className="p-0">
       <div className="flex items-center gap-4">
@@ -132,9 +149,7 @@ const UserTooltip = ({ user }: {user: any}) => (
           <p className="text-sm text-muted-foreground">{user.role}</p>
         </div>
       </div>
-      <p className="mt-2 text-sm text-muted-foreground">
-        {user.bio}
-      </p>
+      <p className="mt-2 text-sm text-muted-foreground">{user.bio}</p>
       <div className="mt-4 flex justify-between items-center">
         <div className="text-sm text-muted-foreground">
           <span className="font-semibold text-foreground">{user.articles}</span> articles
@@ -145,61 +160,64 @@ const UserTooltip = ({ user }: {user: any}) => (
       </div>
     </CardContent>
   </Card>
-)
+);
 
 export default function BlogPost() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const [isThemeEditorOpen, setIsThemeEditorOpen] = useState(false)
-  const [likes, setLikes] = useState(875)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isThemeEditorOpen, setIsThemeEditorOpen] = useState(false);
+  const [likes, setLikes] = useState(875);
   const [theme, setTheme] = useState({
-    headlineFont: 'Inter',
-    paragraphFont: 'Inter',
-    headlineFontWeight: 'font-bold',
-    letterSpacing: 'tight',
+    headlineFont: "Inter",
+    paragraphFont: "Inter",
+    headlineFontWeight: "font-bold",
+    letterSpacing: "tight",
     showAuthor: true,
-    background: '#ffffff',
-    foreground: '#000000',
-  })
+    background: "#ffffff",
+    foreground: "#000000",
+  });
 
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
-  const toggleThemeEditor = () => setIsThemeEditorOpen(!isThemeEditorOpen)
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  const toggleThemeEditor = () => setIsThemeEditorOpen(!isThemeEditorOpen);
 
   useEffect(() => {
-    document.documentElement.style.setProperty('--headline-font', getFontFamily(theme.headlineFont))
-    document.documentElement.style.setProperty('--paragraph-font', getFontFamily(theme.paragraphFont))
-    document.documentElement.style.setProperty('--headline-font-weight', theme.headlineFontWeight)
-    document.documentElement.style.setProperty('--letter-spacing', theme.letterSpacing === 'tight' ? 'tracking-tight' : 'tracking-normal')
-    document.documentElement.style.setProperty('--blog-background', theme.background)
-    document.documentElement.style.setProperty('--blog-foreground', theme.foreground)
-  }, [theme])
+    document.documentElement.style.setProperty("--headline-font", getFontFamily(theme.headlineFont));
+    document.documentElement.style.setProperty("--paragraph-font", getFontFamily(theme.paragraphFont));
+    document.documentElement.style.setProperty("--headline-font-weight", theme.headlineFontWeight);
+    document.documentElement.style.setProperty(
+      "--letter-spacing",
+      theme.letterSpacing === "tight" ? "tracking-tight" : "tracking-normal",
+    );
+    document.documentElement.style.setProperty("--blog-background", theme.background);
+    document.documentElement.style.setProperty("--blog-foreground", theme.foreground);
+  }, [theme]);
 
   const getFontFamily = (fontName: any) => {
     switch (fontName) {
-      case 'Inter':
-        return inter.style.fontFamily
-      case 'Albert Sans':
-        return albertSans.style.fontFamily
-      case 'Onest':
-        return onest.style.fontFamily
-      case 'Plus Jakarta Sans':
-        return plusJakartaSans.style.fontFamily
-      case 'Alegreya':
-        return alegreya.style.fontFamily
-      case 'DM Sans':
-        return dmSans.style.fontFamily
+      case "Inter":
+        return inter.style.fontFamily;
+      case "Albert Sans":
+        return albertSans.style.fontFamily;
+      case "Onest":
+        return onest.style.fontFamily;
+      case "Plus Jakarta Sans":
+        return plusJakartaSans.style.fontFamily;
+      case "Alegreya":
+        return alegreya.style.fontFamily;
+      case "DM Sans":
+        return dmSans.style.fontFamily;
       default:
-        return inter.style.fontFamily
+        return inter.style.fontFamily;
     }
-  }
+  };
 
   const fontOptions = [
-    { name: 'Inter', font: inter },
-    { name: 'Albert Sans', font: albertSans },
-    { name: 'Onest', font: onest },
-    { name: 'Plus Jakarta Sans', font: plusJakartaSans },
-    { name: 'Alegreya', font: alegreya },
-    { name: 'DM Sans', font: dmSans },
-  ]
+    { name: "Inter", font: inter },
+    { name: "Albert Sans", font: albertSans },
+    { name: "Onest", font: onest },
+    { name: "Plus Jakarta Sans", font: plusJakartaSans },
+    { name: "Alegreya", font: alegreya },
+    { name: "DM Sans", font: dmSans },
+  ];
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -215,14 +233,14 @@ export default function BlogPost() {
         <div className="space-x-2">
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline" size="sm">Subscribe</Button>
+              <Button variant="outline" size="sm">
+                Subscribe
+              </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
                 <DialogTitle className="text-2xl font-bold">What's your email?</DialogTitle>
-                <DialogDescription>
-                  Subscribe to never miss a post.
-                </DialogDescription>
+                <DialogDescription>Subscribe to never miss a post.</DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="grid gap-2">
@@ -232,23 +250,31 @@ export default function BlogPost() {
                   <Input id="email" type="email" placeholder="your@email.com" className="col-span-3" />
                 </div>
               </div>
-              <Button type="submit" className="w-full">Subscribe</Button>
+              <Button type="submit" className="w-full">
+                Subscribe
+              </Button>
             </DialogContent>
           </Dialog>
-          <Button variant="outline" size="sm" onClick={toggleThemeEditor}>Edit theme</Button>
+          <Button variant="outline" size="sm" onClick={toggleThemeEditor}>
+            Edit theme
+          </Button>
         </div>
       </nav>
 
       <div className="flex flex-1">
-        <div className={`transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-[calc(100%-24rem)]' : 'w-full'}`}>
-          <div id="blog-content" className="w-full" style={{backgroundColor: 'var(--blog-background)', color: 'var(--blog-foreground)'}}>
+        <div className={`transition-all duration-300 ease-in-out ${isSidebarOpen ? "w-[calc(100%-24rem)]" : "w-full"}`}>
+          <div
+            id="blog-content"
+            className="w-full"
+            style={{ backgroundColor: "var(--blog-background)", color: "var(--blog-foreground)" }}
+          >
             <div className="max-w-3xl px-4 pt-16 lg:pt-20 pb-12 sm:px-6 lg:px-8 mx-auto">
               <div className="max-w-2xl">
                 <AnimatePresence>
                   {theme.showAuthor && (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
+                      animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.3 }}
                       className="overflow-hidden"
@@ -259,31 +285,32 @@ export default function BlogPost() {
                             <Tooltip delayDuration={300}>
                               <TooltipTrigger asChild>
                                 <Avatar className="w-12 h-12">
-                                  <AvatarImage src="https://xsgames.co/randomusers/avatar.php?g=female" alt="Yuki Tanaka" />
+                                  <AvatarImage
+                                    src="https://xsgames.co/randomusers/avatar.php?g=female"
+                                    alt="Yuki Tanaka"
+                                  />
                                   <AvatarFallback>YT</AvatarFallback>
                                 </Avatar>
                               </TooltipTrigger>
                               <TooltipContent side="bottom">
-                                <UserTooltip user={{
-                                  name: "Yuki Tanaka",
-                                  role: "Travel Writer & Photographer",
-                                  avatar: "https://xsgames.co/randomusers/avatar.php?g=female",
-                                  bio: "Yuki is a passionate explorer of Japan's hidden treasures, always seeking the road less traveled.",
-                                  articles: 47,
-                                  followers: "12k+"
-                                }} />
+                                <UserTooltip
+                                  user={{
+                                    name: "Yuki Tanaka",
+                                    role: "Travel Writer & Photographer",
+                                    avatar: "https://xsgames.co/randomusers/avatar.php?g=female",
+                                    bio: "Yuki is a passionate explorer of Japan's hidden treasures, always seeking the road less traveled.",
+                                    articles: 47,
+                                    followers: "12k+",
+                                  }}
+                                />
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
                           <div className="grow">
                             <div className="flex justify-between items-center gap-x-2">
                               <div>
-                                <span className="text-lg font-semibold">
-                                  Yuki Tanaka
-                                </span>
-                                <p className="text-sm text-muted-foreground">
-                                  July 15 • 8 min read
-                                </p>
+                                <span className="text-lg font-semibold">Yuki Tanaka</span>
+                                <p className="text-sm text-muted-foreground">July 15 • 8 min read</p>
                               </div>
                               <Button variant="outline" size="sm">
                                 <ShoppingBag className="w-4 h-4 mr-2" />
@@ -297,8 +324,12 @@ export default function BlogPost() {
                   )}
                 </AnimatePresence>
 
-                <article className={`prose max-w-none ${theme.letterSpacing === 'tight' ? 'tracking-tight' : 'tracking-normal'}`}>
-                  <h1 style={{ fontFamily: 'var(--headline-font)', fontWeight: 'var(--headline-font-weight)' }}>Unveiling Japan's Hidden Treasures: A Journey Off the Beaten Path</h1>
+                <article
+                  className={`prose max-w-none ${theme.letterSpacing === "tight" ? "tracking-tight" : "tracking-normal"}`}
+                >
+                  <h1 style={{ fontFamily: "var(--headline-font)", fontWeight: "var(--headline-font-weight)" }}>
+                    Unveiling Japan's Hidden Treasures: A Journey Off the Beaten Path
+                  </h1>
 
                   {/* Hero Image */}
                   <div className="aspect-w-16 aspect-h-9 mb-6">
@@ -311,12 +342,21 @@ export default function BlogPost() {
                     />
                   </div>
 
-                  <p style={{ fontFamily: 'var(--paragraph-font)' }}>
-                    Japan, a land where ancient traditions seamlessly blend with cutting-edge modernity, is a country that never ceases to amaze. While Tokyo's neon-lit streets and Kyoto's historic temples are undoubtedly captivating, the true magic of Japan often lies in its lesser-known corners. Join me as we embark on a journey to discover the hidden gems that make Japan a treasure trove for the intrepid traveler.
+                  <p style={{ fontFamily: "var(--paragraph-font)" }}>
+                    Japan, a land where ancient traditions seamlessly blend with cutting-edge modernity, is a country
+                    that never ceases to amaze. While Tokyo's neon-lit streets and Kyoto's historic temples are
+                    undoubtedly captivating, the true magic of Japan often lies in its lesser-known corners. Join me as
+                    we embark on a journey to discover the hidden gems that make Japan a treasure trove for the intrepid
+                    traveler.
                   </p>
-                  <h2 style={{ fontFamily: 'var(--headline-font)', fontWeight: 'var(--headline-font-weight)' }}>Kurokawa Onsen: A Timeless Hot Spring Haven</h2>
-                  <p style={{ fontFamily: 'var(--paragraph-font)' }}>
-                    Nestled in the heart of Kyushu's mountains, Kurokawa Onsen is a picturesque hot spring town that seems frozen in time. Unlike its more famous counterparts, Kurokawa has managed to preserve its traditional charm, with narrow streets lined with ryokan (traditional inns) and outdoor baths overlooking lush forests.
+                  <h2 style={{ fontFamily: "var(--headline-font)", fontWeight: "var(--headline-font-weight)" }}>
+                    Kurokawa Onsen: A Timeless Hot Spring Haven
+                  </h2>
+                  <p style={{ fontFamily: "var(--paragraph-font)" }}>
+                    Nestled in the heart of Kyushu's mountains, Kurokawa Onsen is a picturesque hot spring town that
+                    seems frozen in time. Unlike its more famous counterparts, Kurokawa has managed to preserve its
+                    traditional charm, with narrow streets lined with ryokan (traditional inns) and outdoor baths
+                    overlooking lush forests.
                   </p>
                   <div className="aspect-w-4 aspect-h-3 my-2">
                     <Image
@@ -330,25 +370,45 @@ export default function BlogPost() {
                   <figcaption className="text-center text-sm mt-1 mb-4">
                     The serene beauty of Kurokawa Onsen, where time seems to stand still.
                   </figcaption>
-                  <p style={{ fontFamily: 'var(--paragraph-font)' }}>
-                    What sets Kurokawa apart is its unique "rotemburo meguri" (bath-hopping) experience. For a small fee, visitors can purchase a pass that allows access to three different outdoor baths, each offering a distinct atmosphere and healing properties.
+                  <p style={{ fontFamily: "var(--paragraph-font)" }}>
+                    What sets Kurokawa apart is its unique "rotemburo meguri" (bath-hopping) experience. For a small
+                    fee, visitors can purchase a pass that allows access to three different outdoor baths, each offering
+                    a distinct atmosphere and healing properties.
                   </p>
                   <blockquote className="border-l-4 border-gray-200 dark:border-gray-700 pl-4 italic">
-                    "Soaking in a rotenburo under the stars, surrounded by the sounds of nature, is a transcendent experience that connects you to the very essence of Japan."
+                    "Soaking in a rotenburo under the stars, surrounded by the sounds of nature, is a transcendent
+                    experience that connects you to the very essence of Japan."
                     <footer className="mt-2">Hiroshi Yamamoto, local ryokan owner</footer>
                   </blockquote>
-                  <h2 style={{ fontFamily: 'var(--headline-font)', fontWeight: 'var(--headline-font-weight)' }}>Niigata's Hidden Sake Breweries</h2>
-                  <p style={{ fontFamily: 'var(--paragraph-font)' }}>
-                    While Niigata is renowned for its high-quality rice, few travelers venture into its rural heartland to discover the artisanal sake breweries that dot the landscape. These small, family-run operations have been perfecting their craft for generations, producing some of Japan's finest sake.
+                  <h2 style={{ fontFamily: "var(--headline-font)", fontWeight: "var(--headline-font-weight)" }}>
+                    Niigata's Hidden Sake Breweries
+                  </h2>
+                  <p style={{ fontFamily: "var(--paragraph-font)" }}>
+                    While Niigata is renowned for its high-quality rice, few travelers venture into its rural heartland
+                    to discover the artisanal sake breweries that dot the landscape. These small, family-run operations
+                    have been perfecting their craft for generations, producing some of Japan's finest sake.
                   </p>
-                  <ul style={{ fontFamily: 'var(--paragraph-font)' }}>
-                    <li>Visit the historic Imayo Tsukasa Brewery, where you can witness the traditional brewing process and sample rare, seasonal sakes.</li>
-                    <li>Explore the Ponshukan Sake Museum in Echigo-Yuzawa Station, featuring a unique sake-tasting system with over 100 local varieties.</li>
-                    <li>Take a guided tour of the Hakkaisan Brewery, nestled at the foot of Mount Hakkai, and learn about their snow-aging technique.</li>
+                  <ul style={{ fontFamily: "var(--paragraph-font)" }}>
+                    <li>
+                      Visit the historic Imayo Tsukasa Brewery, where you can witness the traditional brewing process
+                      and sample rare, seasonal sakes.
+                    </li>
+                    <li>
+                      Explore the Ponshukan Sake Museum in Echigo-Yuzawa Station, featuring a unique sake-tasting system
+                      with over 100 local varieties.
+                    </li>
+                    <li>
+                      Take a guided tour of the Hakkaisan Brewery, nestled at the foot of Mount Hakkai, and learn about
+                      their snow-aging technique.
+                    </li>
                   </ul>
-                  <h2 style={{ fontFamily: 'var(--headline-font)', fontWeight: 'var(--headline-font-weight)' }}>The Kumano Kodo: Ancient Pilgrimage Routes</h2>
-                  <p style={{ fontFamily: 'var(--paragraph-font)' }}>
-                    For those seeking a spiritual journey through Japan's pristine nature, the Kumano Kodo pilgrimage routes offer an unparalleled experience. These ancient trails, located in the Kii Peninsula, have been walked by emperors, samurai, and pilgrims for over a thousand years.
+                  <h2 style={{ fontFamily: "var(--headline-font)", fontWeight: "var(--headline-font-weight)" }}>
+                    The Kumano Kodo: Ancient Pilgrimage Routes
+                  </h2>
+                  <p style={{ fontFamily: "var(--paragraph-font)" }}>
+                    For those seeking a spiritual journey through Japan's pristine nature, the Kumano Kodo pilgrimage
+                    routes offer an unparalleled experience. These ancient trails, located in the Kii Peninsula, have
+                    been walked by emperors, samurai, and pilgrims for over a thousand years.
                   </p>
                   <div className="aspect-w-3 aspect-h-2 my-2">
                     <Image
@@ -362,22 +422,31 @@ export default function BlogPost() {
                   <figcaption className="text-center text-sm mt-1 mb-4">
                     The mystical beauty of the Kumano Kodo, where nature and spirituality intertwine.
                   </figcaption>
-                  <p style={{ fontFamily: 'var(--paragraph-font)' }}>
-                    As you trek through dense cedar forests, past hidden shrines and thundering waterfalls, you'll feel a deep connection to Japan's spiritual roots. The Kumano Kodo is not just a hike; it's a journey through time and tradition.
+                  <p style={{ fontFamily: "var(--paragraph-font)" }}>
+                    As you trek through dense cedar forests, past hidden shrines and thundering waterfalls, you'll feel
+                    a deep connection to Japan's spiritual roots. The Kumano Kodo is not just a hike; it's a journey
+                    through time and tradition.
                   </p>
                   <blockquote className="border-l-4 border-gray-200 dark:border-gray-700 pl-4 italic">
-                    "Walking the Kumano Kodo is like stepping into a living, breathing history book. Each stone, each tree has a story to tell."
+                    "Walking the Kumano Kodo is like stepping into a living, breathing history book. Each stone, each
+                    tree has a story to tell."
                     <footer className="mt-2">Akiko Sato, Kumano Kodo guide</footer>
                   </blockquote>
-                  <h2 style={{ fontFamily: 'var(--headline-font)', fontWeight: 'var(--headline-font-weight)' }}>Embracing the Unknown</h2>
-                  <p style={{ fontFamily: 'var(--paragraph-font)' }}>
-                    These hidden gems are just a glimpse of what awaits those willing to venture off Japan's well-trodden tourist path. By exploring these lesser-known destinations, you'll not only discover the heart and soul of Japan but also contribute to the sustainability of rural communities that are working hard to preserve their unique cultural heritage.
+                  <h2 style={{ fontFamily: "var(--headline-font)", fontWeight: "var(--headline-font-weight)" }}>
+                    Embracing the Unknown
+                  </h2>
+                  <p style={{ fontFamily: "var(--paragraph-font)" }}>
+                    These hidden gems are just a glimpse of what awaits those willing to venture off Japan's
+                    well-trodden tourist path. By exploring these lesser-known destinations, you'll not only discover
+                    the heart and soul of Japan but also contribute to the sustainability of rural communities that are
+                    working hard to preserve their unique cultural heritage.
                   </p>
-                  <p style={{ fontFamily: 'var(--paragraph-font)' }}>
-                    So, on your next trip to Japan, dare to explore the unknown. You might just find that the most memorable experiences are waiting in the places you least expect.
+                  <p style={{ fontFamily: "var(--paragraph-font)" }}>
+                    So, on your next trip to Japan, dare to explore the unknown. You might just find that the most
+                    memorable experiences are waiting in the places you least expect.
                   </p>
                   <div className="flex flex-wrap gap-2 mt-6">
-                    {['Off the Beaten Path', 'Cultural Immersion', 'Nature', 'Traditional Japan'].map((tag) => (
+                    {["Off the Beaten Path", "Cultural Immersion", "Nature", "Traditional Japan"].map((tag) => (
                       <Badge key={tag} variant="outline" className="hover:bg-secondary transition-colors">
                         {tag}
                       </Badge>
@@ -386,10 +455,18 @@ export default function BlogPost() {
                 </article>
 
                 <div className="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700">
-                  <h2 className="text-2xl font-bold mb-6" style={{ fontFamily: 'var(--headline-font)', fontWeight: 'var(--headline-font-weight)' }}>More posts</h2>
+                  <h2
+                    className="text-2xl font-bold mb-6"
+                    style={{ fontFamily: "var(--headline-font)", fontWeight: "var(--headline-font-weight)" }}
+                  >
+                    More posts
+                  </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {similarPosts.map((post) => (
-                      <Card key={post.id} className="overflow-hidden group hover:shadow-lg transition-shadow duration-300">
+                      <Card
+                        key={post.id}
+                        className="overflow-hidden group hover:shadow-lg transition-shadow duration-300"
+                      >
                         {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
                         <a href="#" className="block h-full">
                           <div className="relative overflow-hidden">
@@ -400,8 +477,18 @@ export default function BlogPost() {
                             />
                           </div>
                           <CardContent className="p-4 flex flex-col h-[calc(100%-12rem)]">
-                            <h3 className="text-lg font-semibold mb-2" style={{ fontFamily: 'var(--headline-font)', fontWeight: 'var(--headline-font-weight)' }}>{post.title}</h3>
-                            <p className="text-sm text-muted-foreground mb-4 flex-grow" style={{ fontFamily: 'var(--paragraph-font)' }}>{post.teaser}</p>
+                            <h3
+                              className="text-lg font-semibold mb-2"
+                              style={{ fontFamily: "var(--headline-font)", fontWeight: "var(--headline-font-weight)" }}
+                            >
+                              {post.title}
+                            </h3>
+                            <p
+                              className="text-sm text-muted-foreground mb-4 flex-grow"
+                              style={{ fontFamily: "var(--paragraph-font)" }}
+                            >
+                              {post.teaser}
+                            </p>
                             <div className="flex items-center mb-4">
                               <TooltipProvider>
                                 <Tooltip>
@@ -412,14 +499,16 @@ export default function BlogPost() {
                                     </Avatar>
                                   </TooltipTrigger>
                                   <TooltipContent side="bottom">
-                                    <UserTooltip user={{
-                                      name: post.author.name,
-                                      role: "Travel Writer",
-                                      avatar: post.author.avatar,
-                                      bio: `${post.author.name} is a passionate explorer and writer for Hidden Gems of Japan.`,
-                                      articles: 15,
-                                      followers: "3k+"
-                                    }} />
+                                    <UserTooltip
+                                      user={{
+                                        name: post.author.name,
+                                        role: "Travel Writer",
+                                        avatar: post.author.avatar,
+                                        bio: `${post.author.name} is a passionate explorer and writer for Hidden Gems of Japan.`,
+                                        articles: 15,
+                                        followers: "3k+",
+                                      }}
+                                    />
                                   </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
@@ -428,7 +517,9 @@ export default function BlogPost() {
                                 <p className="text-xs text-muted-foreground">{post.date}</p>
                               </div>
                             </div>
-                            <Button variant="link" className="p-0 mt-auto self-start">Read more</Button>
+                            <Button variant="link" className="p-0 mt-auto self-start">
+                              Read more
+                            </Button>
                           </CardContent>
                         </a>
                       </Card>
@@ -495,7 +586,7 @@ export default function BlogPost() {
               <div key={comment.id} className="mb-6 last:mb-0">
                 <Card className="mb-2 shadow-sm">
                   <CardContent className="p-3">
-                    <p className="text-sm" style={{ fontFamily: 'var(--paragraph-font)' }}>
+                    <p className="text-sm" style={{ fontFamily: "var(--paragraph-font)" }}>
                       <HighlightedText color="green">{comment.quote}</HighlightedText>
                     </p>
                   </CardContent>
@@ -510,14 +601,16 @@ export default function BlogPost() {
                         </Avatar>
                       </TooltipTrigger>
                       <TooltipContent side="bottom">
-                        <UserTooltip user={{
-                          name: comment.user.name,
-                          role: "Travel Enthusiast",
-                          avatar: comment.user.avatar,
-                          bio: `${comment.user.name} is a passionate traveler and regular reader of Hidden Gems of Japan.`,
-                          articles: 0,
-                          followers: "100+"
-                        }} />
+                        <UserTooltip
+                          user={{
+                            name: comment.user.name,
+                            role: "Travel Enthusiast",
+                            avatar: comment.user.avatar,
+                            bio: `${comment.user.name} is a passionate traveler and regular reader of Hidden Gems of Japan.`,
+                            articles: 0,
+                            followers: "100+",
+                          }}
+                        />
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
@@ -615,10 +708,10 @@ export default function BlogPost() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="300">
-                          <span style={{ fontFamily: 'var(--headline-font)', fontWeight: 'normal' }}>Normal</span>
+                          <span style={{ fontFamily: "var(--headline-font)", fontWeight: "normal" }}>Normal</span>
                         </SelectItem>
                         <SelectItem value="700">
-                          <span style={{ fontFamily: 'var(--headline-font)', fontWeight: 'bold' }}>Bold</span>
+                          <span style={{ fontFamily: "var(--headline-font)", fontWeight: "bold" }}>Bold</span>
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -703,5 +796,5 @@ export default function BlogPost() {
         </motion.div>
       </div>
     </div>
-  )
+  );
 }

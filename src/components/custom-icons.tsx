@@ -117,7 +117,7 @@ export const GraphicInk = () => {
 };
 
 export const WidthColumn = () => (
-  <svg width="36" height="37" viewBox="0 0 36 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg style={{ width: "100%", height: "100%" }} viewBox="0 0 36 37" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g>
       <rect x="10" y="10.5" width="17" height="1.5" rx="0.75" fill="currentColor" />
       <rect x="10" y="24.5" width="17" height="1.5" rx="0.75" fill="currentColor" />
@@ -127,7 +127,7 @@ export const WidthColumn = () => (
 );
 
 export const WidthFull = () => (
-  <svg width="36" height="37" viewBox="0 0 36 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg style={{ width: "100%", height: "100%" }} viewBox="0 0 36 37" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g>
       <g>
         <rect x="13" y="24.5" width="11" height="1.5" rx="0.75" fill="currentColor" />
@@ -138,7 +138,7 @@ export const WidthFull = () => (
 );
 
 export const WidthWide = () => (
-  <svg width="36" height="37" viewBox="0 0 36 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg style={{ width: "100%", height: "100%" }} viewBox="0 0 36 37" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g>
       <g>
         <rect x="13" y="10.5" width="11" height="1.5" rx="0.75" fill="currentColor" />

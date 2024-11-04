@@ -8,8 +8,8 @@ import { uploadMetadata } from "@/lib/upload-utils";
 import { article, MetadataAttributeType } from "@lens-protocol/metadata";
 import { SessionType, useCreatePost, useSession } from "@lens-protocol/react-web";
 import { useQueryClient } from "@tanstack/react-query";
+import { useEditorState, useEditorValue } from "@udecode/plate-common/react";
 import { usePathname, useRouter } from "next/navigation";
-import { useEditor } from "novel";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
@@ -19,7 +19,7 @@ export const EditorPublishing = () => {
   const { isConnected: isWalletConnected } = useAccount();
   const { isOpen, setIsOpen } = usePublishStore();
   const { execute } = useCreatePost();
-  const { editor } = useEditor();
+  const editor:any = useEditorState();
   const router = useRouter();
   const { deleteDocument } = useDocumentStorage();
   const queryClient = useQueryClient();
@@ -27,22 +27,23 @@ export const EditorPublishing = () => {
   const isLocal = pathname.includes("local");
   const documentId = pathname.split("/").at(-1);
 
-  if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
-    return (
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Login to publish</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <p>To publish an article, please select a profile.</p>
-          </div>
-        </DialogContent>
-      </Dialog>
-    );
-  }
+  // if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
+  //   return (
+  //     <Dialog open={isOpen} onOpenChange={setIsOpen}>
+  //       <DialogContent className="sm:max-w-[425px]">
+  //         <DialogHeader>
+  //           <DialogTitle>Login to publish</DialogTitle>
+  //         </DialogHeader>
+  //         <div className="space-y-4">
+  //           <p>To publish an article, please select a profile.</p>
+  //         </div>
+  //       </DialogContent>
+  //     </Dialog>
+  //   );
+  // }
 
-  const handle = session?.profile?.handle?.localName || "";
+  const handle = "";
+  // const handle = session?.profile?.handle?.localName || "";
 
   const handlePublish = async () => {
     if (!editor) {
@@ -50,20 +51,16 @@ export const EditorPublishing = () => {
       return;
     }
 
-    const contentJson = editor.getJSON();
-
-    const hasIncompleteImages = contentJson.content?.some((node: any) => node.type === "image" && !node.attrs?.src);
-
-    if (hasIncompleteImages) {
-      toast.error("Cannot publish with image placeholders", {
-        description: "Please fill in all images or remove the placeholders.",
-      });
-      return;
-    }
-
-    const contentHtml = editor.getHTML();
-    const markdown = editor.storage.markdown.getMarkdown();
+    const contentJson = editor.children;
+    const markdown = editor.api.markdown.serialize();
     const { title } = extractMetadata(contentJson);
+    
+    const publish = false
+    if (!publish) {
+      console.log(contentJson)
+      console.log(markdown)
+      return
+    }
 
     try {
       const metadata = article({
@@ -74,7 +71,7 @@ export const EditorPublishing = () => {
 
         attributes: [
           { key: "contentJson", type: MetadataAttributeType.JSON, value: JSON.stringify(contentJson) },
-          { key: "contentHtml", type: MetadataAttributeType.STRING, value: contentHtml },
+          // { key: "contentHtml", type: MetadataAttributeType.STRING, value: contentHtml },
         ],
       });
 

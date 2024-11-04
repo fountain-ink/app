@@ -1,7 +1,4 @@
-import {
-	getTransactionContent,
-	getTransactionId,
-} from "@/lib/get-arweave-content";
+import { getTransactionContent, getTransactionId } from "@/lib/get-arweave-content";
 import { gql } from "graphql-request";
 
 const query = gql`
@@ -24,38 +21,38 @@ const query = gql`
 `;
 
 interface ParagraphPost {
-	title: string;
-	timestamp: number;
-	content: string;
-	slug: string;
+  title: string;
+  timestamp: number;
+  content: string;
+  slug: string;
 }
 
 export async function getParagraphContent(slug: string) {
-	if (!slug) {
-		throw new Error("Slug parameter is required");
-	}
+  if (!slug) {
+    throw new Error("Slug parameter is required");
+  }
 
-	try {
-		const transactionId = await getTransactionId(query, { slug });
-		if (!transactionId) {
-			throw new Error("No transaction found for this slug");
-		}
+  try {
+    const transactionId = await getTransactionId(query, { slug });
+    if (!transactionId) {
+      throw new Error("No transaction found for this slug");
+    }
 
-		const content = await getTransactionContent(transactionId);
-		if (!content) {
-			throw new Error("Failed to decode content");
-		}
+    const content = await getTransactionContent(transactionId);
+    if (!content) {
+      throw new Error("Failed to decode content");
+    }
 
-		const parsedContent = JSON.parse(content);
+    const parsedContent = JSON.parse(content);
 
-		return {
-			title: parsedContent.title,
-			content: parsedContent.staticHtml,
-			timestamp: parsedContent.timestamp,
-			slug: parsedContent.slug,
-		} as ParagraphPost;
-	} catch (error) {
-		console.error("Error:", error);
-		throw error;
-	}
+    return {
+      title: parsedContent.title,
+      content: parsedContent.staticHtml,
+      timestamp: parsedContent.timestamp,
+      slug: parsedContent.slug,
+    } as ParagraphPost;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
 }

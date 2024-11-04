@@ -10,42 +10,33 @@ import { WriteMenu } from "./write-menu";
 import { ThemeToggle } from "../theme/theme-toggle";
 
 export const Header = () => {
-	const pathname = usePathname();
-	const hostname =
-		typeof window !== "undefined" && window.location.hostname
-			? window.location.hostname
-			: "";
+  const pathname = usePathname();
+  const hostname = typeof window !== "undefined" && window.location.hostname ? window.location.hostname : "";
 
-	// FIXME: Temporary before release
-	if (!hostname.includes("dev") && !hostname.includes("localhost")) {
-		return (
-			<div className="fixed w-full p-2 z-[40] flex justify-between items-center pointer-events-none">
-				<Link
-					href={"/"}
-					className="w-10 h-10 flex items-center justify-center pointer-events-auto"
-				>
-					<FountainLogo />
-				</Link>
-			</div>
-		);
-	}
+  // FIXME: Temporary before release
+  if (!hostname.includes("dev") && !hostname.includes("localhost")) {
+    return (
+      <div className="fixed w-full p-2 z-[40] flex justify-between items-center pointer-events-none">
+        <Link href={"/"} className="w-10 h-10 flex items-center justify-center pointer-events-auto">
+          <FountainLogo />
+        </Link>
+      </div>
+    );
+  }
 
-	const isWritePage = pathname.startsWith("/write");
+  const isWritePage = pathname.startsWith("/write");
 
-	return (
-		<div className="fixed w-full p-2 z-[40] flex justify-between items-center pointer-events-none">
-			<Link
-				href={"/"}
-				className="w-10 h-10 flex items-center justify-center pointer-events-auto"
-			>
-				<FountainLogo />
-			</Link>
-			<div className="flex gap-4 pointer-events-auto">
-				{isWritePage && <ThemeSidebar />}
-				{isWritePage && <PublishMenu />}
-				{!isWritePage && <WriteMenu />}
-				<UserMenu />
-			</div>
-		</div>
-	);
+  return (
+    <div className="fixed w-full p-2 z-[40] flex justify-between items-center pointer-events-none">
+      <Link href={"/"} className="w-10 h-10 flex items-center justify-center pointer-events-auto">
+        <FountainLogo />
+      </Link>
+      <div className="flex gap-4 pointer-events-auto">
+        {isWritePage && <ThemeSidebar />}
+        {isWritePage && <PublishMenu />}
+        {!isWritePage && <WriteMenu />}
+        <UserMenu />
+      </div>
+    </div>
+  );
 };

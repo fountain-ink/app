@@ -80,7 +80,7 @@ type ThemeColors = {
   "--subtitle-margin": string;
   "--header-margin": string;
   "--paragraph-margin": string;
-  
+
   "--date-font": string;
 
   "--list-margin": string;
@@ -113,7 +113,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--primary-foreground": "210 40% 98%",
     "--secondary": "0 0% 66%",
     "--secondary-foreground": "222.2 47.4% 99.2%",
-    "--muted": "210 40% 96.1%",
+    "--muted": "0 0% 90%",
     "--muted-foreground": "0 0% 56%",
 
     "--destructive-foreground": "210 40% 98%",
