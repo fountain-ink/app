@@ -79,8 +79,10 @@ export const editorPlugins = (path?: string, handle?: string) => [
   YjsPlugin.configure({
     render: {
       aboveEditable: RenderAboveEditableYjs,
+
     },
     options: {
+
       cursorOptions: {
         autoSend: true,
         data: {
@@ -92,7 +94,6 @@ export const editorPlugins = (path?: string, handle?: string) => [
       hocuspocusProviderOptions: {
         url: "https://collab.fountain.ink",
         name: path ?? "no-path",
-
       },
     },
   }),

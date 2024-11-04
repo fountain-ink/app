@@ -5,7 +5,7 @@ import * as Y from "yjs";
 
 const initialValue = [
   {
-    type: "h1",
+    type: "p",
     children: [{ text: "" }],
   },
 ];

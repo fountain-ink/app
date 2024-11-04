@@ -213,8 +213,8 @@
     "zustand": "^4.5.5"
   },
   "devDependencies": {
-    "@hocuspocus/extension-logger": "^2.6.1",
-    "@hocuspocus/server": "^2.6.1",
+    "@hocuspocus/extension-logger": "^2.13.7",
+    "@hocuspocus/server": "^2.13.7",
     "@radix-ui/react-icons": "^1.3.0",
     "@tailwindcss/typography": "^0.5.15",
     "@types/dompurify": "^3.0.5",

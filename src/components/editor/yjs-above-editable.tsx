@@ -14,17 +14,27 @@ export const RenderAboveEditableYjs: React.FC<{
 
 
   useEffect(() => {
-    void provider.connect();
+    if (!provider.isConnected) {
+      void provider.connect();
+    }
 
-    return () => provider.disconnect();
+    return () => {
+      if (provider.isConnected) {
+        provider.disconnect();
+      }
+    };
   }, [provider]);
 
   useEffect(() => {
-    if (!provider.isConnected) {
+    // if (!provider.isConnected) {
       YjsEditor.connect(editor as any);
-    }
+    // }
 
-    return () => YjsEditor.disconnect(editor as any);
+    return () => {
+      // if (provider.isConnected) {
+        YjsEditor.disconnect(editor as any);
+      // }
+    };
   }, [provider.awareness, provider.document]);
 
   if (!isSynced) return null;
