@@ -30,8 +30,8 @@ async function getDraft(id: string) {
 }
 
 export default async function WriteDraft({ params }: { params: { id: string } }) {
-  const isLocal = params.id.startsWith("local-");
-  const draft = isLocal ? null : await getDraft(params.id);
+  // const isLocal = params.id.startsWith("local-");
+  // const draft = isLocal ? null : await getDraft(params.id);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center text-foreground bg-background">
