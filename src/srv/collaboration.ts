@@ -11,7 +11,7 @@ const initialValue = [
 ];
 
 const server = Server.configure({
-  port: 1234,
+  port: 4444,
   address: "0.0.0.0",
 
   extensions: [new Logger()],

@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@udecode/cn";
-import { createPlateEditor, Plate, PlateStoreProvider } from "@udecode/plate-common/react";
+import { createPlateEditor, Plate, PlateStoreProvider, usePlateEditor } from "@udecode/plate-common/react";
 import { PropsWithChildren, useRef } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -62,3 +62,12 @@ export default function PlateEditor(props: PropsWithChildren & { showToolbar?: b
     </DndProvider>
   );
 }
+
+export const useMyEditor = () => {
+  return usePlateEditor({
+    plugins: [...editorPlugins],
+    override: {
+      components: getUiComponents(),
+    },
+  });
+};
