@@ -26,14 +26,10 @@ export const RenderAboveEditableYjs: React.FC<{
   }, [provider]);
 
   useEffect(() => {
-    // if (!provider.isConnected) {
       YjsEditor.connect(editor as any);
-    // }
 
     return () => {
-      // if (provider.isConnected) {
         YjsEditor.disconnect(editor as any);
-      // }
     };
   }, [provider.awareness, provider.document]);
 
