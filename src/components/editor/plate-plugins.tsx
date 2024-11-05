@@ -69,6 +69,7 @@ import { ResetNodePlugin } from "@udecode/plate-reset-node/react";
 import { TabbablePlugin } from "@udecode/plate-tabbable/react";
 import { TableCellHeaderPlugin, TableRowPlugin } from "@udecode/plate-table/react";
 import { YjsPlugin } from "@udecode/plate-yjs/react";
+import { toast } from "sonner";
 import { TodoLi, TodoMarker } from "../ui/indent-todo-marker";
 import { autoformatRules } from "./plate-autoformat";
 import { NormalizePlugin } from "./plate-normalization";
@@ -97,6 +98,23 @@ export const getEditorPlugins = (path: string, handle?: string, refreshToken?: s
             name: path,
             connect: false,
             token: refreshToken,
+            onAuthenticated() {
+              console.log("[Collab] Authenticated");
+            },
+            onConnect() {
+              console.log("[Collab] Connected");
+            },
+            onSynced() {
+              console.log("[Collab] Synced");
+            },
+            onAuthenticationFailed(data) {
+              toast.error(`Authentication failed: ${data.reason}`);
+              console.error(`[Collab] Authentication failed: ${data.reason}`);
+            },
+            onDisconnect(data) {
+              toast.error(`Disconnected: ${data.event.reason}`);
+              console.error(`[Collab] Disconnected: ${data.event.reason}`);
+            },
           },
         },
       }),

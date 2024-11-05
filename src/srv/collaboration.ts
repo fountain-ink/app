@@ -35,8 +35,11 @@ const server = Server.configure({
     new Logger(),
     new Database({
       fetch: async ({ documentName, document, requestHeaders, requestParameters }) => {
-        console.log(requestHeaders);
-        console.log(requestParameters);
+        const params = requestParameters.entries();
+
+        for (const [key, value] of params) {
+          console.log(`${key}: ${value}`);
+        }
 
         const { data: response, error } = await db.from("drafts").select().eq("documentId", documentName).single();
 
@@ -82,7 +85,12 @@ const server = Server.configure({
   ],
 
   async onAuthenticate(data) {
-    const { handle } = await getAuthWithToken(data.token);
+    try {
+      await getAuthWithToken(data.token);
+    } catch (error) {
+      console.error("Error authenticating, dropping connection");
+      throw error;
+    }
   },
 });
 
