@@ -1,7 +1,6 @@
 import { LensClient, production } from "@lens-protocol/client";
-import { appId } from "@lens-protocol/react-web";
 
-export const getLensClient = async (refreshToken: string | null) => {
+export const getLensClient = async (refreshToken: string | undefined) => {
   const client = new LensClient({
     environment: production,
     params: {

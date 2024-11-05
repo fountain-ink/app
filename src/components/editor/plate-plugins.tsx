@@ -24,12 +24,12 @@ import { LinkPlugin } from "@udecode/plate-link/react";
 import { MarkdownPlugin } from "@udecode/plate-markdown";
 import { EquationPlugin, InlineEquationPlugin } from "@udecode/plate-math/react";
 import {
-    AudioPlugin,
-    FilePlugin,
-    ImagePlugin,
-    MediaEmbedPlugin,
-    PlaceholderPlugin,
-    VideoPlugin,
+  AudioPlugin,
+  FilePlugin,
+  ImagePlugin,
+  MediaEmbedPlugin,
+  PlaceholderPlugin,
+  VideoPlugin,
 } from "@udecode/plate-media/react";
 import { MentionPlugin } from "@udecode/plate-mention/react";
 import { NodeIdPlugin } from "@udecode/plate-node-id";
@@ -49,13 +49,13 @@ import { LinkFloatingToolbar } from "@/components/ui/link-floating-toolbar";
 import { AlignPlugin } from "@udecode/plate-alignment/react";
 import { AutoformatPlugin } from "@udecode/plate-autoformat/react";
 import {
-    BoldPlugin,
-    CodePlugin,
-    ItalicPlugin,
-    StrikethroughPlugin,
-    SubscriptPlugin,
-    SuperscriptPlugin,
-    UnderlinePlugin,
+  BoldPlugin,
+  CodePlugin,
+  ItalicPlugin,
+  StrikethroughPlugin,
+  SubscriptPlugin,
+  SuperscriptPlugin,
+  UnderlinePlugin,
 } from "@udecode/plate-basic-marks/react";
 import { isCodeBlockEmpty, isSelectionAtCodeBlockStart, unwrapCodeBlock } from "@udecode/plate-code-block";
 import { CodeBlockPlugin, CodeSyntaxPlugin } from "@udecode/plate-code-block/react";
@@ -74,29 +74,52 @@ import { autoformatRules } from "./plate-autoformat";
 import { NormalizePlugin } from "./plate-normalization";
 import { RenderAboveEditableYjs } from "./yjs-above-editable";
 
-export const editorPlugins = (path?: string, handle?: string) => [
-  NormalizePlugin,
-  YjsPlugin.configure({
-    render: {
-      aboveEditable: RenderAboveEditableYjs,
-
-    },
-    options: {
-
-      cursorOptions: {
-        autoSend: true,
-        data: {
-          name: handle || "kualta",
-          color: "#ff0000",
+export const getEditorPlugins = (path: string, handle?: string, refreshToken?: string) => {
+  if (refreshToken) {
+    return [
+      ...staticPlugins,
+      YjsPlugin.configure({
+        render: {
+          aboveEditable: RenderAboveEditableYjs,
         },
-      },
-      disableCursors: false,
-      hocuspocusProviderOptions: {
-        url: "https://collab.fountain.ink",
-        name: path ?? "no-path",
-      },
-    },
-  }),
+        options: {
+          cursorOptions: {
+            autoSend: true,
+            data: {
+              name: handle || "kualta",
+              color: "#ff0000",
+            },
+          },
+          disableCursors: false,
+          hocuspocusProviderOptions: {
+            // url: "https://collab.fountain.ink",
+            url: "ws://0.0.0.0:4444",
+            name: path,
+            connect: false,
+            token: refreshToken,
+          },
+        },
+      }),
+      CommentsPlugin.configure({
+        options: {
+          users: {
+            1: {
+              id: "1",
+              name: handle || "kualta",
+              avatarUrl: "https://avatars.githubusercontent.com/u/19695832?s=96&v=4",
+            },
+          },
+          myUserId: "1",
+        },
+      }),
+    ];
+  }
+
+  return staticPlugins;
+};
+
+const staticPlugins = [
+  NormalizePlugin,
   // Nodes
   HeadingPlugin.configure({ options: { levels: 4 } }),
   BlockquotePlugin,
@@ -390,16 +413,4 @@ export const editorPlugins = (path?: string, handle?: string) => [
       },
     },
   })),
-  CommentsPlugin.configure({
-    options: {
-      users: {
-        1: {
-          id: "1",
-          name: handle || "kualta",
-          avatarUrl: "https://avatars.githubusercontent.com/u/19695832?s=96&v=4",
-        },
-      },
-      myUserId: "1",
-    },
-  }),
 ];
