@@ -6,20 +6,25 @@ import { usePublishStore } from "@/hooks/use-publish-store";
 import { extractMetadata } from "@/lib/get-article-title";
 import { uploadMetadata } from "@/lib/upload-utils";
 import { article, MetadataAttributeType } from "@lens-protocol/metadata";
-import { SessionType, useCreatePost, useSession } from "@lens-protocol/react-web";
+import { useCreatePost, useSession } from "@lens-protocol/react-web";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEditorState, useEditorValue } from "@udecode/plate-common/react";
+import { createPlateEditor, useEditorState } from "@udecode/plate-common/react";
 import { usePathname, useRouter } from "next/navigation";
+import { useMemo } from "react";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import { getEditorPlugins } from "./plate-plugins";
+import { getRawUiCompontents } from "./plate-create-ui";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 export const EditorPublishing = () => {
   const { data: session } = useSession();
   const { isConnected: isWalletConnected } = useAccount();
   const { isOpen, setIsOpen } = usePublishStore();
   const { execute } = useCreatePost();
-  const editor:any = useEditorState();
+  const editorState: any = useEditorState();
   const router = useRouter();
   const { deleteDocument } = useDocumentStorage();
   const queryClient = useQueryClient();
@@ -42,6 +47,14 @@ export const EditorPublishing = () => {
   //   );
   // }
 
+  const plugins = getEditorPlugins("no-path");
+  const editor = useMemo(() => {
+    return createPlateEditor({
+      plugins: plugins?.filter((plugin: any) => plugin?.key !== "toggle" && plugin?.key !== "blockSelection"),
+      override: { components: getRawUiCompontents() }
+    });
+  }, []);
+
   const handle = "";
   // const handle = session?.profile?.handle?.localName || "";
 
@@ -52,14 +65,22 @@ export const EditorPublishing = () => {
     }
 
     const contentJson = editor.children;
+    const contentHtml = editor.api.htmlReact?.serialize({
+      nodes: editorState.children,
+      stripDataAttributes: true,
+      preserveClassNames: [],
+      stripWhitespace: true,
+      dndWrapper: (props) => <DndProvider context={window} backend={HTML5Backend} {...props} />,
+    });
     const markdown = editor.api.markdown.serialize();
     const { title } = extractMetadata(contentJson);
-    
-    const publish = false
+
+    const publish = false;
     if (!publish) {
-      console.log(contentJson)
-      console.log(markdown)
-      return
+      console.log(contentJson);
+      console.log(contentHtml);
+      console.log(markdown);
+      return;
     }
 
     try {
