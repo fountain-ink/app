@@ -1,14 +1,14 @@
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 
-export const getCookieAuth = (): { isValid: boolean; refreshToken: string | null } => {
+export const getCookieAuth = (): { isValid: boolean; refreshToken: string | undefined } => {
   const cookieStorage = cookies();
   const refreshToken = cookieStorage.get("refreshToken")?.value;
 
   if (!refreshToken) {
     return {
       isValid: false,
-      refreshToken: null,
+      refreshToken: undefined,
     };
   }
 
@@ -29,7 +29,7 @@ export const getCookieAuth = (): { isValid: boolean; refreshToken: string | null
       refreshToken,
     };
   } catch (error) {
-    console.log("Error using jwt token:", error);
+    console.error("Error using jwt token:", error);
     return {
       isValid: false,
       refreshToken,

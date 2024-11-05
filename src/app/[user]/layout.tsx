@@ -2,7 +2,7 @@ import { UserCover } from "@/components/user/user-cover";
 import { UserNavigation } from "@/components/user/user-navigation";
 import { UserProfile } from "@/components/user/user-profile";
 import { UserTheme } from "@/components/user/user-theme";
-import { getAuthorizedClients } from "@/lib/get-auth-clients";
+import { getAuth } from "@/lib/get-auth-clients";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }: { params: { user: string } }) {
@@ -21,7 +21,7 @@ const UserLayout = async ({
   children: React.ReactNode;
   params: { user: string };
 }) => {
-  const { lens, handle: userHandle } = await getAuthorizedClients();
+  const { lens, handle: userHandle } = await getAuth();
   const profile = await lens.profile.fetch({
     forHandle: `lens/${params.user}`,
   });

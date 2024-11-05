@@ -1,10 +1,10 @@
-import { getAuthorizedClients } from "@/lib/get-auth-clients";
+import { getAuth } from "@/lib/get-auth-clients";
 import { getRandomUid } from "@/lib/get-random-uid";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
-    const { profileId, db } = await getAuthorizedClients();
+    const { profileId, db } = await getAuth();
 
     if (!db) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST() {
   try {
-    const { profileId, db, handle } = await getAuthorizedClients();
+    const { profileId, db, handle } = await getAuth();
     if (!db) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -101,7 +101,7 @@ export async function POST() {
 
 export async function PUT(req: NextRequest) {
   try {
-    const { profileId, db } = await getAuthorizedClients();
+    const { profileId, db } = await getAuth();
 
     const documentId = req.nextUrl.searchParams.get("id");
 
@@ -152,7 +152,7 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const { profileId, db } = await getAuthorizedClients();
+    const { profileId, db } = await getAuth();
 
     if (!db) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

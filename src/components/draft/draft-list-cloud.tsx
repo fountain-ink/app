@@ -19,7 +19,7 @@ async function getCloudDrafts() {
   return data.drafts;
 }
 
-export async function CloudDraftsList({ profileId }: { profileId: string | null }) {
+export async function CloudDraftsList({ profileId }: { profileId: string | null | undefined }) {
   if (!profileId) {
     return <div>Please login to see your drafts</div>;
   }

@@ -20,7 +20,7 @@ import { useStorage } from "@/hooks/use-storage";
 import { themeNames, type ThemeType } from "@/styles/themes";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export function ProfileSettings({ profile }: { profile: Profile | ProfileFragment | null }) {
+export function ProfileSettings({ profile }: { profile: Profile | ProfileFragment | null | undefined }) {
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [coverPicture, setCoverPicture] = useState<File | null>(null);
 

@@ -12,24 +12,19 @@ export const RenderAboveEditableYjs: React.FC<{
   const provider = useOption("provider");
   const isSynced = useOption("isSynced");
 
-
   useEffect(() => {
-    if (!provider.isConnected) {
-      void provider.connect();
-    }
+    void provider.connect();
 
     return () => {
-      if (provider.isConnected) {
-        provider.disconnect();
-      }
+      provider.disconnect();
     };
   }, [provider]);
 
   useEffect(() => {
-      YjsEditor.connect(editor as any);
+    YjsEditor.connect(editor as any);
 
     return () => {
-        YjsEditor.disconnect(editor as any);
+      YjsEditor.disconnect(editor as any);
     };
   }, [provider.awareness, provider.document]);
 

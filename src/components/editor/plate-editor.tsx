@@ -2,7 +2,7 @@
 
 import { cn } from "@udecode/cn";
 import { createPlateEditor, Plate, PlateStoreProvider, usePlateEditor } from "@udecode/plate-common/react";
-import { PropsWithChildren, useRef } from "react";
+import { type PropsWithChildren, useRef } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { CommentsPopover } from "../ui/comments-popover";
@@ -13,19 +13,20 @@ import { FixedToolbarButtons } from "../ui/fixed-toolbar-buttons";
 import { FloatingToolbar } from "../ui/floating-toolbar";
 import { FloatingToolbarButtons } from "../ui/floating-toolbar-buttons";
 import { getUiComponents } from "./plate-create-ui";
-import { editorPlugins } from "./plate-plugins";
+import { getEditorPlugins } from "./plate-plugins";
 import { usePathname } from "next/navigation";
 import { useSession } from "@lens-protocol/react-web";
+import { getCookieAuth } from "@/lib/get-auth-cookies";
 
-export default function PlateEditor(props: PropsWithChildren & { showToolbar?: boolean }) {
+export default function PlateEditor(props: PropsWithChildren & { showToolbar?: boolean, refreshToken?: string, handle?: string }) {
   const containerRef = useRef(null);
   const editorRef = useRef(null);
   const pathname = usePathname()
-  const documentId = pathname.split("/").at(-1);
-  const {data: session} = useSession()
-  
+  const documentId = pathname.split("/").at(-1) || "erroredDocumentId";
+
+  console.log(documentId, props.handle, props.refreshToken)
   const editor = createPlateEditor({
-    plugins: [...editorPlugins( documentId)],
+    plugins: [...getEditorPlugins(documentId, props.handle, props.refreshToken)],
     override: {
       components: getUiComponents(),
     },
@@ -71,7 +72,7 @@ export default function PlateEditor(props: PropsWithChildren & { showToolbar?: b
 
 export const useMyEditor = () => {
   return usePlateEditor({
-    plugins: [...editorPlugins()],
+    plugins: [...getEditorPlugins("nopath")],
     override: {
       components: getUiComponents(),
     },

@@ -17,6 +17,7 @@
     "@aws-sdk/client-s3": "^3.649.0",
     "@biomejs/biome": "^1.8.1",
     "@faker-js/faker": "^7.6.0",
+    "@hocuspocus/extension-database": "^2.13.7",
     "@hocuspocus/provider": "^2.13.2",
     "@hookform/resolvers": "^3.9.1",
     "@instantdb/react": "^0.12.8",

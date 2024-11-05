@@ -1,9 +1,9 @@
 import { DraftsList } from "@/components/draft/draft-list";
 import ErrorPage from "@/components/error-page";
-import { getAuthorizedClients } from "@/lib/get-auth-clients";
+import { getAuth } from "@/lib/get-auth-clients";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
-  const { lens, handle: userHandle } = await getAuthorizedClients();
+  const { lens, handle: userHandle } = await getAuth();
   const pageHandle = `lens/${params.user}`;
   const profile = await lens.profile.fetch({ forHandle: pageHandle });
 
