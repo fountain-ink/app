@@ -75,6 +75,8 @@ import { autoformatRules } from "./plate-autoformat";
 import { NormalizePlugin } from "./plate-normalization";
 import { RenderAboveEditableYjs } from "./yjs-above-editable";
 
+
+
 export const getEditorPlugins = (path: string, handle?: string, refreshToken?: string) => {
   if (refreshToken) {
     return [
@@ -93,11 +95,18 @@ export const getEditorPlugins = (path: string, handle?: string, refreshToken?: s
           },
           disableCursors: false,
           hocuspocusProviderOptions: {
-            // url: "https://collab.fountain.ink",
-            url: "ws://0.0.0.0:4444",
+            url: "https://collab.fountain.ink",
+            // url: "ws://0.0.0.0:4444",
             name: path,
             connect: false,
             token: refreshToken,
+            onStatus(data) {
+              console.log(`[Collab] Status ${data.status}`);
+            },
+            onClose(data) {
+              console.log(`[Collab] Closed ${data.event.code} ${data.event.reason}`);
+              console.log(data);
+            },
             onAuthenticated() {
               console.log("[Collab] Authenticated");
             },
