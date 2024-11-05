@@ -2,6 +2,7 @@
 
 import { cn } from "@udecode/cn";
 import { createPlateEditor, Plate, PlateStoreProvider, usePlateEditor } from "@udecode/plate-common/react";
+import { usePathname } from "next/navigation";
 import { type PropsWithChildren, useRef } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -14,17 +15,16 @@ import { FloatingToolbar } from "../ui/floating-toolbar";
 import { FloatingToolbarButtons } from "../ui/floating-toolbar-buttons";
 import { getUiComponents } from "./plate-create-ui";
 import { getEditorPlugins } from "./plate-plugins";
-import { usePathname } from "next/navigation";
-import { useSession } from "@lens-protocol/react-web";
-import { getCookieAuth } from "@/lib/get-auth-cookies";
 
-export default function PlateEditor(props: PropsWithChildren & { showToolbar?: boolean, refreshToken?: string, handle?: string }) {
+export default function PlateEditor(
+  props: PropsWithChildren & { showToolbar?: boolean; refreshToken?: string; handle?: string },
+) {
   const containerRef = useRef(null);
   const editorRef = useRef(null);
-  const pathname = usePathname()
+  const pathname = usePathname();
   const documentId = pathname.split("/").at(-1) || "erroredDocumentId";
 
-  console.log(documentId, props.handle, props.refreshToken)
+  console.log(documentId, props.handle, props.refreshToken);
   const editor = createPlateEditor({
     plugins: [...getEditorPlugins(documentId, props.handle, props.refreshToken)],
     override: {
@@ -42,7 +42,7 @@ export default function PlateEditor(props: PropsWithChildren & { showToolbar?: b
             className={cn(
               "relative",
               // Block selection
-              "[&_.slate-start-area-left]:!w-[64px] [&_.slate-start-area-right]:!w-[64px] [&_.slate-start-area-top]:!h-4 overflow-visible",
+              "[&_.slate-start-area-left]:!w-[64px] [&_.slate-start-area-right]:!w-[64px] [&_.slate-start-area-top]:!h-4 overflow-visible w-full",
             )}
           >
             {props.showToolbar && (
@@ -52,7 +52,13 @@ export default function PlateEditor(props: PropsWithChildren & { showToolbar?: b
             )}
 
             {props.children}
-            <Editor ref={editorRef} disableDefaultStyles className={"overflow-visible"} autoFocus variant="fullWidth" />
+            <Editor
+              ref={editorRef}
+              disableDefaultStyles
+              className={"overflow-visible w-full"}
+              autoFocus
+              variant="fullWidth"
+            />
 
             <FloatingToolbar>
               <FloatingToolbarButtons />

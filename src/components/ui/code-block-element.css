@@ -1,6 +1,5 @@
 .slate-code_block code[class*='language-'],
 .slate-code_block pre[class*='language-'] {
-  background: hsl(230, 1%, 98%);
   color: hsl(230, 8%, 24%);
   font-family: 'Fira Code', 'Fira Mono', Menlo, Consolas, 'DejaVu Sans Mono',
     monospace;
