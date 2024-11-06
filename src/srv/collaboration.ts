@@ -64,6 +64,7 @@ const server = Server.configure({
           .upsert(
             {
               documentId: documentName,
+              authrorId: undefined,
               yDoc,
             },
             {
