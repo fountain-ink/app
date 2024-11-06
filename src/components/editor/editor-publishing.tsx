@@ -11,13 +11,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import { createPlateEditor, useEditorState } from "@udecode/plate-common/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo } from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
-import { getEditorPlugins } from "./plate-plugins";
 import { getRawUiCompontents } from "./plate-create-ui";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { getEditorPlugins } from "./plate-plugins";
 
 export const EditorPublishing = () => {
   const { data: session } = useSession();
@@ -51,7 +51,7 @@ export const EditorPublishing = () => {
   const editor = useMemo(() => {
     return createPlateEditor({
       plugins: plugins?.filter((plugin: any) => plugin?.key !== "toggle" && plugin?.key !== "blockSelection"),
-      override: { components: getRawUiCompontents() }
+      override: { components: getRawUiCompontents() },
     });
   }, []);
 
@@ -72,7 +72,7 @@ export const EditorPublishing = () => {
       stripWhitespace: true,
       dndWrapper: (props) => <DndProvider context={window} backend={HTML5Backend} {...props} />,
     });
-    const markdown = editor.api.markdown.serialize();
+    const markdown = editorState.api.markdown.serialize();
     const { title } = extractMetadata(contentJson);
 
     const publish = false;

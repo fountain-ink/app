@@ -65,7 +65,6 @@ const server = Server.configure({
             {
               documentId: documentName,
               yDoc,
-              authorId: "0xblahblah",
             },
             {
               onConflict: "documentId",
