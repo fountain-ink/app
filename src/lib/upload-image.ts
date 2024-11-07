@@ -25,4 +25,3 @@ export const uploadFile = async (file: File) => {
     console.error(error);
   }
 };
-

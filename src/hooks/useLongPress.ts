@@ -11,79 +11,59 @@ import {
   useCallback,
   useEffect,
   useRef,
-} from 'react';
+} from "react";
 
 // Disabled callback
-export function useLongPress<
-  Target extends Element = Element,
-  Context = unknown,
->(
+export function useLongPress<Target extends Element = Element, Context = unknown>(
   callback: null,
-  options?: LongPressOptions<Target, Context>
+  options?: LongPressOptions<Target, Context>,
 ): LongPressResult<LongPressEmptyHandlers, Context>;
 
 // https://github.com/minwork/react/blob/main/packages/use-long-press/README.md
 export function useLongPress<
   Target extends Element = Element,
   Context = unknown,
-  Callback extends LongPressCallback<Target, Context> = LongPressCallback<
-    Target,
-    Context
-  >,
+  Callback extends LongPressCallback<Target, Context> = LongPressCallback<Target, Context>,
 >(
   callback: Callback,
-  options: LongPressOptions<Target, Context, LongPressEventType.Touch>
+  options: LongPressOptions<Target, Context, LongPressEventType.Touch>,
 ): LongPressResult<LongPressTouchHandlers<Target>, Context>;
 
 // Mouse events
 export function useLongPress<
   Target extends Element = Element,
   Context = unknown,
-  Callback extends LongPressCallback<Target, Context> = LongPressCallback<
-    Target,
-    Context
-  >,
+  Callback extends LongPressCallback<Target, Context> = LongPressCallback<Target, Context>,
 >(
   callback: Callback,
-  options: LongPressOptions<Target, Context, LongPressEventType.Mouse>
+  options: LongPressOptions<Target, Context, LongPressEventType.Mouse>,
 ): LongPressResult<LongPressMouseHandlers<Target>, Context>;
 
 // Pointer events
 export function useLongPress<
   Target extends Element = Element,
   Context = unknown,
-  Callback extends LongPressCallback<Target, Context> = LongPressCallback<
-    Target,
-    Context
-  >,
+  Callback extends LongPressCallback<Target, Context> = LongPressCallback<Target, Context>,
 >(
   callback: Callback,
-  options: LongPressOptions<Target, Context, LongPressEventType.Pointer>
+  options: LongPressOptions<Target, Context, LongPressEventType.Pointer>,
 ): LongPressResult<LongPressPointerHandlers<Target>, Context>;
 
 // Default options
 export function useLongPress<
   Target extends Element = Element,
   Context = unknown,
-  Callback extends LongPressCallback<Target, Context> = LongPressCallback<
-    Target,
-    Context
-  >,
->(
-  callback: Callback
-): LongPressResult<LongPressPointerHandlers<Target>, Context>;
+  Callback extends LongPressCallback<Target, Context> = LongPressCallback<Target, Context>,
+>(callback: Callback): LongPressResult<LongPressPointerHandlers<Target>, Context>;
 
 // General
 export function useLongPress<
   Target extends Element = Element,
   Context = unknown,
-  Callback extends LongPressCallback<Target, Context> = LongPressCallback<
-    Target,
-    Context
-  >,
+  Callback extends LongPressCallback<Target, Context> = LongPressCallback<Target, Context>,
 >(
   callback: Callback | null,
-  options?: LongPressOptions<Target, Context>
+  options?: LongPressOptions<Target, Context>,
 ): LongPressResult<LongPressHandlers<Target>, Context>;
 
 /**
@@ -128,10 +108,7 @@ export function useLongPress<
 export function useLongPress<
   Target extends Element = Element,
   Context = unknown,
-  Callback extends LongPressCallback<Target, Context> = LongPressCallback<
-    Target,
-    Context
-  >,
+  Callback extends LongPressCallback<Target, Context> = LongPressCallback<Target, Context>,
 >(
   callback: Callback | null,
   {
@@ -145,7 +122,7 @@ export function useLongPress<
     onFinish,
     onMove,
     onStart,
-  }: LongPressOptions<Target, Context> = {}
+  }: LongPressOptions<Target, Context> = {},
 ): LongPressResult<LongPressHandlers<Target>, Context> {
   const isLongPressActive = useRef(false);
   const isPressed = useRef(false);
@@ -190,45 +167,41 @@ export function useLongPress<
         }
       }, threshold);
     },
-    [captureEvent, filterEvents, onStart, threshold]
+    [captureEvent, filterEvents, onStart, threshold],
   );
 
   const cancel = useCallback(
-    (context?: Context) =>
-      (
-        event: LongPressReactEvents<Target>,
-        reason?: LongPressCallbackReason
-      ) => {
-        // Ignore unrecognised events
-        if (!isRecognisableEvent(event)) {
-          return;
-        }
-        // Ignore when element is not pressed anymore
-        if (!isPressed.current) {
-          return;
-        }
+    (context?: Context) => (event: LongPressReactEvents<Target>, reason?: LongPressCallbackReason) => {
+      // Ignore unrecognised events
+      if (!isRecognisableEvent(event)) {
+        return;
+      }
+      // Ignore when element is not pressed anymore
+      if (!isPressed.current) {
+        return;
+      }
 
-        startPosition.current = null;
+      startPosition.current = null;
 
-        if (captureEvent) {
-          event.persist();
-        }
-        // Trigger onFinish callback only if timer was active
-        if (isLongPressActive.current) {
-          onFinish?.(event, { context });
-        } else if (isPressed.current) {
-          // If not active but pressed, trigger onCancel
-          onCancel?.(event, {
-            context,
-            reason: reason ?? LongPressCallbackReason.CancelledByRelease,
-          });
-        }
+      if (captureEvent) {
+        event.persist();
+      }
+      // Trigger onFinish callback only if timer was active
+      if (isLongPressActive.current) {
+        onFinish?.(event, { context });
+      } else if (isPressed.current) {
+        // If not active but pressed, trigger onCancel
+        onCancel?.(event, {
+          context,
+          reason: reason ?? LongPressCallbackReason.CancelledByRelease,
+        });
+      }
 
-        isLongPressActive.current = false;
-        isPressed.current = false;
-        timer.current !== undefined && clearTimeout(timer.current);
-      },
-    [captureEvent, onFinish, onCancel]
+      isLongPressActive.current = false;
+      isPressed.current = false;
+      timer.current !== undefined && clearTimeout(timer.current);
+    },
+    [captureEvent, onFinish, onCancel],
   );
 
   const move = useCallback(
@@ -240,24 +213,20 @@ export function useLongPress<
         const currentPosition = getCurrentPosition(event);
 
         if (currentPosition) {
-          const moveThreshold =
-            cancelOnMovement === true ? 25 : cancelOnMovement;
+          const moveThreshold = cancelOnMovement === true ? 25 : cancelOnMovement;
           const movedDistance = {
             x: Math.abs(currentPosition.x - startPosition.current.x),
             y: Math.abs(currentPosition.y - startPosition.current.y),
           };
 
           // If moved outside move tolerance box then cancel long press
-          if (
-            movedDistance.x > moveThreshold ||
-            movedDistance.y > moveThreshold
-          ) {
+          if (movedDistance.x > moveThreshold || movedDistance.y > moveThreshold) {
             cancel(context)(event, LongPressCallbackReason.CancelledByMovement);
           }
         }
       }
     },
-    [cancel, cancelOnMovement, onMove]
+    [cancel, cancelOnMovement, onMove],
   );
 
   /* const unregisterWindowListeners = useCallback((context: Context | undefined) => {
@@ -276,9 +245,7 @@ export function useLongPress<
     }
   }, []); */
 
-  const binder = useCallback<
-    LongPressResult<LongPressHandlers<Target>, Context>
-  >(
+  const binder = useCallback<LongPressResult<LongPressHandlers<Target>, Context>>(
     (ctx?: Context) => {
       if (callback === null) {
         return {};
@@ -294,10 +261,7 @@ export function useLongPress<
 
           if (cancelOutsideElement) {
             result.onMouseLeave = (event: MouseEvent<Target>) => {
-              cancel(ctx)(
-                event,
-                LongPressCallbackReason.CancelledOutsideElement
-              );
+              cancel(ctx)(event, LongPressCallbackReason.CancelledOutsideElement);
             };
           }
 
@@ -312,10 +276,7 @@ export function useLongPress<
 
           if (cancelOutsideElement) {
             result.onPointerLeave = (event: PointerEvent<Target>) =>
-              cancel(ctx)(
-                event,
-                LongPressCallbackReason.CancelledOutsideElement
-              );
+              cancel(ctx)(event, LongPressCallbackReason.CancelledOutsideElement);
           }
 
           return result;
@@ -329,7 +290,7 @@ export function useLongPress<
         }
       }
     },
-    [callback, cancel, cancelOutsideElement, detect, move, start]
+    [callback, cancel, cancelOutsideElement, detect, move, start],
   );
 
   // Listen to long press stop events on window
@@ -342,15 +303,15 @@ export function useLongPress<
       cancel()(reactEvent);
     }
 
-    window.addEventListener('mouseup', listener as any);
-    window.addEventListener('touchend', listener);
-    window.addEventListener('pointerup', listener as any);
+    window.addEventListener("mouseup", listener as any);
+    window.addEventListener("touchend", listener);
+    window.addEventListener("pointerup", listener as any);
 
     // Unregister all listeners on unmount
     return () => {
-      window.removeEventListener('mouseup', listener as any);
-      window.removeEventListener('touchend', listener);
-      window.removeEventListener('pointerup', listener as any);
+      window.removeEventListener("mouseup", listener as any);
+      window.removeEventListener("touchend", listener);
+      window.removeEventListener("pointerup", listener as any);
     };
   }, [cancel]);
 
@@ -359,7 +320,7 @@ export function useLongPress<
     () => (): void => {
       timer.current !== undefined && clearTimeout(timer.current);
     },
-    []
+    [],
   );
 
   // Update callback handle when it changes
@@ -370,36 +331,23 @@ export function useLongPress<
   return binder;
 }
 
-const getPointerEvent = () =>
-  typeof window === 'object' ? (window?.PointerEvent ?? null) : null;
-const getTouchEvent = () =>
-  typeof window === 'object' ? (window?.TouchEvent ?? null) : null;
+const getPointerEvent = () => (typeof window === "object" ? window?.PointerEvent ?? null : null);
+const getTouchEvent = () => (typeof window === "object" ? window?.TouchEvent ?? null : null);
 
-function isTouchEvent<Target extends Element>(
-  event: SyntheticEvent<Target>
-): event is ReactTouchEvent<Target> {
+function isTouchEvent<Target extends Element>(event: SyntheticEvent<Target>): event is ReactTouchEvent<Target> {
   const { nativeEvent } = event;
   const TouchEvent = getTouchEvent();
 
-  return (
-    (TouchEvent && nativeEvent instanceof TouchEvent) || 'touches' in event
-  );
+  return (TouchEvent && nativeEvent instanceof TouchEvent) || "touches" in event;
 }
 
-function isMouseEvent<Target extends Element>(
-  event: SyntheticEvent<Target>
-): event is ReactMouseEvent<Target> {
+function isMouseEvent<Target extends Element>(event: SyntheticEvent<Target>): event is ReactMouseEvent<Target> {
   const PointerEvent = getPointerEvent();
 
-  return (
-    event.nativeEvent instanceof MouseEvent &&
-    !(PointerEvent && event.nativeEvent instanceof PointerEvent)
-  );
+  return event.nativeEvent instanceof MouseEvent && !(PointerEvent && event.nativeEvent instanceof PointerEvent);
 }
 
-function isPointerEvent<Target extends Element>(
-  event: SyntheticEvent<Target>
-): event is ReactPointerEvent<Target> {
+function isPointerEvent<Target extends Element>(event: SyntheticEvent<Target>): event is ReactPointerEvent<Target> {
   const { nativeEvent } = event;
 
   if (!nativeEvent) {
@@ -408,20 +356,17 @@ function isPointerEvent<Target extends Element>(
 
   const PointerEvent = getPointerEvent();
 
-  return (
-    (PointerEvent && nativeEvent instanceof PointerEvent) ||
-    'pointerId' in nativeEvent
-  );
+  return (PointerEvent && nativeEvent instanceof PointerEvent) || "pointerId" in nativeEvent;
 }
 
 function isRecognisableEvent<Target extends Element>(
-  event: SyntheticEvent<Target>
+  event: SyntheticEvent<Target>,
 ): event is LongPressReactEvents<Target> {
   return isMouseEvent(event) || isTouchEvent(event) || isPointerEvent(event);
 }
 
 function getCurrentPosition<Target extends Element>(
-  event: LongPressReactEvents<Target>
+  event: LongPressReactEvents<Target>,
 ): {
   x: number;
   y: number;
@@ -443,7 +388,7 @@ function getCurrentPosition<Target extends Element>(
 }
 
 function createArtificialReactEvent<Target extends Element = Element>(
-  event: LongPressDomEvents
+  event: LongPressDomEvents,
 ): LongPressReactEvents<Target> {
   return {
     currentTarget: event.currentTarget,
@@ -462,9 +407,9 @@ function createArtificialReactEvent<Target extends Element = Element>(
 
 /** Which event listeners should be returned from the hook */
 export enum LongPressEventType {
-  Mouse = 'mouse',
-  Pointer = 'pointer',
-  Touch = 'touch',
+  Mouse = "mouse",
+  Pointer = "pointer",
+  Touch = "touch",
 }
 
 /**
@@ -478,17 +423,17 @@ export enum LongPressCallbackReason {
    * Returned when mouse / touch / pointer was moved outside initial press area
    * when `cancelOnMovement` is active
    */
-  CancelledByMovement = 'cancelled-by-movement',
+  CancelledByMovement = "cancelled-by-movement",
   /**
    * Returned when click / tap / point was released before long press detection
    * time threshold
    */
-  CancelledByRelease = 'cancelled-by-release',
+  CancelledByRelease = "cancelled-by-release",
   /**
    * Returned when mouse / touch / pointer was moved outside element and
    * _cancelOutsideElement_ option was set to `true`
    */
-  CancelledOutsideElement = 'cancelled-outside-element',
+  CancelledOutsideElement = "cancelled-outside-element",
 }
 
 /*
@@ -506,12 +451,9 @@ export enum LongPressCallbackReason {
  * @param {Object} meta Object containing _context_ and / or _reason_ (if
  *   applicable)
  */
-export type LongPressCallback<
-  Target extends Element = Element,
-  Context = unknown,
-> = (
+export type LongPressCallback<Target extends Element = Element, Context = unknown> = (
   event: LongPressReactEvents<Target>,
-  meta: LongPressCallbackMeta<Context>
+  meta: LongPressCallbackMeta<Context>,
 ) => void;
 
 export type LongPressDomEvents = MouseEvent | PointerEvent | TouchEvent;

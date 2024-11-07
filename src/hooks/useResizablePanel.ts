@@ -1,7 +1,6 @@
 import { PanelsContext } from "@/components/ui/resizeable-panel";
 import React from "react";
 
-
 export const useToggleLeftPanel = () => {
   const context = React.useContext(PanelsContext);
 
@@ -29,7 +28,7 @@ export const useToggleLeftPanel = () => {
 };
 
 export enum RightPanelType {
-  history = 0,  
+  history = 0,
   comment = 1,
 }
 

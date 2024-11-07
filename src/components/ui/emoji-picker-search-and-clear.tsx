@@ -1,27 +1,20 @@
-'use client';
+"use client";
 
-import type { UseEmojiPickerType } from '@udecode/plate-emoji/react';
+import type { UseEmojiPickerType } from "@udecode/plate-emoji/react";
 
-import { cn } from '@udecode/cn';
+import { cn } from "@udecode/cn";
 
-import { Button } from './button';
-import { emojiSearchIcons } from './emoji-icons';
+import { Button } from "./button";
+import { emojiSearchIcons } from "./emoji-icons";
 
-export type EmojiPickerSearchAndClearProps = Pick<
-  UseEmojiPickerType,
-  'clearSearch' | 'i18n' | 'searchValue'
->;
+export type EmojiPickerSearchAndClearProps = Pick<UseEmojiPickerType, "clearSearch" | "i18n" | "searchValue">;
 
-export function EmojiPickerSearchAndClear({
-  clearSearch,
-  i18n,
-  searchValue,
-}: EmojiPickerSearchAndClearProps) {
+export function EmojiPickerSearchAndClear({ clearSearch, i18n, searchValue }: EmojiPickerSearchAndClearProps) {
   return (
     <div className="flex items-center text-foreground">
       <div
         className={cn(
-          'absolute left-2.5 top-1/2 z-10 flex size-5 -translate-y-1/2 items-center justify-center text-foreground'
+          "absolute left-2.5 top-1/2 z-10 flex size-5 -translate-y-1/2 items-center justify-center text-foreground",
         )}
       >
         {emojiSearchIcons.loupe}
@@ -31,7 +24,7 @@ export function EmojiPickerSearchAndClear({
           size="icon"
           variant="ghost"
           className={cn(
-            'absolute right-0.5 top-1/2 flex size-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border-none bg-transparent text-popover-foreground hover:bg-transparent'
+            "absolute right-0.5 top-1/2 flex size-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border-none bg-transparent text-popover-foreground hover:bg-transparent",
           )}
           onClick={clearSearch}
           title={i18n.clear}

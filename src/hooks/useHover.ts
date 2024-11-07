@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
-import useEventListener from '@/hooks/useEventListener';
+import useEventListener from "@/hooks/useEventListener";
 
 export interface UseHoverOptions {
   /** The delay value for a certain operation. */
@@ -32,11 +32,7 @@ export const useHover = <T extends HTMLElement = any>({
   const inTimerRef = useRef<number | null>(null);
   const outTimerRef = useRef<number | null>(null);
 
-  const startTimer = (
-    timer: React.MutableRefObject<number | null>,
-    callback: () => void,
-    delay: number
-  ) => {
+  const startTimer = (timer: React.MutableRefObject<number | null>, callback: () => void, delay: number) => {
     if (!timer.current) {
       timer.current = window.setTimeout(callback, delay);
     }
@@ -55,9 +51,9 @@ export const useHover = <T extends HTMLElement = any>({
   };
 
   // More reliable than onMouseLeave
-  useEventListener('mousemove', () => {
+  useEventListener("mousemove", () => {
     if (!elementRef.current) return;
-    if (!elementRef.current?.matches?.(':hover')) {
+    if (!elementRef.current?.matches?.(":hover")) {
       clearTimer(inTimerRef);
 
       if (isHovered) {
@@ -73,14 +69,14 @@ export const useHover = <T extends HTMLElement = any>({
       setIsHovered(false);
     };
 
-    document.documentElement.addEventListener('mouseleave', onMouseExit);
+    document.documentElement.addEventListener("mouseleave", onMouseExit);
 
-    elementRef.current?.addEventListener('blur', onMouseExit, true);
+    elementRef.current?.addEventListener("blur", onMouseExit, true);
 
     return () => {
-      document.documentElement.removeEventListener('mouseleave', onMouseExit);
+      document.documentElement.removeEventListener("mouseleave", onMouseExit);
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      elementRef.current?.removeEventListener('blur', onMouseExit, true);
+      elementRef.current?.removeEventListener("blur", onMouseExit, true);
     };
   }, []);
 

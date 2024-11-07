@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 /**
  * A custom hook that returns a boolean value indicating whether the component

@@ -75,8 +75,6 @@ import { autoformatRules } from "./plate-autoformat";
 import { NormalizePlugin } from "./plate-normalization";
 import { RenderAboveEditableYjs } from "./yjs-above-editable";
 
-
-
 export const getEditorPlugins = (path: string, handle?: string, refreshToken?: string) => {
   if (refreshToken) {
     return [

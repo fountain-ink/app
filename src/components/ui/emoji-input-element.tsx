@@ -36,11 +36,11 @@ export const EmojiInputElement = withRef<typeof PlateElement>(({ className, ...p
         <InlineComboboxContent>
           {!isPending && <InlineComboboxEmpty>No results</InlineComboboxEmpty>}
 
-            {filteredEmojis.map((emoji) => (
-              <InlineComboboxItem key={emoji.id} value={emoji.name} onClick={() => insertEmoji(editor, emoji)}>
-                {emoji?.skins?.[0]?.native} {emoji.name}
-              </InlineComboboxItem>
-            ))}
+          {filteredEmojis.map((emoji) => (
+            <InlineComboboxItem key={emoji.id} value={emoji.name} onClick={() => insertEmoji(editor, emoji)}>
+              {emoji?.skins?.[0]?.native} {emoji.name}
+            </InlineComboboxItem>
+          ))}
         </InlineComboboxContent>
       </InlineCombobox>
 

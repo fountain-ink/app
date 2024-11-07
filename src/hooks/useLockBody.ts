@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 /**
  * Uses a lock mechanism on the body element to prevent scrolling. This effect
@@ -7,11 +7,11 @@ import * as React from 'react';
  */
 export const useLockBody = () => {
   React.useLayoutEffect((): (() => void) => {
-    const originalStyle: string = window.getComputedStyle(
-      document.body
-    ).overflow;
-    document.body.style.overflow = 'hidden';
+    const originalStyle: string = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = "hidden";
 
-    return () => (document.body.style.overflow = originalStyle);
+    return () => {
+      document.body.style.overflow = originalStyle;
+    };
   }, []);
 };

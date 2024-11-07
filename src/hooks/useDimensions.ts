@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useState } from "react";
 
 interface DimensionObject {
   bottom: number;
@@ -24,12 +24,12 @@ function getDimensionObject(node: HTMLElement): DimensionObject {
   return {
     bottom: rect.bottom,
     height: rect.height,
-    left: 'y' in rect ? rect.y : rect.left,
+    left: "y" in rect ? rect.y : rect.left,
     right: rect.right,
-    top: 'x' in rect ? rect.x : rect.top,
+    top: "x" in rect ? rect.x : rect.top,
     width: rect.width,
-    x: 'x' in rect ? rect.x : rect.left,
-    y: 'y' in rect ? rect.y : rect.top,
+    x: "x" in rect ? rect.x : rect.left,
+    y: "y" in rect ? rect.y : rect.top,
   };
 }
 
@@ -60,18 +60,18 @@ export function useDimensions({
             setDimensions(getDimensionObject(node));
           });
         }
-          if (!enabled) return;
+        if (!enabled) return;
 
-          setDimensions(getDimensionObject(node));
+        setDimensions(getDimensionObject(node));
       };
       measure();
 
       if (onResize) {
-        window.addEventListener('resize', measure);
+        window.addEventListener("resize", measure);
         // window.addEventListener('scroll', measure);
 
         return () => {
-          window.removeEventListener('resize', measure);
+          window.removeEventListener("resize", measure);
           // window.removeEventListener('scroll', measure);
         };
       }

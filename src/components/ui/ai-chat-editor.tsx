@@ -1,16 +1,12 @@
-'use client';
+"use client";
 
-import React, { memo } from 'react';
+import React, { memo } from "react";
 
-import { AIChatPlugin, useLastAssistantMessage } from '@udecode/plate-ai/react';
-import {
-  type PlateEditor,
-  Plate,
-  useEditorPlugin,
-} from '@udecode/plate-common/react';
-import { deserializeMd } from '@udecode/plate-markdown';
+import { AIChatPlugin, useLastAssistantMessage } from "@udecode/plate-ai/react";
+import { type PlateEditor, Plate, useEditorPlugin } from "@udecode/plate-common/react";
+import { deserializeMd } from "@udecode/plate-markdown";
 
-import { Editor } from './editor';
+import { Editor } from "./editor";
 
 export const AIChatEditor = memo(
   ({
@@ -20,14 +16,13 @@ export const AIChatEditor = memo(
   }) => {
     const { getOptions } = useEditorPlugin(AIChatPlugin);
     const lastAssistantMessage = useLastAssistantMessage();
-    const content = lastAssistantMessage?.content ?? '';
+    const content = lastAssistantMessage?.content ?? "";
 
     const aiEditor = React.useMemo(() => {
       const editor = getOptions().createAIEditor();
 
       const fragment = deserializeMd(editor, content);
-      editor.children =
-        fragment.length > 0 ? fragment : editor.api.create.value();
+      editor.children = fragment.length > 0 ? fragment : editor.api.create.value();
 
       return editor;
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -50,5 +45,5 @@ export const AIChatEditor = memo(
         <Editor variant="aiChat" readOnly />
       </Plate>
     );
-  }
+  },
 );

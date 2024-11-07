@@ -1,12 +1,8 @@
-import { type DependencyList, useEffect, useLayoutEffect, useRef } from 'react';
+import { type DependencyList, useEffect, useLayoutEffect, useRef } from "react";
 
 const makeUseEffectAfterFirst =
   (useEffectHook: typeof useEffect | typeof useLayoutEffect) =>
-  (
-    callback: () => void,
-    dependencies: DependencyList = [],
-    shouldExecute = true
-  ) => {
+  (callback: () => void, dependencies: DependencyList = [], shouldExecute = true) => {
     const isFirst = useRef(true);
 
     useEffectHook(() => {
@@ -22,5 +18,4 @@ const makeUseEffectAfterFirst =
 
 export const useEffectAfterFirst = makeUseEffectAfterFirst(useEffect);
 
-export const useLayoutEffectAfterFirst =
-  makeUseEffectAfterFirst(useLayoutEffect);
+export const useLayoutEffectAfterFirst = makeUseEffectAfterFirst(useLayoutEffect);

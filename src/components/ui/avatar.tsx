@@ -1,19 +1,13 @@
-'use client';
+"use client";
 
-import * as AvatarPrimitive from '@radix-ui/react-avatar';
-import { withCn } from '@udecode/cn';
+import * as AvatarPrimitive from "@radix-ui/react-avatar";
+import { withCn } from "@udecode/cn";
 
-export const Avatar = withCn(
-  AvatarPrimitive.Root,
-  'relative flex h-12 w-12 shrink-0 overflow-hidden rounded-full'
-);
+export const Avatar = withCn(AvatarPrimitive.Root, "relative flex h-12 w-12 shrink-0 overflow-hidden rounded-full");
 
-export const AvatarImage = withCn(
-  AvatarPrimitive.Image,
-  'aspect-square size-full'
-);
+export const AvatarImage = withCn(AvatarPrimitive.Image, "aspect-square size-full");
 
 export const AvatarFallback = withCn(
   AvatarPrimitive.Fallback,
-  'flex size-full items-center justify-center rounded-full bg-muted'
+  "flex size-full items-center justify-center rounded-full bg-muted",
 );

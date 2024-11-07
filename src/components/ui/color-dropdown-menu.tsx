@@ -1,31 +1,20 @@
-'use client';
+"use client";
 
-import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
-import {
-  useColorDropdownMenu,
-  useColorDropdownMenuState,
-} from '@udecode/plate-font/react';
+import { useColorDropdownMenu, useColorDropdownMenuState } from "@udecode/plate-font/react";
 
-import { DEFAULT_COLORS, DEFAULT_CUSTOM_COLORS } from './color-constants';
-import { ColorPicker } from './color-picker';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from './dropdown-menu';
-import { ToolbarButton } from './toolbar';
+import { DEFAULT_COLORS, DEFAULT_CUSTOM_COLORS } from "./color-constants";
+import { ColorPicker } from "./color-picker";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "./dropdown-menu";
+import { ToolbarButton } from "./toolbar";
 
 type ColorDropdownMenuProps = {
   nodeType: string;
   tooltip?: string;
 } & DropdownMenuProps;
 
-export function ColorDropdownMenu({
-  children,
-  nodeType,
-  tooltip,
-}: ColorDropdownMenuProps) {
+export function ColorDropdownMenu({ children, nodeType, tooltip }: ColorDropdownMenuProps) {
   const state = useColorDropdownMenuState({
     closeOnSelect: true,
     colors: DEFAULT_COLORS,

@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { useOrientation } from 'react-use';
+import { useEffect } from "react";
+import { useOrientation } from "react-use";
 
-import { createAtomStore } from 'jotai-x';
+import { createAtomStore } from "jotai-x";
 
-import { useMounted } from '@/hooks/use-mounted';
-import { useViewport } from '@/hooks/useViewport';
-import { IS_MOBILE } from '@/lib/utils/environment';
+import { useMounted } from "@/hooks/use-mounted";
+import { useViewport } from "@/hooks/useViewport";
+import { IS_MOBILE } from "@/lib/utils/environment";
 
 // Keep up to date with tailwind.config.cjs
 const breakpointSizes = {
-  '2xl': 1400,
+  "2xl": 1400,
   lg: 1024,
   md: 768,
   sm: 640,
@@ -41,8 +41,8 @@ export const { TailwindProvider, useTailwindStore } = createAtomStore(
   },
   {
     effect: TailwindEffect,
-    name: 'tailwind',
-  }
+    name: "tailwind",
+  },
 );
 
 export const useIsMinBreakpoint = (breakpoint: Breakpoint, fallback = true) => {
@@ -54,22 +54,19 @@ export const useIsMinBreakpoint = (breakpoint: Breakpoint, fallback = true) => {
   return currentBreakpoints.includes(breakpoint);
 };
 
-export const useIsMaxBreakpoint = (
-  breakpoint: Breakpoint,
-  fallback = false
-) => {
+export const useIsMaxBreakpoint = (breakpoint: Breakpoint, fallback = false) => {
   return !useIsMinBreakpoint(breakpoint, !fallback);
 };
 
 // Desktop device and > sm
-export const useIsDesktop = () => useIsMinBreakpoint('md') && !IS_MOBILE;
+export const useIsDesktop = () => useIsMinBreakpoint("md") && !IS_MOBILE;
 
 // Mobile device or < md
-export const useIsMobile = () => !useIsMinBreakpoint('md') || IS_MOBILE;
+export const useIsMobile = () => !useIsMinBreakpoint("md") || IS_MOBILE;
 
 // Landscape orientation and < md
 export const useIsLandscape = () => {
   const orientation = useOrientation();
 
-  return orientation.type.includes('landscape');
+  return orientation.type.includes("landscape");
 };

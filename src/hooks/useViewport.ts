@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 export const getViewport = () => {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return {
       height: 0,
       width: 0,
@@ -19,9 +19,9 @@ export const useViewport = () => {
 
   useEffect(() => {
     const handleResize = () => setViewport(getViewport());
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return viewport;

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef } from "react";
 
 export const useObjectVersion = (obj: unknown): number => {
   const versionRef = useRef(0);

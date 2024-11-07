@@ -283,7 +283,6 @@ const InlineComboboxEmpty = ({ children, className }: HTMLAttributes<HTMLDivElem
   const store = useComboboxContext();
   const items = store?.useState("items");
 
-
   useEffect(() => {
     setHasEmpty(true);
 

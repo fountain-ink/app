@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 export const useMounted = () => {
   const [mounted, setMounted] = React.useState(false);

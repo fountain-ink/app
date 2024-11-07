@@ -1,51 +1,33 @@
 /* eslint-disable @typescript-eslint/prefer-optional-chain */
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from "react";
 
 type ListenerFn = () => any;
 
 export function getScrollTop(target?: HTMLElement) {
   if (target) return target.scrollTop;
 
-  return (
-    window.scrollY ||
-    window.pageYOffset ||
-    document.body.scrollTop ||
-    (document.documentElement && document.documentElement.scrollTop) ||
-    0
-  );
+  return window.scrollY || window.pageYOffset || document.body.scrollTop || document.documentElement?.scrollTop || 0;
 }
 
 export function getScrollLeft(target?: HTMLElement) {
   if (target) return target.scrollLeft;
 
-  return (
-    window.scrollX ||
-    window.pageXOffset ||
-    document.body.scrollLeft ||
-    (document.documentElement && document.documentElement.scrollLeft) ||
-    0
-  );
+  return window.scrollX || window.pageXOffset || document.body.scrollLeft || document.documentElement?.scrollLeft || 0;
 }
 
 export function isBrowser() {
-  return typeof window === 'object';
+  return typeof window === "object";
 }
 
-export function addScrollListener(
-  listener: ListenerFn,
-  target: Document | HTMLElement = document
-) {
-  return target.addEventListener('wheel', listener);
+export function addScrollListener(listener: ListenerFn, target: Document | HTMLElement = document) {
+  return target.addEventListener("wheel", listener);
 }
 
-export function removeScrollListener(
-  listener: ListenerFn,
-  target: Document | HTMLElement = document
-) {
-  return target.removeEventListener('wheel', listener);
+export function removeScrollListener(listener: ListenerFn, target: Document | HTMLElement = document) {
+  return target.removeEventListener("wheel", listener);
 }
 
-export type ScrollDirection = 'DOWN' | 'LEFT' | 'RIGHT' | 'UP' | null;
+export type ScrollDirection = "DOWN" | "LEFT" | "RIGHT" | "UP" | null;
 
 export interface ScrollDirectionHookResult {
   isScrolling: boolean;
@@ -67,20 +49,17 @@ export function useScrollDirection({
   threshold?: number;
 }): ScrollDirectionHookResult {
   const [targetFromApi, setTargetFromApi] = useState<HTMLElement | undefined>();
-  const [targetFromProps, setTargetFromProps] = useState<
-    HTMLElement | undefined
-  >();
+  const [targetFromProps, setTargetFromProps] = useState<HTMLElement | undefined>();
   const [scrollDirection, setScrollDirection] = useState<ScrollDirection>(null);
   const targetToUse = targetFromProps || targetFromApi;
 
   const isScrolling = scrollDirection !== null;
-  const isScrollingX =
-    scrollDirection === 'LEFT' || scrollDirection === 'RIGHT';
-  const isScrollingY = scrollDirection === 'UP' || scrollDirection === 'DOWN';
-  const isScrollingUp = scrollDirection === 'UP';
-  const isScrollingDown = scrollDirection === 'DOWN';
-  const isScrollingLeft = scrollDirection === 'LEFT';
-  const isScrollingRight = scrollDirection === 'RIGHT';
+  const isScrollingX = scrollDirection === "LEFT" || scrollDirection === "RIGHT";
+  const isScrollingY = scrollDirection === "UP" || scrollDirection === "DOWN";
+  const isScrollingUp = scrollDirection === "UP";
+  const isScrollingDown = scrollDirection === "DOWN";
+  const isScrollingLeft = scrollDirection === "LEFT";
+  const isScrollingRight = scrollDirection === "RIGHT";
 
   const scrollTargetRef = useCallback((node: HTMLElement) => {
     setTargetFromApi(node);
@@ -111,9 +90,9 @@ export function useScrollDirection({
         if (Math.abs(scrollTop - lastScrollTop) > threshold) {
           // Check if the scroll distance is greater than the threshold
           if (scrollTop > lastScrollTop) {
-            setScrollDirection('DOWN');
+            setScrollDirection("DOWN");
           } else if (scrollTop < lastScrollTop) {
-            setScrollDirection('UP');
+            setScrollDirection("UP");
           }
         }
 
@@ -125,9 +104,9 @@ export function useScrollDirection({
         if (Math.abs(scrollLeft - lastScrollLeft) > threshold) {
           // Check if the scroll distance is greater than the threshold
           if (scrollLeft > lastScrollLeft) {
-            setScrollDirection('RIGHT');
+            setScrollDirection("RIGHT");
           } else if (scrollLeft < lastScrollLeft) {
-            setScrollDirection('LEFT');
+            setScrollDirection("LEFT");
           }
         }
 

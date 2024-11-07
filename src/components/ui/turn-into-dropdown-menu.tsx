@@ -127,7 +127,7 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
     () => turnIntoItems.find((item) => item.value === (value ?? ParagraphPlugin.key)) ?? turnIntoItems[0],
     [value],
   );
-  
+
   if (!selectedItem) return null;
 
   return (

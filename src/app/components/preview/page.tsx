@@ -2,24 +2,8 @@
 
 import { proseClasses } from "@/styles/prose";
 
-
 const preview = () => {
-  return (
-    
-    <div className={proseClasses}>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-    </div>
-    
-  )
-}
+  return <div className={proseClasses}></div>;
+};
 
-export default preview
+export default preview;

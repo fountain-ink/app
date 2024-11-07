@@ -1,22 +1,13 @@
-import React from 'react';
+import React from "react";
 
-import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
-import {
-  SubscriptPlugin,
-  SuperscriptPlugin,
-} from '@udecode/plate-basic-marks/react';
-import { collapseSelection } from '@udecode/plate-common';
-import { focusEditor, useEditorRef } from '@udecode/plate-common/react';
-import { HighlightPlugin } from '@udecode/plate-highlight/react';
-import { KbdPlugin } from '@udecode/plate-kbd/react';
-import {
-  HighlighterIcon,
-  KeyboardIcon,
-  MoreHorizontalIcon,
-  SubscriptIcon,
-  SuperscriptIcon,
-} from 'lucide-react';
+import { SubscriptPlugin, SuperscriptPlugin } from "@udecode/plate-basic-marks/react";
+import { collapseSelection } from "@udecode/plate-common";
+import { focusEditor, useEditorRef } from "@udecode/plate-common/react";
+import { HighlightPlugin } from "@udecode/plate-highlight/react";
+import { KbdPlugin } from "@udecode/plate-kbd/react";
+import { HighlighterIcon, KeyboardIcon, MoreHorizontalIcon, SubscriptIcon, SuperscriptIcon } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -25,8 +16,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   useOpenState,
-} from './dropdown-menu';
-import { ToolbarButton } from './toolbar';
+} from "./dropdown-menu";
+import { ToolbarButton } from "./toolbar";
 
 export function MoreDropdownMenu(props: DropdownMenuProps) {
   const editor = useEditorRef();
@@ -48,7 +39,7 @@ export function MoreDropdownMenu(props: DropdownMenuProps) {
           <DropdownMenuItem
             onSelect={() => {
               editor.tf.toggle.mark({ key: HighlightPlugin.key });
-              collapseSelection(editor, { edge: 'end' });
+              collapseSelection(editor, { edge: "end" });
               focusEditor(editor);
             }}
           >
@@ -59,7 +50,7 @@ export function MoreDropdownMenu(props: DropdownMenuProps) {
           <DropdownMenuItem
             onSelect={() => {
               editor.tf.toggle.mark({ key: KbdPlugin.key });
-              collapseSelection(editor, { edge: 'end' });
+              collapseSelection(editor, { edge: "end" });
               focusEditor(editor);
             }}
           >

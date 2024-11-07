@@ -1,24 +1,24 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
-import { cn } from '@udecode/cn';
+import { cn } from "@udecode/cn";
 import {
   useCommentDeleteButton,
   useCommentDeleteButtonState,
   useCommentEditButton,
   useCommentEditButtonState,
-} from '@udecode/plate-comments/react';
-import { MoreHorizontal } from 'lucide-react';
+} from "@udecode/plate-comments/react";
+import { MoreHorizontal } from "lucide-react";
 
-import { Button } from './button';
+import { Button } from "./button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from './dropdown-menu';
+} from "./dropdown-menu";
 
 export function CommentMoreDropdown() {
   const editButtonState = useCommentEditButtonState();
@@ -29,7 +29,7 @@ export function CommentMoreDropdown() {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className={cn('h-6 p-1 text-muted-foreground')}>
+        <Button variant="ghost" className={cn("h-6 p-1 text-muted-foreground")}>
           <MoreHorizontal className="size-4" />
         </Button>
       </DropdownMenuTrigger>

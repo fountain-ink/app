@@ -1,9 +1,4 @@
-import {
-  type MutableRefObject,
-  type RefCallback,
-  useEffect,
-  useState,
-} from 'react';
+import { type MutableRefObject, type RefCallback, useEffect, useState } from "react";
 
 type Ref<T> = MutableRefObject<T> | RefCallback<T>;
 
@@ -23,7 +18,7 @@ export const usePipeRefIn = <T>(): [Ref<T>, RefPipe<T>] => {
 export const usePipeRefOut = <T>(outputRef: Ref<T>, refPipe: RefPipe<T>) => {
   useEffect(() => {
     if (refPipe) {
-      if (typeof outputRef === 'function') {
+      if (typeof outputRef === "function") {
         outputRef(refPipe);
       } else {
         outputRef.current = refPipe;

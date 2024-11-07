@@ -1,13 +1,13 @@
-import { type RefObject, useEffect, useRef } from 'react';
+import { type RefObject, useEffect, useRef } from "react";
 
-import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
+import { useIsomorphicLayoutEffect } from "./useIsomorphicLayoutEffect";
 
 // MediaQueryList Event based useEventListener interface
 function useEventListener<K extends keyof MediaQueryListEventMap>(
   eventName: K,
   handler: (event: MediaQueryListEventMap[K]) => void,
   element: RefObject<MediaQueryList>,
-  options?: AddEventListenerOptions | boolean
+  options?: AddEventListenerOptions | boolean,
 ): void;
 
 // Window Event based useEventListener interface
@@ -15,18 +15,15 @@ function useEventListener<K extends keyof WindowEventMap>(
   eventName: K,
   handler: (event: WindowEventMap[K]) => void,
   element?: undefined,
-  options?: AddEventListenerOptions | boolean
+  options?: AddEventListenerOptions | boolean,
 ): void;
 
 // Element Event based useEventListener interface
-function useEventListener<
-  K extends keyof HTMLElementEventMap,
-  T extends HTMLElement = HTMLDivElement,
->(
+function useEventListener<K extends keyof HTMLElementEventMap, T extends HTMLElement = HTMLDivElement>(
   eventName: K,
   handler: (event: HTMLElementEventMap[K]) => void,
   element: RefObject<T>,
-  options?: AddEventListenerOptions | boolean
+  options?: AddEventListenerOptions | boolean,
 ): void;
 
 // Document Event based useEventListener interface
@@ -34,7 +31,7 @@ function useEventListener<K extends keyof DocumentEventMap>(
   eventName: K,
   handler: (event: DocumentEventMap[K]) => void,
   element: RefObject<Document>,
-  options?: AddEventListenerOptions | boolean
+  options?: AddEventListenerOptions | boolean,
 ): void;
 
 // https://usehooks-ts.com/react-hook/use-event-listener
@@ -42,18 +39,12 @@ function useEventListener<
   KW extends keyof WindowEventMap,
   KH extends keyof HTMLElementEventMap,
   KM extends keyof MediaQueryListEventMap,
-  T extends HTMLElement | MediaQueryList | void = void,
+  T extends HTMLElement | MediaQueryList | undefined = void,
 >(
   eventName: KH | KM | KW,
-  handler: (
-    event:
-      | Event
-      | HTMLElementEventMap[KH]
-      | MediaQueryListEventMap[KM]
-      | WindowEventMap[KW]
-  ) => void,
+  handler: (event: Event | HTMLElementEventMap[KH] | MediaQueryListEventMap[KM] | WindowEventMap[KW]) => void,
   element?: RefObject<T>,
-  options?: AddEventListenerOptions | boolean
+  options?: AddEventListenerOptions | boolean,
 ) {
   // Create a ref that stores handler
   const savedHandler = useRef(handler);
@@ -66,7 +57,7 @@ function useEventListener<
     // Define the listening target
     const targetElement: T | Window = element?.current ?? window;
 
-    if (!(targetElement?.addEventListener)) return;
+    if (!targetElement?.addEventListener) return;
 
     // Create event listener that calls handler function stored in ref
     const listener: typeof handler = (event) => savedHandler.current(event);

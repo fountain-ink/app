@@ -1,14 +1,11 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
-import { withRef } from '@udecode/cn';
-import {
-  useMarkToolbarButton,
-  useMarkToolbarButtonState,
-} from '@udecode/plate-common/react';
+import { withRef } from "@udecode/cn";
+import { useMarkToolbarButton, useMarkToolbarButtonState } from "@udecode/plate-common/react";
 
-import { ToolbarButton } from './toolbar';
+import { ToolbarButton } from "./toolbar";
 
 export const MarkToolbarButton = withRef<
   typeof ToolbarButton,

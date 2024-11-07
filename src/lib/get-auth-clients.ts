@@ -26,7 +26,6 @@ export async function getAuth() {
 }
 
 export async function getAuthWithToken(refreshToken: string) {
-
   const lens = await getLensClient(refreshToken);
 
   if (!refreshToken) {

@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { startTransition } from 'react';
+import * as React from "react";
+import { startTransition } from "react";
 
 /**
  * Debounces the given value by delaying its update.

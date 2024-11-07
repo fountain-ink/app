@@ -1,39 +1,27 @@
-import {
-  type MouseEvent,
-  type MouseEventHandler,
-  useCallback,
-  useRef,
-} from 'react';
+import { type MouseEvent, type MouseEventHandler, useCallback, useRef } from "react";
 
 type EmptyCallback = () => void;
 
-export type CallbackFunction<Target = Element> =
-  | EmptyCallback
-  | MouseEventHandler<Target>;
+export type CallbackFunction<Target = Element> = EmptyCallback | MouseEventHandler<Target>;
 
-export type DoubleTapCallback<Target = Element> =
-  CallbackFunction<Target> | null;
+export type DoubleTapCallback<Target = Element> = CallbackFunction<Target> | null;
 
 export interface DoubleTapOptions<Target = Element> {
   onSingleTap?: CallbackFunction<Target>;
 }
 
-export type DoubleTapResult<Target, Callback> =
-  Callback extends CallbackFunction<Target>
-    ? {
-        onClick: CallbackFunction<Target>;
-      }
-    : Callback extends null
-      ? Record<string, never>
-      : never;
+export type DoubleTapResult<Target, Callback> = Callback extends CallbackFunction<Target>
+  ? {
+      onClick: CallbackFunction<Target>;
+    }
+  : Callback extends null
+    ? Record<string, never>
+    : never;
 
-export function useDoubleTap<
-  Target = Element,
-  Callback extends DoubleTapCallback<Target> = DoubleTapCallback<Target>,
->(
+export function useDoubleTap<Target = Element, Callback extends DoubleTapCallback<Target> = DoubleTapCallback<Target>>(
   callback: Callback,
   threshold = 300,
-  options: DoubleTapOptions<Target> = {}
+  options: DoubleTapOptions<Target> = {},
 ): DoubleTapResult<Target, Callback> {
   const timer = useRef<NodeJS.Timeout | null>(null);
 
@@ -54,7 +42,7 @@ export function useDoubleTap<
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [callback, threshold, options.onSingleTap]
+    [callback, threshold, options.onSingleTap],
   );
 
   return (

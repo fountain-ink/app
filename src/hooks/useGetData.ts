@@ -1,11 +1,11 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from "react";
 
-import { format, formatDistance } from 'date-fns';
+import { format, formatDistance } from "date-fns";
 
-type Dates = 'date' | 'distance';
+type Dates = "date" | "distance";
 
 export const getDate = (dateToFormat: Date | number) => {
-  return format(dateToFormat, 'HH:mm - dd/MM/yyyy');
+  return format(dateToFormat, "HH:mm - dd/MM/yyyy");
 };
 
 /**
@@ -13,8 +13,8 @@ export const getDate = (dateToFormat: Date | number) => {
  * dateToFormat is not provided, the formatted date will be undefined.
  */
 export const useGetDate = (dateToFormat?: Date | number) => {
-  const [selectedDateType, setSelectedDateType] = useState<Dates>('distance');
-  const isDistance = selectedDateType === 'distance';
+  const [selectedDateType, setSelectedDateType] = useState<Dates>("distance");
+  const isDistance = selectedDateType === "distance";
 
   const formattedDate: Record<Dates, string> | undefined = useMemo(() => {
     if (dateToFormat) {
@@ -28,7 +28,7 @@ export const useGetDate = (dateToFormat?: Date | number) => {
   }, [dateToFormat]);
 
   const toggleDateType = useCallback(() => {
-    setSelectedDateType(isDistance ? 'date' : 'distance');
+    setSelectedDateType(isDistance ? "date" : "distance");
   }, [isDistance]);
 
   const date = isDistance ? formattedDate?.distance : formattedDate?.date;

@@ -1,6 +1,6 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { type ExternalToast, toast } from 'sonner';
+import { type ExternalToast, toast } from "sonner";
 
 export const useCopyToClipboard = ({
   timeout = 2000,
@@ -9,11 +9,8 @@ export const useCopyToClipboard = ({
 } = {}) => {
   const [isCopied, setIsCopied] = React.useState(false);
 
-  const copyToClipboard = (
-    value: string,
-    { data, tooltip }: { data?: ExternalToast; tooltip?: string } = {}
-  ) => {
-    if (typeof window === 'undefined' || !navigator.clipboard?.writeText) {
+  const copyToClipboard = (value: string, { data, tooltip }: { data?: ExternalToast; tooltip?: string } = {}) => {
+    if (typeof window === "undefined" || !navigator.clipboard?.writeText) {
       return;
     }
     if (!value) {

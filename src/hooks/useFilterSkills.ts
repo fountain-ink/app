@@ -1,21 +1,18 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState } from "react";
 
-export type FilterTypes = 'liked' | 'newest' | 'oldest';
+export type FilterTypes = "liked" | "newest" | "oldest";
 
-const filters: FilterTypes[] = ['newest', 'oldest', 'liked'];
+const filters: FilterTypes[] = ["newest", "oldest", "liked"];
 const filterLabels: Record<FilterTypes, string> = {
-  liked: 'Most interactions',
-  newest: 'Most recent',
-  oldest: 'Oldest',
+  liked: "Most interactions",
+  newest: "Most recent",
+  oldest: "Oldest",
 };
 
 export const useFilterSkills = () => {
-  const [currentFilter, setCurrentFilter] = useState<FilterTypes>('newest');
+  const [currentFilter, setCurrentFilter] = useState<FilterTypes>("newest");
 
-  const toggleFilter = useCallback(
-    (value: FilterTypes) => () => setCurrentFilter(value),
-    []
-  );
+  const toggleFilter = useCallback((value: FilterTypes) => () => setCurrentFilter(value), []);
 
   return { currentFilter, filterLabels, filters, toggleFilter };
 };

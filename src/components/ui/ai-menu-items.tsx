@@ -40,7 +40,7 @@ export const aiChatItems = {
     value: "continueWrite",
     onSelect: ({ editor }) => {
       const ancestorNode = getAncestorNode(editor);
-      const isEmpty = getNodeString(ancestorNode![0]).trim().length === 0;
+      const isEmpty = getNodeString(ancestorNode?.[0]).trim().length === 0;
 
       void editor.getApi(AIChatPlugin).aiChat.submit({
         mode: "insert",

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from "react";
 
 export interface CallOptions {
   leading?: boolean;
@@ -16,15 +16,14 @@ export interface ControlFunctions<ReturnT> {
   isPending: () => boolean;
 }
 
-export interface DebouncedState<T extends (...args: any[]) => ReturnType<T>>
-  extends ControlFunctions<ReturnType<T>> {
+export interface DebouncedState<T extends (...args: any[]) => ReturnType<T>> extends ControlFunctions<ReturnType<T>> {
   (...args: Parameters<T>): ReturnType<T> | undefined;
 }
 
 export function useDebouncedCallback<T extends (...args: any[]) => ReturnType<T>>(
   func: T,
   waitMs = 0,
-  inputOptions: Options = {}
+  inputOptions: Options = {},
 ): DebouncedState<T> {
   const lastCallTime = useRef<number | null>(null);
   const lastInvokeTime = useRef(0);
@@ -37,16 +36,16 @@ export function useDebouncedCallback<T extends (...args: any[]) => ReturnType<T>
 
   funcRef.current = func;
 
-  const isClientSize = typeof window !== 'undefined';
+  const isClientSize = typeof window !== "undefined";
   const useRAF = !waitMs && waitMs !== 0 && isClientSize;
 
-  if (typeof func !== 'function') {
-    throw new TypeError('Expected a function');
+  if (typeof func !== "function") {
+    throw new TypeError("Expected a function");
   }
 
   const leading = !!inputOptions.leading;
-  const trailing = 'trailing' in inputOptions ? !!inputOptions.trailing : true;
-  const maxing = 'maxWait' in inputOptions;
+  const trailing = "trailing" in inputOptions ? !!inputOptions.trailing : true;
+  const maxing = "maxWait" in inputOptions;
   const debounceOnServer = !!inputOptions.debounceOnServer;
   const maxWait = maxing ? Math.max(inputOptions.maxWait || 0, waitMs) : null;
 
@@ -64,7 +63,7 @@ export function useDebouncedCallback<T extends (...args: any[]) => ReturnType<T>
 
       lastArgs.current = lastThis.current = null;
       lastInvokeTime.current = time;
-      
+
       result.current = funcRef.current.apply(thisArg, args as any);
       return result.current;
     };
@@ -72,9 +71,7 @@ export function useDebouncedCallback<T extends (...args: any[]) => ReturnType<T>
     const startTimer = (pendingFunc: () => void, wait: number) => {
       if (useRAF) cancelAnimationFrame(timerId.current!);
 
-      timerId.current = useRAF
-        ? requestAnimationFrame(pendingFunc)
-        : window.setTimeout(pendingFunc, wait);
+      timerId.current = useRAF ? requestAnimationFrame(pendingFunc) : window.setTimeout(pendingFunc, wait);
     };
 
     const shouldInvoke = (time: number) => {
@@ -116,14 +113,12 @@ export function useDebouncedCallback<T extends (...args: any[]) => ReturnType<T>
       const timeSinceLastCall = time - (lastCallTime.current ?? 0);
       const timeSinceLastInvoke = time - lastInvokeTime.current;
       const timeWaiting = waitMs - timeSinceLastCall;
-      const remainingWait = maxing
-        ? Math.min(timeWaiting, (maxWait ?? 0) - timeSinceLastInvoke)
-        : timeWaiting;
+      const remainingWait = maxing ? Math.min(timeWaiting, (maxWait ?? 0) - timeSinceLastInvoke) : timeWaiting;
 
       startTimer(timerExpired, remainingWait);
     };
 
-    const debouncedFunction = function(this: any, ...args: Parameters<T>): ReturnType<T> | undefined {
+    const debouncedFunction = function (this: any, ...args: Parameters<T>): ReturnType<T> | undefined {
       if (!isClientSize && !debounceOnServer) {
         return undefined;
       }
@@ -155,9 +150,7 @@ export function useDebouncedCallback<T extends (...args: any[]) => ReturnType<T>
 
     debouncedFunction.cancel = () => {
       if (timerId.current) {
-        useRAF
-          ? cancelAnimationFrame(timerId.current)
-          : clearTimeout(timerId.current);
+        useRAF ? cancelAnimationFrame(timerId.current) : clearTimeout(timerId.current);
       }
       lastInvokeTime.current = 0;
       lastArgs.current = lastCallTime.current = lastThis.current = timerId.current = null;
@@ -172,16 +165,7 @@ export function useDebouncedCallback<T extends (...args: any[]) => ReturnType<T>
     };
 
     return debouncedFunction;
-  }, [
-    leading,
-    maxing,
-    waitMs,
-    maxWait,
-    trailing,
-    useRAF,
-    isClientSize,
-    debounceOnServer,
-  ]);
+  }, [leading, maxing, waitMs, maxWait, trailing, useRAF, isClientSize, debounceOnServer]);
 
   return debounced;
 }

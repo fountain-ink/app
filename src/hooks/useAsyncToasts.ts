@@ -1,6 +1,6 @@
-import { useRef } from 'react';
+import { useRef } from "react";
 
-import { type ExternalToast, toast } from 'sonner';
+import { type ExternalToast, toast } from "sonner";
 
 export type UseNetworkToastOptions = {
   data?: ExternalToast;
@@ -13,11 +13,11 @@ export type UseNetworkToastOptions = {
 
 export const useAsyncToasts = ({
   data: dataHook,
-  error = 'Error',
+  error = "Error",
   errorData,
-  loading = 'Loading...',
+  loading = "Loading...",
   loadingData,
-  success = 'Success!',
+  success = "Success!",
 }: UseNetworkToastOptions = {}) => {
   const toastIdRef = useRef<number | string | null>(null);
 
@@ -29,10 +29,10 @@ export const useAsyncToasts = ({
       }
     },
     onError: ({ message }: { message?: string } = {}) => {
-      const messageStr = message ? ` ${message}` : '';
+      const messageStr = message ? ` ${message}` : "";
 
       // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-      toast.error((`${error}.${messageStr}`).trim(), {
+      toast.error(`${error}.${messageStr}`.trim(), {
         id: toastIdRef.current!,
         duration: 2000,
         ...dataHook,
@@ -51,7 +51,7 @@ export const useAsyncToasts = ({
       // successData?: {
       //   message?: React.ReactNode;
       // } & ExternalToast
-      successData?: any
+      successData?: any,
     ) => {
       toast.success(successData?.message ?? success, {
         id: toastIdRef.current!,

@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 
-import { useDebounce } from '@/hooks/use-debounce';
+import { useDebounce } from "@/hooks/use-debounce";
 
 export const useAutoScroll = (
   target: HTMLElement | null,
@@ -8,7 +8,7 @@ export const useAutoScroll = (
     enabled = true,
   }: {
     enabled?: boolean;
-  } = {}
+  } = {},
 ) => {
   // canScrollCheck after 100ms
   const canScrollCheck = useDebounce(enabled, 100);
@@ -34,10 +34,7 @@ export const useAutoScroll = (
       autoScroll.current = false;
     }
     // If user scrolls down and is within 175px of the bottom, turn on auto-scrolling.
-    else if (
-      scrollTop > lastScrollTop.current &&
-      scrollTop + clientHeight >= scrollHeight - 175
-    ) {
+    else if (scrollTop > lastScrollTop.current && scrollTop + clientHeight >= scrollHeight - 175) {
       autoScroll.current = true;
     }
 

@@ -245,7 +245,7 @@ const ResizableHandle = ({ className, isDragging, isLeft, maxSize, minSize, setI
           "h-full opacity-0 transition-opacity group-hover:bg-border group-hover:opacity-100",
           isDragging && "opacity-100",
         )}
-        />
+      />
     </div>
   );
 };
