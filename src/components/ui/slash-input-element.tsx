@@ -23,6 +23,7 @@ import {
   ListIcon,
   ListOrderedIcon,
   PilcrowIcon,
+  TableIcon,
 } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 
@@ -43,6 +44,7 @@ import { insertColumnGroup } from "@udecode/plate-layout";
 import { LayoutIcon } from "lucide-react";
 
 import { HorizontalRulePlugin } from "@udecode/plate-horizontal-rule/react";
+import { insertTable } from "@udecode/plate-table/react";
 import { SeparatorHorizontalIcon } from "lucide-react";
 
 interface SlashCommandRule {
@@ -179,6 +181,15 @@ const rules: SlashCommandRule[] = [
     keywords: ["column", "layout", "grid", "split"],
     onSelect: (editor) => {
       insertColumnGroup(editor);
+    },
+  },
+  {
+    icon: TableIcon,
+    value: "Table",
+    description: "Create a table for data.",
+    keywords: ["table", "data", "spreadsheet"],
+    onSelect: (editor) => {
+      insertTable(editor, {}, { select: true });
     },
   },
   {
