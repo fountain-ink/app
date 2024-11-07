@@ -11,14 +11,15 @@ import { useBlockSelectableStore } from "@udecode/plate-selection/react";
 import { BlockSelection } from "./block-selection";
 
 export const PlateElement = React.forwardRef<HTMLDivElement, PlateElementProps>(
-  ({ children, className, ...props }: PlateElementProps, ref) => {
+  ({ children, className, editor, ...props }: PlateElementProps, ref) => {
     const selectable = useBlockSelectableStore().get.selectable();
 
     return (
-      <PlateElementPrimitive ref={ref} className={cn("relative", className)} {...props}>
+      <PlateElementPrimitive ref={ref} className={cn("relative", className)} editor={editor} {...props}>
         {children}
 
         {selectable && <BlockSelection />}
+        {/* <AIPopover /> */}
       </PlateElementPrimitive>
     );
   },

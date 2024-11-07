@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 
 import { cn } from "@udecode/cn";
-import { createPlatePlugin, findEventRange, useEditorPlugin, useEditorRef } from "@udecode/plate-common/react";
+import { createPlatePlugin, useEditorPlugin, useEditorRef } from "@udecode/plate-common/react";
 import {
   type CursorData,
   type CursorOverlayProps,
@@ -11,10 +11,9 @@ import {
   type CursorState,
   CursorOverlay as CursorOverlayPrimitive,
 } from "@udecode/plate-cursor";
-import { DndPlugin } from "@udecode/plate-dnd";
 import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
 
-export function Cursor({
+export function Selection({
   caretPosition,
   classNames,
   data,
@@ -29,7 +28,7 @@ export function Cursor({
       {!disableSelection &&
         selectionRects.map((position, i) => (
           <div
-            key={`selectionrects-${i}-${position}`}
+            key={`${i}-${position.top}-${position.left}`}
             className={cn("pointer-events-none absolute z-10 opacity-30", classNames?.selectionRect)}
             style={{
               ...selectionStyle,
@@ -47,72 +46,73 @@ export function Cursor({
   );
 }
 
-export function CursorOverlay({ cursors, ...props }: CursorOverlayProps) {
+export function SelectionOverlay({ cursors, ...props }: CursorOverlayProps) {
   const editor = useEditorRef();
-  const dynamicCursors = editor.useOption(DragOverCursorPlugin, "cursors");
+  const dynamicCursors = editor.useOption(SelectionOverlayPlugin, "cursors");
 
   const allCursors = { ...cursors, ...dynamicCursors };
 
-  return <CursorOverlayPrimitive {...props} onRenderCursor={Cursor} cursors={allCursors} />;
+  return <CursorOverlayPrimitive {...props} onRenderCursor={Selection} cursors={allCursors} />;
 }
 
-export const DragOverCursorPlugin = createPlatePlugin({
-  key: "dragOverCursor",
-  options: { cursors: {} as Record<string, CursorState<CursorData>> },
-  handlers: {
-    onDragEnd: ({ editor, plugin }) => {
-      editor.setOption(plugin, "cursors", {});
-    },
-    onDragLeave: ({ editor, plugin }) => {
-      editor.setOption(plugin, "cursors", {});
-    },
-    onDragOver: ({ editor, event, plugin }) => {
-      if (editor.getOptions(DndPlugin).isDragging) return;
+// export const DragOverCursorPlugin = createPlatePlugin({
+//   key: 'dragOverCursor',
+//   options: { cursors: {} as Record<string, CursorState<CursorData>> },
+//   handlers: {
+//     onDragEnd: ({ editor, plugin }) => {
+//       editor.setOption(plugin, 'cursors', {});
+//     },
+//     onDragLeave: ({ editor, plugin }) => {
+//       editor.setOption(plugin, 'cursors', {});
+//     },
+//     onDragOver: ({ editor, event, plugin }) => {
+//       if (editor.getOptions(DndPlugin).isDragging) return;
 
-      const range = findEventRange(editor, event);
+//       const range = findEventRange(editor, event);
 
-      if (!range) return;
+//       if (!range) return;
 
-      editor.setOption(plugin, "cursors", {
-        drag: {
-          key: "drag",
-          data: {
-            style: {
-              backgroundColor: "hsl(222.2 47.4% 11.2%)",
-              width: 3,
-            },
-          },
-          selection: range,
-        },
-      });
-    },
-    onDrop: ({ editor, plugin }) => {
-      editor.setOption(plugin, "cursors", {});
-    },
-  },
-});
+//       editor.setOption(plugin, 'cursors', {
+//         drag: {
+//           key: 'drag',
+//           data: {
+//             style: {
+//               backgroundColor: 'hsl(222.2 47.4% 11.2%)',
+//               width: 3,
+//             },
+//           },
+//           selection: range,
+//         },
+//       });
+//     },
+//     onDrop: ({ editor, plugin }) => {
+//       editor.setOption(plugin, 'cursors', {});
+//     },
+//   },
+// });
 
 export const SelectionOverlayPlugin = createPlatePlugin({
   key: "selection_over_lay",
-  useHooks: () => {
+  options: { cursors: {} as Record<string, CursorState<CursorData>> },
+  useHooks: ({ setOption }) => {
     const { editor } = useEditorPlugin(BlockSelectionPlugin);
     const isSelecting = editor.useOptions(BlockSelectionPlugin).isSelecting;
 
     useEffect(() => {
       if (isSelecting) {
         setTimeout(() => {
-          editor.setOption(DragOverCursorPlugin, "cursors", {});
+          setOption("cursors", {});
         }, 0);
       }
-    }, [editor, isSelecting]);
+    }, [editor, isSelecting, setOption]);
   },
   handlers: {
-    onBlur: ({ editor, event }) => {
+    onBlur: ({ editor, event, setOption }) => {
       const isPrevented = (event.relatedTarget as HTMLElement)?.dataset?.platePreventOverlay === "true";
 
       if (isPrevented) return;
       if (editor.selection) {
-        editor.setOption(DragOverCursorPlugin, "cursors", {
+        setOption("cursors", {
           drag: {
             key: "blur",
             data: {
@@ -125,8 +125,8 @@ export const SelectionOverlayPlugin = createPlatePlugin({
         });
       }
     },
-    onFocus: ({ editor }) => {
-      editor.setOption(DragOverCursorPlugin, "cursors", {});
+    onFocus: ({ setOption }) => {
+      setOption("cursors", {});
     },
   },
 });

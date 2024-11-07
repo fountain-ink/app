@@ -144,7 +144,7 @@
     "@udecode/plate-reset-node": "^39.0.0",
     "@udecode/plate-resizable": "^39.1.6",
     "@udecode/plate-select": "^39.0.0",
-    "@udecode/plate-selection": "^39.2.12",
+    "@udecode/plate-selection": "^39.3.5",
     "@udecode/plate-slash-command": "^39.0.0",
     "@udecode/plate-tabbable": "^39.0.0",
     "@udecode/plate-table": "^39.1.6",

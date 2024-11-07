@@ -1,20 +1,28 @@
 {
   "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "default",
+  "aliases": {
+    "components": "@/components",
+    "hooks": "@/hooks",
+    "lib": "@/lib",
+    "ui": "@/components/ui",
+    "utils": "@/lib/utils"
+  },
   "rsc": true,
-  "tsx": true,
+  "style": "default",
   "tailwind": {
+    "baseColor": "slate",
     "config": "tailwind.config.ts",
     "css": "src/styles/globals.css",
-    "baseColor": "slate",
     "cssVariables": true,
     "prefix": ""
   },
-  "aliases": {
-    "components": "@/components",
-    "utils": "@/lib/utils",
-    "ui": "@/components/ui",
-    "lib": "@/lib",
-    "hooks": "@/hooks"
+  "tsx": true,
+  "registries": {
+    "plate": {
+      "aliases": {
+        "ui": "@/components/ui"
+      },
+      "url": "https://platejs.org/r"
+    }
   }
 }

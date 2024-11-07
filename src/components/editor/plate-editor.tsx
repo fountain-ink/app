@@ -7,7 +7,6 @@ import { type PropsWithChildren, useRef } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { CommentsPopover } from "../ui/comments-popover";
-import { CursorOverlay } from "../ui/cursor-overlay";
 import { Editor } from "../ui/editor";
 import { FixedToolbar } from "../ui/fixed-toolbar";
 import { FixedToolbarButtons } from "../ui/fixed-toolbar-buttons";
@@ -41,8 +40,9 @@ export default function PlateEditor(
             ref={containerRef}
             className={cn(
               "relative",
+              "overflow-visible w-full",
               // Block selection
-              "[&_.slate-start-area-left]:!w-[64px] [&_.slate-start-area-right]:!w-[64px] [&_.slate-start-area-top]:!h-4 overflow-visible w-full",
+              "[&_.slate-selection-area]:border [&_.slate-selection-area]:border-primary [&_.slate-selection-area]:bg-primary/10",
             )}
           >
             {props.showToolbar && (
@@ -53,9 +53,10 @@ export default function PlateEditor(
 
             {props.children}
             <Editor
+              data-plate-selectable
               ref={editorRef}
               disableDefaultStyles
-              className={"overflow-visible w-full"}
+              className={"overflow-visible scroll_container w-full"}
               autoFocus
               variant="fullWidth"
             />
@@ -65,8 +66,9 @@ export default function PlateEditor(
             </FloatingToolbar>
 
             <CommentsPopover />
+            <div className="absolute right-0 top-0 h-full w-4 select-none" />
 
-            <CursorOverlay containerRef={containerRef} />
+            {/* <CursorOverlay containerRef={containerRef} /> */}
           </div>
 
           {/* <SettingsDialog /> */}
