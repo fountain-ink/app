@@ -5,7 +5,7 @@ import { withCn } from '@udecode/cn';
 
 export const Avatar = withCn(
   AvatarPrimitive.Root,
-  'relative flex size-10 shrink-0 overflow-hidden rounded-full'
+  'relative flex h-12 w-12 shrink-0 overflow-hidden rounded-full'
 );
 
 export const AvatarImage = withCn(

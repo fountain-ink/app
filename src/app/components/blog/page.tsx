@@ -517,9 +517,7 @@ export default function BlogPost() {
                                 <p className="text-xs text-muted-foreground">{post.date}</p>
                               </div>
                             </div>
-                            <Button variant="link" className="p-0 mt-auto self-start">
-                              Read more
-                            </Button>
+                            <Button className="p-0 mt-auto self-start">Read more</Button>
                           </CardContent>
                         </a>
                       </Card>

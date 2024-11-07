@@ -273,7 +273,6 @@ export default function ComponentsPage() {
           <Button variant="outline">Outline</Button>
           <Button variant="secondary">Secondary</Button>
           <Button variant="ghost">Ghost</Button>
-          <Button variant="link">Link</Button>
           <Button size="sm">Small</Button>
           <Button size="lg">Large</Button>
           <Button size="icon">
@@ -501,7 +500,6 @@ export default function ComponentsPage() {
         <h2 className="text-2xl font-bold">HoverCard</h2>
         <HoverCard>
           <HoverCardTrigger asChild>
-            <Button variant="link">@nextjs</Button>
           </HoverCardTrigger>
           <HoverCardContent className="w-80">
             <div className="flex justify-between space-x-4">

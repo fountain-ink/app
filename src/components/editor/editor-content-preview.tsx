@@ -109,7 +109,6 @@ export const ContentPreview = () => {
                   {exampleLinks.map((link, _index) => (
                     <li key={link}>
                       <Button
-                        variant="link"
                         className="p-0 h-auto text-left truncate text-ellipsis overflow-hidden whitespace-nowrap"
                         onClick={() => {
                           setUrl(link);
