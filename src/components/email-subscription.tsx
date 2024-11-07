@@ -32,7 +32,7 @@ export const EmailSubscription = () => {
         <form onSubmit={handleSubmit} className="w-full sm:w-auto">
           <div className="flex flex-row w-full gap-2">
             <Input
-              className="bg-secondary w-full sm:w-auto lg:w-64"
+              className="bg-muted w-full sm:w-auto lg:w-64"
               type="email"
               name="email"
               required
