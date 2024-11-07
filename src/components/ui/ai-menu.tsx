@@ -6,6 +6,7 @@ import { faker } from "@faker-js/faker";
 import { AIChatPlugin, useEditorChat } from "@udecode/plate-ai/react";
 import {
   type TElement,
+  type TNode,
   type TNodeEntry,
   getAncestorNode,
   getBlocks,
@@ -70,7 +71,7 @@ export function AIMenu() {
   useEditorChat({
     chat,
     onOpenBlockSelection: (blocks: TNodeEntry[]) => {
-      show(toDOMNode(editor, blocks.at(-1)?.[0])!);
+      show(toDOMNode(editor, blocks.at(-1)?.[0] as TNode)!);
     },
     onOpenChange: (open) => {
       if (!open) {
@@ -88,7 +89,7 @@ export function AIMenu() {
       show(toDOMNode(editor, ancestor)!);
     },
     onOpenSelection: () => {
-      show(toDOMNode(editor, getBlocks(editor).at(-1)?.[0])!);
+      show(toDOMNode(editor, getBlocks(editor).at(-1)?.[0] as TNode)!);
     },
   });
 
