@@ -214,25 +214,25 @@ export const SlashInputElement = withRef<typeof PlateElement>(({ className, ...p
       <InlineCombobox element={element} trigger="/">
         <InlineComboboxInput />
 
-        <InlineComboboxContent className="max-w-64 py-1">
-          <InlineComboboxEmpty>No matching items found</InlineComboboxEmpty>
+        <InlineComboboxContent variant="slash">
+          <InlineComboboxEmpty>No results</InlineComboboxEmpty>
 
-          {rules.map(({ focusEditor, icon: Icon, keywords, value, onSelect, description }) => (
+          {rules.map(({ icon: Icon, onSelect, value, description, keywords, focusEditor }) => (
             <InlineComboboxItem
               key={value}
               value={value}
               onClick={() => onSelect(editor)}
+              label={value}
               focusEditor={focusEditor}
+              // group={value}
               keywords={keywords}
-              className="mx-2 my-1 p-0 px-0 h-full"
             >
-              <div className="flex items-center justify-center p-3 bg-muted/30 rounded-sm mr-2">
-                <Icon className="w-4 h-4" aria-hidden />
+              <div className="flex w-10 h-10 items-center justify-center rounded-sm border border-foreground/15 bg-muted/50 [&_svg]:size-5 [&_svg]:text-subtle-foreground">
+                <Icon />
               </div>
-
-              <div className="flex flex-col">
+              <div className="ml-3 flex flex-1 flex-col truncate">
                 <span>{value}</span>
-                {description && <span className="text-xs text-muted-foreground">{description}</span>}
+                <span className="truncate text-xs text-muted-foreground">{description}</span>
               </div>
             </InlineComboboxItem>
           ))}

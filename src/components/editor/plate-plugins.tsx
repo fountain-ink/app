@@ -119,7 +119,6 @@ export const getEditorPlugins = (path: string, handle?: string, refreshToken?: s
               console.error(`[Collab] Authentication failed: ${data.reason}`);
             },
             onDisconnect(data) {
-              toast.error(`Disconnected: ${data.event.reason}`);
               console.error(`[Collab] Disconnected: ${data.event.reason}`);
             },
           },
