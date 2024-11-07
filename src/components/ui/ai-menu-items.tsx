@@ -3,7 +3,7 @@
 import { useEffect, useMemo } from "react";
 
 import { AIChatPlugin, AIPlugin } from "@udecode/plate-ai/react";
-import { getAncestorNode, getEndPoint, getNodeString } from "@udecode/plate-common";
+import { getAncestorNode, getEndPoint, getNodeString, type TNode } from "@udecode/plate-common";
 import { type PlateEditor, focusEditor, useEditorPlugin } from "@udecode/plate-common/react";
 import { useIsSelecting } from "@udecode/plate-selection/react";
 import {
@@ -40,7 +40,7 @@ export const aiChatItems = {
     value: "continueWrite",
     onSelect: ({ editor }) => {
       const ancestorNode = getAncestorNode(editor);
-      const isEmpty = getNodeString(ancestorNode?.[0]).trim().length === 0;
+      const isEmpty = getNodeString(ancestorNode?.[0] as TNode).trim().length === 0;
 
       void editor.getApi(AIChatPlugin).aiChat.submit({
         mode: "insert",
