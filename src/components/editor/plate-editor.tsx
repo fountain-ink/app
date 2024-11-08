@@ -34,11 +34,10 @@ export default function PlateEditor(
 
   return (
     <DndProvider backend={HTML5Backend}>
-
       <PlateStoreProvider>
         <Plate editor={editor}>
           <div ref={containerRef} data-plate-selectable>
-            {props.showToc && <TocSideBar className="top-[130px]" topOffset={30} />}
+            {props.showToc && <TocSideBar className="top-[60px]" topOffset={30} />}
 
             {props.showToolbar && (
               <FixedToolbar>

@@ -42,7 +42,8 @@ export const TocSideBar = ({
                 <div
                   className={cn("h-0.5 rounded-xs bg-primary/20", activeContentId === item.id && "bg-primary")}
                   style={{
-                    marginLeft: `${4 * (item.depth - 1)}px`,
+                    marginRight: `${2 * (item.depth - 1)}px`,
+                    marginLeft: `${2 * (item.depth - 1)}px`,
                     width: `${16 - 4 * (item.depth - 1)}px`,
                   }}
                 />
