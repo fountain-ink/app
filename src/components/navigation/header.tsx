@@ -7,7 +7,6 @@ import { ThemeSidebar } from "../theme/theme-editor";
 import { UserMenu } from "../user/user-menu";
 import { PublishMenu } from "./publish-menu";
 import { WriteMenu } from "./write-menu";
-import { ThemeToggle } from "../theme/theme-toggle";
 
 export const Header = () => {
   const pathname = usePathname();
@@ -16,7 +15,7 @@ export const Header = () => {
   // FIXME: Temporary before release
   if (!hostname.includes("dev") && !hostname.includes("localhost")) {
     return (
-      <div className="fixed w-full p-2 z-[40] flex justify-between items-center pointer-events-none">
+      <div className="fixed top-0 w-full p-2 z-[40] flex justify-between items-center pointer-events-none">
         <Link href={"/"} className="w-10 h-10 flex items-center justify-center pointer-events-auto">
           <FountainLogo />
         </Link>
@@ -27,7 +26,7 @@ export const Header = () => {
   const isWritePage = pathname.startsWith("/write");
 
   return (
-    <div className="fixed w-full p-2 z-[40] flex justify-between items-center pointer-events-none">
+    <div className="fixed top-0 w-full p-2 z-[40] flex justify-between items-center pointer-events-none">
       <Link href={"/"} className="w-10 h-10 flex items-center justify-center pointer-events-auto">
         <FountainLogo />
       </Link>

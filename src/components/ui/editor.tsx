@@ -9,20 +9,17 @@ import { cn } from "@udecode/cn";
 import { PlateContent } from "@udecode/plate-common/react";
 import { cva } from "class-variance-authority";
 
-const editorContainerVariants = cva(
-  "relative flex cursor-text [&_.slate-selection-area]:border [&_.slate-selection-area]:border-brand/25 [&_.slate-selection-area]:bg-brand/15",
-  {
-    defaultVariants: {
-      variant: "default",
-    },
-    variants: {
-      variant: {
-        default: "w-full",
-        demo: "h-[650px] w-full overflow-y-auto",
-      },
+const editorContainerVariants = cva("relative flex cursor-text", {
+  defaultVariants: {
+    variant: "default",
+  },
+  variants: {
+    variant: {
+      default: "w-full",
+      demo: "h-[650px] w-full overflow-y-auto",
     },
   },
-);
+});
 
 export const EditorContainer = React.forwardRef<
   HTMLDivElement,

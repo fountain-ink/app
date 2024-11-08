@@ -1,12 +1,12 @@
 "use client";
 
-import { cn } from "@udecode/cn";
 import { createPlateEditor, Plate, PlateStoreProvider, usePlateEditor } from "@udecode/plate-common/react";
 import { usePathname } from "next/navigation";
 import { type PropsWithChildren, useRef } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { CommentsPopover } from "../ui/comments-popover";
+import { SelectionOverlay } from "../ui/cursor-overlay";
 import { Editor } from "../ui/editor";
 import { FixedToolbar } from "../ui/fixed-toolbar";
 import { FixedToolbarButtons } from "../ui/fixed-toolbar-buttons";
@@ -23,28 +23,19 @@ export default function PlateEditor(
   const pathname = usePathname();
   const documentId = pathname.split("/").at(-1) || "erroredDocumentId";
 
-  console.log(documentId, props.handle, props.refreshToken);
   const editor = createPlateEditor({
     plugins: [...getEditorPlugins(documentId, props.handle, props.refreshToken)],
     override: {
       components: getUiComponents(),
     },
+    options: {},
   });
 
   return (
     <DndProvider backend={HTML5Backend}>
       <PlateStoreProvider>
         <Plate editor={editor}>
-          <div
-            id="scroll_container"
-            ref={containerRef}
-            className={cn(
-              "relative",
-              "overflow-visible w-full",
-              // Block selection
-              "[&_.slate-selection-area]:border [&_.slate-selection-area]:border-primary [&_.slate-selection-area]:bg-primary/10",
-            )}
-          >
+          <div ref={containerRef} data-plate-selectable>
             {props.showToolbar && (
               <FixedToolbar>
                 <FixedToolbarButtons />
@@ -52,11 +43,13 @@ export default function PlateEditor(
             )}
 
             {props.children}
+
             <Editor
-              data-plate-selectable
               ref={editorRef}
               disableDefaultStyles
-              className={"overflow-visible scroll_container w-full"}
+              className={
+                "overflow-visible justify-self-stretch grow w-full max-w-full sm:max-w-3xl md:max-w-4xl  p-10 sm:px-30 md:px-40 mx-auto"
+              }
               autoFocus
               variant="fullWidth"
             />
@@ -66,9 +59,10 @@ export default function PlateEditor(
             </FloatingToolbar>
 
             <CommentsPopover />
+
             <div className="absolute right-0 top-0 h-full w-4 select-none" />
 
-            {/* <CursorOverlay containerRef={containerRef} /> */}
+            <SelectionOverlay containerRef={containerRef} />
           </div>
 
           {/* <SettingsDialog /> */}

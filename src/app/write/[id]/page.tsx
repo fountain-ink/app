@@ -36,16 +36,15 @@ export default async function WriteDraft({ params }: { params: { id: string } })
   const { profileId, handle } = await getAuth();
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center text-foreground bg-background">
-      <div className="container flex flex-col items-center justify-center w-full max-w-lg md:max-w-xl lg:max-w-2xl">
-        <div className="w-full min-h-screen py-4 my-20">
-          <div className={proseClasses}>
-            <Editor refreshToken={refreshToken} handle={handle}>
-              <EditorPublishing />
-            </Editor>
-          </div>
-        </div>
-      </div>
+    <div
+      className={`text-foreground bg-background max-w-full w-screen h-screen overflow-y-auto relative 
+        [&_.slate-selection-area]:border [&_.slate-selection-area]:border-primary [&_.slate-selection-area]:bg-primary/10
+        ${proseClasses}`}
+      id="scroll_container"
+    >
+      <Editor refreshToken={refreshToken} handle={handle}>
+        <EditorPublishing />
+      </Editor>
     </div>
   );
 }

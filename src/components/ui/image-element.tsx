@@ -47,7 +47,7 @@ export const ImageElement = withHOC(
     return (
       <ImagePopover plugin={ImagePlugin}>
         <PlateElement ref={ref} className={cn(className, width)} {...props}>
-          <figure className="group relative py-2" contentEditable={false}>
+          <figure className="group relative" contentEditable={false}>
             {!url ? (
               <div className={cn("rounded-sm", focused && selected && "ring-2 ring-ring ring-offset-2")}>
                 <ImagePlaceholder />

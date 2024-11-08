@@ -28,7 +28,7 @@ export function Selection({
       {!disableSelection &&
         selectionRects.map((position, i) => (
           <div
-            key={`${i}-${position.top}-${position.left}`}
+            key={`${position.height}-${i}`}
             className={cn("pointer-events-none absolute z-10 opacity-30", classNames?.selectionRect)}
             style={{
               ...selectionStyle,
@@ -54,42 +54,6 @@ export function SelectionOverlay({ cursors, ...props }: CursorOverlayProps) {
 
   return <CursorOverlayPrimitive {...props} onRenderCursor={Selection} cursors={allCursors} />;
 }
-
-// export const DragOverCursorPlugin = createPlatePlugin({
-//   key: 'dragOverCursor',
-//   options: { cursors: {} as Record<string, CursorState<CursorData>> },
-//   handlers: {
-//     onDragEnd: ({ editor, plugin }) => {
-//       editor.setOption(plugin, 'cursors', {});
-//     },
-//     onDragLeave: ({ editor, plugin }) => {
-//       editor.setOption(plugin, 'cursors', {});
-//     },
-//     onDragOver: ({ editor, event, plugin }) => {
-//       if (editor.getOptions(DndPlugin).isDragging) return;
-
-//       const range = findEventRange(editor, event);
-
-//       if (!range) return;
-
-//       editor.setOption(plugin, 'cursors', {
-//         drag: {
-//           key: 'drag',
-//           data: {
-//             style: {
-//               backgroundColor: 'hsl(222.2 47.4% 11.2%)',
-//               width: 3,
-//             },
-//           },
-//           selection: range,
-//         },
-//       });
-//     },
-//     onDrop: ({ editor, plugin }) => {
-//       editor.setOption(plugin, 'cursors', {});
-//     },
-//   },
-// });
 
 export const SelectionOverlayPlugin = createPlatePlugin({
   key: "selection_over_lay",

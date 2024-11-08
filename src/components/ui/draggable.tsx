@@ -1,32 +1,30 @@
-/* eslint-disable tailwindcss/no-custom-classname */
 "use client";
-
-import React from "react";
 
 import type { TEditor } from "@udecode/plate-common";
 import type { DropTargetMonitor } from "react-dnd";
 
 import { MemoizedChildren, cn, withRef } from "@udecode/cn";
 import {
-  type PlateElementProps,
-  useEditorPlugin,
-  useEditorRef,
-  useElement,
-  withHOC,
+    type PlateElementProps,
+    useEditorPlugin,
+    useEditorRef,
+    useElement,
+    withHOC,
 } from "@udecode/plate-common/react";
 import {
-  type DragItemNode,
-  DraggableProvider,
-  useDraggable,
-  useDraggableGutter,
-  useDraggableState,
-  useDropLine,
+    type DragItemNode,
+    DraggableProvider,
+    useDraggable,
+    useDraggableGutter,
+    useDraggableState,
+    useDropLine,
 } from "@udecode/plate-dnd";
 import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
 import { GripVertical } from "lucide-react";
 
 import { useMounted } from "@/hooks/use-mounted";
 
+import { forwardRef, memo } from "react";
 import { BlockMenu } from "./block-menu";
 import { Button } from "./button";
 import { DraggableInsertHandle } from "./draggable-insert-handler";
@@ -77,7 +75,7 @@ export const Draggable = withHOC(
   }),
 );
 
-const Gutter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+const Gutter = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ children, className, ...props }, ref) => {
     const { useOption } = useEditorPlugin(BlockSelectionPlugin);
     const isSelectionAreaVisible = useOption("isSelectionAreaVisible");
@@ -101,7 +99,7 @@ const Gutter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElem
   },
 );
 
-const DragHandle = React.memo(({ handleRef, ...props }: any) => {
+const DragHandle = memo(({ handleRef, ...props }: any) => {
   const editor = useEditorRef();
   const element = useElement();
 
@@ -115,6 +113,7 @@ const DragHandle = React.memo(({ handleRef, ...props }: any) => {
         onMouseDown={() => {
           editor.getApi(BlockSelectionPlugin).blockSelection.addSelectedRow(element.id as string);
         }}
+        data-plate-prevent-unselect
         tabIndex={-1}
         tooltip={
           <div className="text-center">
@@ -133,8 +132,8 @@ const DragHandle = React.memo(({ handleRef, ...props }: any) => {
   );
 });
 
-const DropLine = React.memo(
-  React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ children, className, ...props }, ref) => {
+const DropLine = memo(
+  forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ children, className, ...props }, ref) => {
     const state = useDropLine();
 
     if (!state.dropLine) return null;
