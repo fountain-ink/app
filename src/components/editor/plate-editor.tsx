@@ -12,11 +12,12 @@ import { FixedToolbar } from "../ui/fixed-toolbar";
 import { FixedToolbarButtons } from "../ui/fixed-toolbar-buttons";
 import { FloatingToolbar } from "../ui/floating-toolbar";
 import { FloatingToolbarButtons } from "../ui/floating-toolbar-buttons";
+import { TocSideBar } from "../ui/toc-sidebar";
 import { getUiComponents } from "./plate-create-ui";
 import { getEditorPlugins } from "./plate-plugins";
 
 export default function PlateEditor(
-  props: PropsWithChildren & { showToolbar?: boolean; refreshToken?: string; handle?: string },
+  props: PropsWithChildren & { showToolbar?: boolean; showToc?: boolean; refreshToken?: string; handle?: string },
 ) {
   const containerRef = useRef(null);
   const editorRef = useRef(null);
@@ -33,9 +34,12 @@ export default function PlateEditor(
 
   return (
     <DndProvider backend={HTML5Backend}>
+
       <PlateStoreProvider>
         <Plate editor={editor}>
           <div ref={containerRef} data-plate-selectable>
+            {props.showToc && <TocSideBar className="top-[130px]" topOffset={30} />}
+
             {props.showToolbar && (
               <FixedToolbar>
                 <FixedToolbarButtons />
@@ -48,7 +52,7 @@ export default function PlateEditor(
               ref={editorRef}
               disableDefaultStyles
               className={
-                "overflow-visible justify-self-stretch grow w-full max-w-full sm:max-w-3xl md:max-w-4xl  p-10 sm:px-30 md:px-40 mx-auto"
+                "overflow-visible justify-self-stretch grow w-full max-w-full sm:max-w-3xl md:max-w-4xl p-10 sm:px-30 md:px-40 mx-auto"
               }
               autoFocus
               variant="fullWidth"

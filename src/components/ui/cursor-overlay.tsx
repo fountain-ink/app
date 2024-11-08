@@ -5,11 +5,11 @@ import { useEffect } from "react";
 import { cn } from "@udecode/cn";
 import { createPlatePlugin, useEditorPlugin, useEditorRef } from "@udecode/plate-common/react";
 import {
-  type CursorData,
-  type CursorOverlayProps,
-  type CursorProps,
-  type CursorState,
-  CursorOverlay as CursorOverlayPrimitive,
+    type CursorData,
+    type CursorOverlayProps,
+    type CursorProps,
+    type CursorState,
+    CursorOverlay as CursorOverlayPrimitive,
 } from "@udecode/plate-cursor";
 import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
 
@@ -22,6 +22,7 @@ export function Selection({
   selectionRects,
 }: CursorProps<CursorData>) {
   const { style, selectionStyle = style } = data ?? ({} as CursorData);
+
 
   return (
     <>

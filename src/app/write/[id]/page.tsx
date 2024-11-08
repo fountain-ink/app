@@ -37,12 +37,12 @@ export default async function WriteDraft({ params }: { params: { id: string } })
 
   return (
     <div
-      className={`text-foreground bg-background max-w-full w-screen h-screen overflow-y-auto relative 
+      className={`text-foreground bg-background max-w-full w-screen h-screen overflow-y-auto relative
         [&_.slate-selection-area]:border [&_.slate-selection-area]:border-primary [&_.slate-selection-area]:bg-primary/10
         ${proseClasses}`}
       id="scroll_container"
     >
-      <Editor refreshToken={refreshToken} handle={handle}>
+      <Editor showToc refreshToken={refreshToken} handle={handle}>
         <EditorPublishing />
       </Editor>
     </div>
