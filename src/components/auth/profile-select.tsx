@@ -33,19 +33,21 @@ export function ProfileSelect({ onSuccess }: { onSuccess: (profile: Profile) => 
           <User2Icon />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-72">
+      <DialogContent className=" max-w-72 ">
+        {/* // TODO onboarding */}
         <DialogHeader>
           <DialogTitle>Select profile</DialogTitle>
         </DialogHeader>
-        {/* // TODO onboarding */}
-        {profiles.length === 0 && <p>No profiles found.</p>}
-        {profiles.map((profile) => (
-          <LoginButton key={profile.id} profile={profile} onSuccess={onSuccess} />
-        ))}
-        <Button variant="ghost" className="flex gap-2 text-md" onClick={() => toast.error("Not implemented yet")}>
-          <PlusIcon />
-          New Profile
-        </Button>
+        <div className="flex flex-col gap-3 items-center justify-center">
+          {profiles.length === 0 && <p>No profiles found.</p>}
+          {profiles.map((profile) => (
+            <LoginButton key={profile.id} profile={profile} onSuccess={onSuccess} />
+          ))}
+          <Button variant="ghost" className="flex gap-2 text-md" onClick={() => toast.error("Not implemented yet")}>
+            <PlusIcon />
+            New Profile
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );
