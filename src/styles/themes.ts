@@ -123,7 +123,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--foreground": "0 0% 11%",
     "--background": "0 0% 96%",
 
-    "--accent": "210 40% 96%",
+    "--accent": "183 20% 100%",
     "--accent-foreground": "222.2 47.4% 11.2%",
 
     "--title-font": "plantin",

@@ -37,7 +37,7 @@ export default function PlateEditor(
       <PlateStoreProvider>
         <Plate editor={editor}>
           <div ref={containerRef} data-plate-selectable>
-            {props.showToc && <TocSideBar className="top-[60px]" topOffset={30} />}
+            {props.showToc && <TocSideBar className="top-[80px]" topOffset={30} />}
 
             {props.showToolbar && (
               <FixedToolbar>

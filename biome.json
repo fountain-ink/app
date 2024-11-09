@@ -23,6 +23,8 @@
         "noExplicitAny": "off"
       },
       "a11y": {
+        "useKeyWithClickEvents": "off",
+
         "noSvgWithoutTitle": "off",
         "useAltText": "off"
       }
