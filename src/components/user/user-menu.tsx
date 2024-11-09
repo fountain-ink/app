@@ -9,13 +9,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { clearCookies } from "@/lib/clear-cookies";
 import { SessionType, useLogout, useSession } from "@lens-protocol/react-web";
-import { ArrowLeftRightIcon, LogOut, Settings, User } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useAccount, useDisconnect } from "wagmi";
-import { ProfileSelect } from "../auth/profile-select";
-import { AvatarSuspense, SessionAvatar } from "./user-avatar";
+import { ProfileSelectMenu } from "../auth/profile-select";
 import { ConnectWalletButton } from "../auth/wallet-button";
+import { LogoutIcon } from "../icons/logout";
+import { SettingsGearIcon } from "../icons/settings";
+import { UserRoundPenIcon } from "../icons/switch-profile";
+import { UserIcon } from "../icons/user";
+import { AvatarSuspense, SessionAvatar } from "./user-avatar";
 
 export const UserMenu = () => {
   const { data: session, loading, error } = useSession();
@@ -35,7 +38,7 @@ export const UserMenu = () => {
   }
 
   if (session.type !== SessionType.WithProfile) {
-    return <ProfileSelect onSuccess={() => {}} />;
+    return <ProfileSelectMenu onSuccess={() => {}} />;
   }
 
   const handle = session.profile?.handle?.localName;
@@ -49,9 +52,9 @@ export const UserMenu = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48 mt-1">
         <Link href={`/${handle}`} passHref>
-          <DropdownMenuItem className="flex justify-end gap-2 items-center text-base">
+          <DropdownMenuItem className="flex justify-end gap-2 items-center text-base group pr-0 h-10">
             <span>Profile</span>
-            <User className="h-5 w-5" />
+            <UserIcon />
           </DropdownMenuItem>
         </Link>
         <DropdownMenuItem
@@ -60,15 +63,16 @@ export const UserMenu = () => {
             clearCookies();
           }}
           disabled={logoutLoading}
-          className="flex justify-end gap-2 items-center text-base"
+          className="flex justify-end gap-2 items-center text-base group pr-0 h-10"
         >
           <span>Switch Profile</span>
-          <ArrowLeftRightIcon className="h-5 w-5" />
+          <UserRoundPenIcon />
         </DropdownMenuItem>
         <Link href="/settings" passHref>
-          <DropdownMenuItem className="flex justify-end gap-2 items-center text-base">
+          <DropdownMenuItem className="flex justify-end gap-2 items-center text-base group pr-0 h-10">
             <span>Settings</span>
-            <Settings className="h-5 w-5" />
+
+            <SettingsGearIcon />
           </DropdownMenuItem>
         </Link>
 
@@ -78,10 +82,10 @@ export const UserMenu = () => {
             logout();
             clearCookies();
           }}
-          className="flex justify-end gap-2 items-center text-base"
+          className="flex justify-end gap-2 items-center text-base group pr-0 h-10"
         >
           <span>Disconnect</span>
-          <LogOut className="h-5 w-5" />
+          <LogoutIcon />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

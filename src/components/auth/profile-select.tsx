@@ -5,8 +5,9 @@ import { useAccount } from "wagmi";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { LoginButton } from "./login-button";
+import { UserIcon } from "../icons/user";
 
-export function ProfileSelect({ onSuccess }: { onSuccess: (profile: Profile) => void }) {
+export function ProfileSelectMenu({ onSuccess }: { onSuccess: (profile: Profile) => void }) {
   const { address } = useAccount();
   const {
     data: profiles,
@@ -30,7 +31,7 @@ export function ProfileSelect({ onSuccess }: { onSuccess: (profile: Profile) => 
     <Dialog defaultOpen>
       <DialogTrigger asChild>
         <Button size="icon" variant="ghost">
-          <User2Icon />
+          <UserIcon />
         </Button>
       </DialogTrigger>
       <DialogContent className=" max-w-72 ">

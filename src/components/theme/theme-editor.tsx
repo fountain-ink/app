@@ -19,7 +19,7 @@ export const ThemeSidebar = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button className="h-10 w-10 p-0" variant="ghost">
+        <Button className="h-10 w-10 p-0" variant="ghost" size={"icon"}>
           <TypeIcon />
         </Button>
       </SheetTrigger>
