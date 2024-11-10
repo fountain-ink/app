@@ -50,7 +50,7 @@ export const UserMenu = () => {
           <SessionAvatar />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48 mt-1">
+      <DropdownMenuContent align="end" className="w-48 py-1">
         <Link href={`/${handle}`} passHref>
           <DropdownMenuItem className="flex justify-start gap-2 items-center text-base group px-0 h-10">
             <UserIcon />
