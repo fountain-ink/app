@@ -33,7 +33,7 @@ export const Header = () => {
 
   return (
     <div
-      className={`fixed top-0 w-full p-2 z-[40] flex justify-between items-center backdrop-blur-lg border-b border-border transition-opacity duration-500 ${
+      className={`fixed top-0 w-full p-2 z-[40] flex justify-between items-center backdrop-blur-xl bg-background/40 border-b border-border transition-opacity duration-500 ${
         isVisible ? "opacity-100" : "opacity-0"
       } hover:opacity-100`}
     >

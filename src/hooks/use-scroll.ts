@@ -1,14 +1,14 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export const useScroll = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [prevScrollY, setPrevScrollY] = useState(0);
 
-  const debounce = (func: Function, wait: number) => {
+  const debounce = <T extends (...args: any[]) => void>(fn: T, wait: number) => {
     let timeout: NodeJS.Timeout;
-    return (...args: any[]) => {
+    return (...args: Parameters<T>) => {
       clearTimeout(timeout);
-      timeout = setTimeout(() => func(...args), wait);
+      timeout = setTimeout(() => fn(...args), wait);
     };
   };
 
@@ -17,19 +17,19 @@ export const useScroll = () => {
       const currentScrollY = window.scrollY;
       const scrollHeight = document.documentElement.scrollHeight;
       const clientHeight = document.documentElement.clientHeight;
-      const isBottom = currentScrollY + clientHeight >= scrollHeight - 10;
-      
-      // Only trigger hide/show if scroll difference is more than 50px
+      const isBottom = currentScrollY + clientHeight >= scrollHeight - 400;
+      const isTop = currentScrollY < 400;
+
       const scrollDifference = Math.abs(currentScrollY - prevScrollY);
-      
-      if (isBottom) {
+
+      if (isBottom || isTop) {
         setIsVisible(true);
       } else if (scrollDifference > 50) {
         setIsVisible(currentScrollY < prevScrollY);
       }
 
       setPrevScrollY(currentScrollY);
-    }, 100), // 100ms debounce
+    }, 100),
     [prevScrollY]
   );
 

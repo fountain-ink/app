@@ -1,5 +1,6 @@
 import Markdown from "@/components/content/markdown";
 import ErrorPage from "@/components/error-page";
+import { Footer } from "@/components/navigation/footer";
 import { getAuth } from "@/lib/get-auth-clients";
 import { proseClasses } from "@/styles/prose";
 import { sanitize } from "isomorphic-dompurify";
@@ -35,6 +36,7 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
             // biome-ignore lint/security/noDangerouslySetInnerHtml: intended use
             dangerouslySetInnerHTML={{ __html: sanitize(contentHtml) }}
           />
+          <Footer />
         </div>
       </div>
     );
