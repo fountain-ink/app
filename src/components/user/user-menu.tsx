@@ -45,7 +45,7 @@ export const UserMenu = () => {
           <SessionAvatar />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48 py-1">
+      <DropdownMenuContent align="end" className="w-48 p-1">
         <AnimatedMenuItem href={`/${handle}`} icon={UserIcon}>
           Profile
         </AnimatedMenuItem>
@@ -59,11 +59,11 @@ export const UserMenu = () => {
         >
           Switch Profile
         </AnimatedMenuItem>
-        
+
         <AnimatedMenuItem href="/settings" icon={SettingsGearIcon}>
           Settings
         </AnimatedMenuItem>
-        
+
         <AnimatedMenuItem
           icon={LogoutIcon}
           onClick={() => {

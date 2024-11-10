@@ -1,7 +1,4 @@
-
-import {
-    DropdownMenuItem
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -23,7 +20,7 @@ export const AnimatedMenuItem = ({
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="flex justify-start gap-2 items-center text-base group px-0 h-10"
+      className="flex justify-start gap-2 items-center text-base group px-0 h-10 mx-0"
     >
       <Icon animate={isHovered} />
       <span>{children}</span>
