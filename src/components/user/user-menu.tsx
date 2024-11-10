@@ -52,9 +52,9 @@ export const UserMenu = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48 mt-1">
         <Link href={`/${handle}`} passHref>
-          <DropdownMenuItem className="flex justify-end gap-2 items-center text-base group pr-0 h-10">
-            <span>Profile</span>
+          <DropdownMenuItem className="flex justify-start gap-2 items-center text-base group px-0 h-10">
             <UserIcon />
+            <span>Profile</span>
           </DropdownMenuItem>
         </Link>
         <DropdownMenuItem
@@ -63,16 +63,15 @@ export const UserMenu = () => {
             clearCookies();
           }}
           disabled={logoutLoading}
-          className="flex justify-end gap-2 items-center text-base group pr-0 h-10"
+          className="flex justify-start gap-2 items-center text-base group px-0 h-10"
         >
-          <span>Switch Profile</span>
           <UserRoundPenIcon />
+          <span>Switch Profile</span>
         </DropdownMenuItem>
         <Link href="/settings" passHref>
-          <DropdownMenuItem className="flex justify-end gap-2 items-center text-base group pr-0 h-10">
-            <span>Settings</span>
-
+          <DropdownMenuItem className="flex justify-start gap-2 items-center text-base group px-0 h-10">
             <SettingsGearIcon />
+            <span>Settings</span>
           </DropdownMenuItem>
         </Link>
 
@@ -82,10 +81,10 @@ export const UserMenu = () => {
             logout();
             clearCookies();
           }}
-          className="flex justify-end gap-2 items-center text-base group pr-0 h-10"
+          className="flex justify-start gap-2 items-center text-base group px-0 h-10"
         >
-          <span>Disconnect</span>
           <LogoutIcon />
+          <span>Disconnect</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
