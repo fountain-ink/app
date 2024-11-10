@@ -13,14 +13,20 @@ const pathVariants: Variants = {
   },
 };
 
-const LogoutIcon = () => {
+const LogoutIcon = ({ animate = false }: { animate?: boolean }) => {
   const controls = useAnimation();
+
+  if (animate) {
+    controls.start("animate");
+  } else {
+    controls.start("normal");
+  }
 
   return (
     <div
-      className="cursor-pointer select-none p-2 group-hover:bg-accent rounded-md transition-colors duration-200 flex items-center justify-center"
-      onMouseEnter={() => controls.start("animate")}
-      onMouseLeave={() => controls.start("normal")}
+      className={
+        "cursor-pointer select-none p-2 rounded-md transition-colors duration-200 flex items-center justify-center"
+      }
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

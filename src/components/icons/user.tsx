@@ -25,15 +25,17 @@ const circleVariant: Variants = {
   },
 };
 
-const UserIcon = () => {
+const UserIcon = ({ animate = false }: { animate?: boolean }) => {
   const controls = useAnimation();
 
+  if (animate) {
+    controls.start("animate");
+  } else {
+    controls.start("normal");
+  }
+
   return (
-    <div
-      className="cursor-pointer select-none p-2 group-hover:bg-accent rounded-md transition-colors duration-100 flex items-center justify-center"
-      onMouseEnter={() => controls.start("animate")}
-      onMouseLeave={() => controls.start("normal")}
-    >
+    <div className="cursor-pointer select-none p-2 group-hover:bg-accent rounded-md transition-colors duration-100 flex items-center justify-center">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="28"

@@ -1,15 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { clearCookies } from "@/lib/clear-cookies";
 import { SessionType, useLogout, useSession } from "@lens-protocol/react-web";
-import Link from "next/link";
 import { toast } from "sonner";
 import { useAccount, useDisconnect } from "wagmi";
 import { ProfileSelectMenu } from "../auth/profile-select";
@@ -18,6 +12,7 @@ import { LogoutIcon } from "../icons/logout";
 import { SettingsGearIcon } from "../icons/settings";
 import { UserRoundPenIcon } from "../icons/switch-profile";
 import { UserIcon } from "../icons/user";
+import { AnimatedMenuItem } from "../navigation/animated-item";
 import { AvatarSuspense, SessionAvatar } from "./user-avatar";
 
 export const UserMenu = () => {
@@ -51,41 +46,34 @@ export const UserMenu = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48 py-1">
-        <Link href={`/${handle}`} passHref>
-          <DropdownMenuItem className="flex justify-start gap-2 items-center text-base group px-0 h-10">
-            <UserIcon />
-            <span>Profile</span>
-          </DropdownMenuItem>
-        </Link>
-        <DropdownMenuItem
+        <AnimatedMenuItem href={`/${handle}`} icon={UserIcon}>
+          Profile
+        </AnimatedMenuItem>
+
+        <AnimatedMenuItem
+          icon={UserRoundPenIcon}
           onClick={() => {
             logout();
             clearCookies();
           }}
-          disabled={logoutLoading}
-          className="flex justify-start gap-2 items-center text-base group px-0 h-10"
         >
-          <UserRoundPenIcon />
-          <span>Switch Profile</span>
-        </DropdownMenuItem>
-        <Link href="/settings" passHref>
-          <DropdownMenuItem className="flex justify-start gap-2 items-center text-base group px-0 h-10">
-            <SettingsGearIcon />
-            <span>Settings</span>
-          </DropdownMenuItem>
-        </Link>
-
-        <DropdownMenuItem
+          Switch Profile
+        </AnimatedMenuItem>
+        
+        <AnimatedMenuItem href="/settings" icon={SettingsGearIcon}>
+          Settings
+        </AnimatedMenuItem>
+        
+        <AnimatedMenuItem
+          icon={LogoutIcon}
           onClick={() => {
             disconnect();
             logout();
             clearCookies();
           }}
-          className="flex justify-start gap-2 items-center text-base group px-0 h-10"
         >
-          <LogoutIcon />
-          <span>Disconnect</span>
-        </DropdownMenuItem>
+          Disconnect
+        </AnimatedMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
