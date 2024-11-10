@@ -3,7 +3,6 @@ import { withHOC } from "@udecode/plate-common/react";
 import { Image, ImagePlugin, useMediaState } from "@udecode/plate-media/react";
 import { ResizableProvider, useResizableStore } from "@udecode/plate-resizable";
 import React, { useEffect, useState } from "react";
-
 import { Caption, CaptionTextarea } from "./caption";
 import { ImagePopover } from "./image-popover";
 import { PlateElement } from "./plate-element";

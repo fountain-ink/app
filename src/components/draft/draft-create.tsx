@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { getRandomUid } from "@/lib/get-random-uid";
-
 import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { JSONContent } from "novel";
@@ -35,19 +34,13 @@ const defaultContent: JSONContent = {
   ],
 };
 
-export const DraftCreate = ({
-  onSuccess,
-  variant = "default",
-  text = "New Article",
-  isLocal = false,
-}: {
+type CreateButtonProps = {
   onSuccess?: () => void;
-  variant?: "default" | "ghost";
   text?: string;
-  isLocal?: boolean;
-}) => {
+};
+
+export const LocalDraftCreate = ({ onSuccess, text = "New Article" }: CreateButtonProps) => {
   const { saveDocument } = useDocumentStorage();
-  const [isCreating, setIsCreating] = useState(false);
   const router = useRouter();
 
   const handleNew = () => {
@@ -67,6 +60,17 @@ export const DraftCreate = ({
     router.replace(`/write/${id}`);
     onSuccess?.();
   };
+
+  return (
+    <Button onClick={handleNew} variant={"default"} className="flex gap-2">
+      {text}
+    </Button>
+  );
+};
+
+export const RemoteDraftCreate = ({ onSuccess, text = "New Article" }: CreateButtonProps) => {
+  const [isCreating, setIsCreating] = useState(false);
+  const router = useRouter();
 
   const handleCreate = async () => {
     setIsCreating(true);
@@ -89,18 +93,14 @@ export const DraftCreate = ({
     onSuccess?.();
   };
 
-  return isLocal ? (
-    <Button onClick={handleNew} variant={variant} className="flex gap-2">
-      {text}
-    </Button>
-  ) : (
-    <Button onClick={handleCreate} variant={variant} className="flex items-center jusitfy-center gap-2">
+  return (
+    <Button onClick={handleCreate} variant={"ghost"} className="flex items-center justify-start gap-2 py-1 pl-3 w-full">
       {isCreating ? (
         <LoadingSpinner size={20} className="w-4 h-4 flex items-center justify-center" />
       ) : (
         <PlusIcon className="w-4 h-4" />
       )}
-      {text}
+      <span>{text}</span>
     </Button>
   );
 };

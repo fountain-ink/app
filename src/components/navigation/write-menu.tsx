@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SessionType, useSession } from "@lens-protocol/react-web";
 import { useAccount } from "wagmi";
-import { DraftCreate } from "../draft/draft-create";
+import { LocalDraftCreate, RemoteDraftCreate } from "../draft/draft-create";
 import { SquarePenIcon } from "../icons/square-pen";
 import { AnimatedMenuItem } from "./animated-item";
 
@@ -22,7 +22,7 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
   }
 
   if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
-    return <DraftCreate isLocal={true} text="Write" />;
+    return <LocalDraftCreate text="Write" />;
   }
 
   return (
@@ -30,9 +30,9 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
       <DropdownMenuTrigger asChild>
         <Button>{text}</Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="py-1" align="end">
+      <DropdownMenuContent className="p-1" align="end">
         <DropdownMenuItem asChild>
-          <DraftCreate isLocal={false} text="New Article" variant="ghost" />
+          <RemoteDraftCreate text="New Article" />
         </DropdownMenuItem>
         <AnimatedMenuItem href="/drafts" icon={SquarePenIcon}>
           Drafts
