@@ -33,7 +33,7 @@ export const Header = () => {
     return (
       <motion.div
         style={{ y }}
-        className="fixed top-0 w-full h-[100px] -mt-[42px] pt-[50px] z-[40] bg-background/20 backdrop-blur-md border-b border-border overflow-hidden p-2"
+        className="fixed top-0 w-full h-[100px] -mt-[42px] pt-[50px] z-[40] bg-background/20 backdrop-blur-lg border-b border-border overflow-hidden p-2"
       >
         <div className="flex items-end justify-between absolute bg-gradient-to-t from-transparent to-background bottom-0 left-0 right-0 h-[80px] pb-2 px-2">
           <Link href={"/"} className="w-10 h-10 flex items-center justify-center pointer-events-auto">
@@ -49,7 +49,7 @@ export const Header = () => {
   return (
     <motion.div
       style={{ y }}
-      className="fixed top-0 w-full h-[100px] -mt-[42px] pt-[50px] z-[40] bg-background/20 backdrop-blur-md border-b border-border overflow-hidden p-2"
+      className="fixed top-0 w-full h-[100px] -mt-[42px] pt-[50px] z-[40] bg-background/20 backdrop-blur-lg border-b border-border overflow-hidden p-2"
     >
       <div className="flex items-end justify-between absolute bg-gradient-to-t from-transparent to-background bottom-0 left-0 right-0 h-[80px] pb-2 px-2">
         <Link href={"/"} className="w-10 h-10 flex items-center justify-center pointer-events-auto">
