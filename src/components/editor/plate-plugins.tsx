@@ -165,7 +165,7 @@ export const getEditorPlugins = (path: string, handle?: string, refreshToken?: s
   return plugins;
 };
 
-const staticPlugins = [
+export const staticPlugins = [
   NormalizePlugin,
   // Nodes
   HeadingPlugin.configure({ options: { levels: 4 } }),

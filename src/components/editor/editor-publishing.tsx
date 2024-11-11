@@ -17,7 +17,7 @@ import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { getRawUiCompontents } from "./plate-create-ui";
-import { getEditorPlugins } from "./plate-plugins";
+import { getEditorPlugins, staticPlugins } from "./plate-plugins";
 
 export const EditorPublishing = () => {
   const { data: session } = useSession();
@@ -32,6 +32,13 @@ export const EditorPublishing = () => {
   const isLocal = pathname.includes("local");
   const documentId = pathname.split("/").at(-1);
 
+  const editor = useMemo(() => {
+    return createPlateEditor({
+      plugins: staticPlugins?.filter((plugin: any) => plugin?.key !== "toggle" && plugin?.key !== "blockSelection"),
+      override: { components: getRawUiCompontents() },
+    });
+  }, []);
+  
   if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -46,14 +53,6 @@ export const EditorPublishing = () => {
       </Dialog>
     );
   }
-
-  const plugins = getEditorPlugins("no-path");
-  const editor = useMemo(() => {
-    return createPlateEditor({
-      plugins: plugins?.filter((plugin: any) => plugin?.key !== "toggle" && plugin?.key !== "blockSelection"),
-      override: { components: getRawUiCompontents() },
-    });
-  }, []);
 
   const handle = session?.profile?.handle?.localName || "";
 
@@ -71,18 +70,18 @@ export const EditorPublishing = () => {
       stripWhitespace: true,
       dndWrapper: (props) => <DndProvider context={window} backend={HTML5Backend} {...props} />,
     });
-    
+
     const contentMarkdown = editorState.api.markdown.serialize();
     const { title, subtitle, coverImage } = extractMetadata(contentJson);
 
-    const publish = false;
-    if (!publish) {
-      console.log(title, subtitle, coverImage);
-      console.log(JSON.stringify(contentJson, null, 2));
-      console.log(contentHtml);
-      console.log(contentMarkdown);
-      return;
-    }
+    // const publish = false;
+    // if (!publish) {
+    //   console.log(title, subtitle, coverImage);
+    //   console.log(JSON.stringify(contentJson, null, 2));
+    //   console.log(contentHtml);
+    //   console.log(contentMarkdown);
+    //   return;
+    // }
 
     try {
       const metadata = article({
