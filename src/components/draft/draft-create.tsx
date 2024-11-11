@@ -5,11 +5,10 @@ import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { getRandomUid } from "@/lib/get-random-uid";
 import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import type { JSONContent } from "novel";
 import { useState } from "react";
 import { LoadingSpinner } from "../loading-spinner";
 
-const defaultContent: JSONContent = {
+const defaultContent: JSON = {
   type: "doc",
   content: [
     {
@@ -51,7 +50,7 @@ export const LocalDraftCreate = ({ onSuccess, text = "New Article" }: CreateButt
       isLocal: true,
       documentId: id,
       authorId: "",
-      contentJson: defaultContent,
+      contentJson: JSON.stringify(defaultContent),
       updatedAt: "",
       createdAt: "",
     });
