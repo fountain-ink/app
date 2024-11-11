@@ -3,7 +3,7 @@ import { getDatabase } from "@/lib/get-database";
 import { Database } from "@hocuspocus/extension-database";
 import { Logger } from "@hocuspocus/extension-logger";
 import { Server } from "@hocuspocus/server";
-import { slateNodesToInsertDelta } from "@slate-yjs/core";
+import { slateNodesToInsertDelta, yTextToSlateElement } from "@slate-yjs/core";
 import * as Y from "yjs";
 
 const initialValue = [
@@ -41,13 +41,14 @@ const server = Server.configure({
           console.log(`${key}: ${value}`);
         }
 
-        const { data: response, error } = await db.from("drafts").select().eq("documentId", documentName).single();
+        const { data: response } = await db.from("drafts").select().eq("documentId", documentName).single();
 
         if (!response || !response.yDoc) {
           const insertDelta = slateNodesToInsertDelta(initialValue);
           const sharedRoot = document.get("content", Y.XmlText);
           sharedRoot.applyDelta(insertDelta);
           const encoded = Y.encodeStateAsUpdate(document);
+
           return encoded;
         }
 
@@ -56,24 +57,17 @@ const server = Server.configure({
         return ydoc;
       },
 
-      store: async ({ documentName, state }) => {
+      store: async ({ documentName, state, document }) => {
         const yDoc = `\\x${state.toString("hex")}`;
+        const contentJson = yTextToSlateElement(document.get("content", Y.XmlText)).children;
 
         const { data: response, error } = await db
           .from("drafts")
-          .upsert(
-            {
-              documentId: documentName,
-              authrorId: undefined,
-              yDoc,
-            },
-            {
-              onConflict: "documentId",
-              ignoreDuplicates: false,
-            },
-          )
-          .select()
-          .single();
+          .update({
+            yDoc,
+            contentJson,
+          })
+          .eq("documentId", documentName);
 
         if (error) {
           console.error(`Error upserting document: ${error.message}`);

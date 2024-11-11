@@ -44,9 +44,8 @@ export const DraftView = ({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const { deleteDocument } = useDocumentStorage();
   const queryClient = useQueryClient();
-
   const content = draft.contentJson;
-  const { title, subtitle, coverImage } = extractMetadata(JSON.parse(content));
+  const { title, subtitle, coverImage } = extractMetadata(content);
   const authorIds = authorId ? [authorId] : [];
 
   const handleDelete = async () => {

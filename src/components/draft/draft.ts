@@ -3,7 +3,7 @@ export type Draft = {
   isLocal: boolean;
   documentId: string;
   authorId: string;
-  contentJson: string;
+  contentJson: any;
   updatedAt: string;
   createdAt: string;
 };
