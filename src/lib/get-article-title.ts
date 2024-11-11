@@ -1,4 +1,10 @@
-import type { JSONContent } from "novel";
+interface ContentNode {
+  type: string;
+  children: Array<{ text: string }>;
+  id: string;
+  url?: string;
+  width?: string;
+}
 
 interface ArticleMetadata {
   title: string;
@@ -6,8 +12,8 @@ interface ArticleMetadata {
   coverImage: string | null;
 }
 
-export const extractMetadata = (content: JSONContent | undefined): ArticleMetadata => {
-  if (!content) {
+export const extractMetadata = (content: ContentNode[] | undefined): ArticleMetadata => {
+  if (!content || !Array.isArray(content)) {
     return {
       title: "Untitled",
       subtitle: "",
@@ -15,27 +21,20 @@ export const extractMetadata = (content: JSONContent | undefined): ArticleMetada
     };
   }
 
-  const contentJson = content.content;
+  const titleNode = content.find((node) => node.type === "h1");
+  const subtitleNode = content.find((node) => node.type === "h2");
+  const imageNode = content.find((node) => node.type === "img");
 
-  if (!contentJson || !Array.isArray(contentJson)) {
-    return {
-      title: "Untitled",
-      subtitle: "",
-      coverImage: null,
-    };
-  }
-
-  const titleNode = contentJson.find(
-    (node: any) => node.type === "title" || (node.type === "heading" && node.attrs?.level === 1),
-  );
-  const subtitleNode = contentJson.find(
-    (node: any) => node.type === "subtitle" || (node.type === "heading" && node.attrs?.level === 2),
-  );
-  const imageNode = contentJson.find((node: any) => node.type === "image");
+  const extractText = (node: ContentNode | undefined): string => {
+    if (!node || !Array.isArray(node.children) || node.children.length === 0) {
+      return "";
+    }
+    return node.children[0]?.text ?? "";
+  };
 
   return {
-    title: titleNode ? titleNode.content?.[0]?.text ?? "Untitled" : "Untitled",
-    subtitle: subtitleNode ? subtitleNode.content?.[0]?.text ?? "" : "",
-    coverImage: imageNode?.attrs?.src ?? null,
+    title: extractText(titleNode) || "Untitled",
+    subtitle: extractText(subtitleNode),
+    coverImage: imageNode?.url ?? null,
   };
 };

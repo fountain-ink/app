@@ -6,7 +6,7 @@ import { usePublishStore } from "@/hooks/use-publish-store";
 import { extractMetadata } from "@/lib/get-article-title";
 import { uploadMetadata } from "@/lib/upload-utils";
 import { article, MetadataAttributeType } from "@lens-protocol/metadata";
-import { useCreatePost, useSession } from "@lens-protocol/react-web";
+import { SessionType, useCreatePost, useSession } from "@lens-protocol/react-web";
 import { useQueryClient } from "@tanstack/react-query";
 import { createPlateEditor, useEditorState } from "@udecode/plate-common/react";
 import { usePathname, useRouter } from "next/navigation";
@@ -32,20 +32,20 @@ export const EditorPublishing = () => {
   const isLocal = pathname.includes("local");
   const documentId = pathname.split("/").at(-1);
 
-  // if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
-  //   return (
-  //     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-  //       <DialogContent className="sm:max-w-[425px]">
-  //         <DialogHeader>
-  //           <DialogTitle>Login to publish</DialogTitle>
-  //         </DialogHeader>
-  //         <div className="space-y-4">
-  //           <p>To publish an article, please select a profile.</p>
-  //         </div>
-  //       </DialogContent>
-  //     </Dialog>
-  //   );
-  // }
+  if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
+    return (
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Login to publish</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p>To publish an article, please select a profile.</p>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   const plugins = getEditorPlugins("no-path");
   const editor = useMemo(() => {
@@ -55,8 +55,7 @@ export const EditorPublishing = () => {
     });
   }, []);
 
-  const handle = "";
-  // const handle = session?.profile?.handle?.localName || "";
+  const handle = session?.profile?.handle?.localName || "";
 
   const handlePublish = async () => {
     if (!editor) {
@@ -64,7 +63,7 @@ export const EditorPublishing = () => {
       return;
     }
 
-    const contentJson = editor.children;
+    const contentJson = editorState.children;
     const contentHtml = editor.api.htmlReact?.serialize({
       nodes: editorState.children,
       stripDataAttributes: true,
@@ -77,6 +76,7 @@ export const EditorPublishing = () => {
 
     const publish = false;
     if (!publish) {
+      console.log(title);
       console.log(contentJson);
       console.log(contentHtml);
       console.log(markdown);
