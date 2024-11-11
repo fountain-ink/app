@@ -8,23 +8,23 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoadingSpinner } from "../loading-spinner";
 
-const defaultContent: JSON = {
+const defaultContent: any = {
   type: "doc",
   content: [
     {
-      type: "title",
+      type: "h1",
       attrs: {
         level: 1,
       },
     },
     {
-      type: "subtitle",
+      type: "h2",
       attrs: {
         level: 2,
       },
     },
     {
-      type: "image",
+      type: "img",
       attrs: {
         src: null,
         width: "wide",
