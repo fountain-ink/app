@@ -11,6 +11,7 @@ import { LoadingSpinner } from "../loading-spinner";
 const defaultContent: any = {
   type: "doc",
   content: [
+    
     {
       type: "h1",
       attrs: {

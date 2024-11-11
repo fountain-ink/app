@@ -75,14 +75,14 @@ export const EditorPublishing = () => {
     const contentMarkdown = editorState.api.markdown.serialize();
     const { title, subtitle, coverImage } = extractMetadata(contentJson);
 
-    // const publish = false;
-    // if (!publish) {
-    //   console.log(title, subtitle, coverImage);
-    //   console.log(contentJson);
-    //   console.log(contentHtml);
-    //   console.log(contentMarkdown);
-    //   return;
-    // }
+    const publish = false;
+    if (!publish) {
+      console.log(title, subtitle, coverImage);
+      console.log(contentJson);
+      console.log(contentHtml);
+      console.log(contentMarkdown);
+      return;
+    }
 
     try {
       const metadata = article({
