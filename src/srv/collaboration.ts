@@ -66,14 +66,13 @@ const server = Server.configure({
           .update({
             yDoc,
             contentJson,
+            updatedAt: new Date(),
           })
           .eq("documentId", documentName);
 
         if (error) {
           console.error(`Error upserting document: ${error.message}`);
         }
-
-        console.log(response);
       },
     }),
   ],
