@@ -8,31 +8,36 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoadingSpinner } from "../loading-spinner";
 
-const defaultContent: any = {
-  type: "doc",
-  content: [
-    
-    {
-      type: "h1",
-      attrs: {
-        level: 1,
+const defaultContent: any = [
+  {
+    type: "h1",
+    children: [
+      {
+        text: "",
       },
-    },
-    {
-      type: "h2",
-      attrs: {
-        level: 2,
+    ],
+    id: "btxpw",
+  },
+  {
+    type: "h2",
+    children: [
+      {
+        text: "",
       },
-    },
-    {
-      type: "img",
-      attrs: {
-        src: null,
-        width: "wide",
+    ],
+    id: "v799z",
+  },
+  {
+    type: "img",
+    width: "wide",
+    children: [
+      {
+        text: "",
       },
-    },
-  ],
-};
+    ],
+    id: "nx3dl",
+  },
+];
 
 type CreateButtonProps = {
   onSuccess?: () => void;

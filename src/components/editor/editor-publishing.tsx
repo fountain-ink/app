@@ -78,7 +78,7 @@ export const EditorPublishing = () => {
     const publish = false;
     if (!publish) {
       console.log(title, subtitle, coverImage);
-      console.log(contentJson);
+      console.log(JSON.stringify(contentJson, null, 2));
       console.log(contentHtml);
       console.log(contentMarkdown);
       return;
