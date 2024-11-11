@@ -10,7 +10,7 @@ import { LoadingSpinner } from "../loading-spinner";
 import { withTooltip } from "./tooltip";
 
 export const buttonVariants = cva(
-  "focus-ring inline-flex w-fit cursor-pointer select-none items-center justify-center gap-2 rounded-md text-sm ring-offset-background transition-bg-ease disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "focus-ring inline-flex w-fit cursor-pointer select-none items-center justify-center gap-2 rounded-md text-sm ring-offset-background transition-bg-ease disabled:pointer-events-none disabled:opacity-50 transition-all duration-300 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     defaultVariants: {
       size: "default",
