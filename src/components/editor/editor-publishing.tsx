@@ -71,28 +71,29 @@ export const EditorPublishing = () => {
       stripWhitespace: true,
       dndWrapper: (props) => <DndProvider context={window} backend={HTML5Backend} {...props} />,
     });
-    const markdown = editorState.api.markdown.serialize();
-    const { title } = extractMetadata(contentJson);
+    
+    const contentMarkdown = editorState.api.markdown.serialize();
+    const { title, subtitle, coverImage } = extractMetadata(contentJson);
 
-    const publish = false;
-    if (!publish) {
-      console.log(title);
-      console.log(contentJson);
-      console.log(contentHtml);
-      console.log(markdown);
-      return;
-    }
+    // const publish = false;
+    // if (!publish) {
+    //   console.log(title, subtitle, coverImage);
+    //   console.log(contentJson);
+    //   console.log(contentHtml);
+    //   console.log(contentMarkdown);
+    //   return;
+    // }
 
     try {
       const metadata = article({
         title,
-        content: markdown,
+        content: contentMarkdown,
         locale: "en",
         appId: "fountain",
 
         attributes: [
           { key: "contentJson", type: MetadataAttributeType.JSON, value: JSON.stringify(contentJson) },
-          // { key: "contentHtml", type: MetadataAttributeType.STRING, value: contentHtml },
+          { key: "contentHtml", type: MetadataAttributeType.STRING, value: contentHtml },
         ],
       });
 

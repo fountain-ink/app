@@ -17,7 +17,14 @@ import { getUiComponents } from "./plate-create-ui";
 import { getEditorPlugins } from "./plate-plugins";
 
 export default function PlateEditor(
-  props: PropsWithChildren & { showToolbar?: boolean; showToc?: boolean; refreshToken?: string; handle?: string },
+  props: PropsWithChildren & {
+    showToolbar?: boolean;
+    showToc?: boolean;
+    refreshToken?: string;
+    handle?: string;
+    readOnly?: boolean;
+    value?: string;
+  },
 ) {
   const containerRef = useRef(null);
   const editorRef = useRef(null);
@@ -25,17 +32,18 @@ export default function PlateEditor(
   const documentId = pathname.split("/").at(-1) || "erroredDocumentId";
 
   const editor = createPlateEditor({
-    plugins: [...getEditorPlugins(documentId, props.handle, props.refreshToken)],
+    plugins: [...getEditorPlugins(documentId, props.handle, props.refreshToken, props.readOnly)],
     override: {
       components: getUiComponents(),
     },
     options: {},
+    value: props.value ? JSON.parse(props.value) || "" : undefined,
   });
 
   return (
     <DndProvider backend={HTML5Backend}>
       <PlateStoreProvider>
-        <Plate editor={editor}>
+        <Plate editor={editor} readOnly={props.readOnly}>
           <div ref={containerRef} data-plate-selectable>
             {props.showToc && <TocSideBar className="top-[80px]" topOffset={30} />}
 

@@ -75,10 +75,11 @@ import { autoformatRules } from "./plate-autoformat";
 import { NormalizePlugin } from "./plate-normalization";
 import { RenderAboveEditableYjs } from "./yjs-above-editable";
 
-export const getEditorPlugins = (path: string, handle?: string, refreshToken?: string) => {
+export const getEditorPlugins = (path: string, handle?: string, refreshToken?: string, readOnly?: boolean) => {
+  const plugins = [...staticPlugins];
+
   if (refreshToken) {
-    return [
-      ...staticPlugins,
+    plugins.push(
       YjsPlugin.configure({
         render: {
           aboveEditable: RenderAboveEditableYjs,
@@ -94,7 +95,6 @@ export const getEditorPlugins = (path: string, handle?: string, refreshToken?: s
           disableCursors: false,
           hocuspocusProviderOptions: {
             url: "https://collab.fountain.ink",
-            // url: "ws://0.0.0.0:4444",
             name: path,
             connect: false,
             token: refreshToken,
@@ -123,7 +123,7 @@ export const getEditorPlugins = (path: string, handle?: string, refreshToken?: s
             },
           },
         },
-      }),
+      }) as any,
       CommentsPlugin.configure({
         options: {
           users: {
@@ -135,15 +135,37 @@ export const getEditorPlugins = (path: string, handle?: string, refreshToken?: s
           },
           myUserId: "1",
         },
-      }),
-    ];
+      }) as any,
+    );
   }
 
-  return staticPlugins;
+  if (!readOnly) {
+    plugins.push(
+      SelectionOverlayPlugin as any,
+      BlockSelectionPlugin.configure({
+        options: {
+          areaOptions: {
+            behaviour: {
+              scrolling: {
+                speedDivider: 1.5,
+              },
+              startThreshold: 30,
+            },
+            boundaries: "#scroll_container",
+            container: "#scroll_container",
+            selectables: "#scroll_container .slate-selectable",
+            selectionAreaClass: "slate-selection-area",
+          },
+          enableContextMenu: true,
+        },
+      }) as any,
+    );
+  }
+
+  return plugins;
 };
 
 const staticPlugins = [
-  SelectionOverlayPlugin,
   NormalizePlugin,
   // Nodes
   HeadingPlugin.configure({ options: { levels: 4 } }),
@@ -267,24 +289,6 @@ const staticPlugins = [
     options: {
       enableUndoOnDelete: true,
       rules: autoformatRules,
-    },
-  }),
-
-  BlockSelectionPlugin.configure({
-    options: {
-      areaOptions: {
-        behaviour: {
-          scrolling: {
-            speedDivider: 1.5,
-          },
-          startThreshold: 30,
-        },
-        boundaries: "#scroll_container",
-        container: "#scroll_container",
-        selectables: "#scroll_container .slate-selectable",
-        selectionAreaClass: "slate-selection-area",
-      },
-      enableContextMenu: true,
     },
   }),
 

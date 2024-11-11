@@ -193,8 +193,8 @@ export const Footer = () => {
       <motion.div
         style={{ y }}
         className="fixed bottom-6 z-[40] px-2 py-0.5
-          rounded-full backdrop-blur-xl bg-background/70 border border-border
-          shadow-lg w-full max-w-[90vw] sm:max-w-[50vw] md:max-w-sm"
+           rounded-full backdrop-blur-xl bg-background/70 border border-border
+           shadow-lg w-full max-w-[90vw] sm:max-w-[50vw] md:max-w-sm"
       >
         <nav className="flex items-center justify-between">
           {actionButtons.map((button, index) => {

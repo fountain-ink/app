@@ -1,4 +1,5 @@
 import Markdown from "@/components/content/markdown";
+import Editor from "@/components/editor/plate-editor";
 import ErrorPage from "@/components/error-page";
 import { Footer } from "@/components/navigation/footer";
 import { getAuth } from "@/lib/get-auth-clients";
@@ -23,8 +24,19 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
   }
 
   if (post.metadata.appId === "fountain") {
-    const _contentJson = post?.metadata?.attributes?.find((attr: any) => attr.key === "contentJson")?.value;
+    const contentJson = post?.metadata?.attributes?.find((attr: any) => attr.key === "contentJson")?.value;
     const contentHtml = post?.metadata?.attributes?.find((attr: any) => attr.key === "contentHtml")?.value;
+
+    if (contentJson) {
+      return (
+        <div className="container flex flex-col items-center justify-center w-full max-w-lg md:max-w-xl lg:max-w-2xl relative">
+          <div className={`text-foreground bg-background ${proseClasses}`}>
+            <Editor value={contentJson} readOnly={true} />
+          </div>
+          <Footer />
+        </div>
+      );
+    }
 
     if (!contentHtml) throw new Error("Couldn't find content");
 

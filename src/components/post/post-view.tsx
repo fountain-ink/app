@@ -41,6 +41,7 @@ export const PostView = ({
   if (!contentJson) {
     return null;
   }
+
   const { title, subtitle, coverImage } = extractMetadata(JSON.parse(contentJson?.value));
 
   return (
