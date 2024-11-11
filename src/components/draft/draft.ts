@@ -1,11 +1,9 @@
-import type { JSONContent } from "novel";
-
 export type Draft = {
   id: number;
   isLocal: boolean;
   documentId: string;
   authorId: string;
-  contentJson: JSONContent;
+  contentJson: string;
   updatedAt: string;
   createdAt: string;
 };

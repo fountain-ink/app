@@ -38,6 +38,7 @@ export const PostView = ({
   const formattedDate = formatDate(post.createdAt);
   const handle = post.by?.handle?.localName;
   const contentJson = metadata?.attributes?.find((attr) => attr.key === "contentJson");
+  
   if (!contentJson) {
     return null;
   }
