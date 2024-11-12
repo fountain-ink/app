@@ -41,8 +41,9 @@ export default async function WriteDraft({ params }: { params: { id: string } })
         [&_.slate-selection-area]:border [&_.slate-selection-area]:border-primary [&_.slate-selection-area]:bg-primary/10
         ${proseClasses}`}
       id="scroll_container"
+      data-plate-selectable="true"
     >
-      <Editor showToc refreshToken={refreshToken} handle={handle}>
+      <Editor showToc applyMargins refreshToken={refreshToken} handle={handle}>
         <EditorPublishing />
       </Editor>
     </div>

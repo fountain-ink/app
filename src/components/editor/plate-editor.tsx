@@ -23,6 +23,7 @@ export default function PlateEditor(
     refreshToken?: string;
     handle?: string;
     readOnly?: boolean;
+    applyMargins?: boolean;
     value?: string;
   },
 ) {
@@ -58,9 +59,7 @@ export default function PlateEditor(
             <Editor
               ref={editorRef}
               disableDefaultStyles
-              className={
-                "overflow-visible justify-self-stretch grow w-full max-w-full sm:max-w-3xl md:max-w-4xl p-10 sm:px-30 md:px-40 mx-auto"
-              }
+              className={props.applyMargins ? "overflow-visible w-full max-w-full sm:max-w-3xl md:max-w-4xl p-10 sm:px-30 md:px-40 mx-auto" : ""}
               autoFocus
               variant="fullWidth"
             />

@@ -39,7 +39,6 @@ export const PostView = ({
   const handle = post.by?.handle?.localName;
   const contentJson = metadata?.attributes?.find((attr) => attr.key === "contentJson");
   const { title, subtitle, coverImage } = extractMetadata(JSON.parse(contentJson?.value || "{}"));
-  console.log(metadata, contentJson, content, formattedDate, handle, title, subtitle, coverImage);
 
   return (
     <Link href={`/${handle}/${post.id}`}>
