@@ -34,16 +34,12 @@ export const PostView = ({
   },
 }: PostViewProps) => {
   const metadata = post.metadata as ArticleMetadataV3;
-  const content = metadata?.content || "";
+  const content = metadata?.content.slice(0, 100) || "";
   const formattedDate = formatDate(post.createdAt);
   const handle = post.by?.handle?.localName;
   const contentJson = metadata?.attributes?.find((attr) => attr.key === "contentJson");
-  
-  if (!contentJson) {
-    return null;
-  }
-
-  const { title, subtitle, coverImage } = extractMetadata(JSON.parse(contentJson?.value));
+  const { title, subtitle, coverImage } = extractMetadata(JSON.parse(contentJson?.value || "{}"));
+  console.log(metadata, contentJson, content, formattedDate, handle, title, subtitle, coverImage);
 
   return (
     <Link href={`/${handle}/${post.id}`}>
@@ -66,13 +62,13 @@ export const PostView = ({
               <UserAuthorView profileIds={authorIds} />
             </div>
           )}
-          {options.showTitle && (
-            <div className="text-5xl font-[family-name:--title-font] font-[letter-spacing:var(--title-letter-spacing)] font-[family-name:var(--title-font) font-[var(--title-weight)] font-[color:var(--title-color)] truncate inline-block w-[calc(100%)] whitespace-nowrap overflow-hidden text-ellipsis">
+          {options.showTitle && title && (
+            <div className="text-4xl font-[letter-spacing:var(--title-letter-spacing)] font-[family-name:var(--title-font)] font-[var(--title-weight)] font-[color:var(--title-color)] line-clamp-2">
               {title}
             </div>
           )}
           {options.showSubtitle && subtitle !== "" && (
-            <div className="text-xl font-[family-name:--subtitle-font] text-muted-foreground truncate inline-block w-[calc(100%)] whitespace-nowrap overflow-hidden text-ellipsis">
+            <div className="text-xl font-[family-name:--subtitle-font] text-muted-foreground line-clamp-2">
               {subtitle}
             </div>
           )}

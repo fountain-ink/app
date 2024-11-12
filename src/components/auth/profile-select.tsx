@@ -34,8 +34,7 @@ export function ProfileSelectMenu({ onSuccess }: { onSuccess: (profile: Profile)
           <UserIcon />
         </Button>
       </DialogTrigger>
-      <DialogContent className=" max-w-72 ">
-        {/* // TODO onboarding */}
+      <DialogContent className="max-w-72">
         <DialogHeader>
           <DialogTitle>Select profile</DialogTitle>
         </DialogHeader>

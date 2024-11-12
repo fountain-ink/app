@@ -41,7 +41,7 @@ type CreateButtonProps = {
   text?: string;
 };
 
-export const LocalDraftCreate = ({ onSuccess, text = "New Article" }: CreateButtonProps) => {
+export const NewLocalDraftButton = ({ onSuccess, text = "New Article" }: CreateButtonProps) => {
   const { saveDocument } = useDocumentStorage();
   const router = useRouter();
 

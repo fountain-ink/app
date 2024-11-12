@@ -57,7 +57,7 @@ export function LoginButton({ profile, onSuccess }: { profile: Profile; onSucces
   return (
     <Button
       variant="ghost"
-      className="flex items-center justify-center gap-2 text-md"
+      className="flex items-center justify-center gap-2 text-md w-max"
       disabled={loading}
       onClick={login}
     >

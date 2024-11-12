@@ -10,6 +10,7 @@ import {
   usePublications,
 } from "@lens-protocol/react-web";
 import { toast } from "sonner";
+import ErrorPage from "../error-page";
 import { WriteMenu } from "../navigation/write-menu";
 import { PostView } from "../post/post-view";
 import { Card, CardFooter, CardHeader, CardTitle } from "../ui/card";
@@ -50,6 +51,7 @@ export const UserContent = ({
       publicationTypes: [PublicationType.Post],
     },
   });
+  console.log(publications);
 
   if (loading || publicationsLoading) {
     return null;
@@ -57,7 +59,7 @@ export const UserContent = ({
 
   if (error) {
     toast.error(error.message);
-    return null;
+    return <ErrorPage error={error.message} />;
   }
 
   const posts = publications.map((publication) => {
@@ -79,6 +81,7 @@ export const UserContent = ({
           />
         );
       }
+      
       return (
         <PostView
           options={{
@@ -87,7 +90,7 @@ export const UserContent = ({
             showTitle: false,
             showSubtitle: false,
             showDate: true,
-            showPreview: true,
+            showPreview: false,
           }}
           key={publication.id}
           authorIds={[publication.by.id]}
