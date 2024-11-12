@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoadingSpinner } from "../loading-spinner";
 
-const defaultContent: any = [
+export const defaultContent: any = [
   {
     type: "h1",
     children: [
@@ -16,7 +16,6 @@ const defaultContent: any = [
         text: "",
       },
     ],
-    id: "btxpw",
   },
   {
     type: "h2",
@@ -25,7 +24,6 @@ const defaultContent: any = [
         text: "",
       },
     ],
-    id: "v799z",
   },
   {
     type: "img",
@@ -35,7 +33,6 @@ const defaultContent: any = [
         text: "",
       },
     ],
-    id: "nx3dl",
   },
 ];
 
@@ -56,11 +53,10 @@ export const LocalDraftCreate = ({ onSuccess, text = "New Article" }: CreateButt
       isLocal: true,
       documentId: id,
       authorId: "",
-      contentJson: JSON.stringify(defaultContent),
+      contentJson: defaultContent,
       updatedAt: "",
       createdAt: "",
-    });
-
+    })
     router.refresh();
     router.replace(`/write/${id}`);
     onSuccess?.();

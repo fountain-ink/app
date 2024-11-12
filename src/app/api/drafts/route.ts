@@ -1,3 +1,4 @@
+import { defaultContent } from "@/components/draft/draft-create";
 import { getAuth } from "@/lib/get-auth-clients";
 import { getRandomUid } from "@/lib/get-random-uid";
 import { type NextRequest, NextResponse } from "next/server";
@@ -56,31 +57,7 @@ export async function POST() {
     const uid = getRandomUid();
     const documentId = `${handle}-${uid}`;
 
-    const contentJson = {
-      type: "doc",
-      content: [
-        {
-          type: "title",
-          attrs: {
-            level: 1,
-          },
-        },
-        {
-          type: "subtitle",
-          attrs: {
-            level: 2,
-          },
-        },
-        {
-          type: "image",
-          attrs: {
-            src: null,
-            width: "wide",
-          },
-        },
-      ],
-    };
-
+    const contentJson = defaultContent;
     const { data, error } = await db
       .from("drafts")
       .insert({ contentJson, documentId, authorId: profileId })
