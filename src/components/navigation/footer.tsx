@@ -192,7 +192,7 @@ export const Footer = () => {
     <TooltipProvider delayDuration={300}>
       <motion.div
         style={{ y }}
-        className="fixed bottom-6 z-[40] px-2 py-0.5
+        className="fixed bottom-6 inset-x-0 mx-auto z-[40] px-2 py-0.5
            rounded-full backdrop-blur-xl bg-background/70 border border-border
            shadow-lg w-full max-w-[90vw] sm:max-w-[50vw] md:max-w-sm"
       >
