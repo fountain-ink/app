@@ -94,8 +94,8 @@ export const getEditorPlugins = (path: string, handle?: string, refreshToken?: s
           },
           disableCursors: false,
           hocuspocusProviderOptions: {
-            url: "ws://0.0.0.0:4444",
-            // url: "https://collab.fountain.ink",
+            // url: "ws://0.0.0.0:4444",
+            url: "https://collab.fountain.ink",
             name: path,
             connect: false,
             token: refreshToken,
