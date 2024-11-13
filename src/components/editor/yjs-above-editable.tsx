@@ -1,6 +1,8 @@
 import { YjsEditor } from "@slate-yjs/core";
+import { insertNodes, isEditor, removeNodes, type TElement } from "@udecode/plate-common";
 import { useEditorPlugin } from "@udecode/plate-common/react";
-import { type YjsConfig, BaseYjsPlugin } from "@udecode/plate-yjs";
+import { HEADING_KEYS } from "@udecode/plate-heading";
+import { BaseYjsPlugin, type YjsConfig } from "@udecode/plate-yjs";
 import { useEffect } from "react";
 import { RemoteCursorOverlay } from "./yjs-overlay";
 
@@ -9,8 +11,11 @@ export const RenderAboveEditableYjs: React.FC<{
 }> = ({ children }) => {
   const { editor, useOption } = useEditorPlugin<YjsConfig>(BaseYjsPlugin);
 
+  const { normalizeNode } = editor;
+
   const provider = useOption("provider");
   const isSynced = useOption("isSynced");
+
 
   useEffect(() => {
     void provider.connect();

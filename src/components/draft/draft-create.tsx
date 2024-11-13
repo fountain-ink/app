@@ -41,7 +41,7 @@ type CreateButtonProps = {
   text?: string;
 };
 
-export const NewLocalDraftButton = ({ onSuccess, text = "New Article" }: CreateButtonProps) => {
+export const NewLocalDraftButton = () => {
   const { saveDocument } = useDocumentStorage();
   const router = useRouter();
 
@@ -56,20 +56,19 @@ export const NewLocalDraftButton = ({ onSuccess, text = "New Article" }: CreateB
       contentJson: defaultContent,
       updatedAt: "",
       createdAt: "",
-    })
+    });
     router.refresh();
     router.replace(`/write/${id}`);
-    onSuccess?.();
   };
 
   return (
     <Button onClick={handleNew} variant={"default"} className="flex gap-2">
-      {text}
+      Write
     </Button>
   );
 };
 
-export const RemoteDraftCreate = ({ onSuccess, text = "New Article" }: CreateButtonProps) => {
+export const RemoteDraftCreate = () => {
   const [isCreating, setIsCreating] = useState(false);
   const router = useRouter();
 
@@ -91,17 +90,16 @@ export const RemoteDraftCreate = ({ onSuccess, text = "New Article" }: CreateBut
 
     router.refresh();
     router.replace(`/write/${draft.documentId}`);
-    onSuccess?.();
   };
 
   return (
-    <Button onClick={handleCreate} variant={"ghost"} className="flex items-center justify-start gap-2 py-1 pl-3 w-full">
+    <Button onClick={handleCreate} variant={"ghost"} className="flex items-center justify-start gap-2 py-1 pl-2 w-full">
       {isCreating ? (
         <LoadingSpinner size={20} className="w-4 h-4 flex items-center justify-center" />
       ) : (
         <PlusIcon className="w-4 h-4" />
       )}
-      <span>{text}</span>
+      <span>New Article</span>
     </Button>
   );
 };

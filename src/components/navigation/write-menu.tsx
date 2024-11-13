@@ -22,7 +22,7 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
   }
 
   if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
-    return <NewLocalDraftButton text="Write" />;
+    return <NewLocalDraftButton />;
   }
 
   return (
@@ -32,7 +32,7 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="p-1" align="end">
         <DropdownMenuItem asChild>
-          <RemoteDraftCreate text="New Article" />
+          <RemoteDraftCreate />
         </DropdownMenuItem>
         <AnimatedMenuItem href="/drafts" icon={SquarePenIcon}>
           Drafts

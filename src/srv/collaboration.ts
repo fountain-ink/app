@@ -34,18 +34,13 @@ const server = Server.configure({
   extensions: [
     new Logger(),
     new Database({
-      fetch: async ({ documentName, document, requestHeaders, requestParameters }) => {
-        const params = requestParameters.entries();
-
-        for (const [key, value] of params) {
-          console.log(`${key}: ${value}`);
-        }
-
+      fetch: async ({ documentName, document }) => {
         const { data: response } = await db.from("drafts").select().eq("documentId", documentName).single();
 
         if (!response || !response.yDoc) {
           const insertDelta = slateNodesToInsertDelta(initialValue);
           const sharedRoot = document.get("content", Y.XmlText);
+          sharedRoot.delete(0, sharedRoot.length);
           sharedRoot.applyDelta(insertDelta);
           const encoded = Y.encodeStateAsUpdate(document);
 
