@@ -21,8 +21,8 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       <head>
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" href="https://use.typekit.net/ybe1bqw.css" />
-        <script defer src="https://stats.pingpad.io/script.js" data-website-id="544f8064-8484-4ff4-9553-94ba54a8be12" />
-        <script defer src="https://stats.pingpad.io/script.js" data-website-id="8e92ba2d-871c-4ebf-b339-e2931b8d6bed" />
+        <script defer src="https://stats.pingpad.io/script.js" data-website-id="7bdb552a-61f0-47f6-839e-11a53444dfc0" />
+        <script defer src="https://stats.pingpad.io/script.js" data-website-id="42c57186-3cbd-4221-91e1-083ccb710ae8" />
       </head>
       <body
         className={cn(
