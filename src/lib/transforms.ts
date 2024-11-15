@@ -22,17 +22,16 @@ import { insertToc } from "@udecode/plate-heading";
 import { TocPlugin } from "@udecode/plate-heading/react";
 import { INDENT_LIST_KEYS, ListStyleType } from "@udecode/plate-indent-list";
 import { IndentListPlugin } from "@udecode/plate-indent-list/react";
-import { toggleColumns } from "@udecode/plate-layout";
-import { LinkPlugin, triggerFloatingLink } from "@udecode/plate-link/react";
+import { insertColumnGroup, toggleColumnGroup } from "@udecode/plate-layout";
 import { insertEquation, insertInlineEquation } from "@udecode/plate-math";
 import { EquationPlugin, InlineEquationPlugin } from "@udecode/plate-math/react";
 import {
   insertAudioPlaceholder,
   insertFilePlaceholder,
-  insertMedia,
+  insertImagePlaceholder,
   insertVideoPlaceholder,
 } from "@udecode/plate-media";
-import { AudioPlugin, FilePlugin, ImagePlugin, MediaEmbedPlugin, VideoPlugin } from "@udecode/plate-media/react";
+import { AudioPlugin, FilePlugin, ImagePlugin, VideoPlugin } from "@udecode/plate-media/react";
 import { TablePlugin, insertTable } from "@udecode/plate-table/react";
 import { Path } from "slate";
 
@@ -49,38 +48,17 @@ const insertList = (editor: PlateEditor, type: string) => {
   );
 };
 
-const insertColumns = (editor: PlateEditor, _: string) => {
-  insertNodes(editor, editor.api.create.block(), {
-    select: true,
-  });
-
-  const entry = getBlockAbove(editor);
-
-  if (!entry) return;
-
-  toggleColumns(editor, entry);
-};
-
 const insertBlockMap: Record<string, (editor: PlateEditor, type: string) => void> = {
-  [ACTION_THREE_COLUMNS]: insertColumns,
+  [ACTION_THREE_COLUMNS]: (editor) => insertColumnGroup(editor, { layout: 3, select: true }),
   [AudioPlugin.key]: (editor) => insertAudioPlaceholder(editor, { select: true }),
   [CalloutPlugin.key]: (editor) => insertCallout(editor, { select: true }),
   [CodeBlockPlugin.key]: (editor) => insertCodeBlock(editor, { select: true }),
   [EquationPlugin.key]: (editor) => insertEquation(editor, { select: true }),
   [FilePlugin.key]: (editor) => insertFilePlaceholder(editor, { select: true }),
   [INDENT_LIST_KEYS.todo]: insertList,
-  [ImagePlugin.key]: (editor) =>
-    insertMedia(editor, {
-      select: true,
-      type: ImagePlugin.key,
-    }),
+  [ImagePlugin.key]: (editor) => insertImagePlaceholder(editor, { select: true }),
   [ListStyleType.Decimal]: insertList,
   [ListStyleType.Disc]: insertList,
-  [MediaEmbedPlugin.key]: (editor) =>
-    insertMedia(editor, {
-      select: true,
-      type: MediaEmbedPlugin.key,
-    }),
   [TablePlugin.key]: (editor) => insertTable(editor, {}, { select: true }),
   [TocPlugin.key]: (editor) => insertToc(editor, { select: true }),
   [VideoPlugin.key]: (editor) => insertVideoPlaceholder(editor, { select: true }),
@@ -89,13 +67,12 @@ const insertBlockMap: Record<string, (editor: PlateEditor, type: string) => void
 const insertInlineMap: Record<string, (editor: PlateEditor, type: string) => void> = {
   [DatePlugin.key]: (editor) => insertDate(editor, { select: true }),
   [InlineEquationPlugin.key]: (editor) => insertInlineEquation(editor, "", { select: true }),
-  [LinkPlugin.key]: (editor) => triggerFloatingLink(editor, { focused: true }),
 };
 
 export const insertBlock = (editor: PlateEditor, type: string) => {
   withoutNormalizing(editor, () => {
-    if (insertBlockMap && type in insertBlockMap) {
-      insertBlockMap[type]?.(editor, type);
+    if (type in insertBlockMap) {
+      insertBlockMap?.[type]?.(editor, type);
     } else {
       const path = getBlockAbove(editor)?.[1];
 
@@ -132,12 +109,8 @@ const setList = (editor: PlateEditor, type: string, entry: TNodeEntry<TElement>)
   );
 };
 
-const setColumns = (editor: PlateEditor, _: string, entry: TNodeEntry<TElement>) => {
-  toggleColumns(editor, entry);
-};
-
 const setBlockMap: Record<string, (editor: PlateEditor, type: string, entry: TNodeEntry<TElement>) => void> = {
-  [ACTION_THREE_COLUMNS]: setColumns,
+  [ACTION_THREE_COLUMNS]: (editor) => toggleColumnGroup(editor, { layout: 3 }),
   [INDENT_LIST_KEYS.todo]: setList,
   [ListStyleType.Decimal]: setList,
   [ListStyleType.Disc]: setList,
@@ -151,8 +124,8 @@ export const setBlockType = (editor: PlateEditor, type: string, { at }: { at?: P
       if (node[IndentListPlugin.key]) {
         unsetNodes(editor, [IndentListPlugin.key, "indent"], { at: path });
       }
-      if (setBlockMap && type in setBlockMap) {
-        return setBlockMap[type]?.(editor, type, entry);
+      if (type in setBlockMap) {
+        return setBlockMap?.[type]?.(editor, type, entry);
       }
       if (node.type !== type) {
         editor.setNodes<TElement>({ type }, { at: path });
@@ -171,9 +144,8 @@ export const setBlockType = (editor: PlateEditor, type: string, { at }: { at?: P
 
     const entries = getBlocks(editor);
 
-    for (const entry of entries) {
-      setEntry(entry);
-    }
+    // biome-ignore lint/complexity/noForEach: <explanation>
+    entries.forEach((entry) => setEntry(entry));
   });
 };
 

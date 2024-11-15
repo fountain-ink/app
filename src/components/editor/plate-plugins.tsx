@@ -194,7 +194,6 @@ export const staticPlugins = [
   TocPlugin.configure({
     options: {
       isScroll: true,
-      scrollContainerSelector: "#scroll_container",
       topOffset: 80,
     },
   }),

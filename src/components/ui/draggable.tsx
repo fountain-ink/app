@@ -1,14 +1,17 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 "use client";
+
+import React from "react";
 
 import type { TEditor } from "@udecode/plate-common";
 import type { DropTargetMonitor } from "react-dnd";
 
-import { MemoizedChildren, cn, withRef } from "@udecode/cn";
+import { cn, withRef } from "@udecode/cn";
 import {
     type PlateElementProps,
+    MemoizedChildren,
     useEditorPlugin,
     useEditorRef,
-    useElement,
     withHOC,
 } from "@udecode/plate-common/react";
 import {
@@ -21,15 +24,19 @@ import {
 } from "@udecode/plate-dnd";
 import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
 import { GripVertical } from "lucide-react";
+import { useSelected } from "slate-react";
 
 import { useMounted } from "@/hooks/use-mounted";
 
-import { forwardRef, memo } from "react";
-import { BlockMenu } from "./block-menu";
-import { Button } from "./button";
 import { DraggableInsertHandle } from "./draggable-insert-handler";
+import { Tooltip, TooltipContent, TooltipPortal, TooltipProvider, TooltipTrigger } from "./tooltip";
 
 export interface DraggableProps extends PlateElementProps {
+  /**
+   * Intercepts the drop handling. If `false` is returned, the default drop
+   * behavior is called after. If `true` is returned, the default behavior is
+   * not called.
+   */
   onDropHandler?: (
     editor: TEditor,
     props: {
@@ -75,19 +82,21 @@ export const Draggable = withHOC(
   }),
 );
 
-const Gutter = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+const Gutter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ children, className, ...props }, ref) => {
     const { useOption } = useEditorPlugin(BlockSelectionPlugin);
     const isSelectionAreaVisible = useOption("isSelectionAreaVisible");
     const gutter = useDraggableGutter();
+    const selected = useSelected();
 
     return (
       <div
         ref={ref}
         className={cn(
           "slate-gutterLeft",
-          "absolute top-[3px] z-50 flex -translate-x-full cursor-text opacity-0 transition-opacity duration-100 ease-in hover:opacity-100 group-hover:opacity-100",
+          "absolute -top-px z-50 flex h-full -translate-x-full cursor-text hover:opacity-100 sm:opacity-0 main-hover:group-hover:opacity-100",
           isSelectionAreaVisible && "hidden",
+          !selected && "opacity-0",
           className,
         )}
         {...props}
@@ -99,41 +108,34 @@ const Gutter = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   },
 );
 
-const DragHandle = memo(({ handleRef, ...props }: any) => {
+const DragHandle = React.memo(() => {
   const editor = useEditorRef();
-  const element = useElement();
 
   return (
-    <BlockMenu id={element.id as string} placement="left" animateZoom>
-      <Button
-        ref={handleRef}
-        {...props}
-        variant="ghost"
-        className="h-6 w-[18px] shrink-0 rounded-sm p-0"
-        onMouseDown={() => {
-          editor.getApi(BlockSelectionPlugin).blockSelection.addSelectedRow(element.id as string);
-        }}
-        data-plate-prevent-unselect
-        tabIndex={-1}
-        tooltip={
-          <div className="text-center">
-            Drag <span className="text-gray-400">to move</span>
-            <br />
-            Click <span className="text-gray-400">to open menu</span>
-          </div>
-        }
-        tooltipContentProps={{
-          side: "bottom",
-        }}
-      >
-        <GripVertical className="size-4 text-muted-foreground/70" />
-      </Button>
-    </BlockMenu>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger type="button">
+          <GripVertical
+            className="size-4 text-muted-foreground"
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+            }}
+            onMouseDown={() => {
+              editor.getApi(BlockSelectionPlugin).blockSelection?.resetSelectedIds();
+            }}
+          />
+        </TooltipTrigger>
+        <TooltipPortal>
+          <TooltipContent>Drag to move</TooltipContent>
+        </TooltipPortal>
+      </Tooltip>
+    </TooltipProvider>
   );
 });
 
-const DropLine = memo(
-  forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ children, className, ...props }, ref) => {
+const DropLine = React.memo(
+  React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ children, className, ...props }, ref) => {
     const state = useDropLine();
 
     if (!state.dropLine) return null;
@@ -145,10 +147,10 @@ const DropLine = memo(
         {...state.props}
         className={cn(
           "slate-dropLine",
-          "absolute inset-x-0 h-[3px] opacity-100 transition-opacity",
-          "bg-brand/50",
-          state.dropLine === "top" && "top-[-2px]",
-          state.dropLine === "bottom" && "bottom-[-2px]",
+          "absolute inset-x-0 h-0.5 opacity-100 transition-opacity",
+          "bg-accent/50",
+          state.dropLine === "top" && "-top-px",
+          state.dropLine === "bottom" && "-bottom-px",
           className,
         )}
       >

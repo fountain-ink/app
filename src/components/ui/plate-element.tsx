@@ -6,20 +6,16 @@ import type { PlateElementProps } from "@udecode/plate-common/react";
 
 import { cn } from "@udecode/cn";
 import { PlateElement as PlateElementPrimitive } from "@udecode/plate-common/react";
-import { useBlockSelectableStore } from "@udecode/plate-selection/react";
 
 import { BlockSelection } from "./block-selection";
 
 export const PlateElement = React.forwardRef<HTMLDivElement, PlateElementProps>(
   ({ children, className, editor, ...props }: PlateElementProps, ref) => {
-    const selectable = useBlockSelectableStore().get.selectable();
-
     return (
       <PlateElementPrimitive ref={ref} className={cn("relative", className)} editor={editor} {...props}>
         {children}
 
-        {selectable && <BlockSelection />}
-        {/* <AIPopover /> */}
+        {className?.includes("slate-selectable") && <BlockSelection />}
       </PlateElementPrimitive>
     );
   },
