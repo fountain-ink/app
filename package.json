@@ -103,7 +103,7 @@
     "@tiptap/starter-kit": "^2.4.0",
     "@tiptap/suggestion": "^2.4.0",
     "@types/jsonwebtoken": "^9.0.6",
-    "@udecode/cn": "^40.0.0",
+    "@udecode/cn": "^39.0.0",
     "@udecode/plate-ai": "^40.0.0",
     "@udecode/plate-alignment": "^40.0.0",
     "@udecode/plate-autoformat": "^40.0.0",
