@@ -61,7 +61,7 @@ export const Draggable = withHOC(
     return (
       <div ref={ref} className={cn("relative", isDragging && "opacity-50", "group", className)}>
         <Gutter>
-          <div className={cn("slate-blockToolbarWrapper", "flex h-[1.5em]")}>
+          <div className={cn("slate-blockToolbarWrapper", "flex")}>
             <div className={cn("slate-blockToolbar", "pointer-events-auto mr-0.5 flex items-center")}>
               <DraggableInsertHandle />
 
@@ -95,6 +95,7 @@ const Gutter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElem
         className={cn(
           "slate-gutterLeft",
           "absolute -top-px z-50 flex h-full -translate-x-full cursor-text hover:opacity-100 sm:opacity-0 main-hover:group-hover:opacity-100",
+          "items-center justify-center",
           isSelectionAreaVisible && "hidden",
           !selected && "opacity-0",
           className,

@@ -142,7 +142,6 @@ export const getEditorPlugins = (path: string, handle?: string, refreshToken?: s
 
   if (!readOnly) {
     plugins.push(
-      // SelectionOverlayPlugin as any,
       BlockSelectionPlugin.configure({
         inject: {
           excludeBelowPlugins: ["tr"],

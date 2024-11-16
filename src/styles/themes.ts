@@ -175,7 +175,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--title-margin": "3rem",
     "--subtitle-margin": "2rem",
     "--header-margin": "2rem",
-    "--paragraph-margin": "2rem",
+    "--paragraph-margin": "1rem",
     "--list-margin": "2rem",
 
     "--list-font": "var(--paragraph-font)",
