@@ -2,16 +2,7 @@ import { type TElement, getNodeString, insertEmptyElement, isEditor, removeNodes
 import type { PlateEditor } from "@udecode/plate-common/react";
 import { createPlatePlugin } from "@udecode/plate-common/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
-
-export interface NormalizePluginOptions {
-  requireH1?: boolean;
-  requireH2?: boolean;
-}
-
-const DEFAULT_OPTIONS: NormalizePluginOptions = {
-  requireH1: true,
-  requireH2: false,
-};
+import type { Path } from "slate";
 
 export function ensureLeadingBlock(editor: PlateEditor, { event }: { event?: React.MouseEvent } = {}) {
   const { children } = editor;
@@ -21,8 +12,10 @@ export function ensureLeadingBlock(editor: PlateEditor, { event }: { event?: Rea
     event?.preventDefault();
     event?.stopPropagation();
 
+    console.log("INSERTING h1");
     insertEmptyElement(editor, HEADING_KEYS.h1, { select: true });
   } else if (children?.[0]?.type !== HEADING_KEYS.h1) {
+    console.log("INSERTING h1 AT 0");
     insertEmptyElement(editor, HEADING_KEYS.h1, {
       at: [0],
       select: true,
@@ -43,12 +36,21 @@ const allowDelete = (editor: PlateEditor) => {
 
 export const NormalizePlugin = createPlatePlugin({
   key: "normalize",
-  options: DEFAULT_OPTIONS,
 
-  extendEditor: ({ editor, useOption }) => {
-    const { deleteBackward, deleteForward } = editor;
+  extendEditor: ({ editor }) => {
+    const { deleteBackward, deleteForward, setNodes } = editor;
+
+    editor.setNodes = (node, options) => {
+      if (options?.at?.toString() === "0") {
+        return false;
+      }
+
+      return setNodes(node, options);
+    };
 
     editor.deleteForward = (...args) => {
+      // console.log("deleteForward" + allowDelete(editor));
+
       if (allowDelete(editor)) {
         return deleteForward(...args);
       }
@@ -61,6 +63,7 @@ export const NormalizePlugin = createPlatePlugin({
     };
 
     editor.deleteBackward = (...args) => {
+      // console.log("deleteBackward" + allowDelete(editor));
       if (allowDelete(editor)) {
         return deleteBackward(...args);
       }
@@ -74,10 +77,13 @@ export const NormalizePlugin = createPlatePlugin({
       if (isEditor(node)) {
         const nodes = node.children as TElement[];
 
+        console.log(nodes);
+
         // Remove any additional h1 or h2 nodes
         for (let i = 1; i < nodes.length; i++) {
           if (nodes[i]?.type === HEADING_KEYS.h1 || nodes[i]?.type === HEADING_KEYS.h2) {
-            removeNodes(editor, { at: [i] });
+            // console.log("[Normalize] removing: ", nodes[i]);
+            removeNodes(editor, { at: ([i] as Path) });
             break;
           }
         }
@@ -85,13 +91,5 @@ export const NormalizePlugin = createPlatePlugin({
     };
 
     return editor;
-  },
-});
-
-// Configure plugin with options if needed
-export const ConfiguredNormalizePlugin = NormalizePlugin.configure({
-  options: {
-    requireH1: true,
-    requireH2: true,
   },
 });
