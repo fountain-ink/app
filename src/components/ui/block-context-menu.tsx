@@ -1,139 +1,101 @@
-"use client";
+'use client';
 
-import { useCallback, useState } from "react";
+import React from 'react';
 
-import { AIChatPlugin } from "@udecode/plate-ai/react";
-import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
-import { unsetNodes } from "@udecode/plate-common";
-import { ParagraphPlugin, focusEditor, useEditorPlugin } from "@udecode/plate-common/react";
-import { HEADING_KEYS } from "@udecode/plate-heading";
-import { IndentListPlugin } from "@udecode/plate-indent-list/react";
-import { BLOCK_CONTEXT_MENU_ID, BlockMenuPlugin, BlockSelectionPlugin } from "@udecode/plate-selection/react";
-
+import { cn } from '@udecode/cn';
 import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuGroup,
-  ContextMenuItem,
-  ContextMenuSub,
-  ContextMenuSubContent,
-  ContextMenuSubTrigger,
-  ContextMenuTrigger,
-} from "./context-menu";
+  useEditorPlugin,
+  useEditorRef,
+  useElement,
+} from '@udecode/plate-common/react';
+import {
+  BLOCK_CONTEXT_MENU_ID,
+  BlockMenuPlugin,
+} from '@udecode/plate-selection/react';
+import { MoreHorizontal } from 'lucide-react';
 
-type Value = "askAI" | null;
+import { BlockMenu } from './block-menu';
+import { type ButtonProps, Button } from './button';
+import { useContextMenu } from './menu';
+import { useIsTouchDevice } from '@/hooks/use-is-touch';
+import { useLockScroll } from '@/hooks/use-lock-scroll';
 
 export function BlockContextMenu({ children }: { children: React.ReactNode }) {
-  const { api, editor } = useEditorPlugin(BlockMenuPlugin);
-  const [value, setValue] = useState<Value>(null);
+  const { api, editor, useOption } = useEditorPlugin(BlockMenuPlugin);
+  const anchorRect = useOption('position');
+  const openId = useOption('openId');
+  const isTouch = useIsTouchDevice();
+  useLockScroll(openId === BLOCK_CONTEXT_MENU_ID, `#${editor.uid}`);
 
-  const handleTurnInto = useCallback(
-    (type: string) => {
-      for (const [node, path] of editor.getApi(BlockSelectionPlugin).blockSelection.getNodes()) {
-        if (node[IndentListPlugin.key]) {
-          unsetNodes(editor, [IndentListPlugin.key, "indent"], { at: path });
-        }
+  const { getAnchorRect, show, store } = useContextMenu(anchorRect);
 
-        editor.tf.toggle.block({ type }, { at: path });
-      }
-    },
-    [editor],
-  );
-
-  const handleAlign = useCallback(
-    (align: "center" | "left" | "right") => {
-      editor.getTransforms(BlockSelectionPlugin).blockSelection.setNodes({ align });
-    },
-    [editor],
-  );
+  if (isTouch) {
+    return children;
+  }
 
   return (
-    <ContextMenu modal={false}>
-      <ContextMenuTrigger
-        asChild
-        onContextMenu={(event) => {
-          const dataset = (event.target as HTMLElement).dataset;
+    <div
+      className="group/context-menu w-full"
+      onContextMenu={(event) => {
+        const dataset = (event.target as HTMLElement).dataset;
 
-          const disabled = dataset?.slateEditor === "true";
+        const disabled = dataset?.slateEditor === 'true';
 
-          if (disabled) return event.preventDefault();
+        if (disabled) return;
 
-          api.blockMenu.show(BLOCK_CONTEXT_MENU_ID, {
-            x: event.clientX,
-            y: event.clientY,
-          });
-        }}
-      >
-        <div className="w-full">{children}</div>
-      </ContextMenuTrigger>
-      <ContextMenuContent
-        className="w-64"
-        onCloseAutoFocus={(e) => {
-          e.preventDefault();
+        event.preventDefault();
 
-          if (value === "askAI") {
-            editor.getApi(AIChatPlugin).aiChat.show();
-          }
+        show();
+        api.blockMenu.show(BLOCK_CONTEXT_MENU_ID, {
+          x: event.clientX,
+          y: event.clientY,
+        });
+      }}
+      data-plate-selectable
+      data-state={openId === BLOCK_CONTEXT_MENU_ID ? 'open' : 'closed'}
+    >
+      {children}
 
-          setValue(null);
-        }}
-      >
-        <ContextMenuGroup>
-          <ContextMenuItem
-            onClick={() => {
-              setValue("askAI");
-            }}
-          >
-            Ask AI
-          </ContextMenuItem>
-          <ContextMenuItem
-            onClick={() => {
-              editor.getTransforms(BlockSelectionPlugin).blockSelection.removeNodes();
-              focusEditor(editor);
-            }}
-          >
-            Delete
-          </ContextMenuItem>
-          <ContextMenuItem
-            onClick={() => {
-              editor
-                .getTransforms(BlockSelectionPlugin)
-                .blockSelection.duplicate(editor.getApi(BlockSelectionPlugin).blockSelection.getNodes());
-            }}
-          >
-            Duplicate
-            {/* <ContextMenuShortcut>⌘ + D</ContextMenuShortcut> */}
-          </ContextMenuItem>
-          <ContextMenuSub>
-            <ContextMenuSubTrigger>Turn into</ContextMenuSubTrigger>
-            <ContextMenuSubContent className="w-48">
-              <ContextMenuItem onClick={() => handleTurnInto(ParagraphPlugin.key)}>Paragraph</ContextMenuItem>
-
-              <ContextMenuItem onClick={() => handleTurnInto(HEADING_KEYS.h1)}>Heading 1</ContextMenuItem>
-              <ContextMenuItem onClick={() => handleTurnInto(HEADING_KEYS.h2)}>Heading 2</ContextMenuItem>
-              <ContextMenuItem onClick={() => handleTurnInto(HEADING_KEYS.h3)}>Heading 3</ContextMenuItem>
-              <ContextMenuItem onClick={() => handleTurnInto(BlockquotePlugin.key)}>Blockquote</ContextMenuItem>
-            </ContextMenuSubContent>
-          </ContextMenuSub>
-        </ContextMenuGroup>
-
-        <ContextMenuGroup>
-          <ContextMenuItem onClick={() => editor.getTransforms(BlockSelectionPlugin).blockSelection.setIndent(1)}>
-            Indent
-          </ContextMenuItem>
-          <ContextMenuItem onClick={() => editor.getTransforms(BlockSelectionPlugin).blockSelection.setIndent(-1)}>
-            Outdent
-          </ContextMenuItem>
-          <ContextMenuSub>
-            <ContextMenuSubTrigger>Align</ContextMenuSubTrigger>
-            <ContextMenuSubContent className="w-48">
-              <ContextMenuItem onClick={() => handleAlign("left")}>Left</ContextMenuItem>
-              <ContextMenuItem onClick={() => handleAlign("center")}>Center</ContextMenuItem>
-              <ContextMenuItem onClick={() => handleAlign("right")}>Right</ContextMenuItem>
-            </ContextMenuSubContent>
-          </ContextMenuSub>
-        </ContextMenuGroup>
-      </ContextMenuContent>
-    </ContextMenu>
+      <BlockMenu
+        open={openId === BLOCK_CONTEXT_MENU_ID}
+        getAnchorRect={getAnchorRect}
+        store={store}
+      />
+    </div>
   );
 }
+
+export const BlockActionButton = React.forwardRef<
+  HTMLButtonElement,
+  Partial<ButtonProps> & { defaultStyles?: boolean }
+>(({ className, defaultStyles = true, ...props }, ref) => {
+  const editor = useEditorRef();
+  const element = useElement();
+
+  return (
+    <Button
+      ref={ref}
+      size="blockAction"
+      variant="blockAction"
+      className={cn(
+        defaultStyles &&
+          'absolute right-1 top-1 opacity-0 transition-opacity group-hover:opacity-100',
+        className
+      )}
+      onClick={(e) => {
+        e.stopPropagation();
+        editor
+          .getApi(BlockMenuPlugin)
+          .blockMenu.showContextMenu(element.id as string, {
+            x: e.clientX,
+            y: e.clientY,
+          });
+      }}
+      contentEditable={false}
+      tooltip="More actions"
+      {...props}
+    >
+      <MoreHorizontal />
+    </Button>
+  );
+});

@@ -142,15 +142,19 @@ export const getEditorPlugins = (path: string, handle?: string, refreshToken?: s
 
   if (!readOnly) {
     plugins.push(
-      SelectionOverlayPlugin as any,
+      // SelectionOverlayPlugin as any,
       BlockSelectionPlugin.configure({
+        inject: {
+          excludeBelowPlugins: ["tr"],
+          excludePlugins: ["table", "code_line", "column_group", "column"],
+        },
         options: {
           areaOptions: {
             behaviour: {
               scrolling: {
                 speedDivider: 1.5,
               },
-              startThreshold: 30,
+              startThreshold: 4,
             },
             boundaries: "#scroll_container",
             container: "#scroll_container",
@@ -229,8 +233,8 @@ export const staticPlugins = [
       targetPlugins: [
         ParagraphPlugin.key,
         MediaEmbedPlugin.key,
-        HEADING_KEYS.h1,
-        HEADING_KEYS.h2,
+        // HEADING_KEYS.h1,
+        // HEADING_KEYS.h2,
         HEADING_KEYS.h3,
         HEADING_KEYS.h4,
         HEADING_KEYS.h5,
@@ -243,8 +247,8 @@ export const staticPlugins = [
     inject: {
       targetPlugins: [
         ParagraphPlugin.key,
-        HEADING_KEYS.h1,
-        HEADING_KEYS.h2,
+        // HEADING_KEYS.h1,
+        // HEADING_KEYS.h2,
         HEADING_KEYS.h3,
         HEADING_KEYS.h4,
         HEADING_KEYS.h5,
@@ -259,8 +263,8 @@ export const staticPlugins = [
     inject: {
       targetPlugins: [
         ParagraphPlugin.key,
-        HEADING_KEYS.h1,
-        HEADING_KEYS.h2,
+        // HEADING_KEYS.h1,
+        // HEADING_KEYS.h2,
         HEADING_KEYS.h3,
         HEADING_KEYS.h4,
         HEADING_KEYS.h5,

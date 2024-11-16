@@ -6,7 +6,6 @@ import { type PropsWithChildren, useRef } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { CommentsPopover } from "../ui/comments-popover";
-import { SelectionOverlay } from "../ui/cursor-overlay";
 import { Editor } from "../ui/editor";
 import { FixedToolbar } from "../ui/fixed-toolbar";
 import { FixedToolbarButtons } from "../ui/fixed-toolbar-buttons";
@@ -60,7 +59,11 @@ export default function PlateEditor(
             <Editor
               ref={editorRef}
               disableDefaultStyles
-              className={props.applyMargins ? "overflow-visible w-full max-w-full sm:max-w-3xl md:max-w-4xl p-10 sm:px-30 md:px-40 mx-auto" : ""}
+              className={
+                props.applyMargins
+                  ? "overflow-visible w-full max-w-full sm:max-w-3xl md:max-w-4xl p-10 sm:px-30 md:px-40 mx-auto"
+                  : ""
+              }
               autoFocus
               variant="fullWidth"
             />
@@ -73,7 +76,7 @@ export default function PlateEditor(
 
             <div className="absolute right-0 top-0 h-full w-4 select-none" />
 
-            <SelectionOverlay containerRef={containerRef} />
+            {/* <SelectionOverlay containerRef={containerRef} /> */}
           </div>
 
           {/* <SettingsDialog /> */}

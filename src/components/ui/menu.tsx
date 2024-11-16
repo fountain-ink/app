@@ -286,7 +286,7 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(function
   baseProps.children = (
     <>
       <div className="flex w-full items-center gap-2 whitespace-nowrap">
-        {icon && <span className="menu-item-icon text-subtle-foreground">{icon}</span>}
+        {icon && <span className="menu-item-icon text-subtle-foreground w-4 h-4">{icon}</span>}
         {baseProps.children ?? label}
       </div>
 

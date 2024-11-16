@@ -52,7 +52,7 @@ export const BlockMenu = React.forwardRef<HTMLDivElement, BlockMenu>(
           animateZoom={animateZoom}
           autoFocusOnHide={false}
           getAnchorRect={getAnchorRect}
-          preventBodyScroll={children !== undefined}
+          preventBodyScroll={!!children}
           portal
         >
           <ComboboxContent>
@@ -115,7 +115,7 @@ function BlockMenuInput({ onHide }: { onHide: () => void }) {
 
   return (
     <ComboboxInput>
-      <Input placeholder="Search actions..." />
+      <Input className="h-8 rounded-[4px]" placeholder="Search actions..." />
     </ComboboxInput>
   );
 }

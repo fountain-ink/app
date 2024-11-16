@@ -8,19 +8,19 @@ import type { DropTargetMonitor } from "react-dnd";
 
 import { cn, withRef } from "@udecode/cn";
 import {
-    type PlateElementProps,
-    MemoizedChildren,
-    useEditorPlugin,
-    useEditorRef,
-    withHOC,
+  type PlateElementProps,
+  MemoizedChildren,
+  useEditorPlugin,
+  useEditorRef,
+  withHOC,
 } from "@udecode/plate-common/react";
 import {
-    type DragItemNode,
-    DraggableProvider,
-    useDraggable,
-    useDraggableGutter,
-    useDraggableState,
-    useDropLine,
+  type DragItemNode,
+  DraggableProvider,
+  useDraggable,
+  useDraggableGutter,
+  useDraggableState,
+  useDropLine,
 } from "@udecode/plate-dnd";
 import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
 import { GripVertical } from "lucide-react";
@@ -148,7 +148,7 @@ const DropLine = React.memo(
         className={cn(
           "slate-dropLine",
           "absolute inset-x-0 h-0.5 opacity-100 transition-opacity",
-          "bg-accent/50",
+          "bg-accent",
           state.dropLine === "top" && "-top-px",
           state.dropLine === "bottom" && "-bottom-px",
           className,
