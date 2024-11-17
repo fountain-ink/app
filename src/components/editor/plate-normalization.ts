@@ -1,8 +1,7 @@
-import { type TElement, getNodeString, insertEmptyElement, isEditor, removeNodes } from "@udecode/plate-common";
+import { getNodeString, insertEmptyElement, isEditor, removeNodes } from "@udecode/plate-common";
 import type { PlateEditor } from "@udecode/plate-common/react";
 import { createPlatePlugin } from "@udecode/plate-common/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
-import type { Path } from "slate";
 
 export function ensureLeadingBlock(editor: PlateEditor, { event }: { event?: React.MouseEvent } = {}) {
   const { children } = editor;
@@ -70,23 +69,22 @@ export const NormalizePlugin = createPlatePlugin({
     };
 
     editor.normalizeNode = (entry) => {
-      const [node, path] = entry;
+      const [node] = entry;
 
       ensureLeadingBlock(editor);
 
       if (isEditor(node)) {
-        const nodes = node.children as TElement[];
+        // Remove additional h1 nodes (after index 0)
+        removeNodes(editor, {
+          at: [],
+          match: (n, p) => p[0] !== undefined && p[0] > 0 && n.type === HEADING_KEYS.h1,
+        });
 
-        console.log(nodes);
-
-        // Remove any additional h1 or h2 nodes
-        for (let i = 1; i < nodes.length; i++) {
-          if (nodes[i]?.type === HEADING_KEYS.h1 || nodes[i]?.type === HEADING_KEYS.h2) {
-            // console.log("[Normalize] removing: ", nodes[i]);
-            removeNodes(editor, { at: ([i] as Path) });
-            break;
-          }
-        }
+        // Remove additional h2 nodes (after index 1)
+        removeNodes(editor, {
+          at: [],
+          match: (n, p) => p[0] !== undefined && p[0] > 1 && n.type === HEADING_KEYS.h2,
+        });
       }
     };
 

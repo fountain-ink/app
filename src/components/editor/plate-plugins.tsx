@@ -43,7 +43,6 @@ import Prism from "prismjs";
 
 // import { aiPlugins } from '@/example/ai-plugins';
 import { BlockContextMenu } from "@/components/ui/block-context-menu";
-import { SelectionOverlayPlugin } from "@/components/ui/cursor-overlay";
 import { ImageElement } from "@/components/ui/image-element";
 import { LinkFloatingToolbar } from "@/components/ui/link-floating-toolbar";
 import { AlignPlugin } from "@udecode/plate-alignment/react";
@@ -59,7 +58,14 @@ import {
 } from "@udecode/plate-basic-marks/react";
 import { isCodeBlockEmpty, isSelectionAtCodeBlockStart, unwrapCodeBlock } from "@udecode/plate-code-block";
 import { CodeBlockPlugin, CodeSyntaxPlugin } from "@udecode/plate-code-block/react";
-import { isBlockAboveEmpty, isSelectionAtBlockStart, someNode } from "@udecode/plate-common";
+import {
+  getNextNode,
+  getParentNode,
+  insertNodes,
+  isBlockAboveEmpty,
+  isSelectionAtBlockStart,
+  someNode,
+} from "@udecode/plate-common";
 import { FontSizePlugin } from "@udecode/plate-font/react";
 import { IndentListPlugin } from "@udecode/plate-indent-list/react";
 import { IndentPlugin } from "@udecode/plate-indent/react";
@@ -69,6 +75,7 @@ import { ResetNodePlugin } from "@udecode/plate-reset-node/react";
 import { TabbablePlugin } from "@udecode/plate-tabbable/react";
 import { TableCellHeaderPlugin, TableRowPlugin } from "@udecode/plate-table/react";
 import { YjsPlugin } from "@udecode/plate-yjs/react";
+import { Path } from "slate";
 import { toast } from "sonner";
 import { TodoLi, TodoMarker } from "../ui/indent-todo-marker";
 import { autoformatRules } from "./plate-autoformat";
@@ -172,7 +179,77 @@ export const getEditorPlugins = (path: string, handle?: string, refreshToken?: s
 export const staticPlugins = [
   NormalizePlugin,
   // Nodes
-  HeadingPlugin.configure({ options: { levels: 4 } }),
+  HeadingPlugin.configure({
+    options: { levels: 4 },
+    handlers: {
+      onKeyDown: ({ event, editor }) => {
+        const anchor = editor.selection?.anchor?.path;
+        if (!anchor) return;
+
+        const currentNode = getParentNode(editor, anchor);
+        if (!currentNode) return;
+
+        const [node, path] = currentNode;
+        const isTitle = node.type === HEADING_KEYS.h1;
+        const isSubtitle = node.type === HEADING_KEYS.h2;
+
+        if (event.key === "Enter") {
+          if (!isTitle && !isSubtitle) return;
+
+          event.preventDefault();
+
+          if (isTitle) {
+            const nextNode = getNextNode(editor, { at: path });
+            const isNextSubtitle = nextNode?.[0]?.type === HEADING_KEYS.h2;
+
+            if (!isNextSubtitle) {
+              // Insert a new subtitle node
+              insertNodes(
+                editor,
+                {
+                  type: HEADING_KEYS.h2,
+                  children: [{ text: "" }],
+                },
+                {
+                  at: Path.next(path),
+                  select: true,
+                },
+              );
+            } else {
+              // Focus on the existing subtitle
+              editor.select(nextNode[1]);
+              editor.collapse({ edge: "end" });
+            }
+            return;
+          }
+
+          if (isSubtitle) {
+            const nextNode = getNextNode(editor, { at: path });
+            if (nextNode) {
+              // Focus on the next node
+              editor.select(nextNode[1]);
+              editor.collapse({ edge: "start" });
+            } else {
+              // Insert a new paragraph if there's no next node
+              insertNodes(
+                editor,
+                {
+                  type: ParagraphPlugin.key,
+                  children: [{ text: "" }],
+                },
+                {
+                  at: Path.next(path),
+                  select: true,
+                },
+              );
+            }
+
+            return;
+          }
+        }
+      },
+    },
+  }),
   BlockquotePlugin,
   CodeBlockPlugin.configure({ options: { prism: Prism, syntaxPopularFirst: true, syntax: true } }),
   HorizontalRulePlugin,
