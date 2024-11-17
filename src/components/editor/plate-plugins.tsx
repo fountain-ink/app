@@ -224,25 +224,18 @@ export const staticPlugins = [
           }
 
           if (isSubtitle) {
-            const nextNode = getNextNode(editor, { at: path });
-            if (nextNode) {
-              // Focus on the next node
-              editor.select(nextNode[1]);
-              editor.collapse({ edge: "start" });
-            } else {
-              // Insert a new paragraph if there's no next node
-              insertNodes(
-                editor,
-                {
-                  type: ParagraphPlugin.key,
-                  children: [{ text: "" }],
-                },
-                {
-                  at: Path.next(path),
-                  select: true,
-                },
-              );
-            }
+            // Insert a new paragraph
+            insertNodes(
+              editor,
+              {
+                type: ParagraphPlugin.key,
+                children: [{ text: "" }],
+              },
+              {
+                at: Path.next(path),
+                select: true,
+              },
+            );
 
             return;
           }
