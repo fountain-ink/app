@@ -1,8 +1,12 @@
+import { uploadFile } from "@/lib/upload-image";
 import { cn, withRef } from "@udecode/cn";
-import { withHOC } from "@udecode/plate-common/react";
+import { setNode, useEditorRef, useElement, withHOC } from "@udecode/plate-common/react";
 import { Image, ImagePlugin, useMediaState } from "@udecode/plate-media/react";
-import { ResizableProvider, useResizableStore } from "@udecode/plate-resizable";
+import { ResizableProvider } from "@udecode/plate-resizable";
+import { UploadIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { LoadingSpinner } from "../loading-spinner";
+import { Button } from "./button";
 import { Caption, CaptionTextarea } from "./caption";
 import { ImagePopover } from "./image-popover";
 import { PlateElement } from "./plate-element";
@@ -25,14 +29,15 @@ export const ImageElement = withHOC(
   ResizableProvider,
   withRef<typeof PlateElement>(({ children, className, nodeProps, ...props }, ref) => {
     const { align = "center", focused, readOnly, selected } = useMediaState();
-    const pixelWidth = useResizableStore().get.width();
     const [_isImageLoaded, setIsImageLoaded] = React.useState(false);
-    const [url, setUrl] = useState(props.element.url);
+    const [url, setUrl] = useState<string | undefined>(props?.element?.url as string | undefined);
     const [width, setWidth] = useState("");
+    const editor = useEditorRef();
+    const element = useElement();
 
     useEffect(() => {
       if (props.element?.url) {
-        setUrl(props.element.url);
+        setUrl(props.element.url as string);
       }
     }, [props.element.url]);
 
@@ -43,12 +48,49 @@ export const ImageElement = withHOC(
       }
     }, [props.element.width]);
 
+    const [isUploading, setIsUploading] = useState(false);
+
+    const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      setIsUploading(true);
+      try {
+        const url = await uploadFile(file);
+        if (url) {
+          setUrl(url);
+          setNode(editor, element, { url, width });
+        }
+      } finally {
+        setIsUploading(false);
+      }
+    };
+
     return (
-      <ImagePopover plugin={ImagePlugin}>
+      <ImagePopover url={url} plugin={ImagePlugin}>
         <PlateElement ref={ref} className={cn(className, width)} {...props}>
           <figure className="group relative" contentEditable={false}>
             {!url ? (
               <div className={cn("rounded-sm", focused && selected && "ring-2 ring-ring ring-offset-2")}>
+                <Button
+                  className="absolute inset-0 hover:bg-transparent group m-auto z-10"
+                  size="sm"
+                  variant="ghost"
+                  disabled={isUploading}
+                >
+                  <div className="relative flex gap-1 items-center justify-center">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileSelect}
+                      className="absolute inset-0 cursor-pointer opacity-0"
+                      disabled={isUploading}
+                    />
+                    {isUploading ? <LoadingSpinner /> : <>{!url && <UploadIcon className="size-4 mr-2" />}</>}
+                    <span className="">Upload</span>
+                  </div>
+                </Button>
+
                 <ImagePlaceholder />
               </div>
             ) : (

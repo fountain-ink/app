@@ -193,7 +193,6 @@ export const staticPlugins = [
         const isTitle = node.type === HEADING_KEYS.h1;
         const isSubtitle = node.type === HEADING_KEYS.h2;
         const isImage = node.type === ImagePlugin.key;
-        console.log(node.type);
 
         if (event.key === "Enter") {
           if (!isTitle && !isSubtitle && !isImage) return;
