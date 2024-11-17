@@ -192,9 +192,11 @@ export const staticPlugins = [
         const [node, path] = currentNode;
         const isTitle = node.type === HEADING_KEYS.h1;
         const isSubtitle = node.type === HEADING_KEYS.h2;
+        const isImage = node.type === ImagePlugin.key;
+        console.log(node.type);
 
         if (event.key === "Enter") {
-          if (!isTitle && !isSubtitle) return;
+          if (!isTitle && !isSubtitle && !isImage) return;
 
           event.preventDefault();
 
@@ -206,14 +208,8 @@ export const staticPlugins = [
               // Insert a new subtitle node
               insertNodes(
                 editor,
-                {
-                  type: HEADING_KEYS.h2,
-                  children: [{ text: "" }],
-                },
-                {
-                  at: Path.next(path),
-                  select: true,
-                },
+                { type: HEADING_KEYS.h2, children: [{ text: "" }] },
+                { at: Path.next(path), select: true },
               );
             } else {
               // Focus on the existing subtitle
@@ -227,14 +223,19 @@ export const staticPlugins = [
             // Insert a new paragraph
             insertNodes(
               editor,
-              {
-                type: ParagraphPlugin.key,
-                children: [{ text: "" }],
-              },
-              {
-                at: Path.next(path),
-                select: true,
-              },
+              { type: ParagraphPlugin.key, children: [{ text: "" }] },
+              { at: Path.next(path), select: true },
+            );
+
+            return;
+          }
+
+          if (isImage) {
+            // Insert a new paragraph
+            insertNodes(
+              editor,
+              { type: ParagraphPlugin.key, children: [{ text: "" }] },
+              { at: Path.next(path), select: true },
             );
 
             return;
