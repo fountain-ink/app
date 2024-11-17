@@ -63,7 +63,7 @@ export const ImageElement = withHOC(
                 onLoad={() => setIsImageLoaded(true)}
               />
             )}
-            <Caption style={{ width: pixelWidth }} align={align}>
+            <Caption className={width} align={align}>
               <CaptionTextarea readOnly={readOnly} placeholder="Write a caption..." />
             </Caption>
           </figure>
