@@ -1,7 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuPortal,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { clearCookies } from "@/lib/clear-cookies";
 import { SessionType, useLogout, useSession } from "@lens-protocol/react-web";
 import { toast } from "sonner";
@@ -39,42 +44,44 @@ export const UserMenu = () => {
   const handle = session.profile?.handle?.localName;
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-full">
           <SessionAvatar />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48 p-1">
-        <AnimatedMenuItem href={`/${handle}`} icon={UserIcon}>
-          Profile
-        </AnimatedMenuItem>
+      <DropdownMenuPortal>
+        <DropdownMenuContent align="end" className="p-1 flex flex-col gap-1 w-48">
+          <AnimatedMenuItem href={`/${handle}`} icon={UserIcon}>
+            Profile
+          </AnimatedMenuItem>
 
-        <AnimatedMenuItem
-          icon={UserRoundPenIcon}
-          onClick={() => {
-            logout();
-            clearCookies();
-          }}
-        >
-          Switch Profile
-        </AnimatedMenuItem>
+          <AnimatedMenuItem
+            icon={UserRoundPenIcon}
+            onClick={() => {
+              logout();
+              clearCookies();
+            }}
+          >
+            Switch Profile
+          </AnimatedMenuItem>
 
-        <AnimatedMenuItem href="/settings" icon={SettingsGearIcon}>
-          Settings
-        </AnimatedMenuItem>
+          <AnimatedMenuItem href="/settings" icon={SettingsGearIcon}>
+            Settings
+          </AnimatedMenuItem>
 
-        <AnimatedMenuItem
-          icon={LogoutIcon}
-          onClick={() => {
-            disconnect();
-            logout();
-            clearCookies();
-          }}
-        >
-          Disconnect
-        </AnimatedMenuItem>
-      </DropdownMenuContent>
+          <AnimatedMenuItem
+            icon={LogoutIcon}
+            onClick={() => {
+              disconnect();
+              logout();
+              clearCookies();
+            }}
+          >
+            Disconnect
+          </AnimatedMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenuPortal>
     </DropdownMenu>
   );
 };

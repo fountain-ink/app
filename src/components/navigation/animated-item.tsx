@@ -35,7 +35,10 @@ export const AnimatedMenuItem = ({
       {children && <span>{children}</span>}
     </Button>
   ) : (
-    <DropdownMenuItem {...buttonProps} className={`${buttonProps.className} group px-0 h-10 mx-0`}>
+    <DropdownMenuItem
+      {...buttonProps}
+      className={`${buttonProps.className} transition-all duration-300 w-full group px-0 h-10 mx-0`}
+    >
       <Icon animate={isHovered} />
       {children && <span>{children}</span>}
     </DropdownMenuItem>

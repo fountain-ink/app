@@ -93,11 +93,17 @@ export const RemoteDraftCreate = () => {
   };
 
   return (
-    <Button onClick={handleCreate} variant={"ghost"} className="flex items-center justify-start gap-2 py-1 pl-2 w-full">
+    <Button
+      onClick={handleCreate}
+      variant={"ghost"}
+      className="flex items-center justify-start gap-2 p-0 px-0 py-0 w-full"
+    >
       {isCreating ? (
-        <LoadingSpinner size={20} className="w-4 h-4 flex items-center justify-center" />
+        <div className="w-8 h-8 flex items-center justify-center p-2">
+          <LoadingSpinner size={20} className="w-4 h-4 flex items-center justify-center" />
+        </div>
       ) : (
-        <PlusIcon className="w-4 h-4" />
+        <PlusIcon size={20} className="w-8 h-8 p-2" />
       )}
       <span>New Article</span>
     </Button>

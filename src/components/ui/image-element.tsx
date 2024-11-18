@@ -91,7 +91,7 @@ export const ImageElement = withRef<typeof PlateElement>(
                       disabled={isUploading}
                     />
                     {isUploading ? <LoadingSpinner /> : <>{!url && <UploadIcon className="size-4 mr-2" />}</>}
-                    <span className="">Upload</span>
+                    <span className="">Upload Image</span>
                   </div>
                 </Button>
 

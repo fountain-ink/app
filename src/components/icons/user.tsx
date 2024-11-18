@@ -36,7 +36,7 @@ const UserIcon = ({ animate = false, className }: { animate?: boolean; className
 
   return (
     <div
-      className={`cursor-pointer select-none p-2 group-hover:bg-accent rounded-md transition-colors duration-100 flex items-center justify-center ${className}`}
+      className={`cursor-pointer select-none p-2 rounded-md transition-colors duration-100 flex items-center justify-center ${className}`}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

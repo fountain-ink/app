@@ -5,6 +5,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuPortal,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SessionType, useSession } from "@lens-protocol/react-web";
@@ -30,14 +31,16 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
       <DropdownMenuTrigger asChild>
         <Button>{text}</Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="p-1" align="end">
-        <DropdownMenuItem asChild>
-          <RemoteDraftCreate />
-        </DropdownMenuItem>
-        <AnimatedMenuItem href="/drafts" icon={SquarePenIcon}>
-          Drafts
-        </AnimatedMenuItem>
-      </DropdownMenuContent>
+      <DropdownMenuPortal>
+        <DropdownMenuContent className="p-1 flex flex-col gap-1" align="end">
+          <DropdownMenuItem asChild>
+            <RemoteDraftCreate />
+          </DropdownMenuItem>
+          <AnimatedMenuItem href="/drafts" icon={SquarePenIcon}>
+            Drafts
+          </AnimatedMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenuPortal>
     </DropdownMenu>
   );
 };
