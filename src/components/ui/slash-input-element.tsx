@@ -67,7 +67,8 @@ const rules: SlashCommandRule[] = [
     description: "Add a section.",
     keywords: ["heading", "big", "huge", "section", "h1", "one"],
     onSelect: (editor) => {
-      editor.tf.toggle.block({ type: HEADING_KEYS.h3 });
+      // editor.tf.toggle.block({ type: HEADING_KEYS.h3 });
+      insertBlock(editor, HEADING_KEYS.h3);
     },
   },
   {
@@ -76,7 +77,8 @@ const rules: SlashCommandRule[] = [
     description: "Add a subsection.",
     keywords: ["sub", "heading", "mid", "section", "h2", "two"],
     onSelect: (editor) => {
-      editor.tf.toggle.block({ type: HEADING_KEYS.h4 });
+      // editor.tf.toggle.block({ type: HEADING_KEYS.h4 });
+      insertBlock(editor, HEADING_KEYS.h4);
     },
   },
   {
@@ -97,7 +99,8 @@ const rules: SlashCommandRule[] = [
     description: "Add an image.",
     keywords: ["image", "img", "picture", "png", "photo", "jpg", "jpeg"],
     onSelect: (editor) => {
-      editor.tf.toggle.block({ type: ImagePlugin.key });
+      // editor.tf.toggle.block({ type: ImagePlugin.key });
+      insertBlock(editor, ImagePlugin.key);
     },
   },
   {
@@ -128,10 +131,11 @@ const rules: SlashCommandRule[] = [
     description: "Capture a quote.",
     keywords: ["quote", "blockquote", "citation"],
     onSelect: (editor) => {
-      insertEmptyElement(editor, BlockquotePlugin.key, {
-        nextBlock: true,
-        select: true,
-      });
+      // insertEmptyElement(editor, BlockquotePlugin.key, {
+      //   nextBlock: true,
+      //   select: true,
+      // });
+      insertBlock(editor, BlockquotePlugin.key);
     },
   },
   {
@@ -184,7 +188,8 @@ const rules: SlashCommandRule[] = [
     description: "Add a date.",
     value: "Date",
     onSelect: (editor) => {
-      editor.getTransforms(DatePlugin).insert.date();
+      // editor.getTransforms(DatePlugin).insert.date();
+      insertBlock(editor, DatePlugin.key);
     },
   },
   {
