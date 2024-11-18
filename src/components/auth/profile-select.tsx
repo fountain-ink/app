@@ -1,11 +1,12 @@
 import { type Profile, useProfilesManaged } from "@lens-protocol/react-web";
-import { PlusIcon, User2Icon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
+import { UserIcon } from "../icons/user";
+import { AnimatedMenuItem } from "../navigation/animated-item";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { LoginButton } from "./login-button";
-import { UserIcon } from "../icons/user";
 
 export function ProfileSelectMenu({ onSuccess }: { onSuccess: (profile: Profile) => void }) {
   const { address } = useAccount();
@@ -30,9 +31,7 @@ export function ProfileSelectMenu({ onSuccess }: { onSuccess: (profile: Profile)
   return (
     <Dialog defaultOpen>
       <DialogTrigger asChild>
-        <Button size="icon" variant="ghost">
-          <UserIcon />
-        </Button>
+        <AnimatedMenuItem asButton icon={UserIcon} />
       </DialogTrigger>
       <DialogContent className="max-w-72">
         <DialogHeader>

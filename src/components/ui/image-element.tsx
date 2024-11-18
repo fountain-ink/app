@@ -29,7 +29,7 @@ export const ImageElement = withHOC(
   ResizableProvider,
   withRef<typeof PlateElement>(({ children, className, nodeProps, ...props }, ref) => {
     const { align = "center", focused, readOnly, selected } = useMediaState();
-    const [_isImageLoaded, setIsImageLoaded] = React.useState(false);
+    const [_isImageLoaded, setIsImageLoaded] = useState(false);
     const [url, setUrl] = useState<string | undefined>(props?.element?.url as string | undefined);
     const [width, setWidth] = useState("");
     const editor = useEditorRef();
@@ -60,8 +60,9 @@ export const ImageElement = withHOC(
         if (url) {
           setUrl(url);
           setNode(editor, element, { url, width });
+          console.log(element)
         }
-      } finally {
+      }  finally {
         setIsUploading(false);
       }
     };

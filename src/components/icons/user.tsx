@@ -25,7 +25,7 @@ const circleVariant: Variants = {
   },
 };
 
-const UserIcon = ({ animate = false }: { animate?: boolean }) => {
+const UserIcon = ({ animate = false, className }: { animate?: boolean; className?: string }) => {
   const controls = useAnimation();
 
   if (animate) {
@@ -35,7 +35,9 @@ const UserIcon = ({ animate = false }: { animate?: boolean }) => {
   }
 
   return (
-    <div className="cursor-pointer select-none p-2 group-hover:bg-accent rounded-md transition-colors duration-100 flex items-center justify-center">
+    <div
+      className={`cursor-pointer select-none p-2 group-hover:bg-accent rounded-md transition-colors duration-100 flex items-center justify-center ${className}`}
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="28"
