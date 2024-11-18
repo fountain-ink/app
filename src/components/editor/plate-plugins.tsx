@@ -11,7 +11,6 @@ import { DatePlugin } from "@udecode/plate-date/react";
 import { DndPlugin } from "@udecode/plate-dnd";
 import { DocxPlugin } from "@udecode/plate-docx";
 import { EmojiPlugin } from "@udecode/plate-emoji/react";
-import { FontBackgroundColorPlugin, FontColorPlugin } from "@udecode/plate-font/react";
 import { HEADING_KEYS, HEADING_LEVELS } from "@udecode/plate-heading";
 import { HeadingPlugin, TocPlugin } from "@udecode/plate-heading/react";
 import { HighlightPlugin } from "@udecode/plate-highlight/react";
@@ -291,8 +290,6 @@ export const staticPlugins = [
 
   // Marks
   BasicMarksPlugin,
-  FontColorPlugin,
-  FontBackgroundColorPlugin,
   HighlightPlugin,
   KbdPlugin,
 
