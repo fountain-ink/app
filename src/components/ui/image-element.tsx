@@ -1,10 +1,10 @@
 import { uploadFile } from "@/lib/upload-image";
 import { cn, withRef } from "@udecode/cn";
-import { setNode, useEditorRef, useElement, withHOC } from "@udecode/plate-common/react";
+import { selectEditor, setNode, useEditorRef, useElement } from "@udecode/plate-common/react";
 import { Image, ImagePlugin, useMediaState } from "@udecode/plate-media/react";
-import { ResizableProvider } from "@udecode/plate-resizable";
 import { UploadIcon } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { LoadingSpinner } from "../loading-spinner";
 import { Button } from "./button";
 import { Caption, CaptionTextarea } from "./caption";
@@ -25,9 +25,8 @@ const IMAGE_WIDTH_CLASSES: Record<ImageWidth, string> = {
   column: "w-full max-w-full",
 } as const;
 
-export const ImageElement = withHOC(
-  ResizableProvider,
-  withRef<typeof PlateElement>(({ children, className, nodeProps, ...props }, ref) => {
+export const ImageElement = withRef<typeof PlateElement>(
+  ({ children, className, nodeProps, autoFocus = true, ...props }, ref) => {
     const { align = "center", focused, readOnly, selected } = useMediaState();
     const [_isImageLoaded, setIsImageLoaded] = useState(false);
     const [url, setUrl] = useState<string | undefined>(props?.element?.url as string | undefined);
@@ -60,9 +59,13 @@ export const ImageElement = withHOC(
         if (url) {
           setUrl(url);
           setNode(editor, element, { url, width });
-          console.log(element)
+          selectEditor(editor, {
+            at: editor.selection || undefined,
+            edge: editor.selection ? undefined : "end",
+            focus: true,
+          });
         }
-      }  finally {
+      } finally {
         setIsUploading(false);
       }
     };
@@ -115,5 +118,5 @@ export const ImageElement = withHOC(
         </PlateElement>
       </ImagePopover>
     );
-  }),
+  },
 );

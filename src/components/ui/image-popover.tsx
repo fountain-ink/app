@@ -1,6 +1,13 @@
 import { uploadFile } from "@/lib/upload-image";
 import { type WithRequiredKey, isSelectionExpanded } from "@udecode/plate-common";
-import { setNode, useEditorRef, useEditorSelector, useElement, useRemoveNodeButton } from "@udecode/plate-common/react";
+import {
+  selectEditor,
+  setNode,
+  useEditorRef,
+  useEditorSelector,
+  useElement,
+  useRemoveNodeButton,
+} from "@udecode/plate-common/react";
 import type React from "react";
 import { useState } from "react";
 import { useReadOnly, useSelected } from "slate-react";
@@ -38,6 +45,11 @@ export function ImagePopover({ children, url }: ImagePopoverProps) {
       const url = await uploadFile(file);
       if (url) {
         setNode(editor, element, { url, width });
+        selectEditor(editor, {
+          at: editor.selection || undefined,
+          edge: editor.selection ? undefined : "end",
+          focus: true,
+        });
       }
     } finally {
       setIsUploading(false);
