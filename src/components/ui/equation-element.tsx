@@ -11,9 +11,9 @@ import { RadicalIcon } from "lucide-react";
 
 import { BlockActionButton } from "./block-context-menu";
 
+import { EquationPopoverContent } from "./equation-popover";
 import { PlateElement } from "./plate-element";
 import { Popover, PopoverTrigger } from "./popover";
-import { EquationPopoverContent } from "./equation-popover";
 
 export const EquationElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
   const element = useElement<TEquationElement>();
@@ -42,14 +42,14 @@ export const EquationElement = withRef<typeof PlateElement>(({ children, classNa
       <Popover open={open} onOpenChange={setOpen} modal={false}>
         <PopoverTrigger asChild>
           <div
-            className={cn(
+            classNam={cn(
               "group flex cursor-pointer select-none items-center justify-center rounded-sm transition-bg-ease hover:bg-primary/10",
-              element.texExpression.length === 0 ? "bg-muted p-3 pr-9" : "px-2 py-1",
+              element?.texExpression?.length === 0 ? "bg-muted p-3 pr-9" : "px-2 py-1",
             )}
             contentEditable={false}
             role="button"
           >
-            {element.texExpression.length > 0 ? (
+            {element?.texExpression?.length > 0 ? (
               <span ref={katexRef} />
             ) : (
               <div className="flex h-7 w-full items-center gap-2 whitespace-nowrap text-sm text-muted-foreground">

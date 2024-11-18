@@ -23,6 +23,7 @@ import {
   ListIcon,
   ListOrderedIcon,
   PilcrowIcon,
+  Radical,
   TableIcon,
 } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
@@ -43,7 +44,9 @@ import { CodeIcon } from "lucide-react";
 import { insertColumnGroup } from "@udecode/plate-layout";
 import { LayoutIcon } from "lucide-react";
 
+import { insertBlock } from "@/lib/transforms";
 import { HorizontalRulePlugin } from "@udecode/plate-horizontal-rule/react";
+import { EquationPlugin } from "@udecode/plate-math/react";
 import { insertTable } from "@udecode/plate-table/react";
 import { SeparatorHorizontalIcon } from "lucide-react";
 
@@ -95,6 +98,16 @@ const rules: SlashCommandRule[] = [
     keywords: ["image", "img", "picture", "png", "photo", "jpg", "jpeg"],
     onSelect: (editor) => {
       editor.tf.toggle.block({ type: ImagePlugin.key });
+    },
+  },
+  {
+    description: "Insert a block for equations.",
+    focusEditor: false,
+    icon: Radical,
+    keywords: ["math", "formula"],
+    value: "Equation",
+    onSelect: (editor: any) => {
+      insertBlock(editor, EquationPlugin.key);
     },
   },
   {
