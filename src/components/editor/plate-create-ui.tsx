@@ -57,6 +57,9 @@ import { TableRowElement } from "@/components/ui/table-row-element";
 import { TocElement } from "@/components/ui/toc-element";
 import { ToggleElement } from "@/components/ui/toggle-element";
 import { withDraggables } from "@/components/ui/with-draggables";
+import { EquationPlugin, InlineEquationPlugin } from "@udecode/plate-math/react";
+import { EquationElement } from "../ui/equation-element";
+import { InlineEquationElement } from "../ui/inline-equation-element";
 
 export const getUiComponents = () => {
   return withPlaceholders(
@@ -78,6 +81,8 @@ export const getUiComponents = () => {
       [HEADING_KEYS.h4]: withProps(HeadingElement, { variant: "h4" }),
       [HEADING_KEYS.h5]: withProps(HeadingElement, { variant: "h5" }),
       [HEADING_KEYS.h6]: withProps(HeadingElement, { variant: "h6" }),
+      [EquationPlugin.key]: EquationElement,
+      [InlineEquationPlugin.key]: InlineEquationElement,
       [ImagePlugin.key]: ImageElement,
       [LinkPlugin.key]: LinkElement,
       [MediaEmbedPlugin.key]: MediaEmbedElement,

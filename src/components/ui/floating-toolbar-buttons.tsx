@@ -1,4 +1,4 @@
-import React from "react";
+"use client";
 
 import {
   BoldPlugin,
@@ -7,11 +7,9 @@ import {
   StrikethroughPlugin,
   UnderlinePlugin,
 } from "@udecode/plate-basic-marks/react";
-import { useEditorReadOnly } from "@udecode/plate-common/react";
-import { BoldIcon, Code2Icon, ItalicIcon, SparklesIcon, StrikethroughIcon, UnderlineIcon } from "lucide-react";
+import { useEditorReadOnly, useEditorRef, useSelectionAcrossBlocks } from "@udecode/plate-common/react";
+import { Bold, Code2, Italic, Strikethrough, Underline } from "lucide-react";
 
-import { AIToolbarButton } from "./ai-toolbar-button";
-import { CommentToolbarButton } from "./comment-toolbar-button";
 import { LinkToolbarButton } from "./link-toolbar-button";
 import { MarkToolbarButton } from "./mark-toolbar-button";
 import { MoreDropdownMenu } from "./more-dropdown-menu";
@@ -19,55 +17,65 @@ import { ToolbarGroup } from "./toolbar";
 import { TurnIntoDropdownMenu } from "./turn-into-dropdown-menu";
 
 export function FloatingToolbarButtons() {
+  const editor = useEditorRef();
   const readOnly = useEditorReadOnly();
 
+  const isSelectionAcrossBlocks = useSelectionAcrossBlocks();
+
   return (
-    <>
+    <div
+      className="flex"
+      style={{
+        transform: "translateX(calc(-1px))",
+        whiteSpace: "nowrap",
+      }}
+    >
       {!readOnly && (
         <>
-          <ToolbarGroup>
+          {/* <ToolbarGroup>
             <AIToolbarButton
-              className="gap-1.5 text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-500"
+              className="gap-1.5"
+              shortcut="⌘+J"
               tooltip="Edit, generate, and more"
             >
-              <SparklesIcon className="!size-3.5" />
-              Ask AI
+              <AIIcon className="!size-3" />
+              <div className="hidden bg-[linear-gradient(120deg,#6EB6F2_10%,#a855f7,#ea580c,#eab308)] bg-clip-text text-transparent sm:inline">
+                Ask AI
+              </div>
             </AIToolbarButton>
-          </ToolbarGroup>
+          </ToolbarGroup> */}
 
+          {/* <ToolbarGroup>{editor.plugins[CommentsPlugin.key] && <CommentToolbarButton />}</ToolbarGroup> */}
           <ToolbarGroup>
             <TurnIntoDropdownMenu />
 
-            <MarkToolbarButton nodeType={BoldPlugin.key} tooltip="Bold (⌘+B)">
-              <BoldIcon />
+            <MarkToolbarButton nodeType={BoldPlugin.key} tooltip="Bold">
+              <Bold />
             </MarkToolbarButton>
 
-            <MarkToolbarButton nodeType={ItalicPlugin.key} tooltip="Italic (⌘+I)">
-              <ItalicIcon />
+            <MarkToolbarButton nodeType={ItalicPlugin.key} tooltip="Italic">
+              <Italic />
             </MarkToolbarButton>
 
-            <MarkToolbarButton nodeType={UnderlinePlugin.key} tooltip="Underline (⌘+U)">
-              <UnderlineIcon />
+            <MarkToolbarButton nodeType={UnderlinePlugin.key} tooltip="Underline">
+              <Underline />
             </MarkToolbarButton>
 
-            <MarkToolbarButton nodeType={StrikethroughPlugin.key} tooltip="Strikethrough (⌘+⇧+M)">
-              <StrikethroughIcon />
+            <MarkToolbarButton nodeType={StrikethroughPlugin.key} tooltip="Strikethrough">
+              <Strikethrough />
             </MarkToolbarButton>
 
-            <MarkToolbarButton nodeType={CodePlugin.key} tooltip="Code (⌘+E)">
-              <Code2Icon />
+            <MarkToolbarButton nodeType={CodePlugin.key} tooltip="Code">
+              <Code2 />
             </MarkToolbarButton>
+
+            <InlineEquationToolbarButton />
 
             <LinkToolbarButton />
           </ToolbarGroup>
+          <ToolbarGroup>{!isSelectionAcrossBlocks && <MoreDropdownMenu />}</ToolbarGroup>
         </>
       )}
-
-      <ToolbarGroup>
-        <CommentToolbarButton />
-
-        {!readOnly && <MoreDropdownMenu />}
-      </ToolbarGroup>
-    </>
+    </div>
   );
 }
