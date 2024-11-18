@@ -15,6 +15,7 @@ import { MarkToolbarButton } from "./mark-toolbar-button";
 import { MoreDropdownMenu } from "./more-dropdown-menu";
 import { ToolbarGroup } from "./toolbar";
 import { TurnIntoDropdownMenu } from "./turn-into-dropdown-menu";
+import { InlineEquationToolbarButton } from "./inline-equation-toolbar-button";
 
 export function FloatingToolbarButtons() {
   const editor = useEditorRef();

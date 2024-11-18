@@ -6,7 +6,7 @@ import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
-import { type PlateEditor, ParagraphPlugin, focusEditor, useEditorRef } from "@udecode/plate-common/react";
+import { type PlateEditor, ParagraphPlugin, useEditorRef } from "@udecode/plate-common/react";
 import { DatePlugin } from "@udecode/plate-date/react";
 import { ExcalidrawPlugin } from "@udecode/plate-excalidraw/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
@@ -18,37 +18,34 @@ import { ImagePlugin, MediaEmbedPlugin } from "@udecode/plate-media/react";
 import { TablePlugin } from "@udecode/plate-table/react";
 import { TogglePlugin } from "@udecode/plate-toggle/react";
 import {
-  CalendarIcon,
-  ChevronRightIcon,
-  Columns3Icon,
-  FileCodeIcon,
-  FilmIcon,
-  Heading1Icon,
-  Heading2Icon,
-  Heading3Icon,
-  ImageIcon,
-  Link2Icon,
-  ListIcon,
-  ListOrderedIcon,
-  MinusIcon,
-  PenToolIcon,
-  PilcrowIcon,
-  PlusIcon,
-  QuoteIcon,
-  SquareIcon,
-  TableIcon,
-  TableOfContentsIcon,
+    CalendarIcon,
+    ChevronRightIcon,
+    Columns3Icon,
+    FileCodeIcon,
+    FilmIcon,
+    Heading1Icon,
+    Heading2Icon,
+    Heading3Icon,
+    ImageIcon,
+    Link2Icon,
+    ListIcon,
+    ListOrderedIcon,
+    MinusIcon,
+    PenToolIcon,
+    PilcrowIcon,
+    PlusIcon,
+    QuoteIcon,
+    SquareIcon,
+    TableIcon,
+    TableOfContentsIcon,
 } from "lucide-react";
 
 import { insertBlock, insertInlineElement } from "@/lib/transforms";
 
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  useOpenState,
+    DropdownMenu,
+    DropdownMenuTrigger,
+    useOpenState
 } from "./dropdown-menu";
 import { ToolbarButton } from "./toolbar";
 
@@ -226,7 +223,7 @@ export function InsertDropdownMenu(props: DropdownMenuProps) {
         </ToolbarButton>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="flex max-h-[500px] min-w-0 flex-col overflow-y-auto" align="start">
+      {/* <DropdownMenuContent className="flex max-h-[500px] min-w-0 flex-col overflow-y-auto" align="start">
         {groups.map(({ group, items: nestedItems }) => (
           <DropdownMenuGroup key={group} label={group}>
             {nestedItems.map(({ icon, label, value, onSelect }) => (
@@ -244,7 +241,8 @@ export function InsertDropdownMenu(props: DropdownMenuProps) {
             ))}
           </DropdownMenuGroup>
         ))}
-      </DropdownMenuContent>
+      </DropdownMenuContent> */}
+
     </DropdownMenu>
   );
 }
