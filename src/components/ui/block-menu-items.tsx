@@ -4,9 +4,7 @@ import { useMemo } from "react";
 
 import type { TElement } from "@udecode/plate-common";
 
-import { AIChatPlugin } from "@udecode/plate-ai/react";
 import { showCaption } from "@udecode/plate-caption/react";
-import { CommentsPlugin } from "@udecode/plate-comments/react";
 import { ParagraphPlugin, focusEditor, useEditorRef } from "@udecode/plate-common/react";
 import { AudioPlugin, FilePlugin, ImagePlugin, MediaEmbedPlugin, VideoPlugin } from "@udecode/plate-media/react";
 import {
@@ -14,17 +12,7 @@ import {
   useBlockSelectionFragmentProp,
   useBlockSelectionNodes,
 } from "@udecode/plate-selection/react";
-import {
-  AlignCenter,
-  AlignLeft,
-  AlignRight,
-  CaptionsIcon,
-  FilesIcon,
-  MessageSquareText,
-  RefreshCwIcon,
-  SparklesIcon,
-  Trash2,
-} from "lucide-react";
+import { AlignCenter, AlignLeft, AlignRight, CaptionsIcon, RefreshCwIcon, Trash2 } from "lucide-react";
 
 import { getBlockType, setBlockType } from "@/lib/transforms";
 import {
@@ -113,21 +101,21 @@ export const blockMenuItems = {
       editor.getTransforms(BlockSelectionPlugin).blockSelection.removeNodes();
     },
   },
-  duplicate: {
-    focusEditor: false,
-    icon: <FilesIcon size={16} />,
-    keywords: ["copy"],
-    label: "Duplicate",
-    shortcut: "⌘+D",
-    value: "duplicate",
-    onSelect: ({ editor }: any) => {
-      editor
-        .getTransforms(BlockSelectionPlugin)
-        .blockSelection.duplicate(editor.getApi(BlockSelectionPlugin).blockSelection.getNodes());
+  // duplicate: {
+  //   focusEditor: false,
+  //   icon: <FilesIcon size={16} />,
+  //   keywords: ["copy"],
+  //   label: "Duplicate",
+  //   shortcut: "⌘+D",
+  //   value: "duplicate",
+  //   onSelect: ({ editor }: any) => {
+  //     editor
+  //       .getTransforms(BlockSelectionPlugin)
+  //       .blockSelection.duplicate(editor.getApi(BlockSelectionPlugin).blockSelection.getNodes());
 
-      editor.getApi(BlockSelectionPlugin).blockSelection.focus();
-    },
-  },
+  //     editor.getApi(BlockSelectionPlugin).blockSelection.focus();
+  //   },
+  // },
 };
 
 const orderedMenuItems: any[] = [
@@ -138,7 +126,7 @@ const orderedMenuItems: any[] = [
   //   items: [blockMenuItems.askAI, blockMenuItems.delete, blockMenuItems.duplicate, blockMenuItems[GROUP.TURN_INTO]],
   // },
   {
-    items: [blockMenuItems.delete, blockMenuItems.duplicate, blockMenuItems[GROUP.TURN_INTO]],
+    items: [blockMenuItems.delete, blockMenuItems, blockMenuItems[GROUP.TURN_INTO]],
   },
 ];
 
@@ -153,7 +141,7 @@ const mediaMenuItems = [
     items: [blockMenuItems[GROUP.ALIGN]],
   },
   {
-    items: [blockMenuItems.delete, blockMenuItems.duplicate],
+    items: [blockMenuItems.delete],
   },
 ];
 

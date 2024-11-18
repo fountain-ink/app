@@ -58,7 +58,7 @@ export function MoreDropdownMenu(props: DropdownMenuProps) {
             Keyboard input
           </DropdownMenuItem>
 
-          <DropdownMenuItem
+          {/* <DropdownMenuItem
             onSelect={() => {
               editor.tf.toggle.mark({
                 key: SuperscriptPlugin.key,
@@ -69,7 +69,6 @@ export function MoreDropdownMenu(props: DropdownMenuProps) {
           >
             <SuperscriptIcon />
             Superscript
-            {/* (⌘+,) */}
           </DropdownMenuItem>
           <DropdownMenuItem
             onSelect={() => {
@@ -82,8 +81,7 @@ export function MoreDropdownMenu(props: DropdownMenuProps) {
           >
             <SubscriptIcon />
             Subscript
-            {/* (⌘+.) */}
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

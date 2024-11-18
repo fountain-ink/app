@@ -42,7 +42,7 @@ export const EquationElement = withRef<typeof PlateElement>(({ children, classNa
       <Popover open={open} onOpenChange={setOpen} modal={false}>
         <PopoverTrigger asChild>
           <div
-            classNam={cn(
+            className={cn(
               "group flex cursor-pointer select-none items-center justify-center rounded-sm transition-bg-ease hover:bg-primary/10",
               element?.texExpression?.length === 0 ? "bg-muted p-3 pr-9" : "px-2 py-1",
             )}

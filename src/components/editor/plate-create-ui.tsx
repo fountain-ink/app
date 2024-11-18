@@ -35,11 +35,9 @@ import { ColumnElement } from "@/components/ui/column-element";
 import { ColumnGroupElement } from "@/components/ui/column-group-element";
 import { CommentLeaf } from "@/components/ui/comment-leaf";
 import { DateElement } from "@/components/ui/date-element";
-// import { EquationElement } from '@/components/ui/equation-element';
 import { HeadingElement } from "@/components/ui/heading-element";
 import { HrElement } from "@/components/ui/hr-element";
 import { ImageElement } from "@/components/ui/image-element";
-// import { InlineEquationElement } from '@/components/ui/inline-equation-element';
 import { LinkElement } from "@/components/ui/link-element";
 // import { MediaAudioElement } from '@/components/ui/media-audio-element';
 import { MediaEmbedElement } from "@/components/ui/media-embed-element";
@@ -57,9 +55,13 @@ import { TableRowElement } from "@/components/ui/table-row-element";
 import { TocElement } from "@/components/ui/toc-element";
 import { ToggleElement } from "@/components/ui/toggle-element";
 import { withDraggables } from "@/components/ui/with-draggables";
+import { HighlightPlugin } from "@udecode/plate-highlight/react";
+import { KbdPlugin } from "@udecode/plate-kbd/react";
 import { EquationPlugin, InlineEquationPlugin } from "@udecode/plate-math/react";
 import { EquationElement } from "../ui/equation-element";
 import { InlineEquationElement } from "../ui/inline-equation-element";
+import { KbdLeaf } from "../ui/kbd-leaf";
+import { HighlightLeaf } from "../ui/highlight-leaf";
 
 export const getUiComponents = () => {
   return withPlaceholders(
@@ -83,6 +85,8 @@ export const getUiComponents = () => {
       [HEADING_KEYS.h6]: withProps(HeadingElement, { variant: "h6" }),
       [EquationPlugin.key]: EquationElement,
       [InlineEquationPlugin.key]: InlineEquationElement,
+      [KbdPlugin.key]: KbdLeaf,
+      [HighlightPlugin.key]: HighlightLeaf,
       [ImagePlugin.key]: ImageElement,
       [LinkPlugin.key]: LinkElement,
       [MediaEmbedPlugin.key]: MediaEmbedElement,
@@ -125,6 +129,9 @@ export const getRawUiCompontents = () => {
     [HEADING_KEYS.h4]: withProps(HeadingElement, { variant: "h4" }),
     [HEADING_KEYS.h5]: withProps(HeadingElement, { variant: "h5" }),
     [HEADING_KEYS.h6]: withProps(HeadingElement, { variant: "h6" }),
+    [EquationPlugin.key]: EquationElement,
+    [InlineEquationPlugin.key]: InlineEquationElement,
+    [KbdPlugin.key]: KbdLeaf,
     [ImagePlugin.key]: ImageElement,
     [LinkPlugin.key]: LinkElement,
     [MediaEmbedPlugin.key]: MediaEmbedElement,
