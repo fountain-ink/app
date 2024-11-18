@@ -49,13 +49,13 @@ export const turnIntoItems = [
   {
     icon: <Heading1Icon />,
     keywords: ["title", "h1"],
-    label: "Heading 1",
+    label: "Heading",
     value: HEADING_KEYS.h3,
   },
   {
     icon: <Heading2Icon />,
     keywords: ["subtitle", "h2"],
-    label: "Heading 2",
+    label: "Subheading",
     value: HEADING_KEYS.h4,
   },
   {
@@ -76,12 +76,12 @@ export const turnIntoItems = [
     label: "Numbered list",
     value: ListStyleType.Decimal,
   },
-  {
-    icon: <ChevronDownIcon />,
-    keywords: ["collapsible", "expandable"],
-    label: "Toggle list",
-    value: TogglePlugin.key,
-  },
+  // {
+  //   icon: <ChevronDownIcon />,
+  //   keywords: ["collapsible", "expandable"],
+  //   label: "Toggle list",
+  //   value: TogglePlugin.key,
+  // },
   {
     icon: <Code2Icon />,
     keywords: ["```"],
@@ -121,7 +121,6 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
     [value],
   );
 
-
   return (
     <DropdownMenu modal={false} {...openState} {...props}>
       <DropdownMenuTrigger asChild>
@@ -143,9 +142,10 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
                 focusEditor(editor);
               }}
             >
+
               {turnIntoItems.map(({ icon, label, value: itemValue }) => (
-                <DropdownMenuRadioItem key={itemValue} className="min-w-[180px]" value={itemValue}>
-                  <div className="mr-2 flex size-5 items-center justify-center rounded-sm border border-foreground/15 bg-white p-0.5 text-subtle-foreground [&_svg]:size-3">
+                <DropdownMenuRadioItem key={itemValue} className="min-w-[180px] rounded-sm" value={itemValue}>
+                  <div className="mr-2 flex size-5 items-center justify-center rounded-[4px] border border-foreground/15 bg-muted/50 p-0.5 text-subtle-foreground [&_svg]:size-3">
                     {icon}
                   </div>
                   {label}
