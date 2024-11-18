@@ -1,17 +1,23 @@
 import { getDatabase } from "@/lib/get-database";
 import { getLensClient } from "@/lib/get-lens-client";
-import { getCookieAuth } from "./get-auth-cookies";
+import { getTokenFromCookie } from "./get-token-from-cookie";
 
-export async function getAuth() {
-  const { isValid, refreshToken } = getCookieAuth();
+export async function getAuthWithCookies() {
+  const { isValid, refreshToken } = getTokenFromCookie();
 
   const lens = await getLensClient(refreshToken);
 
-  if (!refreshToken || !isValid) {
+  let isAuthenticated = false;
+  try {
+    isAuthenticated = await lens.authentication.isAuthenticated();
+  } catch (error) {
+    console.log(error);
+  }
+
+  if (!refreshToken || !isValid || !isAuthenticated) {
     return { lens, profileId: undefined, profile: undefined, handle: undefined, db: undefined };
   }
 
-  const isAuthenticated = await lens.authentication.isAuthenticated();
   const profileId = await lens.authentication.getProfileId();
   const profile = profileId ? await lens.profile.fetch({ forProfileId: profileId }) : undefined;
   const handle = profile?.handle?.localName;

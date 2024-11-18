@@ -1,7 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 
-export const getCookieAuth = (): { isValid: boolean; refreshToken: string | undefined } => {
+export const getTokenFromCookie = (): { isValid: boolean; refreshToken: string | undefined } => {
   const cookieStorage = cookies();
   const refreshToken = cookieStorage.get("refreshToken")?.value;
 

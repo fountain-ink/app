@@ -7,7 +7,10 @@ import { useTheme } from "../theme/theme-context";
 
 import { useStorage } from "@/hooks/use-storage";
 
-export const UserTheme = ({ children, profile }: { children: React.ReactNode; profile: ProfileFragment }) => {
+export const UserTheme = ({
+  children,
+  profile,
+}: { children: React.ReactNode; profile: ProfileFragment | undefined }) => {
   const userTheme = profile?.metadata?.attributes?.find((attr) => attr.key === "theme")?.value;
   const { theme: currentTheme, setTheme } = useTheme();
   const { theme: defaultTheme } = useStorage();

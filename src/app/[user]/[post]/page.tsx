@@ -1,11 +1,11 @@
 import Markdown from "@/components/content/markdown";
 import Editor from "@/components/editor/plate-editor";
 import ErrorPage from "@/components/error-page";
-import { getAuth } from "@/lib/get-auth-clients";
+import { getAuthWithCookies } from "@/lib/get-auth-clients";
 import { sanitize } from "isomorphic-dompurify";
 
 const post = async ({ params }: { params: { user: string; post: string } }) => {
-  const { lens } = await getAuth();
+  const { lens } = await getAuthWithCookies();
 
   const id = params.post;
   const post = await lens.publication.fetch({ forId: id });

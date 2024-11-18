@@ -1,5 +1,5 @@
 import { UserTheme } from "@/components/user/user-theme";
-import { getAuth } from "@/lib/get-auth-clients";
+import { getAuthWithCookies } from "@/lib/get-auth-clients";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }: { params: { user: string } }) {
@@ -18,10 +18,15 @@ const UserLayout = async ({
   children: React.ReactNode;
   params: { user: string };
 }) => {
-  const { lens } = await getAuth();
-  const profile = await lens.profile.fetch({
-    forHandle: `lens/${params.user}`,
-  });
+  const { lens } = await getAuthWithCookies();
+  let profile = undefined;
+  try {
+    profile = await lens.profile.fetch({
+      forHandle: `lens/${params.user}`,
+    });
+  } catch (error) {
+    console.error(error);
+  }
 
   if (!profile) {
     return notFound();

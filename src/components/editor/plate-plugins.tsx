@@ -85,7 +85,7 @@ import { RenderAboveEditableYjs } from "./yjs-above-editable";
 export const getEditorPlugins = (path: string, handle?: string, refreshToken?: string, readOnly?: boolean) => {
   const plugins = [...staticPlugins];
 
-  if (refreshToken) {
+  if (refreshToken && handle) {
     plugins.push(
       YjsPlugin.configure({
         render: {

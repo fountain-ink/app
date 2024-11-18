@@ -1,8 +1,8 @@
 import { EditorPublishing } from "@/components/editor/editor-publishing";
 import Editor from "@/components/editor/plate-editor";
-import { getAuth } from "@/lib/get-auth-clients";
-import { getCookieAuth } from "@/lib/get-auth-cookies";
+import { getAuthWithCookies } from "@/lib/get-auth-clients";
 import { getBaseUrl } from "@/lib/get-base-url";
+import { getTokenFromCookie } from "@/lib/get-token-from-cookie";
 import { proseClasses } from "@/styles/prose";
 import { cookies } from "next/headers";
 
@@ -32,9 +32,9 @@ async function getDraft(id: string) {
 }
 
 export default async function WriteDraft({ params }: { params: { id: string } }) {
-  const { refreshToken } = getCookieAuth();
-  const { profileId, handle } = await getAuth();
-
+  const { refreshToken } = getTokenFromCookie();
+  const { profileId, handle } = await getAuthWithCookies();
+  
   return (
     <div
       className={`text-foreground bg-background max-w-full w-screen h-screen overflow-y-auto relative

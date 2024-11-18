@@ -1,8 +1,8 @@
 import { CloudDraftsList } from "@/components/draft/draft-list-cloud";
-import { getAuth } from "@/lib/get-auth-clients";
+import { getAuthWithCookies } from "@/lib/get-auth-clients";
 
 const drafts = async () => {
-  const { profileId } = await getAuth();
+  const { profileId } = await getAuthWithCookies();
   return (
     <div className="flex flex-col items-center justify-center ">
       <div className="flex flex-col grow items-stretch justify-center w-full max-w-3xl sm:max-w-3xl">

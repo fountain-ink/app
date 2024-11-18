@@ -38,7 +38,6 @@ export default function PlateEditor(
     },
     options: {},
     value: props.value ? JSON.parse(props.value) || "" : undefined,
-    // shouldNormalizeEditor: true,
   });
 
   return (

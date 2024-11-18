@@ -1,7 +1,7 @@
 import { UserCover } from "@/components/user/user-cover";
 import { UserNavigation } from "@/components/user/user-navigation";
 import { UserProfile } from "@/components/user/user-profile";
-import { getAuth } from "@/lib/get-auth-clients";
+import { getAuthWithCookies } from "@/lib/get-auth-clients";
 import { notFound } from "next/navigation";
 
 const UserProfileLayout = async ({
@@ -11,7 +11,7 @@ const UserProfileLayout = async ({
   children: React.ReactNode;
   params: { user: string };
 }) => {
-  const { lens, handle: userHandle } = await getAuth();
+  const { lens, handle: userHandle } = await getAuthWithCookies();
   const profile = await lens.profile.fetch({
     forHandle: `lens/${params.user}`,
   });

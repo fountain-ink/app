@@ -2,7 +2,7 @@ import { GeneralSettings } from "@/components/settings/settings-general";
 import { ProfileSettings } from "@/components/settings/settings-profile";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getAuth } from "@/lib/get-auth-clients";
+import { getAuthWithCookies } from "@/lib/get-auth-clients";
 import { DollarSign, FileText, LayoutGrid, Mail, Megaphone, Settings, Users } from "lucide-react";
 
 export async function generateMetadata() {
@@ -31,7 +31,7 @@ const tabData = [
   { id: "layouts", label: "Layouts", icon: LayoutGrid, enabled: false },
 ];
 export default async function settings() {
-  const { profile } = await getAuth();
+  const { profile } = await getAuthWithCookies();
 
   return (
     <div className="container mx-auto p-6 py-10 max-w-6xl">
