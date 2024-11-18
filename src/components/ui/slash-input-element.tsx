@@ -214,7 +214,7 @@ export const SlashInputElement = withRef<typeof PlateElement>(({ className, ...p
       <InlineCombobox element={element} trigger="/">
         <InlineComboboxInput />
 
-        <InlineComboboxContent variant="slash">
+        <InlineComboboxContent className="py-1 flex flex-col gap-1" variant="slash">
           <InlineComboboxEmpty>No results</InlineComboboxEmpty>
 
           {rules.map(({ icon: Icon, onSelect, value, description, keywords, focusEditor }) => (
