@@ -62,10 +62,10 @@ export const Draggable = withHOC(
       <div ref={ref} className={cn("relative", isDragging && "opacity-50", "group", className)}>
         <Gutter>
           <div className={cn("slate-blockToolbarWrapper", "flex")}>
-            <div className={cn("slate-blockToolbar", "pointer-events-auto mr-0.5 flex items-center")}>
+            <div className={cn("slate-blockToolbar", "pointer-events-auto mr-0.5 flex items-center justify-center")}>
               <DraggableInsertHandle />
 
-              <div ref={handleRef} className="h-6" data-key={mounted ? (element.id as string) : undefined}>
+              <div ref={handleRef}  data-key={mounted ? (element.id as string) : undefined}>
                 <DragHandle />
               </div>
             </div>
@@ -115,7 +115,7 @@ const DragHandle = React.memo(() => {
   return (
     <TooltipProvider>
       <Tooltip>
-        <TooltipTrigger type="button">
+        <TooltipTrigger className="flex items-center justify-center" type="button">
           <GripVertical
             className="size-4 text-muted-foreground"
             onClick={(event) => {

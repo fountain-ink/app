@@ -46,7 +46,7 @@ export const DraggableInsertHandle = () => {
         side: "bottom",
       }}
     >
-      <Plus className="size-6 text-muted-foreground/70" />
+      <Plus className="size-4 text-muted-foreground/70" />
     </Button>
   );
 };
