@@ -16,7 +16,7 @@ export const DateElement = withRef<typeof PlateElement>(({ children, className, 
       <Popover>
         <PopoverTrigger asChild>
           <span
-            className={cn("w-fit cursor-pointer rounded-sm bg-muted px-1 text-muted-foreground")}
+            className={cn("w-fit cursor-pointer rounded-[8px] bg-muted px-2 py-1 text-muted-foreground")}
             contentEditable={false}
           >
             {element.date ? (

@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 import { cn } from "@udecode/cn";
 import { useFormInputProps } from "@udecode/plate-common/react";
 import { type UseVirtualFloatingOptions, flip, offset } from "@udecode/plate-floating";
@@ -86,7 +84,7 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
   const editContent = editState.isEditing ? (
     input
   ) : (
-    <div className="box-content flex items-center">
+    <div className="flex items-center justify-center gap-1">
       <button className={buttonVariants({ size: "sm", variant: "ghost" })} type="button" {...editButtonProps}>
         Edit link
       </button>
@@ -95,7 +93,7 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
 
       <LinkOpenButton
         className={buttonVariants({
-          size: "icon",
+          size: "sm",
           variant: "ghost",
         })}
       >
@@ -106,7 +104,7 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
 
       <button
         className={buttonVariants({
-          size: "icon",
+          size: "sm",
           variant: "ghost",
         })}
         type="button"
