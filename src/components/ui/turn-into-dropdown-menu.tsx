@@ -12,74 +12,66 @@ import { HEADING_KEYS } from "@udecode/plate-heading";
 import { INDENT_LIST_KEYS, ListStyleType } from "@udecode/plate-indent-list";
 import { TogglePlugin } from "@udecode/plate-toggle/react";
 import {
-  ChevronDownIcon,
-  Code2,
-  Columns3,
-  Heading1,
-  Heading2,
-  Heading3,
-  Lightbulb,
-  List,
-  ListOrdered,
-  Pilcrow,
-  Quote,
-  Square,
+    ChevronDownIcon,
+    Code2Icon,
+    Columns3Icon,
+    Heading1Icon,
+    Heading2Icon,
+    LightbulbIcon,
+    ListIcon,
+    ListOrderedIcon,
+    PilcrowIcon,
+    QuoteIcon,
+    SquareIcon,
 } from "lucide-react";
 
 import { getBlockType, setBlockType } from "@/lib/transforms";
-
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuTrigger,
-  useOpenState,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuTrigger,
+    useOpenState,
 } from "./dropdown-menu";
 import { ToolbarButton } from "./toolbar";
 
 export const turnIntoItems = [
   {
-    icon: <Pilcrow />,
+    icon: <PilcrowIcon />,
     keywords: ["paragraph"],
     label: "Text",
     value: ParagraphPlugin.key,
   },
   {
-    icon: <Heading1 />,
+    icon: <Heading1Icon />,
     keywords: ["title", "h1"],
     label: "Heading 1",
-    value: HEADING_KEYS.h1,
-  },
-  {
-    icon: <Heading2 />,
-    keywords: ["subtitle", "h2"],
-    label: "Heading 2",
-    value: HEADING_KEYS.h2,
-  },
-  {
-    icon: <Heading3 />,
-    keywords: ["subtitle", "h3"],
-    label: "Heading 3",
     value: HEADING_KEYS.h3,
   },
   {
-    icon: <Square />,
+    icon: <Heading2Icon />,
+    keywords: ["subtitle", "h2"],
+    label: "Heading 2",
+    value: HEADING_KEYS.h4,
+  },
+  {
+    icon: <SquareIcon />,
     keywords: ["checklist", "task", "checkbox", "[]"],
     label: "To-do list",
     value: INDENT_LIST_KEYS.todo,
   },
   {
-    icon: <List />,
+    icon: <ListIcon />,
     keywords: ["unordered", "ul", "-"],
     label: "Bulleted list",
     value: ListStyleType.Disc,
   },
   {
-    icon: <ListOrdered />,
+    icon: <ListOrderedIcon />,
     keywords: ["ordered", "ol", "1"],
     label: "Numbered list",
     value: ListStyleType.Decimal,
@@ -91,25 +83,25 @@ export const turnIntoItems = [
     value: TogglePlugin.key,
   },
   {
-    icon: <Code2 />,
+    icon: <Code2Icon />,
     keywords: ["```"],
     label: "Code",
     value: CodeBlockPlugin.key,
   },
   {
-    icon: <Quote />,
+    icon: <QuoteIcon />,
     keywords: ["citation", "blockquote", ">"],
     label: "Quote",
     value: BlockquotePlugin.key,
   },
   {
-    icon: <Lightbulb />,
+    icon: <LightbulbIcon />,
     keywords: ["highlight", "note", "important"],
     label: "Callout",
     value: CalloutPlugin.key,
   },
   {
-    icon: <Columns3 />,
+    icon: <Columns3Icon />,
     label: "3 columns",
     value: "action_three_columns",
   },
@@ -123,18 +115,18 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
     defaultValue: ParagraphPlugin.key,
     getProp: (node) => getBlockType(node as any),
   });
+
   const selectedItem = React.useMemo(
     () => turnIntoItems.find((item) => item.value === (value ?? ParagraphPlugin.key)) ?? turnIntoItems[0],
     [value],
   );
 
-  if (!selectedItem) return null;
 
   return (
     <DropdownMenu modal={false} {...openState} {...props}>
       <DropdownMenuTrigger asChild>
         <ToolbarButton pressed={openState.open} tooltip="Turn into" isDropdown>
-          {selectedItem.label}
+          {selectedItem?.label}
         </ToolbarButton>
       </DropdownMenuTrigger>
 
@@ -145,7 +137,7 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
 
             <DropdownMenuRadioGroup
               className="flex flex-col gap-0.5"
-              value={selectedItem.value}
+              value={selectedItem?.value}
               onValueChange={(type) => {
                 setBlockType(editor, type);
                 focusEditor(editor);
