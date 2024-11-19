@@ -61,4 +61,9 @@ export const withPlaceholders = (components: any) =>
       hideOnBlur: false,
       placeholder: "Heading",
     },
+    {
+      key: HEADING_KEYS.h4,
+      hideOnBlur: false,
+      placeholder: "subheading",
+    },
   ]);
