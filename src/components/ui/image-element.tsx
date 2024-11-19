@@ -20,7 +20,7 @@ const ImagePlaceholder = () => (
 type ImageWidth = "column" | "wide" | "full";
 
 const IMAGE_WIDTH_CLASSES: Record<ImageWidth, string> = {
-  wide: "w-[160%] -ml-[30%] max-w-[160%]",
+  wide: "w-screen max-w-[65vw] relative -translate-x-1/2 left-1/2 content-center justify-center",
   full: "w-screen max-w-[90vw] relative -translate-x-1/2 left-1/2 content-center justify-center",
   column: "w-full max-w-full",
 } as const;
