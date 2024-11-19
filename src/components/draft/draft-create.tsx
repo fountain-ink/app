@@ -96,7 +96,7 @@ export const RemoteDraftCreate = () => {
     <Button
       onClick={handleCreate}
       variant={"ghost"}
-      className="flex items-center justify-start gap-2 p-0 px-0 py-0 w-full"
+      className="flex items-center justify-start gap-2 p-0 px-0 py-0 w-full text-base"
     >
       {isCreating ? (
         <div className="w-8 h-8 flex items-center justify-center p-2">

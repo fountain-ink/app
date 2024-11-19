@@ -6,7 +6,7 @@ import { HEADING_KEYS } from "@udecode/plate-heading";
 export function ensureLeadingBlock(editor: PlateEditor, { event }: { event?: React.MouseEvent } = {}) {
   const { children } = editor;
 
-  if (children.length === 0) {
+  if (children?.length === 0) {
     // Don't try to select an empty editor
     event?.preventDefault();
     event?.stopPropagation();
@@ -37,19 +37,9 @@ export const NormalizePlugin = createPlatePlugin({
   key: "normalize",
 
   extendEditor: ({ editor }) => {
-    const { deleteBackward, deleteForward, setNodes } = editor;
-
-    editor.setNodes = (node, options) => {
-      if (options?.at?.toString() === "0") {
-        return false;
-      }
-
-      return setNodes(node, options);
-    };
+    const { deleteBackward, deleteForward, normalizeNode } = editor;
 
     editor.deleteForward = (...args) => {
-      // console.log("deleteForward" + allowDelete(editor));
-
       if (allowDelete(editor)) {
         return deleteForward(...args);
       }
@@ -62,7 +52,6 @@ export const NormalizePlugin = createPlatePlugin({
     };
 
     editor.deleteBackward = (...args) => {
-      // console.log("deleteBackward" + allowDelete(editor));
       if (allowDelete(editor)) {
         return deleteBackward(...args);
       }
@@ -86,6 +75,8 @@ export const NormalizePlugin = createPlatePlugin({
           match: (n, p) => p[0] !== undefined && p[0] > 1 && n.type === HEADING_KEYS.h2,
         });
       }
+
+      return normalizeNode(entry);
     };
 
     return editor;
