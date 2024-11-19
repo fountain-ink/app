@@ -75,7 +75,7 @@ export const ImageElement = withRef<typeof PlateElement>(
         <PlateElement ref={ref} className={cn(className, width)} {...props}>
           <figure className="group" contentEditable={false}>
             {!url ? (
-              <div className={cn("rounded-sm relative ", focused && selected && "ring-2 ring-ring ring-offset-2 ")}>
+              <div className={cn("rounded-sm relative ", focused && selected && "ring-2 ring-ring ")}>
                 <Button
                   className="absolute inset-0 hover:bg-transparent group m-auto z-10"
                   size="lg"
@@ -91,7 +91,7 @@ export const ImageElement = withRef<typeof PlateElement>(
                       disabled={isUploading}
                     />
                     {isUploading ? <LoadingSpinner /> : <>{!url && <UploadIcon className="size-4 mr-2" />}</>}
-                    <span className="">Upload Image</span>
+                    <span className="">{isUploading ? "Uploading..." : "Upload Image"}</span>
                   </div>
                 </Button>
 
@@ -102,7 +102,7 @@ export const ImageElement = withRef<typeof PlateElement>(
                 className={cn(
                   "block w-full max-w-full cursor-pointer object-cover px-0",
                   "rounded-sm",
-                  focused && selected && "ring-2 ring-ring ring-offset-2",
+                  focused && selected && "ring-2 ring-ring ",
                 )}
                 alt=""
                 {...nodeProps}
