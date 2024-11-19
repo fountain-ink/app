@@ -30,6 +30,7 @@ export const ImageElement = withRef<typeof PlateElement>(
     const { align = "center", focused, readOnly, selected } = useMediaState();
     const [_isImageLoaded, setIsImageLoaded] = useState(false);
     const [url, setUrl] = useState<string | undefined>(props?.element?.url as string | undefined);
+    const [isUploading, setIsUploading] = useState(false);
     const [width, setWidth] = useState("");
     const editor = useEditorRef();
     const element = useElement();
@@ -37,6 +38,8 @@ export const ImageElement = withRef<typeof PlateElement>(
     useEffect(() => {
       if (props.element?.url) {
         setUrl(props.element.url as string);
+      } else {
+        setUrl(undefined);
       }
     }, [props.element.url]);
 
@@ -47,7 +50,6 @@ export const ImageElement = withRef<typeof PlateElement>(
       }
     }, [props.element.width]);
 
-    const [isUploading, setIsUploading] = useState(false);
 
     const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
