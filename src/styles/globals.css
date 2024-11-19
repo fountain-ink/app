@@ -25,6 +25,7 @@ p.first-paragraph {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    ::-webkit-file-upload-button { cursor:pointer; }
   }
 
   :root {

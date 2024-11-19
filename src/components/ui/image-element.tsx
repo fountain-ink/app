@@ -73,16 +73,16 @@ export const ImageElement = withRef<typeof PlateElement>(
     return (
       <ImagePopover url={url} plugin={ImagePlugin}>
         <PlateElement ref={ref} className={cn(className, width)} {...props}>
-          <figure className="group relative" contentEditable={false}>
+          <figure className="group" contentEditable={false}>
             {!url ? (
-              <div className={cn("rounded-sm", focused && selected && "ring-2 ring-ring ring-offset-2")}>
+              <div className={cn("rounded-sm relative ", focused && selected && "ring-2 ring-ring ring-offset-2 ")}>
                 <Button
                   className="absolute inset-0 hover:bg-transparent group m-auto z-10"
-                  size="sm"
+                  size="lg"
                   variant="ghost"
                   disabled={isUploading}
                 >
-                  <div className="relative flex gap-1 items-center justify-center">
+                  <div className="relative flex gap-1 cursor-pointer items-center justify-center">
                     <input
                       type="file"
                       accept="image/*"
