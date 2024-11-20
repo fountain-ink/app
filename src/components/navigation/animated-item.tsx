@@ -31,7 +31,7 @@ export const AnimatedMenuItem = ({
       {...buttonProps}
       className={`${buttonProps.className} justify-center group p-0 h-10 w-10 mx-0`}
     >
-      <Icon className="w-full h-full p-0 px-0 py-0" animate={isHovered} />
+      <Icon animate={isHovered} />
       {children && <span>{children}</span>}
     </Button>
   ) : (

@@ -43,7 +43,7 @@ export function ProfileSelectMenu({ onSuccess }: { onSuccess: (profile: Profile)
             <LoginButton key={profile.id} profile={profile} onSuccess={onSuccess} />
           ))}
           <Button variant="ghost" className="flex gap-2 text-md" onClick={() => toast.error("Not implemented yet")}>
-            <PlusIcon />
+            <PlusIcon size={18} />
             New Profile
           </Button>
         </div>
