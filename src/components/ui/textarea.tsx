@@ -14,7 +14,7 @@ export const textareaVariants = cva(
       variant: {
         ai: "max-h-[240px] border-transparent bg-transparent py-2",
         default:
-          "rounded-md border-[1.5px] border-input bg-muted/80 px-1 pb-0.5 pt-1 focus:border-brand/50 focus:ring-2 focus:ring-brand/30 [&:read-only]:ring-0 [&:read-only]:focus:border-input",
+          "rounded-md border-[1.5px] border-input bg-muted/80 px-1 pb-0.5 pt-1 focus:border-border/50 focus:ring-2 focus:ring-primary/30 [&:read-only]:ring-0 [&:read-only]:focus:border-input",
         equation: "max-h-[50vh] min-h-[60px] font-mono text-sm",
         equationInline: "max-h-[50vh] font-mono text-sm",
       },
