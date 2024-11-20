@@ -6,17 +6,15 @@ import type { TEquationElement } from "@udecode/plate-math";
 
 import { cn } from "@udecode/cn";
 import {
-    createPrimitiveComponent,
-    selectSiblingNodePoint,
-    useEditorRef,
-    useElement,
+  createPrimitiveComponent,
+  selectSiblingNodePoint,
+  useEditorRef,
+  useElement,
 } from "@udecode/plate-common/react";
 import { useEquationInput } from "@udecode/plate-math/react";
 import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
-import { CornerDownLeftIcon } from "lucide-react";
 import { useReadOnly, useSelected } from "slate-react";
 
-import { Button } from "./button";
 import { PopoverContent } from "./popover";
 
 import { type TextareaAutosizeProps, TextareaAutosize } from "./textarea";
@@ -59,17 +57,21 @@ const EquationPopoverContent = ({
   return (
     <PopoverContent
       variant="equation"
-      className="flex gap-2"
+      className="flex flex-col gap-2 rounded-[8px] p-2"
       onEscapeKeyDown={(e) => {
         e.preventDefault();
       }}
       contentEditable={false}
     >
-      <EquationInput className={cn("grow", className)} state={{ isInline, open: true, onClose }} autoFocus {...props} />
-
-      <Button variant="brand" className="px-3" onClick={onClose}>
-        Done <CornerDownLeftIcon className="size-3.5" />
-      </Button>
+      <EquationInput
+        className={cn("grow rounded-[4px]", className)}
+        state={{ isInline, open: true, onClose }}
+        autoFocus
+        {...props}
+      />
+      {/* <Button variant="brand" className="px-3" onClick={onClose}>
+        confirm
+      </Button> */}
     </PopoverContent>
   );
 };
