@@ -82,7 +82,6 @@ export const RemoteDraftCreate = () => {
     });
 
     const { draft } = await response.json();
-    setIsCreating(false);
 
     if (!draft) {
       return;
