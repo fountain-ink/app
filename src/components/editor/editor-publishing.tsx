@@ -17,7 +17,7 @@ import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { getRawUiCompontents } from "./plate-create-ui";
-import { getEditorPlugins, staticPlugins } from "./plate-plugins";
+import { staticPlugins } from "./plate-plugins";
 
 export const EditorPublishing = () => {
   const { data: session } = useSession();
@@ -38,7 +38,7 @@ export const EditorPublishing = () => {
       override: { components: getRawUiCompontents() },
     });
   }, []);
-  
+
   if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
