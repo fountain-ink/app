@@ -10,6 +10,7 @@ import { Button } from "./button";
 import { Caption, CaptionTextarea } from "./caption";
 import { ImagePopover } from "./image-popover";
 import { PlateElement } from "./plate-element";
+import { useReadOnly } from "slate-react";
 
 const ImagePlaceholder = () => (
   <div className="flex relative aspect-video w-full rounded-sm">
@@ -33,6 +34,7 @@ export const ImageElement = withRef<typeof PlateElement>(
     const [isUploading, setIsUploading] = useState(false);
     const [width, setWidth] = useState("");
     const editor = useEditorRef();
+    const readonly = useReadOnly();
     const element = useElement();
 
     useEffect(() => {
@@ -76,7 +78,7 @@ export const ImageElement = withRef<typeof PlateElement>(
       <ImagePopover url={url} plugin={ImagePlugin}>
         <PlateElement ref={ref} className={cn(className, width)} {...props}>
           <figure className="group" contentEditable={false}>
-            {!url ? (
+            {!url  ? (
               <div className={cn("rounded-sm relative ", focused && selected && "ring-2 ring-ring ")}>
                 <Button
                   className="absolute inset-0 hover:bg-transparent group m-auto z-10"
@@ -93,7 +95,7 @@ export const ImageElement = withRef<typeof PlateElement>(
                       disabled={isUploading}
                     />
                     {isUploading ? <LoadingSpinner /> : <>{!url && <UploadIcon className="size-4 mr-2" />}</>}
-                    <span className="">{isUploading ? "Uploading..." : "Upload Image"}</span>
+                    <span>{isUploading ? "Uploading..." : "Upload Image"}</span>
                   </div>
                 </Button>
 
