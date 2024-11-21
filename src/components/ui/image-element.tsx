@@ -5,12 +5,12 @@ import { Image, ImagePlugin, useMediaState } from "@udecode/plate-media/react";
 import { UploadIcon } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
+import { useReadOnly } from "slate-react";
 import { LoadingSpinner } from "../loading-spinner";
 import { Button } from "./button";
 import { Caption, CaptionTextarea } from "./caption";
 import { ImagePopover } from "./image-popover";
 import { PlateElement } from "./plate-element";
-import { useReadOnly } from "slate-react";
 
 const ImagePlaceholder = () => (
   <div className="flex relative aspect-video w-full rounded-sm">
@@ -52,7 +52,6 @@ export const ImageElement = withRef<typeof PlateElement>(
       }
     }, [props.element.width]);
 
-
     const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
@@ -78,26 +77,28 @@ export const ImageElement = withRef<typeof PlateElement>(
       <ImagePopover url={url} plugin={ImagePlugin}>
         <PlateElement ref={ref} className={cn(className, width)} {...props}>
           <figure className="group" contentEditable={false}>
-            {!url  ? (
+            {!url ? (
               <div className={cn("rounded-sm relative ", focused && selected && "ring-2 ring-ring ")}>
-                <Button
-                  className="absolute inset-0 hover:bg-transparent group m-auto z-10"
-                  size="lg"
-                  variant="ghost"
-                  disabled={isUploading}
-                >
-                  <div className="relative flex gap-1 cursor-pointer items-center justify-center">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileSelect}
-                      className="absolute inset-0 cursor-pointer opacity-0"
-                      disabled={isUploading}
-                    />
-                    {isUploading ? <LoadingSpinner /> : <>{!url && <UploadIcon className="size-4 mr-2" />}</>}
-                    <span>{isUploading ? "Uploading..." : "Upload Image"}</span>
-                  </div>
-                </Button>
+                {!readonly && (
+                  <Button
+                    className="absolute inset-0 hover:bg-transparent group m-auto z-10"
+                    size="lg"
+                    variant="ghost"
+                    disabled={isUploading}
+                  >
+                    <div className="relative flex gap-1 cursor-pointer items-center justify-center">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileSelect}
+                        className="absolute inset-0 cursor-pointer opacity-0"
+                        disabled={isUploading}
+                      />
+                      {isUploading ? <LoadingSpinner /> : <>{!url && <UploadIcon className="size-4 mr-2" />}</>}
+                      <span>{isUploading ? "Uploading..." : "Upload Image"}</span>
+                    </div>
+                  </Button>
+                )}
 
                 <ImagePlaceholder />
               </div>
