@@ -73,6 +73,7 @@ export const ImageElement = withRef<typeof PlateElement>(
       }
     };
 
+    
     return (
       <ImagePopover url={url} plugin={ImagePlugin}>
         <PlateElement ref={ref} className={cn(className, width)} {...props}>
