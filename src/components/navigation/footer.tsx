@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
 
 type ActionState = {
@@ -55,7 +56,7 @@ const actionButtons: ActionButton[] = [
       {
         icon: TbBrandX,
         label: "Twitter",
-        onClick: () => window.open("https://twitter.com/intent/tweet", "_blank"),
+        onClick: () => shareToTwitter(window.location.href),
       },
       {
         icon: TbBrandBluesky,
@@ -65,7 +66,16 @@ const actionButtons: ActionButton[] = [
       {
         icon: TbLink,
         label: "Copy Link",
-        onClick: () => navigator.clipboard.writeText(window.location.href),
+        onClick: async () => {
+          const success = await copyToClipboard(window.location.href);
+          if (success) {
+            toast.success("Link copied", {
+              description: "URL has been copied to clipboard",
+            });
+          } else {
+            toast.error("Failed to copy", { description: "Could not copy the URL to clipboard" });
+          }
+        },
       },
       {
         icon: Repeat2Icon,
@@ -174,6 +184,21 @@ const ButtonHoverEffect = ({
   );
 };
 
+const shareToTwitter = (url: string) => {
+  const text = "Check this out";
+  const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+  window.open(shareUrl, "_blank");
+};
+
+const copyToClipboard = async (url: string) => {
+  try {
+    await navigator.clipboard.writeText(url);
+    return true;
+  } catch (err) {
+    console.error("Failed to copy:", err);
+    return false;
+  }
+};
 export const Footer = () => {
   const { scrollProgress, shouldShow, shouldAnimate } = useScroll();
   const [actionStates, setActionStates] = useState<ActionState[]>(
@@ -255,8 +280,8 @@ export const Footer = () => {
             };
 
             const ButtonContent = (
-              <div 
-                key={button.label} 
+              <div
+                key={button.label}
                 className="group flex items-center cursor-pointer"
                 onClick={() => !button.dropdownItems && handleClick(index)}
               >
@@ -286,10 +311,8 @@ export const Footer = () => {
                           style={{
                             backgroundColor: state.isActive ? `${button.strokeColor}10` : undefined,
                           }}
-                          className="flex items-center transition-all duration-200
-                                                  text-foreground rounded-full p-0 w-10 h-10
-                                                  focus:outline-none group-hover:bg-transparent
-                                                  relative"
+                          className="flex items-center transition-all duration-200 text-foreground rounded-full p-0 w-10 h-10
+                                                  focus:outline-none group-hover:bg-transparent relative"
                         >
                           <Icon {...iconProps} />
                         </Button>
@@ -302,7 +325,6 @@ export const Footer = () => {
                       >
                         <ChevronDown
                           size={16}
-                          className="opacity-50"
                           style={{
                             color: state.isActive || state.isHovered ? button.strokeColor : undefined,
                           }}
@@ -331,10 +353,8 @@ export const Footer = () => {
                       style={{
                         backgroundColor: state.isActive ? `${button.strokeColor}10` : undefined,
                       }}
-                      className="flex items-center transition-all duration-200
-                                                    text-foreground rounded-full p-0 w-10 h-10
-                                                    focus:outline-none group-hover:bg-transparent
-                                                    relative"
+                      className="flex items-center transition-all duration-200 text-foreground rounded-full p-0 w-10 h-10
+                                focus:outline-none group-hover:bg-transparent relative"
                     >
                       <Icon {...iconProps} />
                     </Button>
