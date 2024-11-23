@@ -223,6 +223,7 @@ export const Footer = () => {
                       >
                         <Icon
                           size={20}
+                          strokeWidth={1.5}
                           className={`transition-all duration-200 group-hover:scale-110 group-active:scale-95
                             ${state.isActive && button.fillOnActive ? "fill-current" : ""}`}
                           style={{
@@ -237,7 +238,7 @@ export const Footer = () => {
                           <CounterAnimation
                             value={state.count}
                             prevValue={previousCounts.current[index] ?? state.count}
-                            color={state.isActive ? "var(--primary-foreground)" : "var(--priamry-foreground)"}
+                            color={state.isActive ? "var(--primary-foreground)" : "var(--primary-foreground)"}
                           />
                         </AnimatePresence>
                       </div>
