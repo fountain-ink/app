@@ -26,7 +26,7 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
     const contentHtml = post?.metadata?.attributes?.find((attr: any) => attr.key === "contentHtml")?.value;
 
     if (contentJson) {
-      return <Editor value={contentJson} readOnly={true} />;
+      return <Editor applyMargins showToc value={contentJson} readOnly={true} />;
     }
 
     if (contentHtml) {

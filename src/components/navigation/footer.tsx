@@ -24,12 +24,12 @@ type ActionButton = {
 
 const actionButtons: ActionButton[] = [
   {
-    icon: Heart,
-    label: "Like",
-    initialCount: 124000,
-    color: "rgb(195,120,146)",
+    icon: Share2,
+    label: "Share",
+    initialCount: 0,
+    color: "hsl(var(--primary))",
     fillOnActive: true,
-    showCounter: true,
+    showCounter: false,
   },
   {
     icon: Bookmark,
@@ -56,12 +56,12 @@ const actionButtons: ActionButton[] = [
     showCounter: true,
   },
   {
-    icon: Share2,
-    label: "Share",
-    initialCount: 0,
-    color: "hsl(var(--primary))",
+    icon: Heart,
+    label: "Like",
+    initialCount: 124000,
+    color: "rgb(215, 84, 127)",
     fillOnActive: true,
-    showCounter: false,
+    showCounter: true,
   },
 ];
 
@@ -191,7 +191,7 @@ export const Footer = () => {
           stiffness: 300,
           damping: 20,
         }}
-        className="fixed bottom-6 inset-x-0 mx-auto z-[40] px-2 py-0.5
+        className="fixed bottom-6 inset-x-0 mx-auto z-[40] pl-2 pr-4 py-0.5
            rounded-full backdrop-blur-xl bg-background/70 border border-border
            shadow-lg w-full max-w-[90vw] sm:max-w-[50vw] md:max-w-sm
            origin-bottom"
@@ -217,7 +217,7 @@ export const Footer = () => {
                           backgroundColor: state.isActive ? `${button.color}10` : undefined,
                         }}
                         className="flex items-center transition-all duration-200
-                          text-foreground rounded-full p-2 w-10 h-10
+                          text-foreground rounded-full p-0 w-10 h-10
                           focus:outline-none group-hover:bg-transparent
                           relative"
                       >
@@ -233,14 +233,17 @@ export const Footer = () => {
                       </Button>
                     </div>
                     {button.showCounter && (
-                      <div className="relative h-5 overflow-visible flex justify-start items-center text-xs text-foreground -ml-2">
-                        <AnimatePresence>
-                          <CounterAnimation
-                            value={state.count}
-                            prevValue={previousCounts.current[index] ?? state.count}
-                            color={state.isActive ? "var(--primary-foreground)" : "var(--primary-foreground)"}
-                          />
-                        </AnimatePresence>
+                      <div className="relative h-5 flex items-center text-xs text-foreground -ml-2">
+                        <div className="opacity-0">{formatNumber(state.count)}</div>
+                        <div className="absolute inset-0 flex items-center">
+                          <AnimatePresence>
+                            <CounterAnimation
+                              value={state.count}
+                              prevValue={previousCounts.current[index] ?? state.count}
+                              color={state.isActive ? "var(--primary-foreground)" : "var(--primary-foreground)"}
+                            />
+                          </AnimatePresence>
+                        </div>
                       </div>
                     )}
                   </div>
