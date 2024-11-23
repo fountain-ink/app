@@ -217,7 +217,7 @@ export const Footer = () => {
                           backgroundColor: state.isActive ? `${button.color}10` : undefined,
                         }}
                         className="flex items-center transition-all duration-200
-                          text-muted-foreground rounded-full p-2 w-10 h-10
+                          text-foreground rounded-full p-2 w-10 h-10
                           focus:outline-none group-hover:bg-transparent
                           relative"
                       >
@@ -232,12 +232,12 @@ export const Footer = () => {
                       </Button>
                     </div>
                     {button.showCounter && (
-                      <div className="relative h-5 overflow-visible flex justify-start items-center text-sm text-muted-foreground -ml-2">
+                      <div className="relative h-5 overflow-visible flex justify-start items-center text-xs text-foreground -ml-2">
                         <AnimatePresence>
                           <CounterAnimation
                             value={state.count}
                             prevValue={previousCounts.current[index] ?? state.count}
-                            color={state.isActive ? "var(--primary-foreground)" : "var(--muted-foreground)"}
+                            color={state.isActive ? "var(--primary-foreground)" : "var(--priamry-foreground)"}
                           />
                         </AnimatePresence>
                       </div>
@@ -248,9 +248,7 @@ export const Footer = () => {
                   <div className="flex flex-col items-center">
                     <span>{button.label}</span>
 
-                    {state.count > 0 && (
-                      <span className="text-xs text-muted-foreground">{state.count.toLocaleString()}</span>
-                    )}
+                    {state.count > 0 && <span className="text-xs text-foreground">{state.count.toLocaleString()}</span>}
                   </div>
                 </TooltipContent>
               </Tooltip>
