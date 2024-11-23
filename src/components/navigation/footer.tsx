@@ -9,8 +9,18 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useScroll } from "@/hooks/use-scroll";
 import { AnimatePresence, motion } from "framer-motion";
-import { Bookmark, ChevronDown, Heart, Link, MessageCircle, Share2, ShoppingBag, Twitter } from "lucide-react";
+import {
+  Bookmark,
+  ChevronDown,
+  Heart,
+  MessageCircle,
+  PenLineIcon,
+  Repeat2Icon,
+  Share2,
+  ShoppingBag,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
 import { Button } from "../ui/button";
 
 type ActionState = {
@@ -43,24 +53,29 @@ const actionButtons: ActionButton[] = [
     fillColor: "hsl(var(--primary) / 0.8)",
     dropdownItems: [
       {
-        icon: Twitter,
-        label: "Share to Twitter",
+        icon: TbBrandX,
+        label: "Twitter",
         onClick: () => window.open("https://twitter.com/intent/tweet", "_blank"),
       },
       {
-        icon: Share2,
-        label: "Share to Lens",
-        onClick: () => console.log("Share to Lens"),
-      },
-      {
-        icon: Share2,
-        label: "Share to Bluesky",
+        icon: TbBrandBluesky,
+        label: "Bluesky",
         onClick: () => console.log("Share to Bluesky"),
       },
       {
-        icon: Link,
+        icon: TbLink,
         label: "Copy Link",
         onClick: () => navigator.clipboard.writeText(window.location.href),
+      },
+      {
+        icon: Repeat2Icon,
+        label: "Repost",
+        onClick: () => console.log("Share to Lens"),
+      },
+      {
+        icon: PenLineIcon,
+        label: "Quote",
+        onClick: () => console.log("Share to Lens"),
       },
     ],
   },
@@ -282,7 +297,7 @@ export const Footer = () => {
                         <motion.div
                           initial={false}
                           animate={{ rotate: state.isActive ? 180 : 0 }}
-                          transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                          transition={{ type: "spring", stiffness: 200, damping: 20, mass: 2 }}
                         >
                           <ChevronDown
                             size={16}
@@ -296,8 +311,12 @@ export const Footer = () => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="center">
                       {button.dropdownItems?.map((item) => (
-                        <DropdownMenuItem key={item.label} onClick={item.onClick} className="gap-2">
-                          <item.icon size={16} /> {item.label}
+                        <DropdownMenuItem
+                          key={item.label}
+                          onClick={item.onClick}
+                          className="gap-1 rounded-sm mx-0 w-full"
+                        >
+                          <item.icon className="w-4 h-4" /> {item.label}
                         </DropdownMenuItem>
                       ))}
                     </DropdownMenuContent>
