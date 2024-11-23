@@ -1,9 +1,15 @@
 "use client";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useScroll } from "@/hooks/use-scroll";
 import { AnimatePresence, motion } from "framer-motion";
-import { Bookmark, Heart, MessageCircle, Share2, ShoppingBag } from "lucide-react";
+import { Bookmark, ChevronDown, Heart, Link, MessageCircle, Share2, ShoppingBag, Twitter } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 
@@ -13,14 +19,19 @@ type ActionState = {
   isHovered: boolean;
 };
 
+type DropdownItem = {
+  icon: any;
+  label: string;
+  onClick: () => void;
+};
+
 type ActionButton = {
   icon: any;
   label: string;
   initialCount: number;
   strokeColor: string;
   fillColor: string;
-  fillOnActive?: boolean;
-  showCounter?: boolean;
+  dropdownItems?: DropdownItem[];
 };
 
 const actionButtons: ActionButton[] = [
@@ -30,8 +41,28 @@ const actionButtons: ActionButton[] = [
     initialCount: 0,
     strokeColor: "hsl(var(--primary))",
     fillColor: "hsl(var(--primary) / 0.8)",
-    fillOnActive: true,
-    showCounter: false,
+    dropdownItems: [
+      {
+        icon: Twitter,
+        label: "Share to Twitter",
+        onClick: () => window.open("https://twitter.com/intent/tweet", "_blank"),
+      },
+      {
+        icon: Share2,
+        label: "Share to Lens",
+        onClick: () => console.log("Share to Lens"),
+      },
+      {
+        icon: Share2,
+        label: "Share to Bluesky",
+        onClick: () => console.log("Share to Bluesky"),
+      },
+      {
+        icon: Link,
+        label: "Copy Link",
+        onClick: () => navigator.clipboard.writeText(window.location.href),
+      },
+    ],
   },
   {
     icon: Bookmark,
@@ -39,8 +70,6 @@ const actionButtons: ActionButton[] = [
     initialCount: 5600,
     strokeColor: "hsl(var(--primary))",
     fillColor: "hsl(var(--primary) / 0.8)",
-    fillOnActive: true,
-    showCounter: true,
   },
   {
     icon: ShoppingBag,
@@ -48,8 +77,6 @@ const actionButtons: ActionButton[] = [
     initialCount: 23,
     strokeColor: "rgb(254,178,4)",
     fillColor: "rgba(254, 178, 4, 0.3)",
-    fillOnActive: false,
-    showCounter: true,
   },
   {
     icon: MessageCircle,
@@ -57,8 +84,6 @@ const actionButtons: ActionButton[] = [
     initialCount: 8900,
     strokeColor: "hsl(var(--primary))",
     fillColor: "hsl(var(--primary) / 0.8)",
-    fillOnActive: true,
-    showCounter: true,
   },
   {
     icon: Heart,
@@ -66,8 +91,6 @@ const actionButtons: ActionButton[] = [
     initialCount: 124000,
     strokeColor: "rgb(215, 84, 127)",
     fillColor: "rgba(215, 84, 127, 0.9)",
-    fillOnActive: true,
-    showCounter: true,
   },
 ];
 
@@ -208,56 +231,130 @@ export const Footer = () => {
             const state = actionStates[index];
             if (!state) return null;
 
-            return (
-              <Tooltip key={button.label}>
-                <TooltipTrigger asChild>
-                  <div className="group flex items-center gap-1.5">
-                    <div className="relative">
-                      <ButtonHoverEffect isHovered={state.isHovered} strokeColor={button.strokeColor} />
-                      <Button
-                        variant="ghost3"
-                        onClick={() => handleClick(index)}
-                        onMouseEnter={() => handleHover(index, true)}
-                        onMouseLeave={() => handleHover(index, false)}
-                        style={{
-                          backgroundColor: state.isActive ? `${button.strokeColor}10` : undefined,
-                        }}
-                        className="flex items-center transition-all duration-200
-                          text-foreground rounded-full p-0 w-10 h-10
-                          focus:outline-none group-hover:bg-transparent
-                          relative"
-                      >
-                        <Icon
-                          size={20}
-                          strokeWidth={1.5}
-                          className={`transition-all duration-200 group-hover:scale-110 group-active:scale-95 active:stroke-[${button.strokeColor}]`}
-                          style={{
-                            color: state.isActive || state.isHovered ? button.strokeColor : undefined,
-                            fill: state.isActive ? button.fillColor : undefined,
-                          }}
-                        />
-                      </Button>
-                    </div>
-                    {button.showCounter && (
-                      <div className="relative h-5 flex items-center text-xs text-foreground -ml-2">
-                        <div className="opacity-0">{formatNumber(state.count)}</div>
-                        <div className="absolute inset-0 flex items-center">
-                          <AnimatePresence>
-                            <CounterAnimation
-                              value={state.count}
-                              prevValue={previousCounts.current[index] ?? state.count}
-                              strokeColor={state.isActive ? "var(--primary-foreground)" : "var(--primary-foreground)"}
-                            />
-                          </AnimatePresence>
+            const iconProps = {
+              size: 20,
+              strokeWidth: 1.5,
+              className: "transition-all duration-200 group-hover:scale-110 group-active:scale-95",
+              style: {
+                color: state.isActive || state.isHovered ? button.strokeColor : undefined,
+                fill: state.isActive ? button.fillColor : undefined,
+              },
+            };
+
+            const ButtonContent = (
+              <div key={button.label} className="group flex items-center">
+                {button.dropdownItems ? (
+                  <DropdownMenu
+                    onOpenChange={(open) => {
+                      setActionStates((prevStates) => {
+                        const newStates = [...prevStates];
+                        const currentState = newStates[index];
+                        if (!currentState) return prevStates;
+
+                        newStates[index] = {
+                          ...currentState,
+                          isActive: open,
+                        };
+                        return newStates;
+                      });
+                    }}
+                  >
+                    <DropdownMenuTrigger asChild>
+                      <div className="flex items-center gap-0.5">
+                        <div className="relative">
+                          <ButtonHoverEffect isHovered={state.isHovered} strokeColor={button.strokeColor} />
+                          <Button
+                            variant="ghost3"
+                            onMouseEnter={() => handleHover(index, true)}
+                            onMouseLeave={() => handleHover(index, false)}
+                            style={{
+                              backgroundColor: state.isActive ? `${button.strokeColor}10` : undefined,
+                            }}
+                            className="flex items-center transition-all duration-200
+                                                    text-foreground rounded-full p-0 w-10 h-10
+                                                    focus:outline-none group-hover:bg-transparent
+                                                    relative"
+                          >
+                            <Icon {...iconProps} />
+                          </Button>
                         </div>
+
+                        <motion.div
+                          initial={false}
+                          animate={{ rotate: state.isActive ? 180 : 0 }}
+                          transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                        >
+                          <ChevronDown
+                            size={16}
+                            className="opacity-50"
+                            style={{
+                              color: state.isActive || state.isHovered ? button.strokeColor : undefined,
+                            }}
+                          />
+                        </motion.div>
                       </div>
-                    )}
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="center">
+                      {button.dropdownItems?.map((item) => (
+                        <DropdownMenuItem key={item.label} onClick={item.onClick} className="gap-2">
+                          <item.icon size={16} /> {item.label}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <div className="relative">
+                    <ButtonHoverEffect isHovered={state.isHovered} strokeColor={button.strokeColor} />
+                    <Button
+                      variant="ghost3"
+                      onClick={() => handleClick(index)}
+                      onMouseEnter={() => handleHover(index, true)}
+                      onMouseLeave={() => handleHover(index, false)}
+                      style={{
+                        backgroundColor: state.isActive ? `${button.strokeColor}10` : undefined,
+                      }}
+                      className="flex items-center transition-all duration-200
+                                                      text-foreground rounded-full p-0 w-10 h-10
+                                                      focus:outline-none group-hover:bg-transparent
+                                                      relative"
+                    >
+                      <Icon
+                        size={20}
+                        strokeWidth={1.5}
+                        className="transition-all duration-200 group-hover:scale-110 group-active:scale-95"
+                        style={{
+                          color: state.isActive || state.isHovered ? button.strokeColor : undefined,
+                          fill: state.isActive ? button.fillColor : undefined,
+                        }}
+                      />
+                    </Button>
                   </div>
-                </TooltipTrigger>
+                )}
+                {!button.dropdownItems && (
+                  <div className="relative h-5 flex items-center text-xs text-foreground -ml-1">
+                    <div className="opacity-0">{formatNumber(state.count)}</div>
+                    <div className="absolute inset-0 flex items-center">
+                      <AnimatePresence>
+                        <CounterAnimation
+                          value={state.count}
+                          prevValue={previousCounts.current[index] ?? state.count}
+                          strokeColor={state.isActive ? "var(--primary-foreground)" : "var(--primary-foreground)"}
+                        />
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+
+            return button.dropdownItems ? (
+              ButtonContent
+            ) : (
+              <Tooltip key={button.label}>
+                <TooltipTrigger asChild>{ButtonContent}</TooltipTrigger>
                 <TooltipContent>
                   <div className="flex flex-col items-center">
                     <span>{button.label}</span>
-
                     {state.count > 0 && <span className="text-xs text-foreground">{state.count.toLocaleString()}</span>}
                   </div>
                 </TooltipContent>
