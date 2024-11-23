@@ -6,7 +6,41 @@ import { useCallback, useState } from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { cn, createPrimitiveElement, withCn, withRef, withVariants } from "@udecode/cn";
 import { cva } from "class-variance-authority";
+import { AnimatePresence, motion } from "framer-motion";
 import { CheckIcon, ChevronRightIcon } from "lucide-react";
+
+const menuAnimationVariants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.95,
+    height: 0,
+    transition: {
+      height: {
+        type: "spring",
+        stiffness: 300,
+        damping: 35,
+        mass: 0.8,
+      },
+      opacity: { duration: 0.2 },
+      scale: { duration: 0.2 },
+    },
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    height: "auto",
+    transition: {
+      height: {
+        type: "spring",
+        stiffness: 300,
+        damping: 35,
+        mass: 0.8,
+      },
+      opacity: { duration: 0.2 },
+      scale: { duration: 0.2 },
+    },
+  },
+};
 
 export type DropdownMenuProps = React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Root>;
 
@@ -31,7 +65,7 @@ export const DropdownMenuSubTrigger = withRef<
   <DropdownMenuPrimitive.SubTrigger
     ref={ref}
     className={cn(
-      "mx-1 flex cursor-default select-none items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-none focus:bg-accent data-[state=open]:bg-accent",
+      "mx-1 flex cursor-default select-none items-center rounded-md px-2 py-1.5 text-sm outline-none focus:bg-accent data-[state=open]:bg-accent",
       "no-focus-ring",
       "data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
       inset && "pl-8",
@@ -55,30 +89,49 @@ export const DropdownMenuContent = withRef<typeof DropdownMenuPrimitive.Content,
     const content = (
       <DropdownMenuPrimitive.Content
         ref={ref}
-        className={cn(
-          "no-focus-ring z-50 min-w-32 max-w-[100vw] overflow-hidden rounded-lg bg-popover p-0 text-sm text-popover-foreground shadow-floating",
-          "data-[state=closed]:hidden data-[side=bottom]:origin-top data-[side=left]:origin-right data-[side=right]:origin-left data-[side=top]:origin-bottom data-[state=open]:animate-zoom",
-          className,
-        )}
+        asChild
         onCloseAutoFocus={(e) => {
           e.preventDefault();
         }}
         sideOffset={4}
         {...props}
-      />
+      >
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+          variants={menuAnimationVariants}
+          style={{
+            overflow: "hidden",
+            transformOrigin: "top",
+            willChange: "transform, opacity, height",
+          }}
+          className={cn(
+            "no-focus-ring z-50 min-w-32 max-w-[100vw] rounded-lg bg-popover text-sm text-popover-foreground shadow-floating",
+            "data-[side=bottom]:origin-top data-[side=left]:origin-right data-[side=right]:origin-left data-[side=top]:origin-bottom",
+            className,
+          )}
+        >
+          <div className="p-1 flex flex-col gap-1">{props.children}</div>
+        </motion.div>
+      </DropdownMenuPrimitive.Content>
     );
 
     if (portal) {
-      return <DropdownMenuPrimitive.Portal>{content}</DropdownMenuPrimitive.Portal>;
+      return (
+        <DropdownMenuPrimitive.Portal>
+          <AnimatePresence>{content}</AnimatePresence>
+        </DropdownMenuPrimitive.Portal>
+      );
     }
 
-    return content;
+    return <AnimatePresence>{content}</AnimatePresence>;
   },
 );
 
 export const dropdownMenuItemVariants = cva(
   cn(
-    "no-focus-ring relative flex cursor-pointer select-none items-center gap-2 rounded-md align-middle text-sm transition-bg-ease data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+    "no-focus-ring relative flex cursor-pointer select-none items-center  rounded-md align-middle text-sm transition-bg-ease data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
     "[&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-subtle-foreground",
     "text-accent-foreground hover:bg-accent focus:bg-accent focus:text-accent-foreground",
   ),
@@ -107,7 +160,7 @@ export const DropdownMenuCheckboxItem = withRef<typeof DropdownMenuPrimitive.Che
     <DropdownMenuPrimitive.CheckboxItem
       ref={ref}
       className={cn(
-        "no-focus-ring relative flex select-none items-center gap-2 rounded-sm py-1.5 pl-7 pr-2 transition-bg-ease focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "no-focus-ring relative flex select-none items-center  rounded-sm py-1.5 pl-7 pr-2 transition-bg-ease focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         "cursor-pointer",
         className,
       )}

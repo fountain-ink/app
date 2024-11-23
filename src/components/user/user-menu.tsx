@@ -51,7 +51,7 @@ export const UserMenu = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
-        <DropdownMenuContent align="end" className="p-1 flex flex-col gap-1 w-48">
+        <DropdownMenuContent align="end" className="w-48">
           <AnimatedMenuItem href={`/${handle}`} icon={UserIcon}>
             Profile
           </AnimatedMenuItem>

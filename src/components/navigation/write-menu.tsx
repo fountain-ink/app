@@ -32,7 +32,7 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
         <Button>{text}</Button>
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
-        <DropdownMenuContent className="p-1 flex flex-col gap-1 w-40" align="end">
+        <DropdownMenuContent className="w-40" align="end">
           <DropdownMenuItem asChild>
             <RemoteDraftCreate />
           </DropdownMenuItem>
