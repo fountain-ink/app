@@ -17,7 +17,8 @@ type ActionButton = {
   icon: any;
   label: string;
   initialCount: number;
-  color?: string;
+  strokeColor: string;
+  fillColor: string;
   fillOnActive?: boolean;
   showCounter?: boolean;
 };
@@ -27,7 +28,8 @@ const actionButtons: ActionButton[] = [
     icon: Share2,
     label: "Share",
     initialCount: 0,
-    color: "hsl(var(--primary))",
+    strokeColor: "hsl(var(--primary))",
+    fillColor: "hsl(var(--primary) / 0.8)",
     fillOnActive: true,
     showCounter: false,
   },
@@ -35,7 +37,8 @@ const actionButtons: ActionButton[] = [
     icon: Bookmark,
     label: "Bookmark",
     initialCount: 5600,
-    color: "hsl(var(--primary))",
+    strokeColor: "hsl(var(--primary))",
+    fillColor: "hsl(var(--primary) / 0.8)",
     fillOnActive: true,
     showCounter: true,
   },
@@ -43,7 +46,8 @@ const actionButtons: ActionButton[] = [
     icon: ShoppingBag,
     label: "Collect",
     initialCount: 23,
-    color: "rgb(254,178,4)",
+    strokeColor: "rgb(254,178,4)",
+    fillColor: "rgba(254, 178, 4, 0.3)",
     fillOnActive: false,
     showCounter: true,
   },
@@ -51,7 +55,8 @@ const actionButtons: ActionButton[] = [
     icon: MessageCircle,
     label: "Comment",
     initialCount: 8900,
-    color: "hsl(var(--primary))",
+    strokeColor: "hsl(var(--primary))",
+    fillColor: "hsl(var(--primary) / 0.8)",
     fillOnActive: true,
     showCounter: true,
   },
@@ -59,7 +64,8 @@ const actionButtons: ActionButton[] = [
     icon: Heart,
     label: "Like",
     initialCount: 124000,
-    color: "rgb(215, 84, 127)",
+    strokeColor: "rgb(215, 84, 127)",
+    fillColor: "rgba(215, 84, 127, 0.9)",
     fillOnActive: true,
     showCounter: true,
   },
@@ -79,11 +85,11 @@ const formatNumber = (num: number): string => {
 const CounterAnimation = ({
   value,
   prevValue,
-  color,
+  strokeColor,
 }: {
   value: number;
   prevValue: number;
-  color?: string;
+  strokeColor?: string;
 }) => {
   const isIncreasing = value > prevValue;
   const formattedValue = formatNumber(value);
@@ -98,7 +104,7 @@ const CounterAnimation = ({
       exit={{ y: isIncreasing ? 30 : -30, opacity: 0 }}
       transition={{ duration: 0.2 }}
       className="absolute"
-      style={{ color }}
+      style={{ color: strokeColor }}
     >
       {formattedValue}
     </motion.span>
@@ -107,10 +113,10 @@ const CounterAnimation = ({
 
 const ButtonHoverEffect = ({
   isHovered,
-  color,
+  strokeColor,
 }: {
   isHovered: boolean;
-  color: string;
+  strokeColor: string;
 }) => {
   return (
     <motion.div
@@ -125,7 +131,7 @@ const ButtonHoverEffect = ({
         damping: 20,
       }}
       className="absolute inset-0 rounded-full "
-      style={{ backgroundColor: color }}
+      style={{ backgroundColor: strokeColor }}
     />
   );
 };
@@ -207,14 +213,14 @@ export const Footer = () => {
                 <TooltipTrigger asChild>
                   <div className="group flex items-center gap-1.5">
                     <div className="relative">
-                      <ButtonHoverEffect isHovered={state.isHovered} color={button.color ?? ""} />
+                      <ButtonHoverEffect isHovered={state.isHovered} strokeColor={button.strokeColor} />
                       <Button
                         variant="ghost3"
                         onClick={() => handleClick(index)}
                         onMouseEnter={() => handleHover(index, true)}
                         onMouseLeave={() => handleHover(index, false)}
                         style={{
-                          backgroundColor: state.isActive ? `${button.color}10` : undefined,
+                          backgroundColor: state.isActive ? `${button.strokeColor}10` : undefined,
                         }}
                         className="flex items-center transition-all duration-200
                           text-foreground rounded-full p-0 w-10 h-10
@@ -224,10 +230,10 @@ export const Footer = () => {
                         <Icon
                           size={20}
                           strokeWidth={1.5}
-                          className={`transition-all duration-200 group-hover:scale-110 group-active:scale-95
-                            ${state.isActive && button.fillOnActive ? "fill-current" : ""}`}
+                          className={`transition-all duration-200 group-hover:scale-110 group-active:scale-95 active:stroke-[${button.strokeColor}]`}
                           style={{
-                            color: state.isActive ? button.color : undefined,
+                            color: state.isActive || state.isHovered ? button.strokeColor : undefined,
+                            fill: state.isActive ? button.fillColor : undefined,
                           }}
                         />
                       </Button>
@@ -240,7 +246,7 @@ export const Footer = () => {
                             <CounterAnimation
                               value={state.count}
                               prevValue={previousCounts.current[index] ?? state.count}
-                              color={state.isActive ? "var(--primary-foreground)" : "var(--primary-foreground)"}
+                              strokeColor={state.isActive ? "var(--primary-foreground)" : "var(--primary-foreground)"}
                             />
                           </AnimatePresence>
                         </div>
