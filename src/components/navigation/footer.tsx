@@ -235,10 +235,8 @@ export const Footer = () => {
           stiffness: 300,
           damping: 20,
         }}
-        className="fixed bottom-6 inset-x-0 mx-auto z-[40] pl-2 pr-4 py-0.5
-           rounded-full backdrop-blur-xl bg-background/70 border border-border
-           shadow-lg w-full max-w-[90vw] sm:max-w-[50vw] md:max-w-sm
-           origin-bottom"
+        className="fixed bottom-6 inset-x-0 mx-auto z-[40] pl-2 pr-4 py-0.5 rounded-full backdrop-blur-xl bg-background/70 border border-border
+           shadow-lg w-full max-w-[90vw] sm:max-w-[50vw] md:max-w-sm origin-bottom"
       >
         <nav className="flex items-center justify-between">
           {actionButtons.map((button, index) => {
@@ -257,7 +255,11 @@ export const Footer = () => {
             };
 
             const ButtonContent = (
-              <div key={button.label} className="group flex items-center">
+              <div 
+                key={button.label} 
+                className="group flex items-center cursor-pointer"
+                onClick={() => !button.dropdownItems && handleClick(index)}
+              >
                 {button.dropdownItems ? (
                   <DropdownMenu
                     onOpenChange={(open) => {
@@ -274,40 +276,38 @@ export const Footer = () => {
                       });
                     }}
                   >
-                    <DropdownMenuTrigger asChild>
-                      <div className="flex items-center gap-0.5">
-                        <div className="relative">
-                          <ButtonHoverEffect isHovered={state.isHovered} strokeColor={button.strokeColor} />
-                          <Button
-                            variant="ghost3"
-                            onMouseEnter={() => handleHover(index, true)}
-                            onMouseLeave={() => handleHover(index, false)}
-                            style={{
-                              backgroundColor: state.isActive ? `${button.strokeColor}10` : undefined,
-                            }}
-                            className="flex items-center transition-all duration-200
-                                                    text-foreground rounded-full p-0 w-10 h-10
-                                                    focus:outline-none group-hover:bg-transparent
-                                                    relative"
-                          >
-                            <Icon {...iconProps} />
-                          </Button>
-                        </div>
-
-                        <motion.div
-                          initial={false}
-                          animate={{ rotate: state.isActive ? 180 : 0 }}
-                          transition={{ type: "spring", stiffness: 200, damping: 20, mass: 2 }}
+                    <DropdownMenuTrigger className="flex items-center gap-0.5">
+                      <div className="relative">
+                        <ButtonHoverEffect isHovered={state.isHovered} strokeColor={button.strokeColor} />
+                        <Button
+                          variant="ghost3"
+                          onMouseEnter={() => handleHover(index, true)}
+                          onMouseLeave={() => handleHover(index, false)}
+                          style={{
+                            backgroundColor: state.isActive ? `${button.strokeColor}10` : undefined,
+                          }}
+                          className="flex items-center transition-all duration-200
+                                                  text-foreground rounded-full p-0 w-10 h-10
+                                                  focus:outline-none group-hover:bg-transparent
+                                                  relative"
                         >
-                          <ChevronDown
-                            size={16}
-                            className="opacity-50"
-                            style={{
-                              color: state.isActive || state.isHovered ? button.strokeColor : undefined,
-                            }}
-                          />
-                        </motion.div>
+                          <Icon {...iconProps} />
+                        </Button>
                       </div>
+
+                      <motion.div
+                        initial={false}
+                        animate={{ rotate: state.isActive ? 180 : 0 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 20, mass: 2 }}
+                      >
+                        <ChevronDown
+                          size={16}
+                          className="opacity-50"
+                          style={{
+                            color: state.isActive || state.isHovered ? button.strokeColor : undefined,
+                          }}
+                        />
+                      </motion.div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="center">
                       {button.dropdownItems?.map((item) => (
@@ -326,26 +326,17 @@ export const Footer = () => {
                     <ButtonHoverEffect isHovered={state.isHovered} strokeColor={button.strokeColor} />
                     <Button
                       variant="ghost3"
-                      onClick={() => handleClick(index)}
                       onMouseEnter={() => handleHover(index, true)}
                       onMouseLeave={() => handleHover(index, false)}
                       style={{
                         backgroundColor: state.isActive ? `${button.strokeColor}10` : undefined,
                       }}
                       className="flex items-center transition-all duration-200
-                                                      text-foreground rounded-full p-0 w-10 h-10
-                                                      focus:outline-none group-hover:bg-transparent
-                                                      relative"
+                                                    text-foreground rounded-full p-0 w-10 h-10
+                                                    focus:outline-none group-hover:bg-transparent
+                                                    relative"
                     >
-                      <Icon
-                        size={20}
-                        strokeWidth={1.5}
-                        className="transition-all duration-200 group-hover:scale-110 group-active:scale-95"
-                        style={{
-                          color: state.isActive || state.isHovered ? button.strokeColor : undefined,
-                          fill: state.isActive ? button.fillColor : undefined,
-                        }}
-                      />
+                      <Icon {...iconProps} />
                     </Button>
                   </div>
                 )}
