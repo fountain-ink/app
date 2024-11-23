@@ -2,7 +2,7 @@
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useScroll } from "@/hooks/use-scroll";
-import { AnimatePresence, motion, useSpring } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Bookmark, Heart, MessageCircle, Share2, ShoppingBag } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
@@ -131,7 +131,7 @@ const ButtonHoverEffect = ({
 };
 
 export const Footer = () => {
-  const isVisible = useScroll();
+  const { scrollProgress, shouldShow, shouldAnimate } = useScroll();
   const [actionStates, setActionStates] = useState<ActionState[]>(
     actionButtons.map((button) => ({
       isActive: false,
@@ -146,18 +146,7 @@ export const Footer = () => {
     previousCounts.current = actionStates.map((state) => state.count);
   }, [actionStates]);
 
-  const springConfig = {
-    stiffness: 300,
-    damping: 20,
-  };
-
-  const y = useSpring(0, springConfig);
-
-  if (!isVisible) {
-    y.set(100);
-  } else {
-    y.set(0);
-  }
+  const translateY = scrollProgress * 100; // 0px when visible, 100px when hidden
 
   const handleClick = (index: number) => {
     setActionStates((prevStates) => {
@@ -191,10 +180,21 @@ export const Footer = () => {
   return (
     <TooltipProvider delayDuration={300}>
       <motion.div
-        style={{ y }}
+        style={{
+          opacity: 1.2 - scrollProgress,
+        }}
+        animate={{
+          y: shouldAnimate ? (shouldShow ? 0 : 100) : translateY,
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 300,
+          damping: 20,
+        }}
         className="fixed bottom-6 inset-x-0 mx-auto z-[40] px-2 py-0.5
            rounded-full backdrop-blur-xl bg-background/70 border border-border
-           shadow-lg w-full max-w-[90vw] sm:max-w-[50vw] md:max-w-sm"
+           shadow-lg w-full max-w-[90vw] sm:max-w-[50vw] md:max-w-sm
+           origin-bottom"
       >
         <nav className="flex items-center justify-between">
           {actionButtons.map((button, index) => {
