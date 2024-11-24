@@ -6,7 +6,7 @@ import { useOrientation } from "react-use";
 import { createAtomStore } from "jotai-x";
 
 import { useMounted } from "@/hooks/use-mounted";
-import { useViewport } from "@/hooks/useViewport";
+import { useViewport } from "@/hooks/use-viewport";
 import { IS_MOBILE } from "@/lib/utils/environment";
 
 // Keep up to date with tailwind.config.cjs

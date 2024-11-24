@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import useEventListener from "@/hooks/useEventListener";
+import useEventListener from "@/hooks/use-event-listener";
 
 export interface UseHoverOptions {
   /** The delay value for a certain operation. */

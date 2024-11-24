@@ -1,6 +1,6 @@
 import { type RefObject, useEffect, useRef } from "react";
 
-import { useIsomorphicLayoutEffect } from "./useIsomorphicLayoutEffect";
+import { useIsomorphicLayoutEffect } from "./use-isomorphic-layout-effect";
 
 // MediaQueryList Event based useEventListener interface
 function useEventListener<K extends keyof MediaQueryListEventMap>(

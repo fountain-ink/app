@@ -4,8 +4,8 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 
 import { cn } from "@udecode/cn";
 
-import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { RightPanelType } from "@/hooks/useResizablePanel";
+import { useLocalStorage } from "@/hooks/use-local-storage";
+import { RightPanelType } from "@/hooks/use-resizable-panel";
 
 export type Layout = { leftSize?: number; rightSize?: number };
 
