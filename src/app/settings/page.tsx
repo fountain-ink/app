@@ -2,7 +2,7 @@ import { GeneralSettings } from "@/components/settings/settings-general";
 import { ProfileSettings } from "@/components/settings/settings-profile";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getAuthWithCookies } from "@/lib/get-auth-clients";
+import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 import { DollarSign, FileText, LayoutGrid, Mail, Megaphone, Settings, Users } from "lucide-react";
 
 export async function generateMetadata() {

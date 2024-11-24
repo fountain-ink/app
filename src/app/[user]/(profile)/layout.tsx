@@ -1,7 +1,7 @@
 import { UserCover } from "@/components/user/user-cover";
 import { UserNavigation } from "@/components/user/user-navigation";
 import { UserProfile } from "@/components/user/user-profile";
-import { getAuthWithCookies } from "@/lib/get-auth-clients";
+import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 import { notFound } from "next/navigation";
 
 const UserProfileLayout = async ({

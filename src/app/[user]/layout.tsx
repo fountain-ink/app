@@ -1,5 +1,5 @@
 import { UserTheme } from "@/components/user/user-theme";
-import { getAuthWithCookies } from "@/lib/get-auth-clients";
+import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }: { params: { user: string } }) {

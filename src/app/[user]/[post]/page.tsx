@@ -1,7 +1,7 @@
 import Markdown from "@/components/content/markdown";
 import Editor from "@/components/editor/plate-editor";
 import ErrorPage from "@/components/error-page";
-import { getAuthWithCookies } from "@/lib/get-auth-clients";
+import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 import { sanitize } from "isomorphic-dompurify";
 
 const post = async ({ params }: { params: { user: string; post: string } }) => {

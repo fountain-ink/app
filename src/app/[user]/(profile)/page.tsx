@@ -1,5 +1,5 @@
 import { UserContent } from "@/components/user/user-content";
-import { getAuthWithCookies } from "@/lib/get-auth-clients";
+import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
   const { lens } = await getAuthWithCookies();

@@ -1,8 +1,8 @@
 import { EditorPublishing } from "@/components/editor/editor-publishing";
 import Editor from "@/components/editor/plate-editor";
-import { getAuthWithCookies } from "@/lib/get-auth-clients";
+import { getTokenFromCookie } from "@/lib/auth/get-token-from-cookie";
+import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 import { getBaseUrl } from "@/lib/get-base-url";
-import { getTokenFromCookie } from "@/lib/get-token-from-cookie";
 import { cookies } from "next/headers";
 
 async function getDraft(id: string) {
@@ -36,13 +36,8 @@ export default async function PreviewDraft({ params }: { params: { id: string } 
   const draft = await getDraft(params.id);
 
   return (
-      <Editor
-        showToc
-        readOnly
-        value={JSON.stringify(draft?.contentJson)}
-      >
-        <EditorPublishing />
-      </Editor>
-
+    <Editor showToc readOnly value={JSON.stringify(draft?.contentJson)}>
+      <EditorPublishing />
+    </Editor>
   );
 }

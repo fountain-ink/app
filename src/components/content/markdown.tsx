@@ -1,5 +1,4 @@
-import ReactMarkdown from "react-markdown";
-import type { Components } from "react-markdown/lib/ast-to-react";
+import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 // import { CommunityHandle } from "./communities/CommunityHandle";
 

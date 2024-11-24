@@ -1,5 +1,5 @@
 import { defaultContent } from "@/components/draft/draft-create";
-import { getAuthWithCookies } from "@/lib/get-auth-clients";
+import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 import { getRandomUid } from "@/lib/get-random-uid";
 import { type NextRequest, NextResponse } from "next/server";
 

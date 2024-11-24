@@ -7,7 +7,7 @@ import {
   DropdownMenuPortal,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { clearCookies } from "@/lib/clear-cookies";
+import { clearCookies } from "@/lib/auth/clear-cookies";
 import { SessionType, useLogout, useSession } from "@lens-protocol/react-web";
 import { toast } from "sonner";
 import { useAccount, useDisconnect } from "wagmi";

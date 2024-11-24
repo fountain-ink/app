@@ -1,6 +1,6 @@
 import { DraftsList } from "@/components/draft/draft-list";
 import ErrorPage from "@/components/error-page";
-import { getAuthWithCookies } from "@/lib/get-auth-clients";
+import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
   const { lens, handle: userHandle } = await getAuthWithCookies();

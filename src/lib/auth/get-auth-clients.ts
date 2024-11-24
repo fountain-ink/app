@@ -1,5 +1,5 @@
-import { getDatabase } from "@/lib/get-database";
-import { getLensClient } from "@/lib/get-lens-client";
+import { getDatabase } from "@/lib/auth/get-database";
+import { getLensClient } from "@/lib/auth/get-lens-client";
 import { getTokenFromCookie } from "./get-token-from-cookie";
 
 export async function getAuthWithCookies() {

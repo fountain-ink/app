@@ -7,7 +7,7 @@ import { createAtomStore } from "jotai-x";
 
 import { useMounted } from "@/hooks/use-mounted";
 import { useViewport } from "@/hooks/use-viewport";
-import { IS_MOBILE } from "@/lib/utils/environment";
+import { IS_MOBILE } from "@/lib/environment";
 
 // Keep up to date with tailwind.config.cjs
 const breakpointSizes = {

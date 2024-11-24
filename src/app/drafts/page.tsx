@@ -1,5 +1,5 @@
 import { CloudDraftsList } from "@/components/draft/draft-list-cloud";
-import { getAuthWithCookies } from "@/lib/get-auth-clients";
+import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 
 const drafts = async () => {
   const { profileId } = await getAuthWithCookies();

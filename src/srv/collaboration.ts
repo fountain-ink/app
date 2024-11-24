@@ -1,5 +1,5 @@
-import { getAuthWithToken } from "@/lib/get-auth-clients";
-import { getDatabase } from "@/lib/get-database";
+import { getDatabase } from "@/lib/auth/get-database";
+import { getAuthWithToken } from "@/lib/auth/get-auth-clients";
 import { Database } from "@hocuspocus/extension-database";
 import { Logger } from "@hocuspocus/extension-logger";
 import { Server } from "@hocuspocus/server";
