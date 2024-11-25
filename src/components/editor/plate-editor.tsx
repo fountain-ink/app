@@ -22,7 +22,6 @@ export default function PlateEditor(
     refreshToken?: string;
     handle?: string;
     readOnly?: boolean;
-    applyMargins?: boolean;
     value?: string;
   },
 ) {
@@ -44,7 +43,7 @@ export default function PlateEditor(
     <DndProvider backend={HTML5Backend}>
       <PlateStoreProvider>
         <Plate editor={editor} readOnly={props.readOnly}>
-          <div ref={containerRef} data-plate-selectable>
+          <div ref={containerRef} data-plate-selectable="true">
             {props.showToc && <TocSideBar className="top-[80px]" topOffset={30} />}
 
             {props.showToolbar && (
@@ -57,12 +56,7 @@ export default function PlateEditor(
 
             <Editor
               ref={editorRef}
-              disableDefaultStyles
-              className={
-                props.applyMargins
-                  ? "overflow-visible w-full max-w-full sm:max-w-3xl md:max-w-4xl p-10 sm:px-30 md:px-40 mx-auto"
-                  : ""
-              }
+              className={"overflow-visible w-full max-w-full sm:max-w-3xl md:max-w-4xl p-10 sm:px-30 md:px-40 mx-auto"}
               autoFocus
               variant="fullWidth"
             />

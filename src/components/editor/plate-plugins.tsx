@@ -23,12 +23,12 @@ import { LinkPlugin } from "@udecode/plate-link/react";
 import { MarkdownPlugin } from "@udecode/plate-markdown";
 import { EquationPlugin, InlineEquationPlugin } from "@udecode/plate-math/react";
 import {
-  AudioPlugin,
-  FilePlugin,
-  ImagePlugin,
-  MediaEmbedPlugin,
-  PlaceholderPlugin,
-  VideoPlugin,
+    AudioPlugin,
+    FilePlugin,
+    ImagePlugin,
+    MediaEmbedPlugin,
+    PlaceholderPlugin,
+    VideoPlugin,
 } from "@udecode/plate-media/react";
 import { MentionPlugin } from "@udecode/plate-mention/react";
 import { NodeIdPlugin } from "@udecode/plate-node-id";
@@ -47,26 +47,25 @@ import { LinkFloatingToolbar } from "@/components/ui/link-floating-toolbar";
 import { AlignPlugin } from "@udecode/plate-alignment/react";
 import { AutoformatPlugin } from "@udecode/plate-autoformat/react";
 import {
-  BoldPlugin,
-  CodePlugin,
-  ItalicPlugin,
-  StrikethroughPlugin,
-  SubscriptPlugin,
-  SuperscriptPlugin,
-  UnderlinePlugin,
+    BoldPlugin,
+    CodePlugin,
+    ItalicPlugin,
+    StrikethroughPlugin,
+    SubscriptPlugin,
+    SuperscriptPlugin,
+    UnderlinePlugin,
 } from "@udecode/plate-basic-marks/react";
 import { isCodeBlockEmpty, isSelectionAtCodeBlockStart, unwrapCodeBlock } from "@udecode/plate-code-block";
 import { CodeBlockPlugin, CodeSyntaxPlugin } from "@udecode/plate-code-block/react";
 import {
-  getNextNode,
-  getParentNode,
-  insertNodes,
-  isBlockAboveEmpty,
-  isSelectionAtBlockStart,
-  someNode,
+    getNextNode,
+    getParentNode,
+    insertNodes,
+    isBlockAboveEmpty,
+    isSelectionAtBlockStart,
+    someNode,
 } from "@udecode/plate-common";
 import { FontSizePlugin } from "@udecode/plate-font/react";
-import { IndentListPlugin } from "@udecode/plate-indent-list/react";
 import { IndentPlugin } from "@udecode/plate-indent/react";
 import { ListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
 import { MentionInputPlugin } from "@udecode/plate-mention/react";
@@ -76,7 +75,6 @@ import { TableCellHeaderPlugin, TableRowPlugin } from "@udecode/plate-table/reac
 import { YjsPlugin } from "@udecode/plate-yjs/react";
 import { Path } from "slate";
 import { toast } from "sonner";
-import { TodoLi, TodoMarker } from "../ui/indent-todo-marker";
 import { autoformatRules } from "./plate-autoformat";
 import { NormalizePlugin } from "./plate-normalization";
 import { RenderAboveEditableYjs } from "./yjs-above-editable";
@@ -327,7 +325,7 @@ export const staticPlugins = [
   }),
   // IndentListPlugin.extend({
   //   inject: {
-      
+
   //     targetPlugins: [
   //       // ParagraphPlugin.key,
   //       // HEADING_KEYS.h1,

@@ -46,7 +46,7 @@ import { LayoutIcon } from "lucide-react";
 
 import { insertBlock } from "@/lib/transforms";
 import { HorizontalRulePlugin } from "@udecode/plate-horizontal-rule/react";
-import { ListPlugin } from "@udecode/plate-list/react";
+import { ListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
 import { EquationPlugin } from "@udecode/plate-math/react";
 import { insertTable } from "@udecode/plate-table/react";
 import { SeparatorHorizontalIcon } from "lucide-react";
@@ -170,15 +170,15 @@ const rules: SlashCommandRule[] = [
       editor.getTransforms(ListPlugin).toggle?.numberedList();
     },
   },
-  // {
-  //   icon: ListChecksIcon,
-  //   keywords: ["todo", "checks list", "toggle"],
-  //   value: "Checks list",
-  //   description: "Add a todo list.",
-  //   onSelect: (editor) => {
-  //     editor.getTransforms(ListPlugin).toggle?.list({ type: "todo" });
-  //   },
-  // },
+  {
+    icon: ListChecksIcon,
+    keywords: ["todo", "checks list", "toggle"],
+    value: "Checks list",
+    description: "Add a todo list.",
+    onSelect: (editor) => {
+      insertBlock(editor, TodoListPlugin.key);
+    },
+  },
   {
     icon: CalendarIcon,
     keywords: ["inline", "date"],

@@ -1,3 +1,12 @@
-import UserPostLayout from "@/app/[user]/[post]/layout";
+import { Footer } from "@/components/navigation/footer";
 
-export default UserPostLayout;
+const WritePreviewLayout = async ({ children }: { children: React.ReactNode; params: { user: string } }) => {
+  return (
+    <>
+      {children}
+      <Footer />
+    </>
+  );
+};
+
+export default WritePreviewLayout;

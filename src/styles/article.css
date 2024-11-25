@@ -1,17 +1,16 @@
 @import "./fonts.css";
 
-article {
-  max-width: 65ch;
+.article {
   color: var(--foreground);
   background-color: var(--background);
 }
 
-img {
+.article img {
   border-radius: var(--image-border-radius);
   margin: 0;
 }
 
-h1 {
+.article h1 {
   color: var(--title-color);
   margin-top: var(--header-margin);
   margin-bottom: var(--header-margin);
@@ -24,7 +23,7 @@ h1 {
   letter-spacing: var(--title-letter-spacing);
 }
 
-h2 {
+.article h2 {
   color: var(--subtitle-color);
   margin-top: var(--header-margin);
   margin-bottom: var(--header-margin);
@@ -37,7 +36,7 @@ h2 {
   letter-spacing: var(--subtitle-letter-spacing);
 }
 
-h3 {
+.article h3 {
   color: var(--header-color);
   margin-top: var(--header-margin);
   margin-bottom: var(--header-margin);
@@ -49,7 +48,7 @@ h3 {
   letter-spacing: var(--header-letter-spacing);
 }
 
-h4 {
+.article h4 {
   color: var(--header-color);
   margin-top: var(--header-margin);
   margin-bottom: var(--header-margin);
@@ -61,7 +60,7 @@ h4 {
   letter-spacing: var(--header-letter-spacing);
 }
 
-p {
+.article p {
   padding-top: var(--paragraph-margin);
   padding-bottom: var(--paragraph-margin);
   margin-top: 0;
@@ -75,8 +74,8 @@ p {
   color: var(--paragraph-color);
 }
 
-ul,
-ol {
+.article ul,
+.article ol {
   font-family: var(--list-font);
   font-weight: var(--list-weight);
   font-style: var(--list-style);
@@ -89,7 +88,20 @@ ol {
   padding-inline-start: 0;
 }
 
-li {
+.article .todo-element {
+  font-family: var(--list-font);
+  font-weight: var(--list-weight);
+  font-style: var(--list-style);
+  font-size: var(--list-size);
+  line-height: var(--list-line-height);
+  letter-spacing: var(--list-letter-spacing);
+  color: var(--list-color);
+  margin-top: var(--list-margin-top);
+  margin-bottom: var(--list-margin-bottom);
+  padding-inline-start: 0;
+}
+
+.article li {
   font-family: var(--list-font);
   font-weight: var(--list-weight);
   font-style: var(--list-style);
@@ -100,24 +112,23 @@ li {
   padding-inline-start: 0;
 }
 
-ul li::marker,
-ol li::marker {
+.article ul li::marker,
+.article ol li::marker {
   color: var(--list-color);
 }
 
-strong {
+.article strong {
   font-weight: var(--strong-weight);
 }
 
-/* Responsive adjustments */
 @media (min-width: 640px) {
-  article {
+  .article {
     font-size: 1rem;
   }
 }
 
 @media (min-width: 1024px) {
-  article {
+  .article {
     font-size: 1.125rem;
   }
 }

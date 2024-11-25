@@ -3,7 +3,6 @@ import Editor from "@/components/editor/plate-editor";
 import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 import { getTokenFromCookie } from "@/lib/auth/get-token-from-cookie";
 import { getBaseUrl } from "@/lib/get-base-url";
-import { proseClasses } from "@/styles/prose";
 import { cookies } from "next/headers";
 
 async function getDraft(id: string) {
@@ -36,16 +35,8 @@ export default async function WriteDraft({ params }: { params: { id: string } })
   const { profileId, handle } = await getAuthWithCookies();
 
   return (
-    <div
-      className={`text-foreground bg-background max-w-full w-screen h-screen overflow-y-auto relative
-        [&_.slate-selection-area]:border [&_.slate-selection-area]:border-primary [&_.slate-selection-area]:bg-primary/10
-        ${proseClasses}`}
-      id="scroll_container"
-      data-plate-selectable="true"
-    >
-      <Editor showToc applyMargins refreshToken={refreshToken} handle={handle}>
-        <EditorPublishing />
-      </Editor>
-    </div>
+    <Editor showToc refreshToken={refreshToken} handle={handle}>
+      <EditorPublishing />
+    </Editor>
   );
 }

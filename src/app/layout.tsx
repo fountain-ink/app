@@ -27,7 +27,6 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       <body
         className={cn(
           "overflow-x-hidden scroll-smooth text-clip bg-background text-foreground min-h-dvh",
-          "antialiased",
         )}
       >
         <Web3Providers>
