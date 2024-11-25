@@ -58,7 +58,7 @@ export const NormalizePlugin = createPlatePlugin({
     };
 
     editor.normalizeNode = (entry) => {
-      const [node] = entry;
+      const [node, path] = entry;
 
       ensureLeadingBlock(editor);
 

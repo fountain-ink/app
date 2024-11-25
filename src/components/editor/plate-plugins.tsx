@@ -68,7 +68,7 @@ import {
 import { FontSizePlugin } from "@udecode/plate-font/react";
 import { IndentListPlugin } from "@udecode/plate-indent-list/react";
 import { IndentPlugin } from "@udecode/plate-indent/react";
-import { TodoListPlugin } from "@udecode/plate-list/react";
+import { ListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
 import { MentionInputPlugin } from "@udecode/plate-mention/react";
 import { ResetNodePlugin } from "@udecode/plate-reset-node/react";
 import { TabbablePlugin } from "@udecode/plate-tabbable/react";
@@ -325,34 +325,35 @@ export const staticPlugins = [
       ],
     },
   }),
-  IndentListPlugin.extend({
-    inject: {
-      targetPlugins: [
-        ParagraphPlugin.key,
-        // HEADING_KEYS.h1,
-        // HEADING_KEYS.h2,
-        HEADING_KEYS.h3,
-        HEADING_KEYS.h4,
-        HEADING_KEYS.h5,
-        HEADING_KEYS.h6,
-        BlockquotePlugin.key,
-        CodeBlockPlugin.key,
-        TogglePlugin.key,
-      ],
-    },
-    options: {
-      listStyleTypes: {
-        todo: {
-          liComponent: TodoLi,
-          markerComponent: TodoMarker,
-          type: "todo",
-        },
-      },
-    },
-  }),
+  // IndentListPlugin.extend({
+  //   inject: {
+      
+  //     targetPlugins: [
+  //       // ParagraphPlugin.key,
+  //       // HEADING_KEYS.h1,
+  //       // HEADING_KEYS.h2,
+  //       HEADING_KEYS.h3,
+  //       HEADING_KEYS.h4,
+  //       HEADING_KEYS.h5,
+  //       HEADING_KEYS.h6,
+  //       BlockquotePlugin.key,
+  //       CodeBlockPlugin.key,
+  //       TogglePlugin.key,
+  //     ],
+  //   },
+  //   options: {
+  //     listStyleTypes: {
+  //       todo: {
+  //         liComponent: TodoLi,
+  //         markerComponent: TodoMarker,
+  //         type: "todo",
+  //       },
+  //     },
+  //   },
+  // }),
 
-  // ListPlugin,
-  // TodoListPlugin,
+  ListPlugin,
+  TodoListPlugin,
 
   // Functionality
   AutoformatPlugin.configure({
@@ -431,7 +432,7 @@ export const staticPlugins = [
   DocxPlugin,
   MarkdownPlugin.configure({
     options: {
-      indentList: true,
+      indentList: false,
     },
   }),
   JuicePlugin,
@@ -453,16 +454,6 @@ export const staticPlugins = [
   SubscriptPlugin,
   SuperscriptPlugin,
   FontSizePlugin,
-
-  // LineHeightPlugin.configure({
-  //   inject: {
-  //     nodeProps: {
-  //       defaultNodeValue: 1.5,
-  //       validNodeValues: [1, 1.2, 1.5, 2, 3],
-  //     },
-  //     targetPlugins: [ParagraphPlugin.key, ...HEADING_LEVELS],
-  //   },
-  // }),
 
   // Functionality
   ResetNodePlugin.configure({

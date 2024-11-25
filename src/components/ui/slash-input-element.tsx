@@ -1,7 +1,7 @@
 import { withRef } from "@udecode/cn";
 import { DatePlugin } from "@udecode/plate-date/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
-import { INDENT_LIST_KEYS, ListStyleType, toggleIndentList } from "@udecode/plate-indent-list";
+import { ListStyleType } from "@udecode/plate-indent-list";
 
 import {
   InlineCombobox,
@@ -46,6 +46,7 @@ import { LayoutIcon } from "lucide-react";
 
 import { insertBlock } from "@/lib/transforms";
 import { HorizontalRulePlugin } from "@udecode/plate-horizontal-rule/react";
+import { ListPlugin } from "@udecode/plate-list/react";
 import { EquationPlugin } from "@udecode/plate-math/react";
 import { insertTable } from "@udecode/plate-table/react";
 import { SeparatorHorizontalIcon } from "lucide-react";
@@ -155,8 +156,8 @@ const rules: SlashCommandRule[] = [
     value: "Bulleted list",
     description: "Add a bullet list.",
     onSelect: (editor) => {
-      toggleIndentList(editor, {
-        listStyleType: ListStyleType.Disc,
+      editor.getTransforms(ListPlugin).toggle?.list({
+        type: ListStyleType.Disc,
       });
     },
   },
@@ -166,22 +167,18 @@ const rules: SlashCommandRule[] = [
     value: "Numbered list",
     description: "Add a numbered list.",
     onSelect: (editor) => {
-      toggleIndentList(editor, {
-        listStyleType: ListStyleType.Decimal,
-      });
+      editor.getTransforms(ListPlugin).toggle?.numberedList();
     },
   },
-  {
-    icon: ListChecksIcon,
-    keywords: ["todo", "checks list", "toggle"],
-    value: "Checks list",
-    description: "Add a todo list.",
-    onSelect: (editor) => {
-      toggleIndentList(editor, {
-        listStyleType: INDENT_LIST_KEYS.todo,
-      });
-    },
-  },
+  // {
+  //   icon: ListChecksIcon,
+  //   keywords: ["todo", "checks list", "toggle"],
+  //   value: "Checks list",
+  //   description: "Add a todo list.",
+  //   onSelect: (editor) => {
+  //     editor.getTransforms(ListPlugin).toggle?.list({ type: "todo" });
+  //   },
+  // },
   {
     icon: CalendarIcon,
     keywords: ["inline", "date"],

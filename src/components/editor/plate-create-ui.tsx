@@ -11,7 +11,7 @@ import {
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { CodeBlockPlugin, CodeLinePlugin, CodeSyntaxPlugin } from "@udecode/plate-code-block/react";
 import { CommentsPlugin } from "@udecode/plate-comments/react";
-import { ParagraphPlugin, PlateLeaf } from "@udecode/plate-common/react";
+import { ParagraphPlugin, PlateElement, PlateLeaf } from "@udecode/plate-common/react";
 import { DatePlugin } from "@udecode/plate-date/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
 import { TocPlugin } from "@udecode/plate-heading/react";
@@ -24,8 +24,8 @@ import { SlashInputPlugin } from "@udecode/plate-slash-command/react";
 import { TableCellHeaderPlugin, TableCellPlugin, TablePlugin, TableRowPlugin } from "@udecode/plate-table/react";
 import { TogglePlugin } from "@udecode/plate-toggle/react";
 
-// import { AILeaf } from '@/components/ui/ai-leaf';
 import { BlockquoteElement } from "@/components/ui/blockquote-element";
+// import { AILeaf } from '@/components/ui/ai-leaf';
 // import { CalloutElement } from '@/components/ui/callout-element';
 import { CodeBlockElement } from "@/components/ui/code-block-element";
 import { CodeLeaf } from "@/components/ui/code-leaf";
@@ -57,57 +57,17 @@ import { ToggleElement } from "@/components/ui/toggle-element";
 import { withDraggables } from "@/components/ui/with-draggables";
 import { HighlightPlugin } from "@udecode/plate-highlight/react";
 import { KbdPlugin } from "@udecode/plate-kbd/react";
+import { BulletedListPlugin, ListItemPlugin, NumberedListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
 import { EquationPlugin, InlineEquationPlugin } from "@udecode/plate-math/react";
 import { EquationElement } from "../ui/equation-element";
+import { HighlightLeaf } from "../ui/highlight-leaf";
 import { InlineEquationElement } from "../ui/inline-equation-element";
 import { KbdLeaf } from "../ui/kbd-leaf";
-import { HighlightLeaf } from "../ui/highlight-leaf";
+import { ListElement } from "../ui/list-element";
+import { TodoListElement } from "../ui/todo-list-element";
 
 export const getUiComponents = () => {
-  return withPlaceholders(
-    withDraggables({
-      [DatePlugin.key]: DateElement,
-      [SlashInputPlugin.key]: SlashInputElement,
-      [TogglePlugin.key]: ToggleElement,
-      [BlockquotePlugin.key]: BlockquoteElement,
-      [CodeBlockPlugin.key]: CodeBlockElement,
-      [CodeLinePlugin.key]: CodeLineElement,
-      [TocPlugin.key]: TocElement,
-      [ColumnItemPlugin.key]: ColumnElement,
-      [ColumnPlugin.key]: ColumnGroupElement,
-      [CodeSyntaxPlugin.key]: CodeSyntaxLeaf,
-      [HorizontalRulePlugin.key]: HrElement,
-      [HEADING_KEYS.h1]: withProps(HeadingElement, { variant: "h1" }),
-      [HEADING_KEYS.h2]: withProps(HeadingElement, { variant: "h2" }),
-      [HEADING_KEYS.h3]: withProps(HeadingElement, { variant: "h3" }),
-      [HEADING_KEYS.h4]: withProps(HeadingElement, { variant: "h4" }),
-      [HEADING_KEYS.h5]: withProps(HeadingElement, { variant: "h5" }),
-      [HEADING_KEYS.h6]: withProps(HeadingElement, { variant: "h6" }),
-      [EquationPlugin.key]: EquationElement,
-      [InlineEquationPlugin.key]: InlineEquationElement,
-      [KbdPlugin.key]: KbdLeaf,
-      [HighlightPlugin.key]: HighlightLeaf,
-      [ImagePlugin.key]: ImageElement,
-      [LinkPlugin.key]: LinkElement,
-      [MediaEmbedPlugin.key]: MediaEmbedElement,
-      [MentionPlugin.key]: MentionElement,
-      [MentionInputPlugin.key]: MentionInputElement,
-      [ParagraphPlugin.key]: withProps(ParagraphElement, { as: "p" }),
-      // [BulletedListPlugin.key]: withProps(ListElement, { variant: "ul" }),
-      // [NumberedListPlugin.key]: withProps(ListElement, { variant: "ol" }),
-      // [ListItemPlugin.key]: withProps(PlateElement, { as: "li", className: "list-item" }),
-      [TablePlugin.key]: TableElement,
-      [TableRowPlugin.key]: TableRowElement,
-      [TableCellPlugin.key]: TableCellElement,
-      [TableCellHeaderPlugin.key]: TableCellHeaderElement,
-      [BoldPlugin.key]: withProps(PlateLeaf, { as: "strong" }),
-      [CodePlugin.key]: CodeLeaf,
-      [ItalicPlugin.key]: withProps(PlateLeaf, { as: "em" }),
-      [StrikethroughPlugin.key]: withProps(PlateLeaf, { as: "s" }),
-      [UnderlinePlugin.key]: withProps(PlateLeaf, { as: "u" }),
-      [CommentsPlugin.key]: CommentLeaf,
-    }),
-  );
+  return withPlaceholders(withDraggables(getRawUiCompontents()));
 };
 
 export const getRawUiCompontents = () => {
@@ -132,15 +92,17 @@ export const getRawUiCompontents = () => {
     [EquationPlugin.key]: EquationElement,
     [InlineEquationPlugin.key]: InlineEquationElement,
     [KbdPlugin.key]: KbdLeaf,
+    [HighlightPlugin.key]: HighlightLeaf,
     [ImagePlugin.key]: ImageElement,
     [LinkPlugin.key]: LinkElement,
     [MediaEmbedPlugin.key]: MediaEmbedElement,
     [MentionPlugin.key]: MentionElement,
     [MentionInputPlugin.key]: MentionInputElement,
     [ParagraphPlugin.key]: withProps(ParagraphElement, { as: "p" }),
-    // [BulletedListPlugin.key]: withProps(ListElement, { variant: "ul" }),
-    // [NumberedListPlugin.key]: withProps(ListElement, { variant: "ol" }),
-    // [ListItemPlugin.key]: withProps(PlateElement, { as: "li", className: "list-item" }),
+    [BulletedListPlugin.key]: withProps(ListElement, { variant: "ul" }),
+    [NumberedListPlugin.key]: withProps(ListElement, { variant: "ol" }),
+    [TodoListPlugin.key]: TodoListElement,
+    [ListItemPlugin.key]: withProps(PlateElement, { as: "li"  }),
     [TablePlugin.key]: TableElement,
     [TableRowPlugin.key]: TableRowElement,
     [TableCellPlugin.key]: TableCellElement,
