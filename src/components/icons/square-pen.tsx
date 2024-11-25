@@ -2,6 +2,7 @@
 
 import type { Variants } from "framer-motion";
 import { motion, useAnimation } from "framer-motion";
+import { useEffect } from "react";
 
 const penVariants: Variants = {
   normal: {
@@ -19,11 +20,13 @@ const penVariants: Variants = {
 const SquarePenIcon = ({ animate = false }: { animate?: boolean }) => {
   const controls = useAnimation();
 
-  if (animate) {
-    controls.start("animate");
-  } else {
-    controls.start("normal");
-  }
+  useEffect(() => {
+    if (animate) {
+      controls.start("animate");
+    } else {
+      controls.start("normal");
+    }
+  }, [animate]);
 
   return (
     <div className="cursor-pointer select-none p-2 rounded-md transition-colors duration-200 flex items-center justify-center">

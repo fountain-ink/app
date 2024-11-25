@@ -2,6 +2,7 @@
 
 import type { Variants } from "framer-motion";
 import { motion, useAnimation } from "framer-motion";
+import { useEffect } from "react";
 
 const pathVariants: Variants = {
   animate: {
@@ -16,11 +17,13 @@ const pathVariants: Variants = {
 const LogoutIcon = ({ animate = false }: { animate?: boolean }) => {
   const controls = useAnimation();
 
-  if (animate) {
-    controls.start("animate");
-  } else {
-    controls.start("normal");
-  }
+  useEffect(() => {
+    if (animate) {
+      controls.start("animate");
+    } else {
+      controls.start("normal");
+    }
+  }, [animate]);
 
   return (
     <div

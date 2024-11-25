@@ -2,6 +2,7 @@
 
 import type { Variants } from "framer-motion";
 import { motion, useAnimation } from "framer-motion";
+import { useEffect } from "react";
 
 const penVariants: Variants = {
   normal: {
@@ -11,19 +12,21 @@ const penVariants: Variants = {
   },
   animate: {
     rotate: [-0.5, 0.5, -0.5],
-    x: [7, -1.5, 1.5, 0],
-    y: [0, -1.5, 1.5, 0],
+    x: [0, -1.5, -1.5, 0],
+    y: [0, 1.5, 1.5, 0],
   },
 };
 
 const UserRoundPenIcon = ({ animate = false }: { animate?: boolean }) => {
   const controls = useAnimation();
 
-  if (animate) {
-    controls.start("animate");
-  } else {
-    controls.start("normal");
-  }
+  useEffect(() => {
+    if (animate) {
+      controls.start("animate");
+    } else {
+      controls.start("normal");
+    }
+  }, [animate]);
 
   return (
     <div className="cursor-pointer select-none p-2 rounded-md transition-colors duration-200 flex items-center justify-center">

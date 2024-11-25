@@ -29,7 +29,7 @@ export const AnimatedMenuItem = ({
     <Button
       variant="ghost"
       {...buttonProps}
-      className={`${buttonProps.className} justify-center group p-0 h-10 w-10 mx-0`}
+      className={`${buttonProps.className} transition-all justify-center group h-10 w-10 mx-0`}
     >
       <Icon animate={isHovered} />
       {children && <span>{children}</span>}

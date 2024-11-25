@@ -24,7 +24,7 @@ const HeadingElementVariants = withVariants(PlateElement, headingVariants, ["var
 
 export const HeadingElement = withRef<typeof HeadingElementVariants>(({ children, variant = "h1", ...props }, ref) => {
   return (
-    <HeadingElementVariants ref={ref} as={variant!} variant={variant} {...props}>
+    <HeadingElementVariants ref={ref} as={variant!}  {...props}>
       {children}
     </HeadingElementVariants>
   );

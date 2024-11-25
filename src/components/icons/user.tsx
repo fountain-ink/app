@@ -2,6 +2,7 @@
 
 import type { Variants } from "framer-motion";
 import { motion, useAnimation } from "framer-motion";
+import { useEffect } from "react";
 
 const pathVariant: Variants = {
   normal: { pathLength: 1, opacity: 1, pathOffset: 0 },
@@ -28,11 +29,13 @@ const circleVariant: Variants = {
 const UserIcon = ({ animate = false, className }: { animate?: boolean; className?: string }) => {
   const controls = useAnimation();
 
-  if (animate) {
-    controls.start("animate");
-  } else {
-    controls.start("normal");
-  }
+  useEffect(() => {
+    if (animate) {
+      controls.start("animate");
+    } else {
+      controls.start("normal");
+    }
+  }, [animate]);
 
   return (
     <div

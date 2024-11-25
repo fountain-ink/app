@@ -1,5 +1,6 @@
 import { Footer } from "@/components/navigation/footer";
-import { proseClasses } from "@/styles/prose";
+
+import "@/styles/article.css";
 
 const UserPostLayout = async ({
   children,
@@ -9,13 +10,10 @@ const UserPostLayout = async ({
   params: { user: string };
 }) => {
   return (
-    <div
-      className={`text-foreground bg-background max-w-full w-screen h-screen overflow-y-auto ${proseClasses}`}
-      id="scroll_container"
-    >
-        {children}
-        <Footer />
-    </div>
+    <article className="max-w-full w-screen h-screen overflow-y-auto" id="scroll_container">
+      {children}
+      <Footer />
+    </article>
   );
 };
 

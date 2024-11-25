@@ -1,15 +1,18 @@
 "use client";
 
 import { motion, useAnimation } from "framer-motion";
+import { useEffect } from "react";
 
 const SettingsGearIcon = ({ animate = false }: { animate?: boolean }) => {
   const controls = useAnimation();
 
-  if (animate) {
-    controls.start("animate");
-  } else {
-    controls.start("normal");
-  }
+  useEffect(() => {
+    if (animate) {
+      controls.start("animate");
+    } else {
+      controls.start("normal");
+    }
+  }, [animate]);
 
   return (
     <div
