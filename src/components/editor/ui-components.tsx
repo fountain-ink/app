@@ -23,10 +23,7 @@ import { MentionInputPlugin, MentionPlugin } from "@udecode/plate-mention/react"
 import { SlashInputPlugin } from "@udecode/plate-slash-command/react";
 import { TableCellHeaderPlugin, TableCellPlugin, TablePlugin, TableRowPlugin } from "@udecode/plate-table/react";
 import { TogglePlugin } from "@udecode/plate-toggle/react";
-
 import { BlockquoteElement } from "@/components/ui/blockquote-element";
-// import { AILeaf } from '@/components/ui/ai-leaf';
-// import { CalloutElement } from '@/components/ui/callout-element';
 import { CodeBlockElement } from "@/components/ui/code-block-element";
 import { CodeLeaf } from "@/components/ui/code-leaf";
 import { CodeLineElement } from "@/components/ui/code-line-element";
@@ -39,11 +36,7 @@ import { HeadingElement } from "@/components/ui/heading-element";
 import { HrElement } from "@/components/ui/hr-element";
 import { ImageElement } from "@/components/ui/image-element";
 import { LinkElement } from "@/components/ui/link-element";
-// import { MediaAudioElement } from '@/components/ui/media-audio-element';
 import { MediaEmbedElement } from "@/components/ui/media-embed-element";
-// import { MediaFileElement } from '@/components/ui/media-file-element';
-// import { MediaPlaceholderElement } from '@/components/ui/media-placeholder-element';
-// import { MediaVideoElement } from '@/components/ui/media-video-element';
 import { MentionElement } from "@/components/ui/mention-element";
 import { MentionInputElement } from "@/components/ui/mention-input-element";
 import { ParagraphElement } from "@/components/ui/paragraph-element";

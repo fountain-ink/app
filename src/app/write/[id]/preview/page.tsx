@@ -1,7 +1,7 @@
-import { EditorPublishing } from "@/components/editor/editor-publishing";
-import Editor from "@/components/editor/plate-editor";
-import { getTokenFromCookie } from "@/lib/auth/get-token-from-cookie";
+import { EditorPublishing } from "@/components/editor/addons/editor-publishing";
+import Editor from "@/components/editor/editor";
 import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
+import { getTokenFromCookie } from "@/lib/auth/get-token-from-cookie";
 import { getBaseUrl } from "@/lib/get-base-url";
 import { cookies } from "next/headers";
 

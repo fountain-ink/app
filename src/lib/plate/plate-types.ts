@@ -1,14 +1,13 @@
 import { useEditorRef } from "@udecode/plate-common/react";
 
+// import type { TExcalidrawElement } from '@udecode/plate-excalidraw';
+// import type { ExcalidrawPlugin } from '@udecode/plate-excalidraw/react';
+import type { useMyEditor } from "@/components/editor/editor";
 import type { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import type { CodeBlockPlugin, CodeLinePlugin } from "@udecode/plate-code-block/react";
 import type { TCommentText } from "@udecode/plate-comments";
 import type { ElementOf, TElement, TText } from "@udecode/plate-common";
 import type { ParagraphPlugin } from "@udecode/plate-common/react";
-import type React from "react";
-// import type { TExcalidrawElement } from '@udecode/plate-excalidraw';
-// import type { ExcalidrawPlugin } from '@udecode/plate-excalidraw/react';
-import type { useMyEditor } from "@/components/editor/plate-editor";
 import type { HEADING_KEYS } from "@udecode/plate-heading";
 import type { HorizontalRulePlugin } from "@udecode/plate-horizontal-rule/react";
 import type { TLinkElement } from "@udecode/plate-link";
@@ -23,6 +22,7 @@ import type { TTableElement } from "@udecode/plate-table";
 import type { TableCellPlugin, TablePlugin, TableRowPlugin } from "@udecode/plate-table/react";
 import type { TToggleElement } from "@udecode/plate-toggle";
 import type { TogglePlugin } from "@udecode/plate-toggle/react";
+import type React from "react";
 
 /** Text */
 

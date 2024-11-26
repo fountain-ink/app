@@ -1,6 +1,6 @@
 "use client";
 
-import { createPlateEditor, Plate, PlateStoreProvider, usePlateEditor } from "@udecode/plate-common/react";
+import { Plate, PlateStoreProvider, createPlateEditor, usePlateEditor } from "@udecode/plate-common/react";
 import { usePathname } from "next/navigation";
 import { type PropsWithChildren, useRef } from "react";
 import { DndProvider } from "react-dnd";
@@ -12,8 +12,8 @@ import { FixedToolbarButtons } from "../ui/fixed-toolbar-buttons";
 import { FloatingToolbar } from "../ui/floating-toolbar";
 import { FloatingToolbarButtons } from "../ui/floating-toolbar-buttons";
 import { TocSideBar } from "../ui/toc-sidebar";
-import { getUiComponents } from "./plate-create-ui";
-import { getEditorPlugins } from "./plate-plugins";
+import { getEditorPlugins } from "./plugins";
+import { getUiComponents } from "./ui-components";
 
 export default function PlateEditor(
   props: PropsWithChildren & {
@@ -68,11 +68,7 @@ export default function PlateEditor(
             <CommentsPopover />
 
             <div className="absolute right-0 top-0 h-full w-4 select-none" />
-
-            {/* <SelectionOverlay containerRef={containerRef} /> */}
           </div>
-
-          {/* <SettingsDialog /> */}
         </Plate>
       </PlateStoreProvider>
     </DndProvider>

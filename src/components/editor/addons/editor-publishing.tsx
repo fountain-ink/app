@@ -5,7 +5,7 @@ import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { usePublishStore } from "@/hooks/use-publish-store";
 import { extractMetadata } from "@/lib/get-article-title";
 import { uploadMetadata } from "@/lib/upload-utils";
-import { article, MetadataAttributeType } from "@lens-protocol/metadata";
+import { MetadataAttributeType, article } from "@lens-protocol/metadata";
 import { SessionType, useCreatePost, useSession } from "@lens-protocol/react-web";
 import { useQueryClient } from "@tanstack/react-query";
 import { createPlateEditor, useEditorState } from "@udecode/plate-common/react";
@@ -15,9 +15,9 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
-import { getRawUiCompontents } from "./plate-create-ui";
-import { staticPlugins } from "./plate-plugins";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../ui/dialog";
+import { staticPlugins } from "../plugins";
+import { getRawUiCompontents } from "../ui-components";
 
 export const EditorPublishing = () => {
   const { data: session } = useSession();

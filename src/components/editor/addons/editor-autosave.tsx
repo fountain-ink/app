@@ -1,14 +1,13 @@
 "use client";
 
+import { Draft } from "@/components/draft/draft";
+import { LoadingSpinner } from "@/components/loading-spinner";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckIcon } from "lucide-react";
 import { useEditor } from "novel";
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { LoadingSpinner } from "../loading-spinner";
-
-import type { Draft } from "../draft/draft";
 
 export function AutoSave({ documentId, isLocal }: { documentId: string; isLocal?: boolean }) {
   const { editor } = useEditor();

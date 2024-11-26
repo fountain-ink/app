@@ -1,9 +1,9 @@
 "use client";
 
 import { SessionType, useSession } from "@lens-protocol/react-web";
-import { LoadingSpinner } from "../loading-spinner";
-import { Badge } from "../ui/badge";
-import { UserAuthorView } from "../user/user-author-view";
+import { LoadingSpinner } from "../../loading-spinner";
+import { Badge } from "../../ui/badge";
+import { UserAuthorView } from "../../user/user-author-view";
 
 export const EditorCollaborators = () => {
   const { data: session, loading, error } = useSession();

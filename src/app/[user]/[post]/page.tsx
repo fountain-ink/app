@@ -1,5 +1,5 @@
 import Markdown from "@/components/content/markdown";
-import Editor from "@/components/editor/plate-editor";
+import Editor from "@/components/editor/editor";
 import ErrorPage from "@/components/error-page";
 import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 import { sanitize } from "isomorphic-dompurify";

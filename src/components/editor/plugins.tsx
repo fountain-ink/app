@@ -38,9 +38,6 @@ import { SlashPlugin } from "@udecode/plate-slash-command/react";
 import { TableCellPlugin, TablePlugin } from "@udecode/plate-table/react";
 import { TogglePlugin } from "@udecode/plate-toggle/react";
 import { TrailingBlockPlugin } from "@udecode/plate-trailing-block";
-import Prism from "prismjs";
-
-// import { aiPlugins } from '@/example/ai-plugins';
 import { BlockContextMenu } from "@/components/ui/block-context-menu";
 import { ImageElement } from "@/components/ui/image-element";
 import { LinkFloatingToolbar } from "@/components/ui/link-floating-toolbar";
@@ -75,9 +72,10 @@ import { TableCellHeaderPlugin, TableRowPlugin } from "@udecode/plate-table/reac
 import { YjsPlugin } from "@udecode/plate-yjs/react";
 import { Path } from "slate";
 import { toast } from "sonner";
-import { autoformatRules } from "./plate-autoformat";
-import { NormalizePlugin } from "./plate-normalization";
-import { RenderAboveEditableYjs } from "./yjs-above-editable";
+import { autoformatRules } from "./plugins/editor-autoformat";
+import { NormalizePlugin } from "./plugins/plate-normalization";
+import Prism from "prismjs";
+import { RenderAboveEditableYjs } from "./plugins/yjs-above-editable";
 
 export const getEditorPlugins = (path: string, handle?: string, refreshToken?: string, readOnly?: boolean) => {
   const plugins = [...staticPlugins];
@@ -175,7 +173,6 @@ export const getEditorPlugins = (path: string, handle?: string, refreshToken?: s
 
 export const staticPlugins = [
   NormalizePlugin,
-  // Nodes
   HeadingPlugin.configure({
     options: { levels: 4 },
     handlers: {
@@ -201,14 +198,12 @@ export const staticPlugins = [
             const isNextSubtitle = nextNode?.[0]?.type === HEADING_KEYS.h2;
 
             if (!isNextSubtitle) {
-              // Insert a new subtitle node
               insertNodes(
                 editor,
                 { type: HEADING_KEYS.h2, children: [{ text: "" }] },
                 { at: Path.next(path), select: true },
               );
             } else {
-              // Focus on the existing subtitle
               editor.select(nextNode[1]);
               editor.collapse({ edge: "end" });
             }
@@ -216,7 +211,6 @@ export const staticPlugins = [
           }
 
           if (isSubtitle) {
-            // Insert a new paragraph
             insertNodes(
               editor,
               { type: ParagraphPlugin.key, children: [{ text: "" }] },
@@ -227,7 +221,6 @@ export const staticPlugins = [
           }
 
           if (isImage) {
-            // Insert a new paragraph
             insertNodes(
               editor,
               { type: ParagraphPlugin.key, children: [{ text: "" }] },
@@ -245,9 +238,6 @@ export const staticPlugins = [
   HorizontalRulePlugin,
   LinkPlugin.extend({
     render: { afterEditable: () => <LinkFloatingToolbar /> },
-  }),
-  ImagePlugin.extend({
-    // render: { afterEditable: ImagePreview },
   }),
   MediaEmbedPlugin,
   CaptionPlugin.configure({
@@ -353,7 +343,6 @@ export const staticPlugins = [
   ListPlugin,
   TodoListPlugin,
 
-  // Functionality
   AutoformatPlugin.configure({
     options: {
       enableUndoOnDelete: true,
