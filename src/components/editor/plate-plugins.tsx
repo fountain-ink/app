@@ -38,9 +38,6 @@ import { SlashPlugin } from "@udecode/plate-slash-command/react";
 import { TableCellPlugin, TablePlugin } from "@udecode/plate-table/react";
 import { TogglePlugin } from "@udecode/plate-toggle/react";
 import { TrailingBlockPlugin } from "@udecode/plate-trailing-block";
-import { BlockContextMenu } from "@/components/ui/block-context-menu";
-import { ImageElement } from "@/components/ui/image-element";
-import { LinkFloatingToolbar } from "@/components/ui/link-floating-toolbar";
 import { AlignPlugin } from "@udecode/plate-alignment/react";
 import { AutoformatPlugin } from "@udecode/plate-autoformat/react";
 import {
@@ -76,6 +73,9 @@ import { autoformatRules } from "./plugins/editor-autoformat";
 import Prism from "prismjs";
 import { RenderAboveEditableYjs } from "./plugins/yjs-above-editable";
 import { NormalizePlugin } from "./plugins/editor-normalization";
+import { LinkFloatingToolbar } from "../ui/link-floating-toolbar";
+import { ImageElement } from "../ui/image-element";
+import { BlockContextMenu } from "../ui/block-context-menu";
 
 export const getEditorPlugins = (path: string, handle?: string, refreshToken?: string, readOnly?: boolean) => {
   const plugins = [...staticPlugins];

@@ -68,7 +68,7 @@ export const EditorPublishing = () => {
       stripDataAttributes: true,
       preserveClassNames: [],
       stripWhitespace: true,
-      dndWrapper: (props) => <DndProvider context={window} backend={HTML5Backend} {...props} />,
+      dndWrapper: (props: any) => <DndProvider context={window} backend={HTML5Backend} {...props} />,
     });
 
     const contentMarkdown = editorState.api.markdown.serialize();
