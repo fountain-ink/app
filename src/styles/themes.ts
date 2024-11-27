@@ -95,6 +95,17 @@ type ThemeColors = {
   "--list-item-margin": string;
   "--list-item-spacing": string;
 
+  "--blockquote-font": string;
+  "--blockquote-weight": "100" | "200" | "300" | "400" | "500" | "600" | "800" | "900";
+  "--blockquote-style": "normal" | "italic";
+  "--blockquote-size": string;
+  "--blockquote-line-height": string;
+  "--blockquote-letter-spacing": string;
+  "--blockquote-color": string;
+  "--blockquote-margin": string;
+  "--blockquote-padding": string;
+  "--blockquote-border-width": string;
+  "--blockquote-border-color": string;
   "--strong-weight": "600" | "700" | "800" | "900";
 };
 
@@ -188,6 +199,18 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--list-indent": "1.5em",
     "--list-item-margin": "0.5em",
     "--list-item-spacing": "1.25em",
+
+    "--blockquote-font": "var(--paragraph-font)",
+    "--blockquote-weight": "400",
+    "--blockquote-style": "italic",
+    "--blockquote-size": "var(--paragraph-size)",
+    "--blockquote-line-height": "var(--paragraph-line-height)",
+    "--blockquote-letter-spacing": "var(--paragraph-letter-spacing)",
+    "--blockquote-color": "hsl(var(--foreground))",
+    "--blockquote-margin": "var(--paragraph-margin)",
+    "--blockquote-padding": "1rem",
+    "--blockquote-border-width": "4px",
+    "--blockquote-border-color": "hsl(var(--muted-foreground))",
 
     "--strong-weight": "700",
     "--date-font": "proxima-nova-wide",
