@@ -65,9 +65,9 @@ export const Draggable = withHOC(
             <div className={cn("slate-blockToolbar", "pointer-events-auto mr-0.5 flex items-center justify-center")}>
               <DraggableInsertHandle />
 
-              <div ref={handleRef}  data-key={mounted ? (element.id as string) : undefined}>
+              {/* <div ref={handleRef}  data-key={mounted ? (element.id as string) : undefined}>
                 <DragHandle />
-              </div>
+              </div> */}
             </div>
           </div>
         </Gutter>
