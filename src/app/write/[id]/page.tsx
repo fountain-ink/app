@@ -3,7 +3,7 @@ import Editor from "@/components/editor/editor";
 import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 import { getTokenFromCookie } from "@/lib/auth/get-token-from-cookie";
 import { getBaseUrl } from "@/lib/get-base-url";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 
 async function getDraft(id: string) {
   const isLocal = id.startsWith("local-");
@@ -33,9 +33,10 @@ async function getDraft(id: string) {
 export default async function WriteDraft({ params }: { params: { id: string } }) {
   const { refreshToken } = getTokenFromCookie();
   const { profileId, handle } = await getAuthWithCookies();
+  const pathname = headers().get('next-url') ?? undefined;
 
   return (
-    <Editor showToc refreshToken={refreshToken} handle={handle}>
+    <Editor showToc pathname={pathname} refreshToken={refreshToken} handle={handle}>
       <EditorPublishing />
     </Editor>
   );

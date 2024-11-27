@@ -17,7 +17,7 @@ import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../ui/dialog";
 import { staticPlugins } from "../plugins";
-import { getRawUiCompontents } from "../ui-components";
+import { getElements } from "../elements";
 
 export const EditorPublishing = () => {
   const { data: session } = useSession();
@@ -35,7 +35,7 @@ export const EditorPublishing = () => {
   const editor = useMemo(() => {
     return createPlateEditor({
       plugins: staticPlugins?.filter((plugin: any) => plugin?.key !== "toggle" && plugin?.key !== "blockSelection"),
-      override: { components: getRawUiCompontents() },
+      override: { components: getElements() },
     });
   }, []);
 

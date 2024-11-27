@@ -1,8 +1,7 @@
 "use client";
 
-import { Plate, PlateStoreProvider, createPlateEditor, usePlateEditor } from "@udecode/plate-common/react";
-import { usePathname } from "next/navigation";
-import { type PropsWithChildren, useRef } from "react";
+import { Plate, createPlateEditor } from "@udecode/plate-common/react";
+import type { PropsWithChildren } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { CommentsPopover } from "../ui/comments-popover";
@@ -12,8 +11,8 @@ import { FixedToolbarButtons } from "../ui/fixed-toolbar-buttons";
 import { FloatingToolbar } from "../ui/floating-toolbar";
 import { FloatingToolbarButtons } from "../ui/floating-toolbar-buttons";
 import { TocSideBar } from "../ui/toc-sidebar";
+import { getRichElements } from "./elements";
 import { getEditorPlugins } from "./plugins";
-import { getUiComponents } from "./ui-components";
 
 export default function PlateEditor(
   props: PropsWithChildren & {
@@ -23,17 +22,14 @@ export default function PlateEditor(
     handle?: string;
     readOnly?: boolean;
     value?: string;
+    pathname?: string;
   },
 ) {
-  const containerRef = useRef(null);
-  const editorRef = useRef(null);
-  const pathname = usePathname();
-  const documentId = pathname.split("/").at(-1) || "erroredDocumentId";
-
+  const documentId = props?.pathname?.split("/")?.at(-1) ?? "erroredDocumentId";
   const editor = createPlateEditor({
     plugins: [...getEditorPlugins(documentId, props.handle, props.refreshToken, props.readOnly)],
     override: {
-      components: getUiComponents(),
+      components: getRichElements(),
     },
     options: {},
     value: props.value ? JSON.parse(props.value) || "" : undefined,
@@ -41,45 +37,42 @@ export default function PlateEditor(
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <PlateStoreProvider>
-        <Plate editor={editor} readOnly={props.readOnly}>
-          <div ref={containerRef} data-plate-selectable="true">
-            {props.showToc && <TocSideBar className="top-[80px]" topOffset={30} />}
+      <Plate editor={editor} readOnly={props.readOnly}>
+        <div data-plate-selectable="true">
+          {props.showToc && <TocSideBar className="top-[80px]" topOffset={30} />}
 
-            {props.showToolbar && (
-              <FixedToolbar>
-                <FixedToolbarButtons />
-              </FixedToolbar>
-            )}
+          {props.showToolbar && (
+            <FixedToolbar>
+              <FixedToolbarButtons />
+            </FixedToolbar>
+          )}
 
-            {props.children}
+          {props.children}
 
-            <Editor
-              ref={editorRef}
-              className={"overflow-visible w-full max-w-full sm:max-w-3xl md:max-w-4xl p-10 sm:px-30 md:px-40 mx-auto"}
-              autoFocus
-              variant="fullWidth"
-            />
+          <Editor
+            className={"overflow-visible w-full max-w-full sm:max-w-3xl md:max-w-4xl p-10 sm:px-30 md:px-40 mx-auto"}
+            variant="fullWidth"
+            autoFocus
+          />
 
-            <FloatingToolbar>
-              <FloatingToolbarButtons />
-            </FloatingToolbar>
+          <FloatingToolbar>
+            <FloatingToolbarButtons />
+          </FloatingToolbar>
 
-            <CommentsPopover />
+          <CommentsPopover />
 
-            <div className="absolute right-0 top-0 h-full w-4 select-none" />
-          </div>
-        </Plate>
-      </PlateStoreProvider>
+          <div className="absolute right-0 top-0 h-full w-4 select-none" />
+        </div>
+      </Plate>
     </DndProvider>
   );
 }
 
-export const useMyEditor = () => {
-  return usePlateEditor({
-    plugins: [...getEditorPlugins("nopath")],
-    override: {
-      components: getUiComponents(),
-    },
-  });
-};
+// export const useMyEditor = () => {
+//   return usePlateEditor({
+//     plugins: [...getEditorPlugins("nopath")],
+//     override: {
+//       components: getRichElements(),
+//     },
+//   });
+// };

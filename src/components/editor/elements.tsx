@@ -59,11 +59,11 @@ import { KbdLeaf } from "../ui/kbd-leaf";
 import { ListElement } from "../ui/list-element";
 import { TodoListElement } from "../ui/todo-list-element";
 
-export const getUiComponents = () => {
-  return withPlaceholders(withDraggables(getRawUiCompontents()));
+export const getRichElements = () => {
+  return withPlaceholders(withDraggables(getElements()));
 };
 
-export const getRawUiCompontents = () => {
+export const getElements = () => {
   return {
     [DatePlugin.key]: DateElement,
     [SlashInputPlugin.key]: SlashInputElement,
