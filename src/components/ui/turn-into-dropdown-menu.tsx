@@ -9,33 +9,32 @@ import { CalloutPlugin } from "@udecode/plate-callout/react";
 import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
 import { ParagraphPlugin, focusEditor, useEditorRef, useSelectionFragmentProp } from "@udecode/plate-common/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
-import { INDENT_LIST_KEYS, ListStyleType } from "@udecode/plate-indent-list";
-import { TogglePlugin } from "@udecode/plate-toggle/react";
+import { INDENT_LIST_KEYS } from "@udecode/plate-indent-list";
 import {
-    ChevronDownIcon,
-    Code2Icon,
-    Columns3Icon,
-    Heading1Icon,
-    Heading2Icon,
-    LightbulbIcon,
-    ListIcon,
-    ListOrderedIcon,
-    PilcrowIcon,
-    QuoteIcon,
-    SquareIcon,
+  Code2Icon,
+  Columns3Icon,
+  Heading1Icon,
+  Heading2Icon,
+  LightbulbIcon,
+  ListIcon,
+  ListOrderedIcon,
+  PilcrowIcon,
+  QuoteIcon,
+  SquareIcon,
 } from "lucide-react";
 
 import { getBlockType, setBlockType } from "@/lib/transforms";
+import { BulletedListPlugin, NumberedListPlugin } from "@udecode/plate-list/react";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuLabel,
-    DropdownMenuPortal,
-    DropdownMenuRadioGroup,
-    DropdownMenuRadioItem,
-    DropdownMenuTrigger,
-    useOpenState,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+  useOpenState,
 } from "./dropdown-menu";
 import { ToolbarButton } from "./toolbar";
 
@@ -68,13 +67,13 @@ export const turnIntoItems = [
     icon: <ListIcon />,
     keywords: ["unordered", "ul", "-"],
     label: "Bulleted list",
-    value: ListStyleType.Disc,
+    value: BulletedListPlugin.key,
   },
   {
     icon: <ListOrderedIcon />,
     keywords: ["ordered", "ol", "1"],
     label: "Numbered list",
-    value: ListStyleType.Decimal,
+    value: NumberedListPlugin.key,
   },
   // {
   //   icon: <ChevronDownIcon />,
@@ -142,7 +141,6 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
                 focusEditor(editor);
               }}
             >
-
               {turnIntoItems.map(({ icon, label, value: itemValue }) => (
                 <DropdownMenuRadioItem key={itemValue} className="min-w-[180px] rounded-sm" value={itemValue}>
                   <div className="mr-2 flex size-5 items-center justify-center rounded-[4px] border border-foreground/15 bg-muted/50 p-0.5 text-subtle-foreground [&_svg]:size-3">
