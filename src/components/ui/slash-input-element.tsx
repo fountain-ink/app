@@ -1,7 +1,6 @@
 import { withRef } from "@udecode/cn";
 import { DatePlugin } from "@udecode/plate-date/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
-import { ListStyleType } from "@udecode/plate-indent-list";
 
 import {
   InlineCombobox,
@@ -156,9 +155,7 @@ const rules: SlashCommandRule[] = [
     value: "Bulleted list",
     description: "Add a bullet list.",
     onSelect: (editor) => {
-      editor.getTransforms(ListPlugin).toggle?.list({
-        type: ListStyleType.Disc,
-      });
+      editor.getTransforms(ListPlugin).toggle?.bulletedList();
     },
   },
   {

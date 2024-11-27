@@ -85,7 +85,8 @@
   color: var(--list-color);
   margin-top: var(--list-margin-top);
   margin-bottom: var(--list-margin-bottom);
-  padding-inline-start: 0;
+  padding-inline-start: 1.5rem;
+  /* padding-inline-end: 1.5rem; */
 }
 
 .article .todo-element {
@@ -98,7 +99,6 @@
   color: var(--list-color);
   margin-top: var(--list-margin-top);
   margin-bottom: var(--list-margin-bottom);
-  padding-inline-start: 0;
 }
 
 .article li {
@@ -109,7 +109,6 @@
   line-height: var(--list-line-height);
   letter-spacing: var(--list-letter-spacing);
   color: var(--list-color);
-  padding-inline-start: 0;
 }
 
 .article ul li::marker,

@@ -31,7 +31,6 @@ export default function PlateEditor(
     override: {
       components: getRichElements(),
     },
-    options: {},
     value: props.value ? JSON.parse(props.value) || "" : undefined,
   });
 
