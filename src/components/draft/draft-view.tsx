@@ -83,6 +83,7 @@ export const DraftView = ({
     <Link
       href={`/write/${draft.documentId}`}
       className="flex flex-row items-start justify-start gap-4 bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none relative w-full rounded-sm p-2"
+      prefetch
     >
       {options.showPreview && (
         <div className="h-48 w-48 aspect-square rounded-sm overflow-hidden">
