@@ -113,7 +113,7 @@ export function ImagePopover({ children, url }: ImagePopoverProps) {
 
           <CaptionButton variant="ghost">Caption</CaptionButton>
 
-          <Button size="sm" variant="ghost" {...buttonProps}>
+          <Button variant="ghost" {...buttonProps}>
             Remove
           </Button>
         </div>

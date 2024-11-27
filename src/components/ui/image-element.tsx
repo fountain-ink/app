@@ -73,7 +73,6 @@ export const ImageElement = withRef<typeof PlateElement>(
       }
     };
 
-    
     return (
       <ImagePopover url={url} plugin={ImagePlugin}>
         <PlateElement ref={ref} className={cn(className, width)} {...props}>
@@ -82,21 +81,26 @@ export const ImageElement = withRef<typeof PlateElement>(
               <div className={cn("rounded-sm relative ", focused && selected && "ring-2 ring-ring ")}>
                 {!readonly && (
                   <Button
-                    className="absolute inset-0 hover:bg-transparent group m-auto z-10"
+                    className="absolute inset-0 hover:bg-transparent m-auto z-10"
                     size="lg"
                     variant="ghost"
                     disabled={isUploading}
                   >
-                    <div className="relative flex gap-1 cursor-pointer items-center justify-center">
+                    <div className="relative flex gap-1 text-muted-foreground hover:text-foreground duration-300 transition-colors cursor-pointer items-center justify-center">
                       <input
+                        title=""
                         type="file"
                         accept="image/*"
                         onChange={handleFileSelect}
                         className="absolute inset-0 cursor-pointer opacity-0"
                         disabled={isUploading}
                       />
-                      {isUploading ? <LoadingSpinner /> : <>{!url && <UploadIcon className="size-4 mr-2" />}</>}
-                      <span>{isUploading ? "Uploading..." : "Upload Image"}</span>
+                      {isUploading ? (
+                        <LoadingSpinner />
+                      ) : (
+                        <>{!url && <UploadIcon className="size-5 mr-2 text-inherit" />}</>
+                      )}
+                      <span className="">{isUploading ? "Uploading..." : "Upload Image"}</span>
                     </div>
                   </Button>
                 )}
