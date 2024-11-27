@@ -22,8 +22,43 @@ import { type UseComboboxInputResult, useComboboxInput, useHTMLInputCursorState 
 import { type TElement, createPointRef, getPointBefore, insertText, moveSelection } from "@udecode/plate-common";
 import { findNodePath, useComposedRef, useEditorRef } from "@udecode/plate-common/react";
 import { type VariantProps, cva } from "class-variance-authority";
+import { AnimatePresence, motion } from "framer-motion";
+import { ScrollArea } from "./scroll-area";
 
 import { Ariakit } from "./menu";
+
+const menuAnimationVariants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.95,
+    height: 0,
+    transition: {
+      height: {
+        type: "spring",
+        stiffness: 300,
+        damping: 35,
+        mass: 0.8,
+      },
+      opacity: { duration: 0.2 },
+      scale: { duration: 0.2 },
+    },
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    height: "auto",
+    transition: {
+      height: {
+        type: "spring",
+        stiffness: 300,
+        damping: 35,
+        mass: 0.8,
+      },
+      opacity: { duration: 0.2 },
+      scale: { duration: 0.2 },
+    },
+  },
+};
 
 type FilterFn = (
   item: { value: string; group?: string; keywords?: string[]; label?: string },
@@ -199,7 +234,7 @@ const InlineComboboxInput = forwardRef<HTMLInputElement, HTMLAttributes<HTMLInpu
 InlineComboboxInput.displayName = "InlineComboboxInput";
 
 const comboboxVariants = cva(
-  "z-[500] mt-1 h-full max-h-[40vh] min-w-[180px] max-w-[calc(100vw-24px)] animate-popover overflow-y-auto rounded-lg bg-popover shadow-floating",
+  "z-[500] mt-1 min-w-[180px] max-w-[calc(100vw-24px)] animate-popover rounded-lg bg-popover p-1 shadow-floating",
   {
     defaultVariants: {
       variant: "default",
@@ -222,9 +257,25 @@ const InlineComboboxContent = ({
 }: Ariakit.ComboboxPopoverProps & VariantProps<typeof comboboxVariants>) => {
   return (
     <Ariakit.Portal>
-      <Ariakit.ComboboxPopover className={cn(comboboxVariants({ variant }), className)} {...props}>
-        {props.children}
-      </Ariakit.ComboboxPopover>
+      <AnimatePresence>
+        <Ariakit.ComboboxPopover {...props}>
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={menuAnimationVariants}
+            style={{
+              transformOrigin: "top",
+              willChange: "transform, opacity, height",
+            }}
+            className={cn(comboboxVariants({ variant }), className)}
+          >
+            <ScrollArea className="h-full max-h-[40vh]">
+              <div className="flex flex-col gap-1 max-h-[40vh]">{props.children}</div>
+            </ScrollArea>
+          </motion.div>
+        </Ariakit.ComboboxPopover>
+      </AnimatePresence>
     </Ariakit.Portal>
   );
 };
