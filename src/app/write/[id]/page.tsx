@@ -32,8 +32,8 @@ async function getDraft(id: string) {
 
 export default async function WriteDraft({ params }: { params: { id: string } }) {
   const { refreshToken } = getTokenFromCookie();
-  const { profileId, handle } = await getAuthWithCookies();
-  const pathname = headers().get('next-url') ?? undefined;
+  const { handle } = await getAuthWithCookies();
+  const pathname = headers().get("x-url") ?? undefined;
 
   return (
     <Editor showToc pathname={pathname} refreshToken={refreshToken} handle={handle}>

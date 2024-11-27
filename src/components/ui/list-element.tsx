@@ -1,17 +1,15 @@
 "use client";
 
-import React from "react";
-
 import { withRef, withVariants } from "@udecode/cn";
 import { cva } from "class-variance-authority";
 
 import { PlateElement } from "./plate-element";
 
-const listVariants = cva("m-0 ps-6", {
+const listVariants = cva("m-0 list-inside", {
   variants: {
     variant: {
-      ol: "list-decimal prose-p:my-0 prose-p:m-0",
-      ul: "list-disc [&_ul]:list-[circle] [&_ul_ul]:list-[square] prose-p:my-0 prose-p:m-0",
+      ol: "list-decimal ",
+      ul: "list-disc [&_ul]:list-[circle] [&_ul_ul]:list-[square] ",
     },
   },
 });
