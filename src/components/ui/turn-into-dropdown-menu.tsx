@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 
 import { getBlockType, setBlockType } from "@/lib/transforms";
-import { BulletedListPlugin, NumberedListPlugin } from "@udecode/plate-list/react";
+import { BulletedListPlugin, NumberedListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,7 +61,7 @@ export const turnIntoItems = [
     icon: <SquareIcon />,
     keywords: ["checklist", "task", "checkbox", "[]"],
     label: "To-do list",
-    value: INDENT_LIST_KEYS.todo,
+    value: TodoListPlugin.key
   },
   {
     icon: <ListIcon />,

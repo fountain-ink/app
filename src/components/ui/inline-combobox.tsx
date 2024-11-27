@@ -22,41 +22,8 @@ import { type UseComboboxInputResult, useComboboxInput, useHTMLInputCursorState 
 import { type TElement, createPointRef, getPointBefore, insertText, moveSelection } from "@udecode/plate-common";
 import { findNodePath, useComposedRef, useEditorRef } from "@udecode/plate-common/react";
 import { type VariantProps, cva } from "class-variance-authority";
-import { AnimatePresence, motion } from "framer-motion";
 
 import { Ariakit } from "./menu";
-const menuAnimationVariants = {
-  hidden: {
-    opacity: 0,
-    scale: 0.95,
-    height: 0,
-    transition: {
-      height: {
-        type: "spring",
-        stiffness: 300,
-        damping: 35,
-        mass: 0.8,
-      },
-      opacity: { duration: 0.2 },
-      scale: { duration: 0.2 },
-    },
-  },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    height: "auto",
-    transition: {
-      height: {
-        type: "spring",
-        stiffness: 300,
-        damping: 35,
-        mass: 0.8,
-      },
-      opacity: { duration: 0.2 },
-      scale: { duration: 0.2 },
-    },
-  },
-};
 
 type FilterFn = (
   item: { value: string; group?: string; keywords?: string[]; label?: string },
@@ -255,24 +222,9 @@ const InlineComboboxContent = ({
 }: Ariakit.ComboboxPopoverProps & VariantProps<typeof comboboxVariants>) => {
   return (
     <Ariakit.Portal>
-      <AnimatePresence>
-        <Ariakit.ComboboxPopover {...props}>
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            variants={menuAnimationVariants}
-            style={{
-              overflow: "hidden",
-              transformOrigin: "top",
-              willChange: "transform, opacity, height",
-            }}
-            className={cn(comboboxVariants({ variant }), className)}
-          >
-            {props.children}
-          </motion.div>
-        </Ariakit.ComboboxPopover>
-      </AnimatePresence>
+      <Ariakit.ComboboxPopover className={cn(comboboxVariants({ variant }), className)} {...props}>
+        {props.children}
+      </Ariakit.ComboboxPopover>
     </Ariakit.Portal>
   );
 };
