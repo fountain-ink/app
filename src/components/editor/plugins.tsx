@@ -350,20 +350,20 @@ export const staticPlugins = [
     },
   }),
 
-  BlockMenuPlugin.extend(({ api }) => ({
-    handlers: {
-      onMouseDown: ({ event, getOptions }) => {
-        // Prevent unset block selection when menu is closing
-        if (event.button === 0 && getOptions().openId) {
-          event.preventDefault();
-          api.blockMenu.hide();
-        }
-        if (event.button === 2) event.preventDefault();
-      },
-    },
-  })).configure({
-    render: { aboveEditable: BlockContextMenu },
-  }),
+  // BlockMenuPlugin.extend(({ api }) => ({
+  //   handlers: {
+  //     onMouseDown: ({ event, getOptions }) => {
+  //       // Prevent unset block selection when menu is closing
+  //       if (event.button === 0 && getOptions().openId) {
+  //         event.preventDefault();
+  //         api.blockMenu.hide();
+  //       }
+  //       if (event.button === 2) event.preventDefault();
+  //     },
+  //   },
+  // })).configure({
+  //   render: { aboveEditable: BlockContextMenu },
+  // }),
   DndPlugin.configure({ options: { enableScroller: true } }),
   EmojiPlugin,
   ExitBreakPlugin.configure({
