@@ -1,6 +1,6 @@
 "use client";
 
-import { Plate, createPlateEditor } from "@udecode/plate-common/react";
+import { Plate, createPlateEditor, usePlateEditor } from "@udecode/plate-common/react";
 import type { PropsWithChildren } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -67,11 +67,11 @@ export default function PlateEditor(
   );
 }
 
-// export const useMyEditor = () => {
-//   return usePlateEditor({
-//     plugins: [...getEditorPlugins("nopath")],
-//     override: {
-//       components: getRichElements(),
-//     },
-//   });
-// };
+export const useMyEditor = () => {
+  return usePlateEditor({
+    plugins: [...getEditorPlugins("nopath")],
+    override: {
+      components: getRichElements(),
+    },
+  });
+};
