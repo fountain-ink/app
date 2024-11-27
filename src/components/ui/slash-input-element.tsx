@@ -1,5 +1,4 @@
 import { withRef } from "@udecode/cn";
-import { DatePlugin } from "@udecode/plate-date/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
 
 import {
@@ -14,7 +13,6 @@ import { PlateElement } from "./plate-element";
 import type { PlateEditor } from "@udecode/plate-common/react";
 import { ImagePlugin } from "@udecode/plate-media/react";
 import {
-  CalendarIcon,
   Heading2Icon,
   HeadingIcon,
   ImageIcon,
@@ -23,7 +21,6 @@ import {
   ListOrderedIcon,
   PilcrowIcon,
   Radical,
-  TableIcon,
 } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 
@@ -40,15 +37,9 @@ import { ParagraphPlugin } from "@udecode/plate-common/react";
 import { insertEmptyCodeBlock } from "@udecode/plate-code-block";
 import { CodeIcon } from "lucide-react";
 
-import { insertColumnGroup } from "@udecode/plate-layout";
-import { LayoutIcon } from "lucide-react";
-
 import { insertBlock } from "@/lib/transforms";
-import { HorizontalRulePlugin } from "@udecode/plate-horizontal-rule/react";
 import { ListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
 import { EquationPlugin } from "@udecode/plate-math/react";
-import { insertTable } from "@udecode/plate-table/react";
-import { SeparatorHorizontalIcon } from "lucide-react";
 
 interface SlashCommandRule {
   icon: ComponentType<SVGProps<SVGSVGElement>>;
@@ -176,46 +167,46 @@ const rules: SlashCommandRule[] = [
       insertBlock(editor, TodoListPlugin.key);
     },
   },
-  {
-    icon: CalendarIcon,
-    keywords: ["inline", "date"],
-    description: "Add a date.",
-    value: "Date",
-    onSelect: (editor) => {
-      // editor.getTransforms(DatePlugin).insert.date();
-      insertBlock(editor, DatePlugin.key);
-    },
-  },
-  {
-    icon: LayoutIcon,
-    value: "Columns",
-    description: "Split the page into columns.",
-    keywords: ["column", "layout", "grid", "split"],
-    onSelect: (editor) => {
-      insertColumnGroup(editor);
-    },
-  },
-  {
-    icon: TableIcon,
-    value: "Table",
-    description: "Create a table for data.",
-    keywords: ["table", "data", "spreadsheet"],
-    onSelect: (editor) => {
-      insertTable(editor, {}, { select: true });
-    },
-  },
-  {
-    icon: SeparatorHorizontalIcon,
-    value: "Divider",
-    description: "Horizontal divider.",
-    keywords: ["divider", "separator", "hr", "horizontal rule", "line"],
-    onSelect: (editor) => {
-      insertEmptyElement(editor, HorizontalRulePlugin.key, {
-        nextBlock: true,
-        select: true,
-      });
-    },
-  },
+  // {
+  //   icon: CalendarIcon,
+  //   keywords: ["inline", "date"],
+  //   description: "Add a date.",
+  //   value: "Date",
+  //   onSelect: (editor) => {
+  //     // editor.getTransforms(DatePlugin).insert.date();
+  //     insertBlock(editor, DatePlugin.key);
+  //   },
+  // },
+  // {
+  //   icon: LayoutIcon,
+  //   value: "Columns",
+  //   description: "Split the page into columns.",
+  //   keywords: ["column", "layout", "grid", "split"],
+  //   onSelect: (editor) => {
+  //     insertColumnGroup(editor);
+  //   },
+  // },
+  // {
+  //   icon: TableIcon,
+  //   value: "Table",
+  //   description: "Create a table for data.",
+  //   keywords: ["table", "data", "spreadsheet"],
+  //   onSelect: (editor) => {
+  //     insertTable(editor, {}, { select: true });
+  //   },
+  // },
+  // {
+  //   icon: SeparatorHorizontalIcon,
+  //   value: "Divider",
+  //   description: "Horizontal divider.",
+  //   keywords: ["divider", "separator", "hr", "horizontal rule", "line"],
+  //   onSelect: (editor) => {
+  //     insertEmptyElement(editor, HorizontalRulePlugin.key, {
+  //       nextBlock: true,
+  //       select: true,
+  //     });
+  //   },
+  // },
 ];
 
 export const SlashInputElement = withRef<typeof PlateElement>(({ className, ...props }, ref) => {
