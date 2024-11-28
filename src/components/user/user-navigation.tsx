@@ -9,21 +9,21 @@ export const UserNavigation = ({ username, isUserProfile }: { username: string; 
 
   return (
     <div className="flex flex-row gap-4">
-      <Link href={`/${username}`}>
-        <Button variant={pathname === `/${username}` ? "secondary" : "ghost"} className="text-lg">
+      <Link href={`/${username}`} prefetch>
+        <Button variant={pathname === `/${username}` ? "ghost2" : "ghost"} className="">
           Published
         </Button>
       </Link>
 
-      <Link href={`/${username}/all`}>
-        <Button variant={pathname === `/${username}/all` ? "secondary" : "ghost"} className="text-lg">
+      <Link href={`/${username}/all`} prefetch>
+        <Button variant={pathname === `/${username}/all` ? "ghost2" : "ghost"} className="">
           All
         </Button>
       </Link>
 
       {isUserProfile && (
-        <Link href={`/${username}/drafts`}>
-          <Button variant={pathname === `/${username}/drafts` ? "secondary" : "ghost"} className="text-lg">
+        <Link href={`/${username}/drafts` } prefetch>
+          <Button variant={pathname === `/${username}/drafts` ? "ghost2" : "ghost"} className="">
             Drafts
           </Button>
         </Link>
