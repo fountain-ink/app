@@ -3,7 +3,7 @@ import { formatDate } from "@/lib/utils";
 import type { ArticleMetadataV3, Post, ProfileId } from "@lens-protocol/react-web";
 import Link from "next/link";
 import Markdown from "../content/markdown";
-import { UserAuthorView } from "../user/user-author-view";
+import { LazyAuthorView } from "../user/user-author-view";
 import { PostReactions } from "./post-reactions";
 
 interface PostViewOptions {
@@ -58,7 +58,7 @@ export const PostView = ({
           {options.showDate && <span className="text-sm font-[family-name:--date-font] ">{formattedDate}</span>}
           {options.showAuthor && (
             <div>
-              <UserAuthorView profileIds={authorIds} />
+              <LazyAuthorView profileIds={authorIds} />
             </div>
           )}
           {options.showTitle && title && (

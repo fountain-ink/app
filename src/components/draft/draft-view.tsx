@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { PastDateLabel } from "../content/date-label";
-import { UserAuthorView } from "../user/user-author-view";
+import { LazyAuthorView } from "../user/user-author-view";
 import type { Draft } from "./draft";
 import { DraftDeleteDialog } from "./draft-delete-dialog";
 import { DraftOptionsDropdown } from "./draft-options";
@@ -98,7 +98,7 @@ export const DraftView = ({
       )}
       <div className="p-2">
         {options.showDate && <PastDateLabel updatedAt={draft.updatedAt} />}
-        {options.showAuthor && authorId && <UserAuthorView profileIds={authorIds} />}
+        {options.showAuthor && authorId && <LazyAuthorView profileIds={authorIds} />}
         {options.showTitle && (
           <div
             className="text-2xl py-1 font-[family-name:--title-font] \

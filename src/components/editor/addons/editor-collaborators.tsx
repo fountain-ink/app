@@ -3,7 +3,7 @@
 import { SessionType, useSession } from "@lens-protocol/react-web";
 import { LoadingSpinner } from "../../loading-spinner";
 import { Badge } from "../../ui/badge";
-import { UserAuthorView } from "../../user/user-author-view";
+import { LazyAuthorView } from "../../user/user-author-view";
 
 export const EditorCollaborators = () => {
   const { data: session, loading, error } = useSession();
@@ -21,7 +21,7 @@ export const EditorCollaborators = () => {
 
   return (
     <div className="flex flex-row gap-4  justify-center items-center py-2">
-      <UserAuthorView profileIds={[session.profile.id]} />
+      <LazyAuthorView profileIds={[session.profile.id]} />
     </div>
   );
 };

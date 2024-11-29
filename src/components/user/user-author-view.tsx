@@ -1,7 +1,8 @@
-import { type ProfileId, useProfiles } from "@lens-protocol/react-web";
+import { type Profile, type ProfileId, useProfiles } from "@lens-protocol/react-web";
 import { UserAvatar } from "./user-avatar";
+import { ProfileFragment } from "@lens-protocol/client";
 
-export const UserAuthorView = ({
+export const LazyAuthorView = ({
   profileIds,
   showAvatar = true,
   showName = true,
@@ -33,6 +34,32 @@ export const UserAuthorView = ({
   }
   if (loading) return <span>Loading...</span>;
   if (error) return <span>Error loading profiles</span>;
+  if (!profiles || profiles.length === 0) return null;
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {profiles.map((profile) => (
+        <span key={profile.id} className="flex flex-row gap-2 items-center">
+          {showAvatar && <UserAvatar className="w-6 h-6" profile={profile} />}
+          {showName && <b className="text-foreground">{profile.metadata?.displayName}</b>}
+          {showHandle && <span className="text-foreground">@{profile.handle?.localName}</span>}
+        </span>
+      ))}
+    </div>
+  );
+};
+
+export const AuthorView = ({
+  profiles,
+  showAvatar = true,
+  showName = true,
+  showHandle = true,
+}: {
+  profiles: ProfileFragment[];
+  showAvatar?: boolean;
+  showName?: boolean;
+  showHandle?: boolean;
+}) => {
   if (!profiles || profiles.length === 0) return null;
 
   return (
