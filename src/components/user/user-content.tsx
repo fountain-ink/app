@@ -2,12 +2,12 @@
 
 import type { ProfileFragment } from "@lens-protocol/client";
 import {
-  appId,
-  type Profile,
-  type ProfileId,
-  PublicationMetadataMainFocusType,
-  PublicationType,
-  usePublications,
+    appId,
+    type Profile,
+    type ProfileId,
+    PublicationMetadataMainFocusType,
+    PublicationType,
+    usePublications,
 } from "@lens-protocol/react-web";
 import { toast } from "sonner";
 import ErrorPage from "../error-page";
@@ -69,7 +69,7 @@ export const UserContent = ({
           <PostView
             options={{
               showContent: false,
-              showAuthor: true,
+              showAuthor: false,
               showTitle: true,
               showSubtitle: true,
               showDate: true,
@@ -81,7 +81,7 @@ export const UserContent = ({
           />
         );
       }
-      
+
       return (
         <PostView
           options={{
