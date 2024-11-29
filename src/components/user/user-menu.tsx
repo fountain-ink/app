@@ -52,7 +52,7 @@ export const UserMenu = () => {
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent align="end" className="w-48">
-          <AnimatedMenuItem href={`/${handle}`} icon={UserIcon}>
+          <AnimatedMenuItem href={`/u/${handle}`} icon={UserIcon}>
             Profile
           </AnimatedMenuItem>
 

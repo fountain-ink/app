@@ -36,7 +36,7 @@ const replaceHandles = (content: string): string => {
     .replace(userHandleRegex, (match) => {
       const parts = match.slice(1).split("/");
       const handle = parts.length > 1 ? parts[1] : parts[0];
-      return `${BASE_URL}${handle}`;
+      return `${BASE_URL}/u/${handle}`;
     })
     .replace(communityHandleRegex, (match) => `${BASE_URL}c${match}`);
 };
