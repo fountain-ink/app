@@ -86,7 +86,7 @@ export const DraftView = ({
       prefetch
     >
       {options.showPreview && (
-        <div className="h-48 w-48 aspect-square rounded-sm overflow-hidden">
+        <div className="h-40 w-40 aspect-square rounded-sm overflow-hidden">
           {coverImage ? (
             <img src={coverImage} alt="Cover" className="w-full h-full object-cover" />
           ) : (
