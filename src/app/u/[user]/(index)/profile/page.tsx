@@ -2,6 +2,7 @@ import ErrorPage from "@/components/error-page";
 import { UserAvatar } from "@/components/user/user-avatar";
 import { UserContent } from "@/components/user/user-content";
 import { UserCover } from "@/components/user/user-cover";
+import { UserFollowButton } from "@/components/user/user-follow";
 import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
@@ -14,14 +15,17 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
   }
 
   return (
-    <div className="flex flex-col  ">
-      <UserCover className="w-screen md:max-w-[65vw] content-center justify-center" profile={profile} />
-      <div className="flex flex-row">
-        <div className="transform -translate-y-1/2 flex flex-col items-center justify-center">
-          <UserAvatar className="w-40 h-40" profile={profile} />
-        </div>
+    <div className="flex flex-col items-center">
+      <div className="w-screen md:w-[120%] md:max-w-3xl">
+        <UserCover profile={profile} />
       </div>
-      <UserContent contentType="all" profile={profile} />
+      <div className="w-full max-w-2xl flex flex-col">
+        <div className="flex justify-between p-4">
+          <UserAvatar className="transform -translate-y-1/2 w-40 h-40" profile={profile} />
+          <UserFollowButton profile={profile} />
+        </div>
+        <UserContent contentType="all" profile={profile} />
+      </div>
     </div>
   );
 };
