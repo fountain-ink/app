@@ -65,20 +65,28 @@ export const AuthorView = ({
 }) => {
   if (!profiles || profiles.length === 0) return null;
 
-  const conent =  <div className="flex flex-wrap gap-2">
+  const conent = (
+    <div className="flex flex-wrap gap-2">
       {profiles.map((profile) => {
-        const item = <span key={profile.id} className="flex flex-row gap-2 items-center">
-          {showAvatar && <UserAvatar className="w-6 h-6" profile={profile} />}
-          {showName && <b className="text-foreground">{profile.metadata?.displayName}</b>}
-          {showHandle && <span className="text-foreground">@{profile.handle?.localName}</span>}
-        </span>
+        const item = (
+          <span key={profile.id} className="flex flex-row gap-2 items-center">
+            {showAvatar && <UserAvatar className="w-6 h-6" profile={profile} />}
+            {showName && <span className="font-[family-name:--title-font]">{profile.metadata?.displayName}</span>}
+            {showHandle && <span className="">@{profile.handle?.localName}</span>}
+          </span>
+        );
         if (showCard) {
-          return <UserCard linkProfile handle={profile.handle?.localName }>{item}</UserCard>
+          return (
+            <UserCard linkProfile handle={profile.handle?.localName}>
+              {item}
+            </UserCard>
+          );
         }
 
-        return item
+        return item;
       })}
     </div>
+  );
 
-  return conent
+  return conent;
 };
