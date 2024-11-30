@@ -6,6 +6,9 @@ import { ThemeProvider } from "@/components/theme/theme-context";
 import { Toaster } from "@/components/ui/sonner";
 import { Web3Providers } from "@/components/web3-providers";
 
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
+
 import "@/styles/globals.css";
 import { cn } from "@udecode/cn";
 
@@ -17,7 +20,7 @@ export const metadata = {
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html lang="en">
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <head>
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" href="https://use.typekit.net/ybe1bqw.css" />

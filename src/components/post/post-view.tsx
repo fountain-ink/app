@@ -88,8 +88,8 @@ export const PostView = ({
           aria-label={`View post ${title}`}
         />
 
-        <div className="flex flex-row items-center justify-between">
-          <div className="flex flex-row items-center gap-4 text-sm font-[family-name:--date-font]">
+        <div className={"flex flex-row items-center justify-between text-sm tracking-wide"}>
+          <div className="flex flex-row items-center gap-4">
             {options.showDate && <span>{formattedDate}</span>}
             <PostReactions post={post} />
           </div>
