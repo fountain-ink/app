@@ -42,7 +42,7 @@ export const PostView = ({
   const { title, subtitle, coverImage } = extractMetadata(JSON.parse(contentJson?.value || "{}"));
 
   return (
-    <div className="flex flex-row items-start justify-start gap-4 bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 group border-0 shadow-none relative w-full rounded-sm p-4 h-48 max-w-[750px]">
+    <div className="flex flex-row items-start justify-start gap-4 bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 border-0 shadow-none relative w-full rounded-sm p-4 h-48 max-w-[750px]">
       {options.showPreview && (
         <div className="h-40 w-40 shrink-0 aspect-square rounded-sm overflow-hidden">
           {coverImage ? (

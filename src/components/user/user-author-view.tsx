@@ -1,6 +1,7 @@
-import { type Profile, type ProfileId, useProfiles } from "@lens-protocol/react-web";
-import { UserAvatar } from "./user-avatar";
 import { ProfileFragment } from "@lens-protocol/client";
+import { type ProfileId, useProfiles } from "@lens-protocol/react-web";
+import { UserAvatar } from "./user-avatar";
+import { UserCard } from "./user-card";
 
 export const LazyAuthorView = ({
   profileIds,
@@ -54,23 +55,30 @@ export const AuthorView = ({
   showAvatar = true,
   showName = true,
   showHandle = true,
+  showCard = true,
 }: {
   profiles: ProfileFragment[];
   showAvatar?: boolean;
   showName?: boolean;
   showHandle?: boolean;
+  showCard?: boolean;
 }) => {
   if (!profiles || profiles.length === 0) return null;
 
-  return (
-    <div className="flex flex-wrap gap-2">
-      {profiles.map((profile) => (
-        <span key={profile.id} className="flex flex-row gap-2 items-center">
+  const conent =  <div className="flex flex-wrap gap-2">
+      {profiles.map((profile) => {
+        const item = <span key={profile.id} className="flex flex-row gap-2 items-center">
           {showAvatar && <UserAvatar className="w-6 h-6" profile={profile} />}
           {showName && <b className="text-foreground">{profile.metadata?.displayName}</b>}
           {showHandle && <span className="text-foreground">@{profile.handle?.localName}</span>}
         </span>
-      ))}
+        if (showCard) {
+          return <UserCard linkProfile handle={profile.handle?.localName }>{item}</UserCard>
+        }
+
+        return item
+      })}
     </div>
-  );
+
+  return conent
 };

@@ -8,7 +8,14 @@ import { Badge } from "../ui/badge";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card";
 import { UserAvatar } from "./user-avatar";
 
-export const UserCard = ({ children, handle }: PropsWithChildren & { handle?: string }) => {
+import Link from "next/link";
+
+type UserCardProps = PropsWithChildren & {
+  handle?: string;
+  linkProfile?: boolean;
+};
+
+export const UserCard = ({ children, handle, linkProfile = false }: UserCardProps) => {
   const { error, loading, execute } = useLazyProfile();
   const [user, setUser] = useState<Profile | null>(null);
 
@@ -24,7 +31,9 @@ export const UserCard = ({ children, handle }: PropsWithChildren & { handle?: st
 
   return (
     <HoverCard defaultOpen={false} onOpenChange={(open: boolean) => open && loadCard()} closeDelay={100}>
-      <HoverCardTrigger asChild>{children}</HoverCardTrigger>
+      <HoverCardTrigger asChild>
+        {linkProfile && handle ? <Link href={`/u/${handle}/profile`}>{children}</Link> : children}
+      </HoverCardTrigger>
       <HoverCardContent className="w-full max-w-sm" side="top">
         {(loading || !user) && <LoadingSpinner />}
         {error && <div>Error: {error.message}</div>}
