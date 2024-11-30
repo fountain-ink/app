@@ -1,38 +1,45 @@
 import type { Post } from "@lens-protocol/react-web";
-import { Bookmark, Heart, MessageCircle, Repeat2 } from "lucide-react";
-import { ActionButton } from "./action-button";
-
-const reactions = [
-  {
-    icon: MessageCircle,
-    label: "Comment",
-    strokeColor: "hsl(var(--primary))",
-    fillColor: "hsl(var(--primary) / 0.8)",
-  },
-  {
-    icon: Heart,
-    label: "Like",
-    strokeColor: "rgb(215, 84, 127)",
-    fillColor: "rgba(215, 84, 127, 0.9)",
-  },
-] as const;
+import { Bookmark, Link, MoreHorizontal, Trash2 } from "lucide-react";
+import { ActionButton, DropdownItem } from "./action-button";
 
 export const PostMenu = ({ post }: { post: Post }) => {
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+  };
+
+  const handleDelete = () => {
+    // Implement delete functionality
+    console.log("Delete post:", post.id);
+  };
+
+  const dropdownItems: DropdownItem[] = [
+    {
+      icon: Link,
+      label: "Copy link",
+      onClick: handleCopyLink,
+    },
+    {
+      icon: Trash2,
+      label: "Delete post",
+      onClick: handleDelete,
+    },
+  ];
+
   return (
     <div className="flex flex-row gap-3 items-center justify-center">
       <ActionButton
-        icon={reactions[0].icon}
-        label={reactions[0].label}
-        initialCount={post.stats.comments}
-        strokeColor={reactions[0].strokeColor}
-        fillColor={reactions[0].fillColor}
+        icon={Bookmark}
+        label="Bookmark"
+        strokeColor="hsl(var(--primary))"
+        fillColor="hsl(var(--primary) / 0.8)"
       />
       <ActionButton
-        icon={reactions[1].icon}
-        label={reactions[1].label}
-        initialCount={post.stats.mirrors}
-        strokeColor={reactions[1].strokeColor}
-        fillColor={reactions[1].fillColor}
+        icon={MoreHorizontal}
+        label="More"
+        strokeColor="hsl(var(--muted-foreground))"
+        fillColor="hsl(var(--muted-foreground))"
+        dropdownItems={dropdownItems}
+        showChevron={false}
       />
     </div>
   );

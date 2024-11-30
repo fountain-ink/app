@@ -26,6 +26,7 @@ export type ActionButtonProps = {
   fillColor: string;
   dropdownItems?: DropdownItem[];
   className?: string;
+  showChevron?: boolean;
 };
 
 const ButtonHoverEffect = ({
@@ -101,6 +102,7 @@ export const ActionButton = ({
   fillColor,
   dropdownItems,
   className,
+  showChevron = true,
 }: ActionButtonProps) => {
   const [state, setState] = useState({
     isActive: false,
@@ -159,18 +161,20 @@ export const ActionButton = ({
                 <Icon {...iconProps} />
               </Button>
             </div>
-            <motion.div
-              initial={false}
-              animate={{ rotate: state.isActive ? 180 : 0 }}
-              transition={{ type: "spring", stiffness: 200, damping: 20, mass: 2 }}
-            >
-              <ChevronDown
-                size={16}
-                style={{
-                  color: state.isActive || state.isHovered ? strokeColor : undefined,
-                }}
-              />
-            </motion.div>
+            {showChevron && (
+              <motion.div
+                initial={false}
+                animate={{ rotate: state.isActive ? 180 : 0 }}
+                transition={{ type: "spring", stiffness: 200, damping: 20, mass: 2 }}
+              >
+                <ChevronDown
+                  size={16}
+                  style={{
+                    color: state.isActive || state.isHovered ? strokeColor : undefined,
+                  }}
+                />
+              </motion.div>
+            )}
           </DropdownMenuTrigger>
           <DropdownMenuContent align="center">
             {dropdownItems?.map((item) => (
