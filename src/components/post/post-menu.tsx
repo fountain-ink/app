@@ -17,7 +17,7 @@ const reactions = [
   },
 ] as const;
 
-export const PostReactions = ({ post }: { post: Post }) => {
+export const PostMenu = ({ post }: { post: Post }) => {
   return (
     <div className="flex flex-row gap-3 items-center justify-center">
       <ActionButton
