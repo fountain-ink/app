@@ -30,7 +30,7 @@ export async function CloudDraftsList({ profileId }: { profileId: string | null 
   }
 
   return (
-    <div className="space-y-4">
+    <>
       {cloudDrafts.map((draft: Draft) => (
         <DraftView
           key={draft.documentId}
@@ -39,6 +39,6 @@ export async function CloudDraftsList({ profileId }: { profileId: string | null 
           isLocal={false}
         />
       ))}
-    </div>
+    </>
   );
 }

@@ -11,9 +11,11 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
   }
 
   return  <div className="flex flex-col items-center justify-center ">
-    <div className="flex flex-col grow items-stretch justify-center w-full max-w-3xl sm:max-w-3xl">
+    <div className="flex flex-col grow items-stretch justify-center w-full">
       <h1 className="text-4xl font-bold text-center m-8">Drafts</h1>
+      <div className="flex flex-col my-4 gap-4">
       <CloudDraftsList profileId={profileId} />
+      </div>
     </div>
   </div>
 };
