@@ -1,8 +1,12 @@
 import { extractMetadata } from "@/lib/get-article-title";
-import { formatDate } from "@/lib/utils";
+import { formatDate, formatRelativeTime } from "@/lib/utils";
 import type { ArticleMetadataV3, Post, ProfileId } from "@lens-protocol/react-web";
 import Link from "next/link";
+import { useState } from "react";
 import Markdown from "../content/markdown";
+import { Draft } from "../draft/draft";
+import { DraftDeleteDialog } from "../draft/draft-delete-dialog";
+import { DraftOptionsDropdown } from "../draft/draft-options";
 import { LazyAuthorView } from "../user/user-author-view";
 import { PostMenu } from "./post-menu";
 import { PostReactions } from "./post-reactions";
@@ -17,13 +21,15 @@ interface PostViewOptions {
 }
 
 interface PostViewProps {
-  post: Post;
+  item: Post | Draft;
   authorIds: ProfileId[];
   options?: PostViewOptions;
+  isDraft?: boolean;
+  onDelete?: () => void;
 }
 
 export const PostView = ({
-  post,
+  item,
   authorIds,
   options = {
     showAuthor: true,
@@ -33,13 +39,31 @@ export const PostView = ({
     showPreview: true,
     showContent: true,
   },
+  isDraft = false,
+  onDelete,
 }: PostViewProps) => {
-  const metadata = post.metadata as ArticleMetadataV3;
-  const content = metadata?.content.slice(0, 100) || "";
-  const formattedDate = formatDate(post.createdAt);
-  const handle = post.by?.handle?.localName;
-  const contentJson = metadata?.attributes?.find((attr) => attr.key === "contentJson");
-  const { title, subtitle, coverImage } = extractMetadata(JSON.parse(contentJson?.value || "{}"));
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  let contentMarkdown: string;
+  let date: string;
+  let contentJson: string;
+  let handle: string;
+
+  if (isDraft) {
+    const draft = item as Draft;
+    handle = "";
+    date = draft.updatedAt;
+    contentMarkdown = "";
+    contentJson = draft.contentJson;
+  } else {
+    const post = item as Post;
+    const metadata = post?.metadata as ArticleMetadataV3;
+    date = post.createdAt;
+    handle = post.by?.handle?.localName || "";
+    contentMarkdown = metadata?.content.slice(0, 100) || "";
+    contentJson = metadata?.attributes?.find((attr) => attr.key === "contentJson")?.value || "{}";
+  }
+  const { title, subtitle, coverImage } = extractMetadata(isDraft ? contentJson : JSON.parse(contentJson));
 
   return (
     <div className="group/post flex flex-row items-start justify-start gap-4 bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 border-0 shadow-none relative w-full rounded-sm p-4 h-48 max-w-[750px]">
@@ -80,7 +104,7 @@ export const PostView = ({
           {options.showContent && (
             <div className="whitespace-normal truncate text-sm line-clamp-3 overflow-auto font-[family-name:--paragraph-font] font-[letter-spacing:var(--paragraph-letter-spacing)] font-[family-name:var(--paragraph-font) font-[var(--paragraph-weight)] font-[color:var(--paragraph-color)]">
               <Markdown
-                content={content}
+                content={contentMarkdown}
                 className="prose prose-sm sm:prose-base lg:prose-lg prose-headings:mt-0 prose-headings:mb-0 prose-p:my-0 prose-tight"
               />
             </div>
@@ -88,18 +112,33 @@ export const PostView = ({
         </div>
 
         <Link
-          href={`/u/${handle}/${post.id}`}
+          href={isDraft ? `/write/${(item as Draft).documentId}` : `/u/${handle}/${(item as Post).id}`}
           prefetch
           className="absolute inset-0"
-          aria-label={`View post ${title}`}
+          aria-label={`View ${isDraft ? "draft" : "post"} ${title}`}
         />
 
         <div className={"flex flex-row items-center justify-between text-sm tracking-wide"}>
           <div className="flex flex-row items-center gap-3">
-            {options.showDate && <span>{formattedDate}</span>}
-            <PostReactions post={post} />
+            {options.showDate && (
+              <span className="text-muted-foreground">
+                {isDraft ? <>Last updated {formatRelativeTime(date)}</> : formatDate(date)}
+              </span>
+            )}
+            {!isDraft && <PostReactions post={item as Post} />}
           </div>
-          <PostMenu post={post} />
+          {isDraft ? (
+            <>
+              <DraftOptionsDropdown onDeleteClick={() => setIsDeleteDialogOpen(true)} />
+              <DraftDeleteDialog
+                isOpen={isDeleteDialogOpen}
+                onClose={() => setIsDeleteDialogOpen(false)}
+                onConfirm={() => onDelete?.()}
+              />
+            </>
+          ) : (
+            <PostMenu post={item as Post} />
+          )}
         </div>
       </div>
     </div>

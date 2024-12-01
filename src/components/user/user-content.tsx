@@ -2,12 +2,12 @@
 
 import type { ProfileFragment } from "@lens-protocol/client";
 import {
-    appId,
-    type Profile,
-    type ProfileId,
-    PublicationMetadataMainFocusType,
-    PublicationType,
-    usePublications,
+  appId,
+  type Profile,
+  type ProfileId,
+  PublicationMetadataMainFocusType,
+  PublicationType,
+  usePublications,
 } from "@lens-protocol/react-web";
 import { toast } from "sonner";
 import ErrorPage from "../error-page";
@@ -51,7 +51,6 @@ export const UserContent = ({
       publicationTypes: [PublicationType.Post],
     },
   });
-  console.log(publications);
 
   if (loading || publicationsLoading) {
     return null;
@@ -77,7 +76,7 @@ export const UserContent = ({
             }}
             key={publication.id}
             authorIds={[publication.by.id]}
-            post={publication}
+            item={publication}
           />
         );
       }
@@ -94,7 +93,7 @@ export const UserContent = ({
           }}
           key={publication.id}
           authorIds={[publication.by.id]}
-          post={publication}
+          item={publication}
         />
       );
     }
