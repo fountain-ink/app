@@ -2,8 +2,6 @@
 
 import { withRef, withVariants } from "@udecode/cn";
 import { cva } from "class-variance-authority";
-
-import { motion } from "framer-motion";
 import { PlateElement } from "./plate-element";
 
 const headingVariants = cva("relative mb-1", {
@@ -24,7 +22,7 @@ const HeadingElementVariants = withVariants(PlateElement, headingVariants, ["var
 export const HeadingElement = withRef<typeof HeadingElementVariants>(({ children, variant = "h1", ...props }, ref) => {
   return (
     <HeadingElementVariants ref={ref} as={variant!} {...props}>
-      <motion.div layoutId="title">{children}</motion.div>
+      {children}
     </HeadingElementVariants>
   );
 });

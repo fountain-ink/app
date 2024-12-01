@@ -21,9 +21,7 @@ export const PageTransition = ({ children }: { children: React.ReactNode }) => {
         width: "100%",
       }}
     >
-      <LayoutGroup>
         {children}
-      </LayoutGroup>
     </motion.div>
   );
 };
