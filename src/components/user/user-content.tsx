@@ -2,18 +2,19 @@
 
 import type { ProfileFragment } from "@lens-protocol/client";
 import {
-  appId,
-  type Profile,
-  type ProfileId,
-  PublicationMetadataMainFocusType,
-  PublicationType,
-  usePublications,
+    appId,
+    type Profile,
+    type ProfileId,
+    PublicationMetadataMainFocusType,
+    PublicationType,
+    usePublications,
 } from "@lens-protocol/react-web";
 import { toast } from "sonner";
 import ErrorPage from "../error-page";
 import { WriteMenu } from "../navigation/write-menu";
 import { PostView } from "../post/post-view";
-import { Card, CardFooter, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardFooter, CardHeader } from "../ui/card";
+import { motion } from "framer-motion";
 
 export const UserContent = ({
   profile,
@@ -114,5 +115,15 @@ export const UserContent = ({
     );
   }
 
-  return <>{posts}</>;
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="flex flex-col gap-4"
+    >
+      {posts}
+    </motion.div>
+  );
 };

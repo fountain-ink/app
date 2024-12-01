@@ -1,6 +1,7 @@
 import { extractMetadata } from "@/lib/get-article-title";
 import { formatDate, formatRelativeTime } from "@/lib/utils";
 import type { ArticleMetadataV3, Post, ProfileId } from "@lens-protocol/react-web";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
 import Markdown from "../content/markdown";
@@ -93,9 +94,12 @@ export const PostView = ({
             </div>
           )}
           {options.showTitle && title && (
-            <div className="text-2xl font-[letter-spacing:var(--title-letter-spacing)] font-[family-name:var(--title-font)] font-[var(--title-weight)] font-[color:var(--title-color)] line-clamp-2">
+            <motion.div
+              layoutId={"title"}
+              className="text-2xl font-[letter-spacing:var(--title-letter-spacing)] font-[family-name:var(--title-font)] font-[var(--title-weight)] font-[color:var(--title-color)] line-clamp-2"
+            >
               {title}
-            </div>
+            </motion.div>
           )}
           {options.showSubtitle && subtitle !== "" && (
             <div className="text-lg font-[family-name:--subtitle-font] text-muted-foreground line-clamp-2">
