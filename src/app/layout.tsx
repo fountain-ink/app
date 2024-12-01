@@ -1,16 +1,13 @@
 import { CookieManager } from "@/components/auth/cookie-manager";
 import { Blur } from "@/components/navigation/gradient-blur";
 import { Header } from "@/components/navigation/header";
-import { SmoothScroll } from "@/components/smooth-scroll";
 import { ThemeProvider } from "@/components/theme/theme-context";
 import { Toaster } from "@/components/ui/sonner";
 import { Web3Providers } from "@/components/web3-providers";
-
-import { GeistSans } from 'geist/font/sans';
-import { GeistMono } from 'geist/font/mono';
-
 import "@/styles/globals.css";
 import { cn } from "@udecode/cn";
+import { GeistMono } from "geist/font/mono";
+import { GeistSans } from "geist/font/sans";
 
 export const metadata = {
   title: "Fountain",
@@ -27,20 +24,14 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         <script defer src="https://stats.kualta.dev/script.js" data-website-id="7bdb552a-61f0-47f6-839e-11a53444dfc0" />
         <script defer src="https://stats.kualta.dev/script.js" data-website-id="42c57186-3cbd-4221-91e1-083ccb710ae8" />
       </head>
-      <body
-        className={cn(
-          "overflow-x-hidden scroll-smooth text-clip bg-background text-foreground min-h-dvh",
-        )}
-      >
+      <body className={cn("overflow-x-hidden scroll-smooth text-clip bg-background text-foreground min-h-dvh")}>
         <Web3Providers>
           <ThemeProvider>
-            <SmoothScroll>
-              <CookieManager />
-              <Toaster position="top-center" offset={16} />
-              <Header />
-              <Blur />
-              {children}
-            </SmoothScroll>
+            <CookieManager />
+            <Toaster position="top-center" offset={16} />
+            <Header />
+            <Blur />
+            {children}
           </ThemeProvider>
         </Web3Providers>
       </body>

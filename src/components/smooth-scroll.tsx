@@ -5,7 +5,7 @@ import { type ReactNode, useEffect, useRef } from "react";
 
 export const SmoothScroll = ({
   children,
-  speed = 0.1,
+  speed = 0.08,
 }: {
   children: ReactNode;
   speed?: number;
@@ -67,15 +67,5 @@ export const SmoothScroll = ({
     };
   }, [speed, isSmoothScrolling]);
 
-  if (!isSmoothScrolling || document.getElementById("scroll_container")) {
-    return <>{children}</>;
-  }
-
-  return (
-    <div ref={scrollContainerRef} className="h-screen overflow-hidden">
-      <div ref={smoothScrollRef} className="smooth-scroll">
-        {children}
-      </div>
-    </div>
-  );
+  return <>{children}</>;
 };
