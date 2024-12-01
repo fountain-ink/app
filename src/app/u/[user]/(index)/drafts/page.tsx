@@ -16,7 +16,6 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
       <CloudDraftsList profileId={profileId} />
     </div>
   </div>
-;
 };
 
 export default UserPage;

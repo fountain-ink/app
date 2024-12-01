@@ -25,6 +25,8 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
   if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
     return <NewLocalDraftButton />;
   }
+  
+  const handle = session?.profile.handle?.localName
 
   return (
     <DropdownMenu>
@@ -36,7 +38,7 @@ export const WriteMenu = ({ text = "Write" }: { text?: string }) => {
           <DropdownMenuItem asChild>
             <RemoteDraftCreate />
           </DropdownMenuItem>
-          <AnimatedMenuItem href="/drafts" icon={SquarePenIcon}>
+          <AnimatedMenuItem href={`/u/${handle}/drafts`} icon={SquarePenIcon}>
             Drafts
           </AnimatedMenuItem>
         </DropdownMenuContent>
