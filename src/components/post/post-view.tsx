@@ -42,11 +42,17 @@ export const PostView = ({
   const { title, subtitle, coverImage } = extractMetadata(JSON.parse(contentJson?.value || "{}"));
 
   return (
-    <div className="flex flex-row items-start justify-start gap-4 bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 border-0 shadow-none relative w-full rounded-sm p-4 h-48 max-w-[750px]">
+    <div className="group/post flex flex-row items-start justify-start gap-4 bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 border-0 shadow-none relative w-full rounded-sm p-4 h-48 max-w-[750px]">
       {options.showPreview && (
         <div className="h-40 w-40 shrink-0 aspect-square rounded-sm overflow-hidden">
           {coverImage ? (
-            <img src={coverImage} alt="Cover" className="w-full h-full object-cover" />
+            <div className="h-full w-full overflow-hidden">
+              <img
+                src={coverImage}
+                alt="Cover"
+                className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover/post:scale-110"
+              />
+            </div>
           ) : (
             <div className="h-full w-auto relative">
               <div className="placeholder-background rounded-sm" />
