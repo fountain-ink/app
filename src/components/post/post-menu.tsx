@@ -1,3 +1,4 @@
+import { useProfileId } from "@/hooks/use-profile-id";
 import type { Post } from "@lens-protocol/react-web";
 import { Bookmark, Link, MoreHorizontal, Trash2 } from "lucide-react";
 import { ActionButton, type DropdownItem } from "./action-button";
@@ -6,6 +7,9 @@ export const PostMenu = ({ post }: { post: Post }) => {
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
   };
+
+  const profileId = useProfileId();
+  const isUserPost = post.by?.id === profileId;
 
   const handleDelete = () => {
     // Implement delete functionality
@@ -18,11 +22,15 @@ export const PostMenu = ({ post }: { post: Post }) => {
       label: "Copy link",
       onClick: handleCopyLink,
     },
-    {
-      icon: Trash2,
-      label: "Delete post",
-      onClick: handleDelete,
-    },
+    ...(isUserPost
+      ? [
+          {
+            icon: Trash2,
+            label: "Delete post",
+            onClick: handleDelete,
+          },
+        ]
+      : []),
   ];
 
   return (
