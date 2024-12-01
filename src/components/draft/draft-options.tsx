@@ -1,24 +1,34 @@
-import { MoreVertical, TrashIcon } from "lucide-react";
-import { Button } from "../ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { Link, MoreHorizontal, Trash2 } from "lucide-react";
+import { ActionButton, type DropdownItem } from "../post/action-button";
 
-export const DraftOptionsDropdown = ({ onDeleteClick }: { onDeleteClick: () => void }) => (
-  <DropdownMenu>
-    <DropdownMenuTrigger asChild>
-      <Button
-        variant="ghost"
-        className="hover:bg-transparent hover:text-card-foreground opacity-0 group-hover:opacity-100
-            			 data-[state=open]:opacity-100 transition-all ease-in duration-100"
-        size="icon"
-      >
-        <MoreVertical className="h-5 w-5" />
-      </Button>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent onClick={(e) => e.stopPropagation()} className="text-base">
-      <DropdownMenuItem onClick={onDeleteClick} className="flex gap-2 items-center">
-        <TrashIcon className="h-5 w-5" />
-        Delete draft
-      </DropdownMenuItem>
-    </DropdownMenuContent>
-  </DropdownMenu>
-);
+export const DraftOptionsDropdown = ({ onDeleteClick }: { onDeleteClick: () => void }) => {
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+  };
+
+  const dropdownItems: DropdownItem[] = [
+    {
+      icon: Link,
+      label: "Copy link",
+      onClick: handleCopyLink,
+    },
+    {
+      icon: Trash2,
+      label: "Delete",
+      onClick: onDeleteClick,
+    },
+  ];
+
+  return (
+    <div className="flex flex-row gap-3 items-center justify-center">
+      <ActionButton
+        icon={MoreHorizontal}
+        label="More"
+        strokeColor="hsl(var(--muted-foreground))"
+        fillColor="hsl(var(--muted-foreground))"
+        dropdownItems={dropdownItems}
+        showChevron={false}
+      />
+    </div>
+  );
+};

@@ -63,6 +63,7 @@ export const PostView = ({
     contentMarkdown = metadata?.content.slice(0, 100) || "";
     contentJson = metadata?.attributes?.find((attr) => attr.key === "contentJson")?.value || "{}";
   }
+  
   const { title, subtitle, coverImage } = extractMetadata(isDraft ? contentJson : JSON.parse(contentJson));
 
   return (
