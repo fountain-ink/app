@@ -1,17 +1,9 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-
 import { useStorage } from "@/hooks/use-storage";
 
-export const Blur = () => {
-  const pathname = usePathname();
-
+export const GradientBlur = () => {
   const { isBlurEnabled } = useStorage();
-
-  if (pathname !== "/" && !pathname.startsWith("/p")) {
-    return null;
-  }
 
   if (!isBlurEnabled) {
     return null;

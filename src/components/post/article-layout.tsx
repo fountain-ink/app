@@ -1,5 +1,6 @@
 import "@/styles/article.css";
 import { SmoothScroll } from "../smooth-scroll";
+import { GradientBlur } from "../navigation/gradient-blur";
 
 export const ArticleLayout = async ({ children }: { children: React.ReactNode }) => {
   return (

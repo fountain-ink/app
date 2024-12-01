@@ -1,11 +1,13 @@
 import { GraphicHand, GraphicInk } from "@/components/custom-icons";
 import { EmailSubscription } from "@/components/email-subscription";
+import { GradientBlur } from "@/components/navigation/gradient-blur";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { proseClasses } from "@/styles/prose";
 
 export default function HomePage() {
   return (
     <SmoothScroll>
+      <GradientBlur />
       <main className="flex flex-col items-center h-screen overflow-y-auto" id={"scroll_container"}>
         <div className="flex flex-col gap-12 px-4 py-16 mb-20 max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl">
           <div className={proseClasses}>

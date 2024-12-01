@@ -1,5 +1,4 @@
 import { CookieManager } from "@/components/auth/cookie-manager";
-import { Blur } from "@/components/navigation/gradient-blur";
 import { Header } from "@/components/navigation/header";
 import { ThemeProvider } from "@/components/theme/theme-context";
 import { Toaster } from "@/components/ui/sonner";
@@ -30,7 +29,6 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
             <CookieManager />
             <Toaster position="top-center" offset={16} />
             <Header />
-            <Blur />
             {children}
           </ThemeProvider>
         </Web3Providers>
