@@ -107,7 +107,7 @@ type ThemeColors = {
   "--blockquote-border-width": string;
   "--blockquote-border-color": string;
   "--strong-weight": "600" | "700" | "800" | "900";
-  
+
   "--code-block-background": string;
   "--code-block-color": string;
   "--code-block-font": string;
@@ -217,13 +217,13 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--blockquote-line-height": "var(--paragraph-line-height)",
     "--blockquote-letter-spacing": "var(--paragraph-letter-spacing)",
     "--blockquote-color": "hsl(var(--foreground))",
-    "--blockquote-margin": "var(--paragraph-margin)",
+    "--blockquote-margin": "2rem",
     "--blockquote-padding": "1rem",
     "--blockquote-border-width": "4px",
     "--blockquote-border-color": "hsl(var(--muted-foreground))",
 
     "--strong-weight": "700",
-    
+
     "--code-block-background": "hsl(var(--muted))",
     "--code-block-color": "hsl(var(--foreground))",
     "--code-block-font": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
@@ -233,7 +233,7 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--code-block-border-radius": "0.5rem",
     "--code-block-margin": "1.5rem",
     "--code-block-border": "1px solid hsl(var(--border))",
-    
+
     "--date-font": "proxima-nova-wide",
   },
 };
