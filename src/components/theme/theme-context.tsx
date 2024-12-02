@@ -1,21 +1,22 @@
 "use client";
 
-import { type ThemeType, globalThemes } from "@/styles/themes";
-import { type PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
-
 import { useStorage } from "@/hooks/use-storage";
-
-import { defaultTheme, isValidTheme } from "@/styles/themes";
+import setGlobalColorTheme, { type ThemeType, defaultTheme, isValidTheme } from "@/styles/themes";
+import { useTheme as useNextTheme } from "next-themes";
+import { type PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 
 interface ThemeContextType {
   theme: ThemeType;
   setTheme: (theme: ThemeType) => void;
+  isMounted: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: PropsWithChildren) => {
+  const { theme: nextTheme } = useNextTheme();
   const { theme: storedTheme, setTheme: setStoredTheme } = useStorage();
+  const [isMounted, setIsMounted] = useState(false);
 
   const [theme, setTheme] = useState<ThemeType>(() => {
     const initialTheme = isValidTheme(storedTheme) ? storedTheme : defaultTheme;
@@ -23,30 +24,22 @@ export const ThemeProvider = ({ children }: PropsWithChildren) => {
   });
 
   useEffect(() => {
-    console.log("Theme changed to:", theme);
     const root = document.documentElement;
-    if (!root) {
-      console.error("Document root element not found");
-      return;
-    }
+    if (!root) return;
 
-    const themeStyles = globalThemes[theme];
-    if (!themeStyles) {
-      console.error("Theme styles not found for theme:", theme);
-      return;
-    }
+    setGlobalColorTheme(nextTheme as "light" | "dark", theme);
+    setStoredTheme(theme);
 
-    for (const [property, value] of Object.entries(themeStyles)) {
-      if (typeof value === "string") {
-        root.style.setProperty(property, value);
-      } else {
-        console.warn(`Invalid value for property ${property}:`, value);
-      }
+    if (!isMounted) {
+      setIsMounted(true);
     }
-  }, [theme]);
+  }, [theme, nextTheme, isMounted, setStoredTheme]);
 
-  const contextValue = { theme, setTheme };
-  console.log("Providing theme context:", contextValue);
+  if (!isMounted) {
+    return null;
+  }
+
+  const contextValue = { theme, setTheme, isMounted };
 
   return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
 };
@@ -54,13 +47,7 @@ export const ThemeProvider = ({ children }: PropsWithChildren) => {
 export const useTheme = (): ThemeContextType => {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    console.error("useTheme was called outside of ThemeProvider");
-    return {
-      theme: defaultTheme,
-      setTheme: () => {
-        console.warn("setTheme called outside of ThemeProvider, no effect");
-      },
-    };
+    throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
 };
