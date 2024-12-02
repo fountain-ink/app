@@ -7,6 +7,7 @@ import "@/styles/globals.css";
 import { cn } from "@udecode/cn";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
+import { ThemeProvider as DarkModeProvider } from "next-themes";
 
 export const metadata = {
   title: "Fountain",
@@ -16,7 +17,10 @@ export const metadata = {
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en" suppressHydrationWarning className={cn(
+        GeistSans.variable,
+        GeistMono.variable,
+      )}>
       <head>
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" href="https://use.typekit.net/ybe1bqw.css" />
@@ -25,12 +29,19 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       </head>
       <body className={cn("overflow-x-hidden scroll-smooth text-clip bg-background text-foreground min-h-dvh")}>
         <Web3Providers>
-          <ThemeProvider>
-            <CookieManager />
-            <Toaster position="top-center" offset={16} />
-            <Header />
-            {children}
-          </ThemeProvider>
+          <DarkModeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <ThemeProvider>
+              <CookieManager />
+              <Toaster position="top-center" offset={16} />
+              <Header />
+              {children}
+            </ThemeProvider>
+          </DarkModeProvider>
         </Web3Providers>
       </body>
     </html>

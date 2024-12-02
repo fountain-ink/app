@@ -4,7 +4,7 @@ import type { ArticleMetadataV3, Post, ProfileId } from "@lens-protocol/react-we
 import Link from "next/link";
 import { useState } from "react";
 import Markdown from "../content/markdown";
-import { Draft } from "../draft/draft";
+import type { Draft } from "../draft/draft";
 import { DraftDeleteDialog } from "../draft/draft-delete-dialog";
 import { DraftOptionsDropdown } from "../draft/draft-options";
 import { LazyAuthorView } from "../user/user-author-view";
@@ -63,7 +63,6 @@ export const PostView = ({
     contentMarkdown = metadata?.content.slice(0, 100) || "";
     contentJson = metadata?.attributes?.find((attr) => attr.key === "contentJson")?.value || "{}";
   }
-  
   const { title, subtitle, coverImage } = extractMetadata(isDraft ? contentJson : JSON.parse(contentJson));
 
   return (

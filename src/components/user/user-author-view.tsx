@@ -1,4 +1,4 @@
-import { ProfileFragment } from "@lens-protocol/client";
+import type { ProfileFragment } from "@lens-protocol/client";
 import { type ProfileId, useProfiles } from "@lens-protocol/react-web";
 import { UserAvatar } from "./user-avatar";
 import { UserCard } from "./user-card";

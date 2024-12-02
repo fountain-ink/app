@@ -119,16 +119,6 @@ p.first-paragraph {
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
 .placeholder-background {
   background-image: url("/images/placeholder-tile.svg");
   background-repeat: repeat;

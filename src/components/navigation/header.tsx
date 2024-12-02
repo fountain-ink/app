@@ -7,6 +7,7 @@ import { ThemeSidebar } from "../theme/theme-editor";
 import { UserMenu } from "../user/user-menu";
 import { PublishMenu } from "./publish-menu";
 import { WriteMenu } from "./write-menu";
+import { ThemeToggle } from "../theme/theme-toggle";
 
 export const Header = () => {
   const pathname = usePathname();
@@ -32,6 +33,7 @@ export const Header = () => {
         <FountainLogo />
       </Link>
       <div className="flex gap-4 pointer-events-auto">
+        <ThemeToggle />
         {isWritePage && <ThemeSidebar />}
         {isWritePage && <PublishMenu />}
         {!isWritePage && <WriteMenu />}
