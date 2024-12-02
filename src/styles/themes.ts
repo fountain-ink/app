@@ -1,10 +1,10 @@
-export const themeNames = ["editorial"] as const;
+export const themeNames = ["editorial", "romantic"] as const;
 export type ThemeType = (typeof themeNames)[number];
 
 export const isValidTheme = (theme: unknown): theme is ThemeType =>
   typeof theme === "string" && themeNames.includes(theme as ThemeType);
 
-export const defaultTheme = themeNames[0];
+export const defaultThemeName = themeNames[0];
 
 type SharedVariables = {
   "--title-font": string;
@@ -124,6 +124,138 @@ type ColorTheme = {
 };
 
 export const globalThemes: Record<ThemeType, ColorTheme> = {
+  romantic: {
+    light: {
+      "--card": "350 20% 99%",
+      "--popover": "350 20% 99%",
+      "--destructive": "0 84.2% 60.2%",
+      "--border": "350 31.8% 91.4%",
+      "--input": "350 31.8% 91.4%",
+      "--ring": "350 84% 4.9%",
+      "--card-foreground": "350 84% 4.9%",
+      "--popover-foreground": "350 84% 4.9%",
+      "--primary": "350 18% 20%",
+      "--primary-foreground": "350 40% 98%",
+      "--secondary": "350 20% 66%",
+      "--secondary-foreground": "350 47.4% 99.2%",
+      "--muted": "350 20% 90%",
+      "--muted-foreground": "350 20% 56%",
+      "--destructive-foreground": "350 40% 98%",
+      "--foreground": "350 20% 11%",
+      "--background": "350 20% 96%",
+      "--accent": "350 20% 90%",
+      "--accent-foreground": "350 47.4% 11.2%",
+    },
+    dark: {
+      "--card": "350 20% 3.9%",
+      "--popover": "350 20% 3.9%",
+      "--destructive": "0 84.2% 60.2%",
+      "--border": "350 31.8% 20%",
+      "--input": "350 31.8% 20%",
+      "--ring": "350 84% 4.9%",
+      "--card-foreground": "350 20% 98%",
+      "--popover-foreground": "350 20% 98%",
+      "--primary": "350 18% 80%",
+      "--primary-foreground": "350 40% 2%",
+      "--secondary": "350 20% 33%",
+      "--secondary-foreground": "350 47.4% 0.8%",
+      "--muted": "350 20% 15%",
+      "--muted-foreground": "350 20% 64%",
+      "--destructive-foreground": "350 40% 98%",
+      "--foreground": "350 20% 98%",
+      "--background": "350 20% 3.9%",
+      "--accent": "350 20% 15%",
+      "--accent-foreground": "350 20% 98%",
+    },
+    shared: {
+      "--radius": "1.2rem",
+      "--title-font": "plantin",
+      "--title-weight": "300",
+      "--title-style": "italic",
+      "--title-align": "center",
+      "--title-size": "4rem",
+      "--title-line-height": "4rem",
+      "--title-letter-spacing": "-0.075rem",
+      "--title-color": "hsl(var(--foreground))",
+      "--title-margin": "3rem",
+
+      "--subtitle-font": "plantin",
+      "--subtitle-weight": "400",
+      "--subtitle-style": "italic",
+      "--subtitle-size": "1.5rem",
+      "--subtitle-line-height": "1.4",
+      "--subtitle-letter-spacing": "-0.5px",
+      "--subtitle-color": "hsl(var(--muted-foreground))",
+      "--subtitle-margin": "2rem",
+      "--subtitle-align": "center",
+
+      "--header-font": "plantin",
+      "--header-weight": "500",
+      "--header-style": "italic",
+      "--header-size": "1.75rem",
+      "--header-line-height": "1.2",
+      "--header-letter-spacing": "-0.01em",
+      "--header-color": "hsl(var(--foreground))",
+      "--header-margin": "2rem",
+      "--header-align": "left",
+
+      "--paragraph-font": "plantin",
+      "--paragraph-weight": "400",
+      "--paragraph-style": "normal",
+      "--paragraph-size": "1.25rem",
+      "--paragraph-line-height": "1.7",
+      "--paragraph-letter-spacing": "-1%",
+      "--paragraph-color": "hsl(var(--foreground))",
+      "--paragraph-margin": "1.25rem",
+      "--paragraph-align": "left",
+      "--paragraph-first-letter-size": "7.5rem",
+      "--paragraph-first-letter-float": "left",
+      "--paragraph-first-letter-padding-right": "1rem",
+      "--paragraph-first-letter-padding-top": "0.5rem",
+      "--paragraph-first-letter-initial": "3",
+
+      "--list-margin": "2rem",
+      "--list-font": "var(--paragraph-font)",
+      "--list-weight": "var(--paragraph-weight)",
+      "--list-style": "var(--paragraph-style)",
+      "--list-size": "var(--paragraph-size)",
+      "--list-line-height": "var(--paragraph-line-height)",
+      "--list-letter-spacing": "var(--paragraph-letter-spacing)",
+      "--list-color": "var(--paragraph-color)",
+      "--list-indent": "1.5em",
+      "--list-item-margin": "0.5em",
+      "--list-item-spacing": "1.25em",
+
+      "--blockquote-font": "var(--paragraph-font)",
+      "--blockquote-weight": "400",
+      "--blockquote-style": "italic",
+      "--blockquote-size": "1.35rem",
+      "--blockquote-line-height": "var(--paragraph-line-height)",
+      "--blockquote-letter-spacing": "var(--paragraph-letter-spacing)",
+      "--blockquote-color": "hsl(var(--foreground))",
+      "--blockquote-margin": "2.5rem",
+      "--blockquote-padding": "1.25rem",
+      "--blockquote-border-width": "3px",
+      "--blockquote-border-color": "hsl(var(--muted-foreground))",
+
+      "--strong-weight": "600",
+
+      "--code-block-background": "hsl(var(--muted))",
+      "--code-block-color": "hsl(var(--foreground))",
+      "--code-block-font": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+      "--code-block-font-size": "0.9rem",
+      "--code-block-line-height": "1.6",
+      "--code-block-padding": "1.25rem",
+      "--code-block-border-radius": "0.75rem",
+      "--code-block-margin": "1.5rem",
+      "--code-block-border": "1px solid hsl(var(--border))",
+
+      "--image-border-radius": "1.25rem",
+      "--image-margin-y": "2.75rem",
+
+      "--date-font": "proxima-nova-wide",
+    },
+  },
   editorial: {
     light: {
       "--card": "0 0% 99%",

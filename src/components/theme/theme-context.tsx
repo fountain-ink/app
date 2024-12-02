@@ -1,7 +1,7 @@
 "use client";
 
 import { useStorage } from "@/hooks/use-storage";
-import setGlobalColorTheme, { type ThemeType, defaultTheme, isValidTheme } from "@/styles/themes";
+import setGlobalColorTheme, { type ThemeType, defaultThemeName, isValidTheme } from "@/styles/themes";
 import { useTheme as useNextTheme } from "next-themes";
 import { type PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 
@@ -19,7 +19,7 @@ export const ThemeProvider = ({ children }: PropsWithChildren) => {
   const [isMounted, setIsMounted] = useState(false);
 
   const [theme, setTheme] = useState<ThemeType>(() => {
-    const initialTheme = isValidTheme(storedTheme) ? storedTheme : defaultTheme;
+    const initialTheme = isValidTheme(storedTheme) ? storedTheme : defaultThemeName;
     return initialTheme;
   });
 
