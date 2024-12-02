@@ -13,12 +13,12 @@ import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useStorage } from "@/hooks/use-storage";
+import { themeNames, type ThemeType } from "@/styles/themes";
 import { profile as profileMetadata } from "@lens-protocol/metadata";
 import { ImageUploader } from "../images/image-uploader";
 import { useTheme } from "../theme/theme-context";
-import { useStorage } from "@/hooks/use-storage";
-import { themeNames, type ThemeType } from "@/styles/themes";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export function ProfileSettings({ profile }: { profile: Profile | ProfileFragment | null | undefined }) {
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
@@ -170,11 +170,13 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
             placeholder="Your profile title"
           />
         </div>
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2 relative">
           <Label htmlFor="profile-description">Profile Description</Label>
           <Textarea
             id="profile-description"
             value={profileDescription}
+            variant={"default"}
+            className="p-2"
             onChange={(e) => setProfileDescription(e.target.value)}
             placeholder="Your profile description"
           />
