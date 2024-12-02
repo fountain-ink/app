@@ -6,7 +6,7 @@ import { UserFollowButton } from "@/components/user/user-follow";
 import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
-  const { lens } = await getAuthWithCookies();
+  const { lens, profileId } = await getAuthWithCookies();
   const pageHandle = `lens/${params.user}`;
   const profile = await lens.profile.fetch({ forHandle: pageHandle });
 
@@ -14,6 +14,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
     return <ErrorPage error="User not found" />;
   }
 
+  const isUserProfile = profileId === profile.id;
   return (
     <div className="flex flex-col items-center">
       <div className="w-screen md:w-[120%] md:max-w-3xl">
@@ -24,7 +25,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
           <UserAvatar className="transform -translate-y-1/2 w-40 h-40" profile={profile} />
           <UserFollowButton profile={profile} />
         </div>
-        <UserContent contentType="all" profile={profile} />
+        <UserContent isUserProfile={isUserProfile} contentType="all" profile={profile} />
       </div>
     </div>
   );

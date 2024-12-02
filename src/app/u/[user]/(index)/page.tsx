@@ -29,7 +29,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
       <Separator className="w-48 bg-primary mt-3" />
       <IndexNavigation username={params.user} isUserProfile={isUserProfile} />
       <div className="flex flex-col my-4 gap-4">
-        <UserContent contentType="articles" profile={profile} />
+        <UserContent contentType="articles" profile={profile} isUserProfile={isUserProfile} />
       </div>
     </>
   );

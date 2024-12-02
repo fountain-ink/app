@@ -2,28 +2,30 @@
 
 import type { ProfileFragment } from "@lens-protocol/client";
 import {
-    appId,
-    type Profile,
-    type ProfileId,
-    PublicationMetadataMainFocusType,
-    PublicationType,
-    usePublications,
+  appId,
+  type Profile,
+  type ProfileId,
+  PublicationMetadataMainFocusType,
+  PublicationType,
+  usePublications,
 } from "@lens-protocol/react-web";
+import { motion } from "framer-motion";
 import { toast } from "sonner";
 import ErrorPage from "../error-page";
 import { WriteMenu } from "../navigation/write-menu";
 import { PostView } from "../post/post-view";
 import { Card, CardFooter, CardHeader } from "../ui/card";
-import { motion } from "framer-motion";
 
 export const UserContent = ({
   profile,
   loading,
   contentType = "articles",
+  isUserProfile = false,
 }: {
   profile: Profile | ProfileFragment;
   loading?: boolean;
   contentType?: string;
+  isUserProfile?: boolean;
 }) => {
   const {
     data: publications,
@@ -108,9 +110,7 @@ export const UserContent = ({
             Nothing here yet...
           </span>
         </CardHeader>
-        <CardFooter>
-          <WriteMenu text="Start Writing" />
-        </CardFooter>
+        <CardFooter>{isUserProfile && <WriteMenu text="Start Writing" />}</CardFooter>
       </Card>
     );
   }
