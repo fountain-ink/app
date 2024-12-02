@@ -7,7 +7,8 @@
 
 .article img {
   border-radius: var(--image-border-radius);
-  margin: 0;
+  margin-top: var(--image-margin-y);
+  margin-bottom: var(--image-margin-y);
 }
 
 .article h1 {
@@ -136,6 +137,30 @@
   font-weight: var(--strong-weight);
 }
 
+.article pre {
+  background-color: var(--code-block-background);
+  color: var(--code-block-color);
+  font-family: var(--code-block-font);
+  font-size: var(--code-block-font-size);
+  line-height: var(--code-block-line-height);
+  padding: var(--code-block-padding);
+  border-radius: var(--code-block-border-radius);
+  margin-top: var(--code-block-margin);
+  margin-bottom: var(--code-block-margin);
+  border: var(--code-block-border);
+  overflow-x: auto;
+}
+
+.article pre code {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  border: none;
+}
 @media (min-width: 640px) {
   .article {
     font-size: 1rem;

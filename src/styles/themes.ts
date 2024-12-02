@@ -107,6 +107,16 @@ type ThemeColors = {
   "--blockquote-border-width": string;
   "--blockquote-border-color": string;
   "--strong-weight": "600" | "700" | "800" | "900";
+  
+  "--code-block-background": string;
+  "--code-block-color": string;
+  "--code-block-font": string;
+  "--code-block-font-size": string;
+  "--code-block-line-height": string;
+  "--code-block-padding": string;
+  "--code-block-border-radius": string;
+  "--code-block-margin": string;
+  "--code-block-border": string;
 };
 
 export const globalThemes: Record<ThemeType, ThemeColors> = {
@@ -213,6 +223,17 @@ export const globalThemes: Record<ThemeType, ThemeColors> = {
     "--blockquote-border-color": "hsl(var(--muted-foreground))",
 
     "--strong-weight": "700",
+    
+    "--code-block-background": "hsl(var(--muted))",
+    "--code-block-color": "hsl(var(--foreground))",
+    "--code-block-font": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+    "--code-block-font-size": "0.9rem",
+    "--code-block-line-height": "1.6",
+    "--code-block-padding": "1rem",
+    "--code-block-border-radius": "0.5rem",
+    "--code-block-margin": "1.5rem",
+    "--code-block-border": "1px solid hsl(var(--border))",
+    
     "--date-font": "proxima-nova-wide",
   },
 };

@@ -15,7 +15,7 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
   return (
     <PlateElement
       ref={ref}
-      className={cn("relative py-1 bg-muted text-foreground rounded-sm", state.className, className)}
+      className={cn("relative my-4 py-1 bg-muted text-foreground rounded-sm", state.className, className)}
       {...props}
     >
       <pre className="overflow-x-auto rounded-md bg-muted px-6 py-8 text-foreground/80 font-mono text-sm not-prose leading-[normal] [tab-size:2]">

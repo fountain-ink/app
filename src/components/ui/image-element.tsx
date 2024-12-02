@@ -75,7 +75,7 @@ export const ImageElement = withRef<typeof PlateElement>(
 
     return (
       <ImagePopover url={url} plugin={ImagePlugin}>
-        <PlateElement ref={ref} className={cn(className, width)} {...props}>
+        <PlateElement ref={ref} className={cn(className, width, 'my-4')} {...props}>
           <figure className="group" contentEditable={false}>
             {!url ? (
               <div className={cn("rounded-sm relative ", focused && selected && "ring-2 ring-ring ")}>
