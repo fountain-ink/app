@@ -7,8 +7,6 @@
 
 .article img {
   border-radius: var(--image-border-radius);
-  margin-top: var(--image-margin-y);
-  margin-bottom: var(--image-margin-y);
 }
 
 .article h1 {

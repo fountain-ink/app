@@ -15,10 +15,9 @@ import { WidthColumn, WidthFull, WidthWide } from "../custom-icons";
 import { LoadingSpinner } from "../loading-spinner";
 import { Button } from "./button";
 import { CaptionButton } from "./caption";
-import { IMAGE_WIDTH_CLASSES } from "./image-element";
+import type { ImageWidth } from "./image-element";
 import { Popover, PopoverAnchor, PopoverContent } from "./popover";
 import { Separator } from "./separator";
-import type { ImageWidth } from "./image-element";
 
 export interface ImagePopoverProps {
   children: React.ReactNode;
@@ -33,7 +32,7 @@ export function ImagePopover({ children, url }: ImagePopoverProps) {
   const element = useElement();
   const { props: buttonProps } = useRemoveNodeButton({ element });
   const [isUploading, setIsUploading] = useState(false);
-  const [width, setWidth] = useState<ImageWidth>(element?.width as ImageWidth || "column");
+  const [width, setWidth] = useState<ImageWidth>((element?.width as ImageWidth) || "column");
   const selectionCollapsed = useEditorSelector((editor) => !isSelectionExpanded(editor), []);
   const isOpen = !readOnly && selected && selectionCollapsed;
 
@@ -68,7 +67,7 @@ export function ImagePopover({ children, url }: ImagePopoverProps) {
     <Popover open={isOpen} modal={false}>
       <PopoverAnchor>{children}</PopoverAnchor>
 
-      <PopoverContent sideOffset={0} className="w-auto p-1" onOpenAutoFocus={(e) => e.preventDefault()}>
+      <PopoverContent side="top" sideOffset={-20} className="w-auto p-1" onOpenAutoFocus={(e) => e.preventDefault()}>
         <div className="box-content flex h-9 items-center gap-1">
           <Button
             size="icon"
@@ -97,7 +96,7 @@ export function ImagePopover({ children, url }: ImagePopoverProps) {
           <Separator orientation="vertical" className="my-1" />
 
           {url && (
-            <Button size="sm" variant="ghost" disabled={isUploading}>
+            <Button variant="ghost" disabled={isUploading}>
               <div className="relative flex gap-1 items-center justify-center">
                 <input
                   type="file"
