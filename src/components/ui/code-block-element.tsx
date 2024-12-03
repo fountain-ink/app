@@ -2,31 +2,83 @@
 
 import { cn, withRef } from "@udecode/cn";
 import { useCodeBlockElementState } from "@udecode/plate-code-block/react";
-
+import { setNode, useEditorRef, useRemoveNodeButton } from "@udecode/plate-common/react";
+import { useState } from "react";
+import { WidthColumn, WidthFull, WidthWide } from "../custom-icons";
+import { Button } from "./button";
 import { CodeBlockCombobox } from "./code-block-combobox";
-import { PlateElement } from "./plate-element";
-
 import "./code-block-element.css";
+import { ElementPopover } from "./element-popover";
+import type { ImageWidth } from "./image-element";
+import { IMAGE_WIDTH_CLASSES } from "./image-element";
+import { PlateElement } from "./plate-element";
+import { ScrollArea } from "./scroll-area";
+import { Separator } from "./separator";
 
 export const CodeBlockElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
   const { element } = props;
   const state = useCodeBlockElementState({ element });
+  const { props: removeButtonProps } = useRemoveNodeButton({ element });
+  const editor = useEditorRef();
+  const [width, setWidth] = useState<ImageWidth>((element?.width as ImageWidth) || "column");
+
+  const handleWidth = (newWidth: ImageWidth) => {
+    setWidth(newWidth);
+    setNode(editor, element, { width: newWidth });
+  };
+
+  const popoverContent = (
+    <div className="box-content flex h-9 items-center gap-1">
+      <Button
+        size="icon"
+        variant="muted"
+        className={width === "column" ? "text-primary" : "muted"}
+        onClick={() => handleWidth("column")}
+      >
+        <WidthColumn />
+      </Button>
+      <Button
+        size="icon"
+        variant="muted"
+        className={width === "wide" ? "text-primary" : "muted"}
+        onClick={() => handleWidth("wide")}
+      >
+        <WidthWide />
+      </Button>
+      <Button
+        size="icon"
+        variant="muted"
+        className={width === "full" ? "text-primary" : "muted"}
+        onClick={() => handleWidth("full")}
+      >
+        <WidthFull />
+      </Button>
+      <Separator orientation="vertical" className="my-1" />
+      <CodeBlockCombobox />
+      <Button variant="ghost" {...removeButtonProps}>
+        Remove
+      </Button>
+    </div>
+  );
 
   return (
-    <PlateElement
-      ref={ref}
-      className={cn("relative my-8 py-1 bg-muted text-foreground rounded-sm", state.className, className)}
-      {...props}
-    >
-      <pre className="overflow-x-auto rounded-md bg-muted px-6 py-8 text-foreground/80 font-mono text-sm not-prose leading-[normal] [tab-size:2]">
-        <code>{children}</code>
-      </pre>
-
-      {state.syntax && (
-        <div className="absolute right-2 top-2 z-10 select-none" contentEditable={false}>
-          <CodeBlockCombobox />
-        </div>
-      )}
-    </PlateElement>
+    <ElementPopover content={popoverContent}>
+      <PlateElement
+        ref={ref}
+        className={cn(
+          "relative my-8 bg-muted text-foreground rounded-sm",
+          width && IMAGE_WIDTH_CLASSES[width],
+          state.className,
+          className,
+        )}
+        {...props}
+      >
+        <ScrollArea orientation="horizontal" className="rounded-sm overflow-hidden">
+          <pre className="bg-muted px-6 py-4 text-foreground/80 font-mono text-sm not-prose leading-[normal] [tab-size:2] min-w-full">
+            <code>{children}</code>
+          </pre>
+        </ScrollArea>
+      </PlateElement>
+    </ElementPopover>
   );
 });

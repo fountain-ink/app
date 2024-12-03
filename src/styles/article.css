@@ -139,11 +139,6 @@
   font-family: var(--code-block-font);
   font-size: var(--code-block-font-size);
   line-height: var(--code-block-line-height);
-  padding: var(--code-block-padding);
-  border-radius: var(--code-block-border-radius);
-  margin-top: var(--code-block-margin);
-  margin-bottom: var(--code-block-margin);
-  border: var(--code-block-border);
   overflow-x: auto;
 }
 

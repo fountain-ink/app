@@ -1,22 +1,14 @@
 import { uploadFile } from "@/lib/upload-image";
-import { type WithRequiredKey, isSelectionExpanded } from "@udecode/plate-common";
-import {
-  selectEditor,
-  setNode,
-  useEditorRef,
-  useEditorSelector,
-  useElement,
-  useRemoveNodeButton,
-} from "@udecode/plate-common/react";
+import { type WithRequiredKey } from "@udecode/plate-common";
+import { selectEditor, setNode, useEditorRef, useElement, useRemoveNodeButton } from "@udecode/plate-common/react";
 import type React from "react";
 import { useState } from "react";
-import { useReadOnly, useSelected } from "slate-react";
 import { WidthColumn, WidthFull, WidthWide } from "../custom-icons";
 import { LoadingSpinner } from "../loading-spinner";
 import { Button } from "./button";
 import { CaptionButton } from "./caption";
+import { ElementPopover } from "./element-popover";
 import type { ImageWidth } from "./image-element";
-import { Popover, PopoverAnchor, PopoverContent } from "./popover";
 import { Separator } from "./separator";
 
 export interface ImagePopoverProps {
@@ -26,15 +18,11 @@ export interface ImagePopoverProps {
 }
 
 export function ImagePopover({ children, url }: ImagePopoverProps) {
-  const readOnly = useReadOnly();
-  const selected = useSelected();
   const editor = useEditorRef();
   const element = useElement();
   const { props: buttonProps } = useRemoveNodeButton({ element });
   const [isUploading, setIsUploading] = useState(false);
   const [width, setWidth] = useState<ImageWidth>((element?.width as ImageWidth) || "column");
-  const selectionCollapsed = useEditorSelector((editor) => !isSelectionExpanded(editor), []);
-  const isOpen = !readOnly && selected && selectionCollapsed;
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -61,63 +49,57 @@ export function ImagePopover({ children, url }: ImagePopoverProps) {
     setNode(editor, element, { url, width: newWidth });
   };
 
-  if (readOnly) return <>{children}</>;
+  const popoverContent = (
+    <div className="box-content flex h-9 items-center gap-1">
+      <Button
+        size="icon"
+        variant="muted"
+        className={width === "column" ? "text-primary" : "muted"}
+        onClick={() => handleWidth("column")}
+      >
+        <WidthColumn />
+      </Button>
+      <Button
+        size="icon"
+        variant="muted"
+        className={width === "wide" ? "text-primary" : "muted"}
+        onClick={() => handleWidth("wide")}
+      >
+        <WidthWide />
+      </Button>
+      <Button
+        size="icon"
+        variant="muted"
+        className={width === "full" ? "text-primary" : "muted"}
+        onClick={() => handleWidth("full")}
+      >
+        <WidthFull />
+      </Button>
+      <Separator orientation="vertical" className="my-1" />
 
-  return (
-    <Popover open={isOpen} modal={false}>
-      <PopoverAnchor>{children}</PopoverAnchor>
+      {url && (
+        <Button variant="ghost" disabled={isUploading}>
+          <div className="relative flex gap-1 items-center justify-center">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileSelect}
+              className="absolute inset-0 cursor-pointer opacity-0"
+              disabled={isUploading}
+            />
+            {isUploading ? <LoadingSpinner /> : <></>}
+            Change
+          </div>
+        </Button>
+      )}
 
-      <PopoverContent side="top" sideOffset={-20} className="w-auto p-1" onOpenAutoFocus={(e) => e.preventDefault()}>
-        <div className="box-content flex h-9 items-center gap-1">
-          <Button
-            size="icon"
-            variant="muted"
-            className={width === "column" ? "text-primary" : "muted"}
-            onClick={() => handleWidth("column")}
-          >
-            <WidthColumn />
-          </Button>
-          <Button
-            size="icon"
-            variant="muted"
-            className={width === "wide" ? "text-primary" : "muted"}
-            onClick={() => handleWidth("wide")}
-          >
-            <WidthWide />
-          </Button>
-          <Button
-            size="icon"
-            variant="muted"
-            className={width === "full" ? "text-primary" : "muted"}
-            onClick={() => handleWidth("full")}
-          >
-            <WidthFull />
-          </Button>
-          <Separator orientation="vertical" className="my-1" />
+      <CaptionButton variant="ghost">Caption</CaptionButton>
 
-          {url && (
-            <Button variant="ghost" disabled={isUploading}>
-              <div className="relative flex gap-1 items-center justify-center">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileSelect}
-                  className="absolute inset-0 cursor-pointer opacity-0"
-                  disabled={isUploading}
-                />
-                {isUploading ? <LoadingSpinner /> : <></>}
-                Change
-              </div>
-            </Button>
-          )}
-
-          <CaptionButton variant="ghost">Caption</CaptionButton>
-
-          <Button variant="ghost" {...buttonProps}>
-            Remove
-          </Button>
-        </div>
-      </PopoverContent>
-    </Popover>
+      <Button variant="ghost" {...buttonProps}>
+        Remove
+      </Button>
+    </div>
   );
+
+  return <ElementPopover content={popoverContent}>{children}</ElementPopover>;
 }
