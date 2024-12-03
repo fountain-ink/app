@@ -78,7 +78,7 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
         {...props}
       >
         <figure className="group">
-          <ScrollArea orientation="horizontal" className="overflow-hidden">
+          <ScrollArea orientation="horizontal" className="rounded-sm overflow-hidden">
             <pre className="bg-muted px-6 py-4 text-foreground/80 font-mono text-sm not-prose leading-[normal] [tab-size:2] min-w-full">
               <code>{children}</code>
             </pre>
