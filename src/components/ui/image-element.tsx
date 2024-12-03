@@ -36,6 +36,7 @@ export const ImageElement = withRef<typeof PlateElement>(
     const editor = useEditorRef();
     const readonly = useReadOnly();
     const element = useElement();
+    console.log(element)
 
     useEffect(() => {
       if (props.element?.url) {
