@@ -12,15 +12,15 @@ import { Caption, CaptionTextarea } from "./caption";
 import { ImagePopover } from "./image-popover";
 import { PlateElement } from "./plate-element";
 
+export type ImageWidth = "column" | "wide" | "full";
+
 const ImagePlaceholder = () => (
   <div className="flex relative aspect-video w-full rounded-sm">
     <div className="placeholder-background rounded-sm" />
   </div>
 );
 
-type ImageWidth = "column" | "wide" | "full";
-
-const IMAGE_WIDTH_CLASSES: Record<ImageWidth, string> = {
+export const IMAGE_WIDTH_CLASSES: Record<ImageWidth, string> = {
   wide: "w-screen max-w-[65vw] relative -translate-x-1/2 left-1/2 content-center justify-center",
   full: "w-screen max-w-[90vw] relative -translate-x-1/2 left-1/2 content-center justify-center",
   column: "w-full max-w-full",
@@ -32,7 +32,7 @@ export const ImageElement = withRef<typeof PlateElement>(
     const [_isImageLoaded, setIsImageLoaded] = useState(false);
     const [url, setUrl] = useState<string | undefined>(props?.element?.url as string | undefined);
     const [isUploading, setIsUploading] = useState(false);
-    const [width, setWidth] = useState("");
+    const [width, setWidth] = useState<ImageWidth>("column");
     const editor = useEditorRef();
     const readonly = useReadOnly();
     const element = useElement();
@@ -47,8 +47,7 @@ export const ImageElement = withRef<typeof PlateElement>(
 
     useEffect(() => {
       if (props.element?.width) {
-        const imageWidth = props.element?.width as ImageWidth;
-        setWidth(IMAGE_WIDTH_CLASSES[imageWidth]);
+        setWidth(props.element.width as ImageWidth);
       }
     }, [props.element.width]);
 
@@ -75,7 +74,7 @@ export const ImageElement = withRef<typeof PlateElement>(
 
     return (
       <ImagePopover url={url} plugin={ImagePlugin}>
-        <PlateElement ref={ref} className={cn(className, width, 'my-8')} {...props}>
+        <PlateElement ref={ref} className={cn(className, width && IMAGE_WIDTH_CLASSES[width], "my-8")} {...props}>
           <figure className="group" contentEditable={false}>
             {!url ? (
               <div className={cn("rounded-sm relative ", focused && selected && "ring-2 ring-ring ")}>

@@ -15,8 +15,10 @@ import { WidthColumn, WidthFull, WidthWide } from "../custom-icons";
 import { LoadingSpinner } from "../loading-spinner";
 import { Button } from "./button";
 import { CaptionButton } from "./caption";
+import { IMAGE_WIDTH_CLASSES } from "./image-element";
 import { Popover, PopoverAnchor, PopoverContent } from "./popover";
 import { Separator } from "./separator";
+import type { ImageWidth } from "./image-element";
 
 export interface ImagePopoverProps {
   children: React.ReactNode;
@@ -31,8 +33,7 @@ export function ImagePopover({ children, url }: ImagePopoverProps) {
   const element = useElement();
   const { props: buttonProps } = useRemoveNodeButton({ element });
   const [isUploading, setIsUploading] = useState(false);
-  const [width, setWidth] = useState(element?.width || "column");
-
+  const [width, setWidth] = useState<ImageWidth>(element?.width as ImageWidth || "column");
   const selectionCollapsed = useEditorSelector((editor) => !isSelectionExpanded(editor), []);
   const isOpen = !readOnly && selected && selectionCollapsed;
 
@@ -56,9 +57,9 @@ export function ImagePopover({ children, url }: ImagePopoverProps) {
     }
   };
 
-  const handleWidth = (width: "column" | "wide" | "full") => {
-    setWidth(width);
-    setNode(editor, element, { url, width });
+  const handleWidth = (newWidth: ImageWidth) => {
+    setWidth(newWidth);
+    setNode(editor, element, { url, width: newWidth });
   };
 
   if (readOnly) return <>{children}</>;
