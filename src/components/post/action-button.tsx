@@ -1,16 +1,16 @@
 "use client";
 
-import { AnimatedChevron } from "@/components/ui/animated-chevron";
 import { Button } from "@/components/ui/button";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { AnimatedChevron } from "../ui/animated-chevron";
 
 export type DropdownItem = {
   icon: any;
@@ -164,8 +164,8 @@ export const ActionButton = ({
             {showChevron && (
               <AnimatedChevron
                 isOpen={state.isActive}
-                direction="up"
                 color={state.isActive || state.isHovered ? strokeColor : undefined}
+                direction="up"
               />
             )}
           </DropdownMenuTrigger>

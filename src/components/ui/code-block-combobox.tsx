@@ -4,7 +4,6 @@
 
 import { useState } from "react";
 
-import { AnimatedChevron } from "@/components/ui/animated-chevron";
 import { cn } from "@udecode/cn";
 import { useCodeBlockCombobox, useCodeBlockComboboxState } from "@udecode/plate-code-block/react";
 import { Check } from "lucide-react";
@@ -66,6 +65,7 @@ import "prismjs/components/prism-tsx.js";
 import "prismjs/components/prism-typescript.js";
 import "prismjs/components/prism-wasm.js";
 import "prismjs/components/prism-yaml.js";
+import { AnimatedChevron } from "./animated-chevron";
 
 export { Prism };
 
@@ -147,11 +147,11 @@ export function CodeBlockCombobox() {
       <PopoverTrigger asChild>
         <Button variant="ghost" className="justify-between" aria-expanded={open} role="combobox">
           {state.value ? languages.find((language) => language.value === state.value)?.label : "Plain Text"}
-          <AnimatedChevron 
-            isOpen={open} 
-            size={16} 
+          <AnimatedChevron
+            isOpen={open}
+            size={16}
             direction="down"
-            className="ml-2 shrink-0 opacity-50" 
+            className="shrink-0 opacity-50"
           />
         </Button>
       </PopoverTrigger>
