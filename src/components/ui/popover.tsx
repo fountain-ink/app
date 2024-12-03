@@ -60,7 +60,15 @@ export const PopoverContent = withRef<typeof PopoverPrimitive.Content, VariantPr
   ({ align = "center", className, sideOffset = 4, variant, ...props }, ref) => (
     <PopoverPrimitive.Portal>
       <AnimatePresence>
-        <PopoverPrimitive.Content ref={ref} asChild align={align} sideOffset={sideOffset} {...props}>
+        <PopoverPrimitive.Content 
+          ref={ref} 
+          asChild 
+          align={align} 
+          side="top"
+          avoidCollisions={false}
+          sideOffset={sideOffset} 
+          {...props}
+        >
           <motion.div
             initial="hidden"
             animate="visible"
@@ -73,7 +81,6 @@ export const PopoverContent = withRef<typeof PopoverPrimitive.Content, VariantPr
             }}
             className={cn(
               popoverVariants({ variant }),
-              "data-[side=bottom]:origin-top data-[side=left]:origin-right data-[side=right]:origin-left data-[side=top]:origin-bottom",
               className,
             )}
           >

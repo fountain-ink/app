@@ -241,7 +241,7 @@ export const staticPlugins = [
   }),
   MediaEmbedPlugin,
   CaptionPlugin.configure({
-    options: { plugins: [ImagePlugin, MediaEmbedPlugin] },
+    options: { plugins: [ImagePlugin, MediaEmbedPlugin, CodeBlockPlugin] },
   }),
   DatePlugin,
   MentionPlugin.configure({

@@ -4,8 +4,10 @@ import { cn, withRef } from "@udecode/cn";
 import { useCodeBlockElementState } from "@udecode/plate-code-block/react";
 import { setNode, useEditorRef, useRemoveNodeButton } from "@udecode/plate-common/react";
 import { useState } from "react";
+import { useReadOnly } from "slate-react";
 import { WidthColumn, WidthFull, WidthWide } from "../custom-icons";
 import { Button } from "./button";
+import { Caption, CaptionButton, CaptionTextarea } from "./caption";
 import { CodeBlockCombobox } from "./code-block-combobox";
 import "./code-block-element.css";
 import { ElementPopover } from "./element-popover";
@@ -21,6 +23,7 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
   const { props: removeButtonProps } = useRemoveNodeButton({ element });
   const editor = useEditorRef();
   const [width, setWidth] = useState<ImageWidth>((element?.width as ImageWidth) || "column");
+  const readonly = useReadOnly();
 
   const handleWidth = (newWidth: ImageWidth) => {
     setWidth(newWidth);
@@ -55,6 +58,7 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
       </Button>
       <Separator orientation="vertical" className="my-1" />
       <CodeBlockCombobox />
+      <CaptionButton variant="ghost">Caption</CaptionButton>
       <Button variant="ghost" {...removeButtonProps}>
         Remove
       </Button>
@@ -73,11 +77,16 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
         )}
         {...props}
       >
-        <ScrollArea orientation="horizontal" className="rounded-sm overflow-hidden">
-          <pre className="bg-muted px-6 py-4 text-foreground/80 font-mono text-sm not-prose leading-[normal] [tab-size:2] min-w-full">
-            <code>{children}</code>
-          </pre>
-        </ScrollArea>
+        <figure className="group">
+          <ScrollArea orientation="horizontal" className="rounded-sm overflow-hidden">
+            <pre className="bg-muted px-6 py-4 text-foreground/80 font-mono text-sm not-prose leading-[normal] [tab-size:2] min-w-full">
+              <code>{children}</code>
+            </pre>
+          </ScrollArea>
+          <Caption className={width} align="center" contentEditable={false}>
+            <CaptionTextarea readOnly={readonly} placeholder="Write a caption..." />
+          </Caption>
+        </figure>
       </PlateElement>
     </ElementPopover>
   );
