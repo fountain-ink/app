@@ -104,18 +104,18 @@ const rules: SlashCommandRule[] = [
       insertBlock(editor, EquationPlugin.key);
     },
   },
-  {
-    icon: YoutubeIcon,
-    value: "Embed",
-    description: "Add a embed (YouTube, X, etc).",
-    keywords: ["embed", "youtube", "video", "media", "iframe", "x", "twitter", "facebook", "instagram"],
-    onSelect: async (editor) => {
-      await insertMedia(editor, {
-        select: true,
-        type: MediaEmbedPlugin.key,
-      });
-    },
-  },
+  // {
+  //   icon: YoutubeIcon,
+  //   value: "Embed",
+  //   description: "Add a embed (YouTube, X, etc).",
+  //   keywords: ["embed", "youtube", "video", "media", "iframe", "x", "twitter", "facebook", "instagram"],
+  //   onSelect: async (editor) => {
+  //     await insertMedia(editor, {
+  //       select: true,
+  //       type: MediaEmbedPlugin.key,
+  //     });
+  //   },
+  // },
   {
     icon: QuoteIcon,
     value: "Quote",
