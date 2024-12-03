@@ -108,6 +108,7 @@
     "@udecode/plate-toggle": "^40.0.0",
     "@udecode/plate-trailing-block": "^40.0.0",
     "@udecode/plate-yjs": "^40.0.0",
+    "@uidotdev/usehooks": "^2.4.1",
     "ai": "^3.4.31",
     "browser-image-compression": "^2.0.2",
     "class-variance-authority": "^0.7.0",

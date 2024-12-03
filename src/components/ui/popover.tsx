@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
 
 import * as PopoverPrimitive from "@radix-ui/react-popover";
@@ -36,16 +37,50 @@ export const popoverVariants = cva(
 
 export type PopoverContentProps = React.ComponentProps<typeof PopoverContent>;
 
+const popoverAnimationVariants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.95,
+    transition: {
+      opacity: { duration: 0.2 },
+      scale: { duration: 0.2 },
+    },
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      opacity: { duration: 0.2 },
+      scale: { duration: 0.2 },
+    },
+  },
+};
+
 export const PopoverContent = withRef<typeof PopoverPrimitive.Content, VariantProps<typeof popoverVariants>>(
   ({ align = "center", className, sideOffset = 4, variant, ...props }, ref) => (
     <PopoverPrimitive.Portal>
-      <PopoverPrimitive.Content
-        ref={ref}
-        className={cn(popoverVariants({ variant }), className)}
-        align={align}
-        sideOffset={sideOffset}
-        {...props}
-      />
+      <AnimatePresence>
+        <PopoverPrimitive.Content ref={ref} asChild align={align} sideOffset={sideOffset} {...props}>
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={popoverAnimationVariants}
+            style={{
+              overflow: "hidden",
+              transformOrigin: "top",
+              willChange: "transform, opacity, height",
+            }}
+            className={cn(
+              popoverVariants({ variant }),
+              "data-[side=bottom]:origin-top data-[side=left]:origin-right data-[side=right]:origin-left data-[side=top]:origin-bottom",
+              className,
+            )}
+          >
+            {props.children}
+          </motion.div>
+        </PopoverPrimitive.Content>
+      </AnimatePresence>
     </PopoverPrimitive.Portal>
   ),
 );

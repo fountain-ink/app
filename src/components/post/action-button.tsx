@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatedChevron } from "@/components/ui/animated-chevron";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -9,7 +10,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 export type DropdownItem = {
@@ -162,18 +162,11 @@ export const ActionButton = ({
               </Button>
             </div>
             {showChevron && (
-              <motion.div
-                initial={false}
-                animate={{ rotate: state.isActive ? 180 : 0 }}
-                transition={{ type: "spring", stiffness: 200, damping: 20, mass: 2 }}
-              >
-                <ChevronDown
-                  size={16}
-                  style={{
-                    color: state.isActive || state.isHovered ? strokeColor : undefined,
-                  }}
-                />
-              </motion.div>
+              <AnimatedChevron
+                isOpen={state.isActive}
+                direction="up"
+                color={state.isActive || state.isHovered ? strokeColor : undefined}
+              />
             )}
           </DropdownMenuTrigger>
           <DropdownMenuContent align="center">
