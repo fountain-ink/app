@@ -17,9 +17,11 @@ import { PlateElement } from "./plate-element";
 import { ScrollArea } from "./scroll-area";
 import { Separator } from "./separator";
 
+import { useMediaState } from "@udecode/plate-media/react";
 export const CodeBlockElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
   const { element } = props;
   const state = useCodeBlockElementState({ element });
+  const { focused, selected } = useMediaState();
   const { props: removeButtonProps } = useRemoveNodeButton({ element });
   const editor = useEditorRef();
   const [width, setWidth] = useState<ImageWidth>((element?.width as ImageWidth) || "column");
@@ -78,7 +80,13 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
         {...props}
       >
         <figure className="group">
-          <ScrollArea orientation="horizontal" className="rounded-sm overflow-hidden">
+          <ScrollArea 
+            orientation="horizontal" 
+            className={cn(
+              "rounded-sm overflow-hidden",
+              focused && selected && "ring-2 ring-ring"
+            )}
+          >
             <pre className="bg-muted px-6 py-4 text-foreground/80 font-mono text-sm not-prose leading-[normal] [tab-size:2] min-w-full">
               <code>{children}</code>
             </pre>
