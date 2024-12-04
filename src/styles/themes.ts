@@ -391,16 +391,27 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
 };
 
 export default function setGlobalColorTheme(themeMode: "light" | "dark", themeName: ThemeType) {
-  const colorTheme = globalThemes[themeName][themeMode];
-  const sharedTheme = globalThemes[themeName].shared;
-
-  for (const [key, value] of Object.entries(colorTheme)) {
-    document.documentElement.style.setProperty(key, value);
+  if (!globalThemes[themeName]) {
+    throw new Error(`Theme "${themeName}" not found`);
   }
 
-  for (const [key, value] of Object.entries(sharedTheme)) {
+  const theme = globalThemes[themeName];
+  const colorTheme = theme[themeMode];
+  const sharedTheme = theme.shared;
+
+  if (!colorTheme || !sharedTheme) {
+    throw new Error(`Invalid theme configuration for "${themeName}: ${colorTheme} ${sharedTheme} ${themeMode}"`);
+  }
+
+  // biome-ignore lint/complexity/noForEach: <explanation>
+  Object.entries(colorTheme).forEach(([key, value]) => {
+    document.documentElement.style.setProperty(key, value);
+  });
+
+  // biome-ignore lint/complexity/noForEach: <explanation>
+  Object.entries(sharedTheme).forEach(([key, value]) => {
     if (value !== undefined) {
       document.documentElement.style.setProperty(key, value);
     }
-  }
+  });
 }
