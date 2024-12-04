@@ -19,12 +19,17 @@ import { UserRoundPenIcon } from "../icons/switch-profile";
 import { UserIcon } from "../icons/user";
 import { AnimatedMenuItem } from "../navigation/animated-item";
 import { AvatarSuspense, SessionAvatar } from "./user-avatar";
+import { PenToolIcon } from "../icons/pen-tool";
+import { usePathname } from "next/navigation";
+import { SquarePenIcon } from "../icons/square-pen";
 
 export const UserMenu = () => {
   const { data: session, loading, error } = useSession();
   const { isConnected: isWalletConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const { execute: logout, loading: logoutLoading } = useLogout();
+  const pathname = usePathname()
+  console.log(pathname)
 
   if (loading) return <AvatarSuspense />;
 
@@ -52,7 +57,11 @@ export const UserMenu = () => {
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent align="end" className="w-48">
-          <AnimatedMenuItem href={`/u/${handle}`} icon={UserIcon}>
+          <AnimatedMenuItem href={`/u/${handle}`} icon={PenToolIcon}>
+            Index
+          </AnimatedMenuItem>
+          
+          <AnimatedMenuItem href={`/u/${handle}/profile`} icon={UserIcon}>
             Profile
           </AnimatedMenuItem>
 
@@ -64,6 +73,10 @@ export const UserMenu = () => {
             }}
           >
             Switch Profile
+          </AnimatedMenuItem>
+          
+          <AnimatedMenuItem href={`/u/${handle}/drafts`} icon={SquarePenIcon}>
+           Drafts
           </AnimatedMenuItem>
 
           <AnimatedMenuItem href="/settings" icon={SettingsGearIcon}>

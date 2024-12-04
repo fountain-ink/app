@@ -70,7 +70,10 @@ export const PostView = ({
   }
 
   return (
-    <div className="group/post flex flex-row items-start justify-start gap-4 bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all ease-in duration-100 border-0 shadow-none relative w-screen rounded-sm p-4 h-fit max-w-full sm:max-w-2xl">
+    <div
+      className={`group/post flex flex-row items-start justify-start gap-4 bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all
+      ease-in duration-100 border-0 shadow-none relative w-screen rounded-sm p-4 max-w-full sm:max-w-2xl ${options.showPreview ? "h-48" : "h-fit"}`}
+    >
       {options.showPreview && (
         <div className="h-40 w-40 shrink-0 aspect-square rounded-sm overflow-hidden">
           {coverImage ? (
