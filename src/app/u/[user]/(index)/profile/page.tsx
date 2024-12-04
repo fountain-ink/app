@@ -26,7 +26,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
         <div className="flex justify-between px-4">
           <div className="flex flex-row gap-4">
             <UserAvatar
-              className="transform -translate-y-1/2 w-40 h-40 ring-4 rounded-full ring-background"
+              className="transform -translate-y-1/2 w-32 h-32 md:w-40 md:h-40 ring-4 rounded-full ring-background"
               profile={profile}
             />
             <div className="flex flex-col gap-2">
