@@ -18,7 +18,7 @@ const UserProfileLayout = async ({
   }
 
   return (
-    <div className="flex flex-col pt-20 items-center justify-center w-full max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
+    <div className="flex flex-col pt-14 sm:pt-16 md:pt-20 items-center justify-center w-full max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
       {children}
     </div>
   );

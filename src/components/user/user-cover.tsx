@@ -5,12 +5,16 @@ export const UserCover = ({ profile, className }: { profile?: Profile | ProfileF
   const cover = profile?.metadata?.coverPicture?.optimized || profile?.metadata?.coverPicture?.raw;
 
   if (!cover) {
-    return <div className="w-full h-64 bg-card/20 rounded-lg" />;
+    return <div className="w-full h-64 bg-card/20 sm:rounded-lg" />;
   }
 
   return (
-    <div className={`h-64 overflow-hidden rounded-lg ${className}`}>
-      <img className="w-screen md:max-w-3xl h-full object-cover" src={cover.uri} alt={profile?.handle?.localName} />
+    <div className={`relative w-full aspect-[3/1] overflow-hidden md:rounded-lg ${className}`}>
+      <img
+        className="absolute inset-0 w-full h-full object-cover object-center"
+        src={cover.uri}
+        alt={profile?.handle?.localName}
+      />
     </div>
   );
 };
