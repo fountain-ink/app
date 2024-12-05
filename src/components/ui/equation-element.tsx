@@ -1,25 +1,57 @@
 "use client";
 
-import { useRef, useState } from "react";
-
-import type { TEquationElement } from "@udecode/plate-math";
-
 import { cn, withRef } from "@udecode/cn";
-import { useElement } from "@udecode/plate-common/react";
-import { useEquationElement } from "@udecode/plate-math/react";
+import {
+    createPrimitiveComponent,
+    selectSiblingNodePoint,
+    setNode,
+    useEditorRef,
+    useElement,
+} from "@udecode/plate-common/react";
+import type { TEquationElement } from "@udecode/plate-math";
+import { useEquationElement, useEquationInput } from "@udecode/plate-math/react";
 import { RadicalIcon } from "lucide-react";
-
-import { BlockActionButton } from "./block-context-menu";
-
-import { EquationPopoverContent } from "./equation-popover";
+import { useEffect, useRef, useState } from "react";
+import { useReadOnly, useSelected } from "slate-react";
+import { ELEMENT_WIDTH_CLASSES, ElementPopover, ElementWidth } from "./element-popover";
 import { PlateElement } from "./plate-element";
-import { Popover, PopoverTrigger } from "./popover";
+import { TextareaAutosize } from "./textarea";
 
-export const EquationElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
+const EquationInput = createPrimitiveComponent(TextareaAutosize)({
+  propsHook: useEquationInput,
+});
+
+export const EquationElement = withRef<typeof PlateElement>(({ children, className, ...props },  ref) => {
   const element = useElement<TEquationElement>();
-
+  const editor = useEditorRef();
   const [open, setOpen] = useState(false);
   const katexRef = useRef<HTMLDivElement | null>(null);
+  const [width, setWidth] = useState<ElementWidth>((element?.width as ElementWidth) || "column");
+  const readOnly = useReadOnly();
+  const selected = useSelected();
+
+  useEffect(() => {
+    setOpen(selected);
+  }, [selected]);
+
+  const handleClose = () => {
+    setOpen(false);
+      selectSiblingNodePoint(editor, { node: element });
+
+  };
+
+  const renderEquationInput = () => {
+    if (readOnly) return null;
+
+    return (
+      <EquationInput
+        className="grow w-full rounded-[4px]"
+        state={{ isInline:false , open: true, onClose: handleClose }}
+        autoFocus
+        variant={"default"}
+      />
+    );
+  };
 
   useEquationElement({
     element,
@@ -37,41 +69,34 @@ export const EquationElement = withRef<typeof PlateElement>(({ children, classNa
     },
   });
 
+  const handleWidth = (newWidth: ElementWidth) => {
+    setWidth(newWidth);
+    setNode(editor, element, { width: newWidth });
+  };
+
   return (
-    <PlateElement ref={ref} className={cn("relative my-8", className)} {...props}>
-      <Popover open={open} onOpenChange={setOpen} modal={false}>
-        <PopoverTrigger asChild>
-          <div
-            className={cn(
-              "group flex cursor-pointer select-none items-center justify-center rounded-sm transition-bg-ease hover:bg-primary/10",
-              element?.texExpression?.length === 0 ? "bg-muted p-3 pr-9" : "px-2 py-1",
-            )}
-            contentEditable={false}
-            role="button"
-          >
-            {element?.texExpression?.length > 0 ? (
-              <span ref={katexRef} />
-            ) : (
-              <div className="flex h-7 w-full items-center gap-2 whitespace-nowrap text-sm text-muted-foreground">
-                <RadicalIcon className="size-6 text-muted-foreground/80" />
-                <div>Add a Tex equation</div>
-              </div>
-            )}
+    <ElementPopover
+      sideOffset={10}
+      verticalContent={renderEquationInput()}
+      defaultWidth={width}
+      onWidthChange={handleWidth}
+    >
+      <PlateElement
+        ref={ref}
+        className={cn("relative my-8", width && ELEMENT_WIDTH_CLASSES[width], className)}
+        {...props}
+      >
+        {element?.texExpression?.length > 0 ? (
+          <span ref={katexRef} />
+        ) : (
+          <div className="flex h-7 w-full items-center gap-2 whitespace-nowrap text-sm text-muted-foreground">
+            <RadicalIcon className="size-6 text-muted-foreground/80" />
+            <div>Add a Tex equation</div>
           </div>
-        </PopoverTrigger>
+        )}
 
-        <EquationPopoverContent
-          variant="equation"
-          placeholder={
-            "f(x) = \\begin{cases}\n  x^2, &\\quad x > 0 \\\\\n  0, &\\quad x = 0 \\\\\n  -x^2, &\\quad x < 0\n\\end{cases}"
-          }
-          setOpen={setOpen}
-        />
-      </Popover>
-
-      <BlockActionButton />
-
-      {children}
-    </PlateElement>
+        {children}
+      </PlateElement>
+    </ElementPopover>
   );
 });

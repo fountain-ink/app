@@ -1,7 +1,7 @@
 import { uploadFile } from "@/lib/upload-image";
 import { cn, withRef } from "@udecode/cn";
-import { selectEditor, setNode, useEditorRef, useElement } from "@udecode/plate-common/react";
-import { Image, ImagePlugin, useMediaState } from "@udecode/plate-media/react";
+import { selectEditor, setNode, useEditorRef, useElement, useRemoveNodeButton } from "@udecode/plate-common/react";
+import { Image, useMediaState } from "@udecode/plate-media/react";
 import { UploadIcon } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
@@ -9,10 +9,8 @@ import { useReadOnly } from "slate-react";
 import { LoadingSpinner } from "../loading-spinner";
 import { Button } from "./button";
 import { Caption, CaptionTextarea } from "./caption";
-import { ImagePopover } from "./image-popover";
+import { ELEMENT_WIDTH_CLASSES, ElementPopover, type ElementWidth } from "./element-popover";
 import { PlateElement } from "./plate-element";
-
-export type ImageWidth = "column" | "wide" | "full";
 
 const ImagePlaceholder = () => (
   <div className="flex relative aspect-video w-full rounded-sm">
@@ -20,11 +18,60 @@ const ImagePlaceholder = () => (
   </div>
 );
 
-export const IMAGE_WIDTH_CLASSES: Record<ImageWidth, string> = {
-  wide: "w-screen max-w-[65vw] relative -translate-x-1/2 left-1/2 content-center justify-center",
-  full: "w-screen max-w-[90vw] relative -translate-x-1/2 left-1/2 content-center justify-center",
-  column: "w-full max-w-full",
-} as const;
+function ImagePopover({ children, url }: { children: React.ReactNode; url?: string }) {
+  const editor = useEditorRef();
+  const element = useElement();
+  const { props: buttonProps } = useRemoveNodeButton({ element });
+  const [isUploading, setIsUploading] = useState(false);
+  const [width, setWidth] = useState<ElementWidth>((element?.width as ElementWidth) || "column");
+
+  const handleWidth = (newWidth: ElementWidth) => {
+    setWidth(newWidth);
+    setNode(editor, element, { url, width: newWidth });
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const url = await uploadFile(file);
+      if (url) {
+        setNode(editor, element, { url, width });
+        selectEditor(editor, {
+          at: editor.selection || undefined,
+          edge: editor.selection ? undefined : "end",
+          focus: true,
+        });
+      }
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const changeButton = url && (
+    <Button variant="ghost" disabled={isUploading}>
+      <div className="relative flex gap-1 items-center justify-center">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileSelect}
+          className="absolute inset-0 cursor-pointer opacity-0"
+          disabled={isUploading}
+        />
+        {isUploading ? <LoadingSpinner /> : <></>}
+        Change
+      </div>
+    </Button>
+  );
+
+  return (
+    <ElementPopover defaultWidth={width} onWidthChange={handleWidth} content={changeButton}>
+      {children}
+    </ElementPopover>
+  );
+}
 
 export const ImageElement = withRef<typeof PlateElement>(
   ({ children, className, nodeProps, autoFocus = true, ...props }, ref) => {
@@ -32,11 +79,11 @@ export const ImageElement = withRef<typeof PlateElement>(
     const [_isImageLoaded, setIsImageLoaded] = useState(false);
     const [url, setUrl] = useState<string | undefined>(props?.element?.url as string | undefined);
     const [isUploading, setIsUploading] = useState(false);
-    const [width, setWidth] = useState<ImageWidth>("column");
+    const [width, setWidth] = useState<ElementWidth>("column");
     const editor = useEditorRef();
     const readonly = useReadOnly();
     const element = useElement();
-    console.log(element)
+    console.log(element);
 
     useEffect(() => {
       if (props.element?.url) {
@@ -48,7 +95,7 @@ export const ImageElement = withRef<typeof PlateElement>(
 
     useEffect(() => {
       if (props.element?.width) {
-        setWidth(props.element.width as ImageWidth);
+        setWidth(props.element.width as ElementWidth);
       }
     }, [props.element.width]);
 
@@ -74,8 +121,8 @@ export const ImageElement = withRef<typeof PlateElement>(
     };
 
     return (
-      <ImagePopover url={url} plugin={ImagePlugin}>
-        <PlateElement ref={ref} className={cn(className, width && IMAGE_WIDTH_CLASSES[width], "my-8")} {...props}>
+      <ImagePopover url={url}>
+        <PlateElement ref={ref} className={cn(className, width && ELEMENT_WIDTH_CLASSES[width], "my-8")} {...props}>
           <figure className="group" contentEditable={false}>
             {!url ? (
               <div className={cn("rounded-sm relative ", focused && selected && "ring-2 ring-ring ")}>
