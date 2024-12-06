@@ -2,17 +2,19 @@
 
 import { cn, withRef } from "@udecode/cn";
 import {
-    createPrimitiveComponent,
-    selectSiblingNodePoint,
-    setNode,
-    useEditorRef,
-    useElement,
+  createPrimitiveComponent,
+  selectSiblingNodePoint,
+  setNode,
+  useEditorRef,
+  useElement,
 } from "@udecode/plate-common/react";
 import type { TEquationElement } from "@udecode/plate-math";
 import { useEquationElement, useEquationInput } from "@udecode/plate-math/react";
+import { useMediaState } from "@udecode/plate-media/react";
 import { RadicalIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useReadOnly, useSelected } from "slate-react";
+import { useReadOnly } from "slate-react";
+import { Caption, CaptionTextarea } from "./caption";
 import { ELEMENT_WIDTH_CLASSES, ElementPopover, ElementWidth } from "./element-popover";
 import { PlateElement } from "./plate-element";
 import { TextareaAutosize } from "./textarea";
@@ -21,14 +23,14 @@ const EquationInput = createPrimitiveComponent(TextareaAutosize)({
   propsHook: useEquationInput,
 });
 
-export const EquationElement = withRef<typeof PlateElement>(({ children, className, ...props },  ref) => {
+export const EquationElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
   const element = useElement<TEquationElement>();
   const editor = useEditorRef();
   const [open, setOpen] = useState(false);
   const katexRef = useRef<HTMLDivElement | null>(null);
   const [width, setWidth] = useState<ElementWidth>((element?.width as ElementWidth) || "column");
   const readOnly = useReadOnly();
-  const selected = useSelected();
+  const { align = "center", focused, selected } = useMediaState();
 
   useEffect(() => {
     setOpen(selected);
@@ -36,8 +38,7 @@ export const EquationElement = withRef<typeof PlateElement>(({ children, classNa
 
   const handleClose = () => {
     setOpen(false);
-      selectSiblingNodePoint(editor, { node: element });
-
+    selectSiblingNodePoint(editor, { node: element });
   };
 
   const renderEquationInput = () => {
@@ -46,7 +47,7 @@ export const EquationElement = withRef<typeof PlateElement>(({ children, classNa
     return (
       <EquationInput
         className="grow w-full rounded-[4px]"
-        state={{ isInline:false , open: true, onClose: handleClose }}
+        state={{ isInline: false, open: true, onClose: handleClose }}
         autoFocus
         variant={"default"}
       />
@@ -86,14 +87,28 @@ export const EquationElement = withRef<typeof PlateElement>(({ children, classNa
         className={cn("relative my-8", width && ELEMENT_WIDTH_CLASSES[width], className)}
         {...props}
       >
-        {element?.texExpression?.length > 0 ? (
-          <span ref={katexRef} />
-        ) : (
-          <div className="flex h-7 w-full items-center gap-2 whitespace-nowrap text-sm text-muted-foreground">
-            <RadicalIcon className="size-6 text-muted-foreground/80" />
-            <div>Add a Tex equation</div>
+        <figure className={cn("group rounded-sm")} contentEditable={false}>
+          <div className={cn(focused && selected && "ring-2 ring-ring ", "rounded-sm p-2")}>
+            {element?.texExpression?.length > 0 ? (
+              <span ref={katexRef} />
+            ) : (
+              <div className="flex h-7 w-full items-center gap-2 whitespace-nowrap text-sm text-muted-foreground">
+                <RadicalIcon className="size-6 text-muted-foreground/80" />
+                <div>Add a Tex equation</div>
+              </div>
+            )}
           </div>
-        )}
+
+          <Caption className={ELEMENT_WIDTH_CLASSES[width]}>
+            <CaptionTextarea
+              readOnly={readOnly}
+              onFocus={(e) => {
+                e.preventDefault();
+              }}
+              placeholder="Write a caption..."
+            />
+          </Caption>
+        </figure>
 
         {children}
       </PlateElement>
