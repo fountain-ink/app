@@ -499,7 +499,6 @@ export default function ComponentsPage() {
       <section className="space-y-4">
         <h2 className="text-2xl font-bold">HoverCard</h2>
         <HoverCard>
-          <HoverCardTrigger asChild></HoverCardTrigger>
           <HoverCardContent className="w-80">
             <div className="flex justify-between space-x-4">
               <Avatar>

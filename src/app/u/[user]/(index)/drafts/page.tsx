@@ -6,6 +6,8 @@ import { AuthorView } from "@/components/user/user-author-view";
 import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 import { notFound } from "next/navigation";
 
+export const revalidate = 0;
+
 const UserPage = async ({ params }: { params: { user: string } }) => {
   const { lens, handle: userHandle, profileId } = await getAuthWithCookies();
   const pageHandle = `lens/${params.user}`;
