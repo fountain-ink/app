@@ -2,6 +2,7 @@
 
 import { ImageElement } from "@/components/ui/image-element";
 import { LinkFloatingToolbar } from "@/components/ui/link-floating-toolbar";
+import { uploadFile } from "@/lib/upload-image";
 import { AlignPlugin } from "@udecode/plate-alignment/react";
 import { AutoformatPlugin } from "@udecode/plate-autoformat/react";
 import {
@@ -73,7 +74,6 @@ import { toast } from "sonner";
 import { autoformatRules } from "./plugins/editor-autoformat";
 import { NormalizePlugin } from "./plugins/editor-normalization";
 import { RenderAboveEditableYjs } from "./plugins/yjs-above-editable";
-import { uploadFile } from "@/lib/upload-image";
 
 export const getEditorPlugins = (path: string, handle?: string, refreshToken?: string, readOnly?: boolean) => {
   const plugins = [...staticPlugins];
@@ -257,13 +257,11 @@ export const staticPlugins = [
   }),
   PlaceholderPlugin,
   ImagePlugin.extend({
-  
     render: {
-      // afterEditable: ImagePreview,
       node: ImageElement,
     },
   }).configure({
-    options: {uploadImage: uploadFile},
+    options: { uploadImage: uploadFile },
   }),
   VideoPlugin,
   AudioPlugin,
