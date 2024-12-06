@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 import type { TLinkElement } from "@udecode/plate-link";
 
 import { cn, withRef } from "@udecode/cn";
@@ -18,7 +16,7 @@ export const LinkElement = withRef<typeof PlateElement>(({ children, className, 
     <PlateElement
       ref={ref}
       as="a"
-      className={cn("text-primary underline not-prose decoration-primary underline-offset-4", className)}
+      className={cn("text-secondary underline not-prose decoration-secondary underline-offset-4", className)}
       {...(linkProps as any)}
       {...props}
     >
