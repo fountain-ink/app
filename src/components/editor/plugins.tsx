@@ -73,6 +73,7 @@ import { toast } from "sonner";
 import { autoformatRules } from "./plugins/editor-autoformat";
 import { NormalizePlugin } from "./plugins/editor-normalization";
 import { RenderAboveEditableYjs } from "./plugins/yjs-above-editable";
+import { uploadFile } from "@/lib/upload-image";
 
 export const getEditorPlugins = (path: string, handle?: string, refreshToken?: string, readOnly?: boolean) => {
   const plugins = [...staticPlugins];
@@ -256,10 +257,13 @@ export const staticPlugins = [
   }),
   PlaceholderPlugin,
   ImagePlugin.extend({
+  
     render: {
       // afterEditable: ImagePreview,
       node: ImageElement,
     },
+  }).configure({
+    options: {uploadImage: uploadFile},
   }),
   VideoPlugin,
   AudioPlugin,
