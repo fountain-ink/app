@@ -268,9 +268,6 @@ export const staticPlugins = [
   AudioPlugin,
   MediaEmbedPlugin,
   FilePlugin,
-  CaptionPlugin.configure({
-    options: { plugins: [ImagePlugin] },
-  }),
   InlineEquationPlugin,
   EquationPlugin,
   CalloutPlugin,

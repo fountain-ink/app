@@ -73,7 +73,6 @@ export const InlineEquationElement = withRef<typeof PlateElement>(({ children, c
       className={cn("inline-block select-none rounded-sm [&_.katex-display]:my-0", className)}
       {...props}
     >
-
       <ElementPopover showWidth={false} showCaption={false} sideOffset={5} verticalContent={renderEquationInput()}>
         <div
           className={cn(

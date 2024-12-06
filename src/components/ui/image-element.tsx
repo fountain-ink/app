@@ -83,7 +83,6 @@ export const ImageElement = withRef<typeof PlateElement>(
     const editor = useEditorRef();
     const readonly = useReadOnly();
     const element = useElement();
-    console.log(element);
 
     useEffect(() => {
       if (props.element?.url) {
@@ -166,8 +165,15 @@ export const ImageElement = withRef<typeof PlateElement>(
                 onLoad={() => setIsImageLoaded(true)}
               />
             )}
+
             <Caption className={width} align={align}>
-              <CaptionTextarea readOnly={readOnly} placeholder="Write a caption..." />
+              <CaptionTextarea
+                readOnly={readOnly}
+                onFocus={(e) => {
+                  e.preventDefault();
+                }}
+                placeholder="Write a caption..."
+              />
             </Caption>
           </figure>
 

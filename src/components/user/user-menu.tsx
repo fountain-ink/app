@@ -29,7 +29,6 @@ export const UserMenu = () => {
   const { disconnect } = useDisconnect();
   const { execute: logout, loading: logoutLoading } = useLogout();
   const pathname = usePathname()
-  console.log(pathname)
 
   if (loading) return <AvatarSuspense />;
 

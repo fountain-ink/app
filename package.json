@@ -68,7 +68,7 @@
     "@udecode/plate-block-quote": "^40.0.0",
     "@udecode/plate-break": "^40.0.0",
     "@udecode/plate-callout": "^40.0.0",
-    "@udecode/plate-caption": "^40.0.0",
+    "@udecode/plate-caption": "^40.2.5",
     "@udecode/plate-code-block": "^40.0.0",
     "@udecode/plate-combobox": "^40.0.0",
     "@udecode/plate-comments": "^40.0.0",

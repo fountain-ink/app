@@ -11,10 +11,10 @@ export function ensureLeadingBlock(editor: PlateEditor, { event }: { event?: Rea
     event?.preventDefault();
     event?.stopPropagation();
 
-    console.log("INSERTING h1");
+    // console.log("INSERTING h1");
     insertEmptyElement(editor, HEADING_KEYS.h1, { select: true });
   } else if (children?.[0]?.type !== HEADING_KEYS.h1) {
-    console.log("INSERTING h1 AT 0");
+    // console.log("INSERTING h1 AT 0");
     insertEmptyElement(editor, HEADING_KEYS.h1, {
       at: [0],
       select: true,
