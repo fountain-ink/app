@@ -1,13 +1,10 @@
-import React from "react";
-
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
-import { SubscriptPlugin, SuperscriptPlugin } from "@udecode/plate-basic-marks/react";
 import { collapseSelection } from "@udecode/plate-common";
 import { focusEditor, useEditorRef } from "@udecode/plate-common/react";
 import { HighlightPlugin } from "@udecode/plate-highlight/react";
 import { KbdPlugin } from "@udecode/plate-kbd/react";
-import { HighlighterIcon, KeyboardIcon, MoreHorizontalIcon, SubscriptIcon, SuperscriptIcon } from "lucide-react";
+import { HighlighterIcon, KeyboardIcon, MoreHorizontalIcon } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -42,6 +39,7 @@ export function MoreDropdownMenu(props: DropdownMenuProps) {
               collapseSelection(editor, { edge: "end" });
               focusEditor(editor);
             }}
+            className="flex items-center gap-2"
           >
             <HighlighterIcon />
             Highlight
@@ -53,6 +51,7 @@ export function MoreDropdownMenu(props: DropdownMenuProps) {
               collapseSelection(editor, { edge: "end" });
               focusEditor(editor);
             }}
+            className="flex items-center gap-2"
           >
             <KeyboardIcon />
             Keyboard input
