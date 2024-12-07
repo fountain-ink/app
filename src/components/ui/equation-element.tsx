@@ -80,6 +80,7 @@ export const EquationElement = withRef<typeof PlateElement>(({ children, classNa
       sideOffset={10}
       verticalContent={renderEquationInput()}
       defaultWidth={width}
+      showWidth={false}
       onWidthChange={handleWidth}
     >
       <PlateElement
