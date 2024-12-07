@@ -50,7 +50,7 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
   );
 
   return (
-    <ElementPopover onWidthChange={handleWidth} content={popoverContent}>
+    <ElementPopover sideOffset={5} onWidthChange={handleWidth} content={popoverContent}>
       <PlateElement
         ref={ref}
         className={cn("relative my-8 rounded-sm", width && ELEMENT_WIDTH_CLASSES[width], state.className, className)}
