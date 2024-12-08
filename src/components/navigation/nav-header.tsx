@@ -6,7 +6,7 @@ import { FountainLogo } from "../custom-icons";
 import { ThemeSidebar } from "../theme/theme-editor";
 import { ThemeToggle } from "../theme/theme-toggle";
 import { UserMenu } from "../user/user-menu";
-import { PublishMenu } from "./publish-menu-button";
+import { PublishMenu, PublishMenuButton } from "./publish-menu-button";
 import { WriteMenu } from "./write-menu-button";
 
 export const Header = () => {
@@ -34,8 +34,7 @@ export const Header = () => {
       </Link>
       <div className="flex gap-4 pointer-events-auto">
         <ThemeToggle />
-        {isWritePage && <ThemeSidebar />}
-        {isWritePage && <PublishMenu />}
+        {isWritePage && <PublishMenuButton />}
         {!isWritePage && <WriteMenu />}
         <UserMenu />
       </div>

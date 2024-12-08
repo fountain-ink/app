@@ -1,4 +1,4 @@
-import { EditorPublishing } from "@/components/editor/addons/editor-publishing";
+import { PublishDialog } from "@/components/editor/addons/editor-publish-dialog";
 import Editor from "@/components/editor/editor";
 import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 import { getTokenFromCookie } from "@/lib/auth/get-token-from-cookie";
@@ -37,7 +37,7 @@ export default async function WriteDraft({ params }: { params: { id: string } })
 
   return (
     <Editor showToc pathname={pathname} refreshToken={refreshToken} handle={handle}>
-      <EditorPublishing />
+      <PublishDialog />
     </Editor>
   );
 }

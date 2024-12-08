@@ -4,8 +4,7 @@ import type { ArticleMetadataV3, Post, ProfileId } from "@lens-protocol/react-we
 import Link from "next/link";
 import { useState } from "react";
 import type { Draft } from "../draft/draft";
-import { DraftDeleteDialog } from "../draft/draft-delete-dialog";
-import { DraftOptionsDropdown } from "../draft/draft-menu";
+import { DraftDeleteDialog, DraftOptionsDropdown } from "../draft/draft-menu";
 import Markdown from "../markdown";
 import { LazyAuthorView } from "../user/user-author-view";
 import { PostMenu } from "./post-menu";
