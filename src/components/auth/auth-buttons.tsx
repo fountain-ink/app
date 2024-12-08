@@ -1,5 +1,6 @@
 "use client";
 
+import { useLogout } from "@lens-protocol/react-web";
 import { window } from "@/lib/global-window";
 import { LensClient, production } from "@lens-protocol/client";
 import { type Profile, useLogin } from "@lens-protocol/react-web";
@@ -63,6 +64,22 @@ export function LoginButton({ profile, onSuccess }: { profile: Profile; onSucces
     >
       <UserAvatar profile={profile} className="w-8 h-8" />
       {profile.handle?.localName ?? profile.id}
+    </Button>
+  );
+}
+
+export const logoutProfile = () => {
+  const { execute, loading } = useLogout();
+
+  if (loading) return;
+
+  execute();
+};
+
+export function LogoutButton() {
+  return (
+    <Button variant="default" onClick={() => logoutProfile()}>
+      Log out
     </Button>
   );
 }

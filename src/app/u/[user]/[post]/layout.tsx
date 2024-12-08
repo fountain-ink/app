@@ -1,6 +1,6 @@
-import { Footer } from "@/components/navigation/footer";
+import { ArticleLayout } from "@/components/navigation/article-layout";
 import { GradientBlur } from "@/components/navigation/gradient-blur";
-import { ArticleLayout } from "@/components/post/article-layout";
+import { Footer } from "@/components/navigation/nav-footer";
 
 const UserPostLayout = async ({ children }: { children: React.ReactNode; params: { user: string } }) => {
   return (

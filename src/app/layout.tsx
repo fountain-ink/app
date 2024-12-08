@@ -1,5 +1,5 @@
 import { CookieManager } from "@/components/auth/cookie-manager";
-import { Header } from "@/components/navigation/header";
+import { Header } from "@/components/navigation/nav-header";
 import { ThemeProvider } from "@/components/theme/theme-context";
 import { Toaster } from "@/components/ui/sonner";
 import { Web3Providers } from "@/components/web3-providers";

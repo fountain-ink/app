@@ -1,6 +1,6 @@
 "use client";
 
-import { PageTransition } from "@/components/transition";
+import { PageTransition } from "@/components/navigation/page-transition";
 import { AnimatePresence } from "framer-motion";
 
 export default function Template({ children }: { children: React.ReactNode }) {

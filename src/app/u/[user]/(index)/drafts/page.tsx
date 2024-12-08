@@ -1,6 +1,6 @@
 import { CloudDraftsList } from "@/components/draft/draft-list-cloud";
 import ErrorPage from "@/components/error-page";
-import { IndexNavigation } from "@/components/navigation/index-navigation";
+import { IndexNavigation } from "@/components/navigation/index-navigation-menu";
 import { Separator } from "@/components/ui/separator";
 import { AuthorView } from "@/components/user/user-author-view";
 import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";

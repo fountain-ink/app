@@ -1,7 +1,7 @@
 import { UserContent } from "@/components/user/user-content";
 import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 
-import { IndexNavigation } from "@/components/navigation/index-navigation";
+import { IndexNavigation } from "@/components/navigation/index-navigation-menu";
 import { Separator } from "@/components/ui/separator";
 import { AuthorView } from "@/components/user/user-author-view";
 import { notFound } from "next/navigation";
@@ -16,7 +16,6 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
   }
 
   const isUserProfile = userHandle === params.user;
-
 
   return (
     <>

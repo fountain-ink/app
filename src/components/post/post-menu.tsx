@@ -1,7 +1,7 @@
 import { useProfileId } from "@/hooks/use-profile-id";
 import type { Post } from "@lens-protocol/react-web";
 import { Bookmark, Link, MoreHorizontal, Trash2 } from "lucide-react";
-import { ActionButton, type DropdownItem } from "./action-button";
+import { ActionButton, type DropdownItem } from "./post-action-button";
 
 export const PostMenu = ({ post }: { post: Post }) => {
   const handleCopyLink = () => {

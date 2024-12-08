@@ -1,4 +1,4 @@
-import { defaultContent } from "@/components/draft/draft-create";
+import { defaultContent } from "@/components/draft/draft-create-button";
 import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 import { getRandomUid } from "@/lib/get-random-uid";
 import { type NextRequest, NextResponse } from "next/server";

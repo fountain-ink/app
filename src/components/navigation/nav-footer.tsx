@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Bookmark, Heart, MessageCircle, PenLineIcon, Repeat2Icon, Share2, ShoppingBag } from "lucide-react";
 import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
 import { toast } from "sonner";
-import { ActionButton } from "../post/action-button";
+import { ActionButton } from "../post/post-action-button";
 
 const actionButtons = [
   {

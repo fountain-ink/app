@@ -36,11 +36,6 @@ export const defaultContent: any = [
   },
 ];
 
-type CreateButtonProps = {
-  onSuccess?: () => void;
-  text?: string;
-};
-
 export const NewLocalDraftButton = () => {
   const { saveDocument } = useDocumentStorage();
   const router = useRouter();

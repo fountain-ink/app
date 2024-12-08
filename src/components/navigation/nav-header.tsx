@@ -4,10 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FountainLogo } from "../custom-icons";
 import { ThemeSidebar } from "../theme/theme-editor";
-import { UserMenu } from "../user/user-menu";
-import { PublishMenu } from "./publish-menu";
-import { WriteMenu } from "./write-menu";
 import { ThemeToggle } from "../theme/theme-toggle";
+import { UserMenu } from "../user/user-menu";
+import { PublishMenu } from "./publish-menu-button";
+import { WriteMenu } from "./write-menu-button";
 
 export const Header = () => {
   const pathname = usePathname();

@@ -1,6 +1,6 @@
 import type { Post } from "@lens-protocol/react-web";
 import { Bookmark, Heart, MessageCircle, Repeat2 } from "lucide-react";
-import { ActionButton } from "./action-button";
+import { ActionButton } from "./post-action-button";
 
 const reactions = [
   {

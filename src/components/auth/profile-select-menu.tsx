@@ -6,7 +6,7 @@ import { UserIcon } from "../icons/user";
 import { AnimatedMenuItem } from "../navigation/animated-item";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
-import { LoginButton } from "./login-button";
+import { LoginButton } from "./auth-buttons";
 
 export function ProfileSelectMenu({ onSuccess }: { onSuccess: (profile: Profile) => void }) {
   const { address } = useAccount();

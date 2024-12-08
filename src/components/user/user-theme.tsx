@@ -12,7 +12,7 @@ export const UserTheme = ({
   profile,
 }: { children: React.ReactNode; profile: ProfileFragment | undefined }) => {
   const userTheme = profile?.metadata?.attributes?.find((attr) => attr.key === "theme")?.value ?? defaultThemeName;
-  const { theme: currentTheme, setTheme } = useTheme();
+  const { setTheme } = useTheme();
 
   useEffect(() => {
     if (userTheme && isValidTheme(userTheme)) {
