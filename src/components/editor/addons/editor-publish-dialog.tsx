@@ -7,20 +7,23 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { usePublishStore } from "@/hooks/use-publish-store";
+import { usePlateStore } from "@udecode/plate-common/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CircleDollarSign, Clock, Eye, PenIcon, ShoppingBag, ShoppingBagIcon, Star, Users } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PublishButton } from "./editor-publish-button";
 
 export const PublishDialog = () => {
   const { isOpen, setIsOpen } = usePublishStore();
-  const [tab, setTab] = useState("article");
+  const [tab, setTab] = useState("preview");
   const [isCollectingEnabled, setIsCollectingEnabled] = useState(false);
   const isPreview = tab === "preview";
 
-  const handleBack = () => {
-    setTab("article");
-  };
+  const setReadOnly = usePlateStore().set.readOnly();
+
+  useEffect(() => {
+    setReadOnly(isPreview);
+  }, [isPreview]);
 
   return (
     <AnimatePresence>
@@ -196,7 +199,13 @@ export const PublishDialog = () => {
                 </Tabs>
 
                 <div className="flex items-center justify-between flex-shrink-0">
-                  <Button variant="outline" onClick={() => setIsOpen(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setIsOpen(false);
+                      setReadOnly(false);
+                    }}
+                  >
                     Back
                   </Button>
 

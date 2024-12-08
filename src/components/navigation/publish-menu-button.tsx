@@ -39,5 +39,5 @@ export const PublishMenu = () => {
 export const PublishMenuButton = () => {
   const setIsOpen = usePublishStore((state) => state.setIsOpen);
 
-  return <Button onClick={() => setIsOpen(true)}>Publish</Button>;
+  return <Button onClick={() => setIsOpen(true)}>Preview</Button>;
 };
