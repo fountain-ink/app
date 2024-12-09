@@ -22,8 +22,8 @@ export const PublishDialog = () => {
   const setReadOnly = usePlateStore().set.readOnly();
 
   useEffect(() => {
-    setReadOnly(isPreview);
-  }, [isPreview]);
+    setReadOnly(isPreview && isOpen);
+  }, [isPreview, isOpen]);
 
   return (
     <AnimatePresence>
