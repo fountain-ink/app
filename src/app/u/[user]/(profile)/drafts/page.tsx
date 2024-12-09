@@ -26,14 +26,14 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
 
   return (
     <>
-      <div className="p-4 ">
+      {/* <div className="p-4 ">
         <AuthorView showHandle={false} profiles={[profile]} />
       </div>
       <div className="text-[1.5rem] sm:text-[2rem] lg:text-[2.5rem] text-center font-[letter-spacing:var(--title-letter-spacing)] font-[family-name:var(--title-font)] font-normal font-[color:var(--title-color)] overflow-hidden line-clamp-2">
         Drafts
       </div>
-      <Separator className="w-48 bg-primary mt-3" />
-      <IndexNavigation username={params.user} isUserProfile={isUserProfile} />
+      <Separator className="w-48 bg-primary mt-3" /> */}
+      {/* <IndexNavigation username={params.user} isUserProfile={isUserProfile} /> */}
       <div className="flex flex-col my-4 gap-4">
         <CloudDraftsList profileId={profileId} />
       </div>

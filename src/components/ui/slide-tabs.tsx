@@ -1,69 +1,57 @@
 "use client";
 
-import * as TabsPrimitive from "@radix-ui/react-tabs";
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
+interface NavItem {
+  href: string;
+  label: string;
+  isVisible?: boolean;
+}
 
-const Tabs = TabsPrimitive.Root;
+interface SlideNavProps {
+  items: NavItem[];
+  className?: string;
+}
 
-const TabsList = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.List>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.List
-    ref={ref}
-    className={cn(
-      "relative inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
-      className,
-    )}
-    {...props}
-  />
-));
-TabsList.displayName = TabsPrimitive.List.displayName;
+export function SlideNav({ items, className }: SlideNavProps) {
+  const pathname = usePathname();
+  const [activeItem, setActiveItem] = React.useState<HTMLElement | null>(null);
 
-const TabsTrigger = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> & {
-    'data-state'?: 'active' | 'inactive'
-  }
->(({ className, ...props }, ref) => {
-  const [element, setElement] = React.useState<HTMLElement | null>(null);
-  const [elementWidth, setElementWidth] = React.useState(0);
-  const [elementOffset, setElementOffset] = React.useState(0);
-
-  React.useEffect(() => {
-    if (element) {
-      setElementWidth(element.offsetWidth);
-      setElementOffset(element.offsetLeft);
-    }
-  }, [element]);
+  const visibleItems = items.filter((item) => item.isVisible !== false);
 
   return (
-    <TabsPrimitive.Trigger
-      ref={(node) => {
-        setElement(node);
-        if (typeof ref === "function") {
-          ref(node);
-        } else if (ref) {
-          ref.current = node;
-        }
-      }}
-      className={cn(
-        "relative inline-flex items-center justify-center whitespace-nowrap px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-        className
-      )}
-      {...props}
-    >
-      {props.children}
-      {props['data-state'] === 'active' && (
+    <nav className={cn("relative flex justify-center", className)}>
+      <div className="relative flex gap-4">
+        {visibleItems.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            ref={(node) => {
+              if (node && pathname === item.href) {
+                setActiveItem(node);
+              }
+            }}
+            className={cn(
+              "px-4 py-2 text-sm font-medium transition-colors relative",
+              pathname === item.href ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            {item.label}
+          </Link>
+        ))}
+      </div>
+      {activeItem && (
         <motion.div
-          layoutId="underline"
-          className="absolute bottom-0 left-0 h-0.5 w-full bg-foreground"
+          layoutId="navunderline"
+          className="absolute bottom-0 left-0 h-0.5 bg-foreground"
+          initial={false}
           animate={{
-            width: elementWidth,
-            x: elementOffset,
+            width: activeItem.offsetWidth,
+            x: activeItem.offsetLeft,
           }}
           transition={{
             type: "spring",
@@ -72,25 +60,6 @@ const TabsTrigger = React.forwardRef<
           }}
         />
       )}
-    </TabsPrimitive.Trigger>
+    </nav>
   );
-});
-TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
-
-const TabsContent = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.Content
-    ref={ref}
-    className={cn(
-      "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-      className,
-    )}
-    {...props}
-  />
-));
-TabsContent.displayName = TabsPrimitive.Content.displayName;
-
-export { Tabs, TabsContent, TabsList, TabsTrigger };
-
+}
