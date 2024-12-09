@@ -36,7 +36,7 @@ const replaceHandles = (content: string): string => {
     .replace(userHandleRegex, (match) => {
       const parts = match.slice(1).split("/");
       const handle = parts.length > 1 ? parts[1] : parts[0];
-      return `${BASE_URL}/u/${handle}`;
+      return `${BASE_URL}u/${handle}`;
     })
     .replace(communityHandleRegex, (match) => `${BASE_URL}c${match}`);
 };
@@ -53,7 +53,7 @@ const CustomLink: Components["a"] = ({ node, ...props }) => {
   const { href, children } = props;
   if (href?.startsWith(BASE_URL)) {
     if (href.startsWith(`${BASE_URL}`)) {
-      return <UserLazyHandle handle={href.split("//")[1]?.split("/")[1] || ""} />;
+      return <UserLazyHandle handle={href.split("/u/")[1] || ""} />;
     }
     // if (href.startsWith(`${BASE_URL}c/`)) {
     //   return <CommunityHandle handle={href.split("/c/")[1]} />;
