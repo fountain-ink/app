@@ -18,7 +18,6 @@ export const PublishDialog = () => {
   const [tab, setTab] = useState("preview");
   const [isCollectingEnabled, setIsCollectingEnabled] = useState(false);
   const isPreview = tab === "preview";
-
   const setReadOnly = usePlateStore().set.readOnly();
 
   useEffect(() => {

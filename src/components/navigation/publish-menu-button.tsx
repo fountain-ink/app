@@ -2,42 +2,17 @@
 
 import { Button } from "@/components/ui/button";
 import { usePublishStore } from "@/hooks/use-publish-store";
-import { usePathname, useRouter } from "next/navigation";
 
 export const PublishMenu = () => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const isPreview = pathname.includes("/preview");
-  const pathParts = pathname.split("/");
-  const documentId = pathParts[pathParts.indexOf("write") + 1];
-  const setIsOpen = usePublishStore((state) => state.setIsOpen);
+  const [setIsOpen, isOpen] = usePublishStore((state) => [state.setIsOpen, state.isOpen]);
 
   const handleClick = () => {
-    if (isPreview) {
-      router.push(`/write/${documentId}`);
-    } else {
-      router.push(`/write/${documentId}/preview`);
-    }
+    setIsOpen(!isOpen);
   };
 
   return (
-    <>
-      {isPreview ? (
-        <>
-          <Button variant={"outline"} onClick={handleClick}>
-            Edit
-          </Button>
-          <Button onClick={() => setIsOpen(true)}>Publish</Button>
-        </>
-      ) : (
-        <Button onClick={handleClick}>Preview</Button>
-      )}
-    </>
+    <Button className="trasition-all duration-300" variant={isOpen ? "outline" : "default"} onClick={handleClick}>
+      {isOpen ? "Edit" : "Preview"}
+    </Button>
   );
-};
-
-export const PublishMenuButton = () => {
-  const setIsOpen = usePublishStore((state) => state.setIsOpen);
-
-  return <Button onClick={() => setIsOpen(true)}>Preview</Button>;
 };
