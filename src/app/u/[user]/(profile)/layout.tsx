@@ -64,6 +64,10 @@ export default async function UserLayout({
                 label: "Drafts",
                 isVisible: isUserProfile,
               },
+              {
+                href: `/u/${params.user}/about`,
+                label: "About",
+              },
             ]}
             className="w-fit"
           />
