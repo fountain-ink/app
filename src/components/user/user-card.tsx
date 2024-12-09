@@ -35,7 +35,7 @@ export const UserCard = ({ children, handle, linkProfile = false }: UserCardProp
         {linkProfile && handle ? <Link href={`/u/${handle}/profile`}>{children}</Link> : children}
       </HoverCardTrigger>
       <HoverCardContent className="w-full max-w-sm" side="top">
-        {(loading || !user) && <LoadingSpinner />}
+        {(loading && !user) && <LoadingSpinner />}
         {error && <div>Error: {error.message}</div>}
         {user && (
           <div className="flex flex-col gap-2">
