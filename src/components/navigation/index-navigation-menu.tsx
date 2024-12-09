@@ -12,11 +12,11 @@ export const IndexNavigation = ({ username, isUserProfile }: { username: string;
       <Link href={`/u/${username}`} prefetch>
         <Button variant={pathname === `/u/${username}` ? "ghost2" : "ghost"}>All</Button>
       </Link>
-      {isUserProfile && (
+      {/* {isUserProfile && (
         <Link href={`/u/${username}/drafts`} prefetch>
           <Button variant={pathname === `/u/${username}/drafts` ? "ghost2" : "ghost"}>Drafts</Button>
         </Link>
-      )}
+      )} */}
     </div>
   );
 };
