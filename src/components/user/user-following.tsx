@@ -1,5 +1,5 @@
 import type { ProfileFragment } from "@lens-protocol/client";
-import { type Profile, SessionType, useSession } from "@lens-protocol/react-web";
+import type { Profile } from "@lens-protocol/react-web";
 
 export const UserFollowing = ({ profile }: { profile?: Profile | ProfileFragment }) => {
   const following = profile?.stats.following;
@@ -11,7 +11,7 @@ export const UserFollowing = ({ profile }: { profile?: Profile | ProfileFragment
 
   return (
     <div className="text-foreground text-lg">
-      <b>{following}</b> following <b>{followers}</b> followers
+      <b>{following}</b> following <b className="ml-2">{followers}</b> followers
     </div>
   );
 };

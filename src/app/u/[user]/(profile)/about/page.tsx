@@ -13,7 +13,11 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
 
   const isUserProfile = profileId === profile.id;
 
-  return <UserBio profile={profile} />;
+  return (
+    <div className="p-4">
+      <UserBio profile={profile} />
+    </div>
+  );
 };
 
 export default UserPage;
