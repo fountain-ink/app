@@ -35,6 +35,7 @@ export function SlideNav({ items, className }: SlideNavProps) {
                 setActiveItem(node);
               }
             }}
+            prefetch
             className={cn(
               "px-4 py-2 text-sm font-medium transition-colors relative",
               pathname === item.href ? "text-foreground" : "text-muted-foreground hover:text-foreground",

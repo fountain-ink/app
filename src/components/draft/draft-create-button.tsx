@@ -56,7 +56,7 @@ export const NewLocalDraftButton = () => {
   };
 
   return (
-    <Button onClick={handleNew} variant={"default"} className="flex gap-2">
+    <Button onClick={handleNew} variant={"default"} className="flex gap-2 font-bold text-sm">
       Write
     </Button>
   );
@@ -89,14 +89,14 @@ export const RemoteDraftCreate = () => {
     <Button
       onClick={handleCreate}
       variant={isCreating ? "ghost" : "default"}
-      className="flex flex-col items-center justify-start gap-2 w-full text-base"
+      className="flex items-center justify-center gap-2 w-full font-bold text-sm"
     >
       {isCreating ? (
         <div className="w-8 h-8 flex items-center justify-center">
           <LoadingSpinner size={20} className="w-4 h-4 flex items-center justify-center" />
         </div>
       ) : (
-        <span className="text-center font-normal">Write</span>
+        "Write"
       )}
     </Button>
   );

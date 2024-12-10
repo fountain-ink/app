@@ -10,7 +10,7 @@ export const UserFollowing = ({ profile }: { profile?: Profile | ProfileFragment
   }
 
   return (
-    <div className="text-foreground text-lg">
+    <div className="">
       <b>{following}</b> following <b className="ml-2">{followers}</b> followers
     </div>
   );
