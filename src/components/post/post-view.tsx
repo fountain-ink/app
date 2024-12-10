@@ -1,7 +1,6 @@
 import { extractMetadata } from "@/lib/get-article-title";
 import { formatDate, formatRelativeTime } from "@/lib/utils";
 import type { ArticleMetadataV3, Post, ProfileId } from "@lens-protocol/react-web";
-import Link from "next/link";
 import { useState } from "react";
 import type { Draft } from "../draft/draft";
 import { DraftDeleteDialog, DraftOptionsDropdown } from "../draft/draft-menu";
@@ -25,6 +24,8 @@ interface PostViewProps {
   options?: PostViewOptions;
   isDraft?: boolean;
   onDelete?: () => void;
+  isSelected?: boolean;
+  onSelect?: () => void;
 }
 
 export const PostView = ({
@@ -38,6 +39,8 @@ export const PostView = ({
     showPreview: true,
     showContent: true,
   },
+  isSelected = false,
+  onSelect,
   isDraft = false,
   onDelete,
 }: PostViewProps) => {
@@ -70,8 +73,11 @@ export const PostView = ({
 
   return (
     <div
-      className={`group/post flex flex-row items-start justify-start gap-4 bg-transparent hover:bg-card/50 hover:text-card-foreground transition-all
-      ease-in duration-100 border-0 shadow-none relative w-screen rounded-sm p-4 max-w-full sm:max-w-2xl ${options.showPreview ? "h-48" : "h-fit"}`}
+      className={`group/post flex flex-row items-start justify-start gap-4
+      ${isSelected ? "bg-primary/10" : "bg-transparent hover:bg-card/50"}
+      hover:text-card-foreground transition-all ease-in duration-100
+      border-0 shadow-none relative w-screen rounded-sm p-4
+      max-w-full sm:max-w-2xl ${options.showPreview ? "h-48" : "h-fit"}`}
     >
       {options.showPreview && (
         <div className="h-40 w-40 shrink-0 aspect-square rounded-sm overflow-hidden">
@@ -117,13 +123,6 @@ export const PostView = ({
           )}
         </div>
 
-        <Link
-          href={isDraft ? `/write/${(item as Draft).documentId}` : `/u/${handle}/${(item as Post).id}`}
-          prefetch
-          className="absolute inset-0"
-          aria-label={`View ${isDraft ? "draft" : "post"} ${title}`}
-        />
-
         <div className={"flex flex-row items-center justify-between text-sm tracking-wide"}>
           <div className="flex flex-row items-center gap-3">
             {options.showDate && (
@@ -146,6 +145,27 @@ export const PostView = ({
             <PostMenu post={item as Post} />
           )}
         </div>
+
+        <div
+          className="absolute inset-0 cursor-pointer"
+          onClick={(e) => {
+            // If not selecting (shift key or right click), navigate to the post
+            if (!e.shiftKey && e.button !== 2) {
+              const href = isDraft ? `/write/${(item as Draft).documentId}` : `/u/${handle}/${(item as Post).id}`;
+              window.location.href = href;
+            }
+          }}
+          onPointerDown={(e) => {
+            if (e.shiftKey || e.button === 2 || (e.pointerType === "touch" && e.isPrimary)) {
+              e.preventDefault();
+              onSelect?.();
+            }
+          }}
+          onContextMenu={(e) => {
+            e.preventDefault();
+            onSelect?.();
+          }}
+        />
       </div>
     </div>
   );

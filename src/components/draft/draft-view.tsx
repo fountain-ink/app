@@ -23,12 +23,16 @@ interface DraftViewProps {
   authorId?: ProfileId;
   isLocal: boolean;
   options?: DraftViewOptions;
+  isSelected?: boolean;
+  onSelect?: () => void;
 }
 
 export const DraftView = ({
   draft,
   authorId,
   isLocal,
+  isSelected,
+  onSelect,
   options = {
     showAuthor: false,
     showTitle: true,
@@ -78,6 +82,8 @@ export const DraftView = ({
       options={options}
       isDraft={true}
       onDelete={handleDelete}
+      isSelected={isSelected}
+      onSelect={onSelect}
     />
   );
 };
