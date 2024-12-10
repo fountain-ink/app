@@ -123,31 +123,37 @@ export const PostView = ({
           )}
         </div>
 
-        <div className={"flex flex-row items-center justify-between text-sm tracking-wide"}>
+        <div className="flex flex-row items-center justify-between text-sm tracking-wide relative z-10">
           <div className="flex flex-row items-center gap-3">
             {options.showDate && (
               <span className="text-muted-foreground">
                 {isDraft ? <>Last updated {formatRelativeTime(date)}</> : formatDate(date)}
               </span>
             )}
-            {!isDraft && <PostReactions post={item as Post} />}
+            {!isDraft && (
+              <div className="relative z-10">
+                <PostReactions post={item as Post} />
+              </div>
+            )}
           </div>
-          {isDraft ? (
-            <>
-              <DraftOptionsDropdown onDeleteClick={() => setIsDeleteDialogOpen(true)} />
-              <DraftDeleteDialog
-                isOpen={isDeleteDialogOpen}
-                onClose={() => setIsDeleteDialogOpen(false)}
-                onConfirm={() => onDelete?.()}
-              />
-            </>
-          ) : (
-            <PostMenu post={item as Post} />
-          )}
+          <div className="relative z-10">
+            {isDraft ? (
+              <>
+                <DraftOptionsDropdown onDeleteClick={() => setIsDeleteDialogOpen(true)} />
+                <DraftDeleteDialog
+                  isOpen={isDeleteDialogOpen}
+                  onClose={() => setIsDeleteDialogOpen(false)}
+                  onConfirm={() => onDelete?.()}
+                />
+              </>
+            ) : (
+              <PostMenu post={item as Post} />
+            )}
+          </div>
         </div>
 
         <div
-          className="absolute inset-0 cursor-pointer"
+          className="absolute inset-0 cursor-pointer z-0"
           onClick={(e) => {
             // If not selecting (shift key or right click), navigate to the post
             if (!e.shiftKey && e.button !== 2) {
