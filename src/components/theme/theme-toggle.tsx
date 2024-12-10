@@ -10,7 +10,7 @@ export const ThemeToggle = () => {
   return (
     <Button
       variant="ghost"
-      className="flex items-center justify-center hover:bg-transparent w-10 h-10 p-0"
+      className="flex items-center justify-center hover:bg-transparent shrink-0 w-10 h-10 p-0"
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
       aria-label="Toggle Dark Mode"
     >

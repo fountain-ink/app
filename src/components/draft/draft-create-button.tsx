@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { getRandomUid } from "@/lib/get-random-uid";
-import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoadingSpinner } from "../loading-spinner";
@@ -89,17 +88,16 @@ export const RemoteDraftCreate = () => {
   return (
     <Button
       onClick={handleCreate}
-      variant={"ghost"}
-      className="flex items-center justify-start gap-2 p-0 px-0 py-0 w-full text-base"
+      variant={isCreating ? "ghost" : "default"}
+      className="flex flex-col items-center justify-start gap-2 w-full text-base"
     >
       {isCreating ? (
-        <div className="w-8 h-8 flex items-center justify-center p-2">
+        <div className="w-8 h-8 flex items-center justify-center">
           <LoadingSpinner size={20} className="w-4 h-4 flex items-center justify-center" />
         </div>
       ) : (
-        <PlusIcon size={20} className="w-8 h-8 p-2" />
+        <span className="text-center font-normal">Write</span>
       )}
-      <span>New Article</span>
     </Button>
   );
 };

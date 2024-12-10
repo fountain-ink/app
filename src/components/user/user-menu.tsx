@@ -50,7 +50,7 @@ export const UserMenu = () => {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full">
+        <Button variant="ghost" size="icon" className="rounded-full shrink-0">
           <SessionAvatar />
         </Button>
       </DropdownMenuTrigger>
