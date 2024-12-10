@@ -6,5 +6,5 @@ export const UserHandle = ({ profile, className }: { profile?: ProfileFragment |
     return null;
   }
 
-  return <div className={`text-foreground text-lg ${className}`}>@{handle}</div>;
+  return <div className={`text-foreground  ${className}`}>@{handle}</div>;
 };
