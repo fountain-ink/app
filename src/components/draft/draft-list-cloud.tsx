@@ -3,6 +3,7 @@
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import type { ProfileId } from "@lens-protocol/react-web";
 import { useQueryClient } from "@tanstack/react-query";
 import { Trash, X } from "lucide-react";
@@ -63,6 +64,7 @@ export function CloudDraftsList({ profileId }: { profileId: string | null | unde
       queryClient.invalidateQueries({ queryKey: ["drafts"] });
       setDrafts((prev) => prev.filter((draft) => !selectedItems.has(draft.documentId)));
     } catch (error) {
+      console.error(error);
       toast.error("Failed to delete selected drafts");
     }
   };
@@ -87,7 +89,7 @@ export function CloudDraftsList({ profileId }: { profileId: string | null | unde
       {selectedItems.size > 0 && (
         <div className="sticky top-0 z-50 flex items-center justify-between gap-2 bg-background/80 backdrop-blur-sm p-3">
           <div className="flex items-center gap-2">
-            <Badge variant="secondary">{selectedItems.size} selected</Badge>
+            <Badge variant="outline">{selectedItems.size} selected</Badge>
             <Button variant="ghost" size="sm" onClick={clearSelection}>
               <X className="h-4 w-4 mr-1" />
               Clear
@@ -99,15 +101,17 @@ export function CloudDraftsList({ profileId }: { profileId: string | null | unde
           </Button>
         </div>
       )}
-      {drafts.map((draft: Draft) => (
-        <DraftView
-          key={draft.documentId}
-          draft={draft}
-          authorId={(draft.authorId || profileId) as ProfileId}
-          isLocal={false}
-          isSelected={selectedItems.has(draft.documentId)}
-          onSelect={() => toggleSelection(draft.documentId)}
-        />
+      {drafts.map((draft: Draft, index) => (
+        <div key={draft.documentId}>
+          <DraftView
+            draft={draft}
+            authorId={(draft.authorId || profileId) as ProfileId}
+            isLocal={false}
+            isSelected={selectedItems.has(draft.documentId)}
+            onSelect={() => toggleSelection(draft.documentId)}
+          />
+          {index < drafts.length - 1 && <Separator className="mx-auto max-w-[92%] my-0.5" />}
+        </div>
       ))}
     </div>
   );
