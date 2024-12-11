@@ -1,9 +1,8 @@
 import { extractMetadata } from "@/lib/get-article-title";
 import { formatDate, formatRelativeTime } from "@/lib/utils";
 import type { ArticleMetadataV3, Post, ProfileId } from "@lens-protocol/react-web";
-import { useState } from "react";
 import type { Draft } from "../draft/draft";
-import { DraftDeleteDialog, DraftOptionsDropdown } from "../draft/draft-menu";
+import { DraftMenu } from "../draft/draft-menu";
 import Markdown from "../markdown";
 import { LazyAuthorView } from "../user/user-author-view";
 import { PostMenu } from "./post-menu";
@@ -44,8 +43,6 @@ export const PostView = ({
   isDraft = false,
   onDelete,
 }: PostViewProps) => {
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
   let contentMarkdown: string;
   let date: string;
   let contentJson: string;
@@ -139,12 +136,7 @@ export const PostView = ({
           <div className="relative z-10">
             {isDraft ? (
               <>
-                <DraftOptionsDropdown onDeleteClick={() => setIsDeleteDialogOpen(true)} />
-                <DraftDeleteDialog
-                  isOpen={isDeleteDialogOpen}
-                  onClose={() => setIsDeleteDialogOpen(false)}
-                  onConfirm={() => onDelete?.()}
-                />
+                <DraftMenu onDeleteClick={onDelete ?? (() => {})} />
               </>
             ) : (
               <PostMenu post={item as Post} />

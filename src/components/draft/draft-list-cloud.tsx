@@ -1,7 +1,6 @@
 "use client";
 
 import { LoadingSpinner } from "@/components/loading-spinner";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import type { ProfileId } from "@lens-protocol/react-web";
@@ -54,6 +53,10 @@ export function CloudDraftsList({ profileId }: { profileId: string | null | unde
     setSelectedItems(new Set());
   }, []);
 
+  const removeDraft = useCallback((draftId: string) => {
+    setDrafts((prev) => prev.filter((draft) => draft.documentId !== draftId));
+  }, []);
+
   const deleteSelectedItems = async () => {
     try {
       const promises = Array.from(selectedItems).map((id) => fetch(`/api/drafts?id=${id}`, { method: "DELETE" }));
@@ -89,13 +92,13 @@ export function CloudDraftsList({ profileId }: { profileId: string | null | unde
       {selectedItems.size > 0 && (
         <div className="sticky top-0 z-50 flex items-center justify-between gap-2 bg-background/80 backdrop-blur-sm p-3">
           <div className="flex items-center gap-2">
-            <Badge variant="outline">{selectedItems.size} selected</Badge>
-            <Button variant="ghost" size="sm" onClick={clearSelection}>
+            <Button variant="ghost" onClick={clearSelection}>
               <X className="h-4 w-4 mr-1" />
               Clear
             </Button>
+            <span>{selectedItems.size} selected</span>
           </div>
-          <Button variant="destructive" size="sm" onClick={deleteSelectedItems}>
+          <Button variant="destructive" onClick={deleteSelectedItems}>
             <Trash className="h-4 w-4 mr-1" />
             Delete
           </Button>
@@ -109,6 +112,7 @@ export function CloudDraftsList({ profileId }: { profileId: string | null | unde
             isLocal={false}
             isSelected={selectedItems.has(draft.documentId)}
             onSelect={() => toggleSelection(draft.documentId)}
+            onDelete={() => removeDraft(draft.documentId)}
           />
           {index < drafts.length - 1 && <Separator className="mx-auto max-w-[92%] my-0.5" />}
         </div>

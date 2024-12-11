@@ -1,14 +1,12 @@
 "use client";
 
 import { useDocumentStorage } from "@/hooks/use-document-storage";
-import { extractMetadata } from "@/lib/get-article-title";
 import type { ProfileId } from "@lens-protocol/react-web";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { useState } from "react";
 import { toast } from "sonner";
-import type { Draft } from "./draft";
 import { PostView } from "../post/post-view";
+import type { Draft } from "./draft";
 
 interface DraftViewOptions {
   showDate?: boolean;
@@ -25,6 +23,7 @@ interface DraftViewProps {
   options?: DraftViewOptions;
   isSelected?: boolean;
   onSelect?: () => void;
+  onDelete?: () => void;
 }
 
 export const DraftView = ({
@@ -33,6 +32,7 @@ export const DraftView = ({
   isLocal,
   isSelected,
   onSelect,
+  onDelete,
   options = {
     showAuthor: false,
     showTitle: true,
@@ -64,6 +64,7 @@ export const DraftView = ({
             queryKey: ["drafts"],
             refetchType: "active",
           });
+          onDelete?.();
         } else {
           toast.error("Failed to delete draft");
         }

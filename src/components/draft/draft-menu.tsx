@@ -1,9 +1,7 @@
 import { Link, MoreHorizontal, Trash2 } from "lucide-react";
 import { ActionButton, type DropdownItem } from "../post/post-action-button";
-import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 
-export const DraftOptionsDropdown = ({ onDeleteClick }: { onDeleteClick: () => void }) => {
+export const DraftMenu = ({ onDeleteClick }: { onDeleteClick: () => void }) => {
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
   };
@@ -17,7 +15,11 @@ export const DraftOptionsDropdown = ({ onDeleteClick }: { onDeleteClick: () => v
     {
       icon: Trash2,
       label: "Delete",
-      onClick: onDeleteClick,
+      onClick: () => {
+        if (onDeleteClick) {
+          onDeleteClick();
+        }
+      },
     },
   ];
 
@@ -35,25 +37,3 @@ export const DraftOptionsDropdown = ({ onDeleteClick }: { onDeleteClick: () => v
   );
 };
 
-export const DraftDeleteDialog = ({
-  isOpen,
-  onClose,
-  onConfirm,
-}: { isOpen: boolean; onClose: () => void; onConfirm: () => void }) => (
-  <Dialog open={isOpen} onOpenChange={onClose}>
-    <DialogContent onClick={(e) => e.stopPropagation()}>
-      <DialogHeader>
-        <DialogTitle>Are you sure you want to delete this draft?</DialogTitle>
-        <DialogDescription>This action cannot be undone.</DialogDescription>
-      </DialogHeader>
-      <DialogFooter>
-        <Button variant="secondary" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button variant="destructive" onClick={onConfirm}>
-          Delete
-        </Button>
-      </DialogFooter>
-    </DialogContent>
-  </Dialog>
-);
