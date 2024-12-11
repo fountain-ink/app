@@ -79,6 +79,7 @@ export function CloudDraftsList({ profileId }: { profileId: string | null | unde
       </div>
     );
   }
+  
   if (!profileId) {
     return <div>Please login to see your drafts</div>;
   }
@@ -90,13 +91,13 @@ export function CloudDraftsList({ profileId }: { profileId: string | null | unde
   return (
     <div className="relative">
       {selectedItems.size > 0 && (
-        <div className="sticky top-0 z-50 flex items-center justify-between gap-2 bg-background/80 backdrop-blur-sm p-3">
+        <div className="sticky top-0 z-50 flex items-center justify-between gap-2 bg-background/80 backdrop-blur-sm p-2">
           <div className="flex items-center gap-2">
             <Button variant="ghost" onClick={clearSelection}>
               <X className="h-4 w-4 mr-1" />
               Clear
             </Button>
-            <span>{selectedItems.size} selected</span>
+            <span className="text-sm">{selectedItems.size} selected</span>
           </div>
           <Button variant="destructive" onClick={deleteSelectedItems}>
             <Trash className="h-4 w-4 mr-1" />

@@ -1,12 +1,30 @@
-import { Link, MoreHorizontal, Trash2 } from "lucide-react";
+import { Check, Link, MoreHorizontal, Trash2, X } from "lucide-react";
 import { ActionButton, type DropdownItem } from "../post/post-action-button";
+import { toast } from "sonner";
+import { Draft } from "./draft";
 
-export const DraftMenu = ({ onDeleteClick }: { onDeleteClick: () => void }) => {
+export const DraftMenu = ({
+  draft,
+  onDeleteClick,
+  onSelect,
+  isSelected
+}: {
+  draft: Draft;
+  onDeleteClick: () => void;
+  onSelect: () => void;
+  isSelected?: boolean;
+}) => {
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
+    navigator.clipboard.writeText(`${draft.id}`);
+    toast.success("Link copied to clipboard!");
   };
 
   const dropdownItems: DropdownItem[] = [
+    {
+      icon: isSelected ? X : Check,
+      label: isSelected ? "Deselect" : "Select",
+      onClick: onSelect,
+    },
     {
       icon: Link,
       label: "Copy link",
@@ -36,4 +54,3 @@ export const DraftMenu = ({ onDeleteClick }: { onDeleteClick: () => void }) => {
     </div>
   );
 };
-
