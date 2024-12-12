@@ -2,6 +2,7 @@
 
 import { ImageElement } from "@/components/ui/image-element";
 import { LinkFloatingToolbar } from "@/components/ui/link-floating-toolbar";
+import { useYjsState } from "@/hooks/use-yjs-state";
 import { uploadFile } from "@/lib/upload-image";
 import { AlignPlugin } from "@udecode/plate-alignment/react";
 import { AutoformatPlugin } from "@udecode/plate-autoformat/react";
@@ -100,27 +101,29 @@ export const getEditorPlugins = (path: string, handle?: string, refreshToken?: s
             connect: false,
             token: refreshToken,
             onStatus(data) {
-              console.log(`[Collab] Status ${data.status}`);
+              useYjsState.getState().setStatus(path, data.status);
             },
             onClose(data) {
-              console.log(`[Collab] Closed ${data.event.code} ${data.event.reason}`);
-              console.log(data);
+              useYjsState.getState().setError(path, `Connection closed: ${data.event.reason}`);
             },
             onAuthenticated() {
-              console.log("[Collab] Authenticated");
+              useYjsState.getState().setStatus(path, "connected");
             },
             onConnect() {
-              console.log("[Collab] Connected");
+              useYjsState.getState().setStatus(path, "connected");
             },
             onSynced() {
-              console.log("[Collab] Synced");
+              useYjsState.getState().setStatus(path, "synced");
             },
             onAuthenticationFailed(data) {
               toast.error(`Authentication failed: ${data.reason}`);
-              console.error(`[Collab] Authentication failed: ${data.reason}`);
+              useYjsState.getState().setError(path, `Authentication failed: ${data.reason}`);
             },
             onDisconnect(data) {
-              console.error(`[Collab] Disconnected: ${data.event.reason}`);
+              useYjsState.getState().setStatus(path, "disconnected");
+              if (data.event.reason) {
+                useYjsState.getState().setError(path, data.event.reason);
+              }
             },
           },
         },

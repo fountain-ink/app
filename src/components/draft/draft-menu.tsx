@@ -1,13 +1,13 @@
 import { Check, Link, MoreHorizontal, Trash2, X } from "lucide-react";
-import { ActionButton, type DropdownItem } from "../post/post-action-button";
 import { toast } from "sonner";
-import { Draft } from "./draft";
+import { ActionButton, type DropdownItem } from "../post/post-action-button";
+import type { Draft } from "./draft";
 
 export const DraftMenu = ({
   draft,
   onDeleteClick,
   onSelect,
-  isSelected
+  isSelected,
 }: {
   draft: Draft;
   onDeleteClick: () => void;

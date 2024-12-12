@@ -68,7 +68,7 @@ export default async function UserLayout({
                 label: "About",
               },
             ]}
-            className="w-fit"
+            className="w-fit "
           />
         </div>
         {children}

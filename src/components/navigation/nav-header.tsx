@@ -1,9 +1,11 @@
 "use client";
 
+import { ConnectionStatus, useYjsState } from "@/hooks/use-yjs-state";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FountainLogo } from "../custom-icons";
 import { ThemeToggle } from "../theme/theme-toggle";
+import { ConnectionBadge } from "../ui/connection-badge";
 import { UserMenu } from "../user/user-menu";
 import { PublishMenu } from "./publish-menu-button";
 import { WriteMenu } from "./write-menu-button";
@@ -12,6 +14,8 @@ export const Header = () => {
   const pathname = usePathname();
   const hostname = typeof window !== "undefined" && window.location.hostname ? window.location.hostname : "";
   const isWritePage = pathname.startsWith("/write");
+  const documentId = pathname.split("/").filter(Boolean).pop() ?? "";
+  const yjsState = useYjsState((state) => state.getState(documentId) ?? { status: "disconnected" as ConnectionStatus });
 
   // FIXME: Temporary before release
   if (!hostname.includes("dev") && !hostname.includes("localhost")) {
@@ -28,9 +32,12 @@ export const Header = () => {
 
   const HeaderContent = () => (
     <div className="flex items-end justify-between absolute bg-gradient-to-t from-transparent to-background bottom-0 left-0 right-0 h-[80px] pb-2 px-2">
-      <Link href={"/"} className="w-10 h-10 flex items-center justify-center pointer-events-auto">
-        <FountainLogo />
-      </Link>
+      <div className="flex gap-4 items-center justify-center">
+        <Link href={"/"} className="w-10 h-10 flex items-center justify-center pointer-events-auto">
+          <FountainLogo />
+        </Link>
+        {isWritePage && <ConnectionBadge {...yjsState} />}
+      </div>
       <div className="flex gap-4 pointer-events-auto">
         <ThemeToggle />
         {isWritePage && <PublishMenu />}
