@@ -15,7 +15,6 @@ import { useAccount, useDisconnect } from "wagmi";
 import { ConnectWalletButton } from "../auth/auth-wallet-button";
 import { ProfileSelectMenu } from "../auth/profile-select-menu";
 import { LogoutIcon } from "../icons/logout";
-import { MessageCircleMoreIcon } from "../icons/message-more";
 import { PenToolIcon } from "../icons/pen-tool";
 import { SettingsGearIcon } from "../icons/settings";
 import { SquarePenIcon } from "../icons/square-pen";
@@ -23,6 +22,7 @@ import { UserRoundPenIcon } from "../icons/switch-profile";
 import { UserIcon } from "../icons/user";
 import { AnimatedMenuItem } from "../navigation/animated-item";
 import { AvatarSuspense, SessionAvatar } from "./user-avatar";
+import { useTheme } from "next-themes";
 
 export const UserMenu = () => {
   const { data: session, loading, error } = useSession();
@@ -30,6 +30,8 @@ export const UserMenu = () => {
   const { disconnect } = useDisconnect();
   const { execute: logout, loading: logoutLoading } = useLogout();
   const pathname = usePathname();
+  const theme = useTheme();
+  console.log(theme.theme);
 
   if (loading) return <AvatarSuspense />;
 
@@ -82,8 +84,6 @@ export const UserMenu = () => {
           <AnimatedMenuItem href="/settings" icon={SettingsGearIcon}>
             Settings
           </AnimatedMenuItem>
-
-
 
           <AnimatedMenuItem
             icon={LogoutIcon}

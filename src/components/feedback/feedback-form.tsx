@@ -1,5 +1,4 @@
 import html2canvas from "html2canvas";
-import { MessageCircleMore } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
@@ -77,8 +76,8 @@ export function FeedbackForm() {
   return (
     <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full shrink-0">
-          <MessageCircleMore />
+        <Button className="shrink-0" variant="outline">
+          Feedback
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
@@ -116,7 +115,7 @@ export function FeedbackForm() {
                 placeholder="Please describe your feedback..."
                 value={feedbackText}
                 onChange={(e) => setFeedbackText(e.target.value)}
-                className="min-h-[100px] min-w-[400px]"
+                className="min-h-[100px] min-w-[400px] p-2"
               />
               <div className="flex items-center space-x-2">
                 <Checkbox
