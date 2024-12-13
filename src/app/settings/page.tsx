@@ -11,6 +11,7 @@ export async function generateMetadata() {
     title,
   };
 }
+
 const tabData = [
   { id: "app", label: "Application", icon: Settings, enabled: true },
   { id: "profile", label: "Profile", icon: FileText, enabled: true },
@@ -30,6 +31,7 @@ const tabData = [
   { id: "team", label: "Team", icon: Users, enabled: false },
   { id: "layouts", label: "Layouts", icon: LayoutGrid, enabled: false },
 ];
+
 export default async function settings() {
   const { profile } = await getAuthWithCookies();
 
