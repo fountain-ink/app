@@ -10,7 +10,6 @@ export const UserFollowButton = ({ profile, className }: { profile: ProfileFragm
   const followsMe = profile.operations.isFollowingMe.value;
   const controller = useRef<any>();
 
-
   const toggleFollow = async () => {
     return;
     // const followingNow = !following;
@@ -26,7 +25,7 @@ export const UserFollowButton = ({ profile, className }: { profile: ProfileFragm
 
     // if (!result.ok) {
     //   toast.error(`${followingNow ? "Follow" : "Unfollow"} action failed: ${result.statusText} `);
-    //   setFollowing(!following); 
+    //   setFollowing(!following);
     // } else {
     //   toast.success(`${followingNow ? "Followed" : "Unfollowed"} Successfully!`, { description: "Finalized on-chain" });
     // }
@@ -39,7 +38,7 @@ export const UserFollowButton = ({ profile, className }: { profile: ProfileFragm
           size="default"
           variant={following ? "outline" : "default"}
           onClick={() => toggleFollow()}
-          className={`font-bold text-sm right-0 top-0 ${className}`}
+          className={`text-sm right-0 top-0 ${className}`}
         >
           {following ? "Following" : followsMe ? "Follow back" : "Follow"}
         </Button>
