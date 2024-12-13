@@ -8,7 +8,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { clearCookies } from "@/lib/auth/clear-cookies";
-import { FeedbackFish } from "@feedback-fish/react";
 import { SessionType, useLogout, useSession } from "@lens-protocol/react-web";
 import { usePathname } from "next/navigation";
 import { toast } from "sonner";
@@ -84,11 +83,7 @@ export const UserMenu = () => {
             Settings
           </AnimatedMenuItem>
 
-          <FeedbackFish projectId="48aad16d4c95d5" userId={session.profile.handle?.localName}>
-            <Button className="w-full p-0 m-0" variant="ghost">
-              <AnimatedMenuItem icon={MessageCircleMoreIcon}>Feedback</AnimatedMenuItem>
-            </Button>
-          </FeedbackFish>
+
 
           <AnimatedMenuItem
             icon={LogoutIcon}
