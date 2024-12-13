@@ -8,27 +8,29 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { clearCookies } from "@/lib/auth/clear-cookies";
+import { FeedbackFish } from "@feedback-fish/react";
 import { SessionType, useLogout, useSession } from "@lens-protocol/react-web";
+import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 import { useAccount, useDisconnect } from "wagmi";
-import { ProfileSelectMenu } from "../auth/profile-select-menu";
 import { ConnectWalletButton } from "../auth/auth-wallet-button";
+import { ProfileSelectMenu } from "../auth/profile-select-menu";
 import { LogoutIcon } from "../icons/logout";
+import { MessageCircleMoreIcon } from "../icons/message-more";
+import { PenToolIcon } from "../icons/pen-tool";
 import { SettingsGearIcon } from "../icons/settings";
+import { SquarePenIcon } from "../icons/square-pen";
 import { UserRoundPenIcon } from "../icons/switch-profile";
 import { UserIcon } from "../icons/user";
 import { AnimatedMenuItem } from "../navigation/animated-item";
 import { AvatarSuspense, SessionAvatar } from "./user-avatar";
-import { PenToolIcon } from "../icons/pen-tool";
-import { usePathname } from "next/navigation";
-import { SquarePenIcon } from "../icons/square-pen";
 
 export const UserMenu = () => {
   const { data: session, loading, error } = useSession();
   const { isConnected: isWalletConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const { execute: logout, loading: logoutLoading } = useLogout();
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   if (loading) return <AvatarSuspense />;
 
@@ -59,7 +61,7 @@ export const UserMenu = () => {
           <AnimatedMenuItem href={`/u/${handle}`} icon={PenToolIcon}>
             Index
           </AnimatedMenuItem>
-          
+
           <AnimatedMenuItem href={`/u/${handle}/profile`} icon={UserIcon}>
             Profile
           </AnimatedMenuItem>
@@ -73,14 +75,20 @@ export const UserMenu = () => {
           >
             Switch Profile
           </AnimatedMenuItem>
-          
+
           <AnimatedMenuItem href={`/u/${handle}/drafts`} icon={SquarePenIcon}>
-           Drafts
+            Drafts
           </AnimatedMenuItem>
 
           <AnimatedMenuItem href="/settings" icon={SettingsGearIcon}>
             Settings
           </AnimatedMenuItem>
+
+          <FeedbackFish projectId="48aad16d4c95d5" userId={session.profile.handle?.localName}>
+            <Button className="w-full p-0 m-0" variant="ghost">
+              <AnimatedMenuItem icon={MessageCircleMoreIcon}>Feedback</AnimatedMenuItem>
+            </Button>
+          </FeedbackFish>
 
           <AnimatedMenuItem
             icon={LogoutIcon}
