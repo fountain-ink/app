@@ -8,6 +8,8 @@ import { UserHandle } from "@/components/user/user-handle";
 import { UserName } from "@/components/user/user-name";
 import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 
+import { PageTransition } from "@/components/navigation/page-transition";
+import { AnimatePresence } from "framer-motion";
 export default async function UserLayout({
   children,
   params,
@@ -71,7 +73,11 @@ export default async function UserLayout({
             className="w-fit "
           />
         </div>
-        {children}
+        <AnimatePresence mode="wait">
+          <PageTransition type="content">
+            {children}
+          </PageTransition>
+        </AnimatePresence>
       </div>
     </div>
   );

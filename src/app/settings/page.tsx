@@ -34,7 +34,7 @@ export default async function settings() {
   const { profile } = await getAuthWithCookies();
 
   return (
-    <div className="container mx-auto p-6 py-10 max-w-6xl">
+    <div className="container mx-auto p-6 py-10 mt-16 max-w-6xl">
       <h1 className="text-3xl font-bold mb-8">Settings</h1>
       <Tabs defaultValue="app">
         <TabsList className="flex flex-wrap justify-start gap-2 bg-transparent">

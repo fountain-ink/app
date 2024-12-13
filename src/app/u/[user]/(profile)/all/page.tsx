@@ -10,10 +10,14 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
   if (!profile) {
     return <ErrorPage error="User not found" />;
   }
-  
+
   const isUserProfile = profileId === profile.id;
 
-  return <UserContent contentType="all" profile={profile} isUserProfile={isUserProfile} />;
+  return (
+    <div className="flex flex-col p-4">
+      <UserContent contentType="all" profile={profile} isUserProfile={isUserProfile} />
+    </div>
+  );
 };
 
 export default UserPage;

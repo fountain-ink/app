@@ -1,10 +1,34 @@
 "use client";
 
-import { LayoutGroup, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 
-export const PageTransition = ({ children }: { children: React.ReactNode }) => {
+interface PageTransitionProps {
+  children: React.ReactNode;
+  type?: 'full' | 'content';
+}
+
+export const PageTransition = ({ children, type = 'full' }: PageTransitionProps) => {
   const pathname = usePathname();
+
+  if (type === 'content') {
+    return (
+      <div style={{ position: "relative", width: "100%" }}>
+        <motion.div
+          key={pathname}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ 
+            duration: 0.2,
+            ease: "easeInOut",
+          }}
+        >
+          {children}
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <motion.div
@@ -21,7 +45,7 @@ export const PageTransition = ({ children }: { children: React.ReactNode }) => {
         width: "100%",
       }}
     >
-        {children}
+      {children}
     </motion.div>
   );
 };
