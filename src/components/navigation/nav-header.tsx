@@ -9,6 +9,7 @@ import { ConnectionBadge } from "../ui/connection-badge";
 import { UserMenu } from "../user/user-menu";
 import { PublishMenu } from "./publish-menu-button";
 import { WriteMenu } from "./write-menu-button";
+import { FeedbackForm } from "../feedback/feedback-form";
 
 export const Header = () => {
   const pathname = usePathname();
@@ -40,6 +41,7 @@ export const Header = () => {
       </div>
       <div className="flex gap-4 pointer-events-auto">
         <ThemeToggle />
+        <FeedbackForm />
         {isWritePage && <PublishMenu />}
         {!isWritePage && <WriteMenu />}
         <UserMenu />
