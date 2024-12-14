@@ -4,7 +4,7 @@ import path from "node:path";
 import ts from "typescript";
 
 const fontDirs = [
-  path.join(process.cwd(), "public", "fonts", "Test Martina Plantijn"),
+  // path.join(process.cwd(), "public", "fonts", "Test Martina Plantijn"),
   // Add more font directories here
 ];
 const outputCSSFile = path.join(process.cwd(), "src", "styles", "fonts.css");

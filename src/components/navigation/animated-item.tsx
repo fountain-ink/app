@@ -39,7 +39,7 @@ export const AnimatedMenuItem = ({
       {...buttonProps}
       className={`${buttonProps.className} transition-all duration-300 w-full group px-0 h-10 mx-0`}
     >
-      <Icon className="p-2 w-10 h-10" animate={isHovered} />
+      <Icon className="p-2" animate={isHovered} />
       {children && <span>{children}</span>}
     </DropdownMenuItem>
   );
