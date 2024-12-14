@@ -1,6 +1,6 @@
 "use client";
 
-import { ConnectionStatus, useYjsState } from "@/hooks/use-yjs-state";
+import { type ConnectionStatus, useYjsState } from "@/hooks/use-yjs-state";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FountainLogo } from "../custom-icons";
@@ -40,7 +40,6 @@ export const Header = () => {
         {isWritePage && <ConnectionBadge {...yjsState} />}
       </div>
       <div className="flex gap-4 pointer-events-auto">
-        <ThemeToggle />
         <FeedbackForm />
         {isWritePage && <PublishMenu />}
         {!isWritePage && <WriteMenu />}
