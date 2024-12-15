@@ -12,16 +12,19 @@ interface DocumentState {
 
 interface YjsState {
   documents: DocumentState;
+  activeDocument: string | null;
   setStatus: (path: string, status: ConnectionStatus) => void;
   setError: (path: string, error: string) => void;
   getState: (path: string) => { status: ConnectionStatus; error?: string } | null;
   removeDocument: (path: string) => void;
+  setActiveDocument: (path: string | null) => void;
 }
 
 export const useYjsState = create<YjsState>()(
   persist(
     (set, get) => ({
       documents: {},
+      activeDocument: null,
       setStatus: (path: string, status: ConnectionStatus) =>
         set((state) => ({
           documents: {
@@ -50,6 +53,8 @@ export const useYjsState = create<YjsState>()(
           const { [path]: _, ...remainingDocuments } = state.documents;
           return { documents: remainingDocuments };
         }),
+        setActiveDocument: (path: string | null) =>
+          set({ activeDocument: path }),
     }),
     {
       name: "yjs-state",

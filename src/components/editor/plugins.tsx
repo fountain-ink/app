@@ -90,6 +90,7 @@ export const getEditorPlugins = (path: string, handle?: string, refreshToken?: s
             autoSend: true,
             data: {
               name: handle || "kualta",
+
               color: "#ff0000",
             },
           },
@@ -100,6 +101,15 @@ export const getEditorPlugins = (path: string, handle?: string, refreshToken?: s
             name: path,
             connect: false,
             token: refreshToken,
+
+            onOpen: () => {
+              // Set this document as active when YjsPlugin is initialized
+              useYjsState.getState().setActiveDocument(path);
+            },
+            onDestroy: () => {
+              useYjsState.getState().setStatus(path, "disconnected");
+              useYjsState.getState().setActiveDocument(null);
+            },
             onStatus(data) {
               useYjsState.getState().setStatus(path, data.status);
             },
