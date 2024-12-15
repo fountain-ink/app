@@ -35,7 +35,8 @@ export const NormalizePlugin = createPlatePlugin({
     editor.apply = (...args) => {
       console.log(args);
 
-      if (args[0].type === "set_node" && args[0].path[0] === 0 && args[0].properties.type === HEADING_KEYS.h1) {
+      const operation = args[0] as { type: string; path: number[]; properties: { type?: string } };
+      if (operation.type === "set_node" && operation.path[0] === 0 && operation.properties.type === HEADING_KEYS.h1) {
         return false;
       }
 
@@ -57,63 +58,78 @@ export const NormalizePlugin = createPlatePlugin({
 
         if (isConnected) {
           console.log("remove em");
+
+          // Handle h1 nodes
+          const h1Nodes = children.filter((n, i) => i > 0 && n.type === HEADING_KEYS.h1);
+          if (h1Nodes.length > 0) {
+            const firstNode = children[0];
+            const nonEmptyH1 = h1Nodes.find((n) => getNodeString(n).length > 0);
+
+            if (
+              nonEmptyH1 &&
+              (!firstNode || firstNode.type !== HEADING_KEYS.h1 || getNodeString(firstNode).length === 0)
+            ) {
+              editor.apply({ type: "insert_node", path: [0], node: nonEmptyH1 });
+            }
+          }
+
+          // Handle h2 nodes
+          const h2Nodes = children.filter((n, i) => i > 1 && n.type === HEADING_KEYS.h2);
+          if (h2Nodes.length > 0) {
+            editor.apply({
+              type: "insert_node",
+              path: [1],
+              node: { type: HEADING_KEYS.h2, children: [{ text: "", id: "2" }] },
+            });
+            const secondNode = children[1];
+            const nonEmptyH2 = h2Nodes.find((n) => getNodeString(n).length > 0);
+
+            if (
+              nonEmptyH2 &&
+              (!secondNode || secondNode.type !== HEADING_KEYS.h2 || getNodeString(secondNode).length === 0)
+            ) {
+              editor.apply({ type: "insert_node", path: [1], node: nonEmptyH2 });
+            }
+          }
+        }
+
+        if (isConnected || isSynced) {
           removeNodes(editor, {
+            at: [],
             match: (n) => {
+              console.log(!hasId(n) && n.type === ParagraphPlugin.key);
               return !hasId(n) && n.type === ParagraphPlugin.key;
             },
           });
         }
 
-        // Handle h1 nodes
-        const h1Nodes = children.filter((n, i) => i > 0 && n.type === HEADING_KEYS.h1);
-        if (h1Nodes.length > 0) {
-          const firstNode = children[0];
-          const nonEmptyH1 = h1Nodes.find((n) => getNodeString(n).length > 0);
+        // Remove any h1 nodes after index 0
+        removeNodes(editor, {
+          at: [],
+          match: (n, p) => {
+            return p[0] !== undefined && p[0] > 0 && "type" in n && n.type === HEADING_KEYS.h1;
+          },
+        });
 
-          if (
-            nonEmptyH1 &&
-            (!firstNode || firstNode.type !== HEADING_KEYS.h1 || getNodeString(firstNode).length === 0)
-          ) {
-            // Move the non-empty h1 to position 0
-            editor.apply({ type: "remove_node", path: [children.indexOf(nonEmptyH1)], node: nonEmptyH1 });
-            if (firstNode && firstNode.type === HEADING_KEYS.h1) {
-              editor.apply({ type: "remove_node", path: [0], node: firstNode });
-            }
-            editor.apply({ type: "insert_node", path: [0], node: nonEmptyH1 });
-          }
-
-          // Remove any remaining h1 nodes
-          removeNodes(editor, {
-            at: [],
-            match: (n, p) => p[0] !== undefined && p[0] > 0 && n.type === HEADING_KEYS.h1,
-          });
-        }
-
-        // Handle h2 nodes
-        const h2Nodes = children.filter((n, i) => i > 1 && n.type === HEADING_KEYS.h2);
-        if (h2Nodes.length > 0) {
-          const secondNode = children[1];
-          const nonEmptyH2 = h2Nodes.find((n) => getNodeString(n).length > 0);
-
-          if (
-            nonEmptyH2 &&
-            (!secondNode || secondNode.type !== HEADING_KEYS.h2 || getNodeString(secondNode).length === 0)
-          ) {
-            // Move the non-empty h2 to position 1
-            editor.apply({ type: "remove_node", path: [children.indexOf(nonEmptyH2)], node: nonEmptyH2 });
-            if (secondNode && secondNode.type === HEADING_KEYS.h2) {
-              editor.apply({ type: "remove_node", path: [1], node: secondNode });
-            }
-            editor.apply({ type: "insert_node", path: [1], node: nonEmptyH2 });
-          }
-
-          // Remove any remaining h2 nodes
-          removeNodes(editor, {
-            at: [],
-            match: (n, p) => p[0] !== undefined && p[0] > 1 && n.type === HEADING_KEYS.h2,
-          });
-        }
+        // Remove any h2 nodes after index 1
+        removeNodes(editor, {
+          at: [],
+          match: (n, p) => {
+            return p[0] !== undefined && p[0] > 1 && "type" in n && n.type === HEADING_KEYS.h2;
+          },
+        });
       }
+
+      // // Remove any remaining h1 nodes
+      // removeNodes(editor, {
+      //   at: [],
+      //   match: (n, p) => p[0] !== undefined && p[0] > 0 && n.type === HEADING_KEYS.h1,
+      // });
+      // // Remove any remaining h2 nodes
+      // removeNodes(editor, {
+      //   at: [],
+      //   match: (n, p) => p[0] !== undefined && p[0] > 1 && n.type === HEADING_KEYS.h2,
+      // });
 
       return normalizeNode(entry);
     };
