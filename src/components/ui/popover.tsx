@@ -18,7 +18,7 @@ export const PopoverPortal = PopoverPrimitive.Portal;
 export const popoverVariants = cva(
   cn(
     "group/popover",
-    "z-50 max-w-[calc(100vw-24px)] animate-popover overflow-hidden rounded-md bg-popover text-popover-foreground shadow-floating outline-none",
+    "z-50 max-w-[calc(100vw-24px)] animate-popover overflow-hidden rounded-md bg-popover border border-border text-popover-foreground shadow-floating outline-none",
   ),
   {
     defaultVariants: {
@@ -60,13 +60,13 @@ export const PopoverContent = withRef<typeof PopoverPrimitive.Content, VariantPr
   ({ align = "center", className, sideOffset = 4, variant, ...props }, ref) => (
     <PopoverPrimitive.Portal>
       <AnimatePresence>
-        <PopoverPrimitive.Content 
-          ref={ref} 
-          asChild 
-          align={align} 
+        <PopoverPrimitive.Content
+          ref={ref}
+          asChild
+          align={align}
           side="top"
           avoidCollisions={false}
-          sideOffset={sideOffset} 
+          sideOffset={sideOffset}
           {...props}
         >
           <motion.div
@@ -79,10 +79,7 @@ export const PopoverContent = withRef<typeof PopoverPrimitive.Content, VariantPr
               transformOrigin: "top",
               willChange: "transform, opacity, height",
             }}
-            className={cn(
-              popoverVariants({ variant }),
-              className,
-            )}
+            className={cn(popoverVariants({ variant }), className)}
           >
             {props.children}
           </motion.div>

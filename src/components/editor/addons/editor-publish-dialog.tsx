@@ -72,7 +72,7 @@ export const PublishDialog = () => {
                 bounce: 0.2,
               }}
               layout
-              className="bg-background border rounded-lg shadow-lg z-[101] mx-auto overflow-hidden"
+              className="bg-background border border-border rounded-lg shadow-lg z-[101] mx-auto overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-6 h-full w-full flex flex-col">

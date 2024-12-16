@@ -19,10 +19,6 @@ export function ensureLeadingBlock(editor: PlateEditor, { event }: { event?: Rea
     insertElements(editor, [{ type: HEADING_KEYS.h1, children: [{ text: "", id: "1" }] }], { select: false });
   } else if (children?.[0]?.type !== HEADING_KEYS.h1) {
     insertEmptyElement(editor, HEADING_KEYS.h1, { select: true, at: [0] });
-    // insertElements(editor, [{ type: HEADING_KEYS.h1, children: [{ text: "", id: "1" }] }], {
-    //   at: [0],
-    //   select: true,
-    // });
   }
 }
 
@@ -118,17 +114,6 @@ export const NormalizePlugin = createPlatePlugin({
           },
         });
       }
-
-      // // Remove any remaining h1 nodes
-      // removeNodes(editor, {
-      //   at: [],
-      //   match: (n, p) => p[0] !== undefined && p[0] > 0 && n.type === HEADING_KEYS.h1,
-      // });
-      // // Remove any remaining h2 nodes
-      // removeNodes(editor, {
-      //   at: [],
-      //   match: (n, p) => p[0] !== undefined && p[0] > 1 && n.type === HEADING_KEYS.h2,
-      // });
 
       return normalizeNode(entry);
     };

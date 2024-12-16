@@ -67,7 +67,7 @@ export const buttonVariants = cva(
         navAction:
           "rounded-sm text-muted-foreground/80 opacity-0 transition hover:bg-primary/[.06] group-hover:opacity-100",
         none: "",
-        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        outline: "border border-border bg-background hover:bg-accent hover:text-accent-foreground",
         primaryOutline:
           "border border-primary-foreground text-primary-foreground hover:bg-accent/15 [&_svg]:text-primary-foreground",
         radio: "border-2 border-input hover:border-primary",
