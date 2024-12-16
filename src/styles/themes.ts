@@ -168,7 +168,7 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--accent-foreground": "350 20% 98%",
     },
     shared: {
-      "--radius": "1.2rem",
+      "--radius": "0.75rem",
       "--title-font": "plantin",
       "--title-weight": "300",
       "--title-style": "italic",
@@ -250,7 +250,7 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--code-block-margin": "1.5rem",
       "--code-block-border": "1px solid hsl(var(--border))",
 
-      "--image-border-radius": "1.25rem",
+      "--image-border-radius": "0.75rem",
       "--image-margin-y": "2.75rem",
 
       "--date-font": "proxima-nova-wide",
@@ -300,7 +300,7 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--accent-foreground": "0 0% 98%",
     },
     shared: {
-      "--radius": "1.0rem",
+      "--radius": "0.75rem",
       "--title-font": "plantin",
       "--title-weight": "300",
       "--title-style": "italic",
@@ -378,11 +378,11 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--code-block-font-size": "0.9rem",
       "--code-block-line-height": "1.6",
       "--code-block-padding": "1rem",
-      "--code-block-border-radius": "0.5rem",
+      "--code-block-border-radius": "0.75rem",
       "--code-block-margin": "1.5rem",
       "--code-block-border": "1px solid hsl(var(--border))",
 
-      "--image-border-radius": "1rem",
+      "--image-border-radius": "0.75rem",
       "--image-margin-y": "2.5rem",
 
       "--date-font": "proxima-nova-wide",

@@ -97,7 +97,6 @@ export const NormalizePlugin = createPlatePlugin({
           removeNodes(editor, {
             at: [],
             match: (n) => {
-              console.log(!hasId(n) && n.type === ParagraphPlugin.key);
               return !hasId(n) && n.type === ParagraphPlugin.key;
             },
           });
