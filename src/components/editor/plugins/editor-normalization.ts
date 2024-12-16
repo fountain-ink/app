@@ -40,7 +40,7 @@ export const NormalizePlugin = createPlatePlugin({
     };
 
     editor.normalizeNode = (entry) => {
-      const [node, path] = entry;
+      const [node, _path] = entry;
 
       if (isEditor(node)) {
         const children = [...editor.children];
