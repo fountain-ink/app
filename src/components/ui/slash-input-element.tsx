@@ -24,10 +24,6 @@ import {
 } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 
-import { insertMedia } from "@udecode/plate-media";
-import { MediaEmbedPlugin } from "@udecode/plate-media/react";
-import { YoutubeIcon } from "lucide-react";
-
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { QuoteIcon } from "lucide-react";
 
@@ -217,7 +213,7 @@ export const SlashInputElement = withRef<typeof PlateElement>(({ className, ...p
       <InlineCombobox element={element} trigger="/">
         <InlineComboboxInput />
 
-        <InlineComboboxContent className="py-1 flex flex-col gap-1" variant="slash">
+        <InlineComboboxContent className="flex flex-col gap-1" variant="slash">
           <InlineComboboxEmpty>No results</InlineComboboxEmpty>
 
           {rules.map(({ icon: Icon, onSelect, value, description, keywords, focusEditor }) => (

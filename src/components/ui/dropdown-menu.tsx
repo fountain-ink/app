@@ -107,7 +107,7 @@ export const DropdownMenuContent = withRef<typeof DropdownMenuPrimitive.Content,
             willChange: "transform, opacity, height",
           }}
           className={cn(
-            "no-focus-ring z-50 min-w-32 max-w-[100vw] rounded-lg bg-popover text-sm text-popover-foreground shadow-floating",
+            "no-focus-ring z-50 border border-border min-w-32 max-w-[100vw] rounded-lg bg-popover text-sm text-popover-foreground shadow-floating",
             "data-[side=bottom]:origin-top data-[side=left]:origin-right data-[side=right]:origin-left data-[side=top]:origin-bottom",
             className,
           )}

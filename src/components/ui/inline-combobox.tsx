@@ -54,8 +54,8 @@ const menuAnimationVariants = {
         damping: 35,
         mass: 0.8,
       },
-      opacity: { duration: 0.2 },
-      scale: { duration: 0.2 },
+      opacity: { duration: 0.1 },
+      scale: { duration: 0.1 },
     },
   },
 };
@@ -234,7 +234,7 @@ const InlineComboboxInput = forwardRef<HTMLInputElement, HTMLAttributes<HTMLInpu
 InlineComboboxInput.displayName = "InlineComboboxInput";
 
 const comboboxVariants = cva(
-  "z-[500] mt-1 min-w-[180px] max-w-[calc(100vw-24px)] animate-popover rounded-lg bg-popover p-1 shadow-floating",
+  "z-[500] mt-1 min-w-[180px] max-w-[calc(100vw-24px)] animate-popover rounded-lg bg-popover border border-border shadow-floating",
   {
     defaultVariants: {
       variant: "default",
@@ -271,7 +271,7 @@ const InlineComboboxContent = ({
             className={cn(comboboxVariants({ variant }), className)}
           >
             <ScrollArea className="h-full max-h-[40vh]">
-              <div className="flex flex-col gap-1 max-h-[40vh]">{props.children}</div>
+              <div className="flex flex-col gap-1 py-1 max-h-[40vh]">{props.children}</div>
             </ScrollArea>
           </motion.div>
         </Ariakit.ComboboxPopover>
