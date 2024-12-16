@@ -263,7 +263,7 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--destructive": "0 84.2% 60.2%",
       "--border": "214.3 31.8% 91.4%",
       "--input": "214.3 31.8% 91.4%",
-      "--ring": "214.3 31.8% 91.4%",
+      "--ring": "222.2 84% 4.9%",
       "--card-foreground": "222.2 84% 4.9%",
       "--popover-foreground": "222.2 84% 4.9%",
       "--primary": "213 18% 20%",

@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 import { cn, withRef } from "@udecode/cn";
 import { useComposedRef, useEditorId, useEditorRef, useEventEditorSelectors } from "@udecode/plate-common/react";
 import {
@@ -55,7 +53,7 @@ export const FloatingToolbar = withRef<
       <Toolbar
         ref={ref}
         className={cn(
-          "absolute z-50 whitespace-nowrap rounded-md border bg-popover p-1 opacity-100 shadow-md print:hidden",
+          "absolute z-50 whitespace-nowrap rounded-md border border-border bg-popover p-1 opacity-100 shadow-md print:hidden",
           "max-w-[80vw]",
         )}
         {...rootProps}
