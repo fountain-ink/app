@@ -29,7 +29,7 @@ export const NormalizePlugin = createPlatePlugin({
     const { normalizeNode, apply } = editor;
 
     editor.apply = (...args) => {
-      console.log(args);
+      // console.log(args);
 
       const operation = args[0] as { type: string; path: number[]; properties: { type?: string } };
       if (operation.type === "set_node" && operation.path[0] === 0 && operation.properties.type === HEADING_KEYS.h1) {
@@ -49,11 +49,11 @@ export const NormalizePlugin = createPlatePlugin({
         const isConnected = documentState?.status === "connected";
         const isSynced = documentState?.status === "synced";
 
-        console.log(children);
+        // console.log(children);
         ensureLeadingBlock(editor);
 
         if (isConnected) {
-          console.log("remove em");
+          // console.log("remove em");
 
           // Handle h1 nodes
           const h1Nodes = children.filter((n, i) => i > 0 && n.type === HEADING_KEYS.h1);
