@@ -21,6 +21,9 @@ export function BlogSettings({ profile }: { profile: Profile | ProfileFragment |
   const [showTags, setShowTags] = useState(
     currentMetadata?.attributes?.find((attr) => attr.key === "showTags")?.value !== "false"
   );
+  const [showTitle, setShowTitle] = useState(
+    currentMetadata?.attributes?.find((attr) => attr.key === "showTitle")?.value !== "false"
+  );
   const [error, setError] = useState<string | null>(null);
   const { saveSettings, isSaving } = useSaveProfileSettings();
 
@@ -39,10 +42,12 @@ export function BlogSettings({ profile }: { profile: Profile | ProfileFragment |
   const handleSave = async () => {
     setError(null);
     
-    const titleError = validateBlogTitle(blogTitle);
-    if (titleError) {
-      setError(titleError);
-      return;
+    if (showTitle) {
+      const titleError = validateBlogTitle(blogTitle);
+      if (titleError) {
+        setError(titleError);
+        return;
+      }
     }
 
     try {
@@ -56,6 +61,11 @@ export function BlogSettings({ profile }: { profile: Profile | ProfileFragment |
           key: "showTags",
           type: "Boolean",
           value: showTags.toString(),
+        },
+        {
+          key: "showTitle",
+          type: "Boolean",
+          value: showTitle.toString(),
         },
         {
           key: "showAuthor",
@@ -80,8 +90,22 @@ export function BlogSettings({ profile }: { profile: Profile | ProfileFragment |
         <CardDescription>Configure your blog preferences.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
+        <div className="flex items-center justify-between space-y-2">
+          <div className="space-y-0.5">
+            <Label htmlFor="show-title">Show Title</Label>
+            <p className="text-sm text-muted-foreground">
+              Display the blog title at the top of your page
+            </p>
+          </div>
+          <Switch
+            id="show-title"
+            checked={showTitle}
+            onCheckedChange={setShowTitle}
+          />
+        </div>
+
         <div className="space-y-2">
-          <Label htmlFor="blog-title">Blog Title</Label>
+          <Label htmlFor="blog-title" className={!showTitle ? "text-muted-foreground" : ""}>Blog Title</Label>
           <Input
             id="blog-title"
             value={blogTitle}
@@ -91,6 +115,8 @@ export function BlogSettings({ profile }: { profile: Profile | ProfileFragment |
             }}
             placeholder="Enter your blog title"
             aria-invalid={error ? "true" : "false"}
+            disabled={!showTitle}
+            className={!showTitle ? "opacity-50" : ""}
           />
           {error && (
             <p className="text-sm text-destructive mt-2">{error}</p>

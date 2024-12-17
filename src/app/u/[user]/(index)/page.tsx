@@ -14,6 +14,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
   const showAuthor =
     profile?.metadata?.attributes?.find((item) => item.key === "showAuthor")?.value !== "false" ?? true;
   const showTags = profile?.metadata?.attributes?.find((item) => item.key === "showTags")?.value !== "false" ?? true;
+  const showTitle = profile?.metadata?.attributes?.find((item) => item.key === "showTitle")?.value !== "false" ?? true;
 
   if (!profile) {
     return notFound();
@@ -28,9 +29,11 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
           <AuthorView showHandle={false} profiles={[profile]} />
         </div>
       )}
-      <div className="text-[1.5rem] sm:text-[2rem] lg:text-[2.5rem] text-center font-[letter-spacing:var(--title-letter-spacing)] font-[family-name:var(--title-font)] font-normal font-[color:var(--title-color)] overflow-hidden line-clamp-2">
-        {title?.value ?? `${profile.handle?.localName}'s blog`}
-      </div>
+      {showTitle && (
+        <div className="text-[1.5rem] sm:text-[2rem] lg:text-[2.5rem] text-center font-[letter-spacing:var(--title-letter-spacing)] font-[family-name:var(--title-font)] font-normal font-[color:var(--title-color)] overflow-hidden line-clamp-2">
+          {title?.value ?? `${profile.handle?.localName}'s blog`}
+        </div>
+      )}
       <Separator className="w-48 bg-primary mt-3" />
       {showTags && <IndexNavigation username={params.user} isUserProfile={isUserProfile} />}
       <div className="flex flex-col my-4 gap-4">

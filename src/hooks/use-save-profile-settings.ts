@@ -93,7 +93,7 @@ export function useSaveProfileSettings() {
         attributes: updatedAttributes,
         appId: "fountain",
       });
-      console.log(metadata)
+      console.log(metadata);
 
       const metadataURI = await uploadMetadata(metadata, handle);
       const result = await setProfileMetadata({ metadataURI });
@@ -106,7 +106,7 @@ export function useSaveProfileSettings() {
       }
 
       toast.success("Settings updated!", {
-        description: "It might take a few seconds for the changes to take effect.",
+        description: "Changes may take a few seconds to apply.",
       });
 
       // Handle transaction completion in background

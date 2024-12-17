@@ -16,18 +16,23 @@ export function GeneralSettings() {
         <CardDescription>Manage your application settings.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div className="flex items-center justify-between space-y-2">
+          <div className="space-y-0.5">
+            <Label htmlFor="smoothScrolling">Enable smooth scrolling</Label>
+            <p className="text-sm text-muted-foreground">Whether the article page should scroll smoothly</p>
+          </div>
+          <Switch id="smoothScrolling" checked={isSmoothScrolling} onCheckedChange={toggleSmoothScrolling} />
+        </div>
+        <div className="flex items-center justify-between space-y-2">
+          <div className="space-y-0.5">
+            <Label htmlFor="blurEffect">Enable blur effect</Label>
+            <p className="text-sm text-muted-foreground">Whether the article page should have a blur on top and bottom</p>
+          </div>
+          <Switch id="blurEffect" checked={isBlurEnabled} onCheckedChange={toggleBlurEffect} />
+        </div>
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input id="email" type="email" placeholder="Your email" disabled />
-        </div>
-        <div className="flex items-center space-x-2">
-          <Switch id="smoothScrolling" checked={isSmoothScrolling} onCheckedChange={toggleSmoothScrolling} />
-          <Label htmlFor="smoothScrolling">Enable smooth scrolling</Label>
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <Switch id="blurEffect" checked={isBlurEnabled} onCheckedChange={toggleBlurEffect} />
-          <Label htmlFor="blurEffect">Enable blur effect</Label>
         </div>
       </CardContent>
     </Card>
