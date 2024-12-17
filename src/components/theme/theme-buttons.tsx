@@ -4,10 +4,22 @@ import { themeNames } from "@/styles/themes";
 import { Button } from "../ui/button";
 import { useTheme } from "./theme-context";
 
-export const ThemeButtons = () => {
+import { ThemeType } from "@/styles/themes";
+
+interface ThemeButtonsProps {
+  onChange?: (theme: ThemeType) => void;
+  disabled?: boolean;
+}
+
+export const ThemeButtons = ({ onChange, disabled }: ThemeButtonsProps) => {
   const { setTheme } = useTheme();
 
-  const themeButtons = Object.values(themeNames).map((theme) => {
+  const handleThemeChange = (theme: ThemeType) => {
+    setTheme(theme);
+    onChange?.(theme);
+  };
+
+  const themeButtons = themeNames.map((theme) => {
     const placeholderText =
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 
@@ -20,7 +32,8 @@ export const ThemeButtons = () => {
           color: "hsl(var(--foreground))",
         }}
         key={theme}
-        onClick={() => setTheme(theme)}
+        onClick={() => handleThemeChange(theme)}
+        disabled={disabled}
       >
         <h1
           style={{

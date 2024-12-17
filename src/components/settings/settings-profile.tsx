@@ -6,8 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useSaveProfileSettings } from "@/hooks/use-save-profile-settings";
 import { uploadFileFormData } from "@/lib/upload-utils";
-import { ProfileFragment } from "@lens-protocol/client";
-import { type Profile } from "@lens-protocol/react-web";
+import type { ProfileFragment } from "@lens-protocol/client";
+import type { Profile } from "@lens-protocol/react-web";
 import { useCallback, useState } from "react";
 import { ImageUploader } from "../images/image-uploader";
 import { Button } from "../ui/button";
@@ -21,7 +21,7 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
   const [profileTitle, setProfileTitle] = useState(currentMetadata?.displayName || "");
   const [profileDescription, setProfileDescription] = useState(currentMetadata?.bio || "");
   const { saveSettings, isSaving: isSavingProfileSettings } = useSaveProfileSettings();
-  const [enableComments, setEnableComments] = useState(
+  const [enableComments, _setEnableComments] = useState(
     currentMetadata?.attributes?.find((attr) => attr.key === "enableComments")?.value === "true",
   );
   const [autoPublish, setAutoPublish] = useState(

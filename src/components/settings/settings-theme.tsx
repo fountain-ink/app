@@ -1,18 +1,21 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSaveProfileSettings } from "@/hooks/use-save-profile-settings";
 import { useStorage } from "@/hooks/use-storage";
-import { themeNames, type ThemeType } from "@/styles/themes";
-import { ProfileFragment } from "@lens-protocol/client";
+import { type ThemeType } from "@/styles/themes";
+import type { ProfileFragment } from "@lens-protocol/client";
 import { MetadataAttributeType } from "@lens-protocol/metadata";
-import { Profile } from "@lens-protocol/react-web";
+import type { Profile } from "@lens-protocol/react-web";
 import { useState } from "react";
 import { toast } from "sonner";
+import { ThemeButtons } from "../theme/theme-buttons";
 import { useTheme } from "../theme/theme-context";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 interface ThemeSettingsProps {
   defaultTheme?: ThemeType;
@@ -27,6 +30,8 @@ export function ThemeSettings({ defaultTheme, onThemeChange, profile }: ThemeSet
   const { saveSettings, isSaving } = useSaveProfileSettings();
   const currentThemeAttribute = profile?.metadata?.attributes?.find((attr) => attr.key === "theme");
   const currentSavedTheme = (currentThemeAttribute?.value as ThemeType) || theme;
+  const [customColor, setCustomColor] = useState("#e2f3ab");
+  const [customBackground, setCustomBackground] = useState("#bbccaa");
 
   const handleThemeChange = (newTheme: ThemeType) => {
     setSelectedTheme(newTheme);
@@ -51,8 +56,10 @@ export function ThemeSettings({ defaultTheme, onThemeChange, profile }: ThemeSet
 
       if (success) {
         setStoredTheme(selectedTheme);
+        toast.success("Theme settings saved successfully");
       }
     } catch (error) {
+      toast.error("Failed to save theme preference");
       console.error("Error saving theme:", error);
     }
   };
@@ -61,32 +68,52 @@ export function ThemeSettings({ defaultTheme, onThemeChange, profile }: ThemeSet
     <Card>
       <CardHeader>
         <CardTitle>Theme Settings</CardTitle>
-        <CardDescription>Customize your interface theme.</CardDescription>
+        <CardDescription>Choose a preset or make your own theme.</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="space-y-2">
-          <Label htmlFor="theme">Select Theme</Label>
-          <Select onValueChange={handleThemeChange} value={selectedTheme} disabled={isSaving}>
-            <SelectTrigger id="theme">
-              <SelectValue placeholder={isSaving ? "Saving..." : "Select a theme"} />
-            </SelectTrigger>
-            <SelectContent>
-              {themeNames.map((themeName) => (
-                <SelectItem key={themeName} value={themeName}>
-                  {themeName.charAt(0).toUpperCase() + themeName.slice(1)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <Button 
-          onClick={handleSave} 
-          disabled={isSaving || !profile || selectedTheme === currentSavedTheme}
-        >
-          {isSaving ? "Saving..." : "Save Theme"}
-        </Button>
+      <CardContent>
+        <Tabs defaultValue="presets">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="presets">Presets</TabsTrigger>
+            <TabsTrigger disabled value="custom">
+              Custom
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="presets">
+            <ThemeButtons onChange={handleThemeChange} disabled={isSaving} />
+          </TabsContent>
+          <TabsContent value="custom">
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="color" className="text-right">
+                  Leading Color
+                </Label>
+                <Input
+                  id="color"
+                  value={customColor}
+                  onChange={(e) => setCustomColor(e.target.value)}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="background" className="text-right">
+                  Background Color
+                </Label>
+                <Input
+                  id="background"
+                  value={customBackground}
+                  onChange={(e) => setCustomBackground(e.target.value)}
+                  className="col-span-3"
+                />
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </CardContent>
+      <CardFooter>
+        <Button onClick={handleSave} disabled={isSaving || !profile || selectedTheme === currentSavedTheme}>
+          {isSaving ? "Saving..." : "Save changes"}
+        </Button>
+      </CardFooter>
     </Card>
   );
 }
