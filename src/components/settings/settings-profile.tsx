@@ -129,11 +129,6 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
           />
         </div>
 
-        <div className="flex items-center space-x-2">
-          <Switch id="auto-publish" checked={autoPublish} onCheckedChange={setAutoPublish} />
-          <Label htmlFor="auto-publish">Auto-publish scheduled articles</Label>
-        </div>
-
         <Button onClick={handleSave} disabled={isSavingProfileSettings}>
           {isSavingProfileSettings ? "Saving..." : "Save Settings"}
         </Button>

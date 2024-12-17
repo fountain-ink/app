@@ -6,7 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { useStorage } from "@/hooks/use-storage";
 import { Input } from "../ui/input";
 
-export function GeneralSettings() {
+export function ApplicationSettings() {
   const { isSmoothScrolling, toggleSmoothScrolling, isBlurEnabled, toggleBlurEffect } = useStorage();
 
   return (

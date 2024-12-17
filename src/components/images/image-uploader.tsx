@@ -1,7 +1,7 @@
 "use client";
+import { UploadIcon } from "lucide-react";
 
 import { useRef, useState } from "react";
-import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 
 export const getIpfsImageUrl = (uri: string | undefined): string => {
@@ -42,10 +42,24 @@ export const ImageUploader = ({ label, initialImage, aspectRatio, onImageChange 
 
   return (
     <div className="space-y-2">
-      <Label>{label}</Label>
+      <div className="flex items-center gap-2">
+        <Label>{label}</Label>
+        {(localImage || image) && (
+          <span
+            className="text-sm text-muted-foreground cursor-pointer hover:text-red-700"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleImageDelete();
+            }}
+          >
+            remove
+          </span>
+        )}
+      </div>
+
       <div
         className={`relative ${
-          aspectRatio === 1 ? "w-32 h-32 rounded-full" : "w-full h-48 rounded-lg"
+          aspectRatio === 1 ? "w-48 h-48 rounded-full" : "w-full h-48 rounded-lg"
         } overflow-hidden cursor-pointer`}
         onClick={handleImageClick}
         onKeyDown={handleImageClick}
@@ -53,17 +67,17 @@ export const ImageUploader = ({ label, initialImage, aspectRatio, onImageChange 
         {localImage || image ? (
           <img src={localImage || getIpfsImageUrl(image)} alt={""} className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-            <span className="text-gray-500">Click to upload</span>
+          <div className="w-full h-full relative flex items-center justify-center">
+            <div className="flex  absolute gap-1 text-muted-foreground items-center justify-center">
+              <UploadIcon className="size-5 mr-2" />
+              <span>Upload Image</span>
+            </div>
+
+            <div className="placeholder-background rounded-sm" />
           </div>
         )}
       </div>
       <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileSelection} className="hidden" />
-      {(localImage || image) && (
-        <Button onClick={handleImageDelete} variant="outline">
-          Delete
-        </Button>
-      )}
     </div>
   );
 };
