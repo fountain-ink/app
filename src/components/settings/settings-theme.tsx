@@ -24,7 +24,6 @@ interface ThemeSettingsProps {
 
 export function ThemeSettings({ defaultTheme, onThemeChange, profile }: ThemeSettingsProps) {
   const { theme, setTheme } = useTheme();
-  const { setTheme: setStoredTheme } = useStorage();
   const [selectedTheme, setSelectedTheme] = useState<ThemeType>(defaultTheme || theme);
   const { saveSettings, isSaving } = useSaveProfileSettings();
   const [savedTheme, setSavedTheme] = useState<ThemeType>(() => {
@@ -56,7 +55,6 @@ export function ThemeSettings({ defaultTheme, onThemeChange, profile }: ThemeSet
       });
 
       if (success) {
-        setStoredTheme(selectedTheme);
         setSavedTheme(selectedTheme);
       }
     } catch (error) {
