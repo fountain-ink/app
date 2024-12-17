@@ -1,13 +1,14 @@
 "use client";
 
-import { Brush, DollarSign, FileText, LayoutGrid, Mail, Megaphone, Settings, Users } from "lucide-react";
+import { Brush, DollarSign, LayoutGrid, Mail, Megaphone, PenTool, Settings, User2, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navItems = [
-  { id: "app", label: "Application", icon: Settings, enabled: true },
-  { id: "profile", label: "Profile", icon: FileText, enabled: true },
+  { id: "profile", label: "Profile", icon: User2, enabled: true },
+  { id: "blog", label: "Blog", icon: PenTool, enabled: true },
   { id: "theme", label: "Theme", icon: Brush, enabled: true },
+  { id: "app", label: "Application", icon: Settings, enabled: true },
   {
     id: "subscriptions",
     label: "Subscriptions",

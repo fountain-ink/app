@@ -49,7 +49,7 @@ export default async function UserLayout({
           </div>
           <div className="mt-4">
             {isUserProfile ? (
-              <Link href={"/settings"} prefetch>
+              <Link href={"/settings/profile"} prefetch>
                 <Button variant="outline" className="w-fit">
                   Edit
                 </Button>
