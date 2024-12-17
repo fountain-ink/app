@@ -66,7 +66,6 @@ export function useSaveProfileSettings() {
         },
         [...existingAttributes],
       );
-      console.log(existingAttributes, updatedAttributes);
 
       const metadata = profileMetadata({
         name: name ?? currentMetadata?.displayName ?? undefined,
@@ -89,11 +88,11 @@ export function useSaveProfileSettings() {
 
       if (result.isFailure()) {
         console.error("Failed to update profile metadata:", result.error);
-        toast.error("Failed to update profile settings. Please try again.");
+        toast.error("Failed to update settings. Please try again.");
         return false;
       }
 
-      toast.success("Profile settings updated successfully!", {
+      toast.success("Settings updated!", {
         description: "It might take a few seconds for the changes to take effect.",
       });
       return true;
