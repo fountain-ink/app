@@ -1,6 +1,6 @@
 "use client";
 
-import { Draft } from "@/components/draft/draft";
+import type { Draft } from "@/components/draft/draft";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { AnimatePresence, motion } from "framer-motion";

@@ -56,7 +56,7 @@ export const Draggable = withHOC(
     const state = useDraggableState({ element, onDropHandler });
     const { isDragging } = state;
     const { previewRef, handleRef } = useDraggable(state);
-    const mounted = useMounted();
+    const _mounted = useMounted();
 
     return (
       <div ref={ref} className={cn("relative", isDragging && "opacity-50", "group", className)}>
@@ -109,7 +109,7 @@ const Gutter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElem
   },
 );
 
-const DragHandle = React.memo(() => {
+const _DragHandle = React.memo(() => {
   const editor = useEditorRef();
 
   return (

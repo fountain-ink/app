@@ -31,7 +31,7 @@ export const UserMenu = () => {
   const { isConnected: isWalletConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const { execute: logout, loading: logoutLoading } = useLogout();
-  const pathname = usePathname();
+  const _pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const isDarkMode = theme === "dark";
 

@@ -53,8 +53,7 @@ export const useYjsState = create<YjsState>()(
           const { [path]: _, ...remainingDocuments } = state.documents;
           return { documents: remainingDocuments };
         }),
-        setActiveDocument: (path: string | null) =>
-          set({ activeDocument: path }),
+      setActiveDocument: (path: string | null) => set({ activeDocument: path }),
     }),
     {
       name: "yjs-state",

@@ -5,7 +5,7 @@ import { findNode } from "@udecode/plate-common";
 import { useEditorState } from "@udecode/plate-common/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
 import { ImagePlugin } from "@udecode/plate-media/react";
-import { TElement, TText } from "@udecode/slate";
+import type { TElement, TText } from "@udecode/slate";
 import { useEffect, useState } from "react";
 
 const ImagePlaceholder = () => (

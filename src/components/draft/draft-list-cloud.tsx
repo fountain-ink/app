@@ -79,7 +79,7 @@ export function CloudDraftsList({ profileId }: { profileId: string | null | unde
       </div>
     );
   }
-  
+
   if (!profileId) {
     return <div>Please login to see your drafts</div>;
   }

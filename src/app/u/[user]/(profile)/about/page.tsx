@@ -11,7 +11,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
     return <ErrorPage error="User not found" />;
   }
 
-  const isUserProfile = profileId === profile.id;
+  const _isUserProfile = profileId === profile.id;
 
   return (
     <div className="p-4">

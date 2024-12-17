@@ -4,11 +4,11 @@ import React from "react";
 
 import { cn } from "@udecode/cn";
 import {
-    ParagraphPlugin,
-    type PlaceholderProps,
-    createNodeHOC,
-    createNodesHOC,
-    usePlaceholderState,
+  ParagraphPlugin,
+  type PlaceholderProps,
+  createNodeHOC,
+  createNodesHOC,
+  usePlaceholderState,
 } from "@udecode/plate-common/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
 import { useReadOnly } from "slate-react";
@@ -16,14 +16,13 @@ import { useReadOnly } from "slate-react";
 export const Placeholder = (props: PlaceholderProps) => {
   const { children, nodeProps, placeholder } = props;
 
-  const readonly = useReadOnly()
+  const readonly = useReadOnly();
 
   const { enabled } = usePlaceholderState(props);
 
   if (readonly) {
     return children;
   }
-
 
   return React.Children.map(children, (child) => {
     return React.cloneElement(child, {

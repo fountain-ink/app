@@ -2,10 +2,10 @@
 
 import { cn, withRef } from "@udecode/cn";
 import {
-    createPrimitiveComponent,
-    selectSiblingNodePoint,
-    useEditorRef,
-    useElement,
+  createPrimitiveComponent,
+  selectSiblingNodePoint,
+  useEditorRef,
+  useElement,
 } from "@udecode/plate-common/react";
 import type { TEquationElement } from "@udecode/plate-math";
 import { useEquationElement, useEquationInput } from "@udecode/plate-math/react";

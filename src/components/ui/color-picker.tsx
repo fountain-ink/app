@@ -23,7 +23,7 @@ export const ColorPickerContent = withRef<
 >(({ className, clearColor, color, colors, customColors, updateColor, updateCustomColor, ...props }, ref) => {
   return (
     <div ref={ref} className={cn("flex flex-col", className)} {...props}>
-      <DropdownMenuGroup >
+      <DropdownMenuGroup>
         <ColorCustom
           color={color}
           className="p-2"

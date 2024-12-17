@@ -136,7 +136,7 @@ export const PostView = ({
           <div className="relative z-10">
             {isDraft ? (
               <>
-                <DraftMenu 
+                <DraftMenu
                   draft={item as Draft}
                   onDeleteClick={onDelete ?? (() => {})}
                   onSelect={onSelect ?? (() => {})}

@@ -5,13 +5,13 @@ import { usePathname } from "next/navigation";
 
 interface PageTransitionProps {
   children: React.ReactNode;
-  type?: 'full' | 'content';
+  type?: "full" | "content";
 }
 
-export const PageTransition = ({ children, type = 'full' }: PageTransitionProps) => {
+export const PageTransition = ({ children, type = "full" }: PageTransitionProps) => {
   const pathname = usePathname();
 
-  if (type === 'content') {
+  if (type === "content") {
     return (
       <div style={{ position: "relative", width: "100%" }}>
         <motion.div
@@ -19,7 +19,7 @@ export const PageTransition = ({ children, type = 'full' }: PageTransitionProps)
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          transition={{ 
+          transition={{
             duration: 0.2,
             ease: "easeInOut",
           }}
@@ -36,7 +36,7 @@ export const PageTransition = ({ children, type = 'full' }: PageTransitionProps)
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ 
+      transition={{
         duration: 0.3,
         ease: "easeInOut",
       }}

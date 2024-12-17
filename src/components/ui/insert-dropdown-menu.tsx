@@ -18,35 +18,31 @@ import { ImagePlugin, MediaEmbedPlugin } from "@udecode/plate-media/react";
 import { TablePlugin } from "@udecode/plate-table/react";
 import { TogglePlugin } from "@udecode/plate-toggle/react";
 import {
-    CalendarIcon,
-    ChevronRightIcon,
-    Columns3Icon,
-    FileCodeIcon,
-    FilmIcon,
-    Heading1Icon,
-    Heading2Icon,
-    Heading3Icon,
-    ImageIcon,
-    Link2Icon,
-    ListIcon,
-    ListOrderedIcon,
-    MinusIcon,
-    PenToolIcon,
-    PilcrowIcon,
-    PlusIcon,
-    QuoteIcon,
-    SquareIcon,
-    TableIcon,
-    TableOfContentsIcon,
+  CalendarIcon,
+  ChevronRightIcon,
+  Columns3Icon,
+  FileCodeIcon,
+  FilmIcon,
+  Heading1Icon,
+  Heading2Icon,
+  Heading3Icon,
+  ImageIcon,
+  Link2Icon,
+  ListIcon,
+  ListOrderedIcon,
+  MinusIcon,
+  PenToolIcon,
+  PilcrowIcon,
+  PlusIcon,
+  QuoteIcon,
+  SquareIcon,
+  TableIcon,
+  TableOfContentsIcon,
 } from "lucide-react";
 
 import { insertBlock, insertInlineElement } from "@/lib/transforms";
 
-import {
-    DropdownMenu,
-    DropdownMenuTrigger,
-    useOpenState
-} from "./dropdown-menu";
+import { DropdownMenu, DropdownMenuTrigger, useOpenState } from "./dropdown-menu";
 import { ToolbarButton } from "./toolbar";
 
 type Group = {
@@ -62,7 +58,7 @@ interface Item {
   label?: string;
 }
 
-const groups: Group[] = [
+const _groups: Group[] = [
   {
     group: "Basic blocks",
     items: [
@@ -212,7 +208,7 @@ const groups: Group[] = [
 ];
 
 export function InsertDropdownMenu(props: DropdownMenuProps) {
-  const editor = useEditorRef();
+  const _editor = useEditorRef();
   const openState = useOpenState();
 
   return (
@@ -242,7 +238,6 @@ export function InsertDropdownMenu(props: DropdownMenuProps) {
           </DropdownMenuGroup>
         ))}
       </DropdownMenuContent> */}
-
     </DropdownMenu>
   );
 }

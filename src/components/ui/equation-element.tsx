@@ -15,7 +15,7 @@ import { RadicalIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useReadOnly } from "slate-react";
 import { Caption, CaptionTextarea } from "./caption";
-import { ELEMENT_WIDTH_CLASSES, ElementPopover, ElementWidth } from "./element-popover";
+import { ELEMENT_WIDTH_CLASSES, ElementPopover, type ElementWidth } from "./element-popover";
 import { PlateElement } from "./plate-element";
 import { TextareaAutosize } from "./textarea";
 
@@ -26,7 +26,7 @@ const EquationInput = createPrimitiveComponent(TextareaAutosize)({
 export const EquationElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
   const element = useElement<TEquationElement>();
   const editor = useEditorRef();
-  const [open, setOpen] = useState(false);
+  const [_open, setOpen] = useState(false);
   const katexRef = useRef<HTMLDivElement | null>(null);
   const [width, setWidth] = useState<ElementWidth>((element?.width as ElementWidth) || "column");
   const readOnly = useReadOnly();

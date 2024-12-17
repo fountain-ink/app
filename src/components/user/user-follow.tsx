@@ -8,7 +8,7 @@ import { Button } from "../ui/button";
 export const UserFollowButton = ({ profile, className }: { profile: ProfileFragment; className?: string }) => {
   const [following, _setFollowing] = useState(profile.operations.isFollowedByMe.value);
   const followsMe = profile.operations.isFollowingMe.value;
-  const controller = useRef<any>();
+  const _controller = useRef<any>();
 
   const toggleFollow = async () => {
     return;

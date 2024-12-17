@@ -19,7 +19,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
     return <ErrorPage error="Can't access other user's drafts" />;
   }
 
-  const isUserProfile = userHandle === params.user;
+  const _isUserProfile = userHandle === params.user;
 
   return (
     <div className="flex flex-col my-4 gap-4">

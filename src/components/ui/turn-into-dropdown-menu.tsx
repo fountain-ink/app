@@ -61,7 +61,7 @@ export const turnIntoItems = [
     icon: <SquareIcon />,
     keywords: ["checklist", "task", "checkbox", "[]"],
     label: "To-do list",
-    value: TodoListPlugin.key
+    value: TodoListPlugin.key,
   },
   {
     icon: <ListIcon />,

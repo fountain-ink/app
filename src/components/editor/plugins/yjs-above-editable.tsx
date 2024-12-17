@@ -16,7 +16,6 @@ export const RenderAboveEditableYjs: React.FC<{
   const provider = useOption("provider");
   const isSynced = useOption("isSynced");
 
-
   useEffect(() => {
     void provider.connect();
 

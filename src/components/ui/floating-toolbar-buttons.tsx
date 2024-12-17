@@ -18,7 +18,7 @@ import { TurnIntoDropdownMenu } from "./turn-into-dropdown-menu";
 import { InlineEquationToolbarButton } from "./inline-equation-toolbar-button";
 
 export function FloatingToolbarButtons() {
-  const editor = useEditorRef();
+  const _editor = useEditorRef();
   const readOnly = useEditorReadOnly();
 
   const isSelectionAcrossBlocks = useSelectionAcrossBlocks();

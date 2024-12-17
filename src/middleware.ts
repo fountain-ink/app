@@ -9,7 +9,7 @@ export function middleware(request: NextRequest) {
     response.headers.set("x-refresh-token", refreshToken.value);
   }
 
-  response.headers.set('x-url', request.url);
+  response.headers.set("x-url", request.url);
 
   return response;
 }
@@ -17,7 +17,6 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: ["/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)"],
 };
-
 
 // import { type NextRequest, NextResponse } from "next/server";
 

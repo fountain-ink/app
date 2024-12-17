@@ -59,7 +59,7 @@ export const PublishButton = () => {
 
     const contentMarkdown = editorState.api.markdown.serialize();
     const { title, subtitle, coverImage } = extractMetadata(contentJson);
-    
+
     // const publish = false;
     // if (!publish) {
     //   console.log(title, subtitle, coverImage);
@@ -122,9 +122,5 @@ export const PublishButton = () => {
     }
   };
 
-  return (
-    <Button onClick={handlePublish} >
-      Publish
-    </Button>
-  );
+  return <Button onClick={handlePublish}>Publish</Button>;
 };

@@ -16,11 +16,7 @@ export const CollectingTab = () => {
           </div>
           <div className="text-sm text-muted-foreground">Allow users to collect this post</div>
         </div>
-        <Switch
-          id="collecting"
-          checked={isCollectingEnabled}
-          onCheckedChange={setIsCollectingEnabled}
-        />
+        <Switch id="collecting" checked={isCollectingEnabled} onCheckedChange={setIsCollectingEnabled} />
       </div>
 
       {isCollectingEnabled && (
@@ -31,9 +27,7 @@ export const CollectingTab = () => {
                 <CircleDollarSign className="w-4 h-4" />
                 <Label htmlFor="charge">Charge for collecting</Label>
               </div>
-              <div className="text-sm text-muted-foreground">
-                Get paid whenever someone collects your post
-              </div>
+              <div className="text-sm text-muted-foreground">Get paid whenever someone collects your post</div>
             </div>
             <Switch id="charge" />
           </div>
@@ -55,9 +49,7 @@ export const CollectingTab = () => {
                 <Clock className="w-4 h-4" />
                 <Label htmlFor="timeLimit">Time limit</Label>
               </div>
-              <div className="text-sm text-muted-foreground">
-                Limit collecting to specific period of time
-              </div>
+              <div className="text-sm text-muted-foreground">Limit collecting to specific period of time</div>
             </div>
             <Switch id="timeLimit" />
           </div>

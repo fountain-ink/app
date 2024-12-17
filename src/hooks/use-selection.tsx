@@ -15,7 +15,7 @@ export function SelectionProvider({ children }: { children: React.ReactNode }) {
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
 
   const toggleSelection = useCallback((id: string) => {
-    setSelectedItems(prev => {
+    setSelectedItems((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(id)) {
         newSet.delete(id);
@@ -32,14 +32,12 @@ export function SelectionProvider({ children }: { children: React.ReactNode }) {
 
   const deleteSelectedItems = async () => {
     try {
-      const promises = Array.from(selectedItems).map(id =>
-        fetch(`/api/drafts?id=${id}`, { method: "DELETE" })
-      );
-      
+      const promises = Array.from(selectedItems).map((id) => fetch(`/api/drafts?id=${id}`, { method: "DELETE" }));
+
       await Promise.all(promises);
       toast.success(`Deleted ${selectedItems.size} drafts`);
       clearSelection();
-    } catch (error) {
+    } catch (_error) {
       toast.error("Failed to delete selected drafts");
     }
   };
@@ -52,11 +50,7 @@ export function SelectionProvider({ children }: { children: React.ReactNode }) {
     deleteSelectedItems,
   };
 
-  return (
-    <SelectionContext.Provider value={value}>
-      {children}
-    </SelectionContext.Provider>
-  );
+  return <SelectionContext.Provider value={value}>{children}</SelectionContext.Provider>;
 }
 
 export function useSelectionContext() {

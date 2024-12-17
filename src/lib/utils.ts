@@ -38,7 +38,6 @@ export function formatTime(date: string | Date): string {
   return `${days} ${days === 1 ? "day" : "days"} ago`;
 }
 
-
 export function formatRelativeTime(date: string | Date): string {
   const now = new Date();
   const then = new Date(date);
@@ -51,16 +50,16 @@ export function formatRelativeTime(date: string | Date): string {
     day: 86400,
     hour: 3600,
     minute: 60,
-    second: 1
+    second: 1,
   } as const;
 
   for (const [unit, seconds] of Object.entries(intervals)) {
     const interval = Math.floor(diffInSeconds / seconds);
-    
+
     if (interval >= 1) {
-      return `${interval} ${unit}${interval !== 1 ? 's' : ''} ago`;
+      return `${interval} ${unit}${interval !== 1 ? "s" : ""} ago`;
     }
   }
 
-  return 'just now';
+  return "just now";
 }

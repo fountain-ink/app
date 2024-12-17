@@ -22,15 +22,17 @@ export const ThemeButtons = () => {
         key={theme}
         onClick={() => setTheme(theme)}
       >
-        <h1 style={{
-          fontFamily: "var(--title-font)",
-          fontWeight: "var(--title-weight)",
-          fontStyle: "var(--title-style)",
-          fontSize: "var(--title-size)",
-          lineHeight: "var(--title-line-height)",
-          letterSpacing: "var(--title-letter-spacing)",
-          color: "var(--title-color)",
-        }}>
+        <h1
+          style={{
+            fontFamily: "var(--title-font)",
+            fontWeight: "var(--title-weight)",
+            fontStyle: "var(--title-style)",
+            fontSize: "var(--title-size)",
+            lineHeight: "var(--title-line-height)",
+            letterSpacing: "var(--title-letter-spacing)",
+            color: "var(--title-color)",
+          }}
+        >
           {theme}
         </h1>
         <p className="text-md break-all whitespace-normal">{placeholderText}</p>

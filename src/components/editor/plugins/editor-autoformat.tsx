@@ -1,19 +1,19 @@
 import {
-    autoformatArrow,
-    autoformatLegal,
-    autoformatLegalHtml,
-    autoformatMath,
-    autoformatPunctuation,
-    autoformatSmartQuotes,
+  autoformatArrow,
+  autoformatLegal,
+  autoformatLegalHtml,
+  autoformatMath,
+  autoformatPunctuation,
+  autoformatSmartQuotes,
 } from "@udecode/plate-autoformat";
 import {
-    BoldPlugin,
-    CodePlugin,
-    ItalicPlugin,
-    StrikethroughPlugin,
-    SubscriptPlugin,
-    SuperscriptPlugin,
-    UnderlinePlugin,
+  BoldPlugin,
+  CodePlugin,
+  ItalicPlugin,
+  StrikethroughPlugin,
+  SubscriptPlugin,
+  SuperscriptPlugin,
+  UnderlinePlugin,
 } from "@udecode/plate-basic-marks/react";
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { insertEmptyCodeBlock } from "@udecode/plate-code-block";
