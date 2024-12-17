@@ -1,6 +1,7 @@
 "use client";
 
-import { Brush, DollarSign, LayoutGrid, Mail, Megaphone, PenTool, Settings, User2, Users } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Brush, DollarSign, LayoutGrid, Mail, PenTool, Settings, User2, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -13,12 +14,6 @@ const navItems = [
     id: "subscriptions",
     label: "Subscriptions",
     icon: DollarSign,
-    enabled: false,
-  },
-  {
-    id: "advertising",
-    label: "Advertising",
-    icon: Megaphone,
     enabled: false,
   },
   { id: "newsletter", label: "Newsletter", icon: Mail, enabled: false },
@@ -36,7 +31,7 @@ export default function SettingsLayout({
   return (
     <div className="container mx-auto p-6 py-10 mt-16 max-w-6xl">
       <h1 className="text-3xl font-bold ml-4 mb-10">Settings</h1>
-      <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
+      <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-4 lg:space-y-0">
         <nav className="flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-2 lg:w-1/5">
           {navItems.map((item) => {
             const isActive = pathname === `/settings/${item.id}`;
@@ -44,7 +39,7 @@ export default function SettingsLayout({
               <Link
                 key={item.id}
                 href={`/settings/${item.id}`}
-                className={`px-4 py-2 flex items-center space-x-2 rounded-lg text-sm font-medium transition-colors
+                className={`px-4 py-2 flex items-center justify-between rounded-lg text-sm font-medium transition-colors
                   ${
                     item.enabled
                       ? isActive
@@ -56,8 +51,11 @@ export default function SettingsLayout({
                   if (!item.enabled) e.preventDefault();
                 }}
               >
-                {item.icon && <item.icon className="w-4 h-4" />}
-                <span className="hidden sm:inline">{item.label}</span>
+                <div className="flex items-center space-x-2">
+                  {item.icon && <item.icon className="w-4 h-4" />}
+                  <span className="hidden sm:inline">{item.label}</span>
+                </div>
+                {!item.enabled && <Badge variant="outline">Soon</Badge>}
               </Link>
             );
           })}

@@ -38,7 +38,7 @@ export const PublishButton = ({ disabled }: { disabled?: boolean }) => {
 
   const handlePublish = async () => {
     if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
-      toast.error("Please connect your wallet and select a profile to publish");
+      toast.error("Please log in to publish");
       return;
     }
 
@@ -122,5 +122,9 @@ export const PublishButton = ({ disabled }: { disabled?: boolean }) => {
     }
   };
 
-  return <Button disabled={disabled} onClick={handlePublish}>Publish</Button>;
+  return (
+    <Button disabled={disabled} onClick={handlePublish}>
+      Publish
+    </Button>
+  );
 };
