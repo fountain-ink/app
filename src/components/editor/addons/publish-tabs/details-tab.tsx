@@ -1,12 +1,15 @@
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { usePublishStore } from "@/hooks/use-publish-store";
 import { findNode } from "@udecode/plate-common";
 import { useEditorState } from "@udecode/plate-common/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
 import { ImagePlugin } from "@udecode/plate-media/react";
 import type { TElement, TText } from "@udecode/slate";
 import { useEffect, useState } from "react";
+import { PublishButton } from "../editor-publish-button";
 
 const ImagePlaceholder = () => (
   <div className="flex relative aspect-video w-full rounded-sm -z-[1]">
@@ -19,6 +22,24 @@ export const DetailsTab = () => {
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [coverUrl, setCoverUrl] = useState("");
+  const [titleError, setTitleError] = useState<string | null>(null);
+  const { setIsOpen } = usePublishStore();
+
+  // Validate title whenever it changes
+  useEffect(() => {
+    const error = validateTitle(title);
+    setTitleError(error);
+  }, [title]);
+
+  const validateTitle = (value: string) => {
+    if (!value.trim()) {
+      return "Title is required";
+    }
+    if (value.length > 100) {
+      return "Title must be less than 100 characters";
+    }
+    return null;
+  };
 
   // Find and sync with first h1 node
   useEffect(() => {
@@ -104,36 +125,59 @@ export const DetailsTab = () => {
   };
 
   return (
-    <ScrollArea className="h-[480px]">
-      <div className="space-y-4 p-4">
-        <div className="space-y-2">
-          <Label htmlFor="title">Title</Label>
-          <Input id="title" placeholder="Enter title" value={title} onChange={handleTitleChange} />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="subtitle">Subtitle</Label>
-          <Input
-            id="subtitle"
-            placeholder="Enter subtitle (optional)"
-            value={subtitle}
-            onChange={handleSubtitleChange}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label>Cover Image</Label>
-          {coverUrl ? (
-            <div className="relative w-full rounded-lg overflow-hidden border border-border">
-              <img src={coverUrl} alt="Cover" className="w-full h-auto object-cover" />
+    <div>
+      <ScrollArea className="h-[480px]">
+        <div className="space-y-4 p-4">
+          <div className="space-y-2">
+            <Label htmlFor="title">Title</Label>
+            <div className="space-y-1">
+              <Input
+                id="title"
+                placeholder="Enter title"
+                value={title}
+                onChange={handleTitleChange}
+                className={titleError ? "border-destructive" : ""}
+              />
+              {titleError && <span className="text-sm text-destructive">{titleError}</span>}
             </div>
-          ) : (
-            <ImagePlaceholder />
-          )}
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="subtitle">Subtitle</Label>
+            <Input
+              id="subtitle"
+              placeholder="Enter subtitle (optional)"
+              value={subtitle}
+              onChange={handleSubtitleChange}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Cover Image</Label>
+            {coverUrl ? (
+              <div className="relative w-full rounded-lg overflow-hidden border border-border">
+                <img src={coverUrl} alt="Cover" className="w-full h-auto object-cover" />
+              </div>
+            ) : (
+              <ImagePlaceholder />
+            )}
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="tags">Tags</Label>
+            <Input id="tags" placeholder="Enter tags separated by commas" />
+          </div>
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="tags">Tags</Label>
-          <Input id="tags" placeholder="Enter tags separated by commas" />
-        </div>
+      </ScrollArea>
+      <div className="flex items-center justify-between pt-4">
+        <Button
+          variant="outline"
+          onClick={() => {
+            setIsOpen(false);
+          }}
+        >
+          Back
+        </Button>
+
+        <PublishButton disabled={!!titleError} />
       </div>
-    </ScrollArea>
+    </div>
   );
 };

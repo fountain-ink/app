@@ -17,7 +17,7 @@ import { useAccount } from "wagmi";
 import { getElements } from "../elements";
 import { staticPlugins } from "../plugins";
 
-export const PublishButton = () => {
+export const PublishButton = ({ disabled }: { disabled?: boolean }) => {
   const { data: session } = useSession();
   const { isConnected: isWalletConnected } = useAccount();
   const { execute } = useCreatePost();
@@ -122,5 +122,5 @@ export const PublishButton = () => {
     }
   };
 
-  return <Button onClick={handlePublish}>Publish</Button>;
+  return <Button disabled={disabled} onClick={handlePublish}>Publish</Button>;
 };

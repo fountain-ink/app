@@ -111,7 +111,7 @@ export const PublishDialog = () => {
                   </ScrollArea>
                 </Tabs>
 
-                <div className="flex items-center justify-between flex-shrink-0">
+                {/* <div className="flex items-center justify-between flex-shrink-0">
                   <Button
                     variant="outline"
                     onClick={() => {
@@ -123,7 +123,7 @@ export const PublishDialog = () => {
                   </Button>
 
                   <PublishButton />
-                </div>
+                </div> */}
               </div>
             </motion.div>
           )}

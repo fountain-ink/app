@@ -9,7 +9,6 @@ import { Profile } from "@lens-protocol/react-web";
 export const UserFollowButton = ({ profile, className }: { profile: ProfileFragment | Profile; className?: string }) => {
   const [following, _setFollowing] = useState(profile.operations.isFollowedByMe.value);
   const followsMe = profile.operations.isFollowingMe.value;
-  const _controller = useRef<any>();
 
   const toggleFollow = async () => {
     return;
