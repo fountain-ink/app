@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { useSaveProfileSettings } from "@/hooks/use-save-profile-settings";
 import { uploadFileFormData } from "@/lib/upload-utils";
 import type { ProfileFragment } from "@lens-protocol/client";
 import type { Profile } from "@lens-protocol/react-web";
@@ -12,6 +11,7 @@ import { useCallback, useState } from "react";
 import { ImageUploader } from "../images/image-uploader";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
+import { useSaveProfileSettings } from "@/hooks/use-save-profile-settings";
 
 export function ProfileSettings({ profile }: { profile: Profile | ProfileFragment | null | undefined }) {
   const [profilePicture, setProfilePicture] = useState<File | null>(null);

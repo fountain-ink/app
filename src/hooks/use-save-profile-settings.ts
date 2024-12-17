@@ -93,16 +93,17 @@ export function useSaveProfileSettings() {
       }
 
       toast.success("Settings updated!", {
-        description: "It might take a few seconds for the changes to take effect.",
+        description: "It might take a few minutes for the changes to take effect.",
       });
-      return true;
-    } catch (error) {
-      console.error("Error updating profile metadata:", error);
-      toast.error("An error occurred. Please try again.");
-      return false;
+
+      result.value.waitForCompletion().catch((error) => {
+        console.error("Transaction failed:", error);
+      });
     } finally {
       setIsSaving(false);
     }
+
+    return true;
   };
 
   return { saveSettings, isSaving };
