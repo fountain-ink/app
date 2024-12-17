@@ -14,6 +14,10 @@ type ProfileSettingsParams = {
   attributes?: any[];
 };
 
+type SaveSettingsResult = {
+  success: boolean;
+  error: string | null;
+};
 export function useSaveProfileSettings() {
   const [isSaving, setIsSaving] = useState(false);
   const { execute: setProfileMetadata } = useSetProfileMetadata();
@@ -31,8 +35,8 @@ export function useSaveProfileSettings() {
     const handle = profile.handle?.localName;
 
     if (!handle) {
-      toast.error("No handle found for profile");
-      return false;
+      toast.error("Error: No handle found for profile");
+      return { success: false, error: "No handle found for profile" };
     }
 
     try {
@@ -46,6 +50,15 @@ export function useSaveProfileSettings() {
         };
         return typeMap[type.toUpperCase()] || type;
       };
+
+      // Validate attributes
+      for (const attr of attributes) {
+        if (attr.type === "String" && (!attr.value || attr.value.trim().length === 0)) {
+          const error = `Invalid value for attribute "${attr.key}": String must not be empty`;
+          toast.error(`Error: ${error}`);
+          return { success: false, error };
+        }
+      }
 
       // Convert existing attributes to correct format
       const existingAttributes = (currentMetadata?.attributes || []).map((attr) => ({
@@ -81,29 +94,35 @@ export function useSaveProfileSettings() {
         appId: "fountain",
       });
 
-      console.log(metadata);
-
       const metadataURI = await uploadMetadata(metadata, handle);
       const result = await setProfileMetadata({ metadataURI });
 
       if (result.isFailure()) {
-        console.error("Failed to update profile metadata:", result.error);
-        toast.error("Failed to update settings. Please try again.");
-        return false;
+        const error = result.error.message || "Failed to update settings";
+        console.error("Failed to update profile metadata:", error);
+        toast.error(`Error: ${error}`);
+        return { success: false, error };
       }
 
       toast.success("Settings updated!", {
-        description: "It might take a few minutes for the changes to take effect.",
+        description: "It might take a few seconds for the changes to take effect.",
       });
 
+      // Handle transaction completion in background
       result.value.waitForCompletion().catch((error) => {
         console.error("Transaction failed:", error);
+        toast.error(`Error: Transaction failed - ${error.message || "Unknown error"}`);
       });
+
+      return { success: true, error: null };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      console.error("Error saving settings:", errorMessage);
+      toast.error(`Error: ${errorMessage}`);
+      return { success: false, error: errorMessage };
     } finally {
       setIsSaving(false);
     }
-
-    return true;
   };
 
   return { saveSettings, isSaving };
