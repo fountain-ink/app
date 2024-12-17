@@ -11,7 +11,7 @@ import type { Profile } from "@lens-protocol/react-web";
 import { useCallback, useState } from "react";
 import { ImageUploader } from "../images/image-uploader";
 import { Button } from "../ui/button";
-import { Textarea } from "../ui/textarea";
+import { Textarea, TextareaAutosize } from "../ui/textarea";
 
 export function ProfileSettings({ profile }: { profile: Profile | ProfileFragment | null | undefined }) {
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
@@ -119,7 +119,7 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
         </div>
         <div className="flex flex-col gap-2 relative">
           <Label htmlFor="profile-description">Profile Description</Label>
-          <Textarea
+          <TextareaAutosize
             id="profile-description"
             value={profileDescription}
             variant={"default"}

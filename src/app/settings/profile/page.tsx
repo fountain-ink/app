@@ -7,5 +7,6 @@ export const metadata = {
 
 export default async function ProfileSettingsPage() {
   const { profile } = await getAuthWithCookies();
+
   return <ProfileSettings profile={profile} />;
 }
