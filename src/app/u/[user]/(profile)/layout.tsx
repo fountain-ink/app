@@ -9,7 +9,9 @@ import { UserName } from "@/components/user/user-name";
 import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 
 import { PageTransition } from "@/components/navigation/page-transition";
+import { Button } from "@/components/ui/button";
 import { AnimatePresence } from "framer-motion";
+import Link from "next/link";
 export default async function UserLayout({
   children,
   params,
@@ -46,7 +48,15 @@ export default async function UserLayout({
             </div>
           </div>
           <div className="mt-4">
-            <UserFollowButton profile={profile} />
+            {isUserProfile ? (
+              <Link href={"/settings"} prefetch>
+                <Button variant="outline" className="w-fit">
+                  Edit
+                </Button>
+              </Link>
+            ) : (
+              <UserFollowButton profile={profile} />
+            )}
           </div>
         </div>
         <div className="-mt-10 p-4 pb-0 border-b border-border">
@@ -74,9 +84,7 @@ export default async function UserLayout({
           />
         </div>
         <AnimatePresence mode="wait">
-          <PageTransition type="content">
-            {children}
-          </PageTransition>
+          <PageTransition type="content">{children}</PageTransition>
         </AnimatePresence>
       </div>
     </div>
