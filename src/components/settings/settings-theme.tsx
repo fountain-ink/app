@@ -11,7 +11,6 @@ import type { ProfileFragment } from "@lens-protocol/client";
 import { MetadataAttributeType } from "@lens-protocol/metadata";
 import type { Profile } from "@lens-protocol/react-web";
 import { useState } from "react";
-import { toast } from "sonner";
 import { ThemeButtons } from "../theme/theme-buttons";
 import { useTheme } from "../theme/theme-context";
 import { Button } from "../ui/button";
@@ -28,8 +27,10 @@ export function ThemeSettings({ defaultTheme, onThemeChange, profile }: ThemeSet
   const { setTheme: setStoredTheme } = useStorage();
   const [selectedTheme, setSelectedTheme] = useState<ThemeType>(defaultTheme || theme);
   const { saveSettings, isSaving } = useSaveProfileSettings();
-  const currentThemeAttribute = profile?.metadata?.attributes?.find((attr) => attr.key === "theme");
-  const currentSavedTheme = (currentThemeAttribute?.value as ThemeType) || theme;
+  const [savedTheme, setSavedTheme] = useState<ThemeType>(() => {
+    const currentThemeAttribute = profile?.metadata?.attributes?.find((attr) => attr.key === "theme");
+    return (currentThemeAttribute?.value as ThemeType) || theme;
+  });
   const [customColor, setCustomColor] = useState("#e2f3ab");
   const [customBackground, setCustomBackground] = useState("#bbccaa");
 
@@ -56,10 +57,9 @@ export function ThemeSettings({ defaultTheme, onThemeChange, profile }: ThemeSet
 
       if (success) {
         setStoredTheme(selectedTheme);
-        toast.success("Theme settings saved successfully");
+        setSavedTheme(selectedTheme);
       }
     } catch (error) {
-      toast.error("Failed to save theme preference");
       console.error("Error saving theme:", error);
     }
   };
@@ -79,7 +79,7 @@ export function ThemeSettings({ defaultTheme, onThemeChange, profile }: ThemeSet
             </TabsTrigger>
           </TabsList>
           <TabsContent value="presets">
-            <ThemeButtons onChange={handleThemeChange} disabled={isSaving} />
+            <ThemeButtons currentTheme={savedTheme} onChange={handleThemeChange} disabled={isSaving} />
           </TabsContent>
           <TabsContent value="custom">
             <div className="grid gap-4 py-4">
@@ -110,7 +110,7 @@ export function ThemeSettings({ defaultTheme, onThemeChange, profile }: ThemeSet
         </Tabs>
       </CardContent>
       <CardFooter>
-        <Button onClick={handleSave} disabled={isSaving || !profile || selectedTheme === currentSavedTheme}>
+        <Button onClick={handleSave} disabled={isSaving || !profile || selectedTheme === savedTheme}>
           {isSaving ? "Saving..." : "Save changes"}
         </Button>
       </CardFooter>
