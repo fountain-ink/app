@@ -1,13 +1,11 @@
 import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
 import { TypeIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -17,19 +15,13 @@ import { ThemeButtons } from "./theme-buttons";
 
 export const ThemeSidebar = () => {
   return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button className="h-10 w-10 p-0" variant="ghost" size={"icon"}>
-          <TypeIcon />
-        </Button>
-      </SheetTrigger>
-
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Theme Editor</SheetTitle>
-          <SheetDescription>Choose a preset or make your own theme.</SheetDescription>
-        </SheetHeader>
-        <Tabs className="mt-4" defaultValue="account">
+    <Card className="w-[350px]">
+      <CardHeader>
+        <CardTitle>Theme Editor</CardTitle>
+        <CardDescription>Choose a preset or make your own theme.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Tabs defaultValue="presets">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="presets">Presets</TabsTrigger>
             <TabsTrigger value="custom">Custom</TabsTrigger>
@@ -41,8 +33,8 @@ export const ThemeSidebar = () => {
             <ThemeEditor />
           </TabsContent>
         </Tabs>
-      </SheetContent>
-    </Sheet>
+      </CardContent>
+    </Card>
   );
 };
 
@@ -64,11 +56,9 @@ export const ThemeEditor = () => {
         </div>
       </div>
 
-      <SheetFooter>
-        <SheetClose asChild>
-          <Button type="submit">Save changes</Button>
-        </SheetClose>
-      </SheetFooter>
+      <CardFooter>
+        <Button type="submit">Save changes</Button>
+      </CardFooter>
     </>
   );
 };
