@@ -11,6 +11,9 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
   const pageHandle = `lens/${params.user}`;
   const profile = await lens.profile.fetch({ forHandle: pageHandle });
   const title = profile?.metadata?.attributes?.find((item) => item.key === "blogTitle");
+  const showAuthor =
+    profile?.metadata?.attributes?.find((item) => item.key === "showAuthor")?.value !== "false" ?? true;
+  const showTags = profile?.metadata?.attributes?.find((item) => item.key === "showTags")?.value !== "false" ?? true;
 
   if (!profile) {
     return notFound();
@@ -20,14 +23,16 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
 
   return (
     <>
-      <div className="p-4 ">
-        <AuthorView showHandle={false} profiles={[profile]} />
-      </div>
+      {showAuthor && (
+        <div className="p-4 ">
+          <AuthorView showHandle={false} profiles={[profile]} />
+        </div>
+      )}
       <div className="text-[1.5rem] sm:text-[2rem] lg:text-[2.5rem] text-center font-[letter-spacing:var(--title-letter-spacing)] font-[family-name:var(--title-font)] font-normal font-[color:var(--title-color)] overflow-hidden line-clamp-2">
         {title?.value ?? `${profile.handle?.localName}'s blog`}
       </div>
       <Separator className="w-48 bg-primary mt-3" />
-      <IndexNavigation username={params.user} isUserProfile={isUserProfile} />
+      {showTags && <IndexNavigation username={params.user} isUserProfile={isUserProfile} />}
       <div className="flex flex-col my-4 gap-4">
         <UserContent contentType="articles" profile={profile} isUserProfile={isUserProfile} />
       </div>

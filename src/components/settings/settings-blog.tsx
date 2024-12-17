@@ -3,6 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { useSaveProfileSettings } from "@/hooks/use-save-profile-settings";
 import type { ProfileFragment } from "@lens-protocol/client";
 import type { Profile } from "@lens-protocol/react-web";
@@ -13,6 +14,12 @@ export function BlogSettings({ profile }: { profile: Profile | ProfileFragment |
   const currentMetadata = profile?.metadata;
   const [blogTitle, setBlogTitle] = useState(
     currentMetadata?.attributes?.find((attr) => attr.key === "blogTitle")?.value || "",
+  );
+  const [showAuthor, setShowAuthor] = useState(
+    currentMetadata?.attributes?.find((attr) => attr.key === "showAuthor")?.value !== "false"
+  );
+  const [showTags, setShowTags] = useState(
+    currentMetadata?.attributes?.find((attr) => attr.key === "showTags")?.value !== "false"
   );
   const [error, setError] = useState<string | null>(null);
   const { saveSettings, isSaving } = useSaveProfileSettings();
@@ -44,6 +51,16 @@ export function BlogSettings({ profile }: { profile: Profile | ProfileFragment |
           key: "blogTitle",
           type: "String",
           value: blogTitle.trim(),
+        },
+        {
+          key: "showTags",
+          type: "Boolean",
+          value: showTags.toString(),
+        },
+        {
+          key: "showAuthor",
+          type: "Boolean",
+          value: showAuthor.toString(),
         },
       ];
 
@@ -80,6 +97,32 @@ export function BlogSettings({ profile }: { profile: Profile | ProfileFragment |
           )}
         </div>
 
+        <div className="flex items-center justify-between space-y-2">
+          <div className="space-y-0.5">
+            <Label htmlFor="show-author">Show Author</Label>
+            <p className="text-sm text-muted-foreground">
+              Display your name above the blog title
+            </p>
+          </div>
+          <Switch
+            id="show-author"
+            checked={showAuthor}
+            onCheckedChange={setShowAuthor}
+          />
+        </div>
+        <div className="flex items-center justify-between space-y-2">
+          <div className="space-y-0.5">
+            <Label htmlFor="show-tags">Show Tags</Label>
+            <p className="text-sm text-muted-foreground">
+              Display article tags below the blog title
+            </p>
+          </div>
+          <Switch
+            id="show-tags"
+            checked={showTags}
+            onCheckedChange={setShowTags}
+          />
+        </div>
         <Button 
           onClick={handleSave} 
           disabled={isSaving || !!error || !blogTitle.trim()}

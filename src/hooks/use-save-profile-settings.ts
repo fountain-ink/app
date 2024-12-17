@@ -93,6 +93,7 @@ export function useSaveProfileSettings() {
         attributes: updatedAttributes,
         appId: "fountain",
       });
+      console.log(metadata)
 
       const metadataURI = await uploadMetadata(metadata, handle);
       const result = await setProfileMetadata({ metadataURI });
