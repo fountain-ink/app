@@ -4,12 +4,11 @@ import { type ConnectionStatus, useYjsState } from "@/hooks/use-yjs-state";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FountainLogo } from "../custom-icons";
-import { ThemeToggle } from "../theme/theme-toggle";
+import { FeedbackForm } from "../feedback/feedback-form";
 import { ConnectionBadge } from "../ui/connection-badge";
 import { UserMenu } from "../user/user-menu";
 import { PublishMenu } from "./publish-menu-button";
 import { WriteMenu } from "./write-menu-button";
-import { FeedbackForm } from "../feedback/feedback-form";
 
 export const Header = () => {
   const pathname = usePathname();
@@ -41,6 +40,7 @@ export const Header = () => {
       </div>
       <div className="flex gap-4 pointer-events-auto">
         <FeedbackForm />
+
         {isWritePage && <PublishMenu />}
         {!isWritePage && <WriteMenu />}
         <UserMenu />

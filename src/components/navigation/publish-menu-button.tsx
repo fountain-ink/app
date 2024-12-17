@@ -12,7 +12,7 @@ export const PublishMenu = () => {
 
   return (
     <Button className="trasition-all duration-300" variant={isOpen ? "outline" : "default"} onClick={handleClick}>
-      {isOpen ? "Edit" : "Preview"}
+      {"Publish"}
     </Button>
   );
 };
