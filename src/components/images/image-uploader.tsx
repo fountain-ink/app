@@ -65,8 +65,8 @@ export const ImageUploader = ({ label, initialImage, aspectRatio, onImageChange 
           </>
         ) : (
           <div className="w-full h-full relative bg-background flex group items-center justify-center">
-            <div className="flex absolute gap-1 text-muted-foreground group-hover:text-accent-foreground items-center justify-center">
-              <UploadIcon className="size-5 mr-2" />
+            <div className="flex absolute gap-1 text-sm text-muted-foreground group-hover:text-accent-foreground items-center justify-center">
+              <UploadIcon className="size-4 mr-2" />
               <span>Upload {label}</span>
             </div>
 

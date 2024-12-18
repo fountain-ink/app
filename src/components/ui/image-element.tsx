@@ -130,7 +130,7 @@ export const ImageElement = withRef<typeof PlateElement>(
                 <div className="absolute">
                   {!readonly && (
                     <Button className="hover:bg-transparent" size="lg" variant="ghost" disabled={isUploading}>
-                      <div className="relative flex gap-1 text-muted-foreground hover:text-foreground duration-300 transition-colors cursor-pointer items-center justify-center">
+                      <div className="relative flex gap-1 text-base text-muted-foreground hover:text-foreground duration-300 transition-colors cursor-pointer items-center justify-center">
                         <input
                           title=""
                           type="file"
@@ -142,7 +142,7 @@ export const ImageElement = withRef<typeof PlateElement>(
                         {isUploading ? (
                           <LoadingSpinner />
                         ) : (
-                          <>{!url && <UploadIcon className="size-5 mr-2 text-inherit" />}</>
+                          <>{!url && <UploadIcon className="size-4 mr-2 text-inherit" />}</>
                         )}
                         <span className="">{isUploading ? "Uploading..." : "Upload Image"}</span>
                       </div>
