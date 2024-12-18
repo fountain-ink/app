@@ -9,6 +9,8 @@ import { ConnectionBadge } from "../ui/connection-badge";
 import { UserMenu } from "../user/user-menu";
 import { PublishMenu } from "./publish-menu-button";
 import { WriteMenu } from "./write-menu-button";
+import { BurgerDropdownMenu } from "../ui/burger-dropdown-menu";
+import { EditorOptionsDropdown } from "../editor/addons/editor-options-dropdown";
 
 export const Header = () => {
   const pathname = usePathname();
@@ -42,6 +44,7 @@ export const Header = () => {
         <FeedbackForm />
 
         {isWritePage && <PublishMenu />}
+        {isWritePage && <EditorOptionsDropdown />}
         {!isWritePage && <WriteMenu />}
         <UserMenu />
       </div>

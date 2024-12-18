@@ -30,9 +30,10 @@ export function ProfileSelectMenu({ onSuccess }: { onSuccess: (profile: Profile)
 
   return (
     <Dialog defaultOpen>
-      <DialogTrigger asChild>
+      <DialogTrigger className="p-2" asChild>
         <AnimatedMenuItem asButton icon={UserIcon} />
       </DialogTrigger>
+
       <DialogContent className="max-w-72">
         <DialogHeader>
           <DialogTitle>Select profile</DialogTitle>

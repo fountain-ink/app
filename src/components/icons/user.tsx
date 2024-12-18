@@ -26,7 +26,7 @@ const circleVariant: Variants = {
   },
 };
 
-const UserIcon = ({ animate = false, className }: { animate?: boolean; className?: string }) => {
+const UserIcon = ({ animate = false }: { animate?: boolean }) => {
   const controls = useAnimation();
 
   useEffect(() => {
@@ -39,12 +39,14 @@ const UserIcon = ({ animate = false, className }: { animate?: boolean; className
 
   return (
     <div
-      className={`cursor-pointer select-none p-2 rounded-md transition-colors duration-100 flex items-center justify-center ${className}`}
+      className="cursor-pointer select-none hover:bg-accent rounded-md transition-colors duration-200 flex items-center justify-center"
+      onMouseEnter={() => controls.start("animate")}
+      onMouseLeave={() => controls.start("normal")}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
+        width="28"
+        height="28"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -58,7 +60,7 @@ const UserIcon = ({ animate = false, className }: { animate?: boolean; className
           d="M20 21a8 8 0 0 0-16 0"
           variants={pathVariant}
           transition={{
-            delay: 0,
+            delay: 0.2,
             duration: 0.4,
           }}
           animate={controls}

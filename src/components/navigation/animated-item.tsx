@@ -27,11 +27,12 @@ export const AnimatedMenuItem = ({
 
   const content = asButton ? (
     <Button
-      variant="ghost"
+      variant="outline"
+      size="icon"
       {...buttonProps}
-      className={`${buttonProps.className} transition-all justify-center group h-10 w-10 mx-0`}
+      className={`${buttonProps.className} transition-all duration-300 justify-center group `}
     >
-      <Icon animate={isHovered} />
+      <Icon animate={isHovered} className="w-5 h-5" />
       {children && <span>{children}</span>}
     </Button>
   ) : (
@@ -39,7 +40,9 @@ export const AnimatedMenuItem = ({
       {...buttonProps}
       className={`${buttonProps.className} transition-all duration-300 w-full group px-0 h-10 mx-0`}
     >
-      <Icon className="p-2" animate={isHovered} />
+      <div className="p-2">
+        <Icon animate={isHovered} className="w-5 h-5" />
+      </div>
       {children && <span>{children}</span>}
     </DropdownMenuItem>
   );

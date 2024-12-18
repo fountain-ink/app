@@ -28,7 +28,7 @@ const LogoutIcon = ({ animate = false }: { animate?: boolean }) => {
   return (
     <div
       className={
-        "cursor-pointer select-none p-2 rounded-md transition-colors duration-200 flex items-center justify-center"
+        "cursor-pointer select-none rounded-md transition-colors duration-200 flex items-center justify-center"
       }
     >
       <svg

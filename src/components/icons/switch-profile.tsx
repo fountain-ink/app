@@ -29,7 +29,7 @@ const UserRoundPenIcon = ({ animate = false }: { animate?: boolean }) => {
   }, [animate]);
 
   return (
-    <div className="cursor-pointer select-none p-2 rounded-md transition-colors duration-200 flex items-center justify-center">
+    <div className="cursor-pointer select-none rounded-md transition-colors duration-200 flex items-center justify-center">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="28"
