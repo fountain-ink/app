@@ -39,6 +39,7 @@ export const ImageUploader = ({ label, initialImage, aspectRatio, onImageChange 
   const handleImageClick = () => {
     fileInputRef.current?.click();
   };
+  
 
   return (
     <div className="space-y-2">
