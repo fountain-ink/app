@@ -9,9 +9,9 @@ import { UserName } from "@/components/user/user-name";
 import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 
 import { PageTransition } from "@/components/navigation/page-transition";
+import { ProfileSettingsModal } from "@/components/settings/settings-profile-modal";
 import { Button } from "@/components/ui/button";
 import { AnimatePresence } from "framer-motion";
-import Link from "next/link";
 export default async function UserLayout({
   children,
   params,
@@ -49,11 +49,15 @@ export default async function UserLayout({
           </div>
           <div className="mt-4">
             {isUserProfile ? (
-              <Link href={"/settings/profile"} prefetch>
-                <Button variant="outline" className="w-fit">
-                  Edit
-                </Button>
-              </Link>
+
+              <ProfileSettingsModal
+                profile={profile}
+                trigger={
+                  <Button variant="outline" className="w-fit">
+                    Edit
+                  </Button>
+                }
+              />
             ) : (
               <UserFollowButton profile={profile} />
             )}

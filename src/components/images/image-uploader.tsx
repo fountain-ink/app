@@ -1,8 +1,7 @@
 "use client";
-import { UploadIcon } from "lucide-react";
+import { UploadIcon, XIcon } from "lucide-react";
 
 import { useRef, useState } from "react";
-import { Label } from "../ui/label";
 
 export const getIpfsImageUrl = (uri: string | undefined): string => {
   if (!uri) return "";
@@ -39,46 +38,43 @@ export const ImageUploader = ({ label, initialImage, aspectRatio, onImageChange 
   const handleImageClick = () => {
     fileInputRef.current?.click();
   };
-  
 
   return (
-    <div className="space-y-2">
-      <div className="flex items-center gap-2">
-        <Label>{label}</Label>
-        {(localImage || image) && (
-          <span
-            className="text-sm text-muted-foreground cursor-pointer hover:text-red-700"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleImageDelete();
-            }}
-          >
-            remove
-          </span>
-        )}
-      </div>
-
+    <span>
       <div
         className={`relative ${
-          aspectRatio === 1 ? "w-48 h-48 rounded-full" : "w-full h-48 rounded-lg"
-        } overflow-hidden cursor-pointer`}
+          aspectRatio === 1 ? "w-40 h-40 rounded-full" : "w-full h-44 rounded-lg"
+        } overflow-hidden cursor-pointer ring-2 ring-background `}
         onClick={handleImageClick}
         onKeyDown={handleImageClick}
       >
         {localImage || image ? (
-          <img src={localImage || getIpfsImageUrl(image)} alt={""} className="w-full h-full object-cover" />
+          <>
+            <img src={localImage || getIpfsImageUrl(image)} alt={""} className="w-full h-full object-cover" />
+            {(localImage || image) && (
+              <div
+                className="absolute inset-0 w-10 h-10 mx-auto my-auto flex items-center justify-center bg-black/50 hover:bg-black/70 p-1.5 rounded-full cursor-pointer transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleImageDelete();
+                }}
+              >
+                <XIcon className="size-4 text-white" />
+              </div>
+            )}
+          </>
         ) : (
-          <div className="w-full h-full relative flex items-center justify-center">
-            <div className="flex  absolute gap-1 text-muted-foreground items-center justify-center">
+          <div className="w-full h-full relative bg-background flex group items-center justify-center">
+            <div className="flex absolute gap-1 text-muted-foreground group-hover:text-accent-foreground items-center justify-center">
               <UploadIcon className="size-5 mr-2" />
-              <span>Upload Image</span>
+              <span>Upload {label}</span>
             </div>
 
-            <div className="placeholder-background rounded-sm" />
+            <div className="placeholder-background " />
           </div>
         )}
       </div>
       <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileSelection} className="hidden" />
-    </div>
+    </span>
   );
 };

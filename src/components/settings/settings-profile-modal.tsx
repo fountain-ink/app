@@ -101,37 +101,43 @@ export function ProfileSettingsModal({ profile, trigger, open, onOpenChange }: P
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
-        {trigger}
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Profile Settings</DialogTitle>
+          <DialogTitle>Edit Profile</DialogTitle>
           <DialogDescription>Customize your profile preferences.</DialogDescription>
         </DialogHeader>
-        <div className="space-y-6">
-          <ImageUploader
-            label="Profile Picture"
-            initialImage={
-              currentMetadata?.picture?.__typename === "ImageSet"
-                ? currentMetadata.picture.raw?.uri || ""
-                : currentMetadata?.picture?.image?.raw?.uri || ""
-            }
-            aspectRatio={1}
-            onImageChange={setProfilePicture}
-          />
-          <ImageUploader
-            label="Cover Picture"
-            initialImage={currentMetadata?.coverPicture?.raw?.uri || ""}
-            aspectRatio={3}
-            onImageChange={setCoverPicture}
-          />
+
+          <div className="space-y-4">
+            <div className="relative">
+              <ImageUploader
+                label="Cover Picture"
+                initialImage={currentMetadata?.coverPicture?.raw?.uri || ""}
+                aspectRatio={3}
+                onImageChange={setCoverPicture}
+              />
+              <div className="absolute bottom-0 translate-y-1/2 left-8 z-10">
+                <ImageUploader
+                  label="Avatar"
+                  initialImage={
+                    currentMetadata?.picture?.__typename === "ImageSet"
+                      ? currentMetadata.picture.raw?.uri || ""
+                      : currentMetadata?.picture?.image?.raw?.uri || ""
+                  }
+                  aspectRatio={1}
+                  onImageChange={setProfilePicture}
+                />
+              </div>
+            </div>
+            {/* Spacer to account for overlapping avatar */}
+            <div className="h-20" />
+          </div>
           {/* <div className="space-y-2">
             <Label htmlFor="username">Username</Label>
             <Input id="username" placeholder={handle} disabled />
           </div> */}
-          <div className="space-y-2">
-            <Label htmlFor="profile-title">Display name</Label>
+          <div className=" space-y-2">
+            <Label htmlFor="profile-title">Name</Label>
             <Input
               id="profile-title"
               value={profileTitle}
@@ -140,7 +146,7 @@ export function ProfileSettingsModal({ profile, trigger, open, onOpenChange }: P
             />
           </div>
           <div className="flex flex-col gap-2 relative">
-            <Label htmlFor="profile-description">Profile Description</Label>
+            <Label htmlFor="profile-description">Bio</Label>
             <TextareaAutosize
               id="profile-description"
               value={profileDescription}
@@ -154,7 +160,6 @@ export function ProfileSettingsModal({ profile, trigger, open, onOpenChange }: P
           <Button onClick={handleSave} disabled={isSavingProfileSettings}>
             {isSavingProfileSettings ? "Saving..." : "Save Settings"}
           </Button>
-        </div>
       </DialogContent>
     </Dialog>
   );
