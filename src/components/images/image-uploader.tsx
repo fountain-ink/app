@@ -1,13 +1,59 @@
 "use client";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Slider } from "@/components/ui/slider";
 import { UploadIcon, XIcon } from "lucide-react";
+import Cropper from "react-easy-crop";
 
 import { useRef, useState } from "react";
+import { Button } from "../ui/button";
 
 export const getIpfsImageUrl = (uri: string | undefined): string => {
   if (!uri) return "";
   return uri.startsWith("ipfs://") ? `https://fountain.4everland.link/ipfs/${uri.slice(7)}` : uri;
 };
 
+const createImage = (url: string): Promise<HTMLImageElement> =>
+  new Promise((resolve, reject) => {
+    const image = new Image();
+    image.addEventListener("load", () => resolve(image));
+    image.addEventListener("error", (error) => reject(error));
+    image.src = url;
+  });
+
+async function getCroppedImg(
+  imageSrc: string,
+  pixelCrop: { x: number; y: number; width: number; height: number },
+): Promise<Blob> {
+  const image = await createImage(imageSrc);
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  if (!ctx) {
+    throw new Error("No 2d context");
+  }
+
+  canvas.width = pixelCrop.width;
+  canvas.height = pixelCrop.height;
+
+  ctx.drawImage(
+    image,
+    pixelCrop.x,
+    pixelCrop.y,
+    pixelCrop.width,
+    pixelCrop.height,
+    0,
+    0,
+    pixelCrop.width,
+    pixelCrop.height,
+  );
+
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => {
+      if (!blob) throw new Error("Canvas is empty");
+      resolve(blob);
+    }, "image/jpeg");
+  });
+}
 interface ImageUploaderProps {
   label: string;
   initialImage: string;
@@ -18,6 +64,16 @@ interface ImageUploaderProps {
 export const ImageUploader = ({ label, initialImage, aspectRatio, onImageChange }: ImageUploaderProps) => {
   const [image, setImage] = useState(initialImage);
   const [localImage, setLocalImage] = useState<string | null>(null);
+  const [showCropModal, setShowCropModal] = useState(false);
+  const [tempImageUrl, setTempImageUrl] = useState<string | null>(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<{
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageDelete = () => {
@@ -30,8 +86,8 @@ export const ImageUploader = ({ label, initialImage, aspectRatio, onImageChange 
     if (e.target.files?.[0]) {
       const file = e.target.files[0];
       const localUrl = URL.createObjectURL(file);
-      setLocalImage(localUrl);
-      onImageChange(file);
+      setTempImageUrl(localUrl);
+      setShowCropModal(true);
     }
   };
 
@@ -39,6 +95,26 @@ export const ImageUploader = ({ label, initialImage, aspectRatio, onImageChange 
     fileInputRef.current?.click();
   };
 
+  const onCropComplete = (croppedArea: any, croppedAreaPixels: any) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  };
+
+  const handleCropConfirm = async () => {
+    if (!tempImageUrl || !croppedAreaPixels) return;
+
+    try {
+      const croppedImageBlob = await getCroppedImg(tempImageUrl, croppedAreaPixels);
+      const croppedImageFile = new File([croppedImageBlob], "cropped-image.jpg", { type: "image/jpeg" });
+      const croppedImageUrl = URL.createObjectURL(croppedImageBlob);
+
+      setLocalImage(croppedImageUrl);
+      onImageChange(croppedImageFile);
+      setShowCropModal(false);
+      setTempImageUrl(null);
+    } catch (error) {
+      console.error("Error cropping image:", error);
+    }
+  };
   return (
     <span>
       <div
@@ -75,6 +151,46 @@ export const ImageUploader = ({ label, initialImage, aspectRatio, onImageChange 
         )}
       </div>
       <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileSelection} className="hidden" />
+      <Dialog open={showCropModal} onOpenChange={(open) => !open && setShowCropModal(false)}>
+        <DialogContent className="max-w-[800px] h-[600px] p-0">
+          <div className="relative h-[450px] w-full rounded-t-md overflow-hidden">
+            {tempImageUrl && (
+              <Cropper
+                image={tempImageUrl}
+                crop={crop}
+                zoom={zoom}
+                aspect={aspectRatio}
+                onCropChange={setCrop}
+                onZoomChange={setZoom}
+                cropShape={aspectRatio === 1 ? "round" : "rect"}
+                showGrid={false}
+                onCropComplete={onCropComplete}
+              />
+            )}
+          </div>
+          <div className="px-8">
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-muted-foreground">Zoom</span>
+              <Slider
+                value={[zoom]}
+                onValueChange={([value]) => setZoom(value ?? 1)}
+                min={1}
+                max={5}
+                step={0.05}
+                className="w-96"
+              />
+            </div>
+          </div>
+          <div className="flex justify-between gap-2 p-4 border-t">
+            <Button variant={"outline"} onClick={() => setShowCropModal(false)}>
+              Cancel
+            </Button>
+            <Button variant={"default"} onClick={handleCropConfirm}>
+              Save
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </span>
   );
 };
