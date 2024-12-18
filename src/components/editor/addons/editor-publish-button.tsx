@@ -82,20 +82,47 @@ export const PublishButton = ({ disabled }: { disabled?: boolean }) => {
       });
 
       const metadataURI = await uploadMetadata(metadata, handle);
+      // Show initial toast that transaction is being processed
+      const pendingToast = toast.loading("Publishing post...");
+
       const result = await execute({
         metadata: metadataURI,
       });
 
       if (result.isFailure()) {
+        toast.dismiss(pendingToast);
         toast.error(`Failed to create post: ${result.error.message}`);
         return;
       }
 
-      const post = await result.value.waitForCompletion();
+      // Update toast to show transaction is being mined/indexed
+      toast.loading("Finalizing on-chain...", {
+        id: pendingToast,
+      });
 
-      toast.success(`Post created successfully! ID: ${post.unwrap().id}`);
-      router.refresh();
+      const completion = await result.value.waitForCompletion();
 
+      if (completion.isFailure()) {
+        toast.dismiss(pendingToast);
+        switch (completion.error.reason) {
+          case "MINING_TIMEOUT":
+            toast.error("Transaction was not mined within the timeout period");
+            break;
+          case "INDEXING_TIMEOUT":
+            toast.error("Transaction was mined but not indexed within timeout period");
+            break;
+          case "REVERTED":
+            toast.error("Transaction was reverted");
+            break;
+          default:
+            toast.error("Unknown error occurred while processing transaction");
+        }
+        return;
+      }
+
+      const post = completion.value;
+
+      // Clean up drafts
       if (isLocal) {
         deleteDocument(documentId || "");
       } else {
@@ -116,6 +143,14 @@ export const PublishButton = ({ disabled }: { disabled?: boolean }) => {
           console.error("Error deleting cloud draft:", error);
         }
       }
+
+      // Show success and redirect
+      toast.dismiss(pendingToast);
+      toast.success("Post published successfully!");
+
+      // Route to post page
+      router.push(`/u/${handle}/${post.id}`);
+      router.refresh();
     } catch (error) {
       console.error("Error creating post:", error);
       toast.error("An error occurred while creating the post. See console for details");

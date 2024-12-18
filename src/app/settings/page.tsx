@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default async function SettingsPage() {
-  redirect("/settings/app");
+  redirect("/settings/profile");
 }
