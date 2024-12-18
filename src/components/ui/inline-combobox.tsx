@@ -142,7 +142,7 @@ const InlineCombobox = ({
   }, [editor, element]);
 
   const { props: inputProps, removeInput } = useComboboxInput({
-    cancelInputOnBlur: false,
+    cancelInputOnBlur: true,
     cursorState,
     ref: inputRef,
     onCancelInput: (cause) => {
@@ -186,6 +186,13 @@ const InlineCombobox = ({
       store.setActiveId(store.first());
     }
   }, [items, store]);
+
+  const isOnTitle = editor.selection?.anchor.path[0] === 0 || editor.selection?.focus.path[0] === 0;
+  const isOnSubtitle = editor.selection?.anchor.path[0] === 1 || editor.selection?.focus.path[0] === 1;
+
+  if (isOnTitle || isOnSubtitle) {
+    return <>{trigger}</>;
+  }
 
   return (
     <span contentEditable={false}>
