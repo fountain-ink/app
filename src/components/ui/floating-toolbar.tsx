@@ -23,11 +23,13 @@ export const FloatingToolbar = withRef<
   const focusedEditorId = useEventEditorSelectors.focus();
   const isFloatingLinkOpen = !!editor.useOption({ key: "a" }, "mode");
   const isAIChatOpen = editor.useOption({ key: "aiChat" }, "open");
+  const isOnTitle = editor.selection?.anchor.path[0] === 0 || editor.selection?.focus.path[0] === 0;
+  const isOnSubtitle = editor.selection?.anchor.path[0] === 1 || editor.selection?.focus.path[0] === 1;
 
   const floatingToolbarState = useFloatingToolbarState({
     editorId,
     focusedEditorId,
-    hideToolbar: isFloatingLinkOpen || isAIChatOpen,
+    hideToolbar: isFloatingLinkOpen || isAIChatOpen || isOnTitle || isOnSubtitle,
     ...state,
     floatingOptions: {
       middleware: [
