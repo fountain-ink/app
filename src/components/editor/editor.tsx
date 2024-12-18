@@ -1,6 +1,7 @@
 "use client";
 
 import { Plate, createPlateEditor, usePlateEditor } from "@udecode/plate-common/react";
+import { useSearchParams } from "next/navigation";
 import type { PropsWithChildren } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -25,18 +26,22 @@ export default function PlateEditor(
     pathname?: string;
   },
 ) {
-  const documentId = props?.pathname?.split("/")?.at(-1) ?? "erroredDocumentId";
+  const documentId = props?.pathname?.split("?")?.[0]?.split("/")?.at(-1) ?? "erroredDocumentId";
+  const searchParams = useSearchParams();
+  const isPreview = searchParams.has("preview");
+  const isReadOnly = props.readOnly || isPreview;
   const editor = createPlateEditor({
-    plugins: [...getEditorPlugins(documentId, props.handle, props.refreshToken, props.readOnly)],
+    plugins: [...getEditorPlugins(documentId, props.handle, props.refreshToken, isReadOnly)],
     override: {
       components: getRichElements(),
     },
     value: props.value ? JSON.parse(props.value) || "" : undefined,
   });
+  console.log(documentId);
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <Plate editor={editor} readOnly={props.readOnly}>
+      <Plate editor={editor} readOnly={isReadOnly}>
         <div data-plate-selectable="true">
           {props.showToc && <TocSideBar className="top-[80px]" topOffset={30} />}
 

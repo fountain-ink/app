@@ -2,12 +2,13 @@
 
 import { LinkIcon } from "@/components/icons/link";
 import { AnimatedMenuItem } from "@/components/navigation/animated-item";
-import { BrushIcon, EyeIcon } from "lucide-react";
+import { BrushIcon, EyeIcon, EyeOffIcon } from "lucide-react";
 
 import { DraftShareModal } from "@/components/draft/draft-share-modal";
 import { MenuIcon } from "@/components/icons/menu";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, useOpenState } from "@/components/ui/dropdown-menu";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 export const EditorOptionsDropdown = () => {
@@ -18,9 +19,17 @@ export const EditorOptionsDropdown = () => {
     console.log(isShareModalOpen);
     setIsShareModalOpen(true);
   };
-  const onPreview = () => {};
+  const searchParams = useSearchParams();
+  const isPreview = searchParams.has("preview");
+
+  const onPreview = () => {
+    const currentUrl = window.location.pathname;
+    const newUrl = isPreview ? currentUrl : `${currentUrl}?preview`;
+    window.history.pushState({}, "", newUrl);
+    onOpenChange(false);
+  };
   const onEditTheme = () => {};
-  
+
   return (
     <DropdownMenu open={open} onOpenChange={onOpenChange}>
       <DropdownMenuTrigger asChild>
@@ -33,8 +42,8 @@ export const EditorOptionsDropdown = () => {
         <AnimatedMenuItem icon={LinkIcon} onClick={onShare}>
           Share draft
         </AnimatedMenuItem>
-        <AnimatedMenuItem icon={EyeIcon} onClick={onPreview}>
-          Preview post
+        <AnimatedMenuItem icon={isPreview ? EyeOffIcon : EyeIcon} onClick={onPreview}>
+          {isPreview ? "Exit preview" : "Preview post"}
         </AnimatedMenuItem>
         <AnimatedMenuItem icon={BrushIcon} onClick={onEditTheme}>
           Edit theme
