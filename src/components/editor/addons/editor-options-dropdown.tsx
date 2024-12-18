@@ -8,6 +8,7 @@ import { DraftShareModal } from "@/components/draft/draft-share-modal";
 import { MenuIcon } from "@/components/icons/menu";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, useOpenState } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
@@ -45,9 +46,11 @@ export const EditorOptionsDropdown = () => {
         <AnimatedMenuItem icon={isPreview ? EyeOffIcon : EyeIcon} onClick={onPreview}>
           {isPreview ? "Exit preview" : "Preview post"}
         </AnimatedMenuItem>
-        <AnimatedMenuItem icon={BrushIcon} onClick={onEditTheme}>
-          Edit theme
-        </AnimatedMenuItem>
+        <Link href={"/settings/theme"} prefetch>
+          <AnimatedMenuItem icon={BrushIcon} onClick={onEditTheme}>
+            Edit theme
+          </AnimatedMenuItem>
+        </Link>
       </DropdownMenuContent>
       <DraftShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
     </DropdownMenu>
