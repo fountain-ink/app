@@ -52,9 +52,9 @@ export const UserCard = ({ children, handle, linkProfile = false }: UserCardProp
                 </span>
               </div>
 
-              <span>
+              <span className="flex flex-row gap-2 items-center justify-center">
                 {isFollowingMe && (
-                  <Badge className="text-xs h-fit w-fit" variant="secondary">
+                  <Badge className="text-xs h-fit w-fit mr-8 ml-2" variant="secondary">
                     Follows you
                   </Badge>
                 )}
