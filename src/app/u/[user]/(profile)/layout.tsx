@@ -11,6 +11,7 @@ import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 import { PageTransition } from "@/components/navigation/page-transition";
 import { ProfileSettingsModal } from "@/components/settings/settings-profile-modal";
 import { Button } from "@/components/ui/button";
+import { UserBio } from "@/components/user/user-bio";
 import { AnimatePresence } from "framer-motion";
 export default async function UserLayout({
   children,
@@ -49,7 +50,6 @@ export default async function UserLayout({
           </div>
           <div className="mt-4">
             {isUserProfile ? (
-
               <ProfileSettingsModal
                 profile={profile}
                 trigger={
@@ -63,7 +63,10 @@ export default async function UserLayout({
             )}
           </div>
         </div>
-        <div className="-mt-10 p-4 pb-0 border-b border-border">
+        <div className="-mt-14 p-4 px-8 ">
+          <UserBio profile={profile} />
+        </div>
+        <div className="p-4 pb-0 border-b border-border">
           <SlideNav
             items={[
               {
@@ -78,10 +81,6 @@ export default async function UserLayout({
                 href: `/u/${params.user}/drafts`,
                 label: "Drafts",
                 isVisible: isUserProfile,
-              },
-              {
-                href: `/u/${params.user}/about`,
-                label: "About",
               },
             ]}
             className="w-fit "

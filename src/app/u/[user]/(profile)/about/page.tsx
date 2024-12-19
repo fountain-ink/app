@@ -15,7 +15,6 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
 
   return (
     <div className="p-4">
-      <UserBio profile={profile} />
     </div>
   );
 };
