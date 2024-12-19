@@ -449,7 +449,7 @@ export const staticPlugins = [
   CodePlugin,
   SubscriptPlugin,
   SuperscriptPlugin,
-  FontSizePlugin,
+  // FontSizePlugin,
 
   // Functionality
   ResetNodePlugin.configure({
