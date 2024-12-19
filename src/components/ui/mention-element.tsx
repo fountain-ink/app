@@ -1,16 +1,13 @@
 "use client";
 
-import React from "react";
-
-import type { TMentionElement } from "@udecode/plate-mention";
-
+import { useMounted } from "@/hooks/use-mounted";
 import { cn, withRef } from "@udecode/cn";
 import { IS_APPLE, getHandler } from "@udecode/plate-common";
 import { useElement } from "@udecode/plate-common/react";
+import type { TMentionElement } from "@udecode/plate-mention";
+import React from "react";
 import { useFocused, useSelected } from "slate-react";
-
-import { useMounted } from "@/hooks/use-mounted";
-
+import { UserLazyHandle } from "../user/user-lazy-handle";
 import { PlateElement } from "./plate-element";
 
 export const MentionElement = withRef<
@@ -30,11 +27,10 @@ export const MentionElement = withRef<
     <PlateElement
       ref={ref}
       className={cn(
-        "inline-block cursor-pointer rounded-md bg-muted px-1.5 py-0.5 align-baseline text-sm font-medium",
-        selected && focused && "ring-2 ring-ring",
+        "inline-block cursor-pointer align-baseline",
+        selected && focused && "ring-2 ring-ring rounded-md",
         element?.children?.[0]?.bold === true && "font-bold",
         element?.children?.[0]?.italic === true && "italic",
-        element?.children?.[0]?.underline === true && "underline",
         className,
       )}
       onClick={getHandler(onClick, element)}
@@ -42,19 +38,11 @@ export const MentionElement = withRef<
       contentEditable={false}
       {...props}
     >
-      {mounted && IS_APPLE ? (
-        // Mac OS IME https://github.com/ianstormtaylor/slate/issues/3490
+      {mounted && (
         <React.Fragment>
-          {children}
-          {prefix}
-          {renderLabel ? renderLabel(element) : element.value}
-        </React.Fragment>
-      ) : (
-        // Others like Android https://github.com/ianstormtaylor/slate/pull/5360
-        <React.Fragment>
-          {prefix}
-          {renderLabel ? renderLabel(element) : element.value}
-          {children}
+          {IS_APPLE && children}
+          <UserLazyHandle handle={element.value} />
+          {!IS_APPLE && children}
         </React.Fragment>
       )}
     </PlateElement>
