@@ -1,5 +1,5 @@
-import { GraphicHand, GraphicInk } from "@/components/custom-icons";
 import { EmailSubscription } from "@/components/email-subscription";
+import { GraphicHand, GraphicInk } from "@/components/icons/custom-icons";
 import { GradientBlur } from "@/components/navigation/gradient-blur";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { proseClasses } from "@/styles/prose";

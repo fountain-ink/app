@@ -3,13 +3,13 @@
 import { type ConnectionStatus, useYjsState } from "@/hooks/use-yjs-state";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FountainLogo } from "../custom-icons";
 import { FeedbackForm } from "../feedback/feedback-form";
 import { ConnectionBadge } from "../ui/connection-badge";
 import { UserMenu } from "../user/user-menu";
 import { PublishMenu } from "./publish-menu-button";
 import { WriteMenu } from "./write-menu-button";
 import { EditorOptionsDropdown } from "../editor/addons/editor-options-dropdown";
+import { FountainLogo } from "../icons/custom-icons";
 
 export const Header = () => {
   const pathname = usePathname();

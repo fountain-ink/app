@@ -6,10 +6,10 @@ import { Popover, PopoverAnchor, PopoverContent } from "./popover";
 
 import { setNode, useEditorRef, useElement, useRemoveNodeButton } from "@udecode/plate-common/react";
 import { useState } from "react";
-import { WidthColumn, WidthFull, WidthWide } from "../custom-icons";
 import { Button } from "./button";
 import { CaptionButton } from "./caption";
 import { Separator } from "./separator";
+import { WidthColumn, WidthWide, WidthFull } from "../icons/custom-icons";
 
 interface ElementPopoverProps {
   children: React.ReactNode;
