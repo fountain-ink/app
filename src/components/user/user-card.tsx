@@ -11,6 +11,7 @@ import { UserAvatar } from "./user-avatar";
 import Link from "next/link";
 import { UserFollowButton } from "./user-follow";
 import { UserFollowing } from "./user-following";
+import { inter } from "@/styles/google-fonts";
 
 type UserCardProps = PropsWithChildren & {
   handle?: string;
@@ -32,11 +33,11 @@ export const UserCard = ({ children, handle, linkProfile = false }: UserCardProp
   const isFollowingMe = profile?.operations.isFollowingMe.value;
 
   return (
-    <HoverCard defaultOpen={false} onOpenChange={(open: boolean) => open && loadCard()} closeDelay={100}>
+    <HoverCard  defaultOpen={false} onOpenChange={(open: boolean) => open && loadCard()} closeDelay={100}>
       <HoverCardTrigger asChild>
         {linkProfile && handle ? <Link href={`/u/${handle}/profile`}>{children}</Link> : children}
       </HoverCardTrigger>
-      <HoverCardContent className="w-full max-w-sm" side="top">
+      <HoverCardContent className={`w-full max-w-sm ${inter.className}`} side="top">
         {loading && !profile && <LoadingSpinner />}
         {error && <div>Error: {error.message}</div>}
         {profile && (

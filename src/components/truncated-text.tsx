@@ -20,11 +20,17 @@ export const TruncatedText = ({
 
   return (
     <span
-      className={isTruncated ? "line-clamp-3" : "line-clamp-none"}
+      className={`truncated-text ${isTruncated ? "line-clamp-3" : "line-clamp-none"}`}
       onKeyDown={() => setIsCollapsed(!isCollapsed)}
       onClick={() => setIsCollapsed(!isCollapsed)}
     >
-      {isMarkdown ? <Markdown content={truncatedText + ellipsis} /> : truncatedText + ellipsis}
+      {isMarkdown ? (
+        <div className="not-article p-0 mt-0 p:mb-0 m-0">
+          <Markdown content={truncatedText + ellipsis} />
+        </div>
+      ) : (
+        truncatedText + ellipsis
+      )}
     </span>
   );
 };

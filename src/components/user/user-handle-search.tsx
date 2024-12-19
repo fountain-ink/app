@@ -52,7 +52,8 @@ export function HandleSearch({
         mentionables?.map((user) => (
           <InlineComboboxItem key={user.key} value={user.text} onClick={() => onResultsChange?.(mentionables)}>
             <div className="flex items-center gap-2">
-              {user.picture && <img src={user.picture} alt={user.handle} className="w-6 h-6 rounded-full" />}
+              {user.picture ? <img src={user.picture} alt={user.handle} className="w-6 h-6 rounded-full" /> : 
+                <span className="w-6 h-6 bg-muted rounded-full"/>}
               <span>{user.text}</span>
             </div>
           </InlineComboboxItem>
