@@ -27,7 +27,7 @@ export const MentionInputElement = withRef<typeof PlateElement>(({ className, ..
           ) : (
             <HandleSearch
               query={search}
-              maxResults={5}
+              maxResults={10}
               onResultsChange={(results) => {
                 const selectedItem = results[0];
                 if (selectedItem) {

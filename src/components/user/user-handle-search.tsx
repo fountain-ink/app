@@ -31,8 +31,8 @@ export function HandleSearch({
   const mentionables: MentionableUser[] | undefined = profiles
     ?.map((profile) => ({
       key: profile.id,
-      text: profile.handle?.localName || "",
-      handle: profile.handle?.fullHandle || "",
+      text: profile.metadata?.displayName || "",
+      handle: profile.handle?.localName || "",
       picture:
         profile.metadata?.picture?.__typename === "ImageSet"
           ? profile.metadata?.picture?.optimized?.uri
@@ -44,7 +44,7 @@ export function HandleSearch({
     <>
       {loading ? (
         <InlineComboboxEmpty>
-          <div className="p-2 flex justify-center items-center">
+          <div className="flex justify-center items-center">
             <LoadingSpinner />
           </div>
         </InlineComboboxEmpty>
@@ -52,9 +52,13 @@ export function HandleSearch({
         mentionables?.map((user) => (
           <InlineComboboxItem key={user.key} value={user.text} onClick={() => onResultsChange?.(mentionables)}>
             <div className="flex items-center gap-2">
-              {user.picture ? <img src={user.picture} alt={user.handle} className="w-6 h-6 rounded-full" /> : 
-                <span className="w-6 h-6 bg-muted rounded-full"/>}
-              <span>{user.text}</span>
+              {user.picture ? (
+                <img src={user.picture} alt={user.handle} className="w-6 h-6 rounded-full" />
+              ) : (
+                <span className="w-6 h-6 bg-primary/40 rounded-full" />
+              )}
+              <span className="font-semibold">{user.text}</span>
+              <span className="text-muted-foreground">@{user.handle}</span>
             </div>
           </InlineComboboxItem>
         ))

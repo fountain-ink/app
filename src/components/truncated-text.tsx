@@ -25,7 +25,7 @@ export const TruncatedText = ({
       onClick={() => setIsCollapsed(!isCollapsed)}
     >
       {isMarkdown ? (
-        <div className="not-article p-0 mt-0 p:mb-0 m-0">
+        <div className="not-article">
           <Markdown content={truncatedText + ellipsis} />
         </div>
       ) : (
