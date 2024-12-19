@@ -59,6 +59,8 @@ import { KbdLeaf } from "../ui/kbd-leaf";
 import { ListElement } from "../ui/list-element";
 import { ListItemElement } from "../ui/list-item";
 import { TodoListElement } from "../ui/todo-list-element";
+import { EmojiInputElement } from "../ui/emoji-input-element";
+import { EmojiInputPlugin } from "@udecode/plate-emoji/react";
 
 export const getRichElements = () => {
   return withPlaceholders(withDraggables(getElements()));
@@ -91,6 +93,7 @@ export const getElements = () => {
     [LinkPlugin.key]: LinkElement,
     [MediaEmbedPlugin.key]: MediaEmbedElement,
     [MentionPlugin.key]: MentionElement,
+    [EmojiInputPlugin.key]: EmojiInputElement,
     [MentionInputPlugin.key]: MentionInputElement,
     [ParagraphPlugin.key]: withProps(ParagraphElement, { as: "p" }),
     [BulletedListPlugin.key]: withProps(ListElement, { variant: "ul" }),
