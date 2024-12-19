@@ -6,6 +6,7 @@ import { InlineComboboxEmpty, InlineComboboxItem } from "../ui/inline-combobox";
 
 export type MentionableUser = {
   key: string;
+  name: string;
   text: string;
   handle: string;
   picture?: string;
@@ -31,7 +32,8 @@ export function HandleSearch({
   const mentionables: MentionableUser[] | undefined = profiles
     ?.map((profile) => ({
       key: profile.id,
-      text: profile.metadata?.displayName || "",
+      name: profile.metadata?.displayName || "",
+      text: profile.handle?.localName || "",
       handle: profile.handle?.localName || "",
       picture:
         profile.metadata?.picture?.__typename === "ImageSet"
@@ -50,14 +52,14 @@ export function HandleSearch({
         </InlineComboboxEmpty>
       ) : (
         mentionables?.map((user) => (
-          <InlineComboboxItem key={user.key} value={user.text} onClick={() => onResultsChange?.(mentionables)}>
+          <InlineComboboxItem key={user.handle} value={user.handle} onClick={() => onResultsChange?.([user])}>
             <div className="flex items-center gap-2">
               {user.picture ? (
                 <img src={user.picture} alt={user.handle} className="w-6 h-6 rounded-full" />
               ) : (
                 <span className="w-6 h-6 bg-primary/40 rounded-full" />
               )}
-              <span className="font-semibold">{user.text}</span>
+              <span className="font-semibold truncate text-ellipsis">{user.name}</span>
               <span className="text-muted-foreground">@{user.handle}</span>
             </div>
           </InlineComboboxItem>

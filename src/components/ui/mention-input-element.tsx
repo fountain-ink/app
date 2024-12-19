@@ -29,9 +29,9 @@ export const MentionInputElement = withRef<typeof PlateElement>(({ className, ..
               query={search}
               maxResults={10}
               onResultsChange={(results) => {
-                const selectedItem = results[0];
-                if (selectedItem) {
-                  onSelectItem(editor, selectedItem, search);
+                // results will be an array with exactly one item - the clicked item
+                if (results[0]) {
+                  onSelectItem(editor, results[0], search);
                 }
               }}
             />
