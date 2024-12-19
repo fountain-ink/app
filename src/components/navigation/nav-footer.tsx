@@ -2,10 +2,10 @@
 
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useScroll } from "@/hooks/use-scroll";
+import { handlePlatformShare } from "@/lib/get-share-url";
 import { motion } from "framer-motion";
-import { Bookmark, Heart, MessageCircle, PenLineIcon, Repeat2Icon, Share2, ShoppingBag } from "lucide-react";
+import { Bookmark, Heart, MessageCircle, PenLineIcon, Repeat2Icon, Share2, Share2Icon, ShoppingBag } from "lucide-react";
 import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
-import { toast } from "sonner";
 import { ActionButton } from "../post/post-action-button";
 
 const actionButtons = [
@@ -17,38 +17,34 @@ const actionButtons = [
     fillColor: "hsl(var(--primary) / 0.8)",
     dropdownItems: [
       {
+        icon: TbLink,
+        label: "Copy Link",
+        onClick: () => handlePlatformShare("copy"),
+      },
+      {
         icon: TbBrandX,
         label: "Twitter",
-        onClick: () => shareToTwitter(window.location.href),
+        onClick: () => handlePlatformShare("x"),
       },
       {
         icon: TbBrandBluesky,
         label: "Bluesky",
-        onClick: () => console.log("Share to Bluesky"),
+        onClick: () => handlePlatformShare("bluesky"),
       },
       {
-        icon: TbLink,
-        label: "Copy Link",
-        onClick: async () => {
-          const success = await copyToClipboard(window.location.href);
-          if (success) {
-            toast.success("Link copied", {
-              description: "URL has been copied to clipboard",
-            });
-          } else {
-            toast.error("Failed to copy", { description: "Could not copy the URL to clipboard" });
-          }
-        },
+        icon: Share2Icon,
+        label: "Lens",
+        onClick: () => handlePlatformShare("lens"),
       },
       {
         icon: Repeat2Icon,
         label: "Repost",
-        onClick: () => console.log("Share to Lens"),
+        onClick: () => {},
       },
       {
         icon: PenLineIcon,
         label: "Quote",
-        onClick: () => console.log("Share to Lens"),
+        onClick: () => {},
       },
     ],
   },
@@ -82,21 +78,7 @@ const actionButtons = [
   },
 ];
 
-const shareToTwitter = (url: string) => {
-  const text = "Check this out";
-  const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
-  window.open(shareUrl, "_blank");
-};
 
-const copyToClipboard = async (url: string) => {
-  try {
-    await navigator.clipboard.writeText(url);
-    return true;
-  } catch (err) {
-    console.error("Failed to copy:", err);
-    return false;
-  }
-};
 export const Footer = () => {
   const { scrollProgress, shouldShow, shouldAnimate } = useScroll();
   const translateY = scrollProgress * 100;

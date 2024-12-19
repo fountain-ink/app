@@ -7,12 +7,12 @@ const extractPublicationId = (url: string): string | null => {
   return matches?.[1] ?? null;
 };
 
-export const getShareUrl = (platform: SharePlatform, url: string) => {
+export const getShareUrl = (platform: SharePlatform, url: string, text?: string) => {
   switch (platform) {
     case "x":
-      return `https://x.com/intent/tweet?url=${encodeURIComponent(url)}`;
-    case "bluesky":
-      return `https://bsky.app/intent/compose?text=${encodeURIComponent(url)}`;
+          return `https://x.com/intent/tweet?${text ? `text=${encodeURIComponent(text)}&` : ''}url=${encodeURIComponent(url)}`;
+        case "bluesky":
+          return `https://bsky.app/intent/compose?text=${encodeURIComponent(text ? `${text}\n\n${url}` : url)}`;
     case "lens": {
       const publicationId = extractPublicationId(url);
       if (!publicationId) return url;
@@ -33,6 +33,6 @@ export const handlePlatformShare = (platform: SharePlatform) => {
     return;
   }
 
-  const shareUrl = getShareUrl(platform, cleanUrl);
+  const shareUrl = getShareUrl(platform, cleanUrl, "Check this out:");
   window.open(shareUrl, "_blank", "noopener,noreferrer");
 };
