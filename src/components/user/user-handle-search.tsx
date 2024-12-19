@@ -53,14 +53,16 @@ export function HandleSearch({
       ) : (
         mentionables?.map((user) => (
           <InlineComboboxItem key={user.handle} value={user.handle} onClick={() => onResultsChange?.([user])}>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center min-w-48 max-w-96 w-full gap-2">
               {user.picture ? (
-                <img src={user.picture} alt={user.handle} className="w-6 h-6 rounded-full" />
+                <img src={user.picture} alt={user.handle} className="w-8 h-8 rounded-full" />
               ) : (
-                <span className="w-6 h-6 bg-primary/40 rounded-full" />
+                <span className="w-8 h-8 bg-primary/40 rounded-full" />
               )}
-              <span className="font-semibold truncate text-ellipsis">{user.name}</span>
-              <span className="text-muted-foreground">@{user.handle}</span>
+              <span className="flex flex-col">
+                <span className="font-semibold truncate text-ellipsis">{user.name}</span>
+                <span className="text-muted-foreground">@{user.handle}</span>
+              </span>
             </div>
           </InlineComboboxItem>
         ))
