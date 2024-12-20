@@ -48,31 +48,55 @@ export const TableBordersDropdownMenuContent = withRef<typeof DropdownMenuPrimit
   } = useTableBordersDropdownMenuContentState();
 
   return (
-    <DropdownMenuContent ref={ref} className={cn("min-w-[220px]")} align="start" side="right" sideOffset={0} {...props}>
-      <DropdownMenuCheckboxItem checked={hasBottomBorder} onCheckedChange={getOnSelectTableBorder("bottom")}>
+    <DropdownMenuContent ref={ref} className={cn("min-w-[220px]")} align="start" side="right" sideOffset={5} {...props}>
+      <DropdownMenuCheckboxItem
+        className="flex gap-1 pl-10"
+        checked={hasBottomBorder}
+        onCheckedChange={getOnSelectTableBorder("bottom")}
+      >
         <BorderBottom />
         <div>Bottom Border</div>
       </DropdownMenuCheckboxItem>
-      <DropdownMenuCheckboxItem checked={hasTopBorder} onCheckedChange={getOnSelectTableBorder("top")}>
+      <DropdownMenuCheckboxItem
+        className="flex gap-1 pl-10"
+        checked={hasTopBorder}
+        onCheckedChange={getOnSelectTableBorder("top")}
+      >
         <BorderTop />
         <div>Top Border</div>
       </DropdownMenuCheckboxItem>
-      <DropdownMenuCheckboxItem checked={hasLeftBorder} onCheckedChange={getOnSelectTableBorder("left")}>
+      <DropdownMenuCheckboxItem
+        className="flex gap-1 pl-10"
+        checked={hasLeftBorder}
+        onCheckedChange={getOnSelectTableBorder("left")}
+      >
         <BorderLeft />
         <div>Left Border</div>
       </DropdownMenuCheckboxItem>
-      <DropdownMenuCheckboxItem checked={hasRightBorder} onCheckedChange={getOnSelectTableBorder("right")}>
+      <DropdownMenuCheckboxItem
+        className="flex gap-1 pl-10"
+        checked={hasRightBorder}
+        onCheckedChange={getOnSelectTableBorder("right")}
+      >
         <BorderRight />
         <div>Right Border</div>
       </DropdownMenuCheckboxItem>
 
       <Separator />
 
-      <DropdownMenuCheckboxItem checked={hasNoBorders} onCheckedChange={getOnSelectTableBorder("none")}>
+      <DropdownMenuCheckboxItem
+        className="flex gap-1 pl-10"
+        checked={hasNoBorders}
+        onCheckedChange={getOnSelectTableBorder("none")}
+      >
         <BorderNone />
         <div>No Border</div>
       </DropdownMenuCheckboxItem>
-      <DropdownMenuCheckboxItem checked={hasOuterBorders} onCheckedChange={getOnSelectTableBorder("outer")}>
+      <DropdownMenuCheckboxItem
+        className="flex gap-1 pl-10"
+        checked={hasOuterBorders}
+        onCheckedChange={getOnSelectTableBorder("outer")}
+      >
         <BorderAll />
         <div>Outside Borders</div>
       </DropdownMenuCheckboxItem>
@@ -112,7 +136,7 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(({ children, 
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" isMenu>
+          <Button size="sm" variant="ghost" isMenu>
             <BorderAll className="mr-2 size-4" />
             Borders
           </Button>
@@ -123,7 +147,7 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(({ children, 
         </DropdownMenuPortal>
       </DropdownMenu>
 
-      <Button variant="ghost" contentEditable={false} isMenu {...buttonProps}>
+      <Button size="sm" variant="ghost" contentEditable={false} isMenu {...buttonProps}>
         <Trash2 className="mr-2 size-4" />
         Delete
       </Button>
@@ -136,7 +160,7 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(({ children, 
       {(canMerge || canUnmerge || collapsed) && (
         <PopoverContent
           ref={ref}
-          className={cn(popoverVariants(), "flex w-[220px] flex-col gap-1 p-1")}
+          className={cn(popoverVariants(), "flex w-[220px] flex-row gap-1 p-1")}
           onOpenAutoFocus={(e) => e.preventDefault()}
           {...props}
         >
@@ -193,10 +217,10 @@ export const BorderBottom = (props: LucideProps) => (
   <svg
     fill="currentColor"
     focusable="false"
-    height="48"
+    height="20"
     role="img"
     viewBox="0 0 24 24"
-    width="48"
+    width="20"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
@@ -208,10 +232,10 @@ export const BorderTop = (props: LucideProps) => (
   <svg
     fill="currentColor"
     focusable="false"
-    height="48"
+    height="20"
     role="img"
     viewBox="0 0 24 24"
-    width="48"
+    width="20"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
@@ -223,10 +247,10 @@ export const BorderLeft = (props: LucideProps) => (
   <svg
     fill="currentColor"
     focusable="false"
-    height="48"
+    height="20"
     role="img"
     viewBox="0 0 24 24"
-    width="48"
+    width="20"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
@@ -238,10 +262,10 @@ export const BorderRight = (props: LucideProps) => (
   <svg
     fill="currentColor"
     focusable="false"
-    height="48"
+    height="20"
     role="img"
     viewBox="0 0 24 24"
-    width="48"
+    width="20"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
@@ -253,10 +277,10 @@ export const BorderAll = (props: LucideProps) => (
   <svg
     fill="currentColor"
     focusable="false"
-    height="48"
+    height="20"
     role="img"
     viewBox="0 0 24 24"
-    width="48"
+    width="20"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
@@ -268,10 +292,10 @@ export const BorderNone = (props: LucideProps) => (
   <svg
     fill="currentColor"
     focusable="false"
-    height="48"
+    height="20"
     role="img"
     viewBox="0 0 24 24"
-    width="48"
+    width="20"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >

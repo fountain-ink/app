@@ -21,6 +21,7 @@ import {
   ListOrderedIcon,
   PilcrowIcon,
   Radical,
+  TableIcon,
 } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 
@@ -36,6 +37,7 @@ import { CodeIcon } from "lucide-react";
 import { insertBlock } from "@/lib/transforms";
 import { ListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
 import { EquationPlugin } from "@udecode/plate-math/react";
+import { insertTable } from "@udecode/plate-table/react";
 
 interface SlashCommandRule {
   icon: ComponentType<SVGProps<SVGSVGElement>>;
@@ -182,15 +184,15 @@ const rules: SlashCommandRule[] = [
   //     insertColumnGroup(editor);
   //   },
   // },
-  // {
-  //   icon: TableIcon,
-  //   value: "Table",
-  //   description: "Create a table for data.",
-  //   keywords: ["table", "data", "spreadsheet"],
-  //   onSelect: (editor) => {
-  //     insertTable(editor, {}, { select: true });
-  //   },
-  // },
+  {
+    icon: TableIcon,
+    value: "Table",
+    description: "Create a table for data.",
+    keywords: ["table", "data", "spreadsheet"],
+    onSelect: (editor) => {
+      insertTable(editor, {}, { select: true });
+    },
+  },
   // {
   //   icon: SeparatorHorizontalIcon,
   //   value: "Divider",

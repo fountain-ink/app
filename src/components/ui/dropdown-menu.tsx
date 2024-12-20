@@ -161,7 +161,7 @@ export const DropdownMenuCheckboxItem = withRef<typeof DropdownMenuPrimitive.Che
     <DropdownMenuPrimitive.CheckboxItem
       ref={ref}
       className={cn(
-        "relative flex select-none items-center rounded-sm py-1.5 pl-7 pr-2 transition-bg-ease focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "relative flex select-none items-center rounded-sm p-1.5 pl-7 pr-2 transition-bg-ease focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         "ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0",
         "outline-none focus:outline-none focus-visible:outline-none",
         "cursor-pointer",
@@ -169,9 +169,9 @@ export const DropdownMenuCheckboxItem = withRef<typeof DropdownMenuPrimitive.Che
       )}
       {...props}
     >
-      <span className="absolute left-2 flex size-3.5 items-center justify-center">
+      <span className="absolute w-6 h-6 rounded-sm bg-muted left-2 flex items-center justify-center">
         <DropdownMenuPrimitive.ItemIndicator>
-          <CheckIcon />
+          <CheckIcon size={16} />
         </DropdownMenuPrimitive.ItemIndicator>
       </span>
 
@@ -197,9 +197,9 @@ export const DropdownMenuRadioItem = withRef<
     {...props}
   >
     {!hideIcon && (
-      <span className="absolute right-2 flex size-3.5 items-center justify-center">
+      <span className="absolute right-2 flex items-center justify-center">
         <DropdownMenuPrimitive.ItemIndicator>
-          <CheckIcon />
+          <CheckIcon className="p-2" size={10} />
         </DropdownMenuPrimitive.ItemIndicator>
       </span>
     )}
