@@ -33,7 +33,7 @@ export const UserCard = ({ children, handle, linkProfile = false }: UserCardProp
   const isFollowingMe = profile?.operations.isFollowingMe.value;
 
   return (
-    <HoverCard  defaultOpen={false} onOpenChange={(open: boolean) => open && loadCard()} closeDelay={100}>
+    <HoverCard defaultOpen={false} onOpenChange={(open: boolean) => open && loadCard()} closeDelay={100}>
       <HoverCardTrigger asChild>
         {linkProfile && handle ? <Link href={`/u/${handle}/profile`}>{children}</Link> : children}
       </HoverCardTrigger>

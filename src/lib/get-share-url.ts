@@ -10,9 +10,9 @@ const extractPublicationId = (url: string): string | null => {
 export const getShareUrl = (platform: SharePlatform, url: string, text?: string) => {
   switch (platform) {
     case "x":
-          return `https://x.com/intent/tweet?${text ? `text=${encodeURIComponent(text)}&` : ''}url=${encodeURIComponent(url)}`;
-        case "bluesky":
-          return `https://bsky.app/intent/compose?text=${encodeURIComponent(text ? `${text}\n\n${url}` : url)}`;
+      return `https://x.com/intent/tweet?${text ? `text=${encodeURIComponent(text)}&` : ""}url=${encodeURIComponent(url)}`;
+    case "bluesky":
+      return `https://bsky.app/intent/compose?text=${encodeURIComponent(text ? `${text}\n\n${url}` : url)}`;
     case "lens": {
       const publicationId = extractPublicationId(url);
       if (!publicationId) return url;

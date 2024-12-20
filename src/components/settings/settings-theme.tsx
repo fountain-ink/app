@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSaveProfileSettings } from "@/hooks/use-save-profile-settings";
 import { useStorage } from "@/hooks/use-storage";
-import { type ThemeType } from "@/styles/themes";
+import type { ThemeType } from "@/styles/themes";
 import type { ProfileFragment } from "@lens-protocol/client";
 import { MetadataAttributeType } from "@lens-protocol/metadata";
 import type { Profile } from "@lens-protocol/react-web";

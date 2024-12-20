@@ -7,6 +7,6 @@ export const metadata = {
 
 export default async function BlogSettingsPage() {
   const { profile } = await getAuthWithCookies();
-  
+
   return <BlogSettings profile={profile} />;
 }

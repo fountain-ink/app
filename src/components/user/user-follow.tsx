@@ -4,9 +4,12 @@ import type { ProfileFragment } from "@lens-protocol/client";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
-import { Profile } from "@lens-protocol/react-web";
+import type { Profile } from "@lens-protocol/react-web";
 
-export const UserFollowButton = ({ profile, className }: { profile: ProfileFragment | Profile; className?: string }) => {
+export const UserFollowButton = ({
+  profile,
+  className,
+}: { profile: ProfileFragment | Profile; className?: string }) => {
   const [following, _setFollowing] = useState(profile.operations.isFollowedByMe.value);
   const followsMe = profile.operations.isFollowingMe.value;
 

@@ -23,7 +23,7 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
   const [enableComments, _setEnableComments] = useState(
     currentMetadata?.attributes?.find((attr) => attr.key === "enableComments")?.value === "true",
   );
-  const [autoPublish, setAutoPublish] = useState(
+  const [autoPublish, _setAutoPublish] = useState(
     currentMetadata?.attributes?.find((attr) => attr.key === "autoPublish")?.value === "true",
   );
 

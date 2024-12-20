@@ -4,7 +4,16 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useScroll } from "@/hooks/use-scroll";
 import { handlePlatformShare } from "@/lib/get-share-url";
 import { motion } from "framer-motion";
-import { Bookmark, Heart, MessageCircle, PenLineIcon, Repeat2Icon, Share2, Share2Icon, ShoppingBag } from "lucide-react";
+import {
+  Bookmark,
+  Heart,
+  MessageCircle,
+  PenLineIcon,
+  Repeat2Icon,
+  Share2,
+  Share2Icon,
+  ShoppingBag,
+} from "lucide-react";
 import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
 import { ActionButton } from "../post/post-action-button";
 
@@ -77,7 +86,6 @@ const actionButtons = [
     fillColor: "rgba(215, 84, 127, 0.9)",
   },
 ];
-
 
 export const Footer = () => {
   const { scrollProgress, shouldShow, shouldAnimate } = useScroll();

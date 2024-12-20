@@ -187,10 +187,12 @@ const InlineCombobox = ({
     }
   }, [items, store]);
 
-  const isOnTitle = editor.selection?.anchor.path[0] === 0 || editor.selection?.focus.path[0] === 0;
-  const isOnSubtitle = editor.selection?.anchor.path[0] === 1 || editor.selection?.focus.path[0] === 1;
+  const selected = editor.children[editor?.selection?.anchor.path[0] ?? 0];
+  const isOnTitle = selected?.type === "h1";
+  const isOnSubtitle = selected?.type === "h2";
+  const isOnCodeblock = selected?.type === "code_block";
 
-  if (isOnTitle || isOnSubtitle) {
+  if (isOnTitle || isOnSubtitle || isOnCodeblock) {
     return <>{trigger}</>;
   }
 

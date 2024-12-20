@@ -5,7 +5,7 @@ import { useTheme as useNextTheme } from "next-themes";
 import { Button } from "../ui/button";
 import { useTheme as useLocalTheme } from "./theme-context";
 
-import { ThemeType } from "@/styles/themes";
+import type { ThemeType } from "@/styles/themes";
 
 interface ThemeButtonsProps {
   onChange?: (theme: ThemeType) => void;

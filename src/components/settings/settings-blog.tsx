@@ -16,13 +16,13 @@ export function BlogSettings({ profile }: { profile: Profile | ProfileFragment |
     currentMetadata?.attributes?.find((attr) => attr.key === "blogTitle")?.value || "",
   );
   const [showAuthor, setShowAuthor] = useState(
-    currentMetadata?.attributes?.find((attr) => attr.key === "showAuthor")?.value !== "false"
+    currentMetadata?.attributes?.find((attr) => attr.key === "showAuthor")?.value !== "false",
   );
   const [showTags, setShowTags] = useState(
-    currentMetadata?.attributes?.find((attr) => attr.key === "showTags")?.value !== "false"
+    currentMetadata?.attributes?.find((attr) => attr.key === "showTags")?.value !== "false",
   );
   const [showTitle, setShowTitle] = useState(
-    currentMetadata?.attributes?.find((attr) => attr.key === "showTitle")?.value !== "false"
+    currentMetadata?.attributes?.find((attr) => attr.key === "showTitle")?.value !== "false",
   );
   const [error, setError] = useState<string | null>(null);
   const { saveSettings, isSaving } = useSaveProfileSettings();
@@ -41,7 +41,7 @@ export function BlogSettings({ profile }: { profile: Profile | ProfileFragment |
 
   const handleSave = async () => {
     setError(null);
-    
+
     if (showTitle) {
       const titleError = validateBlogTitle(blogTitle);
       if (titleError) {
@@ -93,19 +93,15 @@ export function BlogSettings({ profile }: { profile: Profile | ProfileFragment |
         <div className="flex items-center justify-between space-y-2">
           <div className="space-y-0.5">
             <Label htmlFor="show-title">Show Title</Label>
-            <p className="text-sm text-muted-foreground">
-              Display the blog title at the top of your page
-            </p>
+            <p className="text-sm text-muted-foreground">Display the blog title at the top of your page</p>
           </div>
-          <Switch
-            id="show-title"
-            checked={showTitle}
-            onCheckedChange={setShowTitle}
-          />
+          <Switch id="show-title" checked={showTitle} onCheckedChange={setShowTitle} />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="blog-title" className={!showTitle ? "text-muted-foreground" : ""}>Blog Title</Label>
+          <Label htmlFor="blog-title" className={!showTitle ? "text-muted-foreground" : ""}>
+            Blog Title
+          </Label>
           <Input
             id="blog-title"
             value={blogTitle}
@@ -118,41 +114,24 @@ export function BlogSettings({ profile }: { profile: Profile | ProfileFragment |
             disabled={!showTitle}
             className={!showTitle ? "opacity-50" : ""}
           />
-          {error && (
-            <p className="text-sm text-destructive mt-2">{error}</p>
-          )}
+          {error && <p className="text-sm text-destructive mt-2">{error}</p>}
         </div>
 
         <div className="flex items-center justify-between space-y-2">
           <div className="space-y-0.5">
             <Label htmlFor="show-author">Show Author</Label>
-            <p className="text-sm text-muted-foreground">
-              Display your name above the blog title
-            </p>
+            <p className="text-sm text-muted-foreground">Display your name above the blog title</p>
           </div>
-          <Switch
-            id="show-author"
-            checked={showAuthor}
-            onCheckedChange={setShowAuthor}
-          />
+          <Switch id="show-author" checked={showAuthor} onCheckedChange={setShowAuthor} />
         </div>
         <div className="flex items-center justify-between space-y-2">
           <div className="space-y-0.5">
             <Label htmlFor="show-tags">Show Tags</Label>
-            <p className="text-sm text-muted-foreground">
-              Display article tags below the blog title
-            </p>
+            <p className="text-sm text-muted-foreground">Display article tags below the blog title</p>
           </div>
-          <Switch
-            id="show-tags"
-            checked={showTags}
-            onCheckedChange={setShowTags}
-          />
+          <Switch id="show-tags" checked={showTags} onCheckedChange={setShowTags} />
         </div>
-        <Button 
-          onClick={handleSave} 
-          disabled={isSaving || !!error || !blogTitle.trim()}
-        >
+        <Button onClick={handleSave} disabled={isSaving || !!error || !blogTitle.trim()}>
           {isSaving ? "Saving..." : "Save Settings"}
         </Button>
       </CardContent>

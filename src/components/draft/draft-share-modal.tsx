@@ -20,7 +20,7 @@ export const DraftShareModal = ({ isOpen, onClose }: DraftShareModalProps) => {
     try {
       await navigator.clipboard.writeText(window.location.href);
       toast.success("Link copied!", { description: "The draft link has been copied to your clipboard." });
-    } catch (error) {
+    } catch (_error) {
       toast.error("Failed to copy", {
         description: "There was an error copying the link.",
       });

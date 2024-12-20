@@ -26,7 +26,9 @@ export function ApplicationSettings() {
         <div className="flex items-center justify-between space-y-2">
           <div className="space-y-0.5">
             <Label htmlFor="blurEffect">Enable blur effect</Label>
-            <p className="text-sm text-muted-foreground">Whether the article page should have a blur on top and bottom</p>
+            <p className="text-sm text-muted-foreground">
+              Whether the article page should have a blur on top and bottom
+            </p>
           </div>
           <Switch id="blurEffect" checked={isBlurEnabled} onCheckedChange={toggleBlurEffect} />
         </div>

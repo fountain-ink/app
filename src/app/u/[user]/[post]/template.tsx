@@ -23,10 +23,6 @@ export default function Template({ children }: { children: React.ReactNode }) {
     }
   }, [isSuccess]);
 
-  const handleEdit = () => {
-    router.push(`${window.location.pathname}/edit`);
-  };
-
   const handleClose = () => {
     setShowSuccessModal(false);
     // Remove the success param from URL
