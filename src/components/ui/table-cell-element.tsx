@@ -47,10 +47,10 @@ export const TableCellElement = withRef<
             "before:absolute before:box-border before:select-none before:content-['']",
             borders &&
               cn(
-                borders.bottom?.size && "before:border-b before:border-b-border",
-                borders.right?.size && "before:border-r before:border-r-border",
-                borders.left?.size && "before:border-l before:border-l-border",
-                borders.top?.size && "before:border-t before:border-t-border",
+                borders.bottom?.size && "before:border-b-2 before:border-b-border",
+                borders.right?.size && "before:border-r-2 before:border-r-border",
+                borders.left?.size && "before:border-l-2 before:border-l-border",
+                borders.top?.size && "before:border-t-2 before:border-t-border",
               ),
           ),
         className,

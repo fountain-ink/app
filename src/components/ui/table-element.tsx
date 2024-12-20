@@ -6,24 +6,30 @@ import type { TTableElement } from "@udecode/plate-table";
 import { PopoverAnchor } from "@radix-ui/react-popover";
 import { cn, withRef } from "@udecode/cn";
 import {
-  useEditorRef,
+  PlateElement,
+  useEditorPlugin,
   useElement,
   useRemoveNodeButton,
   useSelectionCollapsed,
   withHOC,
 } from "@udecode/plate-common/react";
 import {
-  TableProvider,
+  deleteColumn,
+  deleteRow,
   mergeTableCells,
+  TablePlugin,
+  TableProvider,
   unmergeTableCells,
   useTableBordersDropdownMenuContentState,
   useTableElement,
   useTableElementState,
   useTableMergeState,
 } from "@udecode/plate-table/react";
-import { type LucideProps, Combine, Trash2, Ungroup } from "lucide-react";
+
+import { type LucideProps } from "lucide-react";
 import { useReadOnly, useSelected } from "slate-react";
 
+import { Minus, Plus } from "lucide-react";
 import { Button } from "./button";
 import {
   DropdownMenu,
@@ -32,9 +38,34 @@ import {
   DropdownMenuPortal,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
-import { PlateElement } from "./plate-element";
 import { Popover, PopoverContent, popoverVariants } from "./popover";
 import { Separator } from "./separator";
+
+interface QuantityControlProps {
+  label: string;
+  onDecrease: () => void;
+  onIncrease: () => void;
+}
+
+interface QuantityControlProps {
+  label: string;
+  onDecrease: () => void;
+  onIncrease: () => void;
+}
+
+const QuantityControl: React.FC<QuantityControlProps> = ({ label, onDecrease, onIncrease }) => {
+  return (
+    <div className="flex items-center gap-1">
+      <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={onDecrease}>
+        <Minus className="h-4 w-4" />
+      </Button>
+      <span className="min-w-[2rem] text-center text-sm">{label}</span>
+      <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={onIncrease}>
+        <Plus className="h-4 w-4" />
+      </Button>
+    </div>
+  );
+};
 
 export const TableBordersDropdownMenuContent = withRef<typeof DropdownMenuPrimitive.Content>((props, ref) => {
   const {
@@ -111,23 +142,38 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(({ children, 
 
   const readOnly = useReadOnly();
   const selected = useSelected();
-  const editor = useEditorRef();
+  const { editor } = useEditorPlugin(TablePlugin);
 
   const collapsed = !readOnly && selected && selectionCollapsed;
   const open = !readOnly && selected;
+
+  // Handle table operations
+  const handleAddColumn = () => {
+    editor.tf.insert.tableColumn();
+  };
+
+  const handleRemoveColumn = () => {
+    deleteColumn(editor);
+  };
+
+  const handleAddRow = () => {
+    editor.tf.insert.tableRow();
+  };
+
+  const handleRemoveRow = () => {
+    deleteRow(editor);
+  };
 
   const { canMerge, canUnmerge } = useTableMergeState();
 
   const mergeContent = canMerge && (
     <Button variant="ghost" onClick={() => mergeTableCells(editor)} contentEditable={false} isMenu>
-      <Combine className="mr-2 size-4" />
       Merge
     </Button>
   );
 
   const unmergeButton = canUnmerge && (
     <Button variant="ghost" onClick={() => unmergeTableCells(editor)} contentEditable={false} isMenu>
-      <Ungroup className="mr-2 size-4" />
       Unmerge
     </Button>
   );
@@ -136,8 +182,7 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(({ children, 
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button size="sm" variant="ghost" isMenu>
-            <BorderAll className="mr-2 size-4" />
+          <Button variant="ghost" isMenu>
             Borders
           </Button>
         </DropdownMenuTrigger>
@@ -147,9 +192,8 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(({ children, 
         </DropdownMenuPortal>
       </DropdownMenu>
 
-      <Button size="sm" variant="ghost" contentEditable={false} isMenu {...buttonProps}>
-        <Trash2 className="mr-2 size-4" />
-        Delete
+      <Button variant="ghost" contentEditable={false} isMenu {...buttonProps}>
+        Remove
       </Button>
     </>
   );
@@ -160,10 +204,17 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(({ children, 
       {(canMerge || canUnmerge || collapsed) && (
         <PopoverContent
           ref={ref}
-          className={cn(popoverVariants(), "flex w-[220px] flex-row gap-1 p-1")}
+          className={cn(popoverVariants(), "flex w-fit flex-row gap-2 p-1")}
           onOpenAutoFocus={(e) => e.preventDefault()}
           {...props}
         >
+          {/* Add the quantity controls before existing buttons */}
+          <div className="flex items-center gap-2 border-r pr-2">
+            <QuantityControl label={`Cols`} onDecrease={handleRemoveColumn} onIncrease={handleAddColumn} />
+            <QuantityControl label={`Rows`} onDecrease={handleRemoveRow} onIncrease={handleAddRow} />
+          </div>
+
+          {/* Existing buttons */}
           {unmergeButton}
           {mergeContent}
           {bordersContent}
