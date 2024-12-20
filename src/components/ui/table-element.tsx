@@ -142,14 +142,14 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(({ children, 
 
   const readOnly = useReadOnly();
   const selected = useSelected();
-  const { editor } = useEditorPlugin(TablePlugin);
+  const { editor, tf } = useEditorPlugin(TablePlugin);
 
   const collapsed = !readOnly && selected && selectionCollapsed;
   const open = !readOnly && selected;
 
   // Handle table operations
   const handleAddColumn = () => {
-    editor.tf.insert.tableColumn();
+    tf.insert.tableColumn();
   };
 
   const handleRemoveColumn = () => {
@@ -157,7 +157,7 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(({ children, 
   };
 
   const handleAddRow = () => {
-    editor.tf.insert.tableRow();
+    tf.insert.tableRow();
   };
 
   const handleRemoveRow = () => {
@@ -208,10 +208,9 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(({ children, 
           onOpenAutoFocus={(e) => e.preventDefault()}
           {...props}
         >
-          {/* Add the quantity controls before existing buttons */}
           <div className="flex items-center gap-2 border-r pr-2">
-            <QuantityControl label={`Cols`} onDecrease={handleRemoveColumn} onIncrease={handleAddColumn} />
-            <QuantityControl label={`Rows`} onDecrease={handleRemoveRow} onIncrease={handleAddRow} />
+            <QuantityControl label={"Cols"} onDecrease={handleRemoveColumn} onIncrease={handleAddColumn} />
+            <QuantityControl label={"Rows"} onDecrease={handleRemoveRow} onIncrease={handleAddRow} />
           </div>
 
           {/* Existing buttons */}
