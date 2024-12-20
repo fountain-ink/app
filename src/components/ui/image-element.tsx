@@ -125,6 +125,7 @@ export const ImageElement = withRef<typeof PlateElement>(
     }, [props.element.url]);
 
     useEffect(() => {
+      console.log(editor.children);
       if (props.element?.width) {
         setWidth(props.element.width as ElementWidth);
       }
@@ -165,7 +166,7 @@ export const ImageElement = withRef<typeof PlateElement>(
             transition={{
               type: "spring",
               stiffness: 200,
-              damping: 30
+              damping: 30,
             }}
           >
             {!url ? (

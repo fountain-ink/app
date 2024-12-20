@@ -35,9 +35,9 @@ const menuAnimationVariants = {
     transition: {
       height: {
         type: "spring",
-        stiffness: 300,
-        damping: 35,
-        mass: 0.8,
+        stiffness: 200,
+        damping: 25,
+        duration: 0.1,
       },
       opacity: { duration: 0.2 },
       scale: { duration: 0.2 },
@@ -50,9 +50,9 @@ const menuAnimationVariants = {
     transition: {
       height: {
         type: "spring",
-        stiffness: 300,
-        damping: 35,
-        mass: 0.8,
+        stiffness: 200,
+        damping: 25,
+        duration: 0.1,
       },
       opacity: { duration: 0.1 },
       scale: { duration: 0.1 },
