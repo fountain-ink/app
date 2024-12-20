@@ -97,7 +97,7 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
           variants={widthVariants}
           transition={{
             type: "spring",
-            stiffness: 300,
+            stiffness: 200,
             damping: 30
           }}
         >
