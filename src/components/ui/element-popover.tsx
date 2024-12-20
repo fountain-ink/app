@@ -1,4 +1,5 @@
 import { setNode, useEditorRef, useElement, useRemoveNodeButton } from "@udecode/plate-common/react";
+import { Variant } from "framer-motion";
 import type React from "react";
 import { forwardRef, useState } from "react";
 import { useReadOnly } from "slate-react";
@@ -23,10 +24,22 @@ interface ElementPopoverProps {
 
 export type ElementWidth = "column" | "wide" | "full";
 
+export const widthVariants: Record<ElementWidth, Variant> = {
+  column: {
+    width: "100%",
+  },
+  wide: {
+    width: "min(130%, 95vw)",
+  },
+  full: {
+    width: "min(200%, 98vw)",
+  },
+};
+
 export const ELEMENT_WIDTH_CLASSES: Record<ElementWidth, string> = {
-  wide: "w-screen max-w-[65vw] relative -translate-x-1/2 left-1/2 content-center justify-center",
-  full: "w-screen max-w-[90vw] relative -translate-x-1/2 left-1/2 content-center justify-center",
-  column: "w-full max-w-full",
+  column: "",
+  wide: "",
+  full: "",
 } as const;
 
 export const ElementPopover = forwardRef<HTMLDivElement, ElementPopoverProps>(

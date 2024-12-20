@@ -126,12 +126,11 @@ const languages: { label: string; value: string }[] = [
   { label: "YAML", value: "yaml" },
 ];
 
-
-interface CodeBlockComboboxProps  {
+interface CodeBlockComboboxProps {
   onOpenChange?: (open: boolean) => void;
 }
 
-export const CodeBlockCombobox = forwardRef<HTMLDivElement, CodeBlockComboboxProps>( ({ onOpenChange }, ref) => {
+export const CodeBlockCombobox = forwardRef<HTMLDivElement, CodeBlockComboboxProps>(({ onOpenChange }, ref) => {
   const state = useCodeBlockComboboxState();
   const { commandItemProps } = useCodeBlockCombobox(state);
 
@@ -148,41 +147,38 @@ export const CodeBlockCombobox = forwardRef<HTMLDivElement, CodeBlockComboboxPro
   );
 
   return (
-    <Popover 
-      modal={true} 
-      open={open} 
-      onOpenChange={setOpen}>
+    <Popover modal={true} open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="ghost" className="justify-between" aria-expanded={open} role="combobox">
           {state.value ? languages.find((language) => language.value === state.value)?.label : "Plain Text"}
           <AnimatedChevron isOpen={open} size={16} direction="down" className="shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent  className="w-[200px] p-0">
+      <PopoverContent className="w-[200px] p-0">
         <div ref={ref}>
-        <Command shouldFilter={false}>
-          <CommandInput value={value} onValueChange={(value) => setValue(value)} placeholder="Search language..." />
-          <CommandEmpty>No language found.</CommandEmpty>
+          <Command shouldFilter={false}>
+            <CommandInput value={value} onValueChange={(value) => setValue(value)} placeholder="Search language..." />
+            <CommandEmpty>No language found.</CommandEmpty>
 
-          <CommandList key={value}>
-            {items.map((language) => (
-              <CommandItem
-                key={language.value}
-                className="cursor-pointer"
-                value={language.value}
-                onSelect={(_value) => {
-                  commandItemProps.onSelect(_value);
-                  setOpen(false);
-                }}
-              >
-                <Check className={cn(state.value === language.value ? "opacity-100" : "opacity-0")} />
-                {language.label}
-              </CommandItem>
-            ))}
-          </CommandList>
-        </Command>
+            <CommandList key={value}>
+              {items.map((language) => (
+                <CommandItem
+                  key={language.value}
+                  className="cursor-pointer"
+                  value={language.value}
+                  onSelect={(_value) => {
+                    commandItemProps.onSelect(_value);
+                    setOpen(false);
+                  }}
+                >
+                  <Check className={cn(state.value === language.value ? "opacity-100" : "opacity-0")} />
+                  {language.label}
+                </CommandItem>
+              ))}
+            </CommandList>
+          </Command>
         </div>
       </PopoverContent>
     </Popover>
   );
-})
+});
