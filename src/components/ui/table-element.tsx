@@ -6,24 +6,24 @@ import type { TTableElement } from "@udecode/plate-table";
 import { PopoverAnchor } from "@radix-ui/react-popover";
 import { cn, withRef } from "@udecode/cn";
 import {
-  PlateElement,
-  useEditorPlugin,
-  useElement,
-  useRemoveNodeButton,
-  useSelectionCollapsed,
-  withHOC,
+    PlateElement,
+    useEditorPlugin,
+    useElement,
+    useRemoveNodeButton,
+    useSelectionCollapsed,
+    withHOC,
 } from "@udecode/plate-common/react";
 import {
-  deleteColumn,
-  deleteRow,
-  mergeTableCells,
-  TablePlugin,
-  TableProvider,
-  unmergeTableCells,
-  useTableBordersDropdownMenuContentState,
-  useTableElement,
-  useTableElementState,
-  useTableMergeState,
+    deleteColumn,
+    deleteRow,
+    mergeTableCells,
+    TablePlugin,
+    TableProvider,
+    unmergeTableCells,
+    useTableBordersDropdownMenuContentState,
+    useTableElement,
+    useTableElementState,
+    useTableMergeState,
 } from "@udecode/plate-table/react";
 
 import { type LucideProps } from "lucide-react";
@@ -32,11 +32,11 @@ import { useReadOnly, useSelected } from "slate-react";
 import { Minus, Plus } from "lucide-react";
 import { Button } from "./button";
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuPortal,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuCheckboxItem,
+    DropdownMenuContent,
+    DropdownMenuPortal,
+    DropdownMenuTrigger,
 } from "./dropdown-menu";
 import { Popover, PopoverContent, popoverVariants } from "./popover";
 import { Separator } from "./separator";
@@ -97,6 +97,7 @@ export const TableBordersDropdownMenuContent = withRef<typeof DropdownMenuPrimit
         <div>Top Border</div>
       </DropdownMenuCheckboxItem>
       <DropdownMenuCheckboxItem
+
         className="flex gap-1 pl-10"
         checked={hasLeftBorder}
         onCheckedChange={getOnSelectTableBorder("left")}
@@ -147,7 +148,6 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(({ children, 
   const collapsed = !readOnly && selected && selectionCollapsed;
   const open = !readOnly && selected;
 
-  // Handle table operations
   const handleAddColumn = () => {
     tf.insert.tableColumn();
   };
@@ -213,7 +213,6 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(({ children, 
             <QuantityControl label={"Rows"} onDecrease={handleRemoveRow} onIncrease={handleAddRow} />
           </div>
 
-          {/* Existing buttons */}
           {unmergeButton}
           {mergeContent}
           {bordersContent}

@@ -257,7 +257,15 @@ export const staticPlugins = [
   }),
 
   SlashPlugin,
-  TablePlugin.configure({ options: { enableMerging: true } }),
+
+  TablePlugin.configure({
+    options: {
+      enableMerging: true,
+      minColumnWidth: 60,
+      disableExpandOnInsert: true,
+      initialTableWidth: 600,
+    },
+  }),
   TogglePlugin,
   TocPlugin.configure({
     options: {
