@@ -2,7 +2,7 @@
 
 /* eslint-disable unicorn/prefer-export-from */
 
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 
 import { cn } from "@udecode/cn";
 import { useCodeBlockCombobox, useCodeBlockComboboxState } from "@udecode/plate-code-block/react";
@@ -126,7 +126,12 @@ const languages: { label: string; value: string }[] = [
   { label: "YAML", value: "yaml" },
 ];
 
-export function CodeBlockCombobox() {
+
+interface CodeBlockComboboxProps  {
+  onOpenChange?: (open: boolean) => void;
+}
+
+export const CodeBlockCombobox = forwardRef<HTMLDivElement, CodeBlockComboboxProps>( ({ onOpenChange }, ref) => {
   const state = useCodeBlockComboboxState();
   const { commandItemProps } = useCodeBlockCombobox(state);
 
@@ -143,14 +148,18 @@ export function CodeBlockCombobox() {
   );
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover 
+      modal={true} 
+      open={open} 
+      onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="ghost" className="justify-between" aria-expanded={open} role="combobox">
           {state.value ? languages.find((language) => language.value === state.value)?.label : "Plain Text"}
           <AnimatedChevron isOpen={open} size={16} direction="down" className="shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent  className="w-[200px] p-0">
+        <div ref={ref}>
         <Command shouldFilter={false}>
           <CommandInput value={value} onValueChange={(value) => setValue(value)} placeholder="Search language..." />
           <CommandEmpty>No language found.</CommandEmpty>
@@ -172,7 +181,8 @@ export function CodeBlockCombobox() {
             ))}
           </CommandList>
         </Command>
+        </div>
       </PopoverContent>
     </Popover>
   );
-}
+})

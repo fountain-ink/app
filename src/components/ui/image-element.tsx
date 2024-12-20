@@ -4,7 +4,7 @@ import { selectEditor, setNode, useEditorRef, useElement, useRemoveNodeButton } 
 import { Image, useMediaState } from "@udecode/plate-media/react";
 import { UploadIcon } from "lucide-react";
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useReadOnly } from "slate-react";
 import { LoadingSpinner } from "../loading-spinner";
 import { Button } from "./button";
@@ -18,7 +18,7 @@ const ImagePlaceholder = () => (
   </div>
 );
 
-function ImagePopover({ children, url }: { children: React.ReactNode; url?: string }) {
+function ImagePopover({ children, url, open, popoverRef }: { children: React.ReactNode; url?: string; open: boolean; popoverRef: React.RefObject<HTMLDivElement> }) {
   const editor = useEditorRef();
   const element = useElement();
   const { props: buttonProps } = useRemoveNodeButton({ element });
@@ -67,7 +67,7 @@ function ImagePopover({ children, url }: { children: React.ReactNode; url?: stri
   );
 
   return (
-    <ElementPopover defaultWidth={width} onWidthChange={handleWidth} content={changeButton}>
+    <ElementPopover ref={popoverRef} open={open} defaultWidth={width} onWidthChange={handleWidth} content={changeButton}>
       {children}
     </ElementPopover>
   );
@@ -75,14 +75,35 @@ function ImagePopover({ children, url }: { children: React.ReactNode; url?: stri
 
 export const ImageElement = withRef<typeof PlateElement>(
   ({ children, className, nodeProps, autoFocus = true, ...props }, ref) => {
-    const { align = "center", focused, readOnly, selected } = useMediaState();
+    const { align = "center" } = useMediaState();
     const [_isImageLoaded, setIsImageLoaded] = useState(false);
     const [url, setUrl] = useState<string | undefined>(props?.element?.url as string | undefined);
     const [isUploading, setIsUploading] = useState(false);
     const [width, setWidth] = useState<ElementWidth>("column");
+    const [isFocused, setIsFocused] = useState(false);
     const editor = useEditorRef();
     const readonly = useReadOnly();
     const element = useElement();
+    const figureRef = useRef<HTMLElement>(null);
+    const popoverRef = useRef<HTMLDivElement>(null);
+    
+    useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (readonly) return;
+        
+        const target = event.target as Node;
+        const isClickInside = 
+          figureRef.current?.contains(target) ||
+          popoverRef.current?.contains(target);
+
+        setIsFocused(!!isClickInside);
+      };
+
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, [readonly]);
 
     useEffect(() => {
       if (props.element?.url) {
@@ -120,12 +141,12 @@ export const ImageElement = withRef<typeof PlateElement>(
     };
 
     return (
-      <ImagePopover url={url}>
+      <ImagePopover url={url} open={isFocused} popoverRef={popoverRef}>
         <PlateElement ref={ref} className={cn(className, width && ELEMENT_WIDTH_CLASSES[width], "my-8")} {...props}>
-          <figure className="group" contentEditable={false}>
+          <figure ref={figureRef} className="group" contentEditable={false}>
             {!url ? (
               <div
-                className={cn("rounded-sm flex items-center justify-center", focused && selected && "ring-2 ring-ring")}
+                className={cn("rounded-sm flex items-center justify-center", isFocused && "ring-2 ring-ring")}
               >
                 <div className="absolute">
                   {!readonly && (
@@ -157,7 +178,7 @@ export const ImageElement = withRef<typeof PlateElement>(
                 className={cn(
                   "block w-full max-w-full cursor-pointer object-cover px-0",
                   "rounded-sm",
-                  focused && selected && "ring-2 ring-ring ",
+                  isFocused && "ring-2 ring-ring",
                 )}
                 alt=""
                 {...nodeProps}
@@ -167,7 +188,7 @@ export const ImageElement = withRef<typeof PlateElement>(
 
             <Caption className={width} align={align}>
               <CaptionTextarea
-                readOnly={readOnly}
+                readOnly={readonly}
                 onFocus={(e) => {
                   e.preventDefault();
                 }}

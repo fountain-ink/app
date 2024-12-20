@@ -1,5 +1,3 @@
-"use client";
-
 import { ImageElement } from "@/components/ui/image-element";
 import { LinkFloatingToolbar } from "@/components/ui/link-floating-toolbar";
 import { useYjsState } from "@/hooks/use-yjs-state";

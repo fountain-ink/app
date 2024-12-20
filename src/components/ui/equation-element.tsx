@@ -2,11 +2,11 @@
 
 import { cn, withRef } from "@udecode/cn";
 import {
-  createPrimitiveComponent,
-  selectSiblingNodePoint,
-  setNode,
-  useEditorRef,
-  useElement,
+    createPrimitiveComponent,
+    selectSiblingNodePoint,
+    setNode,
+    useEditorRef,
+    useElement,
 } from "@udecode/plate-common/react";
 import type { TEquationElement } from "@udecode/plate-math";
 import { useEquationElement, useEquationInput } from "@udecode/plate-math/react";
@@ -26,18 +26,33 @@ const EquationInput = createPrimitiveComponent(TextareaAutosize)({
 export const EquationElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
   const element = useElement<TEquationElement>();
   const editor = useEditorRef();
-  const [_open, setOpen] = useState(false);
   const katexRef = useRef<HTMLDivElement | null>(null);
   const [width, setWidth] = useState<ElementWidth>((element?.width as ElementWidth) || "column");
+  const [isFocused, setIsFocused] = useState(false);
   const readOnly = useReadOnly();
-  const { align = "center", focused, selected } = useMediaState();
+  const { align = "center" } = useMediaState();
+  const figureRef = useRef<HTMLElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setOpen(selected);
-  }, [selected]);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (readOnly) return;
+      
+      const target = event.target as Node;
+      const isClickInside = 
+        figureRef.current?.contains(target) ||
+        popoverRef.current?.contains(target);
 
+      setIsFocused(!!isClickInside);
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [readOnly]);
+  
   const handleClose = () => {
-    setOpen(false);
     selectSiblingNodePoint(editor, { node: element });
   };
 
@@ -77,19 +92,20 @@ export const EquationElement = withRef<typeof PlateElement>(({ children, classNa
 
   return (
     <ElementPopover
+      ref={popoverRef}
+      open={isFocused}
       sideOffset={10}
       verticalContent={renderEquationInput()}
       defaultWidth={width}
       showWidth={false}
-      onWidthChange={handleWidth}
-    >
+      onWidthChange={handleWidth}>
       <PlateElement
         ref={ref}
         className={cn("relative my-8", width && ELEMENT_WIDTH_CLASSES[width], className)}
         {...props}
       >
-        <figure className={cn("group rounded-sm")} contentEditable={false}>
-          <div className={cn(focused && selected && "ring-2 ring-ring ", "rounded-sm p-2")}>
+        <figure ref={figureRef} className={cn("group rounded-sm")} contentEditable={false}>
+          <div className={cn(isFocused && "ring-2 ring-ring ", "rounded-sm p-2")}>
             {element?.texExpression?.length > 0 ? (
               <span ref={katexRef} />
             ) : (
