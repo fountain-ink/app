@@ -27,6 +27,7 @@ export const InlineEquationElement = withRef<typeof PlateElement>(({ children, c
   const [open, setOpen] = useState(false);
   const readOnly = useReadOnly();
   const selected = useSelected();
+  const popoverRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setOpen(selected);
@@ -73,7 +74,14 @@ export const InlineEquationElement = withRef<typeof PlateElement>(({ children, c
       className={cn("inline-block select-none rounded-sm [&_.katex-display]:my-0", className)}
       {...props}
     >
-      <ElementPopover showWidth={false} showCaption={false} sideOffset={5} verticalContent={renderEquationInput()}>
+      <ElementPopover
+        open={selected}
+        ref={popoverRef}
+        showWidth={false}
+        showCaption={false}
+        sideOffset={5}
+        verticalContent={renderEquationInput()}
+      >
         <div
           className={cn(
             'relative after:absolute after:inset-0 after:-left-1 after:-top-0.5 after:z-[1] after:h-[calc(100%)+4px] after:w-[calc(100%+8px)] after:rounded-sm after:content-[""]',
