@@ -30,7 +30,7 @@ export const CaptionTextarea = withCn(
     "mt-2 w-full max-w-full resize-none border-none bg-inherit p-0 font-[inherit] text-inherit",
     "focus:outline-none focus:[&::placeholder]:opacity-0",
     "text-center print:placeholder:text-transparent",
-    "whitespace-normal break-words",
+    "break-words",
   ),
 );
 
