@@ -32,7 +32,7 @@ export const PublishDialog = () => {
                 position: "fixed",
                 top: "50%",
                 left: "50%",
-                width: "min(600px, 95vw)",
+                width: "min(700px, 95vw)",
                 x: "-50%",
                 y: "-50%",
               }}
@@ -43,7 +43,7 @@ export const PublishDialog = () => {
                 position: "fixed",
                 top: "50%",
                 left: "50%",
-                width: "min(600px, 95vw)",
+                width: "min(700px, 95vw)",
                 x: "-50%",
                 y: "-50%",
               }}
@@ -87,20 +87,6 @@ export const PublishDialog = () => {
                     </TabsContent>
                   </ScrollArea>
                 </Tabs>
-
-                {/* <div className="flex items-center justify-between flex-shrink-0">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setIsOpen(false);
-                      setReadOnly(false);
-                    }}
-                  >
-                    Back
-                  </Button>
-
-                  <PublishButton />
-                </div> */}
               </div>
             </motion.div>
           )}

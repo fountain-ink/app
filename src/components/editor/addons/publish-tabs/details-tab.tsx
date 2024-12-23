@@ -130,7 +130,7 @@ export const DetailsTab = () => {
   return (
     <div>
       <ScrollArea className="h-[480px]">
-        <div className="space-y-4 p-4">
+        <div className="space-y-4 sm:p-4 sm:pr-8">
           <div className="space-y-2">
             <Label htmlFor="title">Title</Label>
             <div className="space-y-1">
