@@ -1,53 +1,28 @@
 "use client";
 
-import type { Draft } from "@/components/draft/draft";
 import { LoadingSpinner } from "@/components/loading-spinner";
-import { useDocumentStorage } from "@/hooks/use-document-storage";
+import { useEditorState } from "@udecode/plate-common/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckIcon } from "lucide-react";
-import { useEditor } from "novel";
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
-export function AutoSave({ documentId, isLocal }: { documentId: string; isLocal?: boolean }) {
-  const { editor } = useEditor();
+export function AutoSave({ documentId }: { documentId: string }) {
+  const editor = useEditorState();
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const { saveDocument, getDocument } = useDocumentStorage();
 
   const saveContent = useCallback(
-    async (contentJson: object) => {
+    async (content: object) => {
       setIsSaving(true);
       setIsVisible(true);
       setSaveSuccess(false);
       try {
-        if (!isLocal) {
-          const response = await fetch(`/api/drafts?id=${documentId}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ content: contentJson }),
-          });
-
-          if (!response.ok) {
-            throw new Error(`${response.status} ${response.statusText}`);
-          }
-        } else {
-          // Save to local storage if local
-          const existingDraft = getDocument(documentId);
-          const updatedDraft: Draft = {
-            id: existingDraft?.id ?? 0,
-            isLocal: true,
-            documentId,
-            authorId: existingDraft?.authorId ?? "",
-            contentJson: JSON.stringify(contentJson),
-            updatedAt: new Date().toISOString(),
-            createdAt: existingDraft?.createdAt ?? new Date().toISOString(),
-          };
-          saveDocument(documentId, updatedDraft);
-        }
+        localStorage.setItem(`${documentId}`, JSON.stringify({
+          content,
+          updatedAt: new Date().toISOString(),
+        }));
         setSaveSuccess(true);
         setTimeout(() => {
           setIsVisible(false);
@@ -58,24 +33,17 @@ export function AutoSave({ documentId, isLocal }: { documentId: string; isLocal?
         setIsSaving(false);
       }
     },
-    [documentId, isLocal, saveDocument],
+    [documentId],
   );
 
   const debouncedSave = useDebouncedCallback(saveContent, 1000);
 
   useEffect(() => {
-    if (editor) {
-      editor.on("update", ({ editor }) => {
-        const content = editor.getJSON();
-        debouncedSave(content);
-      });
-    }
+    if (!editor) return;
 
-    return () => {
-      if (editor) {
-        editor.off("update");
-      }
-    };
+    const content = editor.children;
+    debouncedSave(content);
+
   }, [editor, debouncedSave]);
 
   return (
