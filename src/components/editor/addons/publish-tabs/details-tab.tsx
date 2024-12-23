@@ -178,7 +178,7 @@ export const DetailsTab = () => {
               }}
               activeTagIndex={activeTagIndex}
               setActiveTagIndex={setActiveTagIndex}
-              variant="primary"
+              variant="default"
             />
           </div>
         </div>

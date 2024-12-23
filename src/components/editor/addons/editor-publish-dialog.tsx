@@ -4,7 +4,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { usePublishStore } from "@/hooks/use-publish-store";
 import { AnimatePresence, motion } from "framer-motion";
-import { PenIcon, ShoppingBag } from "lucide-react";
+import { PenIcon, ShoppingBag, X } from "lucide-react";
 import { useState } from "react";
 import { CollectingTab } from "./publish-tabs/collecting-tab";
 import { DetailsTab } from "./publish-tabs/details-tab";
@@ -62,8 +62,17 @@ export const PublishDialog = () => {
             >
               <div className="p-6 h-full w-full flex flex-col">
                 <div className="flex-shrink-0">
-                  <div className="text-lg font-semibold mb-6">
-                    {tab === "collecting" ? "Article Collecting" : "Article Details"}
+                  <div className="flex justify-between items-center mb-6">
+                    <div className="text-lg font-semibold">
+                      {tab === "collecting" ? "Article Collecting" : "Article Details"}
+                    </div>
+                    <button
+                      onClick={() => setIsOpen(false)}
+                      type="button"
+                      className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
                   </div>
                 </div>
 

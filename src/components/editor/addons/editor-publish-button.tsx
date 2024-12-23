@@ -66,15 +66,6 @@ export const PublishButton = ({
     const contentMarkdown = editorState.api.markdown.serialize();
     // const { title, subtitle, coverImage } = extractMetadata(contentJson);
 
-    // const publish = false;
-    // if (!publish) {
-    //   console.log(title, subtitle, coverImage);
-    //   console.log(JSON.stringify(contentJson, null, 2));
-    //   console.log(contentHtml);
-    //   console.log(contentMarkdown);
-    //   return;
-    // }
-
     try {
       const metadata = article({
         title,
@@ -88,6 +79,12 @@ export const PublishButton = ({
           { key: "subtitle", type: MetadataAttributeType.STRING, value: subtitle ?? "" },
         ],
       });
+      
+      const publish = false;
+      if (!publish) {
+        console.log(metadata);
+        return;
+      }
 
       const metadataURI = await uploadMetadata(metadata, handle);
       // Show initial toast that transaction is being processed
