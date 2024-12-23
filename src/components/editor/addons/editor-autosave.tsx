@@ -1,6 +1,8 @@
 "use client";
 
+import type { Draft } from "@/components/draft/draft";
 import { LoadingSpinner } from "@/components/loading-spinner";
+import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { useEditorState } from "@udecode/plate-common/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckIcon } from "lucide-react";
@@ -13,16 +15,26 @@ export function AutoSave({ documentId }: { documentId: string }) {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
+  const { saveDocument } = useDocumentStorage();
+
   const saveContent = useCallback(
     async (content: object) => {
       setIsSaving(true);
       setIsVisible(true);
       setSaveSuccess(false);
       try {
-        localStorage.setItem(`${documentId}`, JSON.stringify({
-          content,
-          updatedAt: new Date().toISOString(),
-        }));
+        const now = new Date().toISOString();
+        const draft: Draft = {
+          id: Date.now(),
+          isLocal: true,
+          documentId,
+          authorId: "local",
+          contentJson: content,
+          updatedAt: now,
+          createdAt: now,
+        };
+        
+        saveDocument(documentId, draft);
         setSaveSuccess(true);
         setTimeout(() => {
           setIsVisible(false);
@@ -30,21 +42,20 @@ export function AutoSave({ documentId }: { documentId: string }) {
       } catch (error) {
         console.error("Error saving draft:", error);
       } finally {
+        console.log("saved:", content);
         setIsSaving(false);
       }
     },
-    [documentId],
+    [documentId, saveDocument],
   );
 
   const debouncedSave = useDebouncedCallback(saveContent, 1000);
 
   useEffect(() => {
     if (!editor) return;
-
-    const content = editor.children;
-    debouncedSave(content);
-
-  }, [editor, debouncedSave]);
+    
+    debouncedSave(editor.children);
+  }, [editor, editor?.children, debouncedSave]);
 
   return (
     <div className="fixed bottom-4 right-4 z-50">

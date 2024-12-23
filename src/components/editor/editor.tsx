@@ -14,6 +14,7 @@ import { FloatingToolbarButtons } from "../ui/floating-toolbar-buttons";
 import { TocSideBar } from "../ui/toc-sidebar";
 import { getRichElements } from "./elements";
 import { getEditorPlugins } from "./plugins";
+import { AutoSave } from "./addons/editor-autosave";
 
 export default function PlateEditor(
   props: PropsWithChildren & {
@@ -58,6 +59,8 @@ export default function PlateEditor(
             variant="fullWidth"
             autoFocus
           />
+          
+          <AutoSave documentId={documentId} />
 
           <FloatingToolbar>
             <FloatingToolbarButtons />
