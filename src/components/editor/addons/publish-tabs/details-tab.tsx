@@ -170,7 +170,7 @@ export const DetailsTab = () => {
               styleClasses={{
                 input: "shadow-none h-6",
               }}
-              placeholder="Enter a topic"
+              placeholder="Add a tag"
               tags={tags}
               setTags={(newTags) => {
                 setTags(newTags);
@@ -178,6 +178,7 @@ export const DetailsTab = () => {
               }}
               activeTagIndex={activeTagIndex}
               setActiveTagIndex={setActiveTagIndex}
+              variant="primary"
             />
           </div>
         </div>
@@ -192,7 +193,13 @@ export const DetailsTab = () => {
           Back
         </Button>
 
-        <PublishButton disabled={!!titleError} />
+        <PublishButton
+          title={title}
+          subtitle={subtitle}
+          coverImage={coverUrl}
+          tags={tags.map((t) => t.text)}
+          disabled={!!titleError}
+        />
       </div>
     </div>
   );

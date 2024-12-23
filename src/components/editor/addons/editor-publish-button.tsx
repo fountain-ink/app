@@ -17,7 +17,13 @@ import { useAccount } from "wagmi";
 import { getElements } from "../elements";
 import { staticPlugins } from "../plugins";
 
-export const PublishButton = ({ disabled }: { disabled?: boolean }) => {
+export const PublishButton = ({
+  disabled,
+  tags,
+  title,
+  subtitle,
+  coverImage,
+}: { disabled?: boolean; tags?: string[]; title?: string; subtitle?: string; coverImage?: string }) => {
   const { data: session } = useSession();
   const { isConnected: isWalletConnected } = useAccount();
   const { execute } = useCreatePost();
@@ -58,7 +64,7 @@ export const PublishButton = ({ disabled }: { disabled?: boolean }) => {
     });
 
     const contentMarkdown = editorState.api.markdown.serialize();
-    const { title, subtitle, coverImage } = extractMetadata(contentJson);
+    // const { title, subtitle, coverImage } = extractMetadata(contentJson);
 
     // const publish = false;
     // if (!publish) {
@@ -74,10 +80,12 @@ export const PublishButton = ({ disabled }: { disabled?: boolean }) => {
         title,
         content: contentMarkdown,
         locale: "en",
+        tags,
         appId: "fountain",
         attributes: [
           { key: "contentJson", type: MetadataAttributeType.JSON, value: JSON.stringify(contentJson) },
           { key: "contentHtml", type: MetadataAttributeType.STRING, value: contentHtml },
+          { key: "subtitle", type: MetadataAttributeType.STRING, value: subtitle ?? "" },
         ],
       });
 
