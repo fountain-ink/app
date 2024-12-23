@@ -1,5 +1,5 @@
 import { setNode, useEditorRef, useElement, useRemoveNodeButton } from "@udecode/plate-common/react";
-import { Variant } from "framer-motion";
+import type { Variant } from "framer-motion";
 import type React from "react";
 import { forwardRef, useState } from "react";
 import { useReadOnly } from "slate-react";

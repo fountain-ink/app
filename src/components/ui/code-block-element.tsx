@@ -87,9 +87,9 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
         className={cn("relative my-8 rounded-sm flex flex-col items-center", state.className, className)}
         {...props}
       >
-        <motion.figure 
+        <motion.figure
           ref={figureRef}
-          className="group w-full flex flex-col items-center" 
+          className="group w-full flex flex-col items-center"
           contentEditable={false}
           layout={true}
           initial={width}
@@ -98,12 +98,15 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
           transition={{
             type: "spring",
             stiffness: 200,
-            damping: 30
+            damping: 30,
           }}
         >
           <ScrollArea
             orientation="horizontal"
-            className={cn("rounded-sm bg-muted text-foreground overflow-hidden w-full", isFocused && "ring-2 ring-ring")}
+            className={cn(
+              "rounded-sm bg-muted text-foreground overflow-hidden w-full",
+              isFocused && "ring-2 ring-ring",
+            )}
           >
             <pre className="bg-muted px-6 py-4 text-foreground/80 font-mono text-sm not-prose leading-[normal] [tab-size:2] min-w-full">
               <code>{children}</code>

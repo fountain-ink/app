@@ -8,6 +8,7 @@ import { useEditorState } from "@udecode/plate-common/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
 import { ImagePlugin } from "@udecode/plate-media/react";
 import type { TElement, TText } from "@udecode/slate";
+import { type Tag, TagInput } from "emblor";
 import { useEffect, useState } from "react";
 import { PublishButton } from "../editor-publish-button";
 
@@ -24,6 +25,8 @@ export const DetailsTab = () => {
   const [coverUrl, setCoverUrl] = useState("");
   const [titleError, setTitleError] = useState<string | null>(null);
   const { setIsOpen } = usePublishStore();
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
 
   // Validate title whenever it changes
   useEffect(() => {
@@ -161,8 +164,21 @@ export const DetailsTab = () => {
             )}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="tags">Tags</Label>
-            <Input id="tags" placeholder="Enter tags separated by commas" />
+            <Label>Tags</Label>
+            <TagInput
+              maxTags={5}
+              styleClasses={{
+                input: "shadow-none h-6",
+              }}
+              placeholder="Enter a topic"
+              tags={tags}
+              setTags={(newTags) => {
+                setTags(newTags);
+                // setValue('topics', newTags as [Tag, ...Tag[]]);
+              }}
+              activeTagIndex={activeTagIndex}
+              setActiveTagIndex={setActiveTagIndex}
+            />
           </div>
         </div>
       </ScrollArea>

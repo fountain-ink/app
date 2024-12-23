@@ -2,11 +2,11 @@
 
 import { cn, withRef } from "@udecode/cn";
 import {
-    createPrimitiveComponent,
-    selectSiblingNodePoint,
-    setNode,
-    useEditorRef,
-    useElement,
+  createPrimitiveComponent,
+  selectSiblingNodePoint,
+  setNode,
+  useEditorRef,
+  useElement,
 } from "@udecode/plate-common/react";
 import type { TEquationElement } from "@udecode/plate-math";
 import { useEquationElement, useEquationInput } from "@udecode/plate-math/react";
@@ -37,21 +37,19 @@ export const EquationElement = withRef<typeof PlateElement>(({ children, classNa
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (readOnly) return;
-      
+
       const target = event.target as Node;
-      const isClickInside = 
-        figureRef.current?.contains(target) ||
-        popoverRef.current?.contains(target);
+      const isClickInside = figureRef.current?.contains(target) || popoverRef.current?.contains(target);
 
       setIsFocused(!!isClickInside);
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [readOnly]);
-  
+
   const handleClose = () => {
     selectSiblingNodePoint(editor, { node: element });
   };
@@ -98,7 +96,8 @@ export const EquationElement = withRef<typeof PlateElement>(({ children, classNa
       verticalContent={renderEquationInput()}
       defaultWidth={width}
       showWidth={false}
-      onWidthChange={handleWidth}>
+      onWidthChange={handleWidth}
+    >
       <PlateElement
         ref={ref}
         className={cn("relative my-8", width && ELEMENT_WIDTH_CLASSES[width], className)}
