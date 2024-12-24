@@ -33,7 +33,7 @@ export function AutoSave({ documentId }: { documentId: string }) {
           updatedAt: now,
           createdAt: now,
         };
-        
+
         saveDocument(documentId, draft);
         setSaveSuccess(true);
         setTimeout(() => {
@@ -49,11 +49,11 @@ export function AutoSave({ documentId }: { documentId: string }) {
     [documentId, saveDocument],
   );
 
-  const debouncedSave = useDebouncedCallback(saveContent, 1000);
+  const debouncedSave = useDebouncedCallback(saveContent, 3000);
 
   useEffect(() => {
     if (!editor) return;
-    
+
     debouncedSave(editor.children);
   }, [editor, editor?.children, debouncedSave]);
 
