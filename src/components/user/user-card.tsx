@@ -2,8 +2,8 @@
 
 import { type Profile, useLazyProfile } from "@lens-protocol/react-web";
 import { type PropsWithChildren, useState } from "react";
-import { LoadingSpinner } from "../loading-spinner";
-import { TruncatedText } from "../truncated-text";
+import { LoadingSpinner } from "../misc/loading-spinner";
+import { TruncatedText } from "../misc/truncated-text";
 import { Badge } from "../ui/badge";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card";
 import { UserAvatar } from "./user-avatar";

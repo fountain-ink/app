@@ -1,4 +1,4 @@
-import ErrorPage from "@/components/error-page";
+import ErrorPage from "@/components/misc/error-page";
 import { SlideNav } from "@/components/ui/slide-tabs";
 import { UserAvatar } from "@/components/user/user-avatar";
 import { UserCover } from "@/components/user/user-cover";

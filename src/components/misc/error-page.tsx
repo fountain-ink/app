@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 const ErrorPage = ({ error }: { error: string }) => {
   return (

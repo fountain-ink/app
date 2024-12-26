@@ -1,7 +1,7 @@
 "use client";
 
 import { SessionType, useSession } from "@lens-protocol/react-web";
-import { LoadingSpinner } from "../../loading-spinner";
+import { LoadingSpinner } from "../../misc/loading-spinner";
 import { Badge } from "../../ui/badge";
 import { LazyAuthorView } from "../../user/user-author-view";
 

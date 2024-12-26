@@ -1,7 +1,7 @@
-import { EmailSubscription } from "@/components/email-subscription";
+import { EmailSubscription } from "@/components/misc/email-subscription";
 import { GraphicHand, GraphicInk } from "@/components/icons/custom-icons";
 import { GradientBlur } from "@/components/navigation/gradient-blur";
-import { SmoothScroll } from "@/components/smooth-scroll";
+import { SmoothScroll } from "@/components/misc/smooth-scroll";
 import { proseClasses } from "@/styles/prose";
 
 export default function HomePage() {

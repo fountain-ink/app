@@ -11,7 +11,7 @@ import {
 } from "@lens-protocol/react-web";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import ErrorPage from "../error-page";
+import ErrorPage from "../misc/error-page";
 import { WriteMenu } from "../navigation/write-menu-button";
 import { PostView } from "../post/post-view";
 import { Card, CardFooter, CardHeader } from "../ui/card";

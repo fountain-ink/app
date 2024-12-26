@@ -1,5 +1,5 @@
 import "@/styles/article.css";
-import { SmoothScroll } from "../smooth-scroll";
+import { SmoothScroll } from "../misc/smooth-scroll";
 
 export const ArticleLayout = async ({ children }: { children: React.ReactNode }) => {
   return (

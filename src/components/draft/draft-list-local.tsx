@@ -2,7 +2,7 @@
 
 import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { SessionType, useSession } from "@lens-protocol/react-web";
-import { LoadingSpinner } from "../loading-spinner";
+import { LoadingSpinner } from "../misc/loading-spinner";
 import { DraftView } from "./draft-view";
 
 export function LocalDraftsList() {

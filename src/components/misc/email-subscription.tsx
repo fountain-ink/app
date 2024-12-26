@@ -1,8 +1,8 @@
 "use client";
 import { MailCheck } from "lucide-react";
 import { useState } from "react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 
 export const EmailSubscription = () => {
   const [success, setSuccess] = useState<boolean | undefined>(undefined);

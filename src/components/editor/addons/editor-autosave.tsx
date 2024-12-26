@@ -1,7 +1,7 @@
 "use client";
 
 import type { Draft } from "@/components/draft/draft";
-import { LoadingSpinner } from "@/components/loading-spinner";
+import { LoadingSpinner } from "@/components/misc/loading-spinner";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { useEditorState } from "@udecode/plate-common/react";
 import { AnimatePresence, motion } from "framer-motion";

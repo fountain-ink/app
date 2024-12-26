@@ -3,7 +3,7 @@
 import { type ConnectionStatus, useYjsState } from "@/hooks/use-yjs-state";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FeedbackForm } from "../feedback/feedback-form";
+import { FeedbackForm } from "../misc/feedback-form";
 import { ConnectionBadge } from "../ui/connection-badge";
 import { UserMenu } from "../user/user-menu";
 import { PublishMenu } from "./publish-menu-button";

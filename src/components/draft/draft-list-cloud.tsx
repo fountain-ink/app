@@ -1,6 +1,6 @@
 "use client";
 
-import { LoadingSpinner } from "@/components/loading-spinner";
+import { LoadingSpinner } from "@/components/misc/loading-spinner";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import type { ProfileId } from "@lens-protocol/react-web";

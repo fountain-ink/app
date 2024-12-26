@@ -1,7 +1,7 @@
 "use client";
 
 import { LimitType, useSearchProfiles } from "@lens-protocol/react-web";
-import { LoadingSpinner } from "../loading-spinner";
+import { LoadingSpinner } from "../misc/loading-spinner";
 import { InlineComboboxEmpty, InlineComboboxItem } from "../ui/inline-combobox";
 
 export type MentionableUser = {

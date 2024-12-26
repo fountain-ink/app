@@ -1,4 +1,4 @@
-import ErrorPage from "@/components/error-page";
+import ErrorPage from "@/components/misc/error-page";
 import { UserBio } from "@/components/user/user-bio";
 import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 

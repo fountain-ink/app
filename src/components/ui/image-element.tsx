@@ -7,7 +7,7 @@ import { UploadIcon } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useReadOnly } from "slate-react";
-import { LoadingSpinner } from "../loading-spinner";
+import { LoadingSpinner } from "../misc/loading-spinner";
 import { Button } from "./button";
 import { Caption, CaptionTextarea } from "./caption";
 import { ElementPopover, widthVariants, type ElementWidth } from "./element-popover";

@@ -5,7 +5,7 @@ import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { getRandomUid } from "@/lib/get-random-uid";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { LoadingSpinner } from "../loading-spinner";
+import { LoadingSpinner } from "../misc/loading-spinner";
 
 export const defaultContent: any = [
   {

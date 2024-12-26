@@ -3,7 +3,7 @@ import { formatDate, formatRelativeTime } from "@/lib/utils";
 import type { ArticleMetadataV3, Post, ProfileId } from "@lens-protocol/react-web";
 import type { Draft } from "../draft/draft";
 import { DraftMenu } from "../draft/draft-menu";
-import Markdown from "../markdown";
+import Markdown from "../misc/markdown";
 import { LazyAuthorView } from "../user/user-author-view";
 import { PostMenu } from "./post-menu";
 import { PostReactions } from "./post-reactions";

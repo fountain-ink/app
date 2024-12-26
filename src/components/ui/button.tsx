@@ -6,7 +6,7 @@ import { type VariantProps, cva } from "class-variance-authority";
 import Link from "next/link";
 import type { ComponentProps } from "react";
 
-import { LoadingSpinner } from "../loading-spinner";
+import { LoadingSpinner } from "../misc/loading-spinner";
 import { withTooltip } from "./tooltip";
 
 export const buttonVariants = cva(

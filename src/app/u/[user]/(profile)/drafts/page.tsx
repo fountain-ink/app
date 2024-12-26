@@ -1,5 +1,5 @@
 import { CloudDraftsList } from "@/components/draft/draft-list-cloud";
-import ErrorPage from "@/components/error-page";
+import ErrorPage from "@/components/misc/error-page";
 import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
 import { notFound } from "next/navigation";
 

@@ -1,8 +1,8 @@
 import { CookieManager } from "@/components/auth/cookie-manager";
+import { Web3Providers } from "@/components/misc/web3-providers";
 import { Header } from "@/components/navigation/nav-header";
 import { ThemeProvider } from "@/components/theme/theme-context";
 import { Toaster } from "@/components/ui/sonner";
-import { Web3Providers } from "@/components/web3-providers";
 import "@/styles/globals.css";
 import { cn } from "@udecode/cn";
 import { GeistMono } from "geist/font/mono";

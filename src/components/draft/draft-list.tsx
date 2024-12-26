@@ -3,7 +3,7 @@
 import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { type ProfileId, SessionType, useSession } from "@lens-protocol/react-web";
 import { useQuery } from "@tanstack/react-query";
-import { LoadingSpinner } from "../loading-spinner";
+import { LoadingSpinner } from "../misc/loading-spinner";
 import type { Draft } from "./draft";
 import { DraftView } from "./draft-view";
 

@@ -4,7 +4,7 @@ import remarkGfm from "remark-gfm";
 
 import { getBaseUrl } from "@/lib/get-base-url";
 import { proseClasses } from "@/styles/prose";
-import { UserLazyHandle } from "./user/user-lazy-handle";
+import { UserLazyHandle } from "../user/user-lazy-handle";
 
 const BASE_URL = getBaseUrl();
 
