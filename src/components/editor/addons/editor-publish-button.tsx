@@ -79,7 +79,7 @@ export const PublishButton = ({
           { key: "subtitle", type: MetadataAttributeType.STRING, value: subtitle ?? "" },
         ],
       });
-      
+
       const publish = false;
       if (!publish) {
         console.log(metadata);

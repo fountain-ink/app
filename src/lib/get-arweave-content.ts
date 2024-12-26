@@ -22,7 +22,6 @@ const arweave = new Arweave({ url: arweaveAPI });
 
 export async function getTransactionId(
   query: string,
-  // biome-ignore lint/suspicious/noExplicitAny: intended use
   variables: Record<string, any>,
 ) {
   const client = new GraphQLClient(graphqlAPI);

@@ -59,7 +59,7 @@ export default function PlateEditor(
             variant="fullWidth"
             autoFocus
           />
-          
+
           <AutoSave documentId={documentId} />
 
           <FloatingToolbar>

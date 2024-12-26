@@ -8,9 +8,9 @@ await import("./src/env.js");
 const config = {
   reactStrictMode: true,
   transpilePackages: ["geist"],
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // eslint: {
+  //   ignoreDuringBuilds: true,
+  // },
   images: {
     domains: ["images.unsplash.com"],
   },

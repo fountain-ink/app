@@ -8,15 +8,15 @@
     "rules": {
       "recommended": true,
       "correctness": {
-        "noUnusedVariables": "warn",
+        "noUnusedVariables": "off",
         "useExhaustiveDependencies": "off"
       },
       "style": {
         "noNonNullAssertion": {
-          "level": "warn"
+          "level": "off"
         },
         "useImportType": {
-          "level": "warn"
+          "level": "off"
         }
       },
       "suspicious": {
@@ -24,7 +24,6 @@
       },
       "a11y": {
         "useKeyWithClickEvents": "off",
-
         "noSvgWithoutTitle": "off",
         "useAltText": "off"
       }
