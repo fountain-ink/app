@@ -10,7 +10,7 @@ import { LoadingSpinner } from "../loading-spinner";
 import { withTooltip } from "./tooltip";
 
 export const buttonVariants = cva(
-  "focus-ring inline-flex w-fit cursor-pointer select-none items-center justify-center gap-2 rounded-md text-sm ring-offset-background transition-bg-ease disabled:pointer-events-none disabled:opacity-50 transition-all duration-300 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "inline-flex focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-transparent focus:ring-offset-0 ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-offset-0 outline-none w-fit cursor-pointer select-none items-center justify-center gap-2 rounded-md text-sm transition-bg-ease disabled:pointer-events-none disabled:opacity-50 transition-all duration-300 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     defaultVariants: {
       size: "default",
@@ -29,7 +29,7 @@ export const buttonVariants = cva(
         true: "pointer-events-none opacity-50",
       },
       focused: {
-        true: "ring-2 ring-ring ring-offset-2",
+        true: "outline outline-2 outline-border outline-offset-2",
       },
       isMenu: {
         true: "h-auto w-full cursor-pointer justify-start",
@@ -131,7 +131,7 @@ export const Button = withTooltip(
               truncate,
               variant,
             }),
-            active && "border-2 border-primary",
+            active && "border-0 border-primary",
             className,
           )}
           aria-label={label && label.length > 0 ? label : undefined}
