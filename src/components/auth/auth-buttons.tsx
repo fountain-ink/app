@@ -1,9 +1,8 @@
 "use client";
 
-import { useLogout } from "@lens-protocol/react-web";
 import { window } from "@/lib/global-window";
 import { LensClient, production } from "@lens-protocol/client";
-import { type Profile, useLogin } from "@lens-protocol/react-web";
+import { type Profile, useLogin, useLogout } from "@lens-protocol/react-web";
 import { setCookie } from "cookies-next";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
@@ -58,7 +57,7 @@ export function LoginButton({ profile, onSuccess }: { profile: Profile; onSucces
   return (
     <Button
       variant="ghost"
-      className="flex items-center justify-center gap-2 text-md w-max"
+      className="flex items-center justify-center gap-2 text-md w-full"
       disabled={loading}
       onClick={login}
     >
