@@ -1,4 +1,4 @@
-import { CookieManager } from "@/components/auth/cookie-manager";
+import { AuthManager } from "@/components/auth/auth-manager";
 import { Web3Providers } from "@/components/misc/web3-providers";
 import { Header } from "@/components/navigation/nav-header";
 import { ThemeProvider } from "@/components/theme/theme-context";
@@ -28,7 +28,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         <Web3Providers>
           <DarkModeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
             <ThemeProvider>
-              <CookieManager />
+              <AuthManager />
               <Toaster position="top-center" offset={16} />
               <Header />
               {children}

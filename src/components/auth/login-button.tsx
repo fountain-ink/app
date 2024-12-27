@@ -1,13 +1,10 @@
 "use client";
-
-import { window } from "@/lib/global-window";
-import { LensClient, production } from "@lens-protocol/client";
-import { type Profile, useLogin, useLogout } from "@lens-protocol/react-web";
-import { setCookie } from "cookies-next";
+import { type Profile, useLogin } from "@lens-protocol/react-web";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { Button } from "../ui/button";
 import { UserAvatar } from "../user/user-avatar";
+import { setupAuthTokens } from "./auth-manager";
 
 export function LoginButton({ profile, onSuccess }: { profile: Profile; onSuccess: (profile: Profile) => void }) {
   const { execute: lensLogin, loading } = useLogin();
@@ -16,11 +13,6 @@ export function LoginButton({ profile, onSuccess }: { profile: Profile; onSucces
   if (!address) {
     return null;
   }
-
-  const _client = new LensClient({
-    environment: production,
-    storage: window?.localStorage,
-  });
 
   const login = async () => {
     const result = await lensLogin({
@@ -40,15 +32,11 @@ export function LoginButton({ profile, onSuccess }: { profile: Profile; onSucces
 
     const refreshToken = JSON.parse(credentials)?.data?.refreshToken;
 
-    if (refreshToken) {
-      const isLocalhost = window?.location?.hostname === "localhost";
-      const domain = isLocalhost ? undefined : ".fountain.ink";
-      setCookie("refreshToken", refreshToken, {
-        domain,
-        secure: true,
-        sameSite: "lax",
-        path: "/",
-      });
+    try {
+      await setupAuthTokens(refreshToken);
+    } catch (error) {
+      console.error("Error setting up auth:", error);
+      return toast.error("Failed to complete authentication");
     }
 
     return onSuccess(profile);
@@ -63,22 +51,6 @@ export function LoginButton({ profile, onSuccess }: { profile: Profile; onSucces
     >
       <UserAvatar profile={profile} className="w-8 h-8" />
       {profile.handle?.localName ?? profile.id}
-    </Button>
-  );
-}
-
-export const logoutProfile = () => {
-  const { execute, loading } = useLogout();
-
-  if (loading) return;
-
-  execute();
-};
-
-export function LogoutButton() {
-  return (
-    <Button variant="default" onClick={() => logoutProfile()}>
-      Log out
     </Button>
   );
 }

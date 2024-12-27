@@ -1,8 +1,7 @@
 "use client";
+import { getCookie } from "cookies-next";
 
 import { Button } from "@/components/ui/button";
-import { useDocumentStorage } from "@/hooks/use-document-storage";
-import { getRandomUid } from "@/lib/get-random-uid";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoadingSpinner } from "../misc/loading-spinner";
@@ -35,39 +34,13 @@ export const defaultContent: any = [
   },
 ];
 
-export const NewLocalDraftButton = () => {
-  const { saveDocument } = useDocumentStorage();
-  const router = useRouter();
-
-  const handleNew = () => {
-    const uid = getRandomUid();
-    const id = `local-${uid}`;
-    saveDocument(id, {
-      id: 0,
-      isLocal: true,
-      documentId: id,
-      authorId: "",
-      contentJson: defaultContent,
-      updatedAt: "",
-      createdAt: "",
-    });
-    router.refresh();
-    router.replace(`/write/${id}`);
-  };
-
-  return (
-    <Button onClick={handleNew} variant={"default"} className="flex gap-2 text-sm">
-      Write
-    </Button>
-  );
-};
-
-export const RemoteDraftCreate = () => {
+export const DraftCreateButton = () => {
   const [isCreating, setIsCreating] = useState(false);
   const router = useRouter();
 
   const handleCreate = async () => {
     setIsCreating(true);
+    const profileId = getCookie("profileId") as string;
     const response = await fetch("/api/drafts", {
       method: "POST",
       headers: {
@@ -89,7 +62,7 @@ export const RemoteDraftCreate = () => {
     <Button
       onClick={handleCreate}
       variant={isCreating ? "ghost" : "default"}
-      className="flex items-center justify-center gap-2 w-full text-sm"
+      className="flex items-center justify-center gap-2 grow-0 text-sm"
     >
       {isCreating ? (
         <div className="w-8 h-8 flex items-center justify-center">

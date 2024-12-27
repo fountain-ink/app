@@ -3,13 +3,13 @@
 import { type ConnectionStatus, useYjsState } from "@/hooks/use-yjs-state";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { DraftCreateButton } from "../draft/draft-create-button";
+import { EditorOptionsDropdown } from "../editor/addons/editor-options-dropdown";
+import { FountainLogo } from "../icons/custom-icons";
 import { FeedbackForm } from "../misc/feedback-form";
 import { ConnectionBadge } from "../ui/connection-badge";
 import { UserMenu } from "../user/user-menu";
 import { PublishMenu } from "./publish-menu-button";
-import { WriteMenu } from "./write-menu-button";
-import { EditorOptionsDropdown } from "../editor/addons/editor-options-dropdown";
-import { FountainLogo } from "../icons/custom-icons";
 
 export const Header = () => {
   const pathname = usePathname();
@@ -44,7 +44,7 @@ export const Header = () => {
 
         {isWritePage && <PublishMenu />}
         {isWritePage && <EditorOptionsDropdown />}
-        {!isWritePage && <WriteMenu />}
+        {!isWritePage && <DraftCreateButton />}
         <UserMenu />
       </div>
     </div>

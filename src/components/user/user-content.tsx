@@ -12,9 +12,9 @@ import {
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import ErrorPage from "../misc/error-page";
-import { WriteMenu } from "../navigation/write-menu-button";
 import { PostView } from "../post/post-view";
 import { Card, CardFooter, CardHeader } from "../ui/card";
+import { DraftCreateButton } from "../draft/draft-create-button";
 
 export const UserContent = ({
   profile,
@@ -110,7 +110,7 @@ export const UserContent = ({
             Nothing here yet...
           </span>
         </CardHeader>
-        <CardFooter>{isUserProfile && <WriteMenu text="Start Writing" />}</CardFooter>
+        <CardFooter>{isUserProfile && <DraftCreateButton />}</CardFooter>
       </Card>
     );
   }
