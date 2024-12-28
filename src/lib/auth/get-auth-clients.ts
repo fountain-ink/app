@@ -1,4 +1,3 @@
-import { getDatabase } from "@/lib/auth/get-database";
 import { getLensClient } from "@/lib/auth/get-lens-client";
 import { getTokenFromCookie } from "./get-token-from-cookie";
 
@@ -15,7 +14,7 @@ export async function getAuthWithCookies() {
   }
 
   if (!refreshToken || !isValid || !isAuthenticated) {
-    return { lens, profileId: undefined, profile: undefined, handle: undefined, db: undefined };
+    return { lens, profileId: undefined, profile: undefined, handle: undefined };
   }
 
   const profileId = await lens.authentication.getProfileId();
@@ -26,9 +25,7 @@ export async function getAuthWithCookies() {
     throw new Error("Unauthenticated");
   }
 
-  const db = getDatabase();
-
-  return { lens, profileId, profile, handle, db };
+  return { lens, profileId, profile, handle };
 }
 
 export async function getAuthWithToken(refreshToken: string) {
@@ -47,7 +44,5 @@ export async function getAuthWithToken(refreshToken: string) {
     throw new Error("Unauthenticated");
   }
 
-  const db = getDatabase();
-
-  return { lens, profileId, profile, handle, db };
+  return { lens, profileId, profile, handle };
 }

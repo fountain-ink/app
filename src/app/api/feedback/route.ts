@@ -1,4 +1,5 @@
 import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
+import { getDatabase } from "@/lib/auth/get-database";
 import { type NextRequest, NextResponse } from "next/server";
 
 type FeedbackType = "bug" | "feature" | "other";
@@ -11,7 +12,8 @@ interface FeedbackPayload {
 
 export async function POST(req: NextRequest) {
   try {
-    const { profileId, db } = await getAuthWithCookies();
+    const { profileId } = await getAuthWithCookies();
+    const db = getDatabase();
 
     if (!db || !profileId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
