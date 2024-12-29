@@ -1,8 +1,10 @@
 import { UserContent } from "@/components/user/user-content";
-import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
+import { getLensClientWithCookies } from "@/lib/auth/get-lens-client";
+import { getUserProfile } from "@/lib/auth/get-user-profile";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
-  const { lens, profileId } = await getAuthWithCookies();
+  const lens = await getLensClientWithCookies();
+  const { profileId, handle: userHandle } = await getUserProfile(lens);
   const pageHandle = `lens/${params.user}`;
   const profile = await lens.profile.fetch({ forHandle: pageHandle });
 

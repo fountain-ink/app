@@ -1,5 +1,6 @@
 import { env } from "@/env";
-import { getAuthWithToken } from "@/lib/auth/get-auth-clients";
+import { getLensClientWithToken } from "@/lib/auth/get-lens-client";
+import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { createServiceClient } from "@/lib/supabase/service";
 import { sign } from "jsonwebtoken";
 import { NextResponse } from "next/server";
@@ -10,7 +11,7 @@ export async function POST(req: Request) {
 
     if (!refreshToken) {
       return NextResponse.json(
-        { error: "Refresh token is required for authenticated users" },
+        { error: "Refresh token is required to login" },
         { status: 400 }
       );
     }
@@ -32,7 +33,7 @@ async function createOrUpdateUser(profileId: string, handle: string) {
   const { data: existingUser, error: queryError } = await supabase
     .from("users")
     .select("id")
-    .eq("lens_profile_id", profileId)
+    .eq("profileId", profileId)
     .single();
 
   if (queryError && queryError.code !== "PGRST116") { // Ignore not found error
@@ -73,7 +74,8 @@ async function createOrUpdateUser(profileId: string, handle: string) {
 
 async function handleAuthenticatedLogin(refreshToken: string) {
   try {
-    const { profileId, handle } = await getAuthWithToken(refreshToken);
+    const lens = await getLensClientWithToken(refreshToken);
+    const { profileId, handle } = await getUserProfile(lens);
 
     if (!profileId || !handle) {
       return NextResponse.json(

@@ -1,9 +1,9 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import { type NextRequest } from "next/server";
+import { setSupabaseSession } from "./lib/supabase/middleware";
 
-export function middleware(request: NextRequest) {
-  const response = NextResponse.next();
+export async function middleware(request: NextRequest) {
   const refreshToken = request.cookies.get("refreshToken");
+  const response = await setSupabaseSession(request);
 
   if (refreshToken) {
     response.headers.set("x-refresh-token", refreshToken.value);
@@ -15,62 +15,14 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)"],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * Feel free to modify this pattern to include more paths.
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
 };
-
-// import { type NextRequest, NextResponse } from "next/server";
-
-// const PROD_DOMAIN = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "fountain.ink";
-// const DEV_DOMAIN = "localhost:3000";
-
-// export default async function middleware(req: NextRequest) {
-//   const url = req.nextUrl;
-//   const hostname = req.headers.get("host") ?? DEV_DOMAIN;
-
-//   const searchParams = url.searchParams.toString();
-//   const path = `${url.pathname}${searchParams.length > 0 ? `?${searchParams}` : ""}`;
-
-//   const currentDomain = hostname.includes("localhost") ? DEV_DOMAIN : PROD_DOMAIN;
-
-//   const isSubdomain =
-//     hostname !== currentDomain && (hostname.endsWith(`.${PROD_DOMAIN}`) || hostname.includes(".localhost:"));
-
-//   const refreshToken = req.cookies.get("refreshToken");
-//   let response = NextResponse.next();
-
-//   if (isSubdomain) {
-//     const parts = hostname.split(".");
-//     const isDevOrStaging = parts.includes("dev") || parts.includes("staging");
-
-//     let username: string;
-//     let targetDomain: string;
-
-//     if (isDevOrStaging) {
-//       // For user.dev.domain.com -> dev.domain.com/u/user
-//       username = parts[0] ?? "";
-//       targetDomain = parts.slice(1).join(".");
-//     } else {
-//       // For user.domain.com -> domain.com/u/user
-//       username = hostname.replace(`.${PROD_DOMAIN}`, "").replace(".localhost:3000", "");
-//       targetDomain = currentDomain;
-//     }
-
-//     const redirectUrl = new URL(
-//       `/u/${username}${path}`,
-//       `${hostname.includes("localhost") ? "http" : "https"}://${targetDomain}`,
-//     );
-
-//     response = NextResponse.redirect(redirectUrl);
-//   }
-
-//   response.headers.set("x-url", req.url);
-//   if (refreshToken) {
-//     response.headers.set("x-refresh-token", refreshToken.value);
-//   }
-
-//   return response;
-// }
-
-// export const config = {
-//   matcher: ["/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)"],
-// };

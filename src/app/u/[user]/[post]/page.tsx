@@ -1,11 +1,13 @@
 import Editor from "@/components/editor/editor";
 import ErrorPage from "@/components/misc/error-page";
 import Markdown from "@/components/misc/markdown";
-import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
+import { getLensClientWithCookies } from "@/lib/auth/get-lens-client";
+import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { sanitize } from "isomorphic-dompurify";
 
 const post = async ({ params }: { params: { user: string; post: string } }) => {
-  const { lens } = await getAuthWithCookies();
+  const lens = await getLensClientWithCookies();
+  // const { profileId, handle: userHandle } = await getUserProfile(lens);
 
   const id = params.post;
   const post = await lens.publication.fetch({ forId: id });

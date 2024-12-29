@@ -1,13 +1,14 @@
-import { UserContent } from "@/components/user/user-content";
-import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
-
 import { IndexNavigation } from "@/components/navigation/index-navigation-menu";
 import { Separator } from "@/components/ui/separator";
 import { AuthorView } from "@/components/user/user-author-view";
+import { UserContent } from "@/components/user/user-content";
+import { getLensClientWithCookies } from "@/lib/auth/get-lens-client";
+import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { notFound } from "next/navigation";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
-  const { lens, handle: userHandle } = await getAuthWithCookies();
+  const lens = await getLensClientWithCookies();
+  const { handle: userHandle } = await getUserProfile(lens);
   const pageHandle = `lens/${params.user}`;
   const profile = await lens.profile.fetch({ forHandle: pageHandle });
   const title = profile?.metadata?.attributes?.find((item) => item.key === "blogTitle");

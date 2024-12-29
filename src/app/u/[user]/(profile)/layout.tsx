@@ -6,13 +6,13 @@ import { UserFollowButton } from "@/components/user/user-follow";
 import { UserFollowing } from "@/components/user/user-following";
 import { UserHandle } from "@/components/user/user-handle";
 import { UserName } from "@/components/user/user-name";
-import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
-
 import { PageTransition } from "@/components/navigation/page-transition";
 import { ProfileSettingsModal } from "@/components/settings/settings-profile-modal";
 import { Button } from "@/components/ui/button";
 import { UserBio } from "@/components/user/user-bio";
 import { AnimatePresence } from "framer-motion";
+import { getLensClientWithCookies } from "@/lib/auth/get-lens-client";
+import { getUserProfile } from "@/lib/auth/get-user-profile";
 export default async function UserLayout({
   children,
   params,
@@ -20,7 +20,8 @@ export default async function UserLayout({
   children: React.ReactNode;
   params: { user: string };
 }) {
-  const { lens, profileId } = await getAuthWithCookies();
+  const lens = await getLensClientWithCookies();
+  const { profileId, handle: userHandle } = await getUserProfile(lens);
   const pageHandle = `lens/${params.user}`;
   const profile = await lens.profile.fetch({ forHandle: pageHandle });
 

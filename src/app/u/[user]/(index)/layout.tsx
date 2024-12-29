@@ -1,4 +1,5 @@
-import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
+import { getLensClientWithCookies } from "@/lib/auth/get-lens-client";
+import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { notFound } from "next/navigation";
 
 const UserProfileLayout = async ({
@@ -8,7 +9,9 @@ const UserProfileLayout = async ({
   children: React.ReactNode;
   params: { user: string };
 }) => {
-  const { lens, handle: userHandle } = await getAuthWithCookies();
+  const lens = await getLensClientWithCookies();
+  const { handle: userHandle } = await getUserProfile(lens);
+
   const profile = await lens.profile.fetch({
     forHandle: `lens/${params.user}`,
   });
