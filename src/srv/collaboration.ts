@@ -1,5 +1,5 @@
 import { getAuthWithToken } from "@/lib/auth/get-auth-clients";
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { Database } from "@hocuspocus/extension-database";
 import { Logger } from "@hocuspocus/extension-logger";
 import { Server } from "@hocuspocus/server";
@@ -26,7 +26,7 @@ const initialValue = [
   },
 ];
 
-const db = await createClient();
+const db = await createServiceClient();
 
 const server = Server.configure({
   port: 4444,
