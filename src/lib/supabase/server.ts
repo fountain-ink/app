@@ -5,6 +5,8 @@ import { Database } from "./database";
 
 export async function createClient() {
   const cookieStore = cookies();
+  const appToken = cookieStore.get("appToken");
+  console.log(appToken);
 
   const supabase = createServerClient<Database>(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY, {
     cookies: {
@@ -30,6 +32,7 @@ export async function createClient() {
     global: {
       headers: {
         "x-application-name": "fountain",
+        Authorization: `Bearer ${appToken?.value}`,
       },
     },
   });
