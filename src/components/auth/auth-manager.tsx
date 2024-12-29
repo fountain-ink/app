@@ -1,7 +1,7 @@
 "use client";
 
+import { createClient } from "@/lib/supabase/client";
 import { useRefreshToken, useSession } from "@lens-protocol/react-web";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { setCookie } from "cookies-next";
 import { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -44,7 +44,7 @@ export const setupAuthTokens = async (refreshToken?: string | null) => {
       path: "/",
     });
 
-    const supabase = createClientComponentClient();
+    const supabase = createClient();
     await supabase.auth.setSession({
       access_token: token,
       refresh_token: token,
@@ -60,7 +60,6 @@ export const setupAuthTokens = async (refreshToken?: string | null) => {
 export const AuthManager = () => {
   const refreshToken = useRefreshToken();
   const { data: session } = useSession();
-  const supabase = createClientComponentClient();
 
   useEffect(() => {
     setupAuthTokens(refreshToken).catch(console.error);

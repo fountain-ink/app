@@ -1,15 +1,15 @@
 import { defaultContent } from "@/components/draft/draft-create-button";
 import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
-import { getDatabase } from "@/lib/auth/get-database";
 import { getRandomUid } from "@/lib/get-random-uid";
+import { createClient } from "@/lib/supabase/server";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
     const { profileId } = await getAuthWithCookies();
-    const db = getDatabase();
+    const db = await createClient();
 
-    if (!db) {
+    if (!db || !profileId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -52,7 +52,7 @@ export async function GET(req: NextRequest) {
 export async function POST() {
   try {
     const { profileId, handle } = await getAuthWithCookies();
-    const db = getDatabase();
+    const db = await createClient();
     if (!db) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -82,7 +82,7 @@ export async function POST() {
 export async function PUT(req: NextRequest) {
   try {
     const { profileId } = await getAuthWithCookies();
-    const db = getDatabase();
+    const db = await createClient();
 
     const documentId = req.nextUrl.searchParams.get("id");
 
@@ -134,7 +134,7 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     const { profileId } = await getAuthWithCookies();
-    const db = getDatabase();
+    const db = await createClient();
 
     if (!db) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

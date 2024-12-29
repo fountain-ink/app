@@ -1,5 +1,5 @@
 import { getAuthWithCookies } from "@/lib/auth/get-auth-clients";
-import { getDatabase } from "@/lib/auth/get-database";
+import { createClient } from "@/lib/supabase/server";
 import { type NextRequest, NextResponse } from "next/server";
 
 type FeedbackType = "bug" | "feature" | "other";
@@ -13,7 +13,7 @@ interface FeedbackPayload {
 export async function POST(req: NextRequest) {
   try {
     const { profileId } = await getAuthWithCookies();
-    const db = getDatabase();
+    const db = await createClient();
 
     if (!db || !profileId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -22,14 +22,18 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { type, text, screenshot } = body as FeedbackPayload;
 
+    if (!text || !type) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
     const { data, error } = await db
       .from("feedback")
       .insert({
-        userId: profileId,
-        type,
         text,
+        type,
         screenshot,
         createdAt: new Date().toISOString(),
+        userId: profileId,
       })
       .select()
       .single();

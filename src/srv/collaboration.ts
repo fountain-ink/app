@@ -1,5 +1,5 @@
-import { getDatabase } from "@/lib/auth/get-database";
 import { getAuthWithToken } from "@/lib/auth/get-auth-clients";
+import { createClient } from "@/lib/supabase/server";
 import { Database } from "@hocuspocus/extension-database";
 import { Logger } from "@hocuspocus/extension-logger";
 import { Server } from "@hocuspocus/server";
@@ -26,7 +26,7 @@ const initialValue = [
   },
 ];
 
-const db = getDatabase();
+const db = await createClient();
 
 const server = Server.configure({
   port: 4444,
@@ -60,8 +60,8 @@ const server = Server.configure({
           .from("drafts")
           .update({
             yDoc,
-            contentJson,
-            updatedAt: new Date(),
+            contentJson: JSON.stringify(contentJson),
+            updatedAt: new Date().toISOString(),
           })
           .eq("documentId", documentName);
 
