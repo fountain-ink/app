@@ -1,12 +1,14 @@
-import { env } from "@/env";
 import { getLensClientWithToken } from "@/lib/auth/get-lens-client";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
-import { createServiceClient } from "@/lib/supabase/service";
-import { sign } from "jsonwebtoken";
-import { NextResponse } from "next/server";
-import { SupabaseClient } from '@supabase/supabase-js';
 import { Database } from "@/lib/supabase/database";
+import { createServiceClient } from "@/lib/supabase/service";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { NextResponse } from "next/server";
 
+interface UserAuthResult {
+  userId: string;
+  isNewUser: boolean;
+}
 type SupabaseClientType = SupabaseClient<Database>;
 
 export async function POST(req: Request) {
@@ -27,7 +29,6 @@ export async function POST(req: Request) {
   }
 }
 
-
 async function findExistingUser(supabase: SupabaseClientType, profileId: string) {
   console.log("[User Lookup] Checking for existing user", { profileId });
   const { data: existingUser, error: queryError } = await supabase
@@ -36,7 +37,8 @@ async function findExistingUser(supabase: SupabaseClientType, profileId: string)
     .eq("profileId", profileId)
     .single();
 
-  if (queryError && queryError.code !== "PGRST116") { // Ignore not found error
+  if (queryError && queryError.code !== "PGRST116") {
+    // Ignore not found error
     console.error("[User Lookup] Database query failed:", queryError);
     throw new Error(`Database query failed: ${queryError.message}`);
   }
@@ -51,53 +53,65 @@ async function findExistingUser(supabase: SupabaseClientType, profileId: string)
 
 async function createNewUser(supabase: SupabaseClientType, profileId: string, handle: string) {
   console.log("[User Creation] Creating new user", { profileId, handle });
-  
-  // Create new auth user
-  console.log("[User Creation] Creating auth user entry");
-  const { data: authUser, error: createError } = await supabase.auth.admin.createUser({
-    email: `${handle}@fountain.ink`,
-    user_metadata: {
+
+  // Update current session with new metadata
+  console.log("[User Creation] Updating session metadata");
+  const { data: session, error: updateError } = await supabase.auth.updateUser({
+    data: {
       profileId,
       handle,
+      is_anonymous: false,
     },
   });
 
-  if (createError) {
-    console.error("[User Creation] Failed to create auth user:", createError);
-    throw new Error(`Failed to create auth user: ${createError.message}`);
+  if (updateError) {
+    console.error("[User Creation] Failed to update user session:", updateError);
+    throw new Error(`Failed to update user session: ${updateError.message}`);
   }
 
-  // Insert into public users table
-  console.log("[User Creation] Creating user profile in public table");
-  const { error: insertError } = await supabase.from("users").insert({
-    id: authUser.user.id,
-    profileId: profileId,
-    handle,
-    createdAt: new Date().toISOString(),
-  });
-
-  if (insertError) {
-    console.error("[User Creation] Failed to create user profile:", insertError);
-    throw new Error(`Failed to create user profile: ${insertError.message}`);
+  if (!session?.user) {
+    throw new Error("No user found in updated session");
   }
 
-  console.log("[User Creation] Successfully created new user:", authUser.user.id);
-  return authUser.user.id;
+  console.log("[User Creation] Successfully updated user session:", session.user.id);
+  return session.user.id;
 }
 
-async function createOrUpdateUser(profileId: string, handle: string) {
-  const supabaseClient = await createServiceClient();
-  
-  const existingUserId = await findExistingUser(supabaseClient, profileId);
+async function handleUserAuthentication(
+  supabase: SupabaseClientType,
+  profileId: string,
+  handle: string,
+): Promise<UserAuthResult> {
+  // Check if user already exists
+  const existingUserId = await findExistingUser(supabase, profileId);
+
   if (existingUserId) {
-    return existingUserId;
+    // Update session with existing user's metadata
+    const { data: session, error: updateError } = await supabase.auth.admin.updateUserById(existingUserId,
+      {
+        user_metadata: {
+          profileId,
+          handle,
+        },
+        email: `${handle}@fountain.ink`,
+    });
+
+    if (updateError) {
+      throw new Error(`Failed to update session: ${updateError.message}`);
+    }
+
+    return { userId: existingUserId, isNewUser: false };
   }
 
-  return createNewUser(supabaseClient, profileId, handle);
+  // Create new user metadata in session
+  const newUserId = await createNewUser(supabase, profileId, handle);
+  return { userId: newUserId, isNewUser: true };
 }
 
 async function handleAuthenticatedLogin(refreshToken: string) {
   try {
+    const supabaseClient = await createServiceClient();
+
     console.log("[Auth Login] Initializing Lens client");
     const lens = await getLensClientWithToken(refreshToken);
 
@@ -110,22 +124,26 @@ async function handleAuthenticatedLogin(refreshToken: string) {
     }
     console.log("[Auth Login] Retrieved profile data", { profileId, handle });
 
-    console.log("[Auth Login] Creating or updating user");
-    const userId = await createOrUpdateUser(profileId, handle);
+    console.log("[Auth Login] Processing user authentication");
+    const { userId, isNewUser } = await handleUserAuthentication(supabaseClient, profileId, handle);
 
     console.log("[Auth Login] Generating JWT token");
-    const token = sign(
-      {
-        sub: userId,
-        role: "authenticated",
-        handle: handle,
-        profileId: profileId,
-      },
-      env.SUPABASE_JWT_SECRET,
-    );
+    // const token = sign(
+    //   {
+    //     sub: userId,
+    //     role: "authenticated",
+    //     handle: handle,
+    //     profileId: profileId,
+    //     is_anonymous: false,
+    //   },
+    //   env.SUPABASE_JWT_SECRET,
+    // );
     console.log("[Auth Login] Authentication successful");
 
-    return NextResponse.json({ token });
+    return NextResponse.json({
+      // token,
+      isNewUser,
+    });
   } catch (error) {
     console.error("[Authenticated Login Error]:", error);
     return NextResponse.json(

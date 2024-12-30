@@ -66,7 +66,7 @@ export async function POST() {
     const contentJson = defaultContent;
     const { data, error } = await db
       .from("drafts")
-      .insert({ contentJson, documentId, authorId: profileId })
+      .insert({ contentJson, documentId, authorId: '0x0' })
       .select()
       .single();
 

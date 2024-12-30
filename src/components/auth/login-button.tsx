@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { Button } from "../ui/button";
 import { UserAvatar } from "../user/user-avatar";
-import { setupAuthTokens } from "./auth-manager";
+import { setupUserAuth } from "./auth-manager";
 
 export function LoginButton({ profile, onSuccess }: { profile: Profile; onSuccess: (profile: Profile) => void }) {
   const { execute: lensLogin, loading } = useLogin();
@@ -33,9 +33,9 @@ export function LoginButton({ profile, onSuccess }: { profile: Profile; onSucces
     const refreshToken = JSON.parse(credentials)?.data?.refreshToken;
 
     try {
-      await setupAuthTokens(refreshToken);
+      await setupUserAuth(refreshToken);
     } catch (error) {
-      console.error("Error setting up auth:", error);
+      console.error("Error setting up user auth:", error);
       return toast.error("Failed to complete authentication");
     }
 
