@@ -17,7 +17,6 @@ export const EditorOptionsDropdown = () => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const onShare = () => {
-    console.log(isShareModalOpen);
     setIsShareModalOpen(true);
   };
   const searchParams = useSearchParams();

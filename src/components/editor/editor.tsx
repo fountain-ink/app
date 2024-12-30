@@ -12,9 +12,9 @@ import { FixedToolbarButtons } from "../ui/fixed-toolbar-buttons";
 import { FloatingToolbar } from "../ui/floating-toolbar";
 import { FloatingToolbarButtons } from "../ui/floating-toolbar-buttons";
 import { TocSideBar } from "../ui/toc-sidebar";
+import { AutoSave } from "./addons/editor-autosave";
 import { getRichElements } from "./elements";
 import { getEditorPlugins } from "./plugins";
-import { AutoSave } from "./addons/editor-autosave";
 
 export default function PlateEditor(
   props: PropsWithChildren & {
@@ -38,7 +38,6 @@ export default function PlateEditor(
     },
     value: props.value ? JSON.parse(props.value) || "" : undefined,
   });
-  console.log(documentId);
 
   return (
     <DndProvider backend={HTML5Backend}>

@@ -98,7 +98,6 @@ export const ImageElement = withRef<typeof PlateElement>(
     const element = useElement();
     const figureRef = useRef<HTMLElement>(null);
     const popoverRef = useRef<HTMLDivElement>(null);
-    console.log(width);
 
     useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
@@ -125,7 +124,6 @@ export const ImageElement = withRef<typeof PlateElement>(
     }, [props.element.url]);
 
     useEffect(() => {
-      console.log(editor.children);
       if (props.element?.width) {
         setWidth(props.element.width as ElementWidth);
       }

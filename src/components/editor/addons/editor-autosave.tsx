@@ -42,7 +42,7 @@ export function AutoSave({ documentId }: { documentId: string }) {
       } catch (error) {
         console.error("Error saving draft:", error);
       } finally {
-        console.log("saved:", content);
+        // console.log("saved:", content);
         setIsSaving(false);
       }
     },
