@@ -182,7 +182,6 @@ async function handleAuthenticatedLogin(refreshToken: string) {
     return NextResponse.json(
       {
         result: "Success",
-        appToken: session?.access_token,
       },
       { status: 200 },
     );

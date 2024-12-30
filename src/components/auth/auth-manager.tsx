@@ -40,13 +40,6 @@ export const setupUserAuth = async (refreshToken: string) => {
 
     const data = await response.json();
     if (!data) throw new Error("Failed to authenticate user");
-
-    // Store the app token for subsequent requests
-    const { appToken } = data;
-    if (appToken) {
-      setCookie("appToken", appToken, cookieConfig);
-    }
-
   } catch (error) {
     console.error("Error setting up user auth:", error);
     throw error;
