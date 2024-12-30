@@ -1,4 +1,4 @@
-import { getLensClientWithCookies } from "@/lib/auth/get-lens-client";
+import { createLensClient } from "@/lib/auth/get-lens-client";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { createClient } from "@/lib/supabase/server";
 import { type NextRequest, NextResponse } from "next/server";
@@ -14,7 +14,7 @@ interface FeedbackPayload {
 
 export async function POST(req: NextRequest) {
   try {
-    const lens = await getLensClientWithCookies();
+    const lens = await createLensClient();
     const { profileId, handle } = await getUserProfile(lens);
     const db = await createClient();
 

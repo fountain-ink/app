@@ -1,9 +1,9 @@
 import ErrorPage from "@/components/misc/error-page";
-import { getLensClientWithCookies } from "@/lib/auth/get-lens-client";
+import { createLensClient } from "@/lib/auth/get-lens-client";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
-  const lens = await getLensClientWithCookies();
+  const lens = await createLensClient();
   const { profileId } = await getUserProfile(lens);
 
   const pageHandle = `lens/${params.user}`;

@@ -46,7 +46,7 @@ export async function POST() {
       return NextResponse.json({ error: "Failed to get session token" }, { status: 500 });
     }
 
-    console.log("[Guest Login] Successfully created anonymous user: ", session.user.id);
+    console.log("[Guest Login] Successfully created anonymous user:", session.user.id);
     return NextResponse.json({ token: session.access_token });
   } catch (error) {
     console.error("[Guest Login Error]:", error);

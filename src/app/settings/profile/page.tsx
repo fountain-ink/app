@@ -1,5 +1,5 @@
 import { ProfileSettings } from "@/components/settings/settings-profile";
-import { getLensClientWithCookies } from "@/lib/auth/get-lens-client";
+import { createLensClient } from "@/lib/auth/get-lens-client";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 
 export const metadata = {
@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 export default async function ProfileSettingsPage() {
-  const lens = await getLensClientWithCookies();
+  const lens = await createLensClient();
   const { profile } = await getUserProfile(lens);
 
   return <ProfileSettings profile={profile} />;

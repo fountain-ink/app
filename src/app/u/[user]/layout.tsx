@@ -1,5 +1,5 @@
 import { UserTheme } from "@/components/user/user-theme";
-import { getLensClientWithCookies } from "@/lib/auth/get-lens-client";
+import { createLensClient } from "@/lib/auth/get-lens-client";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }: { params: { user: string } }) {
@@ -18,7 +18,7 @@ const UserLayout = async ({
   children: React.ReactNode;
   params: { user: string };
 }) => {
-  const lens = await getLensClientWithCookies();
+  const lens = await createLensClient();
   let profile = undefined;
   try {
     profile = await lens.profile.fetch({

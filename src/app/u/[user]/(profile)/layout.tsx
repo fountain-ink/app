@@ -11,7 +11,7 @@ import { ProfileSettingsModal } from "@/components/settings/settings-profile-mod
 import { Button } from "@/components/ui/button";
 import { UserBio } from "@/components/user/user-bio";
 import { AnimatePresence } from "framer-motion";
-import { getLensClientWithCookies } from "@/lib/auth/get-lens-client";
+import { createLensClient } from "@/lib/auth/get-lens-client";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 export default async function UserLayout({
   children,
@@ -20,7 +20,7 @@ export default async function UserLayout({
   children: React.ReactNode;
   params: { user: string };
 }) {
-  const lens = await getLensClientWithCookies();
+  const lens = await createLensClient();
   const { profileId, handle: userHandle } = await getUserProfile(lens);
   const pageHandle = `lens/${params.user}`;
   const profile = await lens.profile.fetch({ forHandle: pageHandle });

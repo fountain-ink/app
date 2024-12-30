@@ -1,17 +1,9 @@
 import { LensClient, production } from "@lens-protocol/client";
 import { getTokenFromCookie } from "./get-token-from-cookie";
 
-export const createLensClient = () => {
-  return new LensClient({
-    environment: production,
-    params: {
-      profile: { metadataSource: "fountain" },
-    },
-  });
-};
 
 export const getLensClientWithToken = async (refreshToken: string) => {
-  const client = createLensClient();
+  const client = getLensClient();
 
   try {
     await client.authentication.authenticateWith({ refreshToken });
@@ -22,12 +14,21 @@ export const getLensClientWithToken = async (refreshToken: string) => {
   }
 };
 
-export const getLensClientWithCookies = async () => {
+export const createLensClient = async () => {
   const { isValid, refreshToken } = getTokenFromCookie();
   
   if (!refreshToken || !isValid) {
-    return createLensClient();
+    return getLensClient();
   }
 
   return getLensClientWithToken(refreshToken);
+};
+
+const getLensClient = () => {
+  return new LensClient({
+    environment: production,
+    params: {
+      profile: { metadataSource: "fountain" },
+    },
+  });
 };

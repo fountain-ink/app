@@ -1,12 +1,12 @@
 import Editor from "@/components/editor/editor";
 import ErrorPage from "@/components/misc/error-page";
 import Markdown from "@/components/misc/markdown";
-import { getLensClientWithCookies } from "@/lib/auth/get-lens-client";
+import { createLensClient } from "@/lib/auth/get-lens-client";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { sanitize } from "isomorphic-dompurify";
 
 const post = async ({ params }: { params: { user: string; post: string } }) => {
-  const lens = await getLensClientWithCookies();
+  const lens = await createLensClient();
   // const { profileId, handle: userHandle } = await getUserProfile(lens);
 
   const id = params.post;
