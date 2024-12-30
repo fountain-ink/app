@@ -1,7 +1,7 @@
 import { getLensClientWithToken } from "@/lib/auth/get-lens-client";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { Database } from "@/lib/supabase/database";
-import { createServiceClient } from "@/lib/supabase/service";
+import { createClient } from "@/lib/supabase/server";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 
@@ -9,6 +9,7 @@ interface UserAuthResult {
   userId: string;
   isNewUser: boolean;
 }
+
 type SupabaseClientType = SupabaseClient<Database>;
 
 export async function POST(req: Request) {
@@ -56,44 +57,87 @@ async function createNewUser(supabase: SupabaseClientType, profileId: string, ha
 
   // Update current session with new metadata
   console.log("[User Creation] Updating session metadata");
-  const { data: session, error: updateError } = await supabase.auth.updateUser({
+  const { data: session, error: updateSessionError } = await supabase.auth.updateUser({
     data: {
       profileId,
       handle,
-      is_anonymous: false,
     },
+    email: `${handle}@fountain.ink`,
   });
 
-  if (updateError) {
-    console.error("[User Creation] Failed to update user session:", updateError);
-    throw new Error(`Failed to update user session: ${updateError.message}`);
+  if (updateSessionError) {
+    console.error("[User Creation] Failed to update user session:", updateSessionError);
+    throw new Error(`Failed to update user session: ${updateSessionError.message}`);
   }
 
   if (!session?.user) {
     throw new Error("No user found in updated session");
   }
 
-  console.log("[User Creation] Successfully updated user session:", session.user.id);
+  console.log("[User Creation] Upgrading guest user to authenticated:", session.user.id);
+  // First try to update existing user
+  const { data: updateData, error: updatePublicError } = await supabase
+    .from("users")
+    .update({
+      handle,
+      profileId,
+      isAnonymous: false,
+      updatedAt: new Date().toISOString(),
+    })
+    .eq("id", session.user.id)
+    .select()
+    .single();
+
+  if (updateData) {
+    console.log("[User Creation] Updated existing user:", updateData);
+  }
+
+  // If update fails (no existing user), create new user
+  if (updatePublicError) {
+    console.log("[User Creation] No existing user to update, creating new user");
+    const { data: insertData, error: insertError } = await supabase
+      .from("users")
+      .insert({
+        id: session.user.id,
+        handle,
+        profileId,
+        isAnonymous: false,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      })
+      .select()
+      .single();
+
+    if (insertError) {
+      console.error("[User Creation] Failed to create new user:", insertError);
+      throw new Error(`Failed to create user profile: ${insertError.message}`);
+    }
+
+    console.log("[User Creation] Created new user successfully!", session.user.id);
+    return session.user.id;
+  }
+
+  console.log("[User Creation] Updated existing user successfully!", session.user.id);
+
+  console.log("[User Creation] Successfully created new user:", session.user.id);
   return session.user.id;
 }
 
-async function handleUserAuthentication(
+async function authenticateUserSession(
   supabase: SupabaseClientType,
   profileId: string,
   handle: string,
 ): Promise<UserAuthResult> {
-  // Check if user already exists
   const existingUserId = await findExistingUser(supabase, profileId);
 
   if (existingUserId) {
     // Update session with existing user's metadata
-    const { data: session, error: updateError } = await supabase.auth.admin.updateUserById(existingUserId,
-      {
-        user_metadata: {
-          profileId,
-          handle,
-        },
-        email: `${handle}@fountain.ink`,
+    const { data: session, error: updateError } = await supabase.auth.updateUser({
+      data: {
+        profileId,
+        handle,
+      },
+      email: `${handle}@fountain.ink`,
     });
 
     if (updateError) {
@@ -110,7 +154,7 @@ async function handleUserAuthentication(
 
 async function handleAuthenticatedLogin(refreshToken: string) {
   try {
-    const supabaseClient = await createServiceClient();
+    const supabaseClient = await createClient();
 
     console.log("[Auth Login] Initializing Lens client");
     const lens = await getLensClientWithToken(refreshToken);
@@ -124,26 +168,24 @@ async function handleAuthenticatedLogin(refreshToken: string) {
     }
     console.log("[Auth Login] Retrieved profile data", { profileId, handle });
 
-    console.log("[Auth Login] Processing user authentication");
-    const { userId, isNewUser } = await handleUserAuthentication(supabaseClient, profileId, handle);
+    console.log("[Auth Login] Authenticating user");
+    await authenticateUserSession(supabaseClient, profileId, handle);
 
-    console.log("[Auth Login] Generating JWT token");
-    // const token = sign(
-    //   {
-    //     sub: userId,
-    //     role: "authenticated",
-    //     handle: handle,
-    //     profileId: profileId,
-    //     is_anonymous: false,
-    //   },
-    //   env.SUPABASE_JWT_SECRET,
-    // );
-    console.log("[Auth Login] Authentication successful");
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabaseClient.auth.getSession();
+    if (sessionError) {
+      throw new Error(`Failed to get session: ${sessionError.message}`);
+    }
 
-    return NextResponse.json({
-      // token,
-      isNewUser,
-    });
+    return NextResponse.json(
+      {
+        result: "Success",
+        appToken: session?.access_token,
+      },
+      { status: 200 },
+    );
   } catch (error) {
     console.error("[Authenticated Login Error]:", error);
     return NextResponse.json(
