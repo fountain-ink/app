@@ -74,13 +74,13 @@ const server = Server.configure({
   ],
 
   async onAuthenticate(data) {
-    try {
-      const lens = await getLensClientWithToken(data.token);
-      const { handle } = await getUserProfile(lens);
-    } catch (error) {
-      console.error("Error authenticating, dropping connection");
-      throw error;
-    }
+    // try {
+    //   const lens = await getLensClientWithToken(data.token);
+    //   // const { handle } = await getUserProfile(lens);
+    // } catch (error) {
+    //   console.error("Error authenticating, dropping connection");
+    //   throw error;
+    // }
   },
 });
 
