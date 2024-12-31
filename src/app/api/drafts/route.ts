@@ -61,12 +61,12 @@ export async function POST() {
     }
 
     const uid = getRandomUid();
-    const documentId = `${handle}-${uid}`;
+    const documentId = `${uid}`;
 
     const contentJson = defaultContent;
     const { data, error } = await db
       .from("drafts")
-      .insert({ contentJson, documentId, authorId: '0x0' })
+      .insert({ contentJson, documentId, authorId: profileId })
       .select()
       .single();
 

@@ -90,6 +90,7 @@ export type Database = {
           isAnonymous: boolean
           name: string | null
           profileId: string | null
+          updatedAt: string
         }
         Insert: {
           address?: string | null
@@ -99,6 +100,7 @@ export type Database = {
           isAnonymous?: boolean
           name?: string | null
           profileId?: string | null
+          updatedAt?: string
         }
         Update: {
           address?: string | null
@@ -108,6 +110,7 @@ export type Database = {
           isAnonymous?: boolean
           name?: string | null
           profileId?: string | null
+          updatedAt?: string
         }
         Relationships: []
       }

@@ -56,6 +56,7 @@ export const DraftView = ({
       try {
         const res = await fetch(`/api/drafts?id=${draft.documentId}`, {
           method: "DELETE",
+          credentials: "include", 
         });
 
         if (res.ok) {
