@@ -33,7 +33,7 @@ export default function PlateEditor(
   const isPreview = searchParams.has("preview");
   const isReadOnly = props.readOnly || isPreview;
   const editor = createPlateEditor({
-    plugins: [...getEditorPlugins(documentId, props.handle, props.refreshToken, props.appToken, isReadOnly)],
+    plugins: [...getEditorPlugins(documentId, props.appToken, isReadOnly)],
     override: {
       components: getRichElements(),
     },

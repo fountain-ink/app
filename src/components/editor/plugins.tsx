@@ -1,18 +1,19 @@
 import { ImageElement } from "@/components/ui/image-element";
 import { LinkFloatingToolbar } from "@/components/ui/link-floating-toolbar";
 import { useYjsState } from "@/hooks/use-yjs-state";
+import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { uploadFile } from "@/lib/upload-image";
 import { AlignPlugin } from "@udecode/plate-alignment/react";
 import { AutoformatPlugin } from "@udecode/plate-autoformat/react";
 import {
-  BasicMarksPlugin,
-  BoldPlugin,
-  CodePlugin,
-  ItalicPlugin,
-  StrikethroughPlugin,
-  SubscriptPlugin,
-  SuperscriptPlugin,
-  UnderlinePlugin,
+    BasicMarksPlugin,
+    BoldPlugin,
+    CodePlugin,
+    ItalicPlugin,
+    StrikethroughPlugin,
+    SubscriptPlugin,
+    SuperscriptPlugin,
+    UnderlinePlugin,
 } from "@udecode/plate-basic-marks/react";
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { ExitBreakPlugin, SoftBreakPlugin } from "@udecode/plate-break/react";
@@ -22,12 +23,12 @@ import { isCodeBlockEmpty, isSelectionAtCodeBlockStart, unwrapCodeBlock } from "
 import { CodeBlockPlugin, CodeSyntaxPlugin } from "@udecode/plate-code-block/react";
 import { CommentsPlugin } from "@udecode/plate-comments/react";
 import {
-  getNextNode,
-  getParentNode,
-  insertNodes,
-  isBlockAboveEmpty,
-  isSelectionAtBlockStart,
-  someNode,
+    getNextNode,
+    getParentNode,
+    insertNodes,
+    isBlockAboveEmpty,
+    isSelectionAtBlockStart,
+    someNode,
 } from "@udecode/plate-common";
 import { ParagraphPlugin } from "@udecode/plate-common/react";
 import { DatePlugin } from "@udecode/plate-date/react";
@@ -48,12 +49,12 @@ import { ListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
 import { MarkdownPlugin } from "@udecode/plate-markdown";
 import { EquationPlugin, InlineEquationPlugin } from "@udecode/plate-math/react";
 import {
-  AudioPlugin,
-  FilePlugin,
-  ImagePlugin,
-  MediaEmbedPlugin,
-  PlaceholderPlugin,
-  VideoPlugin,
+    AudioPlugin,
+    FilePlugin,
+    ImagePlugin,
+    MediaEmbedPlugin,
+    PlaceholderPlugin,
+    VideoPlugin,
 } from "@udecode/plate-media/react";
 import { MentionInputPlugin, MentionPlugin } from "@udecode/plate-mention/react";
 import { NodeIdPlugin } from "@udecode/plate-node-id";
@@ -75,13 +76,12 @@ import { RenderAboveEditableYjs } from "./plugins/yjs-above-editable";
 
 export const getEditorPlugins = (
   path: string,
-  handle?: string,
-  refreshToken?: string,
   appToken?: string,
   isReadOnly?: boolean,
 ) => {
   const plugins = [...staticPlugins];
-  // TODO: decode handle from appToken
+
+  const handle = appToken ? getTokenClaims(appToken)?.user_metadata.handle : undefined;
 
   if (appToken) {
     plugins.push(
@@ -93,8 +93,7 @@ export const getEditorPlugins = (
           cursorOptions: {
             autoSend: true,
             data: {
-              name: handle || "kualta",
-
+              name: handle || "anonymous",
               color: "#ff0000",
             },
           },
