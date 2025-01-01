@@ -1,14 +1,16 @@
 import { defaultContent } from "@/components/draft/draft-create-button";
 import { createLensClient } from "@/lib/auth/get-lens-client";
+import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
-import { getAuthClaims } from "@/lib/auth/get-auth-claims";
 import { getRandomUid } from "@/lib/get-random-uid";
 import { createClient } from "@/lib/supabase/server";
 import { type NextRequest, NextResponse } from "next/server";
 
+
 export async function GET(req: NextRequest) {
   try {
-    const claims = getAuthClaims();
+    const appToken = req.cookies.get("appToken")?.value;
+    const claims = getTokenClaims(appToken);
     if (!claims) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -67,7 +69,8 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const claims = getAuthClaims();
+    const appToken = req.cookies.get("appToken")?.value;
+    const claims = getTokenClaims(appToken);
     if (!claims) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -109,7 +112,8 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const claims = getAuthClaims();
+    const appToken = req.cookies.get("appToken")?.value;
+    const claims = getTokenClaims(appToken);
     if (!claims) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -169,7 +173,8 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const claims = getAuthClaims();
+    const appToken = req.cookies.get("appToken")?.value;
+    const claims = getTokenClaims(appToken);
     if (!claims) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

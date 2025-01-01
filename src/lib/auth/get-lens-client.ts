@@ -1,5 +1,5 @@
 import { LensClient, production } from "@lens-protocol/client";
-import { getAuthTokens } from "./get-token-from-cookie";
+import { getAuthTokens } from "./get-auth-tokens";
 
 
 export const getLensClientWithToken = async (refreshToken: string) => {

@@ -1,3 +1,6 @@
+import { env } from "@/env";
+import { getTokenClaims } from "@/lib/auth/get-token-claims";
+import { verifyToken } from "@/lib/auth/verify-auth-token";
 import { createServiceClient } from "@/lib/supabase/service";
 import { Database } from "@hocuspocus/extension-database";
 import { Logger } from "@hocuspocus/extension-logger";
@@ -76,14 +79,25 @@ const server = Server.configure({
   ],
 
   async onAuthenticate(data) {
+    const JWT_SECRET = env.SUPABASE_JWT_SECRET;
+
     try {
-      // const lens = await getLensClientWithToken(data.token);
-      // const { handle } = await getUserProfile(lens);
-      // const claims = getAuthClaims();
-      // console.log(claims);
-      console.log(data);
+      if (!data.token) {
+        throw new Error("No authentication token provided");
+      }
+
+      if (!verifyToken(data.token, JWT_SECRET)) {
+        throw new Error("Invalid authentication token provided");
+      }
+
+      const claims = getTokenClaims(data.token);
+      
+      if (!claims?.user_metadata.profileId) {
+        throw new Error("Unauthenticated");
+      }
+      
     } catch (error) {
-      console.error("Error authenticating, dropping connection");
+      console.error(`Error authenticating, dropping connection. ${error}`);
       throw error;
     }
   },

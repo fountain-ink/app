@@ -1,5 +1,4 @@
 import { jwtDecode } from "jwt-decode";
-import { cookies } from "next/headers";
 
 interface AuthClaims {
   sub: string;
@@ -10,19 +9,16 @@ interface AuthClaims {
   };
 }
 
-export function getAuthClaims(): AuthClaims | null {
-  const cookieStore = cookies();
-  const appToken = cookieStore.get("appToken")?.value;
-
-  if (!appToken) {
+export function getTokenClaims(token?: string): AuthClaims | null {
+  if (!token) {
     return null;
   }
 
   try {
-    const claims = jwtDecode<AuthClaims>(appToken);
+    const claims = jwtDecode<AuthClaims>(token);
     return claims;
   } catch (error) {
     console.error("Error decoding auth claims:", error);
     return null;
   }
-} 
+}

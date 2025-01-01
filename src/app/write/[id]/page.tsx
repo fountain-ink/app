@@ -1,8 +1,8 @@
 import { PublishDialog } from "@/components/editor/addons/editor-publish-dialog";
 import Editor from "@/components/editor/editor";
 import { ArticleLayout } from "@/components/navigation/article-layout";
+import { getAuthTokens } from "@/lib/auth/get-auth-tokens";
 import { createLensClient } from "@/lib/auth/get-lens-client";
-import { getAuthTokens } from "@/lib/auth/get-token-from-cookie";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { headers } from "next/headers";
 
