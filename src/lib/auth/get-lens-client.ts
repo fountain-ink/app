@@ -1,5 +1,5 @@
 import { LensClient, production } from "@lens-protocol/client";
-import { getTokenFromCookie } from "./get-token-from-cookie";
+import { getAuthTokens } from "./get-token-from-cookie";
 
 
 export const getLensClientWithToken = async (refreshToken: string) => {
@@ -15,9 +15,9 @@ export const getLensClientWithToken = async (refreshToken: string) => {
 };
 
 export const createLensClient = async () => {
-  const { isValid, refreshToken } = getTokenFromCookie();
+  const { refreshToken } = getAuthTokens();
   
-  if (!refreshToken || !isValid) {
+  if (!refreshToken ) {
     return getLensClient();
   }
 

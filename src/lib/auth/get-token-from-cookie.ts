@@ -1,38 +1,68 @@
+import { env } from "@/env";
+import jwt from "jsonwebtoken";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 
-export const getTokenFromCookie = (): { isValid: boolean; refreshToken: string | undefined } => {
-  const cookieStorage = cookies();
-  const refreshToken = cookieStorage.get("refreshToken")?.value;
+const secret = env.SUPABASE_JWT_SECRET;
 
-  if (!refreshToken) {
-    return {
-      isValid: false,
-      refreshToken: undefined,
-    };
-  }
+type DecodedToken = {
+  exp?: number;
+  [key: string]: unknown;
+};
+
+const isValidToken = (token: string | undefined): boolean => {
+  if (!token) return false;
 
   try {
-    const decodedToken = jwtDecode(refreshToken);
+    const decodedToken = jwtDecode(token) as DecodedToken;
     const currentTimestamp = Math.floor(Date.now() / 1000);
 
     if (typeof decodedToken !== "object" || !("exp" in decodedToken)) {
-      throw new Error("Invalid token structure");
+      return false;
     }
 
     if (typeof decodedToken.exp !== "number" || decodedToken.exp < currentTimestamp) {
-      throw new Error("Authentication token has expired");
+      return false;
     }
 
-    return {
-      isValid: true,
-      refreshToken,
-    };
-  } catch (error) {
-    console.error("Error using jwt token:", error);
-    return {
-      isValid: false,
-      refreshToken,
-    };
+    return true;
+  } catch {
+    return false;
   }
+};
+
+const verifyToken = (token: string | undefined): boolean => {
+  if (!token || !secret) {
+    console.error("No token or secret");
+    return false;
+  }
+
+  try {
+    jwt.verify(token, secret);
+    return true;
+  } catch (error) {
+    console.error("Token verification failed:", error);
+    return false;
+  }
+};
+
+export const getAuthTokens = (): { refreshToken: string | undefined; appToken: string | undefined } => {
+  const cookieStorage = cookies();
+  let refreshToken = cookieStorage.get("refreshToken")?.value;
+  let appToken = cookieStorage.get("appToken")?.value;
+
+  if (refreshToken && !isValidToken(refreshToken)) {
+    console.error("Invalid or expired refresh token");
+    refreshToken = undefined;
+  }
+
+  if (appToken && (!isValidToken(appToken) || !verifyToken(appToken))) {
+    console.error("Invalid or expired app token");
+    appToken = undefined;
+  }
+
+  return {
+    refreshToken,
+    appToken,
+  };
 };

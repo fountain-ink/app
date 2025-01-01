@@ -2,12 +2,10 @@ import { PublishDialog } from "@/components/editor/addons/editor-publish-dialog"
 import Editor from "@/components/editor/editor";
 import { ArticleLayout } from "@/components/navigation/article-layout";
 import { createLensClient } from "@/lib/auth/get-lens-client";
-import { getTokenFromCookie } from "@/lib/auth/get-token-from-cookie";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { headers } from "next/headers";
 
 export default async function WriteDraft({ params }: { params: { id: string } }) {
-  const { refreshToken } = getTokenFromCookie();
   const lens = await createLensClient();
   const { handle } = await getUserProfile(lens);
 
@@ -15,7 +13,7 @@ export default async function WriteDraft({ params }: { params: { id: string } })
 
   return (
     <ArticleLayout>
-      <Editor showToc pathname={pathname} refreshToken={refreshToken} handle={handle}>
+      <Editor showToc pathname={pathname} handle={handle}>
         <PublishDialog />
       </Editor>
     </ArticleLayout>
