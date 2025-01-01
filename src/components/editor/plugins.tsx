@@ -73,10 +73,17 @@ import { autoformatRules } from "./plugins/editor-autoformat";
 import { NormalizePlugin } from "./plugins/editor-normalization";
 import { RenderAboveEditableYjs } from "./plugins/yjs-above-editable";
 
-export const getEditorPlugins = (path: string, handle?: string, refreshToken?: string, readOnly?: boolean) => {
+export const getEditorPlugins = (
+  path: string,
+  handle?: string,
+  refreshToken?: string,
+  appToken?: string,
+  isReadOnly?: boolean,
+) => {
   const plugins = [...staticPlugins];
+  // TODO: decode handle from appToken
 
-  if (refreshToken && handle) {
+  if (appToken) {
     plugins.push(
       YjsPlugin.configure({
         render: {
@@ -97,7 +104,7 @@ export const getEditorPlugins = (path: string, handle?: string, refreshToken?: s
             // url: "https://collab.fountain.ink",
             name: path,
             connect: false,
-            token: refreshToken,
+            token: appToken,
             onOpen: () => {
               // Set this document as active when YjsPlugin is initialized
               useYjsState.getState().setActiveDocument(path);
@@ -149,7 +156,7 @@ export const getEditorPlugins = (path: string, handle?: string, refreshToken?: s
     );
   }
 
-  if (!readOnly) {
+  if (!isReadOnly) {
     plugins.push(
       BlockSelectionPlugin.configure({
         inject: {

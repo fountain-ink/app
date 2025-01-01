@@ -34,7 +34,11 @@ const server = Server.configure({
     new Logger(),
     new Database({
       fetch: async ({ documentName, document }) => {
-        const { data: response } = await db.from("drafts").select().eq("documentId", documentName).single();
+        const { data: response, error } = await db.from("drafts").select().eq("documentId", documentName).single();
+
+        if (error) {
+          console.error(`Error fetching document: ${error.message}`);
+        }
 
         if (!response || !response.yDoc) {
           const insertDelta = slateNodesToInsertDelta(initialValue);
@@ -65,21 +69,23 @@ const server = Server.configure({
           .eq("documentId", documentName);
 
         if (error) {
-          console.error(`Error upserting document: ${error.message}`);
+          console.error(`Error updating document: ${error.message}`);
         }
       },
     }),
   ],
 
-
   async onAuthenticate(data) {
-    // try {
-    //   const lens = await getLensClientWithToken(data.token);
-    //   // const { handle } = await getUserProfile(lens);
-    // } catch (error) {
-    //   console.error("Error authenticating, dropping connection");
-    //   throw error;
-    // }
+    try {
+      // const lens = await getLensClientWithToken(data.token);
+      // const { handle } = await getUserProfile(lens);
+      // const claims = getAuthClaims();
+      // console.log(claims);
+      console.log(data);
+    } catch (error) {
+      console.error("Error authenticating, dropping connection");
+      throw error;
+    }
   },
 });
 

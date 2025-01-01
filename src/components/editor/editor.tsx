@@ -15,7 +15,6 @@ import { TocSideBar } from "../ui/toc-sidebar";
 import { AutoSave } from "./addons/editor-autosave";
 import { getRichElements } from "./elements";
 import { getEditorPlugins } from "./plugins";
-import { getAuthTokens } from "@/lib/auth/get-token-from-cookie";
 
 export default function PlateEditor(
   props: PropsWithChildren & {
@@ -25,15 +24,16 @@ export default function PlateEditor(
     readOnly?: boolean;
     value?: string;
     pathname?: string;
+    refreshToken?: string;
+    appToken?: string;
   },
 ) {
   const documentId = props?.pathname?.split("?")?.[0]?.split("/")?.at(-1) ?? "erroredDocumentId";
   const searchParams = useSearchParams();
-  const { refreshToken } = getAuthTokens();
   const isPreview = searchParams.has("preview");
   const isReadOnly = props.readOnly || isPreview;
   const editor = createPlateEditor({
-    plugins: [...getEditorPlugins(documentId, props.handle, refreshToken, isReadOnly)],
+    plugins: [...getEditorPlugins(documentId, props.handle, props.refreshToken, props.appToken, isReadOnly)],
     override: {
       components: getRichElements(),
     },
