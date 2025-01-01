@@ -1,29 +1,35 @@
 import { defaultContent } from "@/components/draft/draft-create-button";
+import { env } from "@/env";
 import { createLensClient } from "@/lib/auth/get-lens-client";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
+import { verifyToken } from "@/lib/auth/verify-auth-token";
 import { getRandomUid } from "@/lib/get-random-uid";
 import { createClient } from "@/lib/supabase/server";
 import { type NextRequest, NextResponse } from "next/server";
 
-
 export async function GET(req: NextRequest) {
   try {
     const appToken = req.cookies.get("appToken")?.value;
+    const verified = verifyToken(appToken, env.SUPABASE_JWT_SECRET);
+    if (!appToken || !verified) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const claims = getTokenClaims(appToken);
     if (!claims) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const db = await createClient();
-    const tokenProfileId = claims.sub;
+    const profileId = claims.sub;
 
     // If not a guest user, verify with Lens
     if (!claims.user_metadata.isAnonymous) {
       const lens = await createLensClient();
       const { profileId: lensProfileId } = await getUserProfile(lens);
-      
-      if (lensProfileId !== tokenProfileId) {
+
+      if (lensProfileId !== profileId) {
         return NextResponse.json({ error: "Invalid profile" }, { status: 401 });
       }
     }
@@ -35,7 +41,7 @@ export async function GET(req: NextRequest) {
         .from("drafts")
         .select()
         .eq("documentId", documentId)
-        .eq("authorId", tokenProfileId)
+        .eq("authorId", profileId)
         .single();
 
       if (error) {
@@ -49,10 +55,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ draft }, { status: 200 });
     }
 
-    const { data: drafts, error } = await db
-      .from("drafts")
-      .select()
-      .eq("authorId", tokenProfileId);
+    const { data: drafts, error } = await db.from("drafts").select().eq("authorId", profileId);
 
     if (error) {
       throw new Error(error.message);
@@ -70,20 +73,25 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const appToken = req.cookies.get("appToken")?.value;
+    const verified = verifyToken(appToken, env.SUPABASE_JWT_SECRET);
+    if (!appToken || !verified) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const claims = getTokenClaims(appToken);
     if (!claims) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const db = await createClient();
-    const tokenProfileId = claims.sub;
+    const profileId = claims.sub;
 
     // If not a guest user, verify with Lens
     if (!claims.user_metadata.isAnonymous) {
       const lens = await createLensClient();
       const { profileId: lensProfileId } = await getUserProfile(lens);
-      
-      if (lensProfileId !== tokenProfileId) {
+
+      if (lensProfileId !== profileId) {
         return NextResponse.json({ error: "Invalid profile" }, { status: 401 });
       }
     }
@@ -91,10 +99,10 @@ export async function POST(req: NextRequest) {
     const uid = getRandomUid();
     const documentId = `${uid}`;
     const contentJson = defaultContent;
-    
+
     const { data, error } = await db
       .from("drafts")
-      .insert({ contentJson, documentId, authorId: tokenProfileId })
+      .insert({ contentJson, documentId, authorId: profileId })
       .select()
       .single();
 
@@ -113,20 +121,25 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   try {
     const appToken = req.cookies.get("appToken")?.value;
+    const verified = verifyToken(appToken, env.SUPABASE_JWT_SECRET);
+    if (!appToken || !verified) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const claims = getTokenClaims(appToken);
     if (!claims) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const db = await createClient();
-    const tokenProfileId = claims.sub;
+    const profileId = claims.sub;
 
     // If not a guest user, verify with Lens
     if (!claims.user_metadata.isAnonymous) {
       const lens = await createLensClient();
       const { profileId: lensProfileId } = await getUserProfile(lens);
-      
-      if (lensProfileId !== tokenProfileId) {
+
+      if (lensProfileId !== profileId) {
         return NextResponse.json({ error: "Invalid profile" }, { status: 401 });
       }
     }
@@ -151,7 +164,7 @@ export async function PUT(req: NextRequest) {
     const { data, error } = await db
       .from("drafts")
       .update(updateData)
-      .match({ documentId, authorId: tokenProfileId })
+      .match({ documentId, authorId: profileId })
       .select()
       .single();
 
@@ -174,20 +187,25 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     const appToken = req.cookies.get("appToken")?.value;
+    const verified = verifyToken(appToken, env.SUPABASE_JWT_SECRET);
+    if (!appToken || !verified) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const claims = getTokenClaims(appToken);
     if (!claims) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const db = await createClient();
-    const tokenProfileId = claims.sub;
+    const profileId = claims.sub;
 
     // If not a guest user, verify with Lens
     if (!claims.user_metadata.isAnonymous) {
       const lens = await createLensClient();
       const { profileId: lensProfileId } = await getUserProfile(lens);
-      
-      if (lensProfileId !== tokenProfileId) {
+
+      if (lensProfileId !== profileId) {
         return NextResponse.json({ error: "Invalid profile" }, { status: 401 });
       }
     }
@@ -200,7 +218,7 @@ export async function DELETE(req: NextRequest) {
     const { data, error } = await db
       .from("drafts")
       .delete()
-      .match({ documentId, authorId: tokenProfileId })
+      .match({ documentId, authorId: profileId })
       .select()
       .single();
 

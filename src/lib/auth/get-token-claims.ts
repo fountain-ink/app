@@ -2,9 +2,10 @@ import { jwtDecode } from "jwt-decode";
 
 interface AuthClaims {
   sub: string;
+  role: string;
   user_metadata: {
-    handle?: string;
     isAnonymous?: boolean;
+    handle?: string;
     profileId?: string;
   };
 }

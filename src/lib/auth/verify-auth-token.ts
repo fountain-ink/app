@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 
-export const verifyToken = (token: string, secret: string): boolean => {
+export const verifyToken = (token?: string, secret?: string): boolean => {
   if (!token || !secret) {
-    console.error("No token or secret");
+    console.error("Token verification failed: token or secret is missing");
     return false;
   }
 

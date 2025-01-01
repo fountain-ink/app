@@ -1,7 +1,7 @@
+import { env } from '@/env';
 import { sign } from 'jsonwebtoken';
 import { getLensClientWithToken } from './get-lens-client';
 import { getUserProfile } from './get-user-profile';
-import { env } from '@/env';
 
 const SUPABASE_JWT_SECRET = env.SUPABASE_JWT_SECRET;
 
@@ -17,8 +17,9 @@ export async function signAppToken(refreshToken: string) {
     sub: profile.profileId,
     role: 'authenticated',
     user_metadata: {
-      profileId: profile.profileId,
+      isAnonymous: false,
       handle: profile.handle,
+      profileId: profile.profileId,
     }
   };
 

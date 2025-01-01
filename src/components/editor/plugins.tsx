@@ -99,8 +99,8 @@ export const getEditorPlugins = (
           },
           disableCursors: false,
           hocuspocusProviderOptions: {
-            // url: "ws://0.0.0.0:4444",
-            url: "https://collab.fountain.ink",
+            url: "ws://0.0.0.0:4444",
+            // url: "https://collab.fountain.ink",
             name: path,
             connect: false,
             token: appToken,
@@ -145,7 +145,7 @@ export const getEditorPlugins = (
           users: {
             1: {
               id: "1",
-              name: handle || "kualta",
+              name: handle || "anonymous",
               avatarUrl: "https://avatars.githubusercontent.com/u/19695832?s=96&v=4",
             },
           },

@@ -92,7 +92,7 @@ const server = Server.configure({
 
       const claims = getTokenClaims(data.token);
       
-      if (!claims?.user_metadata.profileId) {
+      if (claims?.role !== "authenticated") {
         throw new Error("Unauthenticated");
       }
       

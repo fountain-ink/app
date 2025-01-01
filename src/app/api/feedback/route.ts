@@ -1,8 +1,8 @@
-import { createLensClient } from "@/lib/auth/get-lens-client";
-import { getUserProfile } from "@/lib/auth/get-user-profile";
+import { env } from "@/env";
+import { getTokenClaims } from "@/lib/auth/get-token-claims";
+import { verifyToken } from "@/lib/auth/verify-auth-token";
 import { createClient } from "@/lib/supabase/server";
 import { type NextRequest, NextResponse } from "next/server";
-
 
 type FeedbackType = "bug" | "feature" | "other";
 
@@ -14,13 +14,19 @@ interface FeedbackPayload {
 
 export async function POST(req: NextRequest) {
   try {
-    const lens = await createLensClient();
-    const { profileId, handle } = await getUserProfile(lens);
-    const db = await createClient();
-
-    if (!db || !profileId) {
+    const appToken = req.cookies.get("appToken")?.value;
+    const verified = verifyToken(appToken, env.SUPABASE_JWT_SECRET);
+    if (!appToken || !verified) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const claims = getTokenClaims(appToken);
+    if (!claims) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const db = await createClient();
+    const profileId = claims.sub;
 
     const body = await req.json();
     const { type, text, screenshot } = body as FeedbackPayload;

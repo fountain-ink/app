@@ -12,10 +12,10 @@ export async function signGuestToken() {
     sub: handle,
     role: "authenticated",
     user_metadata: {
-      handle,
       isAnonymous: true,
+      handle,
+      profileId: guestId,
     },
-    aud: "authenticated",
   };
 
   const jwt = sign(claims, SUPABASE_JWT_SECRET, {
