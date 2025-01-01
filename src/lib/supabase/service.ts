@@ -1,4 +1,4 @@
-import { env } from "@/env.server";
+import { env } from "@/env";
 import { createClient } from "@supabase/supabase-js";
 import { Database } from "./database";
 

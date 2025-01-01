@@ -1,5 +1,3 @@
-import { getLensClientWithToken } from "@/lib/auth/get-lens-client";
-import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { createServiceClient } from "@/lib/supabase/service";
 import { Database } from "@hocuspocus/extension-database";
 import { Logger } from "@hocuspocus/extension-logger";
@@ -72,6 +70,7 @@ const server = Server.configure({
       },
     }),
   ],
+
 
   async onAuthenticate(data) {
     // try {
