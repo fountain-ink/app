@@ -12,7 +12,6 @@ export type Database = {
       drafts: {
         Row: {
           authorId: string | null
-          authorUserId: string | null
           contentHtml: string | null
           contentJson: Json | null
           contributors: string[] | null
@@ -24,7 +23,6 @@ export type Database = {
         }
         Insert: {
           authorId?: string | null
-          authorUserId?: string | null
           contentHtml?: string | null
           contentJson?: Json | null
           contributors?: string[] | null
@@ -36,7 +34,6 @@ export type Database = {
         }
         Update: {
           authorId?: string | null
-          authorUserId?: string | null
           contentHtml?: string | null
           contentJson?: Json | null
           contributors?: string[] | null
@@ -86,30 +83,27 @@ export type Database = {
           address: string | null
           createdAt: string
           handle: string | null
-          id: string
           isAnonymous: boolean
           name: string | null
-          profileId: string | null
+          profileId: string
           updatedAt: string
         }
         Insert: {
           address?: string | null
           createdAt?: string
           handle?: string | null
-          id?: string
           isAnonymous?: boolean
           name?: string | null
-          profileId?: string | null
+          profileId: string
           updatedAt?: string
         }
         Update: {
           address?: string | null
           createdAt?: string
           handle?: string | null
-          id?: string
           isAnonymous?: boolean
           name?: string | null
-          profileId?: string | null
+          profileId?: string
           updatedAt?: string
         }
         Relationships: []
