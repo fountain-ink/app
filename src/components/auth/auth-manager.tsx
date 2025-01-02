@@ -1,5 +1,6 @@
 "use client";
 
+import { isValidToken } from "@/lib/auth/validate-auth-token";
 import { setCookie } from "cookies-next";
 import { useEffect, useRef } from "react";
 
@@ -61,26 +62,54 @@ export const setupUserAuth = async (refreshToken: string) => {
   }
 };
 
+const getCookie = (name: string) => {
+  return document.cookie
+    .split("; ")
+    .find((row) => row.startsWith(`${name}=`))
+    ?.split("=")[1];
+};
+
 export function AuthManager() {
-  const initialized = useRef(false);
+  const lastRefreshToken = useRef<string | undefined>();
+  const lastAppToken = useRef<string | undefined>();
+
+  const checkAndUpdateAuth = async () => {
+    try {
+      const currentRefreshToken = getCookie("refreshToken");
+      const currentAppToken = getCookie("appToken");
+
+      const refreshTokenChanged = currentRefreshToken !== lastRefreshToken.current;
+      const appTokenChanged = currentAppToken !== lastAppToken.current;
+
+      if (!refreshTokenChanged && !appTokenChanged) {
+        return;
+      }
+
+      lastRefreshToken.current = currentRefreshToken;
+      lastAppToken.current = currentAppToken;
+
+      if (currentRefreshToken && isValidToken(currentRefreshToken)) {
+        if (!currentAppToken || !isValidToken(currentAppToken) || appTokenChanged) {
+          console.log("[Auth] Token changed or invalid");
+          await setupUserAuth(currentRefreshToken);
+          console.log("[Auth] Set up user session");
+        }
+      } else if (!currentAppToken || !isValidToken(currentAppToken)) {
+        console.log("[Auth] App token missing or invalid");
+        await setupGuestAuth();
+        console.log("[Auth] Set up guest session");
+      }
+    } catch (error) {
+      console.error("Auth check failed:", error);
+    }
+  };
 
   useEffect(() => {
-    const initAuth = async () => {
-      if (initialized.current) return;
-      initialized.current = true;
+    checkAndUpdateAuth();
 
-      const authToken = document.cookie.includes('appToken');
-      if (!authToken) {
-        try {
-          await setupGuestAuth();
-        } catch (error) {
-          console.error("Failed to initialize guest auth:", error);
-          initialized.current = false;
-        }
-      }
-    };
+    const interval = setInterval(checkAndUpdateAuth, 500);
 
-    initAuth();
+    return () => clearInterval(interval);
   }, []);
 
   return null;
