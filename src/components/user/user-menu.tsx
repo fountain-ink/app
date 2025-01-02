@@ -7,7 +7,7 @@ import {
   DropdownMenuPortal,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { clearCookies } from "@/lib/auth/clear-cookies";
+import { clearAuthCookies } from "@/lib/auth/clear-cookies";
 import { SessionType, useLogout, useSession } from "@lens-protocol/react-web";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
@@ -73,7 +73,7 @@ export const UserMenu = () => {
             icon={UserRoundPenIcon}
             onClick={() => {
               logout();
-              clearCookies();
+              clearAuthCookies();
             }}
           >
             Switch Profile
@@ -112,7 +112,7 @@ export const UserMenu = () => {
             onClick={() => {
               disconnect();
               logout();
-              clearCookies();
+              clearAuthCookies();
             }}
           >
             Disconnect
