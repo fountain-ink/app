@@ -1,5 +1,6 @@
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { createServiceClient } from "@/lib/supabase/service";
+import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(req: NextRequest) {
@@ -32,6 +33,9 @@ export async function PUT(req: NextRequest) {
       console.error("Error updating user settings:", error);
       return NextResponse.json({ error: "Failed to update settings" }, { status: 500 });
     }
+
+    // Revalidate the user's settings tag
+    revalidateTag(`user-${claims.user_metadata.profileId}-settings`);
 
     return NextResponse.json({ success: true });
   } catch (error) {
