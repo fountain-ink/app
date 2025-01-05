@@ -1,5 +1,4 @@
 import { createServiceClient } from "@/lib/supabase/service";
-import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 interface UserMetadata {
@@ -44,12 +43,7 @@ export async function GET(req: NextRequest, { params }: { params: { user: string
       theme: metadata?.theme,
     };
 
-    return NextResponse.json({ settings: publicSettings }, {
-      headers: {
-        'Cache-Control': 'no-store',
-        'tags': `user-${params.user}-settings`
-      }
-    });
+    return NextResponse.json({ settings: publicSettings }, { });
   } catch (error) {
     console.error("Error in settings fetch:", error);
     return NextResponse.json(
@@ -57,4 +51,4 @@ export async function GET(req: NextRequest, { params }: { params: { user: string
       { status: 500 },
     );
   }
-} 
+}
