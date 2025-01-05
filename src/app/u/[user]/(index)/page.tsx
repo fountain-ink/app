@@ -12,6 +12,7 @@ async function getUserSettings(profileId: string) {
   const url = getBaseUrl();
   const response = await fetch(`${url}/api/users/${profileId}/settings`, {
     cache: "no-store",
+    next: { revalidate: 0 }
   });
 
   if (!response.ok) {
