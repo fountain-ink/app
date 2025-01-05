@@ -19,10 +19,10 @@ interface Settings {
   };
 }
 
-export function useSettings() {
-  const [settings, setSettings] = useState<Settings>({});
+export function useSettings(initialSettings: Settings = {}) {
+  const [settings, setSettings] = useState<Settings>(initialSettings);
   const [isSaving, setIsSaving] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!Object.keys(initialSettings).length);
 
   const fetchSettings = useCallback(async () => {
     try {
@@ -74,8 +74,10 @@ export function useSettings() {
   }, []);
 
   useEffect(() => {
-    fetchSettings();
-  }, [fetchSettings]);
+    if (!Object.keys(initialSettings).length) {
+      fetchSettings();
+    }
+  }, [fetchSettings, initialSettings]);
 
   return {
     settings,

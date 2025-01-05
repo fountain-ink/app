@@ -8,8 +8,12 @@ import { useSettings } from "@/hooks/use-settings";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 
-export function BlogSettings() {
-  const { settings, saveSettings, isSaving } = useSettings();
+interface BlogSettingsProps {
+  initialSettings?: any;
+}
+
+export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
+  const { settings, saveSettings, isSaving } = useSettings(initialSettings);
   const [blogTitle, setBlogTitle] = useState(settings.blog?.title || "");
   const [showAuthor, setShowAuthor] = useState(settings.blog?.showAuthor ?? true);
   const [showTags, setShowTags] = useState(settings.blog?.showTags ?? true);

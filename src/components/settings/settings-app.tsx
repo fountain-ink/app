@@ -7,8 +7,12 @@ import { useSettings } from "@/hooks/use-settings";
 import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 
-export function ApplicationSettings() {
-  const { settings, saveSettings, isSaving } = useSettings();
+interface ApplicationSettingsProps {
+  initialSettings?: any;
+}
+
+export function ApplicationSettings({ initialSettings = {} }: ApplicationSettingsProps) {
+  const { settings, saveSettings, isSaving } = useSettings(initialSettings);
   const [isSmoothScrolling, setIsSmoothScrolling] = useState(settings.app?.isSmoothScrolling ?? false);
   const [isBlurEnabled, setIsBlurEnabled] = useState(settings.app?.isBlurEnabled ?? false);
 

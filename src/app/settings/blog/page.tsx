@@ -1,11 +1,11 @@
 import { BlogSettings } from "@/components/settings/settings-blog";
-import { createLensClient } from "@/lib/auth/get-lens-client";
-import { getUserProfile } from "@/lib/auth/get-user-profile";
+import { getSettings } from "@/lib/settings/get-settings";
 
 export const metadata = {
   title: "Blog Settings",
 };
 
 export default async function BlogSettingsPage() {
-  return <BlogSettings />;
+  const settings = await getSettings();
+  return <BlogSettings initialSettings={settings} />;
 }

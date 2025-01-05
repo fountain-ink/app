@@ -14,11 +14,12 @@ import { Input } from "../ui/input";
 interface ThemeSettingsProps {
   defaultTheme?: ThemeType;
   onThemeChange?: (theme: ThemeType) => void;
+  initialSettings?: any;
 }
 
-export function ThemeSettings({ defaultTheme, onThemeChange }: ThemeSettingsProps) {
+export function ThemeSettings({ defaultTheme, onThemeChange, initialSettings = {} }: ThemeSettingsProps) {
   const { theme, setTheme } = useTheme();
-  const { settings, saveSettings, isSaving } = useSettings();
+  const { settings, saveSettings, isSaving } = useSettings(initialSettings);
   const [selectedTheme, setSelectedTheme] = useState<ThemeType>(() => {
     const themeName = settings.theme?.name;
     return isValidTheme(themeName) ? themeName : theme;
