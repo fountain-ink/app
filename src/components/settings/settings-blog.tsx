@@ -4,30 +4,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { useSaveProfileSettings } from "@/hooks/use-save-profile-settings";
-import type { ProfileFragment } from "@lens-protocol/client";
-import type { Profile } from "@lens-protocol/react-web";
-import { useCallback, useState } from "react";
+import { useSettings } from "@/hooks/use-settings";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 
-export function BlogSettings({ profile }: { profile: Profile | ProfileFragment | null | undefined }) {
-  const currentMetadata = profile?.metadata;
-  const [blogTitle, setBlogTitle] = useState(
-    currentMetadata?.attributes?.find((attr) => attr.key === "blogTitle")?.value || "",
-  );
-  const [showAuthor, setShowAuthor] = useState(
-    currentMetadata?.attributes?.find((attr) => attr.key === "showAuthor")?.value !== "false",
-  );
-  const [showTags, setShowTags] = useState(
-    currentMetadata?.attributes?.find((attr) => attr.key === "showTags")?.value !== "false",
-  );
-  const [showTitle, setShowTitle] = useState(
-    currentMetadata?.attributes?.find((attr) => attr.key === "showTitle")?.value !== "false",
-  );
+export function BlogSettings() {
+  const { settings, saveSettings, isSaving } = useSettings();
+  const [blogTitle, setBlogTitle] = useState(settings.blog?.title || "");
+  const [showAuthor, setShowAuthor] = useState(settings.blog?.showAuthor ?? true);
+  const [showTags, setShowTags] = useState(settings.blog?.showTags ?? true);
+  const [showTitle, setShowTitle] = useState(settings.blog?.showTitle ?? true);
   const [error, setError] = useState<string | null>(null);
-  const { saveSettings, isSaving } = useSaveProfileSettings();
 
-  if (!profile) return null;
+  useEffect(() => {
+    setBlogTitle(settings.blog?.title || "");
+    setShowAuthor(settings.blog?.showAuthor ?? true);
+    setShowTags(settings.blog?.showTags ?? true);
+    setShowTitle(settings.blog?.showTitle ?? true);
+  }, [settings]);
 
   const validateBlogTitle = useCallback((title: string) => {
     if (title.trim().length === 0) {
@@ -51,32 +45,14 @@ export function BlogSettings({ profile }: { profile: Profile | ProfileFragment |
     }
 
     try {
-      const attributes = [
-        {
-          key: "blogTitle",
-          type: "String",
-          value: blogTitle.trim(),
-        },
-        {
-          key: "showTags",
-          type: "Boolean",
-          value: showTags.toString(),
-        },
-        {
-          key: "showTitle",
-          type: "Boolean",
-          value: showTitle.toString(),
-        },
-        {
-          key: "showAuthor",
-          type: "Boolean",
-          value: showAuthor.toString(),
-        },
-      ];
-
       await saveSettings({
-        profile,
-        attributes,
+        ...settings,
+        blog: {
+          title: blogTitle.trim(),
+          showTags,
+          showTitle,
+          showAuthor,
+        },
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save settings");

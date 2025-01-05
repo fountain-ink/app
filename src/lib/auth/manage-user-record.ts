@@ -17,6 +17,7 @@ export async function manageUserRecord(profile: ProfileFragment | null) {
       isAnonymous: false,
       name: profile.metadata?.displayName ?? null,
       address: profile.ownedBy?.address ?? null,
+      metadata: {},
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });

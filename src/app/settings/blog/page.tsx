@@ -7,8 +7,5 @@ export const metadata = {
 };
 
 export default async function BlogSettingsPage() {
-  const lens = await createLensClient();
-  const { profile } = await getUserProfile(lens);
-  
-  return <BlogSettings profile={profile} />;
+  return <BlogSettings />;
 }

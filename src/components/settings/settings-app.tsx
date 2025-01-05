@@ -3,11 +3,41 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { useStorage } from "@/hooks/use-storage";
+import { useSettings } from "@/hooks/use-settings";
+import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 
 export function ApplicationSettings() {
-  const { isSmoothScrolling, toggleSmoothScrolling, isBlurEnabled, toggleBlurEffect } = useStorage();
+  const { settings, saveSettings, isSaving } = useSettings();
+  const [isSmoothScrolling, setIsSmoothScrolling] = useState(settings.app?.isSmoothScrolling ?? false);
+  const [isBlurEnabled, setIsBlurEnabled] = useState(settings.app?.isBlurEnabled ?? false);
+
+  useEffect(() => {
+    setIsSmoothScrolling(settings.app?.isSmoothScrolling ?? false);
+    setIsBlurEnabled(settings.app?.isBlurEnabled ?? false);
+  }, [settings]);
+
+  const handleSmoothScrollingChange = async (checked: boolean) => {
+    setIsSmoothScrolling(checked);
+    await saveSettings({
+      ...settings,
+      app: {
+        ...settings.app,
+        isSmoothScrolling: checked,
+      },
+    });
+  };
+
+  const handleBlurEffectChange = async (checked: boolean) => {
+    setIsBlurEnabled(checked);
+    await saveSettings({
+      ...settings,
+      app: {
+        ...settings.app,
+        isBlurEnabled: checked,
+      },
+    });
+  };
 
   return (
     <Card>
@@ -21,7 +51,12 @@ export function ApplicationSettings() {
             <Label htmlFor="smoothScrolling">Enable smooth scrolling</Label>
             <p className="text-sm text-muted-foreground">Whether the article page should scroll smoothly</p>
           </div>
-          <Switch id="smoothScrolling" checked={isSmoothScrolling} onCheckedChange={toggleSmoothScrolling} />
+          <Switch
+            id="smoothScrolling"
+            checked={isSmoothScrolling}
+            onCheckedChange={handleSmoothScrollingChange}
+            disabled={isSaving}
+          />
         </div>
         <div className="flex items-center justify-between space-y-2">
           <div className="space-y-0.5">
@@ -30,7 +65,12 @@ export function ApplicationSettings() {
               Whether the article page should have a blur on top and bottom
             </p>
           </div>
-          <Switch id="blurEffect" checked={isBlurEnabled} onCheckedChange={toggleBlurEffect} />
+          <Switch
+            id="blurEffect"
+            checked={isBlurEnabled}
+            onCheckedChange={handleBlurEffectChange}
+            disabled={isSaving}
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>

@@ -84,6 +84,7 @@ export type Database = {
           createdAt: string
           handle: string | null
           isAnonymous: boolean
+          metadata: Json | null
           name: string | null
           profileId: string
           updatedAt: string
@@ -93,6 +94,7 @@ export type Database = {
           createdAt?: string
           handle?: string | null
           isAnonymous?: boolean
+          metadata?: Json | null
           name?: string | null
           profileId: string
           updatedAt?: string
@@ -102,6 +104,7 @@ export type Database = {
           createdAt?: string
           handle?: string | null
           isAnonymous?: boolean
+          metadata?: Json | null
           name?: string | null
           profileId?: string
           updatedAt?: string
