@@ -15,16 +15,10 @@ interface UserMetadata {
   };
 }
 
-export const dynamic = 'force-dynamic';
-
 export async function GET(req: NextRequest, { params }: { params: { user: string } }) {
   try {
     const db = await createServiceClient();
-    const { data, error } = await db
-      .from("users")
-      .select("metadata")
-      .eq("profileId", params.user)
-      .single();
+    const { data, error } = await db.from("users").select("metadata").eq("profileId", params.user).single();
 
     if (error) {
       console.error("Error fetching user settings:", error);
@@ -43,7 +37,7 @@ export async function GET(req: NextRequest, { params }: { params: { user: string
       theme: metadata?.theme,
     };
 
-    return NextResponse.json({ settings: publicSettings }, { });
+    return NextResponse.json({ settings: publicSettings }, {});
   } catch (error) {
     console.error("Error in settings fetch:", error);
     return NextResponse.json(
@@ -52,3 +46,5 @@ export async function GET(req: NextRequest, { params }: { params: { user: string
     );
   }
 }
+
+export const dynamic = "force-dynamic";
