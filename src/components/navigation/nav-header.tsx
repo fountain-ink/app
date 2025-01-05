@@ -7,6 +7,7 @@ import { DraftCreateButton } from "../draft/draft-create-button";
 import { EditorOptionsDropdown } from "../editor/addons/editor-options-dropdown";
 import { FountainLogo } from "../icons/custom-icons";
 import { FeedbackForm } from "../misc/feedback-form";
+import { SettingsBadge } from "../settings/settings-badge";
 import { ConnectionBadge } from "../ui/connection-badge";
 import { UserMenu } from "../user/user-menu";
 import { PublishMenu } from "./publish-menu-button";
@@ -15,6 +16,7 @@ export const Header = () => {
   const pathname = usePathname();
   const hostname = typeof window !== "undefined" && window.location.hostname ? window.location.hostname : "";
   const isWritePage = pathname.startsWith("/write");
+  const isSettingsPage = pathname.startsWith("/settings");
   const documentId = pathname.split("/").filter(Boolean).pop() ?? "";
   const yjsState = useYjsState((state) => state.getState(documentId) ?? { status: "disconnected" as ConnectionStatus });
 
@@ -38,6 +40,7 @@ export const Header = () => {
           <FountainLogo />
         </Link>
         {isWritePage && <ConnectionBadge {...yjsState} />}
+        {isSettingsPage && <SettingsBadge />}
       </div>
       <div className="flex gap-4 pointer-events-auto">
         <FeedbackForm />

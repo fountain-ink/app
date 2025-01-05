@@ -1,5 +1,8 @@
+"use client";
+
+import { settingsEvents } from "@/lib/settings/events";
 import { useCallback, useEffect, useState } from "react";
-import { toast } from "sonner";
+import { useDebouncedCallback } from "use-debounce";
 
 interface Settings {
   blog?: {
@@ -21,16 +24,11 @@ interface Settings {
 
 export function useSettings(initialSettings: Settings = {}) {
   const [settings, setSettings] = useState<Settings>(initialSettings);
-  const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(!Object.keys(initialSettings).length);
 
   const fetchSettings = useCallback(async () => {
     try {
-      const response = await fetch("/api/settings", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await fetch("/api/settings");
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.error || "Failed to fetch settings");
@@ -38,19 +36,17 @@ export function useSettings(initialSettings: Settings = {}) {
       setSettings(data.metadata || {});
     } catch (error) {
       console.error("Error fetching settings:", error);
-      toast.error("Failed to fetch settings");
+      settingsEvents.emit("error", error instanceof Error ? error.message : "Failed to fetch settings");
     } finally {
       setIsLoading(false);
     }
   }, []);
 
-  const saveSettings = useCallback(async (newSettings: Settings) => {
-    setIsSaving(true);
+  const saveSettings = useDebouncedCallback(async (newSettings: Settings) => {
     try {
       const response = await fetch("/api/settings", {
         method: "PUT",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ metadata: newSettings }),
@@ -62,27 +58,27 @@ export function useSettings(initialSettings: Settings = {}) {
       }
 
       setSettings(newSettings);
-      toast.success("Settings saved successfully");
+      settingsEvents.emit("saved");
       return true;
     } catch (error) {
       console.error("Error saving settings:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to save settings");
+      const errorMessage = error instanceof Error ? error.message : "Failed to save settings";
+      settingsEvents.emit("error", errorMessage);
       return false;
-    } finally {
-      setIsSaving(false);
     }
-  }, []);
+  }, 1000);
 
   useEffect(() => {
     if (!Object.keys(initialSettings).length) {
       fetchSettings();
+    } else {
+      setSettings(initialSettings);
     }
   }, [fetchSettings, initialSettings]);
 
   return {
     settings,
     saveSettings,
-    isSaving,
     isLoading,
   };
-} 
+}

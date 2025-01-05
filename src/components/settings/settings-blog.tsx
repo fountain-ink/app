@@ -6,19 +6,18 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useSettings } from "@/hooks/use-settings";
 import { useCallback, useEffect, useState } from "react";
-import { Button } from "../ui/button";
 
 interface BlogSettingsProps {
   initialSettings?: any;
 }
 
 export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
-  const { settings, saveSettings, isSaving } = useSettings(initialSettings);
+  const { settings, saveSettings } = useSettings(initialSettings);
   const [blogTitle, setBlogTitle] = useState(settings.blog?.title || "");
   const [showAuthor, setShowAuthor] = useState(settings.blog?.showAuthor ?? true);
   const [showTags, setShowTags] = useState(settings.blog?.showTags ?? true);
   const [showTitle, setShowTitle] = useState(settings.blog?.showTitle ?? true);
-  const [error, setError] = useState<string | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   useEffect(() => {
     setBlogTitle(settings.blog?.title || "");
@@ -37,30 +36,55 @@ export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
     return null;
   }, []);
 
-  const handleSave = async () => {
-    setError(null);
-
-    if (showTitle) {
-      const titleError = validateBlogTitle(blogTitle);
-      if (titleError) {
-        setError(titleError);
-        return;
-      }
-    }
-
-    try {
-      await saveSettings({
+  const handleSave = useCallback(
+    (updates: Partial<typeof settings.blog>) => {
+      const newSettings = {
         ...settings,
         blog: {
           title: blogTitle.trim(),
           showTags,
           showTitle,
           showAuthor,
+          ...updates,
         },
-      });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save settings");
+      };
+
+      if (newSettings.blog.showTitle) {
+        const titleError = validateBlogTitle(newSettings.blog.title);
+        if (titleError) {
+          setValidationError(titleError);
+          return;
+        }
+      }
+
+      setValidationError(null);
+      saveSettings(newSettings);
+    },
+    [settings, blogTitle, showTags, showTitle, showAuthor, validateBlogTitle, saveSettings],
+  );
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTitle = e.target.value;
+    setBlogTitle(newTitle);
+    setValidationError(null);
+    if (showTitle) {
+      handleSave({ title: newTitle });
     }
+  };
+
+  const handleShowTitleChange = (checked: boolean) => {
+    setShowTitle(checked);
+    handleSave({ showTitle: checked });
+  };
+
+  const handleShowAuthorChange = (checked: boolean) => {
+    setShowAuthor(checked);
+    handleSave({ showAuthor: checked });
+  };
+
+  const handleShowTagsChange = (checked: boolean) => {
+    setShowTags(checked);
+    handleSave({ showTags: checked });
   };
 
   return (
@@ -75,7 +99,7 @@ export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
             <Label htmlFor="show-title">Show Title</Label>
             <p className="text-sm text-muted-foreground">Display the blog title at the top of your page</p>
           </div>
-          <Switch id="show-title" checked={showTitle} onCheckedChange={setShowTitle} />
+          <Switch id="show-title" checked={showTitle} onCheckedChange={handleShowTitleChange} />
         </div>
 
         <div className="space-y-2">
@@ -85,16 +109,13 @@ export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
           <Input
             id="blog-title"
             value={blogTitle}
-            onChange={(e) => {
-              setBlogTitle(e.target.value);
-              setError(null);
-            }}
+            onChange={handleTitleChange}
             placeholder="Enter your blog title"
-            aria-invalid={error ? "true" : "false"}
+            aria-invalid={validationError ? "true" : "false"}
             disabled={!showTitle}
             className={!showTitle ? "opacity-50" : ""}
           />
-          {error && <p className="text-sm text-destructive mt-2">{error}</p>}
+          {validationError && <p className="text-sm text-destructive mt-2">{validationError}</p>}
         </div>
 
         <div className="flex items-center justify-between space-y-2">
@@ -102,18 +123,15 @@ export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
             <Label htmlFor="show-author">Show Author</Label>
             <p className="text-sm text-muted-foreground">Display your name above the blog title</p>
           </div>
-          <Switch id="show-author" checked={showAuthor} onCheckedChange={setShowAuthor} />
+          <Switch id="show-author" checked={showAuthor} onCheckedChange={handleShowAuthorChange} />
         </div>
         <div className="flex items-center justify-between space-y-2">
           <div className="space-y-0.5">
             <Label htmlFor="show-tags">Show Tags</Label>
             <p className="text-sm text-muted-foreground">Display article tags below the blog title</p>
           </div>
-          <Switch id="show-tags" checked={showTags} onCheckedChange={setShowTags} />
+          <Switch id="show-tags" checked={showTags} onCheckedChange={handleShowTagsChange} />
         </div>
-        <Button onClick={handleSave} disabled={isSaving || !!error || !blogTitle.trim()}>
-          {isSaving ? "Saving..." : "Save Settings"}
-        </Button>
       </CardContent>
     </Card>
   );

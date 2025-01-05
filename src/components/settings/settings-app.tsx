@@ -12,7 +12,7 @@ interface ApplicationSettingsProps {
 }
 
 export function ApplicationSettings({ initialSettings = {} }: ApplicationSettingsProps) {
-  const { settings, saveSettings, isSaving } = useSettings(initialSettings);
+  const { settings, saveSettings } = useSettings(initialSettings);
   const [isSmoothScrolling, setIsSmoothScrolling] = useState(settings.app?.isSmoothScrolling ?? false);
   const [isBlurEnabled, setIsBlurEnabled] = useState(settings.app?.isBlurEnabled ?? false);
 
@@ -55,12 +55,7 @@ export function ApplicationSettings({ initialSettings = {} }: ApplicationSetting
             <Label htmlFor="smoothScrolling">Enable smooth scrolling</Label>
             <p className="text-sm text-muted-foreground">Whether the article page should scroll smoothly</p>
           </div>
-          <Switch
-            id="smoothScrolling"
-            checked={isSmoothScrolling}
-            onCheckedChange={handleSmoothScrollingChange}
-            disabled={isSaving}
-          />
+          <Switch id="smoothScrolling" checked={isSmoothScrolling} onCheckedChange={handleSmoothScrollingChange} />
         </div>
         <div className="flex items-center justify-between space-y-2">
           <div className="space-y-0.5">
@@ -69,12 +64,7 @@ export function ApplicationSettings({ initialSettings = {} }: ApplicationSetting
               Whether the article page should have a blur on top and bottom
             </p>
           </div>
-          <Switch
-            id="blurEffect"
-            checked={isBlurEnabled}
-            onCheckedChange={handleBlurEffectChange}
-            disabled={isSaving}
-          />
+          <Switch id="blurEffect" checked={isBlurEnabled} onCheckedChange={handleBlurEffectChange} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
