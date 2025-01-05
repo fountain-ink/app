@@ -31,7 +31,7 @@ export const UserMenu = () => {
   const { isConnected: isWalletConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const { execute: logout, loading: logoutLoading } = useLogout();
-  const _pathname = usePathname();
+  const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const isDarkMode = theme === "dark";
 
@@ -51,6 +51,13 @@ export const UserMenu = () => {
   }
 
   const handle = session.profile?.handle?.localName;
+
+  // Get the settings path based on current route
+  const getSettingsPath = () => {
+    if (pathname.match(/^\/u\/[^/]+\/profile$/)) return "/settings/profile";
+    if (pathname.match(/^\/u\/[^/]+$/)) return "/settings/blog";
+    return "/settings";
+  };
 
   return (
     <DropdownMenu modal={false}>
@@ -83,7 +90,7 @@ export const UserMenu = () => {
             Drafts
           </AnimatedMenuItem>
 
-          <AnimatedMenuItem href="/settings" icon={SettingsGearIcon}>
+          <AnimatedMenuItem href={getSettingsPath()} icon={SettingsGearIcon}>
             Settings
           </AnimatedMenuItem>
 
