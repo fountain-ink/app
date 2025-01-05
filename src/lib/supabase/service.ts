@@ -8,6 +8,10 @@ export async function createServiceClient() {
       headers: {
         "x-application-name": "fountain",
       },
+
+      fetch: (url: any, options = {}) => {
+        return fetch(url, { ...options, cache: "no-store" });
+      },
     },
   });
 
