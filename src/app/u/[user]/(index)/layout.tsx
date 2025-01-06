@@ -2,9 +2,6 @@ import { createLensClient } from "@/lib/auth/get-lens-client";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { notFound } from "next/navigation";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
 const UserProfileLayout = async ({
   children,
   params,

@@ -7,13 +7,10 @@ import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getBaseUrl } from "@/lib/get-base-url";
 import { notFound } from "next/navigation";
 
-export const dynamic = "force-dynamic";
-
 async function getUserSettings(profileId: string) {
   const url = getBaseUrl();
   const response = await fetch(`${url}/api/users/${profileId}/settings`, {
     cache: "no-store",
-    next: { revalidate: 0  }
   });
 
   if (!response.ok) {
