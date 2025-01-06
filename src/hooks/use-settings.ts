@@ -14,6 +14,7 @@ interface Settings {
   app?: {
     isSmoothScrolling?: boolean;
     isBlurEnabled?: boolean;
+    email?: string;
   };
   theme?: {
     name?: string;
@@ -24,6 +25,7 @@ interface Settings {
 
 export function useSettings(initialSettings: Settings = {}) {
   const [settings, setSettings] = useState<Settings>(initialSettings);
+  const [email, setEmail] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(!Object.keys(initialSettings).length);
 
   const fetchSettings = useCallback(async () => {
@@ -34,6 +36,7 @@ export function useSettings(initialSettings: Settings = {}) {
         throw new Error(data.error || "Failed to fetch settings");
       }
       setSettings(data.metadata || {});
+      setEmail(data.email);
     } catch (error) {
       console.error("Error fetching settings:", error);
       settingsEvents.emit("error", error instanceof Error ? error.message : "Failed to fetch settings");
@@ -42,14 +45,17 @@ export function useSettings(initialSettings: Settings = {}) {
     }
   }, []);
 
-  const saveSettings = useDebouncedCallback(async (newSettings: Settings) => {
+  const saveSettings = useDebouncedCallback(async (newSettings: Settings, newEmail?: string) => {
     try {
       const response = await fetch("/api/settings", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ metadata: newSettings }),
+        body: JSON.stringify({ 
+          metadata: newSettings,
+          ...(newEmail !== undefined && { email: newEmail })
+        }),
       });
 
       const data = await response.json();
@@ -58,6 +64,9 @@ export function useSettings(initialSettings: Settings = {}) {
       }
 
       setSettings(newSettings);
+      if (newEmail !== undefined) {
+        setEmail(newEmail);
+      }
       settingsEvents.emit("saved");
       return true;
     } catch (error) {
@@ -78,6 +87,7 @@ export function useSettings(initialSettings: Settings = {}) {
 
   return {
     settings,
+    email,
     saveSettings,
     isLoading,
   };

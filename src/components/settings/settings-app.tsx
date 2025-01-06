@@ -12,14 +12,22 @@ interface ApplicationSettingsProps {
 }
 
 export function ApplicationSettings({ initialSettings = {} }: ApplicationSettingsProps) {
-  const { settings, saveSettings } = useSettings(initialSettings);
+  const { settings, email: initialEmail, saveSettings } = useSettings(initialSettings);
   const [isSmoothScrolling, setIsSmoothScrolling] = useState(settings.app?.isSmoothScrolling ?? false);
   const [isBlurEnabled, setIsBlurEnabled] = useState(settings.app?.isBlurEnabled ?? false);
+  const [email, setEmail] = useState(initialEmail ?? "");
+  const [isEmailValid, setIsEmailValid] = useState(true);
 
   useEffect(() => {
     setIsSmoothScrolling(settings.app?.isSmoothScrolling ?? false);
     setIsBlurEnabled(settings.app?.isBlurEnabled ?? false);
-  }, [settings]);
+    setEmail(initialEmail ?? "");
+  }, [settings, initialEmail]);
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return email === "" || emailRegex.test(email);
+  };
 
   const handleSmoothScrollingChange = async (checked: boolean) => {
     setIsSmoothScrolling(checked);
@@ -41,6 +49,18 @@ export function ApplicationSettings({ initialSettings = {} }: ApplicationSetting
         isBlurEnabled: checked,
       },
     });
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newEmail = e.target.value;
+    setEmail(newEmail);
+    setIsEmailValid(validateEmail(newEmail));
+  };
+
+  const handleEmailBlur = async () => {
+    if (isEmailValid && email !== initialEmail) {
+      await saveSettings(settings, email);
+    }
   };
 
   return (
@@ -68,7 +88,18 @@ export function ApplicationSettings({ initialSettings = {} }: ApplicationSetting
         </div>
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="Your email" disabled />
+          <Input 
+            id="email" 
+            type="email" 
+            placeholder="Your email" 
+            value={email} 
+            onChange={handleEmailChange}
+            onBlur={handleEmailBlur}
+            className={!isEmailValid ? "border-destructive" : ""}
+          />
+          {!isEmailValid && (
+            <p className="text-sm text-destructive">Please enter a valid email address</p>
+          )}
         </div>
       </CardContent>
     </Card>

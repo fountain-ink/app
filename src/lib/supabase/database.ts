@@ -82,6 +82,7 @@ export type Database = {
         Row: {
           address: string | null
           createdAt: string
+          email: string | null
           handle: string | null
           isAnonymous: boolean
           metadata: Json | null
@@ -92,6 +93,7 @@ export type Database = {
         Insert: {
           address?: string | null
           createdAt?: string
+          email?: string | null
           handle?: string | null
           isAnonymous?: boolean
           metadata?: Json | null
@@ -102,6 +104,7 @@ export type Database = {
         Update: {
           address?: string | null
           createdAt?: string
+          email?: string | null
           handle?: string | null
           isAnonymous?: boolean
           metadata?: Json | null

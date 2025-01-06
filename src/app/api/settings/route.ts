@@ -15,18 +15,25 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
-    const { metadata } = await req.json();
+    const { metadata, email } = await req.json();
     if (!metadata) {
       return NextResponse.json({ error: "No metadata provided" }, { status: 400 });
     }
 
     const db = await createServiceClient();
+    const updateData: any = {
+      metadata,
+      updatedAt: new Date().toISOString(),
+    };
+
+    // Only include email in update if it's provided
+    if (email !== undefined) {
+      updateData.email = email;
+    }
+
     const { error } = await db
       .from("users")
-      .update({
-        metadata,
-        updatedAt: new Date().toISOString(),
-      })
+      .update(updateData)
       .eq("profileId", claims.user_metadata.profileId);
 
     if (error) {
@@ -62,7 +69,7 @@ export async function GET(req: NextRequest) {
     const db = await createServiceClient();
     const { data, error } = await db
       .from("users")
-      .select("metadata")
+      .select("metadata, email")
       .eq("profileId", claims.user_metadata.profileId)
       .single();
 
@@ -71,7 +78,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Failed to fetch settings" }, { status: 500 });
     }
 
-    return NextResponse.json({ metadata: data?.metadata || {} });
+    return NextResponse.json({ metadata: data?.metadata || {}, email: data?.email || null });
   } catch (error) {
     console.error("Error in settings fetch:", error);
     return NextResponse.json(
