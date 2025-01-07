@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
-import { uploadMetadata } from "@/lib/upload-metadata";
+import { uploadMetadata } from "@/lib/upload/upload-metadata";
 import { MetadataAttributeType, article } from "@lens-protocol/metadata";
 import { SessionType, useCreatePost, useSession } from "@lens-protocol/react-web";
 import { useQueryClient } from "@tanstack/react-query";

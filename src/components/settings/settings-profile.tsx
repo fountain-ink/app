@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSaveProfileSettings } from "@/hooks/use-save-profile-settings";
-import { uploadFileFormData } from "@/lib/upload-file-form";
+import { uploadFileFormData } from "@/lib/upload/upload-form";
 import type { ProfileFragment } from "@lens-protocol/client";
 import type { Profile } from "@lens-protocol/react-web";
 import { useCallback, useState } from "react";

@@ -1,4 +1,4 @@
-import { uploadFile } from "@/lib/upload-file";
+import { uploadFile } from "@/lib/upload/upload-file";
 import { cn, withRef } from "@udecode/cn";
 import { selectEditor, setNode, useEditorRef, useElement, useRemoveNodeButton } from "@udecode/plate-common/react";
 import { Image, useMediaState } from "@udecode/plate-media/react";

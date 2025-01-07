@@ -1,4 +1,4 @@
-import { uploadMetadata } from "@/lib/upload-metadata";
+import { uploadMetadata } from "@/lib/upload/upload-metadata";
 import type { ProfileFragment } from "@lens-protocol/client";
 import { profile as profileMetadata } from "@lens-protocol/metadata";
 import { type Profile, useSetProfileMetadata } from "@lens-protocol/react-web";
@@ -95,7 +95,7 @@ export function useSaveProfileSettings() {
       });
       console.log(metadata);
 
-      const metadataURI = await uploadMetadata(metadata, handle);
+      const metadataURI = await uploadMetadata(metadata);
       const result = await setProfileMetadata({ metadataURI });
 
       if (result.isFailure()) {
