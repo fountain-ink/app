@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
-import { uploadMetadata } from "@/lib/upload-utils";
+import { uploadMetadata } from "@/lib/upload-metadata";
 import { MetadataAttributeType, article } from "@lens-protocol/metadata";
 import { SessionType, useCreatePost, useSession } from "@lens-protocol/react-web";
 import { useQueryClient } from "@tanstack/react-query";
@@ -85,7 +85,7 @@ export const PublishButton = ({
         return;
       }
 
-      const metadataURI = await uploadMetadata(metadata, handle);
+      const metadataURI = await uploadMetadata(metadata);
       // Show initial toast that transaction is being processed
       const pendingToast = toast.loading("Publishing post...");
 

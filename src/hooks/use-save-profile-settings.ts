@@ -1,4 +1,4 @@
-import { uploadMetadata } from "@/lib/upload-utils";
+import { uploadMetadata } from "@/lib/upload-metadata";
 import type { ProfileFragment } from "@lens-protocol/client";
 import { profile as profileMetadata } from "@lens-protocol/metadata";
 import { type Profile, useSetProfileMetadata } from "@lens-protocol/react-web";

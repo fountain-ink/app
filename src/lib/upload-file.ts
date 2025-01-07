@@ -3,7 +3,6 @@
 import { getIpfsImageUrl } from "@/components/images/image-uploader";
 import imageCompression from "browser-image-compression";
 import { toast } from "sonner";
-import { uploadFileFormData } from "./upload-utils";
 
 export const uploadFile = async (input: File | ArrayBuffer | string) => {
   try {
@@ -35,11 +34,19 @@ export const uploadFile = async (input: File | ArrayBuffer | string) => {
 
     const formData = new FormData();
     formData.append("file", fileToUpload);
-    formData.append("handle", "global");
 
-    const result = await uploadFileFormData(formData);
-    console.log(`Uploaded file to ${result}`);
-    return getIpfsImageUrl(result);
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Upload failed");
+    }
+
+    const { url } = await response.json();
+    console.log(`Uploaded file to ${url}`);
+    return getIpfsImageUrl(url);
   } catch (error) {
     console.error(error);
     toast.error("Failed to upload file");
