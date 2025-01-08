@@ -4,13 +4,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSaveProfileSettings } from "@/hooks/use-save-profile-settings";
-import { uploadFileFormData } from "@/lib/upload/upload-form";
+import { uploadFile } from "@/lib/upload/upload-file";
 import type { ProfileFragment } from "@lens-protocol/client";
 import type { Profile } from "@lens-protocol/react-web";
 import { useCallback, useState } from "react";
 import { ImageUploader } from "../images/image-uploader";
 import { Button } from "../ui/button";
 import { TextareaAutosize } from "../ui/textarea";
+
 
 export function ProfileSettings({ profile }: { profile: Profile | ProfileFragment | null | undefined }) {
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
@@ -34,17 +35,11 @@ export function ProfileSettings({ profile }: { profile: Profile | ProfileFragmen
     let coverPictureUri: any;
 
     if (profilePicture) {
-      const formData = new FormData();
-      formData.append("file", profilePicture);
-      formData.append("handle", handle);
-      picture = await uploadFileFormData(formData);
+      picture = await uploadFile(profilePicture);
     }
 
     if (coverPicture) {
-      const formData = new FormData();
-      formData.append("file", coverPicture);
-      formData.append("handle", handle);
-      coverPictureUri = await uploadFileFormData(formData);
+      coverPictureUri = await uploadFile(coverPicture);
     }
 
     const attributes = [
