@@ -9,20 +9,21 @@ import { Input } from "../ui/input";
 
 interface ApplicationSettingsProps {
   initialSettings?: any;
+  initialEmail?: string | null;
 }
 
-export function ApplicationSettings({ initialSettings = {} }: ApplicationSettingsProps) {
-  const { settings, email: initialEmail, saveSettings } = useSettings(initialSettings);
+export function ApplicationSettings({ initialSettings = {}, initialEmail }: ApplicationSettingsProps) {
+  const { settings, email: initialEmailFromHook, saveSettings } = useSettings(initialSettings, initialEmail);
   const [isSmoothScrolling, setIsSmoothScrolling] = useState(settings.app?.isSmoothScrolling ?? false);
   const [isBlurEnabled, setIsBlurEnabled] = useState(settings.app?.isBlurEnabled ?? false);
-  const [email, setEmail] = useState(initialEmail ?? "");
+  const [email, setEmail] = useState(initialEmailFromHook ?? "");
   const [isEmailValid, setIsEmailValid] = useState(true);
 
   useEffect(() => {
     setIsSmoothScrolling(settings.app?.isSmoothScrolling ?? false);
     setIsBlurEnabled(settings.app?.isBlurEnabled ?? false);
-    setEmail(initialEmail ?? "");
-  }, [settings, initialEmail]);
+    setEmail(initialEmailFromHook ?? "");
+  }, [settings, initialEmailFromHook]);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -51,14 +52,15 @@ export function ApplicationSettings({ initialSettings = {} }: ApplicationSetting
     });
   };
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEmailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newEmail = e.target.value;
     setEmail(newEmail);
     setIsEmailValid(validateEmail(newEmail));
+    await saveSettings(settings, email);
   };
 
   const handleEmailBlur = async () => {
-    if (isEmailValid && email !== initialEmail) {
+    if (isEmailValid && email !== initialEmailFromHook) {
       await saveSettings(settings, email);
     }
   };

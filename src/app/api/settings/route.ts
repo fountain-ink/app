@@ -31,10 +31,7 @@ export async function PUT(req: NextRequest) {
       updateData.email = email;
     }
 
-    const { error } = await db
-      .from("users")
-      .update(updateData)
-      .eq("profileId", claims.user_metadata.profileId);
+    const { error } = await db.from("users").update(updateData).eq("profileId", claims.user_metadata.profileId);
 
     if (error) {
       console.error("Error updating user settings:", error);

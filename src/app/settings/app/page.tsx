@@ -6,6 +6,7 @@ export const metadata = {
 };
 
 export default async function AppSettingsPage() {
-  const settings = await getSettings();
-  return <ApplicationSettings initialSettings={settings} />;
+  const settings: any = await getSettings();
+
+  return <ApplicationSettings initialSettings={settings.metadata} initialEmail={settings.email} />;
 }

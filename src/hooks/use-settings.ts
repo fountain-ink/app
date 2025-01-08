@@ -24,9 +24,9 @@ interface Settings {
   };
 }
 
-export function useSettings(initialSettings: Settings = {}) {
+export function useSettings(initialSettings: Settings = {}, initialEmail?: string | null) {
   const [settings, setSettings] = useState<Settings>(initialSettings);
-  const [email, setEmail] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(initialEmail ?? null);
   const [isLoading, setIsLoading] = useState(!Object.keys(initialSettings).length);
 
   const fetchSettings = useCallback(async () => {
@@ -83,8 +83,11 @@ export function useSettings(initialSettings: Settings = {}) {
       fetchSettings();
     } else {
       setSettings(initialSettings);
+      if (initialEmail !== undefined) {
+        setEmail(initialEmail);
+      }
     }
-  }, [fetchSettings, initialSettings]);
+  }, [fetchSettings, initialSettings, initialEmail]);
 
   return {
     settings,

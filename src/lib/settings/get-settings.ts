@@ -18,7 +18,7 @@ export async function getSettings() {
   const db = await createClient();
   const { data, error } = await db
     .from("users")
-    .select("metadata")
+    .select("metadata, email")
     .eq("profileId", claims.user_metadata.profileId)
     .single();
 
@@ -27,5 +27,5 @@ export async function getSettings() {
     return {};
   }
 
-  return data?.metadata || {};
-} 
+  return data;
+}
