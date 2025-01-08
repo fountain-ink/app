@@ -7,6 +7,7 @@ import { useDebouncedCallback } from "use-debounce";
 interface Settings {
   blog?: {
     title?: string;
+    about?: string;
     showAuthor?: boolean;
     showTags?: boolean;
     showTitle?: boolean;

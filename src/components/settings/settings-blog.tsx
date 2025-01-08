@@ -6,14 +6,26 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useSettings } from "@/hooks/use-settings";
 import { useCallback, useEffect, useState } from "react";
+import { TextareaAutosize } from "../ui/textarea";
+
+interface BlogSettings {
+  title?: string;
+  about?: string;
+  showAuthor?: boolean;
+  showTags?: boolean;
+  showTitle?: boolean;
+}
 
 interface BlogSettingsProps {
-  initialSettings?: any;
+  initialSettings?: {
+    blog?: BlogSettings;
+  };
 }
 
 export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
   const { settings, saveSettings } = useSettings(initialSettings);
   const [blogTitle, setBlogTitle] = useState(settings.blog?.title || "");
+  const [blogAbout, setBlogAbout] = useState(settings.blog?.about || "");
   const [showAuthor, setShowAuthor] = useState(settings.blog?.showAuthor ?? true);
   const [showTags, setShowTags] = useState(settings.blog?.showTags ?? true);
   const [showTitle, setShowTitle] = useState(settings.blog?.showTitle ?? true);
@@ -21,6 +33,7 @@ export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
 
   useEffect(() => {
     setBlogTitle(settings.blog?.title || "");
+    setBlogAbout(settings.blog?.about || "");
     setShowAuthor(settings.blog?.showAuthor ?? true);
     setShowTags(settings.blog?.showTags ?? true);
     setShowTitle(settings.blog?.showTitle ?? true);
@@ -42,6 +55,7 @@ export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
         ...settings,
         blog: {
           title: blogTitle.trim(),
+          about: blogAbout,
           showTags,
           showTitle,
           showAuthor,
@@ -60,7 +74,7 @@ export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
       setValidationError(null);
       saveSettings(newSettings);
     },
-    [settings, blogTitle, showTags, showTitle, showAuthor, validateBlogTitle, saveSettings],
+    [settings, blogTitle, blogAbout, showTags, showTitle, showAuthor, validateBlogTitle, saveSettings],
   );
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,18 +108,8 @@ export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
         <CardDescription>Configure your blog preferences.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="flex items-center justify-between space-y-2">
-          <div className="space-y-0.5">
-            <Label htmlFor="show-title">Show Title</Label>
-            <p className="text-sm text-muted-foreground">Display the blog title at the top of your page</p>
-          </div>
-          <Switch id="show-title" checked={showTitle} onCheckedChange={handleShowTitleChange} />
-        </div>
-
         <div className="space-y-2">
-          <Label htmlFor="blog-title" className={!showTitle ? "text-muted-foreground" : ""}>
-            Blog Title
-          </Label>
+          <Label htmlFor="blog-title">Blog Title</Label>
           <Input
             id="blog-title"
             value={blogTitle}
@@ -118,20 +122,48 @@ export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
           {validationError && <p className="text-sm text-destructive mt-2">{validationError}</p>}
         </div>
 
-        <div className="flex items-center justify-between space-y-2">
-          <div className="space-y-0.5">
-            <Label htmlFor="show-author">Show Author</Label>
-            <p className="text-sm text-muted-foreground">Display your name above the blog title</p>
-          </div>
-          <Switch id="show-author" checked={showAuthor} onCheckedChange={handleShowAuthorChange} />
+        <div className="flex flex-col gap-2 relative">
+          <Label htmlFor="blog-about">Blog About</Label>
+          <TextareaAutosize
+            id="blog-about"
+            value={blogAbout}
+            variant="default"
+            className="p-2"
+            onChange={(e) => {
+              setBlogAbout(e.target.value);
+              handleSave({ about: e.target.value });
+            }}
+            placeholder="Write a description about your blog"
+          />
         </div>
-        <div className="flex items-center justify-between space-y-2">
-          <div className="space-y-0.5">
-            <Label htmlFor="show-tags">Show Tags</Label>
-            <p className="text-sm text-muted-foreground">Display article tags below the blog title</p>
+
+            <h2 className="text-lg font-semibold">Display Options</h2>
+
+<div className="p-4 pt-0 space-y-4">
+          <div className="flex items-center justify-between space-y-2">
+            <div className="space-y-0.5">
+              <Label htmlFor="show-title">Show Title</Label>
+              <p className="text-sm text-muted-foreground">Display the blog title at the top of your page</p>
+            </div>
+            <Switch id="show-title" checked={showTitle} onCheckedChange={handleShowTitleChange} />
           </div>
-          <Switch id="show-tags" checked={showTags} onCheckedChange={handleShowTagsChange} />
-        </div>
+
+          <div className="flex items-center justify-between space-y-2">
+            <div className="space-y-0.5">
+              <Label htmlFor="show-author">Show Author</Label>
+              <p className="text-sm text-muted-foreground">Display your name above the blog title</p>
+            </div>
+            <Switch id="show-author" checked={showAuthor} onCheckedChange={handleShowAuthorChange} />
+          </div>
+
+          <div className="flex items-center justify-between space-y-2">
+            <div className="space-y-0.5">
+              <Label htmlFor="show-tags">Show Tags</Label>
+              <p className="text-sm text-muted-foreground">Display article tags below the blog title</p>
+            </div>
+            <Switch id="show-tags" checked={showTags} onCheckedChange={handleShowTagsChange} />
+          </div>
+          </div>
       </CardContent>
     </Card>
   );

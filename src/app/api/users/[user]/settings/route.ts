@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 interface UserMetadata {
   blog?: {
     title?: string;
+    about?: string;
     showAuthor?: boolean;
     showTags?: boolean;
     showTitle?: boolean;
@@ -30,6 +31,7 @@ export async function GET(req: NextRequest, { params }: { params: { user: string
     const publicSettings = {
       blog: {
         title: metadata?.blog?.title,
+        about: metadata?.blog?.about,
         showAuthor: metadata?.blog?.showAuthor,
         showTags: metadata?.blog?.showTags,
         showTitle: metadata?.blog?.showTitle,
