@@ -24,6 +24,7 @@ const wagmiConfig = createConfig(
   }),
 );
 
+
 export const Web3Providers = ({ children }: { children: JSX.Element }) => {
   const [lensConfig, setLensConfig] = useState<LensConfig | null>(null);
 
