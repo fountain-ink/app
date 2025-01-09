@@ -1,10 +1,18 @@
 import { PublicClient, testnet } from "@lens-protocol/client";
 import { cookieStorage } from "./storage";
 
-export const client = PublicClient.create({
+export const publicClient = PublicClient.create({
   environment: testnet,
   origin: "https://fountain.ink",
   storage: cookieStorage,
 });
 
-client.isPublicClient();
+export const getLensClient = async () => {
+  const resumed = await publicClient.resumeSession();
+  if (resumed.isErr()) {
+    console.error(resumed.error);
+    return publicClient;
+  }
+
+  return resumed.value;
+};

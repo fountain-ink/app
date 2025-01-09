@@ -2,8 +2,8 @@ import { SessionClient } from "@lens-protocol/client";
 import { createApp, fetchApp } from "@lens-protocol/client/actions";
 import { app, Platform } from "@lens-protocol/metadata";
 import { useAccount, useConnect, useSignMessage } from "wagmi";
-import { client } from "./client";
 import { storageClient } from "./storage-client";
+import { getLensClient, publicClient } from "./client";
 
 export const LensAuth = () => {
   const { address } = useAccount();
@@ -37,12 +37,12 @@ export const LensAuth = () => {
       if (!address) {
         return;
       }
-
-      const authenticated = await client.login({
+      
+      const authenticated = await publicClient.login({
         builder: {
           address,
         },
-        signMessage: async (message) => {
+        signMessage: async (message: any) => {
           const signature = await signMessageAsync({ message });
           return signature;
         },
