@@ -5,7 +5,7 @@ export const cookieStorage: IStorageProvider = {
   getItem(key: string) {
     const value = getCookie(key);
     
-    return value || null;
+    return value ?? null;
   },
   setItem(key: string, value: string) {
     setCookie(key, value);
@@ -15,3 +15,4 @@ export const cookieStorage: IStorageProvider = {
     deleteCookie(key);
   },
 };
+
