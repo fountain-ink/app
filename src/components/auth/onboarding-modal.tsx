@@ -9,7 +9,7 @@ import { Label } from "../ui/label";
 import { useOnboardingClient } from "@/hooks/use-lens-clients";
 import { MetadataAttributeType, account } from "@lens-protocol/metadata";
 import { storageClient } from "@/lib/lens/storage-client";
-import { createAccountWithUsername } from "@lens-protocol/client/actions";
+import { createAccountWithUsername, transactionStatus } from "@lens-protocol/client/actions";
 
 interface OnboardingModalProps {
   open: boolean;
@@ -49,7 +49,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
         username: {
           localName: username,
         },
-       metadataUri : uri,
+        metadataUri: uri,
       });
 
       if (result.isErr()) {
@@ -57,9 +57,53 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
         throw new Error("Failed to create account");
       }
 
-      // Wait for transaction to be indexed
-      const txHash = result.value.__typename === "CreateAccountResponse" && result.value.hash 
-      console.log("Transaction hash:", txHash);
+      switch (result.value.__typename) {
+        case "CreateAccountResponse": {
+          const hash = result.value.hash;
+          console.log("Transaction hash:", hash);
+
+          const status = await transactionStatus(client, {
+            txHash: hash,
+          });
+
+          if (status.isErr()) {
+            console.error("Error getting transaction status:", status.error.message);
+            throw new Error("Failed to create account");
+          }
+
+          switch (status.value.__typename) {
+            case "NotIndexedYetStatus":
+            case "PendingTransactionStatus":
+              console.log("Transaction pending");
+              break;
+            case "FinishedTransactionStatus":
+              console.log("Transaction complete");
+              break;
+            case "FailedTransactionStatus":
+              console.log("Transaction failed:", status.value.reason);
+              throw new Error("Failed to create account");
+          }
+          console.log("CreateAccountResponse:", result.value);
+          break;
+        }
+        
+        case "InvalidUsername":
+          console.log("Failed to create account with username:", result.value.reason);
+          throw new Error("Failed to create account");
+        case "SelfFundedTransactionRequest":
+          console.log("Self-funded transaction request:", result.value.raw);
+          break;
+        case "SponsoredTransactionRequest":
+          console.log("Sponsored transaction request:", result.value.raw);
+          break;
+        case "TransactionWillFail":
+          console.log("Transaction will fail:", result.value.reason);
+          throw new Error("Failed to create account");
+        default:
+          console.log("Unknown response:", result.value);
+          throw new Error("Failed to create account");
+      }
+
 
       toast.success("Account created successfully!");
       onSuccess();
