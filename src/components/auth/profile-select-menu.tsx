@@ -78,35 +78,36 @@ export function ProfileSelectMenu() {
             {profiles?.length === 0 && (
               <div className="text-center">
                 <p className="mb-4">No profiles found</p>
-                <Button onClick={() => setShowOnboarding(true)}>
-                  Create Profile
-                </Button>
               </div>
             )}
 
             {profiles?.length > 0 && (
               <div className="w-full">
-                {profiles.map((profile: any) => (
-                  <Button
-                    key={profile.id}
-                    variant="ghost"
-                    className="w-full justify-start"
-                    onClick={() => {/* Handle profile selection */}}
-                  >
-                    {profile.username || 'Unnamed Profile'}
-                  </Button>
-                ))}
+                {profiles.map((entry: any) => {
+                  return (
+                    <Button
+                      key={entry.id}
+                      variant="ghost"
+                      className="w-full justify-start"
+                      onClick={() => {
+                        /* Handle profile selection */
+                      }}
+                    >
+                      {entry.account.username.localName}
+                    </Button>
+                  );
+                })}
               </div>
             )}
+
+            <Button variant="outline" onClick={() => setShowOnboarding(true)}>
+              New Profile
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
 
-      <OnboardingModal 
-        open={showOnboarding}
-        onOpenChange={setShowOnboarding}
-        onSuccess={fetchProfiles}
-      />
+      <OnboardingModal open={showOnboarding} onOpenChange={setShowOnboarding} onSuccess={fetchProfiles} />
     </>
   );
 }

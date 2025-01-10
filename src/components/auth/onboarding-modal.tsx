@@ -1,4 +1,7 @@
-import { getOnboardingClient } from "@/lib/lens/client";
+import { useOnboardingClient } from "@/hooks/use-lens-clients";
+import { storageClient } from "@/lib/lens/storage-client";
+import { createAccountWithUsername, fetchAccount, switchAccount, transactionStatus } from "@lens-protocol/client/actions";
+import { account } from "@lens-protocol/metadata";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
@@ -6,10 +9,6 @@ import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { useOnboardingClient } from "@/hooks/use-lens-clients";
-import { MetadataAttributeType, account } from "@lens-protocol/metadata";
-import { storageClient } from "@/lib/lens/storage-client";
-import { createAccountWithUsername, transactionStatus } from "@lens-protocol/client/actions";
 
 interface OnboardingModalProps {
   open: boolean;
@@ -62,6 +61,27 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
           const hash = result.value.hash;
           console.log("Transaction hash:", hash);
 
+
+          const account = await fetchAccount(client, {txHash: hash});
+          if (account.isErr()) {
+            console.error("Failed to fetch account:", account.error.message);
+            throw new Error("Failed to fetch account");
+          }
+
+          console.log("Account:", account.value);
+
+
+          const switchResult = await switchAccount(client, {
+            account: account.value?.address,
+          });
+
+          if (switchResult.isErr()) {
+            console.error("Error switching account:", switchResult.error.message);
+            throw new Error("Failed to switch account");
+          }
+
+          console.log((`Switched account to ${account.value?.address}`));
+
           const status = await transactionStatus(client, {
             txHash: hash,
           });
@@ -78,6 +98,8 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
               break;
             case "FinishedTransactionStatus":
               console.log("Transaction complete");
+
+
               break;
             case "FailedTransactionStatus":
               console.log("Transaction failed:", status.value.reason);
@@ -86,7 +108,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
           console.log("CreateAccountResponse:", result.value);
           break;
         }
-        
+
         case "InvalidUsername":
           console.log("Failed to create account with username:", result.value.reason);
           throw new Error("Failed to create account");
@@ -103,7 +125,6 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
           console.log("Unknown response:", result.value);
           throw new Error("Failed to create account");
       }
-
 
       toast.success("Account created successfully!");
       onSuccess();
@@ -145,4 +166,3 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
     </Dialog>
   );
 }
-
