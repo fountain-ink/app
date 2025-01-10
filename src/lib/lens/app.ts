@@ -1,15 +1,13 @@
+"use client";
+
 import { SessionClient } from "@lens-protocol/client";
 import { createApp, fetchApp } from "@lens-protocol/client/actions";
 import { app, Platform } from "@lens-protocol/metadata";
-import { useAccount, useConnect, useSignMessage } from "wagmi";
+import { useConnect, useAccount, useSignMessage } from "wagmi";
+import { getBuilderClient } from "./client";
 import { storageClient } from "./storage-client";
-import { getLensClient, publicClient } from "./client";
 
-export const LensAuth = () => {
-  const { address } = useAccount();
-  const { signMessageAsync } = useSignMessage();
-  const { connect } = useConnect();
-
+export const useUploadMetadata = () => {
   const uploadMetadata = async () => {
     try {
       const metadata = app({
@@ -32,33 +30,35 @@ export const LensAuth = () => {
     }
   };
 
+  return uploadMetadata;
+};
+
+export const useBuilderClient = () => {
+  const { address } = useAccount();
+  const { signMessageAsync } = useSignMessage();
+
   const authenticate = async () => {
     try {
-      if (!address) {
-        return;
-      }
-      
-      const authenticated = await publicClient.login({
-        builder: {
-          address,
-        },
-        signMessage: async (message: any) => {
-          const signature = await signMessageAsync({ message });
-          return signature;
-        },
-      });
-
-      if (authenticated.isErr()) {
-        throw authenticated.error;
+      if (!address || !signMessageAsync) {
+        return null;
       }
 
-      // SessionClient: { ... }
-      return authenticated.value;
+      const signMessage = async (message: string) => {
+        return await signMessageAsync({ message });
+      };
+
+      const builder = await getBuilderClient(address, signMessage);
+      return builder;
     } catch (error) {
       console.error("Authentication error:", error);
+      return null;
     }
   };
 
+  return authenticate;
+};
+
+export const useCreateLensApp = () => {
   const createLensApp = async (sessionClient: SessionClient, metadataUri: string) => {
     try {
       const createResult = await createApp(sessionClient, {
@@ -88,9 +88,5 @@ export const LensAuth = () => {
     }
   };
 
-  return {
-    authenticate,
-    uploadMetadata,
-    createLensApp,
-  };
+  return createLensApp;
 };
