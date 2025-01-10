@@ -1,11 +1,15 @@
 import { PublicClient, testnet } from "@lens-protocol/client";
 import { cookieStorage } from "./storage";
 
-export const publicClient = PublicClient.create({
+const publicClient = PublicClient.create({
   environment: testnet,
   origin: "https://fountain.ink",
   storage: cookieStorage,
 });
+
+export const getPublicClient = async () => {
+  return publicClient;
+};
 
 export const getBuilderClient = async (address: string, signMessage: (message: string) => Promise<string>) => {
   if (!address) return null;

@@ -3,8 +3,6 @@
 import { SessionClient } from "@lens-protocol/client";
 import { createApp, fetchApp } from "@lens-protocol/client/actions";
 import { app, Platform } from "@lens-protocol/metadata";
-import { useConnect, useAccount, useSignMessage } from "wagmi";
-import { getBuilderClient } from "./client";
 import { storageClient } from "./storage-client";
 
 export const useUploadMetadata = () => {
@@ -31,31 +29,6 @@ export const useUploadMetadata = () => {
   };
 
   return uploadMetadata;
-};
-
-export const useBuilderClient = () => {
-  const { address } = useAccount();
-  const { signMessageAsync } = useSignMessage();
-
-  const authenticate = async () => {
-    try {
-      if (!address || !signMessageAsync) {
-        return null;
-      }
-
-      const signMessage = async (message: string) => {
-        return await signMessageAsync({ message });
-      };
-
-      const builder = await getBuilderClient(address, signMessage);
-      return builder;
-    } catch (error) {
-      console.error("Authentication error:", error);
-      return null;
-    }
-  };
-
-  return authenticate;
 };
 
 export const useCreateLensApp = () => {

@@ -1,7 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useBuilderClient, useCreateLensApp, useUploadMetadata } from "@/lib/lens/app";
+import { useCreateLensApp, useUploadMetadata } from "@/lib/lens/app";
+import { useBuilderClient } from "@/hooks/use-lens-clients";
 import { Context, SessionClient } from "@lens-protocol/client";
 import { useState } from "react";
 
@@ -11,7 +12,6 @@ const Auth = () => {
   const authenticate = useBuilderClient();
   const uploadMetadata = useUploadMetadata();
   const createLensApp = useCreateLensApp();
-
 
   const handleAuth = async () => {
     const client = await authenticate();

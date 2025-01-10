@@ -6,42 +6,49 @@ import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { UserIcon } from "../icons/user";
 import { AnimatedMenuItem } from "../navigation/animated-item";
+import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { OnboardingModal } from "./onboarding-modal";
 
 export function ProfileSelectMenu() {
   const { address } = useAccount();
   const [profiles, setProfiles] = useState<any>([]);
-    const [error, setError] = useState<Error | null>(null);
-    const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
-    useEffect(() => {
-      async function fetchProfiles() {
-        if (!address) return;
+  const fetchProfiles = async () => {
+    if (!address) return;
 
-        const client = await getLensClient();
+    try {
+      setLoading(true);
+      const client = await getLensClient();
 
-        try {
-          setLoading(true);
-          const result = await fetchAccountsAvailable(client, {
-            managedBy: evmAddress(address),
-            includeOwned: true,
-          })
-
-          if (result.isErr()) {
-            throw result.error;
-          }
-
-          setProfiles(result._unsafeUnwrap()?.items)
-          console.log(result._unsafeUnwrap()?.items)
-        } catch (err) {
-          setError(err as Error);
-        } finally {
-          setLoading(false);
-        }
+      if (!client) {
+        throw new Error("Failed to authenticate");
       }
 
-      fetchProfiles();
-    }, [address]);
+      const result = await fetchAccountsAvailable(client, {
+        managedBy: evmAddress(address),
+        includeOwned: true,
+      });
+
+      if (result.isErr()) {
+        throw result.error;
+      }
+
+      setProfiles(result._unsafeUnwrap()?.items);
+    } catch (err) {
+      console.error("Error fetching profiles:", err);
+      setError(err as Error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfiles();
+  }, [address]);
 
   if (loading) {
     return null;
@@ -57,50 +64,49 @@ export function ProfileSelectMenu() {
   }
 
   return (
-    <Dialog defaultOpen>
-      <DialogTrigger className="p-2" asChild>
-        <AnimatedMenuItem
-          asButton
-          icon={UserIcon}
-        />
-      </DialogTrigger>
+    <>
+      <Dialog>
+        <DialogTrigger className="p-2" asChild>
+          <AnimatedMenuItem asButton icon={UserIcon} />
+        </DialogTrigger>
 
-      <DialogContent className="max-w-72">
-        <DialogHeader>
-          <DialogTitle>Select profile</DialogTitle>
-        </DialogHeader>
-        <div className="flex flex-col gap-3 items-center justify-center">
-          {profiles?.length === 0 && <p>No profiles found</p>}
-          {/* {!session && (
-            <p className="text-center text-sm text-muted-foreground">
-              Please connect your wallet first
-            </p>
-          )}
-          {session && profiles?.length === 0 && (
-            <p className="text-center text-sm text-muted-foreground">
-              No profiles found
-            </p>
-          )}
-          {session && profiles?.map((profile) => (
-            <LoginButton
-              key={profile.id}
-              profile={profile}
-              onSuccess={onSuccess}
-              isActive={activeProfile?.id === profile.id}
-            />
-          ))}
-          {session && (
-            <Button
-              variant="ghost"
-              className="flex gap-2 w-full text-md"
-              onClick={() => toast.error("Profile creation coming soon")}
-            >
-              <PlusIcon size={18} />
-              New Profile
-            </Button>
-          )} */}
-        </div>
-      </DialogContent>
-    </Dialog>
+        <DialogContent className="max-w-72">
+          <DialogHeader>
+            <DialogTitle>Select profile</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col gap-3 items-center justify-center">
+            {profiles?.length === 0 && (
+              <div className="text-center">
+                <p className="mb-4">No profiles found</p>
+                <Button onClick={() => setShowOnboarding(true)}>
+                  Create Profile
+                </Button>
+              </div>
+            )}
+
+            {profiles?.length > 0 && (
+              <div className="w-full">
+                {profiles.map((profile: any) => (
+                  <Button
+                    key={profile.id}
+                    variant="ghost"
+                    className="w-full justify-start"
+                    onClick={() => {/* Handle profile selection */}}
+                  >
+                    {profile.username || 'Unnamed Profile'}
+                  </Button>
+                ))}
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <OnboardingModal 
+        open={showOnboarding}
+        onOpenChange={setShowOnboarding}
+        onSuccess={fetchProfiles}
+      />
+    </>
   );
 }
