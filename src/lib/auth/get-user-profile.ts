@@ -1,29 +1,59 @@
-import { LensClient } from "@lens-protocol/client";
+import { fetchAccount } from "@lens-protocol/client/actions";
+import jwt from "jsonwebtoken";
+import { getLensClient } from "../lens/client";
 
-export async function getUserProfile(lens: LensClient) {
-  let isAuthenticated = false;
-  try {
-    isAuthenticated = await lens.authentication.isAuthenticated();
-  } catch (error) {
-    console.log(error);
-  }
+interface LensIdToken {
+  sub: string; // signedBy address
+  iss: string; // API endpoint
+  aud: string; // App address
+  iat: number; // Issued at timestamp
+  exp: number; // Expiration timestamp
+  sid: string; // Session ID
+  act?: string; // Optional account address for managers
+  "tag:lens.dev,2024:sponsored"?: boolean;
+  "tag:lens.dev,2024:role"?: "ACCOUNT_OWNER" | "ACCOUNT_MANAGER" | "ONBOARDING_USER" | "BUILDER";
+}
 
-  if (!isAuthenticated) {
-    return { 
-      profileId: undefined, 
-      profile: undefined, 
-      handle: undefined 
+export async function getUserProfile() {
+  const client = await getLensClient();
+
+  if (!client.isSessionClient()) {
+    return {
+      profileId: undefined,
+      profile: undefined,
+      handle: undefined,
     };
   }
 
-  const profileId = await lens.authentication.getProfileId();
-  const profile = await lens.profile.fetch({ forProfileId: profileId })  
-  const handle = profile?.handle?.localName;
+  const credentials = await client.getCredentials();
 
-  if (!profileId) {
-    throw new Error("Unauthenticated");
+  if (!credentials || credentials.isErr()) {
+    throw new Error("Unable to get credentials");
   }
 
-  return { profileId, profile, handle };
-}
+  const idToken = credentials.value?.idToken;
 
+  // Decode without verification since we trust the source
+  const decoded = jwt.decode(idToken || "") as unknown as LensIdToken;
+  console.log(decoded);
+
+  if (!decoded) {
+    throw new Error("Invalid ID token");
+  }
+
+  // Use the subject (wallet address) or act (managed account) to fetch the profile
+  const address = decoded.sub;
+  const account = await fetchAccount(client, { address });
+
+  if (!account) {
+    throw new Error("Profile not found");
+  }
+
+  return {
+    profileId: address,
+    profile: account,
+    handle: address, // FIXME
+    role: decoded["tag:lens.dev,2024:role"],
+    sponsored: decoded["tag:lens.dev,2024:sponsored"] || false,
+  };
+}

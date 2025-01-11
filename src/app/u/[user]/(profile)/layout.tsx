@@ -1,18 +1,19 @@
 import ErrorPage from "@/components/misc/error-page";
+import { PageTransition } from "@/components/navigation/page-transition";
+import { ProfileSettingsModal } from "@/components/settings/settings-profile-modal";
+import { Button } from "@/components/ui/button";
 import { SlideNav } from "@/components/ui/slide-tabs";
 import { UserAvatar } from "@/components/user/user-avatar";
+import { UserBio } from "@/components/user/user-bio";
 import { UserCover } from "@/components/user/user-cover";
 import { UserFollowButton } from "@/components/user/user-follow";
 import { UserFollowing } from "@/components/user/user-following";
 import { UserHandle } from "@/components/user/user-handle";
 import { UserName } from "@/components/user/user-name";
-import { PageTransition } from "@/components/navigation/page-transition";
-import { ProfileSettingsModal } from "@/components/settings/settings-profile-modal";
-import { Button } from "@/components/ui/button";
-import { UserBio } from "@/components/user/user-bio";
-import { AnimatePresence } from "framer-motion";
-import { createLensClient } from "@/lib/auth/get-lens-client";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
+import { getLensClient } from "@/lib/lens/client";
+import { fetchAccount } from "@lens-protocol/client/actions";
+import { AnimatePresence } from "framer-motion";
 export default async function UserLayout({
   children,
   params,
@@ -20,16 +21,22 @@ export default async function UserLayout({
   children: React.ReactNode;
   params: { user: string };
 }) {
-  const lens = await createLensClient();
-  const { profileId, handle: userHandle } = await getUserProfile(lens);
+  const lens = await getLensClient();
+  const { profileId, handle: userHandle } = await getUserProfile();
   const pageHandle = `lens/${params.user}`;
-  const profile = await lens.profile.fetch({ forHandle: pageHandle });
+
+  const profile = await fetchAccount(lens, { username: { localName: params.user } });
 
   if (!profile) {
     return <ErrorPage error="User not found" />;
   }
 
-  const isUserProfile = profileId === profile.id;
+  if (profile.isErr()) {
+    console.error("Failed to fetch user profile");
+    return <ErrorPage error="User not found" />;
+  }
+
+  const isUserProfile = profileId === profile.value?.address;
 
   return (
     <div className="flex md:mt-20 flex-col items-center">

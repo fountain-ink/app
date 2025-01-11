@@ -1,14 +1,14 @@
 import { ProfileSettings } from "@/components/settings/settings-profile";
-import { createLensClient } from "@/lib/auth/get-lens-client";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
+import { getLensClient } from "@/lib/lens/client";
 
 export const metadata = {
   title: "Profile Settings",
 };
 
 export default async function ProfileSettingsPage() {
-  const lens = await createLensClient();
-  const { profile } = await getUserProfile(lens);
+  const lens = await getLensClient();
+  const { profile } = await getUserProfile();
 
   return <ProfileSettings profile={profile} />;
 }

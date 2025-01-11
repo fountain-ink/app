@@ -47,6 +47,30 @@ export const getOnboardingClient = async (address: string, signMessage: (message
   return authenticated.value;
 };
 
+export const getAccountOwnerClient = async (
+  ownerAddress: string, 
+  accountAddress: string, 
+  signMessage: (message: string) => Promise<string>
+) => {
+  if (!ownerAddress || !accountAddress) return null;
+
+  const authenticated = await publicClient.login({
+    accountOwner: {
+      account: accountAddress,
+      app: "0xF9F360bb2bFA920a19cB5DedFd4d2d9e7ecc5904",
+      owner: ownerAddress,
+    },
+    signMessage,
+  });
+
+  if (authenticated.isErr()) {
+    console.error(authenticated.error);
+    return null;
+  }
+
+  return authenticated.value;
+};
+
 export const getLensClient = async () => {
   const resumed = await publicClient.resumeSession();
   if (resumed.isErr()) {

@@ -1,3 +1,4 @@
+import { useAccountOwnerClient } from "@/hooks/use-lens-clients";
 import { getLensClient } from "@/lib/lens/client";
 import { evmAddress } from "@lens-protocol/client";
 import { fetchAccountsAvailable } from "@lens-protocol/client/actions";
@@ -8,6 +9,7 @@ import { UserIcon } from "../icons/user";
 import { AnimatedMenuItem } from "../navigation/animated-item";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { setupUserAuth } from "./auth-manager";
 import { OnboardingModal } from "./onboarding-modal";
 
 export function ProfileSelectMenu() {
@@ -16,6 +18,7 @@ export function ProfileSelectMenu() {
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const accountOwnerAuth = useAccountOwnerClient();
 
   const fetchProfiles = async () => {
     if (!address) return;
@@ -49,6 +52,47 @@ export function ProfileSelectMenu() {
   useEffect(() => {
     fetchProfiles();
   }, [address]);
+
+  const handleSelectProfile = async (profile: any) => {
+    console.log("Selected profile:", profile);
+
+    try {
+      const client = await accountOwnerAuth(profile.account.address);
+
+      if (!client) {
+        throw new Error("Failed to authenticate");
+      }
+
+      console.log("Client:", client);
+
+      const credentials = await client.getCredentials();
+
+      if (credentials.isErr()) {
+        toast.error("Failed to get credentials");
+        throw new Error("Failed to get credentials");
+      }
+
+      const refreshToken = credentials._unsafeUnwrap()?.refreshToken;
+      
+      if (!refreshToken) {
+        toast.error("Failed to get refresh token");
+        throw new Error("Failed to get refresh token"); 
+      }
+
+      // try {
+      //   await setupUserAuth(refreshToken);
+      // } catch (error) {
+      //   console.error("Error setting up user auth:", error);
+      //   return toast.error("Failed to complete authentication");
+      // }
+
+      toast.success("Successfully logged in");
+      window.location.reload(); // Refresh to update the auth state
+    } catch (err) {
+      console.error("Error switching profile:", err);
+      toast.error("Failed to switch profile");
+    }
+  };
 
   if (loading) {
     return null;
@@ -89,9 +133,7 @@ export function ProfileSelectMenu() {
                       key={entry.id}
                       variant="ghost"
                       className="w-full justify-start"
-                      onClick={() => {
-                        /* Handle profile selection */
-                      }}
+                      onClick={() => handleSelectProfile(entry)}
                     >
                       {entry.account.username.localName}
                     </Button>

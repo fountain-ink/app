@@ -1,5 +1,6 @@
 import { UserTheme } from "@/components/user/user-theme";
-import { createLensClient } from "@/lib/auth/get-lens-client";
+import { getLensClient } from "@/lib/lens/client";
+import { fetchAccount } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }: { params: { user: string } }) {
@@ -11,21 +12,15 @@ export async function generateMetadata({ params }: { params: { user: string } })
   };
 }
 
-const UserLayout = async ({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { user: string };
-}) => {
-  const lens = await createLensClient();
+const UserLayout = async ({ children, params }: { children: React.ReactNode; params: { user: string } }) => {
+  const lens = await getLensClient();
   let profile = undefined;
-  try {
-    profile = await lens.profile.fetch({
-      forHandle: `lens/${params.user}`,
-    });
-  } catch (error) {
-    console.error(error);
+
+  profile = await fetchAccount(lens, { username: { localName: params.user } });
+  
+  if (profile.isErr()) {
+    console.error("Failed to fetch user profile");
+    return notFound();
   }
 
   if (!profile) {

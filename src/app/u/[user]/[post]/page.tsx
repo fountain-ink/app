@@ -1,29 +1,40 @@
 import Editor from "@/components/editor/editor";
 import ErrorPage from "@/components/misc/error-page";
 import Markdown from "@/components/misc/markdown";
-import { createLensClient } from "@/lib/auth/get-lens-client";
-import { getUserProfile } from "@/lib/auth/get-user-profile";
+import { getLensClient } from "@/lib/lens/client";
+import { fetchPost } from "@lens-protocol/client/actions";
 import { sanitize } from "isomorphic-dompurify";
 
 const post = async ({ params }: { params: { user: string; post: string } }) => {
-  const lens = await createLensClient();
-  // const { profileId, handle: userHandle } = await getUserProfile(lens);
+  const lens = await getLensClient();
+  // const { profileId, handle: userHandle } = await getUserProfile();
 
   const id = params.post;
-  const post = await lens.publication.fetch({ forId: id });
+  const postFetchResult = await fetchPost(lens, { post: id });
 
-  if (!post) return <ErrorPage error="Couldn't find post to show" />;
-  if (post.__typename === "Mirror" || post.metadata.__typename === "EventMetadataV3") {
+  if (!postFetchResult) return <ErrorPage error="Couldn't find post to show" />;
+  if (postFetchResult.isErr()) {
+    console.error("Failed to fetch post");
+    return <ErrorPage error="Couldn't find post to show" />;
+  }
+
+  const post = postFetchResult.value;
+
+  if (post?.__typename === "Repost" || post?.metadata?.__typename === "EventMetadata" || !post) {
     return null;
   }
 
-  if (post.metadata.appId !== "fountain") {
-    const markdown = post?.metadata?.content;
+  if (post?.app?.metadata?.name !== "fountain") {
+    const markdown = "content" in post.metadata ? post?.metadata?.content : "";
 
     return <Markdown content={markdown} />;
   }
 
-  if (post.metadata.appId === "fountain") {
+  if (post.app.metadata.name === "fountain") {
+    if (post.metadata.__typename !== "ArticleMetadata") {
+      return null;
+    }
+
     const contentJson = post?.metadata?.attributes?.find((attr: any) => attr.key === "contentJson")?.value;
     const contentHtml = post?.metadata?.attributes?.find((attr: any) => attr.key === "contentHtml")?.value;
 

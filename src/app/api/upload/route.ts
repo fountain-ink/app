@@ -1,10 +1,10 @@
 import { env } from "@/env";
+import { getTokenClaims } from "@/lib/auth/get-token-claims";
+import { getUserProfile } from "@/lib/auth/get-user-profile";
+import { verifyToken } from "@/lib/auth/verify-auth-token";
+import { getLensClient } from "@/lib/lens/client";
 import { S3 } from "@aws-sdk/client-s3";
 import { NextRequest, NextResponse } from "next/server";
-import { verifyToken } from "@/lib/auth/verify-auth-token";
-import { getTokenClaims } from "@/lib/auth/get-token-claims";
-import { createLensClient } from "@/lib/auth/get-lens-client";
-import { getUserProfile } from "@/lib/auth/get-user-profile";
 
 const accessKeyId = env.STORAGE_ACCESS_KEY;
 const secretAccessKey = env.STORAGE_SECRET_KEY;
@@ -35,8 +35,8 @@ export async function POST(request: NextRequest) {
 
     // If not a guest user, verify with Lens
     if (!claims.user_metadata.isAnonymous) {
-      const lens = await createLensClient();
-      const { profileId: lensProfileId } = await getUserProfile(lens);
+      const lens = await getLensClient();
+      const { profileId: lensProfileId } = await getUserProfile();
 
       if (lensProfileId !== profileId) {
         console.log("Upload attempt with mismatched Lens profile");
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     const key = `users/${profileId}/${date}_${file.name}`;
 
     console.log(`Uploading file ${file.name} for user ${profileId}`);
-    
+
     await s3.putObject({
       ContentType: file.type,
       Bucket: BUCKET_NAME,
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
 
     const cid = result?.Metadata ? result.Metadata["ipfs-hash"] : "";
     console.log(`Successfully uploaded file ${file.name} with CID ${cid}`);
-    
+
     return NextResponse.json({ url: `ipfs://${cid}` });
   } catch (error) {
     console.error("Upload error:", error);
@@ -84,4 +84,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-} 
+}
