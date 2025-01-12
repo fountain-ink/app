@@ -4,7 +4,11 @@ export const UserCover = ({ profile, className }: { profile?: Account; className
   const cover = profile?.metadata?.coverPicture?.optimized || profile?.metadata?.coverPicture?.raw;
 
   if (!cover) {
-    return <div className="w-full h-64 bg-card/20 sm:rounded-lg" />;
+    return (
+      <div className="w-full h-64 rounded-xl relative overflow-hidden">
+        <div className="placeholder-background " />
+      </div>
+    );
   }
 
   return (

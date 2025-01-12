@@ -1,4 +1,4 @@
-import { fetchAccount, fetchMeDetails } from "@lens-protocol/client/actions";
+import { fetchMeDetails } from "@lens-protocol/client/actions";
 import jwt from "jsonwebtoken";
 import { getLensClient } from "../lens/client";
 
@@ -44,14 +44,14 @@ export async function getUserProfile() {
   // Use the subject (wallet address) or act (managed account) to fetch the profile
   const address = decoded.sub;
   // const account = await fetchAccount(client, { address });
-  const account = await fetchMeDetails(client).unwrapOr(null)
+  const account = await fetchMeDetails(client).unwrapOr(null);
 
   if (!account) {
     throw new Error("Profile not found");
   }
 
   return {
-    profileId: address,
+    profileId: account.loggedInAs.account.address,
     profile: account,
     handle: address, // FIXME
     role: decoded["tag:lens.dev,2024:role"],
