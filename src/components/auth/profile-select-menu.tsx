@@ -72,19 +72,19 @@ export function ProfileSelectMenu() {
         throw new Error("Failed to get credentials");
       }
 
-      const refreshToken = credentials._unsafeUnwrap()?.refreshToken;
+      const refreshToken = credentials.value?.refreshToken;
       
       if (!refreshToken) {
         toast.error("Failed to get refresh token");
         throw new Error("Failed to get refresh token"); 
       }
 
-      // try {
-      //   await setupUserAuth(refreshToken);
-      // } catch (error) {
-      //   console.error("Error setting up user auth:", error);
-      //   return toast.error("Failed to complete authentication");
-      // }
+      try {
+        await setupUserAuth(refreshToken);
+      } catch (error) {
+        console.error("Error setting up user auth:", error);
+        return toast.error("Failed to complete authentication");
+      }
 
       toast.success("Successfully logged in");
       window.location.reload(); // Refresh to update the auth state

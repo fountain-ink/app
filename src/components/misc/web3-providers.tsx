@@ -1,11 +1,10 @@
 "use client";
 
 import { env } from "@/env";
-import { appId, type LensConfig, LensProvider, production } from "@lens-protocol/react-web";
-import { bindings } from "@lens-protocol/wagmi";
+import { getPublicClient } from "@/lib/lens/client";
+import { LensProvider } from "@lens-protocol/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
-import { useEffect, useState } from "react";
 import { createConfig, http, WagmiProvider } from "wagmi";
 import { polygon } from "wagmi/chains";
 
@@ -24,33 +23,19 @@ const wagmiConfig = createConfig(
   }),
 );
 
-
 export const Web3Providers = ({ children }: { children: JSX.Element }) => {
-  const [lensConfig, setLensConfig] = useState<LensConfig | null>(null);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const config: LensConfig = {
-        environment: production,
-        bindings: bindings(wagmiConfig),
-        storage: window.localStorage,
-        params: {
-          profile: { metadataSource: appId("fountain") },
-        },
-      };
-      setLensConfig(config);
-    }
-  }, []);
-
   const queryClient = new QueryClient();
-
-  if (!lensConfig) return null;
+  const publicClient = getPublicClient();
 
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <ConnectKitProvider>
-          <LensProvider config={lensConfig}>{children}</LensProvider>
+          <LensProvider client={publicClient}>
+            
+            {children}
+          
+          </LensProvider>
         </ConnectKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

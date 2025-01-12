@@ -1,12 +1,13 @@
-import { uploadMetadata } from "@/lib/upload/upload-metadata";
-import type { ProfileFragment } from "@lens-protocol/client";
-import { profile as profileMetadata } from "@lens-protocol/metadata";
-import { type Profile, useSetProfileMetadata } from "@lens-protocol/react-web";
+import { getLensClient } from "@/lib/lens/client";
+import { storageClient } from "@/lib/lens/storage-client";
+import type { Account } from "@lens-protocol/client";
+import { setAccountMetadata } from "@lens-protocol/client/actions";
+import { account } from "@lens-protocol/metadata";
 import { useState } from "react";
 import { toast } from "sonner";
 
 type ProfileSettingsParams = {
-  profile: Profile | ProfileFragment;
+  profile: Account;
   name?: string;
   bio?: string;
   picture?: string;
@@ -20,7 +21,6 @@ type SaveSettingsResult = {
 };
 export function useSaveProfileSettings() {
   const [isSaving, setIsSaving] = useState(false);
-  const { execute: setProfileMetadata } = useSetProfileMetadata();
 
   const saveSettings = async ({
     profile,
@@ -32,7 +32,13 @@ export function useSaveProfileSettings() {
   }: ProfileSettingsParams) => {
     setIsSaving(true);
     const currentMetadata = profile.metadata;
-    const handle = profile.handle?.localName;
+    const handle = profile.username?.localName;
+    const lens = await getLensClient()
+    
+    if (!lens.isSessionClient()) {
+      console.error("Error: No session found for profile");
+      return { success: false, error: "No session found for profile" };
+    }
 
     if (!handle) {
       toast.error("Error: No handle found for profile");
@@ -80,8 +86,8 @@ export function useSaveProfileSettings() {
         [...existingAttributes],
       );
 
-      const metadata = profileMetadata({
-        name: name ?? currentMetadata?.displayName ?? undefined,
+      const metadata = account({
+        name: name ?? currentMetadata?.name ?? undefined,
         bio: bio ?? currentMetadata?.bio ?? undefined,
         picture:
           picture ??
@@ -91,14 +97,14 @@ export function useSaveProfileSettings() {
           undefined,
         coverPicture: coverPicture ?? currentMetadata?.coverPicture?.raw?.uri ?? undefined,
         attributes: updatedAttributes,
-        appId: "fountain",
       });
       console.log(metadata);
 
-      const metadataURI = await uploadMetadata(metadata);
-      const result = await setProfileMetadata({ metadataURI });
 
-      if (result.isFailure()) {
+      const { uri: metadataUri } = await storageClient.uploadAsJson(metadata);
+      const result = await setAccountMetadata(lens, {metadataUri})
+
+      if (result.isErr()) {
         const error = result.error.message || "Failed to update settings";
         console.error("Failed to update profile metadata:", error);
         toast.error(`Error: ${error}`);
@@ -109,11 +115,12 @@ export function useSaveProfileSettings() {
         description: "Changes may take a few seconds to apply.",
       });
 
+      //// FIXME: Handle transaction completion in background
       // Handle transaction completion in background
-      result.value.waitForCompletion().catch((error) => {
-        console.error("Transaction failed:", error);
-        toast.error(`Error: Transaction failed - ${error.message || "Unknown error"}`);
-      });
+      // result.value.waitForCompletion().catch((error: any) => {
+      //   console.error("Transaction failed:", error);
+      //   toast.error(`Error: Transaction failed - ${error.message || "Unknown error"}`);
+      // });
 
       return { success: true, error: null };
     } catch (error) {

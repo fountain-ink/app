@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { uploadMetadata } from "@/lib/upload/upload-metadata";
 import { MetadataAttributeType, article } from "@lens-protocol/metadata";
-import { SessionType, useCreatePost, useSession } from "@lens-protocol/react-web";
+import { useSessionClient } from "@lens-protocol/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { createPlateEditor, useEditorState } from "@udecode/plate-common/react";
 import { usePathname, useRouter } from "next/navigation";
@@ -23,9 +23,10 @@ export const PublishButton = ({
   subtitle,
   coverImage,
 }: { disabled?: boolean; tags?: string[]; title?: string; subtitle?: string; coverImage?: string }) => {
-  const { data: session } = useSession();
+  const { data: session, loading, error } = useSessionClient();
   const { isConnected: isWalletConnected } = useAccount();
-  const { execute } = useCreatePost();
+  // const { execute } = useCreatePost();
+  // const account = use
   const editorState: any = useEditorState();
   const router = useRouter();
   const { deleteDocument } = useDocumentStorage();
@@ -42,7 +43,7 @@ export const PublishButton = ({
   }, []);
 
   const handlePublish = async () => {
-    if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
+    if (!session || !isWalletConnected) {
       toast.error("Please log in to publish");
       return;
     }
@@ -52,7 +53,8 @@ export const PublishButton = ({
       return;
     }
 
-    const handle = session?.profile?.handle?.localName || "";
+    // const handle = session?.?.handle?.localName || "";
+    const handle = "";
     const contentJson = editorState.children;
     const contentHtml = editor.api.htmlReact?.serialize({
       nodes: editorState.children,
@@ -71,7 +73,7 @@ export const PublishButton = ({
         content: contentMarkdown,
         locale: "en",
         tags,
-        appId: "fountain",
+
         attributes: [
           { key: "contentJson", type: MetadataAttributeType.JSON, value: JSON.stringify(contentJson) },
           { key: "contentHtml", type: MetadataAttributeType.STRING, value: contentHtml },
@@ -85,13 +87,14 @@ export const PublishButton = ({
         return;
       }
 
-      const metadataURI = await uploadMetadata(metadata);
+      // const metadataURI = await uploadMetadata(metadata);
+      const { uri } = await storageClient.uploadAsJson(metadata);
       // Show initial toast that transaction is being processed
       const pendingToast = toast.loading("Publishing post...");
 
-      const result = await execute({
-        metadata: metadataURI,
-      });
+      // const result = await execute({
+      //   metadata: metadataURI,
+      // });
 
       if (result.isFailure()) {
         toast.dismiss(pendingToast);

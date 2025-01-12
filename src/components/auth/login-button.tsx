@@ -1,28 +1,30 @@
 "use client";
-import { type Profile, useLogin } from "@lens-protocol/react-web";
+
+import { useLogin } from "@lens-protocol/react";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { Button } from "../ui/button";
 import { UserAvatar } from "../user/user-avatar";
 import { setupUserAuth } from "./auth-manager";
+import { Account } from "@lens-protocol/client";
 
-export function LoginButton({ profile, onSuccess }: { profile: Profile; onSuccess: (profile: Profile) => void }) {
-  const { execute: lensLogin, loading } = useLogin();
+export function LoginButton({ profile, onSuccess }: { profile: Account; onSuccess: (profile: Account) => void }) {
   const { address } = useAccount();
+  const { execute: lensLogin, loading } = useLogin();
 
   if (!address) {
     return null;
   }
 
   const login = async () => {
-    const result = await lensLogin({
-      address,
-      profileId: profile.id,
-    });
+    // const result = await lensLogin({
+    //   signMessage
+    //   profileId: profile.id,
+    // });
 
-    if (result.isFailure()) {
-      return toast.error(result.error.message);
-    }
+    // if (result.isFailure()) {
+    //   return toast.error(result.error.message);
+    // }
 
     // set a cookie from the local storage with the refresh token
     const credentials = localStorage.getItem("lens.production.credentials");
@@ -50,7 +52,7 @@ export function LoginButton({ profile, onSuccess }: { profile: Profile; onSucces
       onClick={login}
     >
       <UserAvatar profile={profile} className="w-8 h-8" />
-      {profile.handle?.localName ?? profile.id}
+      {/* {profile.handle?.localName ?? profile.id} */}
     </Button>
   );
 }

@@ -8,9 +8,9 @@ import { getLensClient } from "@/lib/lens/client";
 import { fetchAccount } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
 
-async function getUserSettings(profileId: string) {
+async function getUserSettings(address: string) {
   const url = getBaseUrl();
-  const response = await fetch(`${url}/api/users/${profileId}/settings`, {
+  const response = await fetch(`${url}/api/users/${address}/settings`, {
     cache: "no-store",
   });
 

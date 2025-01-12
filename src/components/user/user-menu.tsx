@@ -2,14 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuPortal,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuPortal,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { clearAuthCookies } from "@/lib/auth/clear-cookies";
+import { clearAllCookies, clearAuthCookies } from "@/lib/auth/clear-cookies";
 import { MeResult } from "@lens-protocol/client";
-import { useLogout } from "@lens-protocol/react-web";
+import { useLogout } from "@lens-protocol/react";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
 import { useAccount, useDisconnect } from "wagmi";
@@ -41,7 +41,6 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
   if (!session) {
     return <ProfileSelectMenu />;
   }
-
 
   const handle = session.loggedInAs.account.username?.localName;
 
@@ -112,7 +111,7 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
             onClick={() => {
               disconnect();
               logout();
-              clearAuthCookies();
+              clearAllCookies();
             }}
           >
             Disconnect
