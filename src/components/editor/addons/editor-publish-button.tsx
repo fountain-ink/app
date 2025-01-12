@@ -4,14 +4,8 @@ import { Button } from "@/components/ui/button";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { getLensClient } from "@/lib/lens/client";
 import { storageClient } from "@/lib/lens/storage-client";
-import {
-    SelfFundedTransactionRequest,
-    SponsoredTransactionRequest,
-    TransactionIndexingError,
-    UnexpectedError
-} from "@lens-protocol/client";
-import { post } from "@lens-protocol/client/actions";
-import { handleWith } from "@lens-protocol/client/viem";
+import { TransactionIndexingError, TxHash, UnexpectedError } from "@lens-protocol/client";
+import { currentSession, post } from "@lens-protocol/client/actions";
 import { MetadataAttributeType, article } from "@lens-protocol/metadata";
 import { useSessionClient } from "@lens-protocol/react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -51,7 +45,7 @@ export const PublishButton = ({
   }, []);
 
   const handlePublish = async () => {
-    if (!session || !isWalletConnected || !walletClient) {
+    if (!isWalletConnected || !walletClient) {
       toast.error("Please connect your wallet and log in to publish");
       return;
     }
@@ -61,7 +55,21 @@ export const PublishButton = ({
       return;
     }
 
-    const handle = "";
+    const lens = await getLensClient();
+    if (!lens.isSessionClient()) {
+      toast.error("Please log in to publish");
+      return;
+    }
+
+    const session = await currentSession(lens).unwrapOr(null);
+
+    if (!session) {
+      toast.error("Please log in to publish");
+      return;
+    }
+
+    const handle = session.signer;
+
     const contentJson = editorState.children;
     const contentHtml = editor.api.htmlReact?.serialize({
       nodes: editorState.children,
@@ -89,13 +97,6 @@ export const PublishButton = ({
       const { uri } = await storageClient.uploadAsJson(metadata);
       const pendingToast = toast.loading("Publishing post...");
 
-      const lens = await getLensClient();
-      if (!lens.isSessionClient()) {
-        toast.dismiss(pendingToast);
-        toast.error("Please log in to publish");
-        return;
-      }
-
       // Create post and handle the transaction with viem wallet client
       const result = await post(lens, {
         contentUri: uri,
@@ -110,7 +111,7 @@ export const PublishButton = ({
 
       // Handle different transaction scenarios
       const value = result.value;
-      let txHash;
+      let txHash: TxHash;
 
       switch (value.__typename) {
         case "PostResponse":
@@ -120,14 +121,14 @@ export const PublishButton = ({
         case "SponsoredTransactionRequest":
         case "SelfFundedTransactionRequest": {
           toast.loading("Please approve the transaction...", { id: pendingToast });
-          txHash = await walletClient.sendTransaction({
+          txHash = (await walletClient.sendTransaction({
             to: value.raw.to,
             data: value.raw.data,
             value: BigInt(value.raw.value),
             gas: BigInt(value.raw.gasLimit),
             maxFeePerGas: value.raw.maxFeePerGas ? BigInt(value.raw.maxFeePerGas) : undefined,
             maxPriorityFeePerGas: value.raw.maxPriorityFeePerGas ? BigInt(value.raw.maxPriorityFeePerGas) : undefined,
-          });
+          })) as TxHash;
           break;
         }
 
@@ -139,7 +140,7 @@ export const PublishButton = ({
 
       // Wait for transaction to be mined and indexed
       toast.loading("Waiting for transaction to be mined...", { id: pendingToast });
-      
+
       const completion = await lens.waitForTransaction(txHash);
 
       if (completion.isErr()) {
@@ -186,7 +187,6 @@ export const PublishButton = ({
       toast.success("Post published successfully!");
       router.push(`/u/${handle}`);
       router.refresh();
-
     } catch (error) {
       console.error("Error creating post:", error);
       toast.error("An error occurred while creating the post. See console for details");

@@ -1,3 +1,5 @@
+"use client"
+
 import { Account } from "@lens-protocol/client";
 import { EvmAddress } from "@lens-protocol/metadata";
 import { useAccount } from "@lens-protocol/react";
