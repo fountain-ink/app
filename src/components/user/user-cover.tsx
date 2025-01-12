@@ -1,7 +1,6 @@
-import type { ProfileFragment } from "@lens-protocol/client";
-import type { Profile } from "@lens-protocol/react-web";
+import { Account } from "@lens-protocol/client";
 
-export const UserCover = ({ profile, className }: { profile?: Profile | ProfileFragment; className?: string }) => {
+export const UserCover = ({ profile, className }: { profile?: Account; className?: string }) => {
   const cover = profile?.metadata?.coverPicture?.optimized || profile?.metadata?.coverPicture?.raw;
 
   if (!cover) {
@@ -13,7 +12,7 @@ export const UserCover = ({ profile, className }: { profile?: Profile | ProfileF
       <img
         className="absolute inset-0 w-full h-full object-cover object-center"
         src={cover.uri}
-        alt={profile?.handle?.localName}
+        alt={profile?.username?.localName}
       />
     </div>
   );

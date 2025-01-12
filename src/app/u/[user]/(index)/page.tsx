@@ -26,14 +26,15 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
   const lens = await getLensClient();
   const { handle: userHandle } = await getUserProfile();
   const pageHandle = `lens/${params.user}`;
-  const profile = await fetchAccount(lens, {username: {localName: params.user}}) 
+  const profile = await fetchAccount(lens, { username: { localName: params.user } });
 
-  if (!profile) {
+
+  if (profile.isErr()) {
+    console.error("Failed to fetch user profile");
     return notFound();
   }
   
-  if (profile.isErr()) {
-    console.error("Failed to fetch user profile");
+  if (!profile || !profile.value) {
     return notFound();
   }
 
@@ -49,7 +50,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
     <>
       {showAuthor && (
         <div className="p-4 ">
-          <AuthorView showHandle={false} profiles={[profile]} />
+          <AuthorView showHandle={false} profiles={[profile.value]} />
         </div>
       )}
       {showTitle && (

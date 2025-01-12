@@ -1,4 +1,4 @@
-import type { ProfileFragment } from "@lens-protocol/client";
+import { Account } from "@lens-protocol/client";
 import { type ProfileId, useProfiles } from "@lens-protocol/react-web";
 import { UserAvatar } from "./user-avatar";
 import { UserCard } from "./user-card";
@@ -57,7 +57,7 @@ export const AuthorView = ({
   showHandle = true,
   showCard = true,
 }: {
-  profiles: ProfileFragment[];
+  profiles: Account[] | null;
   showAvatar?: boolean;
   showName?: boolean;
   showHandle?: boolean;
@@ -69,15 +69,15 @@ export const AuthorView = ({
     <div className="flex flex-wrap gap-2">
       {profiles.map((profile) => {
         const item = (
-          <span key={profile.id} className="flex flex-row gap-2 items-center">
+          <span key={profile.address} className="flex flex-row gap-2 items-center">
             {showAvatar && <UserAvatar className="w-6 h-6" profile={profile} />}
-            {showName && <span className="font-[family-name:--title-font]">{profile.metadata?.displayName}</span>}
-            {showHandle && <span className="">@{profile.handle?.localName}</span>}
+            {showName && <span className="font-[family-name:--title-font]">{profile.metadata?.name}</span>}
+            {showHandle && <span className="">@{profile.username?.localName}</span>}
           </span>
         );
         if (showCard) {
           return (
-            <UserCard linkProfile handle={profile.handle?.localName}>
+            <UserCard linkProfile handle={profile.username?.localName}>
               {item}
             </UserCard>
           );

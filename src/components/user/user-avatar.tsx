@@ -1,18 +1,21 @@
 "use client";
 
-import type { ProfileFragment } from "@lens-protocol/client";
 import { type Profile, SessionType, useSession } from "@lens-protocol/react-web";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Account } from "@lens-protocol/client";
 
 export const SessionAvatar = () => {
-  const { data: session, loading, error } = useSession();
 
-  if (session?.type !== SessionType.WithProfile) {
-    return null;
-  }
+  return null
 
-  return <UserAvatar className="w-10 h-10" profile={session?.profile} loading={loading} error={error} />;
+  // const { data: session, loading, error } = useSession();
+
+  // if (session?.type !== SessionType.WithProfile) {
+  //   return null;
+  // }
+
+  // return <UserAvatar className="w-10 h-10" profile={session?.profile} loading={loading} error={error} />;
 };
 
 export const UserAvatar = ({
@@ -21,7 +24,7 @@ export const UserAvatar = ({
   error,
   className,
 }: {
-  profile?: Profile | ProfileFragment;
+  profile?: Account;
   loading?: boolean;
   error?: Error;
   className?: string;

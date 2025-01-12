@@ -1,22 +1,22 @@
 import { createServiceClient } from "@/lib/supabase/service";
-import type { ProfileFragment } from "@lens-protocol/client";
+import { Account } from "@lens-protocol/client";
 
-export async function manageUserRecord(profile: ProfileFragment | null) {
+export async function manageUserRecord(profile: Account | null) {
   if (!profile) return;
 
   const db = await createServiceClient();
 
   // Check if user exists
-  const { data: existingUser } = await db.from("users").select().eq("profileId", profile.id).single();
+  const { data: existingUser } = await db.from("users").select().eq("profileId", profile.address).single();
 
   if (!existingUser) {
     // Create new user record
     const { error: insertError } = await db.from("users").insert({
-      profileId: profile.id,
-      handle: profile.handle?.localName ?? null,
+      profileId: profile.address,
+      handle: profile.username?.localName ?? null,
       isAnonymous: false,
-      name: profile.metadata?.displayName ?? null,
-      address: profile.ownedBy?.address ?? null,
+      name: profile.metadata?.name ?? null,
+      address: profile.owner ?? null,
       metadata: {},
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -31,12 +31,12 @@ export async function manageUserRecord(profile: ProfileFragment | null) {
     const { error: updateError } = await db
       .from("users")
       .update({
-        handle: profile.handle?.localName ?? null,
-        name: profile.metadata?.displayName ?? null,
-        address: profile.ownedBy?.address ?? null,
+        handle: profile.username?.localName ?? null,
+        name: profile.metadata?.name ?? null,
+        address: profile.owner ?? null,
         updatedAt: new Date().toISOString(),
       })
-      .eq("profileId", profile.id);
+      .eq("profileId", profile.address);
 
     if (updateError) {
       console.error("Error updating user record:", updateError);

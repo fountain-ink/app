@@ -12,7 +12,7 @@ import { UserHandle } from "@/components/user/user-handle";
 import { UserName } from "@/components/user/user-name";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
-import { fetchAccount } from "@lens-protocol/client/actions";
+import { fetchAccount, fetchAccountFeedStats, fetchAccountStats } from "@lens-protocol/client/actions";
 import { AnimatePresence } from "framer-motion";
 export default async function UserLayout({
   children,
@@ -25,41 +25,37 @@ export default async function UserLayout({
   const { profileId, handle: userHandle } = await getUserProfile();
   const pageHandle = `lens/${params.user}`;
 
-  const profile = await fetchAccount(lens, { username: { localName: params.user } });
+  const account = await fetchAccount(lens, { username: { localName: params.user } }).unwrapOr(null);
+  const stats = await fetchAccountStats(lens, { account: account?.address }).unwrapOr(null);
 
-  if (!profile) {
+  if (!account) {
     return <ErrorPage error="User not found" />;
   }
 
-  if (profile.isErr()) {
-    console.error("Failed to fetch user profile");
-    return <ErrorPage error="User not found" />;
-  }
-
-  const isUserProfile = profileId === profile.value?.address;
+  const isUserProfile = profileId === account.address;
 
   return (
     <div className="flex md:mt-20 flex-col items-center">
       <div className="w-screen md:max-w-3xl">
-        <UserCover profile={profile} />
+        <UserCover profile={account} />
       </div>
       <div className="w-full max-w-2xl flex flex-col">
         <div className="flex justify-between px-4">
           <div className="flex flex-row gap-4">
             <UserAvatar
               className="transform -translate-y-1/2 w-32 h-32 md:w-40 md:h-40 ring-4 rounded-full ring-background"
-              profile={profile}
+              profile={account}
             />
             <div className="flex flex-col gap-2 font-[family-name:--title-font]">
-              <UserName profile={profile} className="mt-4 md:font-4xl font-normal" />
-              <UserHandle profile={profile} className="md:font-xl -mt-3 font-normal text-normal tracking-wide" />
-              <UserFollowing profile={profile} />
+              <UserName profile={account} className="mt-4 md:font-4xl font-normal" />
+              <UserHandle profile={account} className="md:font-xl -mt-3 font-normal text-normal tracking-wide" />
+              <UserFollowing stats={stats} />
             </div>
           </div>
           <div className="mt-4">
             {isUserProfile ? (
               <ProfileSettingsModal
-                profile={profile}
+                profile={account}
                 trigger={
                   <Button variant="outline" className="w-fit">
                     Edit
@@ -67,12 +63,12 @@ export default async function UserLayout({
                 }
               />
             ) : (
-              <UserFollowButton profile={profile} />
+              <UserFollowButton profile={account} />
             )}
           </div>
         </div>
         <div className="-mt-14 p-4 px-8 ">
-          <UserBio profile={profile} />
+          <UserBio profile={account} />
         </div>
         <div className="p-4 pb-0 border-b border-border">
           <SlideNav

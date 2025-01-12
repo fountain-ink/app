@@ -1,8 +1,7 @@
-import type { ProfileFragment } from "@lens-protocol/client";
-import type { Profile } from "@lens-protocol/react-web";
+import { Account } from "@lens-protocol/client";
 
-export const UserName = ({ profile, className }: { profile?: Profile | ProfileFragment; className?: string }) => {
-  const name = profile?.metadata?.displayName;
+export const UserName = ({ profile, className }: { profile?: Account; className?: string }) => {
+  const name = profile?.metadata?.name;
 
   if (!name) {
     return null;
