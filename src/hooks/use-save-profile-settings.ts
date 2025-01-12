@@ -1,10 +1,14 @@
+"use client";
+
 import { getLensClient } from "@/lib/lens/client";
 import { storageClient } from "@/lib/lens/storage-client";
 import type { Account } from "@lens-protocol/client";
 import { setAccountMetadata } from "@lens-protocol/client/actions";
+import { handleOperationWith } from "@lens-protocol/client/viem";
 import { account } from "@lens-protocol/metadata";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useWalletClient } from "wagmi";
 
 type ProfileSettingsParams = {
   profile: Account;
@@ -21,6 +25,7 @@ type SaveSettingsResult = {
 };
 export function useSaveProfileSettings() {
   const [isSaving, setIsSaving] = useState(false);
+  const { data: walletClient } = useWalletClient();
 
   const saveSettings = async ({
     profile,
@@ -33,8 +38,9 @@ export function useSaveProfileSettings() {
     setIsSaving(true);
     const currentMetadata = profile.metadata;
     const handle = profile.username?.localName;
-    const lens = await getLensClient()
-    
+    const lens = await getLensClient();
+    console.log(currentMetadata, handle);
+
     if (!lens.isSessionClient()) {
       console.error("Error: No session found for profile");
       return { success: false, error: "No session found for profile" };
@@ -43,6 +49,11 @@ export function useSaveProfileSettings() {
     if (!handle) {
       toast.error("Error: No handle found for profile");
       return { success: false, error: "No handle found for profile" };
+    }
+
+    if (!walletClient) {
+      toast.error("Error: No wallet client found");
+      return { success: false, error: "No wallet client found" };
     }
 
     try {
@@ -86,6 +97,7 @@ export function useSaveProfileSettings() {
         [...existingAttributes],
       );
 
+      // console.log("NMAE", name, currentMetadata?.name, bio, currentMetadata?.bio, picture, currentMetadata?.picture, coverPicture, currentMetadata?.coverPicture);
       const metadata = account({
         name: name ?? currentMetadata?.name ?? undefined,
         bio: bio ?? currentMetadata?.bio ?? undefined,
@@ -96,13 +108,14 @@ export function useSaveProfileSettings() {
             : currentMetadata?.picture?.image?.raw?.uri) ??
           undefined,
         coverPicture: coverPicture ?? currentMetadata?.coverPicture?.raw?.uri ?? undefined,
-        attributes: updatedAttributes,
+        attributes: undefined,
       });
       console.log(metadata);
 
-
       const { uri: metadataUri } = await storageClient.uploadAsJson(metadata);
-      const result = await setAccountMetadata(lens, {metadataUri})
+      console.log(metadataUri);
+
+      const result = await setAccountMetadata(lens, { metadataUri }).andThen(handleOperationWith(walletClient as any));
 
       if (result.isErr()) {
         const error = result.error.message || "Failed to update settings";
@@ -114,13 +127,6 @@ export function useSaveProfileSettings() {
       toast.success("Settings updated!", {
         description: "Changes may take a few seconds to apply.",
       });
-
-      //// FIXME: Handle transaction completion in background
-      // Handle transaction completion in background
-      // result.value.waitForCompletion().catch((error: any) => {
-      //   console.error("Transaction failed:", error);
-      //   toast.error(`Error: Transaction failed - ${error.message || "Unknown error"}`);
-      // });
 
       return { success: true, error: null };
     } catch (error) {

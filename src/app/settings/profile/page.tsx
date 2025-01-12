@@ -9,6 +9,7 @@ export const metadata = {
 export default async function ProfileSettingsPage() {
   const lens = await getLensClient();
   const { profile } = await getUserProfile();
+  console.log(profile);
 
-  return <ProfileSettings profile={profile} />;
+  return <ProfileSettings profile={profile?.loggedInAs.account} />;
 }

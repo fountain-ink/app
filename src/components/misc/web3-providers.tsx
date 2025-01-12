@@ -5,35 +5,17 @@ import { getPublicClient } from "@/lib/lens/client";
 import { LensProvider } from "@lens-protocol/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
+import { polygon } from "viem/chains";
 import { createConfig, http, WagmiProvider } from "wagmi";
-import { polygon } from "wagmi/chains";
-
-// Add Lens Testnet chain configuration
-const lensTestnet = {
-  id: 37111,
-  name: 'Lens Network Sepolia Testnet',
-  network: 'lens-testnet',
-  nativeCurrency: {
-    decimals: 18,
-    name: 'GRASS',
-    symbol: 'GRASS',
-  },
-  rpcUrls: {
-    default: { http: ['https://rpc.testnet.lens.dev'] },
-    public: { http: ['https://rpc.testnet.lens.dev'] },
-  },
-  blockExplorers: {
-    default: { name: 'Explorer', url: 'https://block-explorer.testnet.lens.dev' },
-  },
-} as const;
+import { chains } from "@lens-network/sdk/viem";
 
 const wagmiConfig = createConfig(
   getDefaultConfig({
     // Add both chains
-    chains: [lensTestnet],
+    chains: [chains.testnet, polygon],
     transports: {
-      // [polygon.id]: http(),
-      [lensTestnet.id]: http(),
+      [polygon.id]: http(),
+      [chains.testnet.id]: http(),
     },
     walletConnectProjectId: env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
 
@@ -52,11 +34,7 @@ export const Web3Providers = ({ children }: { children: JSX.Element }) => {
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <ConnectKitProvider>
-          <LensProvider client={publicClient}>
-            
-            {children}
-          
-          </LensProvider>
+          <LensProvider client={publicClient}>{children}</LensProvider>
         </ConnectKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
