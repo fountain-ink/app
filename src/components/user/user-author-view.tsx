@@ -41,7 +41,7 @@ export const LazyAuthorView = ({
     <div className="flex flex-wrap gap-2">
       {profiles.map((profile) => (
         <span key={profile.id} className="flex flex-row gap-2 items-center">
-          {showAvatar && <UserAvatar className="w-6 h-6" profile={profile} />}
+          {/* {showAvatar && <UserAvatar className="w-6 h-6" profile={profile} />} */}
           {showName && <b className="text-foreground">{profile.metadata?.displayName}</b>}
           {showHandle && <span className="text-foreground">@{profile.handle?.localName}</span>}
         </span>

@@ -1,6 +1,6 @@
 "use client";
 
-import type { ProfileFragment } from "@lens-protocol/client";
+import type { Account } from "@lens-protocol/client";
 import {
   type Profile,
   type ProfileId,
@@ -22,7 +22,7 @@ export const UserContent = ({
   contentType = "articles",
   isUserProfile = false,
 }: {
-  profile: Profile | ProfileFragment;
+  profile: Account;
   loading?: boolean;
   contentType?: string;
   isUserProfile?: boolean;
@@ -33,7 +33,7 @@ export const UserContent = ({
     error,
   } = usePublications({
     where: {
-      from: [profile.id as ProfileId],
+      from: [profile.address],
       metadata: {
         publishedOn: contentType === "articles" ? [appId("fountain")] : undefined,
         mainContentFocus:

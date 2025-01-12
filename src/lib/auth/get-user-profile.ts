@@ -44,7 +44,7 @@ export async function getUserProfile() {
   // Use the subject (wallet address) or act (managed account) to fetch the profile
   const address = decoded.sub;
   // const account = await fetchAccount(client, { address });
-  const account = await fetchMeDetails(client)
+  const account = await fetchMeDetails(client).unwrapOr(null)
 
   if (!account) {
     throw new Error("Profile not found");

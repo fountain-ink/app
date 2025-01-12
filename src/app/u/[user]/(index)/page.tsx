@@ -26,19 +26,13 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
   const lens = await getLensClient();
   const { handle: userHandle } = await getUserProfile();
   const pageHandle = `lens/${params.user}`;
-  const profile = await fetchAccount(lens, { username: { localName: params.user } });
+  const profile = await fetchAccount(lens, { username: { localName: params.user } }).unwrapOr(null);
 
-
-  if (profile.isErr()) {
-    console.error("Failed to fetch user profile");
-    return notFound();
-  }
-  
-  if (!profile || !profile.value) {
+  if (!profile || !profile) {
     return notFound();
   }
 
-  const settings = await getUserSettings(profile.value?.address);
+  const settings = await getUserSettings(profile.address);
   const showAuthor = settings?.blog?.showAuthor ?? true;
   const showTags = settings?.blog?.showTags ?? true;
   const showTitle = settings?.blog?.showTitle ?? true;
@@ -50,12 +44,12 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
     <>
       {showAuthor && (
         <div className="p-4 ">
-          <AuthorView showHandle={false} profiles={[profile.value]} />
+          <AuthorView showHandle={false} profiles={[profile]} />
         </div>
       )}
       {showTitle && (
         <div className="text-[1.5rem] sm:text-[2rem] lg:text-[2.5rem] text-center font-[letter-spacing:var(--title-letter-spacing)] font-[family-name:var(--title-font)] font-normal font-[color:var(--title-color)] overflow-hidden line-clamp-2">
-          {blogTitle ?? `${profile.value?.username?.localName}'s blog`}
+          {blogTitle ?? `${profile.username?.localName}'s blog`}
         </div>
       )}
       <Separator className="w-48 bg-primary mt-3" />

@@ -29,6 +29,7 @@ export async function signAppToken(refreshToken: string) {
     expiresIn: "30d",
     issuer: "fountain.ink",
   });
+  const account = profile.profile.loggedInAs.account;
 
-  return { jwt, profile };
+  return { jwt, profile: account };
 }

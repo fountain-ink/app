@@ -8,19 +8,14 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
   const lens = await getLensClient();
   const { profileId } = await getUserProfile();
   const pageHandle = `lens/${params.user}`;
-  
- const profile = await fetchAccount(lens, {username: {localName: params.user}}) 
+
+  const profile = await fetchAccount(lens, { username: { localName: params.user } }).unwrapOr(null);
 
   if (!profile) {
     return <ErrorPage error="User not found" />;
   }
-  
-  if (profile.isErr()) {
-    console.error("Failed to fetch user profile");
-    return <ErrorPage error="User not found" />;
-  }
 
-  const isUserProfile = profileId === profile.value?.address;
+  const isUserProfile = profileId === profile.address;
 
   return (
     <div className="flex flex-col p-4">
