@@ -10,19 +10,21 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
   const profile = await fetchAccount(lens, { username: { localName: params.user } }).unwrapOr(null);
   const appEvmAddress = "0xF9F360bb2bFA920a19cB5DedFd4d2d9e7ecc5904";
 
-  const publications = await fetchPosts(lens, {
+  const posts = await fetchPosts(lens, {
     filter: {
       // apps: [appEvmAddress],
       authors: [profile?.address],
     },
-  });
+  }).unwrapOr(null);
 
-  if (!profile) {
+  if (!profile || !posts) {
     return null;
   }
 
   const isUserProfile = profileId === profile.address;
-  return <UserContent isUserProfile={isUserProfile} contentType="articles" profile={profile} />;
+  return (
+    <UserContent posts={[...posts.items]} isUserProfile={isUserProfile} contentType="articles" profile={profile} />
+  );
 };
 
 export default UserPage;

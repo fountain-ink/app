@@ -2,7 +2,16 @@
 
 import { Button } from "@/components/ui/button";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
-import { uploadMetadata } from "@/lib/upload/upload-metadata";
+import { getLensClient } from "@/lib/lens/client";
+import { storageClient } from "@/lib/lens/storage-client";
+import {
+    SelfFundedTransactionRequest,
+    SponsoredTransactionRequest,
+    TransactionIndexingError,
+    UnexpectedError
+} from "@lens-protocol/client";
+import { post } from "@lens-protocol/client/actions";
+import { handleWith } from "@lens-protocol/client/viem";
 import { MetadataAttributeType, article } from "@lens-protocol/metadata";
 import { useSessionClient } from "@lens-protocol/react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -12,7 +21,7 @@ import { useMemo } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { toast } from "sonner";
-import { useAccount } from "wagmi";
+import { useAccount, useWalletClient } from "wagmi";
 import { getElements } from "../elements";
 import { staticPlugins } from "../plugins";
 
@@ -23,10 +32,9 @@ export const PublishButton = ({
   subtitle,
   coverImage,
 }: { disabled?: boolean; tags?: string[]; title?: string; subtitle?: string; coverImage?: string }) => {
-  const { data: session, loading, error } = useSessionClient();
+  const { data: session } = useSessionClient();
   const { isConnected: isWalletConnected } = useAccount();
-  // const { execute } = useCreatePost();
-  // const account = use
+  const { data: walletClient } = useWalletClient();
   const editorState: any = useEditorState();
   const router = useRouter();
   const { deleteDocument } = useDocumentStorage();
@@ -43,8 +51,8 @@ export const PublishButton = ({
   }, []);
 
   const handlePublish = async () => {
-    if (!session || !isWalletConnected) {
-      toast.error("Please log in to publish");
+    if (!session || !isWalletConnected || !walletClient) {
+      toast.error("Please connect your wallet and log in to publish");
       return;
     }
 
@@ -53,7 +61,6 @@ export const PublishButton = ({
       return;
     }
 
-    // const handle = session?.?.handle?.localName || "";
     const handle = "";
     const contentJson = editorState.children;
     const contentHtml = editor.api.htmlReact?.serialize({
@@ -65,7 +72,6 @@ export const PublishButton = ({
     });
 
     const contentMarkdown = editorState.api.markdown.serialize();
-    // const { title, subtitle, coverImage } = extractMetadata(contentJson);
 
     try {
       const metadata = article({
@@ -73,7 +79,6 @@ export const PublishButton = ({
         content: contentMarkdown,
         locale: "en",
         tags,
-
         attributes: [
           { key: "contentJson", type: MetadataAttributeType.JSON, value: JSON.stringify(contentJson) },
           { key: "contentHtml", type: MetadataAttributeType.STRING, value: contentHtml },
@@ -81,53 +86,78 @@ export const PublishButton = ({
         ],
       });
 
-      const publish = false;
-      if (!publish) {
-        console.log(metadata);
-        return;
-      }
-
-      // const metadataURI = await uploadMetadata(metadata);
       const { uri } = await storageClient.uploadAsJson(metadata);
-      // Show initial toast that transaction is being processed
       const pendingToast = toast.loading("Publishing post...");
 
-      // const result = await execute({
-      //   metadata: metadataURI,
-      // });
-
-      if (result.isFailure()) {
+      const lens = await getLensClient();
+      if (!lens.isSessionClient()) {
         toast.dismiss(pendingToast);
-        toast.error(`Failed to create post: ${result.error.message}`);
+        toast.error("Please log in to publish");
         return;
       }
 
-      // Update toast to show transaction is being mined/indexed
-      toast.loading("Finalizing on-chain...", {
-        id: pendingToast,
+      // Create post and handle the transaction with viem wallet client
+      const result = await post(lens, {
+        contentUri: uri,
       });
 
-      const completion = await result.value.waitForCompletion();
-
-      if (completion.isFailure()) {
+      if (result.isErr()) {
         toast.dismiss(pendingToast);
-        switch (completion.error.reason) {
-          case "MINING_TIMEOUT":
-            toast.error("Transaction was not mined within the timeout period");
-            break;
-          case "INDEXING_TIMEOUT":
-            toast.error("Transaction was mined but not indexed within timeout period");
-            break;
-          case "REVERTED":
-            toast.error("Transaction was reverted");
-            break;
-          default:
-            toast.error("Unknown error occurred while processing transaction");
+        const error = result.error as UnexpectedError;
+        toast.error(`Failed to create post: ${error.message}`);
+        return;
+      }
+
+      // Handle different transaction scenarios
+      const value = result.value;
+      let txHash;
+
+      switch (value.__typename) {
+        case "PostResponse":
+          txHash = value.hash;
+          break;
+
+        case "SponsoredTransactionRequest":
+        case "SelfFundedTransactionRequest": {
+          toast.loading("Please approve the transaction...", { id: pendingToast });
+          txHash = await walletClient.sendTransaction({
+            to: value.raw.to,
+            data: value.raw.data,
+            value: BigInt(value.raw.value),
+            gas: BigInt(value.raw.gasLimit),
+            maxFeePerGas: value.raw.maxFeePerGas ? BigInt(value.raw.maxFeePerGas) : undefined,
+            maxPriorityFeePerGas: value.raw.maxPriorityFeePerGas ? BigInt(value.raw.maxPriorityFeePerGas) : undefined,
+          });
+          break;
+        }
+
+        default:
+          toast.dismiss(pendingToast);
+          toast.error("Unexpected response type");
+          return;
+      }
+
+      // Wait for transaction to be mined and indexed
+      toast.loading("Waiting for transaction to be mined...", { id: pendingToast });
+      
+      const completion = await lens.waitForTransaction(txHash);
+
+      if (completion.isErr()) {
+        toast.dismiss(pendingToast);
+        const error = completion.error;
+        if (error instanceof TransactionIndexingError) {
+          switch (error.name) {
+            case "TransactionIndexingError":
+              toast.error("Transaction indexing failed");
+              break;
+            default:
+              toast.error("Unknown error occurred while processing transaction");
+          }
+        } else {
+          toast.error("Unexpected error occurred while processing transaction");
         }
         return;
       }
-
-      const post = completion.value;
 
       // Clean up drafts
       if (isLocal) {
@@ -154,10 +184,9 @@ export const PublishButton = ({
       // Show success and redirect
       toast.dismiss(pendingToast);
       toast.success("Post published successfully!");
-
-      // Route to post page
-      router.push(`/u/${handle}/${post.id}`);
+      router.push(`/u/${handle}`);
       router.refresh();
+
     } catch (error) {
       console.error("Error creating post:", error);
       toast.error("An error occurred while creating the post. See console for details");

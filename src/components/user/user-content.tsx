@@ -1,71 +1,35 @@
 "use client";
 
-import type { Account } from "@lens-protocol/client";
-import {
-  type Profile,
-  type ProfileId,
-  PublicationMetadataMainFocusType,
-  PublicationType,
-  appId,
-  usePublications,
-} from "@lens-protocol/react-web";
+import type { Account, AnyPost, Post } from "@lens-protocol/client";
 import { motion } from "framer-motion";
-import { toast } from "sonner";
-import ErrorPage from "../misc/error-page";
+import { DraftCreateButton } from "../draft/draft-create-button";
 import { PostView } from "../post/post-view";
 import { Card, CardFooter, CardHeader } from "../ui/card";
-import { DraftCreateButton } from "../draft/draft-create-button";
 
 export const UserContent = ({
+  posts,
   profile,
   loading,
   contentType = "articles",
   isUserProfile = false,
 }: {
+  posts: AnyPost[];
   profile: Account;
   loading?: boolean;
   contentType?: string;
   isUserProfile?: boolean;
 }) => {
-  const {
-    data: publications,
-    loading: publicationsLoading,
-    error,
-  } = usePublications({
-    where: {
-      from: [profile.address],
-      metadata: {
-        publishedOn: contentType === "articles" ? [appId("fountain")] : undefined,
-        mainContentFocus:
-          contentType === "articles"
-            ? [PublicationMetadataMainFocusType.Article]
-            : [
-                PublicationMetadataMainFocusType.Article,
-                PublicationMetadataMainFocusType.Image,
-                PublicationMetadataMainFocusType.Audio,
-                PublicationMetadataMainFocusType.TextOnly,
-                PublicationMetadataMainFocusType.CheckingIn,
-                PublicationMetadataMainFocusType.Story,
-                PublicationMetadataMainFocusType.Video,
-                PublicationMetadataMainFocusType.Embed,
-                PublicationMetadataMainFocusType.Link,
-              ],
-      },
-      publicationTypes: [PublicationType.Post],
-    },
-  });
-
-  if (loading || publicationsLoading) {
+  if (loading) {
     return null;
   }
 
-  if (error) {
-    toast.error(error.message);
-    return <ErrorPage error={error.message} />;
-  }
+  // if (error) {
+  //   toast.error(error.message);
+  //   return <ErrorPage error={error.message} />;
+  // }
 
-  const posts = publications.map((publication) => {
-    if (publication.__typename === "Post") {
+  const postViews = posts.map((post) => {
+    if (post.__typename === "Post") {
       if (contentType === "articles") {
         return (
           <PostView
@@ -77,9 +41,9 @@ export const UserContent = ({
               showDate: true,
               showPreview: true,
             }}
-            key={publication.id}
-            authorIds={[publication.by.id]}
-            item={publication}
+            key={post.id}
+            authorIds={[post.author.address]}
+            item={post}
           />
         );
       }
@@ -94,9 +58,9 @@ export const UserContent = ({
             showDate: true,
             showPreview: false,
           }}
-          key={publication.id}
-          authorIds={[publication.by.id]}
-          item={publication}
+          key={post.id}
+          authorIds={[post.author.address]}
+          item={post}
         />
       );
     }
@@ -123,7 +87,7 @@ export const UserContent = ({
       transition={{ duration: 0.3 }}
       className="flex flex-col gap-4"
     >
-      {posts}
+      {postViews}
     </motion.div>
   );
 };

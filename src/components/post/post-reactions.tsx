@@ -1,6 +1,6 @@
-import type { Post } from "@lens-protocol/react-web";
 import { Bookmark, Heart, MessageCircle, Repeat2 } from "lucide-react";
 import { ActionButton } from "./post-action-button";
+import { Post } from "@lens-protocol/client";
 
 const reactions = [
   {
@@ -30,7 +30,7 @@ export const PostReactions = ({ post }: { post: Post }) => {
       <ActionButton
         icon={reactions[1].icon}
         label={reactions[1].label}
-        initialCount={post.stats.mirrors}
+        initialCount={post.stats.reposts}
         strokeColor={reactions[1].strokeColor}
         fillColor={reactions[1].fillColor}
       />

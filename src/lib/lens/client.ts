@@ -72,7 +72,6 @@ export const getAccountOwnerClient = async (
 
   return authenticated.value;
 };
-
 export const getLensClient = async () => {
   const resumed = await publicClient.resumeSession();
   if (resumed.isErr()) {
@@ -82,3 +81,4 @@ export const getLensClient = async () => {
 
   return resumed.value;
 };
+

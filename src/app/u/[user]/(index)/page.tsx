@@ -5,7 +5,7 @@ import { UserContent } from "@/components/user/user-content";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getBaseUrl } from "@/lib/get-base-url";
 import { getLensClient } from "@/lib/lens/client";
-import { fetchAccount } from "@lens-protocol/client/actions";
+import { fetchAccount, fetchPosts } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
 
 async function getUserSettings(address: string) {
@@ -28,7 +28,14 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
   const pageHandle = `lens/${params.user}`;
   const profile = await fetchAccount(lens, { username: { localName: params.user } }).unwrapOr(null);
 
-  if (!profile || !profile) {
+  const posts = await fetchPosts(lens, {
+    filter: {
+      // apps: [appEvmAddress],
+      authors: [profile?.address],
+    },
+  }).unwrapOr(null);
+
+  if (!profile || !posts) {
     return notFound();
   }
 
@@ -55,7 +62,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
       <Separator className="w-48 bg-primary mt-3" />
       {showTags && <IndexNavigation username={params.user} isUserProfile={isUserProfile} />}
       <div className="flex flex-col my-4 gap-4">
-        <UserContent contentType="articles" profile={profile} isUserProfile={isUserProfile} />
+        <UserContent posts={[...posts.items]} contentType="articles" profile={profile} isUserProfile={isUserProfile} />
       </div>
     </>
   );

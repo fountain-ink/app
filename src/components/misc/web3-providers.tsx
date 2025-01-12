@@ -8,11 +8,32 @@ import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { createConfig, http, WagmiProvider } from "wagmi";
 import { polygon } from "wagmi/chains";
 
+// Add Lens Testnet chain configuration
+const lensTestnet = {
+  id: 37111,
+  name: 'Lens Network Sepolia Testnet',
+  network: 'lens-testnet',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'GRASS',
+    symbol: 'GRASS',
+  },
+  rpcUrls: {
+    default: { http: ['https://rpc.testnet.lens.dev'] },
+    public: { http: ['https://rpc.testnet.lens.dev'] },
+  },
+  blockExplorers: {
+    default: { name: 'Explorer', url: 'https://block-explorer.testnet.lens.dev' },
+  },
+} as const;
+
 const wagmiConfig = createConfig(
   getDefaultConfig({
-    chains: [polygon],
+    // Add both chains
+    chains: [lensTestnet],
     transports: {
-      [polygon.id]: http(),
+      // [polygon.id]: http(),
+      [lensTestnet.id]: http(),
     },
     walletConnectProjectId: env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
 

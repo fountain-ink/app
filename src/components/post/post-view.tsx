@@ -1,6 +1,7 @@
 import { extractMetadata } from "@/lib/get-article-title";
 import { formatDate, formatRelativeTime } from "@/lib/utils";
-import type { ArticleMetadataV3, Post, ProfileId } from "@lens-protocol/react-web";
+import { Post } from "@lens-protocol/client";
+import { ArticleMetadata, EvmAddress } from "@lens-protocol/metadata";
 import type { Draft } from "../draft/draft";
 import { DraftMenu } from "../draft/draft-menu";
 import Markdown from "../misc/markdown";
@@ -19,7 +20,7 @@ interface PostViewOptions {
 
 interface PostViewProps {
   item: Post | Draft;
-  authorIds: ProfileId[];
+  authorIds: EvmAddress[];
   options?: PostViewOptions;
   isDraft?: boolean;
   onDelete?: () => void;
@@ -47,6 +48,7 @@ export const PostView = ({
   let date: string;
   let contentJson: string;
   let handle: string;
+  console.log(item);
 
   if (isDraft) {
     const draft = item as Draft;
@@ -56,11 +58,11 @@ export const PostView = ({
     contentJson = draft.contentJson;
   } else {
     const post = item as Post;
-    const metadata = post?.metadata as ArticleMetadataV3;
-    date = post.createdAt;
-    handle = post.by?.handle?.localName || "";
-    contentMarkdown = metadata?.content.slice(0, 100) || "";
-    contentJson = metadata?.attributes?.find((attr) => attr.key === "contentJson")?.value || "{}";
+    const metadata = post?.metadata as ArticleMetadata;
+    date = post.timestamp;
+    handle = post.author.username?.localName || "";
+    contentMarkdown = "content" in metadata ? (metadata.content as string) : "";
+    contentJson = metadata?.attributes?.find((attr) => "key" in attr && attr.key === "contentJson")?.value as string || "{}";
   }
   const { title, subtitle, coverImage } = extractMetadata(isDraft ? contentJson : JSON.parse(contentJson));
 

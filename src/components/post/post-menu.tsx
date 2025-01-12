@@ -1,5 +1,4 @@
-import { useProfileId } from "@/hooks/use-profile-id";
-import type { Post } from "@lens-protocol/react-web";
+import { Post } from "@lens-protocol/client";
 import { Bookmark, Link, MoreHorizontal, Trash2 } from "lucide-react";
 import { ActionButton, type DropdownItem } from "./post-action-button";
 
@@ -8,8 +7,11 @@ export const PostMenu = ({ post }: { post: Post }) => {
     navigator.clipboard.writeText(window.location.href);
   };
 
-  const profileId = useProfileId();
-  const isUserPost = post.by?.id === profileId;
+  // const profileId = useProfileId();
+  // 
+  //// FIXME
+  const profileId = "0x0000000000000000000000000000000000000000";
+  const isUserPost = post.author.address === profileId;
 
   const handleDelete = () => {
     // Implement delete functionality
