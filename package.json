@@ -119,7 +119,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "connectkit": "^1.8.2",
-    "cookies-next": "^4.2.1",
+    "cookies-next": "^4.3.0",
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "editorjs-html": "^3.4.3",

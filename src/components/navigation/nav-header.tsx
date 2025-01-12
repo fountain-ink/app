@@ -1,6 +1,7 @@
 "use client";
 
 import { type ConnectionStatus, useYjsState } from "@/hooks/use-yjs-state";
+import { MeResult } from "@lens-protocol/client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { DraftCreateButton } from "../draft/draft-create-button";
@@ -12,7 +13,7 @@ import { ConnectionBadge } from "../ui/connection-badge";
 import { UserMenu } from "../user/user-menu";
 import { PublishMenu } from "./publish-menu-button";
 
-export const Header = () => {
+export const Header = ({ session }: { session: MeResult | null }) => {
   const pathname = usePathname();
   const hostname = typeof window !== "undefined" && window.location.hostname ? window.location.hostname : "";
   const isWritePage = pathname.startsWith("/write");
@@ -48,7 +49,7 @@ export const Header = () => {
         {isWritePage && <PublishMenu />}
         {isWritePage && <EditorOptionsDropdown />}
         {!isWritePage && <DraftCreateButton />}
-        <UserMenu />
+        <UserMenu session={session} />
       </div>
     </div>
   );
