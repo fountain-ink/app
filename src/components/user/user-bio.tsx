@@ -11,7 +11,7 @@ export const UserBio = ({ profile }: { profile?: Account }) => {
   const content = profile?.metadata?.bio || "";
 
   return (
-    <div className="text-foreground">
+    <div className="">
       <TruncatedText text={content} maxLength={200} isMarkdown={true} />
     </div>
   );

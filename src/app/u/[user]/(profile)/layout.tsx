@@ -12,7 +12,7 @@ import { UserHandle } from "@/components/user/user-handle";
 import { UserName } from "@/components/user/user-name";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
-import { fetchAccount, fetchAccountFeedStats, fetchAccountStats } from "@lens-protocol/client/actions";
+import { fetchAccount, fetchAccountStats } from "@lens-protocol/client/actions";
 import { AnimatePresence } from "framer-motion";
 export default async function UserLayout({
   children,
@@ -27,7 +27,7 @@ export default async function UserLayout({
 
   const account = await fetchAccount(lens, { username: { localName: params.user } }).unwrapOr(null);
   const stats = await fetchAccountStats(lens, { account: account?.address }).unwrapOr(null);
-  console.log(stats)
+  console.log(stats);
 
   if (!account) {
     return <ErrorPage error="User not found" />;
@@ -49,8 +49,11 @@ export default async function UserLayout({
             />
             <div className="flex flex-col gap-2 font-[family-name:--title-font]">
               <UserName profile={account} className="mt-4 md:font-4xl font-normal" />
-              <UserHandle profile={account} className="md:font-xl -mt-3 font-normal text-normal tracking-wide" />
-              <UserFollowing stats={stats} />
+              <UserHandle
+                profile={account}
+                className="md:font-xl -mt-3 font-normal text-normal tracking-wide text-foreground/65"
+              />
+              <UserFollowing stats={stats} className="" />
             </div>
           </div>
           <div className="mt-4">
@@ -68,7 +71,7 @@ export default async function UserLayout({
             )}
           </div>
         </div>
-        <div className="-mt-14 p-4 px-8 ">
+        <div className="-mt-14 p-4 px-8 font-[family-name:--title-font] leading-loose text-foreground/65">
           <UserBio profile={account} />
         </div>
         <div className="p-4 pb-0 border-b border-border">
