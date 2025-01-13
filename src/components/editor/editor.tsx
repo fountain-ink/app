@@ -60,7 +60,7 @@ export default function PlateEditor(
             autoFocus
           />
 
-          <AutoSave documentId={documentId} />
+          {!isReadOnly && <AutoSave documentId={documentId} />}
 
           <FloatingToolbar>
             <FloatingToolbarButtons />

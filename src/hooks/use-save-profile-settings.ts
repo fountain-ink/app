@@ -1,12 +1,17 @@
-import { uploadMetadata } from "@/lib/upload/upload-metadata";
-import type { ProfileFragment } from "@lens-protocol/client";
-import { profile as profileMetadata } from "@lens-protocol/metadata";
-import { type Profile, useSetProfileMetadata } from "@lens-protocol/react-web";
+"use client";
+
+import { getLensClient } from "@/lib/lens/client";
+import { storageClient } from "@/lib/lens/storage-client";
+import type { Account } from "@lens-protocol/client";
+import { setAccountMetadata } from "@lens-protocol/client/actions";
+import { handleOperationWith } from "@lens-protocol/client/viem";
+import { account } from "@lens-protocol/metadata";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useWalletClient } from "wagmi";
 
 type ProfileSettingsParams = {
-  profile: Profile | ProfileFragment;
+  profile: Account;
   name?: string;
   bio?: string;
   picture?: string;
@@ -20,7 +25,7 @@ type SaveSettingsResult = {
 };
 export function useSaveProfileSettings() {
   const [isSaving, setIsSaving] = useState(false);
-  const { execute: setProfileMetadata } = useSetProfileMetadata();
+  const { data: walletClient } = useWalletClient();
 
   const saveSettings = async ({
     profile,
@@ -32,11 +37,23 @@ export function useSaveProfileSettings() {
   }: ProfileSettingsParams) => {
     setIsSaving(true);
     const currentMetadata = profile.metadata;
-    const handle = profile.handle?.localName;
+    const handle = profile.username?.localName;
+    const lens = await getLensClient();
+    console.log(currentMetadata, handle);
+
+    if (!lens.isSessionClient()) {
+      console.error("Error: No session found for profile");
+      return { success: false, error: "No session found for profile" };
+    }
 
     if (!handle) {
       toast.error("Error: No handle found for profile");
       return { success: false, error: "No handle found for profile" };
+    }
+
+    if (!walletClient) {
+      toast.error("Error: No wallet client found");
+      return { success: false, error: "No wallet client found" };
     }
 
     try {
@@ -80,8 +97,9 @@ export function useSaveProfileSettings() {
         [...existingAttributes],
       );
 
-      const metadata = profileMetadata({
-        name: name ?? currentMetadata?.displayName ?? undefined,
+      // console.log("NMAE", name, currentMetadata?.name, bio, currentMetadata?.bio, picture, currentMetadata?.picture, coverPicture, currentMetadata?.coverPicture);
+      const metadata = account({
+        name: name ?? currentMetadata?.name ?? undefined,
         bio: bio ?? currentMetadata?.bio ?? undefined,
         picture:
           picture ??
@@ -90,15 +108,16 @@ export function useSaveProfileSettings() {
             : currentMetadata?.picture?.image?.raw?.uri) ??
           undefined,
         coverPicture: coverPicture ?? currentMetadata?.coverPicture?.raw?.uri ?? undefined,
-        attributes: updatedAttributes,
-        appId: "fountain",
+        attributes: undefined,
       });
       console.log(metadata);
 
-      const metadataURI = await uploadMetadata(metadata);
-      const result = await setProfileMetadata({ metadataURI });
+      const { uri: metadataUri } = await storageClient.uploadAsJson(metadata);
+      console.log(metadataUri);
 
-      if (result.isFailure()) {
+      const result = await setAccountMetadata(lens, { metadataUri }).andThen(handleOperationWith(walletClient as any));
+
+      if (result.isErr()) {
         const error = result.error.message || "Failed to update settings";
         console.error("Failed to update profile metadata:", error);
         toast.error(`Error: ${error}`);
@@ -107,12 +126,6 @@ export function useSaveProfileSettings() {
 
       toast.success("Settings updated!", {
         description: "Changes may take a few seconds to apply.",
-      });
-
-      // Handle transaction completion in background
-      result.value.waitForCompletion().catch((error) => {
-        console.error("Transaction failed:", error);
-        toast.error(`Error: Transaction failed - ${error.message || "Unknown error"}`);
       });
 
       return { success: true, error: null };

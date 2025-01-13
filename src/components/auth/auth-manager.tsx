@@ -1,7 +1,6 @@
 "use client";
 
 import { isValidToken } from "@/lib/auth/validate-auth-token";
-import { useRefreshToken } from "@lens-protocol/react-web";
 import { setCookie } from "cookies-next";
 import { useEffect, useRef } from "react";
 
@@ -54,9 +53,9 @@ export const setupUserAuth = async (refreshToken: string) => {
     const response = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         refreshToken,
-        appToken: existingAppToken 
+        appToken: existingAppToken,
       }),
     });
 
@@ -81,7 +80,15 @@ const getCookie = (name: string) => {
 export function AuthManager() {
   const lastRefreshToken = useRef<string | undefined>();
   const lastAppToken = useRef<string | undefined>();
-  const refreshToken = useRefreshToken();
+  // const { data: session, loading, error } = useSessionClient();
+    const refreshToken = getCookie("refreshToken");
+
+  // if (loading) return null;
+  // if (error) {
+  //   toast.error("Failed to get session data");
+  //   return null;
+  // }
+  console.log("[Auth] Refresh token:", refreshToken);
 
   const checkAndUpdateAuth = async () => {
     try {

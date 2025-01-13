@@ -10,6 +10,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { Draft } from "./draft";
 import { DraftView } from "./draft-view";
+import { EvmAddress } from "@lens-protocol/metadata";
 
 async function getCloudDrafts() {
   const response = await fetch("/api/drafts", {
@@ -23,7 +24,7 @@ async function getCloudDrafts() {
   return data.drafts;
 }
 
-export function CloudDraftsList({ profileId }: { profileId: string | null | undefined }) {
+export function CloudDraftsList({ profileId }: { profileId?: EvmAddress | null }) {
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
@@ -109,7 +110,7 @@ export function CloudDraftsList({ profileId }: { profileId: string | null | unde
         <div key={draft.documentId}>
           <DraftView
             draft={draft}
-            authorId={(draft.authorId || profileId) as ProfileId}
+            authorId={(draft.authorId || profileId) as EvmAddress}
             isLocal={false}
             isSelected={selectedItems.has(draft.documentId)}
             onSelect={() => toggleSelection(draft.documentId)}

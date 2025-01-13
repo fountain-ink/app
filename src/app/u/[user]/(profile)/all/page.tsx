@@ -1,23 +1,31 @@
 import ErrorPage from "@/components/misc/error-page";
 import { UserContent } from "@/components/user/user-content";
-import { createLensClient } from "@/lib/auth/get-lens-client";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
+import { getLensClient } from "@/lib/lens/client";
+import { fetchAccount, fetchPosts } from "@lens-protocol/client/actions";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
-  const lens = await createLensClient();
-  const { profileId } = await getUserProfile(lens);
+  const lens = await getLensClient();
+  const { profileId } = await getUserProfile();
   const pageHandle = `lens/${params.user}`;
-  const profile = await lens.profile.fetch({ forHandle: pageHandle });
 
-  if (!profile) {
+  const profile = await fetchAccount(lens, { username: { localName: params.user } }).unwrapOr(null);
+  const posts = await fetchPosts(lens, {
+    filter: {
+      // apps: [appEvmAddress],
+      authors: [profile?.address],
+    },
+  }).unwrapOr(null);
+
+  if (!profile || !posts) {
     return <ErrorPage error="User not found" />;
   }
 
-  const isUserProfile = profileId === profile.id;
+  const isUserProfile = profileId === profile.address;
 
   return (
     <div className="flex flex-col p-4">
-      <UserContent contentType="all" profile={profile} isUserProfile={isUserProfile} />
+      <UserContent posts={[...posts.items]} contentType="all" profile={profile} isUserProfile={isUserProfile} />
     </div>
   );
 };

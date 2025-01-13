@@ -1,10 +1,9 @@
 "use client";
 
-import type { ProfileFragment } from "@lens-protocol/client";
-import type { Profile } from "@lens-protocol/react-web";
+import { Account } from "@lens-protocol/client";
 import { TruncatedText } from "../misc/truncated-text";
 
-export const UserBio = ({ profile }: { profile?: ProfileFragment | Profile }) => {
+export const UserBio = ({ profile }: { profile?: Account }) => {
   if (!profile) {
     return null;
   }

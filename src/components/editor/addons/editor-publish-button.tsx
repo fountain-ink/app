@@ -2,9 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
-import { uploadMetadata } from "@/lib/upload/upload-metadata";
+import { getLensClient } from "@/lib/lens/client";
+import { storageClient } from "@/lib/lens/storage-client";
+import { TransactionIndexingError } from "@lens-protocol/client";
+import { currentSession, fetchPost, post } from "@lens-protocol/client/actions";
+import { handleOperationWith } from "@lens-protocol/client/viem";
 import { MetadataAttributeType, article } from "@lens-protocol/metadata";
-import { SessionType, useCreatePost, useSession } from "@lens-protocol/react-web";
+import { useSessionClient } from "@lens-protocol/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { createPlateEditor, useEditorState } from "@udecode/plate-common/react";
 import { usePathname, useRouter } from "next/navigation";
@@ -12,7 +16,7 @@ import { useMemo } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { toast } from "sonner";
-import { useAccount } from "wagmi";
+import { useAccount, useWalletClient } from "wagmi";
 import { getElements } from "../elements";
 import { staticPlugins } from "../plugins";
 
@@ -23,9 +27,9 @@ export const PublishButton = ({
   subtitle,
   coverImage,
 }: { disabled?: boolean; tags?: string[]; title?: string; subtitle?: string; coverImage?: string }) => {
-  const { data: session } = useSession();
+  const { data: session } = useSessionClient();
   const { isConnected: isWalletConnected } = useAccount();
-  const { execute } = useCreatePost();
+  const { data: walletClient } = useWalletClient();
   const editorState: any = useEditorState();
   const router = useRouter();
   const { deleteDocument } = useDocumentStorage();
@@ -42,8 +46,8 @@ export const PublishButton = ({
   }, []);
 
   const handlePublish = async () => {
-    if (session?.type !== SessionType.WithProfile || !isWalletConnected) {
-      toast.error("Please log in to publish");
+    if (!isWalletConnected || !walletClient) {
+      toast.error("Please connect your wallet and log in to publish");
       return;
     }
 
@@ -52,7 +56,21 @@ export const PublishButton = ({
       return;
     }
 
-    const handle = session?.profile?.handle?.localName || "";
+    const lens = await getLensClient();
+    if (!lens.isSessionClient()) {
+      toast.error("Please log in to publish");
+      return;
+    }
+
+    const session = await currentSession(lens).unwrapOr(null);
+
+    if (!session) {
+      toast.error("Please log in to publish");
+      return;
+    }
+
+    const handle = session.signer;
+
     const contentJson = editorState.children;
     const contentHtml = editor.api.htmlReact?.serialize({
       nodes: editorState.children,
@@ -63,7 +81,6 @@ export const PublishButton = ({
     });
 
     const contentMarkdown = editorState.api.markdown.serialize();
-    // const { title, subtitle, coverImage } = extractMetadata(contentJson);
 
     try {
       const metadata = article({
@@ -71,7 +88,6 @@ export const PublishButton = ({
         content: contentMarkdown,
         locale: "en",
         tags,
-        appId: "fountain",
         attributes: [
           { key: "contentJson", type: MetadataAttributeType.JSON, value: JSON.stringify(contentJson) },
           { key: "contentHtml", type: MetadataAttributeType.STRING, value: contentHtml },
@@ -79,52 +95,32 @@ export const PublishButton = ({
         ],
       });
 
-      const publish = false;
-      if (!publish) {
-        console.log(metadata);
-        return;
-      }
-
-      const metadataURI = await uploadMetadata(metadata);
-      // Show initial toast that transaction is being processed
+      const { uri } = await storageClient.uploadAsJson(metadata);
       const pendingToast = toast.loading("Publishing post...");
 
-      const result = await execute({
-        metadata: metadataURI,
-      });
+      // Create post and handle the transaction with viem wallet client
+      const result = await post(lens, {
+        contentUri: uri,
+      })
+      .andThen(handleOperationWith(walletClient as any))
+      .andThen(lens.waitForTransaction); ;
 
-      if (result.isFailure()) {
+      if (result.isErr()) {
         toast.dismiss(pendingToast);
-        toast.error(`Failed to create post: ${result.error.message}`);
-        return;
-      }
-
-      // Update toast to show transaction is being mined/indexed
-      toast.loading("Finalizing on-chain...", {
-        id: pendingToast,
-      });
-
-      const completion = await result.value.waitForCompletion();
-
-      if (completion.isFailure()) {
-        toast.dismiss(pendingToast);
-        switch (completion.error.reason) {
-          case "MINING_TIMEOUT":
-            toast.error("Transaction was not mined within the timeout period");
-            break;
-          case "INDEXING_TIMEOUT":
-            toast.error("Transaction was mined but not indexed within timeout period");
-            break;
-          case "REVERTED":
-            toast.error("Transaction was reverted");
-            break;
-          default:
-            toast.error("Unknown error occurred while processing transaction");
+        const error = result.error;
+        if (error instanceof TransactionIndexingError) {
+          switch (error.name) {
+            case "TransactionIndexingError":
+              toast.error("Transaction indexing failed");
+              break;
+            default:
+              toast.error("Unknown error occurred while processing transaction");
+          }
+        } else {
+          toast.error("Unexpected error occurred while processing transaction");
         }
         return;
       }
-
-      const post = completion.value;
 
       // Clean up drafts
       if (isLocal) {
@@ -148,12 +144,23 @@ export const PublishButton = ({
         }
       }
 
+      const hash = result.value
+
+      const postValue = await fetchPost(lens, {txHash: hash})
+
+      if (postValue.isErr()) {
+        toast.error(`Failed to fetch post: ${postValue.error.message}`);
+        console.error("Failed to fetch post:", postValue.error);
+        return;
+      }
+
+      const postSlug = postValue.value?.__typename === "Post" ? postValue.value.slug : postValue.value?.id
+      const handle = postValue.value?.__typename === "Post" ? postValue.value.author.username?.localName : postValue.value?.id
+
       // Show success and redirect
       toast.dismiss(pendingToast);
       toast.success("Post published successfully!");
-
-      // Route to post page
-      router.push(`/u/${handle}/${post.id}`);
+      router.push(`/u/${handle}/${postSlug}?success=true`);
       router.refresh();
     } catch (error) {
       console.error("Error creating post:", error);

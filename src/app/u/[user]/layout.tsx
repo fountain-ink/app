@@ -1,5 +1,7 @@
 import { UserTheme } from "@/components/user/user-theme";
-import { createLensClient } from "@/lib/auth/get-lens-client";
+import { getBaseUrl } from "@/lib/get-base-url";
+import { getLensClient } from "@/lib/lens/client";
+import { fetchAccount } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }: { params: { user: string } }) {
@@ -11,28 +13,37 @@ export async function generateMetadata({ params }: { params: { user: string } })
   };
 }
 
-const UserLayout = async ({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { user: string };
-}) => {
-  const lens = await createLensClient();
-  let profile = undefined;
-  try {
-    profile = await lens.profile.fetch({
-      forHandle: `lens/${params.user}`,
-    });
-  } catch (error) {
-    console.error(error);
+async function getUserSettings(address: string) {
+  const url = getBaseUrl();
+  const response = await fetch(`${url}/api/users/${address}/settings`, {
+    cache: "no-store",
+  });
+  console.log(response);
+
+  if (!response.ok) {
+    console.error("Failed to fetch user settings");
+    return null;
   }
+  const data = await response.json();
+  return data.settings;
+}
+
+const UserLayout = async ({ children, params }: { children: React.ReactNode; params: { user: string } }) => {
+  const lens = await getLensClient();
+  let profile = undefined;
+
+  profile = await fetchAccount(lens, { username: { localName: params.user } }).unwrapOr(null);
 
   if (!profile) {
+    console.error("Failed to fetch user profile");
     return notFound();
   }
 
-  return <UserTheme profile={profile}>{children}</UserTheme>;
+  const settings = await getUserSettings(profile.address);
+  const themeName = settings?.theme?.name;
+  console.log("themeName", themeName);
+
+  return <UserTheme initialTheme={themeName}>{children}</UserTheme>;
 };
 
 export default UserLayout;

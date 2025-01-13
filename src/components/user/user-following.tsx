@@ -1,9 +1,8 @@
-import type { ProfileFragment } from "@lens-protocol/client";
-import type { Profile } from "@lens-protocol/react-web";
+import { AccountStats } from "@lens-protocol/client";
 
-export const UserFollowing = ({ profile }: { profile?: Profile | ProfileFragment }) => {
-  const following = profile?.stats.following;
-  const followers = profile?.stats.followers;
+export const UserFollowing = ({ stats }: { stats?: AccountStats | null }) => {
+  const following = stats?.graphFollowStats.following;
+  const followers = stats?.graphFollowStats.followers;
 
   if (!following || !followers) {
     return null;

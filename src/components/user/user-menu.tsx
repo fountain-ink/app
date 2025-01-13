@@ -7,50 +7,43 @@ import {
   DropdownMenuPortal,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { clearAuthCookies } from "@/lib/auth/clear-cookies";
-import { SessionType, useLogout, useSession } from "@lens-protocol/react-web";
+import { clearAllCookies, clearAuthCookies } from "@/lib/auth/clear-cookies";
+import { MeResult } from "@lens-protocol/client";
+import { useLogout } from "@lens-protocol/react";
 import { useTheme } from "next-themes";
-import { usePathname } from "next/navigation";
-import { toast } from "sonner";
+import { usePathname, useRouter } from "next/navigation";
 import { useAccount, useDisconnect } from "wagmi";
 import { ConnectWalletButton } from "../auth/auth-wallet-button";
 import { ProfileSelectMenu } from "../auth/profile-select-menu";
 import { SunIcon } from "../icons/icon";
 import { LogoutIcon } from "../icons/logout";
+import { MoonIcon } from "../icons/moon";
 import { PenToolIcon } from "../icons/pen-tool";
 import { SettingsGearIcon } from "../icons/settings";
 import { SquarePenIcon } from "../icons/square-pen";
 import { UserRoundPenIcon } from "../icons/switch-profile";
 import { UserIcon } from "../icons/user";
 import { AnimatedMenuItem } from "../navigation/animated-item";
-import { AvatarSuspense, SessionAvatar } from "./user-avatar";
-import { MoonIcon } from "../icons/moon";
+import { SessionAvatar } from "./user-avatar";
 
-export const UserMenu = () => {
-  const { data: session, loading, error } = useSession();
+export const UserMenu = ({ session }: { session: MeResult | null }) => {
   const { isConnected: isWalletConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const { execute: logout, loading: logoutLoading } = useLogout();
   const pathname = usePathname();
+  const router = useRouter();
   const { theme, setTheme } = useTheme();
   const isDarkMode = theme === "dark";
-
-  if (loading) return <AvatarSuspense />;
-
-  if (error) {
-    toast.error(error.message);
-    return null;
-  }
 
   if (!isWalletConnected) {
     return <ConnectWalletButton />;
   }
 
-  if (session.type !== SessionType.WithProfile) {
-    return <ProfileSelectMenu onSuccess={() => {}} />;
+  if (!session) {
+    return <ProfileSelectMenu />;
   }
 
-  const handle = session.profile?.handle?.localName;
+  const handle = session.loggedInAs.account.username?.localName;
 
   // Get the settings path based on current route
   const getSettingsPath = () => {
@@ -63,7 +56,7 @@ export const UserMenu = () => {
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-full shrink-0">
-          <SessionAvatar />
+          <SessionAvatar account={session.loggedInAs.account} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
@@ -78,9 +71,10 @@ export const UserMenu = () => {
 
           <AnimatedMenuItem
             icon={UserRoundPenIcon}
-            onClick={() => {
-              logout();
+            onClick={async () => {
+              await logout();
               clearAuthCookies();
+              router.refresh();
             }}
           >
             Switch Profile
@@ -116,10 +110,12 @@ export const UserMenu = () => {
 
           <AnimatedMenuItem
             icon={LogoutIcon}
-            onClick={() => {
+
+            onClick={async () => {
               disconnect();
-              logout();
-              clearAuthCookies();
+              await logout();
+              clearAllCookies();
+              router.refresh();
             }}
           >
             Disconnect

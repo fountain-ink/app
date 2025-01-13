@@ -1,20 +1,16 @@
 "use client";
 
-import type { ProfileFragment } from "@lens-protocol/client";
-import { useRef, useState } from "react";
-import { toast } from "sonner";
+import type { Account } from "@lens-protocol/client";
+import { useState } from "react";
 import { Button } from "../ui/button";
-import type { Profile } from "@lens-protocol/react-web";
 
-export const UserFollowButton = ({
-  profile,
-  className,
-}: { profile: ProfileFragment | Profile; className?: string }) => {
-  const [following, _setFollowing] = useState(profile.operations.isFollowedByMe.value);
-  const followsMe = profile.operations.isFollowingMe.value;
+export const UserFollowButton = ({ profile, className }: { profile: Account; className?: string }) => {
+  const [following, _setFollowing] = useState(profile.operations?.isFollowedByMe);
+  const followsMe = profile.operations?.isFollowingMe;
 
   const toggleFollow = async () => {
     return;
+    //// FIXME: Implement follow/unfollow
     // const followingNow = !following;
     // setFollowing(!following);
 

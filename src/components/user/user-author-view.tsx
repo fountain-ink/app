@@ -1,5 +1,8 @@
-import type { ProfileFragment } from "@lens-protocol/client";
-import { type ProfileId, useProfiles } from "@lens-protocol/react-web";
+"use client"
+
+import { Account } from "@lens-protocol/client";
+import { EvmAddress } from "@lens-protocol/metadata";
+import { useAccount } from "@lens-protocol/react";
 import { UserAvatar } from "./user-avatar";
 import { UserCard } from "./user-card";
 
@@ -9,14 +12,14 @@ export const LazyAuthorView = ({
   showName = true,
   showHandle = true,
 }: {
-  profileIds: ProfileId[];
+  profileIds: EvmAddress[];
   showAvatar?: boolean;
   showName?: boolean;
   showHandle?: boolean;
 }) => {
-  const { data: profiles, loading, error } = useProfiles({ where: { profileIds } });
+  const { data: account, loading, error } = useAccount({ address: profileIds[0] });
 
-  if (profiles?.length === 0) {
+  if (!account) {
     return null;
   }
 
@@ -35,15 +38,14 @@ export const LazyAuthorView = ({
   }
   if (loading) return <span>Loading...</span>;
   if (error) return <span>Error loading profiles</span>;
-  if (!profiles || profiles.length === 0) return null;
 
   return (
     <div className="flex flex-wrap gap-2">
-      {profiles.map((profile) => (
-        <span key={profile.id} className="flex flex-row gap-2 items-center">
-          {showAvatar && <UserAvatar className="w-6 h-6" profile={profile} />}
-          {showName && <b className="text-foreground">{profile.metadata?.displayName}</b>}
-          {showHandle && <span className="text-foreground">@{profile.handle?.localName}</span>}
+      {[account].map((profile) => (
+        <span key={profile.address} className="flex flex-row gap-2 items-center">
+          {/* {showAvatar && <UserAvatar className="w-6 h-6" profile={profile} />} */}
+          {showName && <b className="text-foreground">{profile.metadata?.name}</b>}
+          {showHandle && <span className="text-foreground">@{profile.username?.localName}</span>}
         </span>
       ))}
     </div>
@@ -57,7 +59,7 @@ export const AuthorView = ({
   showHandle = true,
   showCard = true,
 }: {
-  profiles: ProfileFragment[];
+  profiles: Account[] | null;
   showAvatar?: boolean;
   showName?: boolean;
   showHandle?: boolean;
@@ -69,15 +71,15 @@ export const AuthorView = ({
     <div className="flex flex-wrap gap-2">
       {profiles.map((profile) => {
         const item = (
-          <span key={profile.id} className="flex flex-row gap-2 items-center">
-            {showAvatar && <UserAvatar className="w-6 h-6" profile={profile} />}
-            {showName && <span className="font-[family-name:--title-font]">{profile.metadata?.displayName}</span>}
-            {showHandle && <span className="">@{profile.handle?.localName}</span>}
+          <span key={profile.address} className="flex flex-row gap-2 items-center">
+            {showAvatar && <UserAvatar className="w-6 h-6" account={profile} />}
+            {showName && <span className="font-[family-name:--title-font]">{profile.metadata?.name}</span>}
+            {showHandle && <span className="">@{profile.username?.localName}</span>}
           </span>
         );
         if (showCard) {
           return (
-            <UserCard linkProfile handle={profile.handle?.localName}>
+            <UserCard linkProfile handle={profile.username?.localName}>
               {item}
             </UserCard>
           );

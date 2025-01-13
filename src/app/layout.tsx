@@ -3,6 +3,7 @@ import { Web3Providers } from "@/components/misc/web3-providers";
 import { Header } from "@/components/navigation/nav-header";
 import { ThemeProvider } from "@/components/theme/theme-context";
 import { Toaster } from "@/components/ui/sonner";
+import { getSessionProfile } from "@/lib/auth/get-session-profile";
 import "@/styles/globals.css";
 import { cn } from "@udecode/cn";
 import { GeistMono } from "geist/font/mono";
@@ -15,7 +16,9 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-const RootLayout = ({ children }: { children: React.ReactNode }) => {
+const RootLayout = async ({ children }: { children: React.ReactNode }) => {
+  const session = await getSessionProfile();
+
   return (
     <html lang="en" suppressHydrationWarning className={cn(GeistSans.variable, GeistMono.variable)}>
       <head>
@@ -30,7 +33,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
             <ThemeProvider>
               <AuthManager />
               <Toaster position="top-center" offset={16} />
-              <Header />
+              <Header session={session} />
               {children}
             </ThemeProvider>
           </DarkModeProvider>

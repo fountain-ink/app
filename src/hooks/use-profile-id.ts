@@ -1,7 +1,7 @@
-import { useRefreshToken } from "@lens-protocol/react-web";
+import { getCookie } from "cookies-next";
 
 export const useProfileId = () => {
-  const refreshToken = useRefreshToken();
+  const refreshToken = getCookie("appToken");
 
   if (!refreshToken) {
     return null;

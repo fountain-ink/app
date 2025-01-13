@@ -1,6 +1,8 @@
 "use client";
 
-import { type Profile, useLazyProfile } from "@lens-protocol/react-web";
+import { getLensClient } from "@/lib/lens/client";
+import { type Account } from "@lens-protocol/client";
+import { fetchAccount, fetchAccountStats } from "@lens-protocol/client/actions";
 import { type PropsWithChildren, useState } from "react";
 import { LoadingSpinner } from "../misc/loading-spinner";
 import { TruncatedText } from "../misc/truncated-text";
@@ -8,10 +10,10 @@ import { Badge } from "../ui/badge";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card";
 import { UserAvatar } from "./user-avatar";
 
+import { inter } from "@/styles/google-fonts";
 import Link from "next/link";
 import { UserFollowButton } from "./user-follow";
 import { UserFollowing } from "./user-following";
-import { inter } from "@/styles/google-fonts";
 
 type UserCardProps = PropsWithChildren & {
   handle?: string;
@@ -19,18 +21,44 @@ type UserCardProps = PropsWithChildren & {
 };
 
 export const UserCard = ({ children, handle, linkProfile = false }: UserCardProps) => {
-  const { error, loading, execute } = useLazyProfile();
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [profile, setProfile] = useState<Account | null>(null);
+  const [stats, setStats] = useState<any>(null);
 
-  const loadCard = () => {
-    execute({ forHandle: `lens/${handle}` }).then((res) => {
-      if (res.isSuccess()) {
-        setProfile(res.unwrap());
+  const loadCard = async () => {
+    if (!handle) return;
+
+    setLoading(true);
+    try {
+      const client = await getLensClient();
+      const result = await fetchAccount(client, {
+        username: {
+          localName: handle,
+        },
+      });
+
+      if (result.isErr()) {
+        throw result.error;
       }
-    });
+
+      const account = result.unwrapOr(null);
+      setProfile(account);
+
+      if (account) {
+        const statsResult = await fetchAccountStats(client, { account: account.address });
+        if (!statsResult.isErr()) {
+          setStats(statsResult.unwrapOr(null));
+        }
+      }
+    } catch (err) {
+      setError(err as Error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const isFollowingMe = profile?.operations.isFollowingMe.value;
+  const isFollowingMe = profile?.operations?.isFollowingMe;
 
   return (
     <HoverCard defaultOpen={false} onOpenChange={(open: boolean) => open && loadCard()} closeDelay={100}>
@@ -45,11 +73,11 @@ export const UserCard = ({ children, handle, linkProfile = false }: UserCardProp
             <div className="flex flex-row place-content-between items-center">
               <div className="flex flex-row items-center gap-2 text-sm">
                 <div className="w-8 h-8">
-                  <UserAvatar profile={profile} className="w-8 h-8" />
+                  <UserAvatar account={profile} className="w-8 h-8" />
                 </div>
                 <span className="flex flex-col">
-                  <span className="font-bold">{profile.metadata?.displayName}</span>
-                  <span className="font-light text-xs">@{profile.handle?.localName}</span>
+                  <span className="font-bold">{profile.metadata?.name}</span>
+                  <span className="font-light text-xs">@{profile.username?.localName}</span>
                 </span>
               </div>
 
@@ -63,7 +91,7 @@ export const UserCard = ({ children, handle, linkProfile = false }: UserCardProp
               </span>
             </div>
             <div className="text-xs">
-              <UserFollowing profile={profile} />
+              <UserFollowing stats={stats} />
             </div>
             <div className="text-xs mt-2 leading-4">
               <TruncatedText text={profile.metadata?.bio || ""} maxLength={200} isMarkdown={true} />

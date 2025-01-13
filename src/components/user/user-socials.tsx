@@ -1,8 +1,7 @@
 "use client";
 
-import type { ProfileFragment } from "@lens-protocol/client";
-import type { Profile } from "@lens-protocol/react-web";
+import { Account } from "@lens-protocol/client";
 
-export const UserSocials = ({ profile }: { profile?: Profile | ProfileFragment }) => {
+export const UserSocials = ({ profile }: { profile?: Account }) => {
   return <div />;
 };

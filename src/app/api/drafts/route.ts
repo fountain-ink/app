@@ -1,10 +1,10 @@
 import { defaultContent } from "@/components/draft/draft-create-button";
 import { env } from "@/env";
-import { createLensClient } from "@/lib/auth/get-lens-client";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { verifyToken } from "@/lib/auth/verify-auth-token";
 import { getRandomUid } from "@/lib/get-random-uid";
+import { getLensClient } from "@/lib/lens/client";
 import { createClient } from "@/lib/supabase/server";
 import { type NextRequest, NextResponse } from "next/server";
 
@@ -26,8 +26,8 @@ export async function GET(req: NextRequest) {
 
     // If not a guest user, verify with Lens
     if (!claims.user_metadata.isAnonymous) {
-      const lens = await createLensClient();
-      const { profileId: lensProfileId } = await getUserProfile(lens);
+      const lens = await getLensClient();
+      const { profileId: lensProfileId } = await getUserProfile();
 
       if (lensProfileId !== profileId) {
         return NextResponse.json({ error: "Invalid profile" }, { status: 401 });
@@ -88,8 +88,8 @@ export async function POST(req: NextRequest) {
 
     // If not a guest user, verify with Lens
     if (!claims.user_metadata.isAnonymous) {
-      const lens = await createLensClient();
-      const { profileId: lensProfileId } = await getUserProfile(lens);
+      const lens = await getLensClient();
+      const { profileId: lensProfileId } = await getUserProfile();
 
       if (lensProfileId !== profileId) {
         return NextResponse.json({ error: "Invalid profile" }, { status: 401 });
@@ -136,8 +136,8 @@ export async function PUT(req: NextRequest) {
 
     // If not a guest user, verify with Lens
     if (!claims.user_metadata.isAnonymous) {
-      const lens = await createLensClient();
-      const { profileId: lensProfileId } = await getUserProfile(lens);
+      const lens = await getLensClient();
+      const { profileId: lensProfileId } = await getUserProfile();
 
       if (lensProfileId !== profileId) {
         return NextResponse.json({ error: "Invalid profile" }, { status: 401 });
@@ -202,8 +202,8 @@ export async function DELETE(req: NextRequest) {
 
     // If not a guest user, verify with Lens
     if (!claims.user_metadata.isAnonymous) {
-      const lens = await createLensClient();
-      const { profileId: lensProfileId } = await getUserProfile(lens);
+      const lens = await getLensClient();
+      const { profileId: lensProfileId } = await getUserProfile();
 
       if (lensProfileId !== profileId) {
         return NextResponse.json({ error: "Invalid profile" }, { status: 401 });
