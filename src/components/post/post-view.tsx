@@ -65,7 +65,7 @@ export const PostView = ({
     contentJson =
       (metadata?.attributes?.find((attr) => "key" in attr && attr.key === "contentJson")?.value as string) || "{}";
   }
-  const { title, subtitle, coverImage } = extractMetadata(isDraft ? contentJson : JSON.parse(contentJson));
+  const { title, subtitle, coverImage } = extractMetadata(isDraft ? JSON.parse(contentJson) : JSON.parse(contentJson));
 
   if (options.showContent && !contentMarkdown) {
     return null;
