@@ -72,7 +72,6 @@ export default async function UserLayout({
           </div>
         </div>
         <div className="p-4 font-[family-name:--title-font] text-foreground/65">
-        
           <UserBio profile={account} />
         </div>
         <div className="p-4 pb-0 border-b border-border">
