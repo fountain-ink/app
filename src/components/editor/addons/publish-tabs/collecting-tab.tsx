@@ -7,7 +7,7 @@ export const CollectingTab = () => {
   const [isCollectingEnabled, setIsCollectingEnabled] = useState(false);
 
   return (
-    <div className="space-y-6 pt-4">
+    <div className="space-y-6 py-4 px-2">
       <div className="flex items-center justify-between">
         <div className="space-y-0.5">
           <div className="flex items-center gap-2">

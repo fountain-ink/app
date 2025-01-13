@@ -15,8 +15,8 @@ export const PublishDialog = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="max-w-[700px] h-[90vh] rounded-none flex flex-col">
-        <div className="flex-shrink-0">
-          <div className="flex items-center mb-6">
+        <div className="">
+          <div className="flex items-center mb-2">
             <div className="text-lg font-semibold">
               {tab === "collecting" ? "Article Collecting" : "Publish Article"}
             </div>
