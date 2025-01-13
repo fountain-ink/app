@@ -48,7 +48,7 @@ export default async function UserLayout({
               account={account}
             />
             <div className="flex flex-col gap-2 mt-14 font-[family-name:--title-font]">
-              <UserName profile={account} className="md:font-4xl font-normal" />
+              <UserName profile={account} className="md:font-4xl font-normal tracking-[-0.8px] " />
               <UserHandle
                 profile={account}
                 className="md:font-xl -mt-3 font-normal text-normal tracking-wide text-foreground/65"
