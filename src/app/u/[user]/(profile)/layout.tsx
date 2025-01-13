@@ -44,7 +44,7 @@ export default async function UserLayout({
           <div className="flex flex-row gap-4">
             <UserAvatar
               className="transform -translate-y-1/2 w-32 h-32 md:w-40 md:h-40 ring-4 rounded-full ring-background"
-              profile={account}
+              account={account}
             />
             <div className="flex flex-col gap-2 font-[family-name:--title-font]">
               <UserName profile={account} className="mt-4 md:font-4xl font-normal" />

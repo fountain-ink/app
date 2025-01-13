@@ -51,7 +51,7 @@ export function LoginButton({ profile, onSuccess }: { profile: Account; onSucces
       disabled={loading}
       onClick={login}
     >
-      <UserAvatar profile={profile} className="w-8 h-8" />
+      <UserAvatar account={profile} className="w-8 h-8" />
       {/* {profile.handle?.localName ?? profile.id} */}
     </Button>
   );

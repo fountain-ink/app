@@ -72,7 +72,7 @@ export const AuthorView = ({
       {profiles.map((profile) => {
         const item = (
           <span key={profile.address} className="flex flex-row gap-2 items-center">
-            {showAvatar && <UserAvatar className="w-6 h-6" profile={profile} />}
+            {showAvatar && <UserAvatar className="w-6 h-6" account={profile} />}
             {showName && <span className="font-[family-name:--title-font]">{profile.metadata?.name}</span>}
             {showHandle && <span className="">@{profile.username?.localName}</span>}
           </span>

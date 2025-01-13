@@ -73,7 +73,7 @@ export const UserCard = ({ children, handle, linkProfile = false }: UserCardProp
             <div className="flex flex-row place-content-between items-center">
               <div className="flex flex-row items-center gap-2 text-sm">
                 <div className="w-8 h-8">
-                  <UserAvatar profile={profile} className="w-8 h-8" />
+                  <UserAvatar account={profile} className="w-8 h-8" />
                 </div>
                 <span className="flex flex-col">
                   <span className="font-bold">{profile.metadata?.name}</span>
