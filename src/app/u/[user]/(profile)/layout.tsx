@@ -42,13 +42,13 @@ export default async function UserLayout({
       </div>
       <div className="w-full max-w-2xl flex flex-col">
         <div className="flex justify-between px-4">
-          <div className="flex flex-row gap-4">
+          <div className="flex flex-col relative">
             <UserAvatar
-              className="transform -translate-y-1/2 w-32 h-32 md:w-40 md:h-40 ring-4 rounded-full ring-background"
+              className="absolute transform -translate-y-[80%] w-32 h-32 md:w-40 md:h-40 ring-4 rounded-full ring-background"
               account={account}
             />
-            <div className="flex flex-col gap-2 font-[family-name:--title-font]">
-              <UserName profile={account} className="mt-4 md:font-4xl font-normal" />
+            <div className="flex flex-col gap-2 mt-14 font-[family-name:--title-font]">
+              <UserName profile={account} className="md:font-4xl font-normal" />
               <UserHandle
                 profile={account}
                 className="md:font-xl -mt-3 font-normal text-normal tracking-wide text-foreground/65"
@@ -71,7 +71,8 @@ export default async function UserLayout({
             )}
           </div>
         </div>
-        <div className="-mt-14 p-4 px-8 font-[family-name:--title-font] leading-loose text-foreground/65">
+        <div className="p-4 font-[family-name:--title-font] text-foreground/65">
+        
           <UserBio profile={account} />
         </div>
         <div className="p-4 pb-0 border-b border-border">
