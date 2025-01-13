@@ -1,9 +1,9 @@
 "use client";
 
 import { useDocumentStorage } from "@/hooks/use-document-storage";
-import type { ProfileId } from "@lens-protocol/react-web";
 import { useQueryClient } from "@tanstack/react-query";
 
+import { EvmAddress } from "@lens-protocol/metadata";
 import { toast } from "sonner";
 import { PostView } from "../post/post-view";
 import type { Draft } from "./draft";
@@ -18,7 +18,7 @@ interface DraftViewOptions {
 
 interface DraftViewProps {
   draft: Draft;
-  authorId?: ProfileId;
+  authorId?: EvmAddress;
   isLocal: boolean;
   options?: DraftViewOptions;
   isSelected?: boolean;
@@ -56,7 +56,7 @@ export const DraftView = ({
       try {
         const res = await fetch(`/api/drafts?id=${draft.documentId}`, {
           method: "DELETE",
-          credentials: "include", 
+          credentials: "include",
         });
 
         if (res.ok) {

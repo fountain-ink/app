@@ -1,16 +1,11 @@
 "use client";
 
 import { defaultThemeName, isValidTheme } from "@/styles/themes";
-import type { ProfileFragment } from "@lens-protocol/client";
+import { Account } from "@lens-protocol/client";
 import { useEffect } from "react";
 import { useTheme } from "../theme/theme-context";
 
-import { useStorage } from "@/hooks/use-storage";
-
-export const UserTheme = ({
-  children,
-  profile,
-}: { children: React.ReactNode; profile: ProfileFragment | undefined }) => {
+export const UserTheme = ({ children, account: profile }: { children: React.ReactNode; account?: Account }) => {
   const userTheme = profile?.metadata?.attributes?.find((attr) => attr.key === "theme")?.value ?? defaultThemeName;
   const { setTheme } = useTheme();
 

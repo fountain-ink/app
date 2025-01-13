@@ -16,18 +16,14 @@ const UserLayout = async ({ children, params }: { children: React.ReactNode; par
   const lens = await getLensClient();
   let profile = undefined;
 
-  profile = await fetchAccount(lens, { username: { localName: params.user } });
-  
-  if (profile.isErr()) {
+  profile = await fetchAccount(lens, { username: { localName: params.user } }).unwrapOr(null);
+
+  if (!profile) {
     console.error("Failed to fetch user profile");
     return notFound();
   }
 
-  if (!profile) {
-    return notFound();
-  }
-
-  return <UserTheme profile={profile}>{children}</UserTheme>;
+  return <UserTheme account={profile}>{children}</UserTheme>;
 };
 
 export default UserLayout;
