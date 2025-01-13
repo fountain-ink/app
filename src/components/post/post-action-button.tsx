@@ -102,7 +102,7 @@ export const ActionButton = ({
   fillColor,
   dropdownItems,
   className,
-  showChevron = true,
+  showChevron = false,
 }: ActionButtonProps) => {
   const [state, setState] = useState({
     isActive: false,
