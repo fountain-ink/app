@@ -104,7 +104,7 @@ export const PostView = ({
             </div>
           )}
           {options.showTitle && title && (
-            <div className="text-2xl font-[letter-spacing:var(--title-letter-spacing)] font-[family-name:var(--title-font)] font-[var(--title-weight)] font-[color:var(--title-color)] line-clamp-2">
+            <div className="text-2xl font-[letter-spacing:var(--title-letter-spacing)] font-[family-name:var(--title-font)] font-semibold font-[color:var(--title-color)] line-clamp-2">
               {title}
             </div>
           )}
