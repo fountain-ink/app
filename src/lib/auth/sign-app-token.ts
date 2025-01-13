@@ -8,7 +8,6 @@ const SUPABASE_JWT_SECRET = env.SUPABASE_JWT_SECRET;
 export async function signAppToken(refreshToken: string) {
   const lens = await getLensClient();
   const profile = await getUserProfile();
-  console.log(profile);
 
   if (!profile?.profileId || !profile?.handle) {
     throw new Error("Invalid Lens profile");

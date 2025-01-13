@@ -9,7 +9,13 @@ import { Button } from "../ui/button";
 
 export const getIpfsImageUrl = (uri: string | undefined): string => {
   if (!uri) return "";
-  return uri.startsWith("ipfs://") ? `https://fountain.4everland.link/ipfs/${uri.slice(7)}` : uri;
+  if (uri.startsWith("ipfs://")) {
+    return `https://fountain.4everland.link/ipfs/${uri.slice(7)}`;
+  }
+  if (uri.startsWith("lens://")) {
+    return `https://storage-api.testnet.lens.dev/${uri.slice(7)}`;
+  }
+  return uri;
 };
 
 const createImage = (url: string): Promise<HTMLImageElement> =>

@@ -18,7 +18,6 @@ async function getUserSettings(address: string) {
   const response = await fetch(`${url}/api/users/${address}/settings`, {
     cache: "no-store",
   });
-  console.log(response);
 
   if (!response.ok) {
     console.error("Failed to fetch user settings");
@@ -41,7 +40,6 @@ const UserLayout = async ({ children, params }: { children: React.ReactNode; par
 
   const settings = await getUserSettings(profile.address);
   const themeName = settings?.theme?.name;
-  console.log("themeName", themeName);
 
   return <UserTheme initialTheme={themeName}>{children}</UserTheme>;
 };

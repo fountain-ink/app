@@ -35,7 +35,7 @@ export async function getUserProfile() {
 
   // Decode without verification since we trust the source
   const decoded = jwt.decode(idToken || "") as LensIdToken;
-  console.log(decoded);
+  // console.log(decoded);
 
   if (!decoded) {
     throw new Error("Invalid ID token");
