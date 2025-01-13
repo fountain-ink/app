@@ -12,18 +12,19 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
   const lens = await getLensClient();
   const { profileId, handle: userHandle } = await getUserProfile();
   const pageHandle = `lens/${params.user}`;
-  
-  const profile = await fetchAccount(lens, { username: { localName: params.user } }) 
+
+  const profile = await fetchAccount(lens, { username: { localName: params.user } });
 
   if (!profile) {
     return notFound();
   }
-  
+
   if (profile.isErr()) {
     console.error("Failed to fetch user profile");
     return notFound();
   }
 
+  console.log(profileId, userHandle);
   if (params.user !== userHandle) {
     return <ErrorPage error="Can't access other user's drafts" />;
   }

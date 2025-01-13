@@ -58,7 +58,7 @@ export async function getUserProfile() {
   return {
     profileId: account.loggedInAs.account.address,
     profile: account,
-    handle: address, // FIXME
+    handle: account.loggedInAs.account.username?.localName,
     role: decoded["tag:lens.dev,2024:role"],
     sponsored: decoded["tag:lens.dev,2024:sponsored"] || false,
   };
