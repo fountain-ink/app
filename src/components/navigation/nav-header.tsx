@@ -21,8 +21,9 @@ export const Header = ({ session }: { session: MeResult | null }) => {
   const documentId = pathname.split("/").filter(Boolean).pop() ?? "";
   const yjsState = useYjsState((state) => state.getState(documentId) ?? { status: "disconnected" as ConnectionStatus });
 
+  console.log(hostname);
   // FIXME: Temporary before release
-  if (!hostname.includes("dev") && !hostname.includes("localhost")) {
+  if (!hostname.includes("dev") && !hostname.includes("localhost") && !hostname.includes("vercel")) {
     return (
       <div className="fixed top-0 w-full h-[100px] -mt-[42px] pt-[50px] z-[40] bg-background/70 backdrop-blur-xl border-b border-border overflow-hidden p-2">
         <div className="flex items-end justify-between absolute bg-gradient-to-t from-transparent to-background bottom-0 left-0 right-0 h-[80px] pb-2 px-2">

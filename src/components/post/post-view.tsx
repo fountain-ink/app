@@ -62,7 +62,8 @@ export const PostView = ({
     date = post.timestamp;
     handle = post.author.username?.localName || "";
     contentMarkdown = "content" in metadata ? (metadata.content as string) : "";
-    contentJson = metadata?.attributes?.find((attr) => "key" in attr && attr.key === "contentJson")?.value as string || "{}";
+    contentJson =
+      (metadata?.attributes?.find((attr) => "key" in attr && attr.key === "contentJson")?.value as string) || "{}";
   }
   const { title, subtitle, coverImage } = extractMetadata(isDraft ? contentJson : JSON.parse(contentJson));
 
@@ -156,7 +157,7 @@ export const PostView = ({
           onClick={(e) => {
             // If not selecting (shift key or right click), navigate to the post
             if (!e.shiftKey && e.button !== 2) {
-              const href = isDraft ? `/write/${(item as Draft).documentId}` : `/u/${handle}/${(item as Post).id}`;
+              const href = isDraft ? `/write/${(item as Draft).documentId}` : `/u/${handle}/${(item as Post).slug}`;
               window.location.href = href;
             }
           }}
