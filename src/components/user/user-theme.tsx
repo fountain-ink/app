@@ -1,24 +1,28 @@
 "use client";
 
-import { defaultThemeName, isValidTheme } from "@/styles/themes";
-import { Account } from "@lens-protocol/client";
+import { defaultThemeName, isValidTheme, ThemeType } from "@/styles/themes";
 import { useEffect } from "react";
 import { useTheme } from "../theme/theme-context";
 
-export const UserTheme = ({ children, account: profile }: { children: React.ReactNode; account?: Account }) => {
-  const userTheme = profile?.metadata?.attributes?.find((attr) => attr.key === "theme")?.value ?? defaultThemeName;
+interface UserThemeProps {
+  children: React.ReactNode;
+  initialTheme?: string;
+}
+
+export const UserTheme = ({ children, initialTheme }: UserThemeProps) => {
   const { setTheme } = useTheme();
 
   useEffect(() => {
-    if (userTheme && isValidTheme(userTheme)) {
-      setTheme(userTheme);
+    const themeName = initialTheme ?? defaultThemeName;
+    if (isValidTheme(themeName)) {
+      setTheme(themeName);
     }
 
     return () => {
       // Revert to the default theme when unmounting
       setTheme(defaultThemeName);
     };
-  }, [userTheme, setTheme]);
+  }, [initialTheme, setTheme]);
 
   return <>{children}</>;
 };

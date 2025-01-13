@@ -1,4 +1,5 @@
 import { UserTheme } from "@/components/user/user-theme";
+import { getBaseUrl } from "@/lib/get-base-url";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchAccount } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
@@ -12,6 +13,21 @@ export async function generateMetadata({ params }: { params: { user: string } })
   };
 }
 
+async function getUserSettings(address: string) {
+  const url = getBaseUrl();
+  const response = await fetch(`${url}/api/users/${address}/settings`, {
+    cache: "no-store",
+  });
+  console.log(response);
+
+  if (!response.ok) {
+    console.error("Failed to fetch user settings");
+    return null;
+  }
+  const data = await response.json();
+  return data.settings;
+}
+
 const UserLayout = async ({ children, params }: { children: React.ReactNode; params: { user: string } }) => {
   const lens = await getLensClient();
   let profile = undefined;
@@ -23,7 +39,11 @@ const UserLayout = async ({ children, params }: { children: React.ReactNode; par
     return notFound();
   }
 
-  return <UserTheme account={profile}>{children}</UserTheme>;
+  const settings = await getUserSettings(profile.address);
+  const themeName = settings?.theme?.name;
+  console.log("themeName", themeName);
+
+  return <UserTheme initialTheme={themeName}>{children}</UserTheme>;
 };
 
 export default UserLayout;
