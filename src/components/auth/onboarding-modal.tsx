@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
+import { setupUserAuth } from "./auth-manager";
 
 interface OnboardingModalProps {
   open: boolean;
@@ -42,10 +43,13 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
         name: username,
       });
 
+      const uploadToast = toast.loading("Uploading profile metadata...");
       // Upload metadata to Lens storage
       const { uri } = await storageClient.uploadAsJson(metadata);
+      toast.dismiss(uploadToast);
       console.log("Metadata uploaded:", uri);
 
+      const createToast = toast.loading("Creating your account...");
       // Create the account with username
       const result = await createAccountWithUsername(client, {
         username: {
@@ -56,6 +60,8 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
         .andThen(handleOperationWith(walletClient as any))
         .andThen(client.waitForTransaction);
 
+      toast.dismiss(createToast);
+
       if (result.isErr()) {
         console.log("Error creating account:", result.error.message);
         toast.error(`Error creating account ${result.error.message}`);
@@ -64,7 +70,9 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
 
       console.log("Transaction hash:", result.value);
 
+      const fetchToast = toast.loading("Fetching your new account...");
       const accountResult = await fetchAccount(client, { txHash: result.value }).unwrapOr(null);
+      toast.dismiss(fetchToast);
 
       if (!accountResult) {
         toast.error("Failed to fetch account after creation");
@@ -72,7 +80,9 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
       }
       console.log("Account:", accountResult);
 
+      const switchToast = toast.loading("Switching to your new account...");
       const switchResult = await client.switchAccount({account: accountResult.address});
+      toast.dismiss(switchToast);
 
       if (switchResult.isErr()) {
         toast.error(`Failed to switch account ${switchResult.error.message}`);
@@ -82,16 +92,46 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
 
       console.log("Switched account:", switchResult.value);
 
+      const authToast = toast.loading("Setting up authentication...");
+      const credentials = await switchResult.value.getCredentials();
+
+      if (credentials.isErr()) {
+        toast.dismiss(authToast);
+        toast.error("Failed to get credentials");
+        return onOpenChange(false);
+      }
+
+      const refreshToken = credentials.value?.refreshToken;
+
+      if (!refreshToken) {
+        toast.dismiss(authToast);
+        toast.error("Failed to get refresh token");
+        return onOpenChange(false);
+      }
+
+      try {
+        await setupUserAuth(refreshToken);
+        toast.dismiss(authToast);
+      } catch (error) {
+        toast.dismiss(authToast);
+        console.error("Error setting up user auth:", error);
+        toast.error("Failed to complete authentication");
+        return onOpenChange(false);
+      }
+
       // Enable signless mode if selected
       if (enableSignlessMode) {
+        const signlessToast = toast.loading("Enabling signless mode...");
         const signlessResult = await enableSignless(client)
           .andThen(handleOperationWith(walletClient as any))
           .andThen(client.waitForTransaction);
 
         if (signlessResult.isErr()) {
+          toast.dismiss(signlessToast);
           console.error("Failed to enable signless mode:", signlessResult.error);
           toast.error("Failed to enable signless mode");
         } else {
+          toast.dismiss(signlessToast);
           console.log("Signless mode enabled:", signlessResult.value);
         }
       }

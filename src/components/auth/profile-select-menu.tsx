@@ -72,7 +72,7 @@ export function ProfileSelectMenu() {
   }
 
   if (error) {
-    toast.error("Failed to load profiles");
+    console.error("Failed to load profiles");
     return null;
   }
 
