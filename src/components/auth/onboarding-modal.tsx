@@ -1,19 +1,15 @@
 import { useOnboardingClient } from "@/hooks/use-lens-clients";
 import { storageClient } from "@/lib/lens/storage-client";
-import {
-  createAccountWithUsername,
-  fetchAccount,
-  switchAccount,
-  transactionStatus,
-} from "@lens-protocol/client/actions";
-import { account } from "@lens-protocol/metadata";
+import { createAccountWithUsername, fetchAccount } from "@lens-protocol/client/actions";
+import { handleOperationWith } from "@lens-protocol/client/viem";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useAccount } from "wagmi";
+import { useAccount, useWalletClient } from "wagmi";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { account } from "@lens-protocol/metadata";
 
 interface OnboardingModalProps {
   open: boolean;
@@ -26,6 +22,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const onboardingClient = useOnboardingClient();
+  const { data: walletClient } = useWalletClient();
 
   const handleOnboarding = async () => {
     if (!username || !address) return;
@@ -53,81 +50,37 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
           localName: username,
         },
         metadataUri: uri,
-      });
+      })
+        .andThen(handleOperationWith(walletClient as any))
+        .andThen(client.waitForTransaction);
 
       if (result.isErr()) {
         console.log("Error creating account:", result.error.message);
-        throw new Error("Failed to create account");
+        toast.error(`Error creating account ${result.error.message}`);
+        return onOpenChange(false);
       }
 
-      switch (result.value.__typename) {
-        case "CreateAccountResponse": {
-          const hash = result.value.hash;
-          console.log("Transaction hash:", hash);
+      console.log("Transaction hash:", result.value);
 
-          const account = await fetchAccount(client, { txHash: hash });
-          if (account.isErr()) {
-            console.error("Failed to fetch account:", account.error.message);
-            throw new Error("Failed to fetch account");
-          }
-
-          console.log("Account:", account.value);
-
-          const switchResult = await switchAccount(client, {
-            account: account.value?.address,
-          });
-
-          if (switchResult.isErr()) {
-            console.error("Error switching account:", switchResult.error.message);
-            throw new Error("Failed to switch account");
-          }
-
-          console.log(`Switched account to ${account.value?.address}`);
-
-          const status = await transactionStatus(client, {
-            txHash: hash,
-          });
-
-          if (status.isErr()) {
-            console.error("Error getting transaction status:", status.error.message);
-            throw new Error("Failed to create account");
-          }
-
-          switch (status.value.__typename) {
-            case "NotIndexedYetStatus":
-            case "PendingTransactionStatus":
-              console.log("Transaction pending");
-              break;
-            case "FinishedTransactionStatus":
-              console.log("Transaction complete");
-
-              break;
-            case "FailedTransactionStatus":
-              console.log("Transaction failed:", status.value.reason);
-              throw new Error("Failed to create account");
-          }
-          console.log("CreateAccountResponse:", result.value);
-          break;
-        }
-
-        case "InvalidUsername":
-          console.log("Failed to create account with username:", result.value.reason);
-          throw new Error("Failed to create account");
-        case "SelfFundedTransactionRequest":
-          console.log("Self-funded transaction request:", result.value.raw);
-          break;
-        case "SponsoredTransactionRequest":
-          console.log("Sponsored transaction request:", result.value.raw);
-          break;
-        case "TransactionWillFail":
-          console.log("Transaction will fail:", result.value.reason);
-          throw new Error("Failed to create account");
-        default:
-          console.log("Unknown response:", result.value);
-          throw new Error("Failed to create account");
+      const accountResult = await fetchAccount(client, { txHash: result.value }).unwrapOr(null);
+      
+      if (!accountResult) {
+        toast.error("Failed to fetch account after creation");
+        return onOpenChange(false);
       }
-
+      console.log("Account:", accountResult);
+      
+      const switchResult = await client.switchAccount({account: accountResult.address});
+      
+      if (switchResult.isErr()) {
+        toast.error(`Failed to switch account ${switchResult.error.message}`);
+        console.error(switchResult.error.message)
+        return onOpenChange(false);
+      }
+      
+      console.log("Switched account:", switchResult.value);
       toast.success("Account created successfully!");
+      
       onSuccess();
       onOpenChange(false);
     } catch (err) {

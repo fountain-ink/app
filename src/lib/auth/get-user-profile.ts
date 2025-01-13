@@ -47,7 +47,12 @@ export async function getUserProfile() {
   const account = await fetchMeDetails(client).unwrapOr(null);
 
   if (!account) {
-    throw new Error("Profile not found");
+    console.error("Profile not found, returning empty profile");
+    return {
+      profileId: undefined,
+      profile: undefined,
+      handle: undefined,
+    };
   }
 
   return {
