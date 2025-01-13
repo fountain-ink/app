@@ -37,7 +37,7 @@ export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
     setShowAuthor(settings.blog?.showAuthor ?? true);
     setShowTags(settings.blog?.showTags ?? true);
     setShowTitle(settings.blog?.showTitle ?? true);
-  }, [settings]);
+  }, []);
 
   const validateBlogTitle = useCallback((title: string) => {
     if (title.trim().length === 0) {
@@ -137,9 +137,9 @@ export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
           />
         </div>
 
-            <h2 className="text-lg font-semibold">Display Options</h2>
+        <h2 className="text-lg font-semibold">Display Options</h2>
 
-<div className="p-4 pt-0 space-y-4">
+        <div className="p-4 pt-0 space-y-4">
           <div className="flex items-center justify-between space-y-2">
             <div className="space-y-0.5">
               <Label htmlFor="show-title">Show Title</Label>
@@ -163,7 +163,7 @@ export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
             </div>
             <Switch id="show-tags" checked={showTags} onCheckedChange={handleShowTagsChange} />
           </div>
-          </div>
+        </div>
       </CardContent>
     </Card>
   );
