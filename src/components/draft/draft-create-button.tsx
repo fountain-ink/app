@@ -1,10 +1,10 @@
 "use client";
-import { getCookie } from "cookies-next";
 
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoadingSpinner } from "../misc/loading-spinner";
+import { getRandomUid } from "@/lib/get-random-uid";
 
 export const defaultContent: any = [
   {
@@ -40,22 +40,22 @@ export const DraftCreateButton = () => {
 
   const handleCreate = async () => {
     setIsCreating(true);
-    const profileId = getCookie("profileId") as string;
-    const response = await fetch("/api/drafts", {
+    const documentId = getRandomUid();
+    
+    // Optimistically navigate
+    router.push(`/write/${documentId}`);
+    
+    // Create draft in background
+    fetch("/api/drafts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify({ documentId }),
+    }).catch(error => {
+      console.error("Failed to create draft:", error);
+      // Could add error handling/toast here
     });
-
-    const { draft } = await response.json();
-
-    if (!draft) {
-      return;
-    }
-
-    router.refresh();
-    router.replace(`/write/${draft.documentId}`);
   };
 
   return (

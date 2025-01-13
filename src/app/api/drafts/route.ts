@@ -96,8 +96,8 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const uid = getRandomUid();
-    const documentId = `${uid}`;
+    const body = await req.json();
+    const documentId = body.documentId || getRandomUid();
     const contentJson = defaultContent;
 
     const { data, error } = await db

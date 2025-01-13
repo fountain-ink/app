@@ -21,7 +21,6 @@ export const Header = ({ session }: { session: MeResult | null }) => {
   const documentId = pathname.split("/").filter(Boolean).pop() ?? "";
   const yjsState = useYjsState((state) => state.getState(documentId) ?? { status: "disconnected" as ConnectionStatus });
 
-  console.log(hostname);
   // FIXME: Temporary before release
   if (!hostname.includes("dev") && !hostname.includes("localhost") && !hostname.includes("vercel")) {
     return (
