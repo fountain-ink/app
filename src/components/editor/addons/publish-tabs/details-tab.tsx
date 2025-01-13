@@ -128,41 +128,50 @@ export const DetailsTab = () => {
   };
 
   return (
-    <div>
-      <ScrollArea className="h-[480px]">
-        <div className="space-y-4 sm:p-4 sm:pr-8">
+    <div className="flex flex-col h-full">
+      <ScrollArea className="flex-1 min-h-0 pr-2">
+        <div className="space-y-6 p-4 px-2">
           <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
-            <div className="space-y-1">
-              <Input
-                id="title"
-                placeholder="Enter title"
-                value={title}
-                onChange={handleTitleChange}
-                className={titleError ? "border-destructive" : ""}
-              />
-              {titleError && <span className="text-sm text-destructive">{titleError}</span>}
+            <div className="pb-2">
+              <h3 className="font-medium">Preview</h3>
+              <p className="text-sm text-muted-foreground">You can change how the post will be shown on social media and your blog index.</p>
+            </div>
+            <div className="border rounded-lg p-4 space-y-4">
+              <div className="space-y-2">
+                <Label>Image</Label>
+                {coverUrl ? (
+                  <div className="relative w-full rounded-lg overflow-hidden border border-border">
+                    <img src={coverUrl} alt="Cover" className="w-full h-auto object-cover" />
+                  </div>
+                ) : (
+                  <ImagePlaceholder />
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="title">Title</Label>
+                <div className="space-y-1">
+                  <Input
+                    id="title"
+                    placeholder="Enter title"
+                    value={title}
+                    onChange={handleTitleChange}
+                    className={titleError ? "border-destructive" : ""}
+                  />
+                  {titleError && <span className="text-sm text-destructive">{titleError}</span>}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="subtitle">Summary</Label>
+                <Input
+                  id="subtitle"
+                  placeholder="Enter summary (optional)"
+                  value={subtitle}
+                  onChange={handleSubtitleChange}
+                />
+              </div>
             </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="subtitle">Subtitle</Label>
-            <Input
-              id="subtitle"
-              placeholder="Enter subtitle (optional)"
-              value={subtitle}
-              onChange={handleSubtitleChange}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Cover Image</Label>
-            {coverUrl ? (
-              <div className="relative w-full rounded-lg overflow-hidden border border-border">
-                <img src={coverUrl} alt="Cover" className="w-full h-auto object-cover" />
-              </div>
-            ) : (
-              <ImagePlaceholder />
-            )}
-          </div>
+
           <div className="space-y-2">
             <Label>Tags</Label>
             <TagInput
@@ -174,7 +183,6 @@ export const DetailsTab = () => {
               tags={tags}
               setTags={(newTags) => {
                 setTags(newTags);
-                // setValue('topics', newTags as [Tag, ...Tag[]]);
               }}
               activeTagIndex={activeTagIndex}
               setActiveTagIndex={setActiveTagIndex}
@@ -183,16 +191,7 @@ export const DetailsTab = () => {
           </div>
         </div>
       </ScrollArea>
-      <div className="flex items-center justify-between pt-4">
-        <Button
-          variant="outline"
-          onClick={() => {
-            setIsOpen(false);
-          }}
-        >
-          Back
-        </Button>
-
+      <div className="flex items-center p-2 ">
         <PublishButton
           title={title}
           subtitle={subtitle}
