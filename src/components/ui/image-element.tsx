@@ -152,7 +152,7 @@ export const ImageElement = withRef<typeof PlateElement>(
 
     return (
       <ImagePopover url={url} open={isFocused} popoverRef={popoverRef}>
-        <PlateElement ref={ref} className={cn(className, "my-8 flex flex-col items-center")} {...props}>
+        <PlateElement ref={ref} className={cn(className, "my-9 flex flex-col items-center")} {...props}>
           <motion.figure
             ref={figureRef}
             className="group w-full flex flex-col items-center"
