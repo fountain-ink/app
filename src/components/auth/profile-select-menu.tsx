@@ -2,6 +2,7 @@ import { useAccountOwnerClient } from "@/hooks/use-lens-clients";
 import { getLensClient } from "@/lib/lens/client";
 import { evmAddress } from "@lens-protocol/client";
 import { fetchAccountsAvailable } from "@lens-protocol/client/actions";
+import { PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
@@ -9,7 +10,7 @@ import { UserIcon } from "../icons/user";
 import { AnimatedMenuItem } from "../navigation/animated-item";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
-import { setupUserAuth } from "./auth-manager";
+import { LoginButton } from "./login-button";
 import { OnboardingModal } from "./onboarding-modal";
 
 export function ProfileSelectMenu() {
@@ -53,47 +54,6 @@ export function ProfileSelectMenu() {
     fetchProfiles();
   }, [address]);
 
-  const handleSelectProfile = async (profile: any) => {
-    console.log("Selected profile:", profile);
-
-    try {
-      const client = await accountOwnerAuth(profile.account.address);
-
-      if (!client) {
-        throw new Error("Failed to authenticate");
-      }
-
-      console.log("Client:", client);
-
-      const credentials = await client.getCredentials();
-
-      if (credentials.isErr()) {
-        toast.error("Failed to get credentials");
-        throw new Error("Failed to get credentials");
-      }
-
-      const refreshToken = credentials.value?.refreshToken;
-      
-      if (!refreshToken) {
-        toast.error("Failed to get refresh token");
-        throw new Error("Failed to get refresh token"); 
-      }
-
-      try {
-        await setupUserAuth(refreshToken);
-      } catch (error) {
-        console.error("Error setting up user auth:", error);
-        return toast.error("Failed to complete authentication");
-      }
-
-      toast.success("Successfully logged in");
-      window.location.reload(); // Refresh to update the auth state
-    } catch (err) {
-      console.error("Error switching profile:", err);
-      toast.error("Failed to switch profile");
-    }
-  };
-
   if (loading) {
     return null;
   }
@@ -126,23 +86,15 @@ export function ProfileSelectMenu() {
             )}
 
             {profiles?.length > 0 && (
-              <div className="w-full">
-                {profiles.map((entry: any) => {
-                  return (
-                    <Button
-                      key={entry.id}
-                      variant="ghost"
-                      className="w-full justify-start"
-                      onClick={() => handleSelectProfile(entry)}
-                    >
-                      {entry.account.username.localName}
-                    </Button>
-                  );
-                })}
+              <div className="w-full flex flex-col gap-1">
+                {profiles.map((entry: any) => (
+                  <LoginButton key={entry.id} profile={entry.account} />
+                ))}
               </div>
             )}
 
-            <Button variant="outline" onClick={() => setShowOnboarding(true)}>
+            <Button className="w-full flex gap-2" variant="outline" onClick={() => setShowOnboarding(true)}>
+              <PlusIcon size={16} />
               New Profile
             </Button>
           </div>

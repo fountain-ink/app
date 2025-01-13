@@ -142,7 +142,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-72">
         <DialogHeader>
-          <DialogTitle>Create Profile</DialogTitle>
+          <DialogTitle>Create Testnet Profile</DialogTitle>
         </DialogHeader>
         <div className="w-full space-y-4">
           <div className="space-y-2">
