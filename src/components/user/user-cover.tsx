@@ -1,7 +1,7 @@
 import { Account } from "@lens-protocol/client";
 
 export const UserCover = ({ profile, className }: { profile?: Account; className?: string }) => {
-  const cover = profile?.metadata?.coverPicture?.optimized || profile?.metadata?.coverPicture?.raw;
+  const cover = profile?.metadata?.coverPicture;
 
   if (!cover) {
     return (
@@ -15,8 +15,8 @@ export const UserCover = ({ profile, className }: { profile?: Account; className
     <div className={`relative w-full aspect-[3/1] overflow-hidden md:rounded-lg ${className}`}>
       <img
         className="absolute inset-0 w-full h-full object-cover object-center"
-        src={cover.uri}
-        alt={profile?.username?.localName}
+        src={cover}
+        alt={`${profile?.username?.localName}'s cover`}
       />
     </div>
   );
