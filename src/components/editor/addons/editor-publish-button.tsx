@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { getLensClient } from "@/lib/lens/client";
 import { storageClient } from "@/lib/lens/storage-client";
-import { TransactionIndexingError, TxHash, UnexpectedError } from "@lens-protocol/client";
-import { currentSession, post } from "@lens-protocol/client/actions";
+import { TransactionIndexingError } from "@lens-protocol/client";
+import { currentSession, fetchPost, post } from "@lens-protocol/client/actions";
+import { handleOperationWith } from "@lens-protocol/client/viem";
 import { MetadataAttributeType, article } from "@lens-protocol/metadata";
 import { useSessionClient } from "@lens-protocol/react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -100,52 +101,13 @@ export const PublishButton = ({
       // Create post and handle the transaction with viem wallet client
       const result = await post(lens, {
         contentUri: uri,
-      });
+      })
+      .andThen(handleOperationWith(walletClient as any))
+      .andThen(lens.waitForTransaction); ;
 
       if (result.isErr()) {
         toast.dismiss(pendingToast);
-        const error = result.error as UnexpectedError;
-        toast.error(`Failed to create post: ${error.message}`);
-        return;
-      }
-
-      // Handle different transaction scenarios
-      const value = result.value;
-      let txHash: TxHash;
-
-      switch (value.__typename) {
-        case "PostResponse":
-          txHash = value.hash;
-          break;
-
-        case "SponsoredTransactionRequest":
-        case "SelfFundedTransactionRequest": {
-          toast.loading("Please approve the transaction...", { id: pendingToast });
-          txHash = (await walletClient.sendTransaction({
-            to: value.raw.to,
-            data: value.raw.data,
-            value: BigInt(value.raw.value),
-            gas: BigInt(value.raw.gasLimit),
-            maxFeePerGas: value.raw.maxFeePerGas ? BigInt(value.raw.maxFeePerGas) : undefined,
-            maxPriorityFeePerGas: value.raw.maxPriorityFeePerGas ? BigInt(value.raw.maxPriorityFeePerGas) : undefined,
-          })) as TxHash;
-          break;
-        }
-
-        default:
-          toast.dismiss(pendingToast);
-          toast.error("Unexpected response type");
-          return;
-      }
-
-      // Wait for transaction to be mined and indexed
-      toast.loading("Waiting for transaction to be mined...", { id: pendingToast });
-
-      const completion = await lens.waitForTransaction(txHash);
-
-      if (completion.isErr()) {
-        toast.dismiss(pendingToast);
-        const error = completion.error;
+        const error = result.error;
         if (error instanceof TransactionIndexingError) {
           switch (error.name) {
             case "TransactionIndexingError":
@@ -182,10 +144,23 @@ export const PublishButton = ({
         }
       }
 
+      const hash = result.value
+
+      const postValue = await fetchPost(lens, {txHash: hash})
+
+      if (postValue.isErr()) {
+        toast.error(`Failed to fetch post: ${postValue.error.message}`);
+        console.error("Failed to fetch post:", postValue.error);
+        return;
+      }
+
+      const postSlug = postValue.value?.__typename === "Post" ? postValue.value.slug : postValue.value?.id
+      const handle = postValue.value?.__typename === "Post" ? postValue.value.author.username?.localName : postValue.value?.id
+
       // Show success and redirect
       toast.dismiss(pendingToast);
       toast.success("Post published successfully!");
-      router.push(`/u/${handle}`);
+      router.push(`/u/${handle}/${postSlug}?success=true`);
       router.refresh();
     } catch (error) {
       console.error("Error creating post:", error);
