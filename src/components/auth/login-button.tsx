@@ -7,10 +7,12 @@ import { useAccount } from "wagmi";
 import { Button } from "../ui/button";
 import { UserAvatar } from "../user/user-avatar";
 import { setupUserAuth } from "./auth-manager";
+import { useRouter } from "next/navigation";
 
 export function LoginButton({ profile, onSuccess }: { profile: Account; onSuccess?: () => void }) {
   const { address } = useAccount();
   const accountOwnerAuth = useAccountOwnerClient();
+  const router = useRouter();
 
   if (!address) {
     return null;
@@ -50,7 +52,7 @@ export function LoginButton({ profile, onSuccess }: { profile: Account; onSucces
       if (onSuccess) {
         onSuccess();
       } else {
-        window.location.reload(); // Refresh to update the auth state
+        router.refresh();
       }
     } catch (err) {
       console.error("Error logging in:", err);
@@ -59,7 +61,7 @@ export function LoginButton({ profile, onSuccess }: { profile: Account; onSucces
   };
 
   return (
-    <Button variant="ghost" className="flex items-center justify-center gap-2 text-md w-full" onClick={login}>
+    <Button variant="ghost" className="flex items-center justify-start gap-2 text-md w-full" onClick={login}>
       <UserAvatar account={profile} className="w-8 h-8" />
       {profile.username?.localName ?? profile.address}
     </Button>

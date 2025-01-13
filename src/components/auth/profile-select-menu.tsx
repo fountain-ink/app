@@ -80,6 +80,7 @@ export function ProfileSelectMenu() {
     return null;
   }
 
+
   return (
     <>
       <Dialog open={showProfileSelect} onOpenChange={setShowProfileSelect}>

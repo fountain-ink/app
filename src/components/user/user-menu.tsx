@@ -11,7 +11,7 @@ import { clearAllCookies, clearAuthCookies } from "@/lib/auth/clear-cookies";
 import { MeResult } from "@lens-protocol/client";
 import { useLogout } from "@lens-protocol/react";
 import { useTheme } from "next-themes";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAccount, useDisconnect } from "wagmi";
 import { ConnectWalletButton } from "../auth/auth-wallet-button";
 import { ProfileSelectMenu } from "../auth/profile-select-menu";
@@ -31,6 +31,7 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
   const { disconnect } = useDisconnect();
   const { execute: logout, loading: logoutLoading } = useLogout();
   const pathname = usePathname();
+  const router = useRouter();
   const { theme, setTheme } = useTheme();
   const isDarkMode = theme === "dark";
 
@@ -70,9 +71,10 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
 
           <AnimatedMenuItem
             icon={UserRoundPenIcon}
-            onClick={() => {
-              logout();
+            onClick={async () => {
+              await logout();
               clearAuthCookies();
+              router.refresh();
             }}
           >
             Switch Profile
@@ -108,11 +110,12 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
 
           <AnimatedMenuItem
             icon={LogoutIcon}
-            onClick={() => {
+
+            onClick={async () => {
               disconnect();
-              logout();
+              await logout();
               clearAllCookies();
-              window.location.reload(); 
+              router.refresh();
             }}
           >
             Disconnect
