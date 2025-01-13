@@ -43,25 +43,6 @@ export function ProfileSettings({ profile }: { profile?: Account | null }) {
       picture,
       coverPicture: coverPictureUri,
     });
-
-    // const { uri } = await storageClient.uploadAsJson(metadata);
-    // console.log("URI", uri);
-    // const client = await getLensClient();
-
-    // if (!client.isSessionClient()) {
-    //   throw new Error("Not logged in");
-    // }
-
-    // const result = await setAccountMetadata(client, {
-    //   metadataUri: uri,
-    // });
-
-    // if (result.isErr()){
-    //   toast.error(result.error.message);
-    // }
-
-    // console.log("result", result);
-
   }, [
     profile,
     profileTitle,
@@ -84,18 +65,14 @@ export function ProfileSettings({ profile }: { profile?: Account | null }) {
           <div className="relative">
             <ImageUploader
               label="Cover Picture"
-              initialImage={currentMetadata?.coverPicture?.raw?.uri || ""}
+              initialImage={currentMetadata?.coverPicture || ""}
               aspectRatio={3}
               onImageChange={setCoverPicture}
             />
             <div className="absolute bottom-0 translate-y-1/2 left-8 z-10">
               <ImageUploader
                 label="Avatar"
-                initialImage={
-                  currentMetadata?.picture?.__typename === "ImageSet"
-                    ? currentMetadata.picture.raw?.uri || ""
-                    : currentMetadata?.picture?.image?.raw?.uri || ""
-                }
+                initialImage={ currentMetadata?.picture }
                 aspectRatio={1}
                 onImageChange={setProfilePicture}
               />
