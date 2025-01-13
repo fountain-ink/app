@@ -15,6 +15,7 @@ export const uploadFile = async (input: File | ArrayBuffer | string) => {
         useWebWorker: true,
       });
     } else if (input instanceof ArrayBuffer) {
+      console.log("input is ArrayBuffer");
       const blob = new Blob([input]);
       fileToUpload = new File([blob], "file.dat");
     } else if (typeof input === "string") {

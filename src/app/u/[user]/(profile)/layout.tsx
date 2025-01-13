@@ -27,6 +27,7 @@ export default async function UserLayout({
 
   const account = await fetchAccount(lens, { username: { localName: params.user } }).unwrapOr(null);
   const stats = await fetchAccountStats(lens, { account: account?.address }).unwrapOr(null);
+  console.log(stats)
 
   if (!account) {
     return <ErrorPage error="User not found" />;

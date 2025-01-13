@@ -37,8 +37,10 @@
 
 .article h3 {
   color: var(--header-color);
-  margin-top: var(--header-margin);
-  margin-bottom: var(--header-margin);
+  padding-top: var(--header-margin);
+  padding-bottom: var(--header-margin);
+  margin-top: 0;
+  margin-bottom: 0;
   font-family: var(--header-font);
   font-weight: var(--header-weight);
   font-style: var(--header-style);
@@ -49,8 +51,10 @@
 
 .article h4 {
   color: var(--header-color);
-  margin-top: var(--header-margin);
-  margin-bottom: var(--header-margin);
+  padding-top: var(--header-margin);
+  padding-bottom: var(--header-margin);
+  margin-top: 0;
+  margin-bottom: 0;
   font-family: var(--header-font);
   font-weight: var(--header-weight);
   font-style: var(--header-style);
@@ -77,8 +81,8 @@
   /* padding-top: var(--blockquote-margin);
   padding-bottom: var(--blockquote-margin); */
   padding-left: var(--blockquote-padding);
-  margin-top: var(--blockquote-margin);
-  margin-bottom: var(--blockquote-margin);
+  margin-top: var(--blockquote-margin) ;
+  margin-bottom: var(--blockquote-margin) ;
   border-left: var(--blockquote-border-width) solid var(--blockquote-border-color);
   font-family: var(--blockquote-font);
   font-weight: var(--blockquote-weight);
@@ -98,8 +102,8 @@
   line-height: var(--list-line-height);
   letter-spacing: var(--list-letter-spacing);
   color: var(--list-color);
-  margin-top: var(--list-margin);
-  margin-bottom: var(--list-margin);
+  /* padding-top: var(--list-margin); */
+  /* padding-bottom: var(--list-margin); */
   padding-inline-start: 1.5rem;
   /* padding-inline-end: 1.5rem; */
 }

@@ -206,7 +206,7 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--paragraph-line-height": "1.7",
       "--paragraph-letter-spacing": "-1%",
       "--paragraph-color": "hsl(var(--foreground))",
-      "--paragraph-margin": "1.25rem",
+      "--paragraph-margin": "1rem",
       "--paragraph-align": "left",
       "--paragraph-first-letter-size": "7.5rem",
       "--paragraph-first-letter-float": "left",
@@ -214,7 +214,7 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--paragraph-first-letter-padding-top": "0.5rem",
       "--paragraph-first-letter-initial": "3",
 
-      "--list-margin": "2rem",
+      "--list-margin": "1rem",
       "--list-font": "var(--paragraph-font)",
       "--list-weight": "var(--paragraph-weight)",
       "--list-style": "var(--paragraph-style)",
@@ -233,7 +233,7 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--blockquote-line-height": "var(--paragraph-line-height)",
       "--blockquote-letter-spacing": "var(--paragraph-letter-spacing)",
       "--blockquote-color": "hsl(var(--foreground))",
-      "--blockquote-margin": "2.5rem",
+      "--blockquote-margin": "0.5rem",
       "--blockquote-padding": "1.25rem",
       "--blockquote-border-width": "3px",
       "--blockquote-border-color": "hsl(var(--muted-foreground))",
@@ -247,7 +247,7 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--code-block-line-height": "1.6",
       "--code-block-padding": "1.25rem",
       "--code-block-border-radius": "0.75rem",
-      "--code-block-margin": "1.5rem",
+      "--code-block-margin": "1rem",
       "--code-block-border": "1px solid hsl(var(--border))",
 
       "--image-border-radius": "0.75rem",
@@ -328,7 +328,7 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--header-line-height": "1.2",
       "--header-letter-spacing": "-0.01em",
       "--header-color": "hsl(var(--foreground))",
-      "--header-margin": "2rem",
+      "--header-margin": "1rem",
       "--header-align": "left",
 
       "--paragraph-font": "plantin",
@@ -346,7 +346,7 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--paragraph-first-letter-padding-top": "0.5rem",
       "--paragraph-first-letter-initial": "3",
 
-      "--list-margin": "2rem",
+      "--list-margin": "0.5rem",
       "--list-font": "var(--paragraph-font)",
       "--list-weight": "var(--paragraph-weight)",
       "--list-style": "var(--paragraph-style)",

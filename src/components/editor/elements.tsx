@@ -63,7 +63,7 @@ import { EmojiInputElement } from "../ui/emoji-input-element";
 import { EmojiInputPlugin } from "@udecode/plate-emoji/react";
 
 export const getRichElements = () => {
-  return withPlaceholders(withDraggables(getElements()));
+  return withPlaceholders( withDraggables(getElements()));
 };
 
 export const getElements = () => {
