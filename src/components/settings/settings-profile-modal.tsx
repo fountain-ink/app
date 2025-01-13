@@ -92,18 +92,14 @@ export function ProfileSettingsModal({ profile, trigger, open, onOpenChange }: P
           <div className="relative">
             <ImageUploader
               label="Cover Picture"
-              initialImage={currentMetadata?.coverPicture?.raw?.uri || ""}
+              initialImage={currentMetadata?.coverPicture}
               aspectRatio={3}
               onImageChange={setCoverPicture}
             />
             <div className="absolute bottom-0 translate-y-1/2 left-8 z-10">
               <ImageUploader
                 label="Avatar"
-                initialImage={
-                  currentMetadata?.picture?.__typename === "ImageSet"
-                    ? currentMetadata.picture.raw?.uri || ""
-                    : currentMetadata?.picture?.image?.raw?.uri || ""
-                }
+                initialImage={ currentMetadata?.picture }
                 aspectRatio={1}
                 onImageChange={setProfilePicture}
               />
