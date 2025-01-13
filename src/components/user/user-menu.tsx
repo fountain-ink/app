@@ -112,6 +112,7 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
               disconnect();
               logout();
               clearAllCookies();
+              window.location.reload(); 
             }}
           >
             Disconnect

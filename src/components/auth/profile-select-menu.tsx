@@ -19,6 +19,7 @@ export function ProfileSelectMenu() {
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showProfileSelect, setShowProfileSelect] = useState(true);
   const accountOwnerAuth = useAccountOwnerClient();
 
   const fetchProfiles = async () => {
@@ -54,6 +55,18 @@ export function ProfileSelectMenu() {
     fetchProfiles();
   }, [address]);
 
+  const handleShowOnboarding = () => {
+    setShowProfileSelect(false); // Hide profile select when showing onboarding
+    setShowOnboarding(true);
+  };
+
+  const handleOnboardingClose = (open: boolean) => {
+    setShowOnboarding(open);
+    if (!open) {
+      setShowProfileSelect(true); // Show profile select when closing onboarding
+    }
+  };
+
   if (loading) {
     return null;
   }
@@ -69,7 +82,7 @@ export function ProfileSelectMenu() {
 
   return (
     <>
-      <Dialog>
+      <Dialog open={showProfileSelect} onOpenChange={setShowProfileSelect}>
         <DialogTrigger className="p-2" asChild>
           <AnimatedMenuItem asButton icon={UserIcon} />
         </DialogTrigger>
@@ -93,7 +106,7 @@ export function ProfileSelectMenu() {
               </div>
             )}
 
-            <Button className="w-full flex gap-2" variant="outline" onClick={() => setShowOnboarding(true)}>
+            <Button className="w-full flex gap-2" variant="outline" onClick={handleShowOnboarding}>
               <PlusIcon size={16} />
               New Profile
             </Button>
@@ -101,7 +114,7 @@ export function ProfileSelectMenu() {
         </DialogContent>
       </Dialog>
 
-      <OnboardingModal open={showOnboarding} onOpenChange={setShowOnboarding} onSuccess={fetchProfiles} />
+      <OnboardingModal open={showOnboarding} onOpenChange={handleOnboardingClose} onSuccess={fetchProfiles} />
     </>
   );
 }

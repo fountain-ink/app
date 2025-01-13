@@ -2,6 +2,7 @@ import { useOnboardingClient } from "@/hooks/use-lens-clients";
 import { storageClient } from "@/lib/lens/storage-client";
 import { createAccountWithUsername, fetchAccount } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
+import { account } from "@lens-protocol/metadata";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useAccount, useWalletClient } from "wagmi";
@@ -9,7 +10,6 @@ import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { account } from "@lens-protocol/metadata";
 
 interface OnboardingModalProps {
   open: boolean;
@@ -63,24 +63,24 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
       console.log("Transaction hash:", result.value);
 
       const accountResult = await fetchAccount(client, { txHash: result.value }).unwrapOr(null);
-      
+
       if (!accountResult) {
         toast.error("Failed to fetch account after creation");
         return onOpenChange(false);
       }
       console.log("Account:", accountResult);
-      
+
       const switchResult = await client.switchAccount({account: accountResult.address});
-      
+
       if (switchResult.isErr()) {
         toast.error(`Failed to switch account ${switchResult.error.message}`);
         console.error(switchResult.error.message)
         return onOpenChange(false);
       }
-      
+
       console.log("Switched account:", switchResult.value);
       toast.success("Account created successfully!");
-      
+
       onSuccess();
       onOpenChange(false);
     } catch (err) {
@@ -93,7 +93,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-72">
+      <DialogContent className="w-96 h-96">
         <DialogHeader>
           <DialogTitle>Create Testnet Profile</DialogTitle>
         </DialogHeader>
