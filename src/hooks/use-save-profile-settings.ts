@@ -101,13 +101,8 @@ export function useSaveProfileSettings() {
       const metadata = account({
         name: name ?? currentMetadata?.name ?? undefined,
         bio: bio ?? currentMetadata?.bio ?? undefined,
-        picture:
-          picture ??
-          (currentMetadata?.picture?.__typename === "ImageSet"
-            ? currentMetadata.picture.raw?.uri
-            : currentMetadata?.picture?.image?.raw?.uri) ??
-          undefined,
-        coverPicture: coverPicture ?? currentMetadata?.coverPicture?.raw?.uri ?? undefined,
+        picture: picture ?? currentMetadata?.picture ?? undefined,
+        coverPicture: coverPicture ?? currentMetadata?.coverPicture ?? undefined,
         attributes: undefined,
       });
       console.log(metadata);

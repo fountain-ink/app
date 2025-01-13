@@ -1,6 +1,8 @@
 "use client";
 
-import { LimitType, useSearchProfiles } from "@lens-protocol/react-web";
+import { getLensClient } from "@/lib/lens/client";
+import { fetchAccounts } from "@lens-protocol/client/actions";
+import { useEffect, useState } from "react";
 import { LoadingSpinner } from "../misc/loading-spinner";
 import { InlineComboboxEmpty, InlineComboboxItem } from "../ui/inline-combobox";
 
@@ -21,26 +23,49 @@ export function HandleSearch({
   maxResults?: number;
   onResultsChange?: (results: MentionableUser[]) => void;
 }) {
-  const { data: profiles, loading, error } = useSearchProfiles({ query, limit: LimitType.Ten });
+  const [loading, setLoading] = useState(false);
+  const [profiles, setProfiles] = useState<MentionableUser[]>([]);
 
-  if (error && query) throw error;
+  useEffect(() => {
+    async function searchProfiles() {
+      if (!query) {
+        setProfiles([]);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const lens = await getLensClient();
+        const account = await fetchAccounts(lens, { filter: { searchBy: { localNameQuery: query } } }).unwrapOr(null);
+        const items = account?.items || [];
+
+        if (items.length > 0) {
+          const mentionables = items.slice(0, maxResults).map(item => ({
+            key: item.address,
+            name: item.metadata?.name || "",
+            text: item.username?.localName || "",
+            handle: item.username?.localName || "",
+            picture: item.metadata?.picture
+          }));
+          setProfiles(mentionables);
+        } else {
+          setProfiles([]);
+        }
+      } catch (error) {
+        console.error("Error fetching profiles:", error);
+        setProfiles([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    const debounceTimeout = setTimeout(searchProfiles, 300);
+    return () => clearTimeout(debounceTimeout);
+  }, [query, onResultsChange]);
 
   if (!query) {
     return null;
   }
-
-  const mentionables: MentionableUser[] | undefined = profiles
-    ?.map((profile) => ({
-      key: profile.id,
-      name: profile.metadata?.displayName || "",
-      text: profile.handle?.localName || "",
-      handle: profile.handle?.localName || "",
-      picture:
-        profile.metadata?.picture?.__typename === "ImageSet"
-          ? profile.metadata?.picture?.optimized?.uri
-          : profile.metadata?.picture?.image.optimized?.uri,
-    }))
-    .slice(0, maxResults);
 
   return (
     <>
@@ -51,7 +76,7 @@ export function HandleSearch({
           </div>
         </InlineComboboxEmpty>
       ) : (
-        mentionables?.map((user) => (
+        profiles.map((user) => (
           <InlineComboboxItem key={user.handle} value={user.handle} onClick={() => onResultsChange?.([user])}>
             <div className="flex items-center min-w-48 max-w-96 w-full gap-2">
               {user.picture ? (
