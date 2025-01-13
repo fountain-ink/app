@@ -6,6 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { useSettings } from "@/hooks/use-settings";
 import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
+import { Button } from "@/components/ui/button";
 
 interface ApplicationSettingsProps {
   initialSettings?: any;
@@ -18,11 +19,13 @@ export function ApplicationSettings({ initialSettings = {}, initialEmail }: Appl
   const [isBlurEnabled, setIsBlurEnabled] = useState(settings.app?.isBlurEnabled ?? false);
   const [email, setEmail] = useState(initialEmailFromHook ?? "");
   const [isEmailValid, setIsEmailValid] = useState(true);
+  const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
     setIsSmoothScrolling(settings.app?.isSmoothScrolling ?? false);
     setIsBlurEnabled(settings.app?.isBlurEnabled ?? false);
     setEmail(initialEmailFromHook ?? "");
+    setIsDirty(false);
   }, [settings, initialEmailFromHook]);
 
   const validateEmail = (email: string) => {
@@ -30,38 +33,37 @@ export function ApplicationSettings({ initialSettings = {}, initialEmail }: Appl
     return email === "" || emailRegex.test(email);
   };
 
-  const handleSmoothScrollingChange = async (checked: boolean) => {
+  const handleSmoothScrollingChange = (checked: boolean) => {
     setIsSmoothScrolling(checked);
-    await saveSettings({
-      ...settings,
-      app: {
-        ...settings.app,
-        isSmoothScrolling: checked,
-      },
-    });
+    setIsDirty(true);
   };
 
-  const handleBlurEffectChange = async (checked: boolean) => {
+  const handleBlurEffectChange = (checked: boolean) => {
     setIsBlurEnabled(checked);
-    await saveSettings({
-      ...settings,
-      app: {
-        ...settings.app,
-        isBlurEnabled: checked,
-      },
-    });
+    setIsDirty(true);
   };
 
-  const handleEmailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newEmail = e.target.value;
     setEmail(newEmail);
     setIsEmailValid(validateEmail(newEmail));
-    await saveSettings(settings, email);
+    setIsDirty(true);
   };
 
-  const handleEmailBlur = async () => {
-    if (isEmailValid && email !== initialEmailFromHook) {
-      await saveSettings(settings, email);
+  const handleSave = async () => {
+    if (!isEmailValid) return;
+
+    const success = await saveSettings({
+      ...settings,
+      app: {
+        ...settings.app,
+        isSmoothScrolling,
+        isBlurEnabled,
+      },
+    }, email);
+
+    if (success) {
+      setIsDirty(false);
     }
   };
 
@@ -96,12 +98,20 @@ export function ApplicationSettings({ initialSettings = {}, initialEmail }: Appl
             placeholder="Your email" 
             value={email} 
             onChange={handleEmailChange}
-            onBlur={handleEmailBlur}
             className={!isEmailValid ? "border-destructive" : ""}
           />
           {!isEmailValid && (
             <p className="text-sm text-destructive">Please enter a valid email address</p>
           )}
+        </div>
+
+        <div className="flex justify-end pt-4">
+          <Button 
+            onClick={handleSave} 
+            disabled={!isDirty || !isEmailValid}
+          >
+            Save Changes
+          </Button>
         </div>
       </CardContent>
     </Card>

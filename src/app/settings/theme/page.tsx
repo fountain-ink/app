@@ -7,5 +7,6 @@ export const metadata = {
 
 export default async function ThemeSettingsPage() {
   const settings = await getSettings();
-  return <ThemeSettings initialSettings={settings} />;
+  const initialSettings = 'metadata' in settings ? settings.metadata : {};
+  return <ThemeSettings initialSettings={initialSettings} />;
 }

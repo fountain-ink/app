@@ -1,8 +1,7 @@
 "use client";
 
 import { settingsEvents } from "@/lib/settings/events";
-import { useCallback, useEffect, useState } from "react";
-import { useDebouncedCallback } from "use-debounce";
+import { useState } from "react";
 
 interface Settings {
   blog?: {
@@ -29,31 +28,14 @@ export function useSettings(initialSettings: Settings = {}, initialEmail?: strin
   const [email, setEmail] = useState<string | null>(initialEmail ?? null);
   const [isLoading, setIsLoading] = useState(!Object.keys(initialSettings).length);
 
-  const fetchSettings = useCallback(async () => {
-    try {
-      const response = await fetch("/api/settings");
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to fetch settings");
-      }
-      setSettings(data.metadata || {});
-      setEmail(data.email);
-    } catch (error) {
-      console.error("Error fetching settings:", error);
-      settingsEvents.emit("error", error instanceof Error ? error.message : "Failed to fetch settings");
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  const saveSettings = useDebouncedCallback(async (newSettings: Settings, newEmail?: string) => {
+  const saveSettings = async (newSettings: Settings, newEmail?: string) => {
     try {
       const response = await fetch("/api/settings", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           metadata: newSettings,
           ...(newEmail !== undefined && { email: newEmail })
         }),
@@ -76,18 +58,7 @@ export function useSettings(initialSettings: Settings = {}, initialEmail?: strin
       settingsEvents.emit("error", errorMessage);
       return false;
     }
-  }, 1000);
-
-  useEffect(() => {
-    if (!Object.keys(initialSettings).length) {
-      fetchSettings();
-    } else {
-      setSettings(initialSettings);
-      if (initialEmail !== undefined) {
-        setEmail(initialEmail);
-      }
-    }
-  }, [fetchSettings, initialSettings, initialEmail]);
+  };
 
   return {
     settings,

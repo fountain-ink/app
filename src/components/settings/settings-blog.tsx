@@ -7,6 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { useSettings } from "@/hooks/use-settings";
 import { useCallback, useEffect, useState } from "react";
 import { TextareaAutosize } from "../ui/textarea";
+import { Button } from "@/components/ui/button";
 
 interface BlogSettings {
   title?: string;
@@ -22,7 +23,7 @@ interface BlogSettingsProps {
   };
 }
 
-export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
+export function BlogSettings({ initialSettings }: BlogSettingsProps) {
   const { settings, saveSettings } = useSettings(initialSettings);
   const [blogTitle, setBlogTitle] = useState(settings.blog?.title || "");
   const [blogAbout, setBlogAbout] = useState(settings.blog?.about || "");
@@ -30,6 +31,7 @@ export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
   const [showTags, setShowTags] = useState(settings.blog?.showTags ?? true);
   const [showTitle, setShowTitle] = useState(settings.blog?.showTitle ?? true);
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
     setBlogTitle(settings.blog?.title || "");
@@ -37,7 +39,9 @@ export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
     setShowAuthor(settings.blog?.showAuthor ?? true);
     setShowTags(settings.blog?.showTags ?? true);
     setShowTitle(settings.blog?.showTitle ?? true);
-  }, []);
+    setIsDirty(false);
+  }, [settings]);
+
 
   const validateBlogTitle = useCallback((title: string) => {
     if (title.trim().length === 0) {
@@ -49,56 +53,58 @@ export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
     return null;
   }, []);
 
-  const handleSave = useCallback(
-    (updates: Partial<typeof settings.blog>) => {
-      const newSettings = {
-        ...settings,
-        blog: {
-          title: blogTitle.trim(),
-          about: blogAbout,
-          showTags,
-          showTitle,
-          showAuthor,
-          ...updates,
-        },
-      };
-
-      if (newSettings.blog.showTitle) {
-        const titleError = validateBlogTitle(newSettings.blog.title);
-        if (titleError) {
-          setValidationError(titleError);
-          return;
-        }
+  const handleSave = async () => {
+    if (showTitle) {
+      const titleError = validateBlogTitle(blogTitle);
+      if (titleError) {
+        setValidationError(titleError);
+        return;
       }
+    }
 
-      setValidationError(null);
-      saveSettings(newSettings);
-    },
-    [settings, blogTitle, blogAbout, showTags, showTitle, showAuthor, validateBlogTitle, saveSettings],
-  );
+    const newSettings = {
+      ...settings,
+      blog: {
+        title: blogTitle.trim(),
+        about: blogAbout,
+        showTags,
+        showTitle,
+        showAuthor,
+      },
+    };
+
+    setValidationError(null);
+    const success = await saveSettings(newSettings);
+    if (success) {
+      setIsDirty(false);
+    }
+  };
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
     setBlogTitle(newTitle);
     setValidationError(null);
-    if (showTitle) {
-      handleSave({ title: newTitle });
-    }
+    setIsDirty(true);
+  };
+
+  const handleAboutChange = (value: string) => {
+    setBlogAbout(value);
+    setIsDirty(true);
   };
 
   const handleShowTitleChange = (checked: boolean) => {
     setShowTitle(checked);
-    handleSave({ showTitle: checked });
+    setIsDirty(true);
   };
 
   const handleShowAuthorChange = (checked: boolean) => {
     setShowAuthor(checked);
-    handleSave({ showAuthor: checked });
+    setIsDirty(true);
   };
 
   const handleShowTagsChange = (checked: boolean) => {
     setShowTags(checked);
-    handleSave({ showTags: checked });
+    setIsDirty(true);
   };
 
   return (
@@ -129,10 +135,7 @@ export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
             value={blogAbout}
             variant="default"
             className="p-2"
-            onChange={(e) => {
-              setBlogAbout(e.target.value);
-              handleSave({ about: e.target.value });
-            }}
+            onChange={(e) => handleAboutChange(e.target.value)}
             placeholder="Write a description about your blog"
           />
         </div>
@@ -163,6 +166,15 @@ export function BlogSettings({ initialSettings = {} }: BlogSettingsProps) {
             </div>
             <Switch id="show-tags" checked={showTags} onCheckedChange={handleShowTagsChange} />
           </div>
+        </div>
+
+        <div className="flex justify-end pt-4">
+          <Button 
+            onClick={handleSave} 
+            disabled={!isDirty || !!validationError}
+          >
+            Save Changes
+          </Button>
         </div>
       </CardContent>
     </Card>

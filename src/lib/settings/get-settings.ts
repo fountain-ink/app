@@ -2,7 +2,29 @@ import { cookies } from "next/headers";
 import { getTokenClaims } from "../auth/get-token-claims";
 import { createClient } from "../supabase/server";
 
-export async function getSettings() {
+interface Settings {
+  metadata: {
+    blog?: {
+      title?: string;
+      about?: string;
+      showAuthor?: boolean;
+      showTags?: boolean;
+      showTitle?: boolean;
+    };
+    app?: {
+      isSmoothScrolling?: boolean;
+      isBlurEnabled?: boolean;
+    };
+    theme?: {
+      name?: string;
+      customColor?: string;
+      customBackground?: string;
+    };
+  };
+  email?: string | null;
+}
+
+export async function getSettings(): Promise<Settings | {}> {
   const cookieStore = cookies();
   const token = cookieStore.get("appToken")?.value;
 

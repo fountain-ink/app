@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { ThemeButtons } from "../theme/theme-buttons";
 import { useTheme } from "../theme/theme-context";
 import { Input } from "../ui/input";
+import { Button } from "@/components/ui/button";
 
 interface ThemeSettingsProps {
   defaultTheme?: ThemeType;
@@ -25,6 +26,7 @@ export function ThemeSettings({ defaultTheme, onThemeChange, initialSettings = {
   });
   const [customColor, setCustomColor] = useState(settings.theme?.customColor || "#e2f3ab");
   const [customBackground, setCustomBackground] = useState(settings.theme?.customBackground || "#bbccaa");
+  const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
     const themeName = settings.theme?.name;
@@ -33,46 +35,40 @@ export function ThemeSettings({ defaultTheme, onThemeChange, initialSettings = {
     }
     setCustomColor(settings.theme?.customColor || "#e2f3ab");
     setCustomBackground(settings.theme?.customBackground || "#bbccaa");
+    setIsDirty(false);
   }, [settings, theme]);
 
   const handleThemeChange = (newTheme: ThemeType) => {
     setSelectedTheme(newTheme);
     setTheme(newTheme);
     onThemeChange?.(newTheme);
-    saveSettings({
-      ...settings,
-      theme: {
-        name: newTheme,
-        customColor,
-        customBackground,
-      },
-    });
+    setIsDirty(true);
   };
 
   const handleCustomColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newColor = e.target.value;
     setCustomColor(newColor);
-    saveSettings({
-      ...settings,
-      theme: {
-        name: selectedTheme,
-        customColor: newColor,
-        customBackground,
-      },
-    });
+    setIsDirty(true);
   };
 
   const handleCustomBackgroundChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newBackground = e.target.value;
     setCustomBackground(newBackground);
-    saveSettings({
+    setIsDirty(true);
+  };
+
+  const handleSave = async () => {
+    const success = await saveSettings({
       ...settings,
       theme: {
         name: selectedTheme,
         customColor,
-        customBackground: newBackground,
+        customBackground,
       },
     });
+    if (success) {
+      setIsDirty(false);
+    }
   };
 
   return (
@@ -119,6 +115,12 @@ export function ThemeSettings({ defaultTheme, onThemeChange, initialSettings = {
             </div>
           </TabsContent>
         </Tabs>
+
+        <div className="flex justify-end pt-4">
+          <Button onClick={handleSave} disabled={!isDirty}>
+            Save Changes
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
