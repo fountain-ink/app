@@ -168,7 +168,7 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
           </div>
         </div>
 
-        <div className="flex justify-end pt-4">
+        <div className="flex justify-start pt-4">
           <Button 
             onClick={handleSave} 
             disabled={!isDirty || !!validationError}

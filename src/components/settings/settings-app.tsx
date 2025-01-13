@@ -105,7 +105,7 @@ export function ApplicationSettings({ initialSettings = {}, initialEmail }: Appl
           )}
         </div>
 
-        <div className="flex justify-end pt-4">
+        <div className="flex justify-start pt-4">
           <Button 
             onClick={handleSave} 
             disabled={!isDirty || !isEmailValid}

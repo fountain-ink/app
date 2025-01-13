@@ -116,7 +116,7 @@ export function ThemeSettings({ defaultTheme, onThemeChange, initialSettings = {
           </TabsContent>
         </Tabs>
 
-        <div className="flex justify-end pt-4">
+        <div className="flex justify-start pt-4">
           <Button onClick={handleSave} disabled={!isDirty}>
             Save Changes
           </Button>
