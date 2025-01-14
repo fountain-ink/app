@@ -1,6 +1,7 @@
 "use client";
 
 import { Account } from "@lens-protocol/client";
+import { User2Icon } from "lucide-react";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
@@ -43,5 +44,9 @@ export const UserAvatar = ({
 };
 
 export const AvatarSuspense = () => {
-  return <div className="flex h-full w-full items-center justify-center rounded-full bg-muted" />;
+  return (
+    <div className="flex h-full w-full items-center justify-center rounded-full bg-muted">
+      <User2Icon size={30} className="text-secondary -mb-1" />
+    </div>
+  );
 };

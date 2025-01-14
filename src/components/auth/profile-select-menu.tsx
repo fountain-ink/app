@@ -4,12 +4,12 @@ import { evmAddress } from "@lens-protocol/client";
 import { fetchAccountsAvailable } from "@lens-protocol/client/actions";
 import { PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { UserIcon } from "../icons/user";
 import { AnimatedMenuItem } from "../navigation/animated-item";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { ScrollArea } from "../ui/scroll-area";
 import { LoginButton } from "./login-button";
 import { OnboardingModal } from "./onboarding-modal";
 
@@ -20,7 +20,6 @@ export function ProfileSelectMenu() {
   const [loading, setLoading] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showProfileSelect, setShowProfileSelect] = useState(true);
-  const accountOwnerAuth = useAccountOwnerClient();
 
   const fetchProfiles = async () => {
     if (!address) return;
@@ -56,14 +55,16 @@ export function ProfileSelectMenu() {
   }, [address]);
 
   const handleShowOnboarding = () => {
-    setShowProfileSelect(false); // Hide profile select when showing onboarding
+    // Hide profile select when showing onboarding
+    setShowProfileSelect(false); 
     setShowOnboarding(true);
   };
 
   const handleOnboardingClose = (open: boolean) => {
     setShowOnboarding(open);
     if (!open) {
-      setShowProfileSelect(true); // Show profile select when closing onboarding
+      // Show profile select when closing onboarding
+      setShowProfileSelect(true); 
     }
   };
 
@@ -80,7 +81,6 @@ export function ProfileSelectMenu() {
     return null;
   }
 
-
   return (
     <>
       <Dialog open={showProfileSelect} onOpenChange={setShowProfileSelect}>
@@ -88,7 +88,7 @@ export function ProfileSelectMenu() {
           <AnimatedMenuItem asButton icon={UserIcon} />
         </DialogTrigger>
 
-        <DialogContent className="max-w-72">
+        <DialogContent className="max-w-96">
           <DialogHeader>
             <DialogTitle>Select profile</DialogTitle>
           </DialogHeader>
@@ -100,14 +100,16 @@ export function ProfileSelectMenu() {
             )}
 
             {profiles?.length > 0 && (
-              <div className="w-full flex flex-col gap-1">
-                {profiles.map((entry: any) => (
-                  <LoginButton key={entry.id} profile={entry.account} />
-                ))}
-              </div>
+              <ScrollArea className="w-full pr-4 max-h-[300px]">
+                <div className="w-full flex flex-col gap-1">
+                  {profiles.map((entry: any) => (
+                    <LoginButton key={entry.id} profile={entry.account} />
+                  ))}
+                </div>
+              </ScrollArea>
             )}
 
-            <Button className="w-full flex gap-2" variant="outline" onClick={handleShowOnboarding}>
+            <Button className="flex gap-2" variant="outline" onClick={handleShowOnboarding}>
               <PlusIcon size={16} />
               New Profile
             </Button>
