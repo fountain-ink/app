@@ -202,7 +202,7 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
           <div className="space-y-2">
             <Label>Blog Icon</Label>
             <p className="text-sm text-muted-foreground">
-              Recommended: Square PNG or JPG, max 1MB. Best results with 256x256 pixels or larger.
+              Square PNG or JPG, best results with 256x256 pixels or larger.
             </p>
             <div className="flex items-start gap-4">
               <div className="space-y-1.5">

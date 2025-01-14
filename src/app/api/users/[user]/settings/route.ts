@@ -8,6 +8,7 @@ interface UserMetadata {
     showAuthor?: boolean;
     showTags?: boolean;
     showTitle?: boolean;
+    icon?: string;
   };
   theme?: {
     name?: string;
@@ -35,6 +36,7 @@ export async function GET(req: NextRequest, { params }: { params: { user: string
         showAuthor: metadata?.blog?.showAuthor,
         showTags: metadata?.blog?.showTags,
         showTitle: metadata?.blog?.showTitle,
+        icon: metadata?.blog?.icon,
       },
       theme: metadata?.theme,
     };

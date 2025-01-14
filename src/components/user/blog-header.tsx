@@ -3,11 +3,12 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-interface BlogTitleProps {
+interface BlogHeaderProps {
   title?: string;
+  icon?: string;
 }
 
-export function BlogTitle({ title }: BlogTitleProps) {
+export function BlogHeader({ title, icon }: BlogHeaderProps) {
   const [isVisible, setIsVisible] = useState(true);
   const pathname = usePathname();
   const isIndexPage = pathname.split("/").length === 3;
@@ -20,12 +21,11 @@ export function BlogTitle({ title }: BlogTitleProps) {
       if (!titleElement) return;
 
       const rect = titleElement.getBoundingClientRect();
-      // Show sticky title when original title is scrolled out of view
       setIsVisible(rect.bottom < 75);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Check initial position
+    handleScroll();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -38,8 +38,11 @@ export function BlogTitle({ title }: BlogTitleProps) {
         isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
     >
-      <div className="text-lg font-[family-name:var(--title-font)] font-normal font-[color:var(--title-color)] truncate ">
-        {title}
+      <div className="flex jusitfy-center items-center gap-2">
+        {icon && <img src={icon} alt="Blog icon" className="w-6 h-6 -mt-1 rounded-[4px] object-cover" />}
+        <div className="font-[family-name:var(--title-font)] text-lg font-normal font-[color:var(--title-color)] truncate">
+          {title}
+        </div>
       </div>
     </div>
   );

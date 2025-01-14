@@ -1,4 +1,4 @@
-import { BlogTitle } from "@/components/user/blog-title";
+import { BlogHeader } from "@/components/user/blog-header";
 import { UserTheme } from "@/components/user/user-theme";
 import { getUserSettings } from "@/lib/auth/get-user-settings";
 import { getBaseUrl } from "@/lib/get-base-url";
@@ -34,11 +34,12 @@ const BlogLayout = async ({
 
   const settings = await getUserSettings(profile.address);
   const themeName = settings?.theme?.name;
-  const title = settings?.blog?.title 
+  const title = settings?.blog?.title;
+  const icon = settings?.blog?.icon;
 
   return (
     <UserTheme initialTheme={themeName}>
-      <BlogTitle title={title} />
+      <BlogHeader title={title} icon={icon} />
       <div className="flex flex-col pt-14 md:pt-20 items-center justify-center w-full max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
         {children}
       </div>
