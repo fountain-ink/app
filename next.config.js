@@ -11,8 +11,19 @@ const config = {
   // eslint: {
   //   ignoreDuringBuilds: true,
   // },
+
   images: {
     domains: ["images.unsplash.com"],
+  },
+
+  async redirects() {
+    return [
+      {
+        source: '/settings',
+        destination: '/settings/profile',
+        permanent: true, // This sets the status code to 308 for a permanent redirect
+      },
+    ];
   },
 
   webpack: (config) => {
