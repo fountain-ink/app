@@ -60,6 +60,7 @@ async function getCroppedImg(
     }, "image/jpeg");
   });
 }
+
 interface ImageUploaderProps {
   label: string;
   initialImage: string;

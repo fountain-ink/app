@@ -1,6 +1,6 @@
 import ErrorPage from "@/components/misc/error-page";
 import { PageTransition } from "@/components/navigation/page-transition";
-import { ProfileSettingsModal } from "@/components/settings/settings-profile-modal";
+import { ProfileSettingsModal } from "@/components/settings/settings-profile";
 import { Button } from "@/components/ui/button";
 import { SlideNav } from "@/components/ui/slide-tabs";
 import { UserAvatar } from "@/components/user/user-avatar";
@@ -14,6 +14,7 @@ import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchAccount, fetchAccountStats } from "@lens-protocol/client/actions";
 import { AnimatePresence } from "framer-motion";
+
 export default async function UserLayout({
   children,
   params,
@@ -91,7 +92,7 @@ export default async function UserLayout({
                 isVisible: isUserProfile,
               },
             ]}
-            className="w-fit "
+            className="w-fit"
           />
         </div>
         <AnimatePresence mode="wait">

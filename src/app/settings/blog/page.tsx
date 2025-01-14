@@ -7,6 +7,6 @@ export const metadata = {
 
 export default async function BlogSettingsPage() {
   const settings = await getSettings();
-  const initialSettings = 'metadata' in settings ? settings.metadata : {};
-  return <BlogSettings initialSettings={initialSettings} />;
+
+  return <BlogSettings initialSettings={settings?.metadata} />;
 }

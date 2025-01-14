@@ -24,17 +24,17 @@ interface Settings {
   email?: string | null;
 }
 
-export async function getSettings(): Promise<Settings | {}> {
+export async function getSettings(): Promise<Settings | null> {
   const cookieStore = cookies();
   const token = cookieStore.get("appToken")?.value;
 
   if (!token) {
-    return {};
+    return null;
   }
 
   const claims = getTokenClaims(token);
   if (!claims?.user_metadata?.profileId) {
-    return {};
+    return null;
   }
 
   const db = await createClient();
@@ -46,8 +46,15 @@ export async function getSettings(): Promise<Settings | {}> {
 
   if (error) {
     console.error("Error fetching user settings:", error);
-    return {};
+    return null;
   }
 
-  return data;
+  if (!data) {
+    return null;
+  }
+
+  return {
+    metadata: data.metadata as Settings['metadata'],
+    email: data.email
+  };
 }
