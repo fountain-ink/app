@@ -1,6 +1,6 @@
 import { AuthManager } from "@/components/auth/auth-manager";
 import { Web3Providers } from "@/components/misc/web3-providers";
-import { Header } from "@/components/navigation/nav-header";
+import { Header } from "@/components/navigation/header";
 import { ThemeProvider } from "@/components/theme/theme-context";
 import { Toaster } from "@/components/ui/sonner";
 import { getSessionProfile } from "@/lib/auth/get-session-profile";

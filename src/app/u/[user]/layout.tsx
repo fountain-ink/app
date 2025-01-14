@@ -1,3 +1,4 @@
+import { BlogTitle } from "@/components/user/blog-title";
 import { UserTheme } from "@/components/user/user-theme";
 import { getBaseUrl } from "@/lib/get-base-url";
 import { getLensClient } from "@/lib/lens/client";
@@ -23,6 +24,7 @@ async function getUserSettings(address: string) {
     console.error("Failed to fetch user settings");
     return null;
   }
+
   const data = await response.json();
   return data.settings;
 }
@@ -31,7 +33,9 @@ const UserLayout = async ({ children, params }: { children: React.ReactNode; par
   const lens = await getLensClient();
   let profile = undefined;
 
-  profile = await fetchAccount(lens, { username: { localName: params.user } }).unwrapOr(null);
+  profile = await fetchAccount(lens, {
+    username: { localName: params.user },
+  }).unwrapOr(null);
 
   if (!profile) {
     console.error("Failed to fetch user profile");
@@ -39,9 +43,16 @@ const UserLayout = async ({ children, params }: { children: React.ReactNode; par
   }
 
   const settings = await getUserSettings(profile.address);
+  console.log(settings);
   const themeName = settings?.theme?.name;
+  const title = settings?.blog?.title ?? `${profile.username?.localName}'s blog`;
 
-  return <UserTheme initialTheme={themeName}>{children}</UserTheme>;
+  return (
+    <UserTheme initialTheme={themeName}>
+      <BlogTitle title={title} />
+      {children}
+    </UserTheme>
+  );
 };
 
 export default UserLayout;

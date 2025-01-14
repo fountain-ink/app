@@ -54,11 +54,13 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
           <AuthorView showHandle={false} profiles={[profile]} />
         </div>
       )}
+
       {showTitle && (
-        <div className="text-[1.5rem] sm:text-[2rem] lg:text-[2.5rem] text-center font-[letter-spacing:var(--title-letter-spacing)] font-[family-name:var(--title-font)] font-normal font-[color:var(--title-color)] overflow-hidden line-clamp-2">
+        <div data-blog-title className="text-[1.5rem] sm:text-[2rem] lg:text-[2.5rem] text-center font-[letter-spacing:var(--title-letter-spacing)] font-[family-name:var(--title-font)] font-normal font-[color:var(--title-color)] overflow-hidden line-clamp-2">
           {blogTitle ?? `${profile.username?.localName}'s blog`}
         </div>
       )}
+
       <Separator className="w-48 bg-primary mt-3" />
       {showTags && <IndexNavigation username={params.user} isUserProfile={isUserProfile} />}
       <div className="flex flex-col my-4 gap-4">
