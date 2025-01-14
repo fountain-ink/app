@@ -1,5 +1,6 @@
 import { BlogTitle } from "@/components/user/blog-title";
 import { UserTheme } from "@/components/user/user-theme";
+import { getUserSettings } from "@/lib/auth/get-user-settings";
 import { getBaseUrl } from "@/lib/get-base-url";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchAccount } from "@lens-protocol/client/actions";
@@ -14,21 +15,6 @@ export async function generateMetadata({ params }: { params: { user: string } })
   };
 }
 
-async function getUserSettings(address: string) {
-  const url = getBaseUrl();
-  const response = await fetch(`${url}/api/users/${address}/settings`, {
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    console.error("Failed to fetch user settings");
-    return null;
-  }
-
-  const data = await response.json();
-  return data.settings;
-}
-
 const BlogLayout = async ({
   children,
   params,
@@ -37,9 +23,7 @@ const BlogLayout = async ({
   params: { user: string };
 }) => {
   const lens = await getLensClient();
-  let profile = undefined;
-
-  profile = await fetchAccount(lens, {
+  const profile = await fetchAccount(lens, {
     username: { localName: params.user },
   }).unwrapOr(null);
 
@@ -50,7 +34,7 @@ const BlogLayout = async ({
 
   const settings = await getUserSettings(profile.address);
   const themeName = settings?.theme?.name;
-  const title = settings?.blog?.title ?? `${profile.username?.localName}'s blog`;
+  const title = settings?.blog?.title 
 
   return (
     <UserTheme initialTheme={themeName}>

@@ -10,10 +10,13 @@ import { UserFollowButton } from "@/components/user/user-follow";
 import { UserFollowing } from "@/components/user/user-following";
 import { UserHandle } from "@/components/user/user-handle";
 import { UserName } from "@/components/user/user-name";
+import { UserTheme } from "@/components/user/user-theme";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
+import { getUserSettings } from "@/lib/auth/get-user-settings";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchAccount, fetchAccountStats } from "@lens-protocol/client/actions";
 import { AnimatePresence } from "framer-motion";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }: { params: { user: string } }) {
   const handle = params.user;
@@ -32,10 +35,21 @@ const UserLayout = async ({
   params: { user: string };
 }) => {
   const lens = await getLensClient();
-  const { profileId, handle: userHandle } = await getUserProfile();
-  const pageHandle = `lens/${params.user}`;
+  const account = await fetchAccount(lens, {
+    username: { localName: params.user },
+  }).unwrapOr(null);
 
-  const account = await fetchAccount(lens, { username: { localName: params.user } }).unwrapOr(null);
+  if (!account) {
+    console.error("Failed to fetch user profile");
+    return notFound();
+  }
+
+  const settings = await getUserSettings(account.address);
+  const themeName = settings?.theme?.name;
+  const title = settings?.blog?.title 
+  
+  const { profileId, handle: userHandle } = await getUserProfile();
+
   const stats = await fetchAccountStats(lens, { account: account?.address }).unwrapOr(null);
 
   if (!account) {
@@ -45,6 +59,7 @@ const UserLayout = async ({
   const isUserProfile = profileId === account.address;
 
   return (
+  <UserTheme initialTheme={themeName}>
     <div className="flex md:mt-20 flex-col items-center">
       <div className="w-screen md:max-w-3xl">
         <UserCover profile={account} />
@@ -108,6 +123,7 @@ const UserLayout = async ({
         </AnimatePresence>
       </div>
     </div>
+  </UserTheme>
   );
 };
 

@@ -1,10 +1,10 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface BlogTitleProps {
-  title: string;
+  title?: string;
 }
 
 export function BlogTitle({ title }: BlogTitleProps) {
@@ -34,13 +34,13 @@ export function BlogTitle({ title }: BlogTitleProps) {
 
   return (
     <div
-      className={`fixed top-4 left-0 right-0 z-50 flex items-center justify-center transition-opacity duration-300 ${
+      className={`hidden sm:flex fixed top-4 left-0 right-0 z-50 items-center w-fit mx-auto justify-center transition-opacity duration-300 ${
         isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
     >
-      <div className="text-lg font-[family-name:var(--title-font)] font-normal font-[color:var(--title-color)] truncate max-w-[80%]">
+      <div className="text-lg font-[family-name:var(--title-font)] font-normal font-[color:var(--title-color)] truncate ">
         {title}
       </div>
     </div>
   );
-} 
+}
