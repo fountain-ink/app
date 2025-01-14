@@ -1,12 +1,12 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useSettings } from "@/hooks/use-settings";
 import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
-import { Button } from "@/components/ui/button";
 
 interface ApplicationSettingsProps {
   initialSettings?: any;
@@ -92,11 +92,11 @@ export function ApplicationSettings({ initialSettings = {}, initialEmail }: Appl
         </div>
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
-          <Input 
-            id="email" 
-            type="email" 
-            placeholder="Your email" 
-            value={email} 
+          <Input
+            id="email"
+            type="email"
+            placeholder="Your email"
+            value={email}
             onChange={handleEmailChange}
             className={!isEmailValid ? "border-destructive" : ""}
           />
@@ -106,11 +106,11 @@ export function ApplicationSettings({ initialSettings = {}, initialEmail }: Appl
         </div>
 
         <div className="flex justify-start pt-4">
-          <Button 
-            onClick={handleSave} 
+          <Button
+            onClick={handleSave}
             disabled={!isDirty || !isEmailValid}
           >
-            Save Changes
+            Save Settings
           </Button>
         </div>
       </CardContent>

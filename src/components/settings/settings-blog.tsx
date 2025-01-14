@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,7 +8,6 @@ import { Switch } from "@/components/ui/switch";
 import { useSettings } from "@/hooks/use-settings";
 import { useCallback, useEffect, useState } from "react";
 import { TextareaAutosize } from "../ui/textarea";
-import { Button } from "@/components/ui/button";
 
 interface BlogSettings {
   title?: string;
@@ -169,11 +169,11 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
         </div>
 
         <div className="flex justify-start pt-4">
-          <Button 
-            onClick={handleSave} 
+          <Button
+            onClick={handleSave}
             disabled={!isDirty || !!validationError}
           >
-            Save Changes
+            Save Settings
           </Button>
         </div>
       </CardContent>

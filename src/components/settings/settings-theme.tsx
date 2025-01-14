@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,7 +10,6 @@ import { useEffect, useState } from "react";
 import { ThemeButtons } from "../theme/theme-buttons";
 import { useTheme } from "../theme/theme-context";
 import { Input } from "../ui/input";
-import { Button } from "@/components/ui/button";
 
 interface ThemeSettingsProps {
   defaultTheme?: ThemeType;
@@ -94,12 +94,7 @@ export function ThemeSettings({ defaultTheme, onThemeChange, initialSettings = {
                 <Label htmlFor="color" className="text-right">
                   Leading Color
                 </Label>
-                <Input
-                  id="color"
-                  value={customColor}
-                  onChange={handleCustomColorChange}
-                  className="col-span-3"
-                />
+                <Input id="color" value={customColor} onChange={handleCustomColorChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="background" className="text-right">
@@ -118,7 +113,7 @@ export function ThemeSettings({ defaultTheme, onThemeChange, initialSettings = {
 
         <div className="flex justify-start pt-4">
           <Button onClick={handleSave} disabled={!isDirty}>
-            Save Changes
+            Save Theme
           </Button>
         </div>
       </CardContent>
