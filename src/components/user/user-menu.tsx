@@ -61,11 +61,11 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent align="end" className="w-48">
-          <AnimatedMenuItem href={`/u/${handle}`} icon={PenToolIcon}>
-            Index
+          <AnimatedMenuItem href={`/b/${handle}`} icon={PenToolIcon}>
+            Blog
           </AnimatedMenuItem>
 
-          <AnimatedMenuItem href={`/u/${handle}/profile`} icon={UserIcon}>
+          <AnimatedMenuItem href={`/u/${handle}`} icon={UserIcon}>
             Profile
           </AnimatedMenuItem>
 

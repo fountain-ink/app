@@ -1,57 +1,113 @@
-import { BlogTitle } from "@/components/user/blog-title";
-import { UserTheme } from "@/components/user/user-theme";
-import { getBaseUrl } from "@/lib/get-base-url";
+import ErrorPage from "@/components/misc/error-page";
+import { PageTransition } from "@/components/navigation/page-transition";
+import { ProfileSettingsModal } from "@/components/settings/settings-profile";
+import { Button } from "@/components/ui/button";
+import { SlideNav } from "@/components/ui/slide-tabs";
+import { UserAvatar } from "@/components/user/user-avatar";
+import { UserBio } from "@/components/user/user-bio";
+import { UserCover } from "@/components/user/user-cover";
+import { UserFollowButton } from "@/components/user/user-follow";
+import { UserFollowing } from "@/components/user/user-following";
+import { UserHandle } from "@/components/user/user-handle";
+import { UserName } from "@/components/user/user-name";
+import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
-import { fetchAccount } from "@lens-protocol/client/actions";
-import { notFound } from "next/navigation";
+import { fetchAccount, fetchAccountStats } from "@lens-protocol/client/actions";
+import { AnimatePresence } from "framer-motion";
 
 export async function generateMetadata({ params }: { params: { user: string } }) {
   const handle = params.user;
-  const title = `${handle}`;
+  const title = `@${handle}`;
   return {
     title,
-    description: `@${handle} on Fountain`,
+    description: `@${handle}'s profile on Fountain`,
   };
 }
 
-async function getUserSettings(address: string) {
-  const url = getBaseUrl();
-  const response = await fetch(`${url}/api/users/${address}/settings`, {
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    console.error("Failed to fetch user settings");
-    return null;
-  }
-
-  const data = await response.json();
-  return data.settings;
-}
-
-const UserLayout = async ({ children, params }: { children: React.ReactNode; params: { user: string } }) => {
+const UserLayout = async ({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: { user: string };
+}) => {
   const lens = await getLensClient();
-  let profile = undefined;
+  const { profileId, handle: userHandle } = await getUserProfile();
+  const pageHandle = `lens/${params.user}`;
 
-  profile = await fetchAccount(lens, {
-    username: { localName: params.user },
-  }).unwrapOr(null);
+  const account = await fetchAccount(lens, { username: { localName: params.user } }).unwrapOr(null);
+  const stats = await fetchAccountStats(lens, { account: account?.address }).unwrapOr(null);
 
-  if (!profile) {
-    console.error("Failed to fetch user profile");
-    return notFound();
+  if (!account) {
+    return <ErrorPage error="User not found" />;
   }
 
-  const settings = await getUserSettings(profile.address);
-  console.log(settings);
-  const themeName = settings?.theme?.name;
-  const title = settings?.blog?.title ?? `${profile.username?.localName}'s blog`;
+  const isUserProfile = profileId === account.address;
 
   return (
-    <UserTheme initialTheme={themeName}>
-      <BlogTitle title={title} />
-      {children}
-    </UserTheme>
+    <div className="flex md:mt-20 flex-col items-center">
+      <div className="w-screen md:max-w-3xl">
+        <UserCover profile={account} />
+      </div>
+      <div className="w-full max-w-2xl flex flex-col">
+        <div className="flex justify-between px-4">
+          <div className="flex flex-col relative">
+            <UserAvatar
+              className="absolute transform -translate-y-[80%] w-32 h-32 md:w-40 md:h-40 ring-4 rounded-full ring-background"
+              account={account}
+            />
+            <div className="flex flex-col gap-2 mt-14 font-[family-name:--title-font]">
+              <UserName profile={account} className="md:font-4xl font-normal tracking-[-0.8px] " />
+              <UserHandle
+                profile={account}
+                className="md:font-xl -mt-3 font-normal text-normal tracking-wide text-foreground/65"
+              />
+              <UserFollowing stats={stats} className="" />
+            </div>
+          </div>
+          <div className="mt-4">
+            {isUserProfile ? (
+              <ProfileSettingsModal
+                profile={account}
+                trigger={
+                  <Button variant="outline" className="w-fit">
+                    Edit
+                  </Button>
+                }
+              />
+            ) : (
+              <UserFollowButton profile={account} />
+            )}
+          </div>
+        </div>
+        <div className="p-4 font-[family-name:--title-font] text-foreground/65">
+          <UserBio profile={account} />
+        </div>
+        <div className="p-4 pb-0 border-b border-border">
+          <SlideNav
+            items={[
+              {
+                href: `/u/${params.user}`,
+                label: "Articles",
+              },
+              {
+                href: `/u/${params.user}/all`,
+                label: "Activity",
+              },
+              {
+                href: `/u/${params.user}/drafts`,
+                label: "Drafts",
+                isVisible: isUserProfile,
+              },
+            ]}
+            className="w-fit"
+          />
+        </div>
+        <AnimatePresence mode="wait">
+          <PageTransition type="content">{children}</PageTransition>
+        </AnimatePresence>
+      </div>
+    </div>
   );
 };
 

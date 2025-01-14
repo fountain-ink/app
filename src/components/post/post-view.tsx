@@ -157,7 +157,7 @@ export const PostView = ({
           onClick={(e) => {
             // If not selecting (shift key or right click), navigate to the post
             if (!e.shiftKey && e.button !== 2) {
-              const href = isDraft ? `/write/${(item as Draft).documentId}` : `/u/${handle}/${(item as Post).slug}`;
+              const href = isDraft ? `/write/${(item as Draft).documentId}` : `/p/${handle}/${(item as Post).slug}`;
               window.location.href = href;
             }
           }}

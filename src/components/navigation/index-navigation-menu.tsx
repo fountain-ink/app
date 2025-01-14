@@ -9,8 +9,8 @@ export const IndexNavigation = ({ username, isUserProfile }: { username: string;
 
   return (
     <div className="flex flex-row gap-4 font-[family-name:--title-font] mt-4">
-      <Link href={`/u/${username}`} prefetch>
-        <Button variant={pathname === `/u/${username}` ? "ghost2" : "ghost"}>All</Button>
+      <Link href={`/b/${username}`} prefetch>
+        <Button variant={pathname === `/b/${username}` ? "ghost2" : "ghost"}>All</Button>
       </Link>
       {/* {isUserProfile && (
         <Link href={`/u/${username}/drafts`} prefetch>

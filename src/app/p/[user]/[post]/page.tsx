@@ -11,8 +11,6 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
 
   if (!post) return <ErrorPage error="Couldn't find post to show" />;
 
-  console.log(post);
-
   if (post?.__typename === "Repost" || post?.metadata?.__typename === "EventMetadata" || !post) {
     return null;
   }

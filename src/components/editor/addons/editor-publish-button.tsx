@@ -160,7 +160,7 @@ export const PublishButton = ({
       // Show success and redirect
       toast.dismiss(pendingToast);
       toast.success("Post published successfully!");
-      router.push(`/u/${handle}/${postSlug}?success=true`);
+      router.push(`/p/${handle}/${postSlug}?success=true`);
       router.refresh();
     } catch (error) {
       console.error("Error creating post:", error);

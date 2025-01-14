@@ -63,7 +63,7 @@ export const UserCard = ({ children, handle, linkProfile = false }: UserCardProp
   return (
     <HoverCard defaultOpen={false} onOpenChange={(open: boolean) => open && loadCard()} closeDelay={100}>
       <HoverCardTrigger asChild>
-        {linkProfile && handle ? <Link href={`/u/${handle}/profile`}>{children}</Link> : children}
+        {linkProfile && handle ? <Link href={`/u/${handle}`}>{children}</Link> : children}
       </HoverCardTrigger>
       <HoverCardContent className={`w-full max-w-sm ${inter.className}`} side="top">
         {loading && !profile && <LoadingSpinner />}
