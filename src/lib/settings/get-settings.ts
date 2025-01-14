@@ -10,6 +10,7 @@ interface Settings {
       showAuthor?: boolean;
       showTags?: boolean;
       showTitle?: boolean;
+      icon?: string;
     };
     app?: {
       isSmoothScrolling?: boolean;

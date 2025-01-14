@@ -15,7 +15,7 @@ import { useSaveProfileSettings } from "@/hooks/use-save-profile-settings";
 import { uploadFile } from "@/lib/upload/upload-file";
 import { Account } from "@lens-protocol/client";
 import { useCallback, useState } from "react";
-import { ImageUploader } from "../images/image-uploader";
+import { ImageCropperUploader, ImageUploader } from "../images/image-uploader";
 import { Button } from "../ui/button";
 import { TextareaAutosize } from "../ui/textarea";
 
@@ -68,14 +68,14 @@ function ProfileSettingsForm({ profile, onSaved }: ProfileSettingsFormProps) {
       <div className="space-y-4">
         <Label>Avatar and Cover</Label>
         <div className="relative">
-          <ImageUploader
+          <ImageCropperUploader
             label="Cover Picture"
             initialImage={currentMetadata?.coverPicture || ""}
             aspectRatio={3}
             onImageChange={setCoverPicture}
           />
           <div className="absolute bottom-0 translate-y-1/2 left-8 z-10">
-            <ImageUploader
+            <ImageCropperUploader
               label="Avatar"
               initialImage={currentMetadata?.picture}
               aspectRatio={1}
