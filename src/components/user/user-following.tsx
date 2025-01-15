@@ -6,13 +6,11 @@ export const UserFollowing = ({ stats, className }: { stats?: AccountStats | nul
 
   return (
     <div className={`${className} flex gap-1`}>
-
-      <b>{following}</b>
+      <b className="text-foreground">{following}</b>
       <span className="text-foreground/65">following</span>
 
-      <b className="ml-2">{followers}</b>
+      <b className="ml-2 text-foreground">{followers}</b>
       <span className="text-foreground/65">followers</span>
-
     </div>
   );
 };
