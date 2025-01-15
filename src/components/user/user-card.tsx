@@ -65,7 +65,7 @@ export const UserCard = ({ children, handle, linkProfile = false }: UserCardProp
       <HoverCardTrigger asChild>
         {linkProfile && handle ? <Link href={`/u/${handle}`}>{children}</Link> : children}
       </HoverCardTrigger>
-      <HoverCardContent className={`w-full max-w-sm ${inter.className}`} side="top">
+      <HoverCardContent className={`w-full min-w-64 max-w-64 overflow-hidden ${inter.className}`} side="top">
         {loading && !profile && <LoadingSpinner />}
         {error && <div>Error: {error.message}</div>}
         {profile && (
@@ -73,12 +73,8 @@ export const UserCard = ({ children, handle, linkProfile = false }: UserCardProp
             <div className="flex flex-row place-content-between items-center">
               <div className="flex flex-row items-center gap-2 text-sm">
                 <div className="w-8 h-8">
-                  <UserAvatar account={profile} className="w-8 h-8" />
+                  <UserAvatar account={profile} className="w-12 h-12" />
                 </div>
-                <span className="flex flex-col">
-                  <span className="font-bold">{profile.metadata?.name}</span>
-                  <span className="font-light text-xs">@{profile.username?.localName}</span>
-                </span>
               </div>
 
               <span className="flex flex-row gap-2 items-center justify-center">
@@ -90,11 +86,15 @@ export const UserCard = ({ children, handle, linkProfile = false }: UserCardProp
                 <UserFollowButton profile={profile} />
               </span>
             </div>
+            <span className="flex flex-col pt-2">
+              <span className="font-bold text-xs">{profile.metadata?.name}</span>
+              <span className="font-light text-xs">@{profile.username?.localName}</span>
+            </span>
+            <div className="text-xs mt-2 leading-4 line-clamp-5 break-words">
+              <TruncatedText text={profile.metadata?.bio || ""} maxLength={400} isMarkdown={true} />
+            </div>
             <div className="text-xs">
               <UserFollowing stats={stats} />
-            </div>
-            <div className="text-xs mt-2 leading-4">
-              <TruncatedText text={profile.metadata?.bio || ""} maxLength={200} isMarkdown={true} />
             </div>
           </div>
         )}
