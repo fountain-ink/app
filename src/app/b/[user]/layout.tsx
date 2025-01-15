@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: { user: string } })
   const settings = await getUserSettings(profile.address);
   const icon = settings?.blog?.icon;
   const blogTitle = settings?.blog?.title || `${handle}'s blog`;
-  const blogDescription = settings?.blog?.description || `@${handle}'s blog on Fountain`;
+  const blogDescription = settings?.blog?.about || `@${handle}'s blog on Fountain`;
 
   return {
     title: blogTitle,
