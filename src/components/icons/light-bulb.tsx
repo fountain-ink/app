@@ -9,10 +9,10 @@ const pathVariants: Variants = {
     scale: 1,
   },
   animate: {
-    opacity: [1, 0.5, 1, 0.5, 1],
+    opacity: [1, 0.9, 1],
     scale: [1, 1.1, 1],
     transition: {
-      duration: 1,
+      duration: 0.5,
       ease: "easeInOut",
     },
   },
@@ -58,4 +58,4 @@ const LightBulbIcon = ({ animate = false }: { animate?: boolean }) => {
   );
 };
 
-export { LightBulbIcon }; 
+export { LightBulbIcon };

@@ -3,17 +3,24 @@
 import { motion, useAnimation, type Variants } from "framer-motion";
 import { useEffect } from "react";
 
-const pathVariants: Variants = {
+const iconVariants: Variants = {
   normal: {
     scale: 1,
     rotate: 0,
   },
   animate: {
-    scale: [1, 1.05, 1],
-    rotate: [0, -3, 3, -3, 0],
+    scale: 1.05,
+    rotate: [0, -7, 7, 0],
     transition: {
-      duration: 0.5,
-      ease: "easeInOut",
+      rotate: {
+        duration: 0.5,
+        ease: 'easeInOut',
+      },
+      scale: {
+        type: 'spring',
+        stiffness: 400,
+        damping: 10,
+      },
     },
   },
 };
@@ -35,7 +42,7 @@ const MessageCircleIcon = ({ animate = false }: { animate?: boolean }) => {
       onMouseEnter={() => controls.start("animate")}
       onMouseLeave={() => controls.start("normal")}
     >
-      <svg
+      <motion.svg
         xmlns="http://www.w3.org/2000/svg"
         width="28"
         height="28"
@@ -45,13 +52,11 @@ const MessageCircleIcon = ({ animate = false }: { animate?: boolean }) => {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        variants={iconVariants}
+        animate={controls}
       >
-        <motion.path
-          d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
-          variants={pathVariants}
-          animate={controls}
-        />
-      </svg>
+        <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+      </motion.svg>
     </div>
   );
 };
