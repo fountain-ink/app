@@ -13,6 +13,13 @@
   height: min-content;
 }
 
+@layer base {
+  img {
+    @apply inline-block;
+  }
+}
+
+
 p.first-paragraph {
   min-height: 4rem;
   overflow: hidden;

@@ -11,7 +11,7 @@ export const AnimatedMenuItem = ({
   asButton = false,
 }: {
   href?: string;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
   icon: React.ComponentType<{ animate?: boolean; className?: string }>;
   children?: React.ReactNode;
   asButton?: boolean;
