@@ -10,6 +10,7 @@ import { UserFollowButton } from "@/components/user/user-follow";
 import { UserFollowing } from "@/components/user/user-following";
 import { UserHandle } from "@/components/user/user-handle";
 import { UserName } from "@/components/user/user-name";
+import { UserNavigation } from "@/components/user/user-navigation";
 import { UserTheme } from "@/components/user/user-theme";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getUserSettings } from "@/lib/auth/get-user-settings";
@@ -99,24 +100,7 @@ const UserLayout = async ({
           <UserBio profile={account} />
         </div>
         <div className="p-4 pb-0 border-b border-border">
-          <SlideNav
-            items={[
-              {
-                href: `/u/${params.user}`,
-                label: "Articles",
-              },
-              {
-                href: `/u/${params.user}/all`,
-                label: "Activity",
-              },
-              {
-                href: `/u/${params.user}/drafts`,
-                label: "Drafts",
-                isVisible: isUserProfile,
-              },
-            ]}
-            className="w-fit"
-          />
+          <UserNavigation username={params.user} isUserProfile={isUserProfile} />
         </div>
         <AnimatePresence mode="wait">
           <PageTransition type="content">{children}</PageTransition>

@@ -1,33 +1,33 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Button } from "../ui/button";
+import { SlideNav } from "../ui/slide-tabs";
+import { Badge } from "../ui/badge";
 
 export const UserNavigation = ({ username, isUserProfile }: { username: string; isUserProfile: boolean }) => {
-  const pathname = usePathname();
-
   return (
-    <div className="flex flex-row gap-4">
-      <Link href={`/u/${username}`} prefetch>
-        <Button variant={pathname === `/u/${username}` ? "ghost2" : "ghost"} className="">
-          Published
-        </Button>
-      </Link>
-
-      <Link href={`/u/${username}/all`} prefetch>
-        <Button variant={pathname === `/u/${username}/all` ? "ghost2" : "ghost"} className="">
-          All
-        </Button>
-      </Link>
-
-      {isUserProfile && (
-        <Link href={`/u/${username}/drafts`} prefetch>
-          <Button variant={pathname === `/u/${username}/drafts` ? "ghost2" : "ghost"} className="">
-            Drafts
-          </Button>
-        </Link>
-      )}
-    </div>
+    <SlideNav
+      items={[
+        {
+          href: `/u/${username}`,
+          label: "Articles",
+        },
+        {
+          href: `/u/${username}/all`,
+          label: "Activity",
+          disabled: true,
+        },
+        {
+          href: `/u/${username}/comments`,
+          label: "Comments",
+          disabled: true,
+        },
+        {
+          href: `/u/${username}/drafts`,
+          label: "Drafts",
+          isVisible: isUserProfile,
+        },
+      ]}
+      className="w-fit"
+    />
   );
 };

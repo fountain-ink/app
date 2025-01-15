@@ -10,6 +10,8 @@ interface NavItem {
   href: string;
   label: string;
   isVisible?: boolean;
+  disabled?: boolean;
+  rightElement?: React.ReactNode;
 }
 
 interface SlideNavProps {
@@ -27,22 +29,39 @@ export function SlideNav({ items, className }: SlideNavProps) {
     <nav className={cn("relative flex justify-center", className)}>
       <div className="relative flex gap-4">
         {visibleItems.map((item) => (
-          <Link
+          <div
             key={item.href}
-            href={item.href}
-            ref={(node) => {
-              if (node && pathname === item.href) {
-                setActiveItem(node);
-              }
-            }}
-            prefetch
-            className={cn(
-              "px-4 py-2 text-sm font-medium transition-colors relative",
-              pathname === item.href ? "text-foreground" : "text-muted-foreground hover:text-foreground",
-            )}
+            className="flex items-center"
           >
-            {item.label}
-          </Link>
+            {item.disabled ? (
+              <span
+                className={cn(
+                  "px-4 py-2 text-sm font-medium transition-colors relative cursor-not-allowed",
+                  "text-muted-foreground/50"
+                )}
+              >
+                {item.label}
+                {item.rightElement}
+              </span>
+            ) : (
+              <Link
+                href={item.href}
+                ref={(node) => {
+                  if (node && pathname === item.href) {
+                    setActiveItem(node);
+                  }
+                }}
+                prefetch
+                className={cn(
+                  "px-4 py-2 text-sm font-medium transition-colors relative",
+                  pathname === item.href ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {item.label}
+                {item.rightElement}
+              </Link>
+            )}
+          </div>
         ))}
       </div>
       {activeItem && (
