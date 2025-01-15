@@ -8,10 +8,38 @@ import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }: { params: { user: string } }) {
   const handle = params.user;
-  const title = `${handle}'s blog`;
+  const lens = await getLensClient();
+  const profile = await fetchAccount(lens, {
+    username: { localName: handle },
+  }).unwrapOr(null);
+
+  if (!profile) {
+    return {
+      title: `${handle}'s blog`,
+      description: `@${handle}'s blog on Fountain`,
+    };
+  }
+
+  const settings = await getUserSettings(profile.address);
+  const icon = settings?.blog?.icon;
+  const blogTitle = settings?.blog?.title || `${handle}'s blog`;
+  const blogDescription = settings?.blog?.description || `@${handle}'s blog on Fountain`;
+
   return {
-    title,
-    description: `@${handle}'s blog on Fountain`,
+    title: blogTitle,
+    description: blogDescription,
+    icons: icon ? [{ rel: 'icon', url: icon }] : undefined,
+    openGraph: {
+      title: blogTitle,
+      description: blogDescription,
+      ...(icon && { images: [{ url: icon, alt: `${blogTitle} icon` }] }),
+    },
+    twitter: {
+      card: 'summary',
+      title: blogTitle,
+      description: blogDescription,
+      ...(icon && { images: [icon] }),
+    },
   };
 }
 
