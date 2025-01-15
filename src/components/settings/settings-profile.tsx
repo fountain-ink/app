@@ -135,14 +135,74 @@ function ProfileSettingsForm({ profile, onSaved, onFormDataChange }: ProfileSett
 export function ProfileSettingsCard({ profile }: { profile?: Account | null }) {
   if (!profile) return null;
 
+  const [isUploading, setIsUploading] = useState(false);
+  const { saveSettings, isSaving: isSavingProfileSettings } = useSaveProfileSettings();
+  const [formData, setFormData] = useState<any>(null);
+
+  const handleSave = useCallback(async () => {
+    if (!formData) return;
+
+    const { profilePicture, coverPicture, profileTitle, profileDescription, location, websiteUrl } = formData;
+    let picture: any;
+    let coverPictureUri: any;
+
+    if (profilePicture || coverPicture) {
+      setIsUploading(true);
+
+      if (profilePicture) {
+        picture = await uploadFile(profilePicture);
+      }
+
+      if (coverPicture) {
+        coverPictureUri = await uploadFile(coverPicture);
+      }
+
+      setIsUploading(false);
+    }
+
+    const attributes = [];
+    if (location) {
+      attributes.push({
+        key: "location",
+        value: location,
+        type: "String",
+      });
+    }
+    if (websiteUrl) {
+      attributes.push({
+        key: "website",
+        value: `https://${websiteUrl.replace(/^https?:\/\//, "")}`,
+        type: "String",
+      });
+    }
+
+    await saveSettings({
+      profile,
+      name: profileTitle || undefined,
+      bio: profileDescription || undefined,
+      picture,
+      coverPicture: coverPictureUri,
+      attributes,
+    });
+  }, [profile, formData, saveSettings]);
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Profile Settings</CardTitle>
         <CardDescription>Customize your profile preferences.</CardDescription>
       </CardHeader>
-      <CardContent>
-        <ProfileSettingsForm profile={profile} />
+      <CardContent className="space-y-4">
+        <ProfileSettingsForm profile={profile} onFormDataChange={setFormData} />
+        <div className="pt-4">
+          <Button 
+            onClick={handleSave} 
+            disabled={isUploading || isSavingProfileSettings}
+            className=""
+          >
+            {isUploading ? "Uploading..." : isSavingProfileSettings ? "Saving..." : "Save Settings"}
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
