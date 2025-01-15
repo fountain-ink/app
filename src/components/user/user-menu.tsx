@@ -15,7 +15,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAccount, useDisconnect } from "wagmi";
 import { ConnectWalletButton } from "../auth/auth-wallet-button";
 import { ProfileSelectMenu } from "../auth/profile-select-menu";
-import { SunIcon } from "../icons/icon";
 import { LogoutIcon } from "../icons/logout";
 import { MoonIcon } from "../icons/moon";
 import { PenToolIcon } from "../icons/pen-tool";
@@ -25,6 +24,7 @@ import { UserRoundPenIcon } from "../icons/switch-profile";
 import { UserIcon } from "../icons/user";
 import { AnimatedMenuItem } from "../navigation/animated-item";
 import { SessionAvatar } from "./user-avatar";
+import { SunIcon } from "../icons/sun";
 
 export const UserMenu = ({ session }: { session: MeResult | null }) => {
   const { isConnected: isWalletConnected } = useAccount();
