@@ -39,7 +39,7 @@ const BlogLayout = async ({
 
   return (
     <UserTheme initialTheme={themeName}>
-      <BlogHeader title={title} icon={icon} />
+      <BlogHeader title={title} icon={icon} username={params.user} />
       <div className="flex flex-col pt-14 md:pt-20 items-center justify-center w-full max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
         {children}
       </div>

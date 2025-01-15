@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -6,9 +7,10 @@ import { useEffect, useState } from "react";
 interface BlogHeaderProps {
   title?: string;
   icon?: string;
+  username?: string;
 }
 
-export function BlogHeader({ title, icon }: BlogHeaderProps) {
+export function BlogHeader({ title, icon, username }: BlogHeaderProps) {
   const [isVisible, setIsVisible] = useState(true);
   const pathname = usePathname();
   const isIndexPage = pathname.split("/").length === 3;
@@ -38,12 +40,14 @@ export function BlogHeader({ title, icon }: BlogHeaderProps) {
         isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
     >
-      <div className="flex jusitfy-center items-center gap-2">
-        {icon && <img src={icon} alt="Blog icon" className="w-6 h-6 -mt-1 rounded-[4px] object-cover" />}
-        <div className="font-[family-name:var(--title-font)] text-lg font-normal font-[color:var(--title-color)] truncate">
-          {title}
+      <Link href={`/b/${username}`} className="hover:opacity-80 transition-opacity">
+        <div className="flex jusitfy-center items-center gap-2">
+          {icon && <img src={icon} alt="Blog icon" className="w-6 h-6 -mt-1 rounded-[4px] object-cover" />}
+          <div className="font-[family-name:var(--title-font)] text-lg font-normal font-[color:var(--title-color)] truncate">
+            {title}
+          </div>
         </div>
-      </div>
+      </Link>
     </div>
   );
 }

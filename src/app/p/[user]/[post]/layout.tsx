@@ -29,7 +29,7 @@ const UserPostLayout = async ({
 
   return (
     <UserTheme initialTheme={themeName}>
-      <BlogHeader title={title} icon={icon} />
+      <BlogHeader title={title} icon={icon} username={params.user} />
       <ArticleLayout>
         <GradientBlur />
         {children}

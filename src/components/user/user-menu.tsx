@@ -47,8 +47,8 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
 
   // Get the settings path based on current route
   const getSettingsPath = () => {
-    if (pathname.match(/^\/u\/[^/]+\/profile$/)) return "/settings/profile";
-    if (pathname.match(/^\/u\/[^/]+$/)) return "/settings/blog";
+    if (pathname.match(/^\/u\/[^/]+$/)) return "/settings/profile";
+    if (pathname.match(/^\/b\/[^/]+$/)) return "/settings/blog";
     return "/settings";
   };
 
@@ -110,7 +110,6 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
 
           <AnimatedMenuItem
             icon={LogoutIcon}
-
             onClick={async () => {
               disconnect();
               await logout();
