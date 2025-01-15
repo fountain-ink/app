@@ -12,6 +12,8 @@ import { UserHandle } from "@/components/user/user-handle";
 import { UserName } from "@/components/user/user-name";
 import { UserNavigation } from "@/components/user/user-navigation";
 import { UserTheme } from "@/components/user/user-theme";
+import { UserLocation } from "@/components/user/user-location";
+import { UserSite } from "@/components/user/user-site";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getUserSettings } from "@/lib/auth/get-user-settings";
 import { getLensClient } from "@/lib/lens/client";
@@ -78,7 +80,13 @@ const UserLayout = async ({
                 profile={account}
                 className="md:font-xl -mt-3 font-normal text-normal tracking-wide text-foreground/65"
               />
-              <UserFollowing stats={stats} className="" />
+              <div className="flex items-center gap-4">
+                <UserFollowing stats={stats} className="" />
+                <div className="flex items-center gap-4">
+                  <UserLocation profile={account} />
+                  <UserSite profile={account} />
+                </div>
+              </div>
             </div>
           </div>
           <div className="mt-4">
@@ -87,7 +95,7 @@ const UserLayout = async ({
                 profile={account}
                 trigger={
                   <Button variant="outline" className="w-fit">
-                    Edit
+                    Edit profile
                   </Button>
                 }
               />

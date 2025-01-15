@@ -18,7 +18,6 @@ import { useCallback, useState, useEffect } from "react";
 import { ImageCropperUploader, ImageUploader } from "../images/image-uploader";
 import { Button } from "../ui/button";
 import { TextareaAutosize } from "../ui/textarea";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Globe } from "lucide-react";
 
 interface ProfileSettingsFormProps {
@@ -123,7 +122,7 @@ function ProfileSettingsForm({ profile, onSaved, onFormDataChange }: ProfileSett
               id="location"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              placeholder="Where are you based?"
+              placeholder="metaverse"
               className="rounded-l-none"
             />
           </div>
@@ -232,7 +231,7 @@ export function ProfileSettingsModal({ profile, trigger, open, onOpenChange }: P
           <Button 
             onClick={handleSave} 
             disabled={isUploading || isSavingProfileSettings}
-            className="w-full"
+            className=""
           >
             {isUploading ? "Uploading..." : isSavingProfileSettings ? "Saving..." : "Save Settings"}
           </Button>
