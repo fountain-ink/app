@@ -44,7 +44,7 @@ export const DetailsTab = () => {
     return null;
   };
 
-  // Find and sync with first h1 node
+  // Find and sync with first h1 node - only one way sync now
   useEffect(() => {
     const firstH1 = findNode(editor, {
       at: [],
@@ -64,15 +64,14 @@ export const DetailsTab = () => {
     const h2Element = firstH2?.[0] as TElement | undefined;
     const h2Text = h2Element?.children?.[0] as TText | undefined;
 
-    if (h1Text && h1Text.text !== title) {
+    if (h1Text && (!title)) {
       setTitle(h1Text.text);
     }
 
-    if (h2Text && h2Text.text !== subtitle) {
+    if (h2Text && (!subtitle)) {
       setSubtitle(h2Text.text);
     }
 
-    // Find first image element
     const firstImage = findNode(editor, {
       at: [],
       match: (n) => {
@@ -84,47 +83,14 @@ export const DetailsTab = () => {
     if (imageElement?.url && imageElement.url !== coverUrl) {
       setCoverUrl(imageElement.url);
     }
-  }, [editor, title, subtitle, coverUrl]);
+  }, [editor, coverUrl]);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTitle = e.target.value;
-    setTitle(newTitle);
-
-    const firstH1 = findNode(editor, {
-      at: [],
-      match: (n) => {
-        return n.type === HEADING_KEYS.h1;
-      },
-    });
-
-    if (firstH1) {
-      const [, path] = firstH1;
-      // Delete existing content and insert new text
-      const textPath = [...path, 0];
-      editor.select({ path: textPath, offset: 0 });
-      editor.deleteForward("block");
-      editor.insertText(newTitle);
-    }
+    setTitle(e.target.value);
   };
 
   const handleSubtitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newSubtitle = e.target.value;
-    setSubtitle(newSubtitle);
-
-    const firstH2 = findNode(editor, {
-      at: [],
-      match: (n) => {
-        return n.type === HEADING_KEYS.h2;
-      },
-    });
-
-    if (firstH2) {
-      const [, path] = firstH2;
-      const textPath = [...path, 0];
-      editor.select({ path: textPath, offset: 0 });
-      editor.deleteForward("block");
-      editor.insertText(newSubtitle);
-    }
+    setSubtitle(e.target.value);
   };
 
   return (
