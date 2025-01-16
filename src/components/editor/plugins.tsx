@@ -2,6 +2,7 @@ import { ImageElement } from "@/components/ui/image-element";
 import { LinkFloatingToolbar } from "@/components/ui/link-floating-toolbar";
 import { useYjsState } from "@/hooks/use-yjs-state";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
+import { uploadFile } from "@/lib/upload/upload-file";
 import { AlignPlugin } from "@udecode/plate-alignment/react";
 import { AutoformatPlugin } from "@udecode/plate-autoformat/react";
 import {
@@ -72,7 +73,6 @@ import { toast } from "sonner";
 import { autoformatRules } from "./plugins/editor-autoformat";
 import { NormalizePlugin } from "./plugins/editor-normalization";
 import { RenderAboveEditableYjs } from "./plugins/yjs-above-editable";
-import { uploadFile } from "@/lib/upload/upload-file";
 
 export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: boolean) => {
   const plugins = [...staticPlugins];

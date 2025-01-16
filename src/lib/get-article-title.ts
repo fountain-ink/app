@@ -13,7 +13,6 @@ interface ArticleMetadata {
 }
 
 export const extractMetadata = (content: ContentNode[] | undefined): ArticleMetadata => {
-  console.log(content);
   if (!content || !Array.isArray(content)) {
     return {
       title: "Untitled",

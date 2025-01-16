@@ -1,6 +1,8 @@
 import { env } from "@/env";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { verifyToken } from "@/lib/auth/verify-auth-token";
+import { extractMetadata } from "@/lib/get-article-title";
+import { Json } from "@/lib/supabase/database";
 import { createServiceClient } from "@/lib/supabase/service";
 import { Database } from "@hocuspocus/extension-database";
 import { Logger } from "@hocuspocus/extension-logger";
@@ -61,12 +63,15 @@ const server = Server.configure({
       store: async ({ documentName, state, document }) => {
         const yDoc = `\\x${state.toString("hex")}`;
         const contentJson = yTextToSlateElement(document.get("content", Y.XmlText)).children;
+        const { title, subtitle } = extractMetadata(contentJson as any);
 
         const { data: response, error } = await db
           .from("drafts")
           .update({
             yDoc,
-            contentJson: JSON.stringify(contentJson),
+            title,
+            subtitle,
+            contentJson: contentJson as any,
             updatedAt: new Date().toISOString(),
           })
           .eq("documentId", documentName);
@@ -91,11 +96,10 @@ const server = Server.configure({
       }
 
       const claims = getTokenClaims(data.token);
-      
+
       if (claims?.role !== "authenticated") {
         throw new Error("Unauthenticated");
       }
-      
     } catch (error) {
       console.error(`Error authenticating, dropping connection. ${error}`);
       throw error;

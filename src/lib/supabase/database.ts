@@ -18,6 +18,8 @@ export type Database = {
           createdAt: string
           documentId: string
           id: number
+          subtitle: string | null
+          title: string
           updatedAt: string | null
           yDoc: string | null
         }
@@ -29,6 +31,8 @@ export type Database = {
           createdAt?: string
           documentId?: string
           id?: number
+          subtitle?: string | null
+          title?: string
           updatedAt?: string | null
           yDoc?: string | null
         }
@@ -40,6 +44,8 @@ export type Database = {
           createdAt?: string
           documentId?: string
           id?: number
+          subtitle?: string | null
+          title?: string
           updatedAt?: string | null
           yDoc?: string | null
         }

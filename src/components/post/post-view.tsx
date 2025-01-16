@@ -55,9 +55,9 @@ export const PostView = ({
     const draft = item as Draft;
     handle = "";
     date = draft.updatedAt ?? draft.createdAt;
-    const content = draft.contentJson ? JSON.parse(String(draft.contentJson)) : {};
-    title = content.title ?? undefined;
-    subtitle = content.subtitle ?? undefined;
+    const content = draft.contentJson ? draft.contentJson : {};
+    title = draft.title ?? undefined;
+    subtitle = draft.subtitle ?? undefined;
     contentMarkdown = draft.contentHtml ?? "";
     contentJson = String(draft.contentJson ?? "{}");
   } else {
@@ -73,7 +73,7 @@ export const PostView = ({
       (metadata?.attributes?.find((attr) => "key" in attr && attr.key === "contentJson")?.value as string) || "{}";
   }
 
-  const contentMetadata = extractMetadata(isDraft ? JSON.parse(contentJson) : JSON.parse(contentJson));
+  const contentMetadata = extractMetadata(isDraft ? contentJson : JSON.parse(contentJson));
 
   if (options.showContent && !contentMarkdown) {
     return null;
