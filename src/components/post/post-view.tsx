@@ -48,24 +48,32 @@ export const PostView = ({
   let date: string;
   let contentJson: string;
   let handle: string;
-  console.log(item);
+  let title: string | undefined;
+  let subtitle: string | undefined;
 
   if (isDraft) {
     const draft = item as Draft;
     handle = "";
-    date = draft.updatedAt;
-    contentMarkdown = "";
-    contentJson = draft.contentJson;
+    date = draft.updatedAt ?? draft.createdAt;
+    const content = draft.contentJson ? JSON.parse(String(draft.contentJson)) : {};
+    title = content.title ?? undefined;
+    subtitle = content.subtitle ?? undefined;
+    contentMarkdown = draft.contentHtml ?? "";
+    contentJson = String(draft.contentJson ?? "{}");
   } else {
     const post = item as Post;
     const metadata = post?.metadata as ArticleMetadata;
     date = post.timestamp;
+    title = "title" in metadata ? (metadata.title as string) : undefined;
+    subtitle =
+      (metadata.attributes?.find((attr) => "key" in attr && attr.key === "subtitle")?.value as string) ?? undefined;
     handle = post.author.username?.localName || "";
     contentMarkdown = "content" in metadata ? (metadata.content as string) : "";
     contentJson =
       (metadata?.attributes?.find((attr) => "key" in attr && attr.key === "contentJson")?.value as string) || "{}";
   }
-  const { title, subtitle, coverImage } = extractMetadata(isDraft ? JSON.parse(contentJson) : JSON.parse(contentJson));
+
+  const contentMetadata = extractMetadata(isDraft ? JSON.parse(contentJson) : JSON.parse(contentJson));
 
   if (options.showContent && !contentMarkdown) {
     return null;
@@ -81,10 +89,10 @@ export const PostView = ({
     >
       {options.showPreview && (
         <div className="h-40 w-40 shrink-0 aspect-square rounded-sm overflow-hidden">
-          {coverImage ? (
+          {contentMetadata.coverImage ? (
             <div className="h-full w-full overflow-hidden">
               <img
-                src={coverImage}
+                src={contentMetadata.coverImage}
                 alt="Cover"
                 className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover/post:scale-110"
               />

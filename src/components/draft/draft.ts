@@ -1,9 +1,3 @@
-export type Draft = {
-  id: number;
-  isLocal: boolean;
-  documentId: string;
-  authorId: string;
-  contentJson: any;
-  updatedAt: string;
-  createdAt: string;
-};
+import type { Database } from "@/lib/supabase/database";
+
+export type Draft = Database["public"]["Tables"]["drafts"]["Row"];

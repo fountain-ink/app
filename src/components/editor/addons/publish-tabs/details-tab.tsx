@@ -24,11 +24,9 @@ export const DetailsTab = () => {
   const [subtitle, setSubtitle] = useState("");
   const [coverUrl, setCoverUrl] = useState("");
   const [titleError, setTitleError] = useState<string | null>(null);
-  const { setIsOpen } = usePublishStore();
   const [tags, setTags] = useState<Tag[]>([]);
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
 
-  // Validate title whenever it changes
   useEffect(() => {
     const error = validateTitle(title);
     setTitleError(error);
@@ -44,7 +42,6 @@ export const DetailsTab = () => {
     return null;
   };
 
-  // Find and sync with first h1 node - only one way sync now
   useEffect(() => {
     const firstH1 = findNode(editor, {
       at: [],
