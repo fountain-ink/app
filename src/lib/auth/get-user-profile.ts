@@ -41,9 +41,7 @@ export async function getUserProfile() {
     throw new Error("Invalid ID token");
   }
 
-  // Use the subject (wallet address) or act (managed account) to fetch the profile
   const address = decoded.sub;
-  // const account = await fetchAccount(client, { address });
   const account = await fetchMeDetails(client).unwrapOr(null);
 
   if (!account) {

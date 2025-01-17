@@ -14,25 +14,34 @@ export function AutoSave({ documentId }: { documentId: string }) {
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-
-  const { saveDocument } = useDocumentStorage();
+  const { saveDocument, getDocument } = useDocumentStorage();
 
   const saveContent = useCallback(
-    async (content: object) => {
+    async (content: unknown) => {
       setIsSaving(true);
       setIsVisible(true);
       setSaveSuccess(false);
       try {
         const now = new Date().toISOString();
-        const draft: Draft = {
+        const existingDraft = getDocument(documentId);
+        
+        const draft = {
+          ...(existingDraft || {}),
           id: Date.now(),
-          isLocal: true,
           documentId,
           authorId: "local",
           contentJson: content,
           updatedAt: now,
-          createdAt: now,
-        };
+          createdAt: existingDraft?.createdAt || now,
+          title: existingDraft?.title || "",
+          subtitle: existingDraft?.subtitle || null,
+          contentHtml: null,
+          contributors: null,
+          yDoc: null,
+          // Local-only fields for UI state
+          tags: existingDraft?.tags || [],
+          coverImage: existingDraft?.coverImage || null,
+        } as Draft;
 
         saveDocument(documentId, draft);
         setSaveSuccess(true);
@@ -42,37 +51,41 @@ export function AutoSave({ documentId }: { documentId: string }) {
       } catch (error) {
         console.error("Error saving draft:", error);
       } finally {
-        // console.log("saved:", content);
         setIsSaving(false);
       }
     },
-    [documentId, saveDocument],
+    [documentId, saveDocument, getDocument],
   );
 
   const debouncedSave = useDebouncedCallback(saveContent, 3000);
 
   useEffect(() => {
     if (!editor) return;
-
     debouncedSave(editor.children);
   }, [editor, editor?.children, debouncedSave]);
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
-      <AnimatePresence>
-        {isVisible && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.3 }}
-            className="opacity-50 rounded-full p-2"
-          >
-            {isSaving && <LoadingSpinner className="w-6 h-6 " />}
-            {saveSuccess && <CheckIcon className="w-6 h-6" />}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 10 }}
+          className="fixed bottom-4 right-4 flex items-center gap-2 rounded-md bg-background px-4 py-2 text-sm shadow-lg"
+        >
+          {isSaving ? (
+            <>
+              <LoadingSpinner size={16} />
+              <span>Saving...</span>
+            </>
+          ) : (
+            <>
+              <CheckIcon className="h-4 w-4 text-green-500" />
+              <span>Saved</span>
+            </>
+          )}
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
