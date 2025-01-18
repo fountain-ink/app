@@ -3,33 +3,18 @@
 import { settingsEvents } from "@/lib/settings/events";
 import { useState } from "react";
 
-interface Settings {
-  blog?: {
-    title?: string;
-    about?: string;
-    showAuthor?: boolean;
-    showTags?: boolean;
-    showTitle?: boolean;
-    icon?: string;
-  };
+export interface Settings {
   app?: {
     isSmoothScrolling?: boolean;
     isBlurEnabled?: boolean;
-    email?: string;
-  };
-  theme?: {
-    name?: string;
-    customColor?: string;
-    customBackground?: string;
   };
 }
 
-export function useSettings(initialSettings: Settings = {}, initialEmail?: string | null) {
+export function useSettings(initialSettings: Settings = {}) {
   const [settings, setSettings] = useState<Settings>(initialSettings);
-  const [email, setEmail] = useState<string | null>(initialEmail ?? null);
   const [isLoading, setIsLoading] = useState(!Object.keys(initialSettings).length);
 
-  const saveSettings = async (newSettings: Settings, newEmail?: string) => {
+  const saveSettings = async (newSettings: Settings) => {
     try {
       const response = await fetch("/api/settings", {
         method: "PUT",
@@ -37,8 +22,7 @@ export function useSettings(initialSettings: Settings = {}, initialEmail?: strin
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          metadata: newSettings,
-          ...(newEmail !== undefined && { email: newEmail })
+          settings: newSettings,
         }),
       });
 
@@ -48,9 +32,6 @@ export function useSettings(initialSettings: Settings = {}, initialEmail?: strin
       }
 
       setSettings(newSettings);
-      if (newEmail !== undefined) {
-        setEmail(newEmail);
-      }
       settingsEvents.emit("saved");
       return true;
     } catch (error) {
@@ -61,10 +42,30 @@ export function useSettings(initialSettings: Settings = {}, initialEmail?: strin
     }
   };
 
+  const fetchSettings = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch("/api/settings");
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to fetch settings");
+      }
+
+      setSettings(data.settings);
+      return data.settings;
+    } catch (error) {
+      console.error("Error fetching settings:", error);
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     settings,
-    email,
     saveSettings,
+    fetchSettings,
     isLoading,
   };
 }

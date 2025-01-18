@@ -1,12 +1,11 @@
 import { ThemeSettings } from "@/components/settings/settings-theme";
-import { getSettings } from "@/lib/settings/get-settings";
+import { getMetadata } from "@/lib/settings/get-metadata";
 
 export const metadata = {
   title: "Theme Settings",
 };
 
 export default async function ThemeSettingsPage() {
-  const settings = await getSettings();
-  const initialSettings = settings && 'metadata' in settings ? settings.metadata : {};
-  return <ThemeSettings initialSettings={initialSettings} />;
+  const metadata = await getMetadata();
+  return <ThemeSettings initialMetadata={metadata || {}} />;
 }

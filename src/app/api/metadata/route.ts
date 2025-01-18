@@ -15,16 +15,16 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
-    const { settings } = await req.json();
-    if (!settings) {
-      return NextResponse.json({ error: "No settings provided" }, { status: 400 });
+    const { metadata } = await req.json();
+    if (!metadata) {
+      return NextResponse.json({ error: "No metadata provided" }, { status: 400 });
     }
 
     const db = await createServiceClient();
     const { error } = await db
       .from("users")
       .update({
-        settings: settings as Json,
+        metadata: metadata as Json,
         updatedAt: new Date().toISOString(),
       })
       .eq("profileId", claims.user_metadata.profileId);
@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
     const db = await createServiceClient();
     const { data, error } = await db
       .from("users")
-      .select("settings")
+      .select("metadata")
       .eq("profileId", claims.user_metadata.profileId)
       .single();
 
@@ -68,7 +68,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Failed to fetch settings" }, { status: 500 });
     }
 
-    return NextResponse.json({ settings: data?.settings || {} });
+    return NextResponse.json({ metadata: data?.metadata || {} });
   } catch (error) {
     console.error("Error in settings fetch:", error);
     return NextResponse.json(
@@ -78,4 +78,4 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export const dynamic = "force-dynamic"; 
+export const dynamic = "force-dynamic";

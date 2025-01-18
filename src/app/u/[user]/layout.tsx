@@ -2,21 +2,20 @@ import ErrorPage from "@/components/misc/error-page";
 import { PageTransition } from "@/components/navigation/page-transition";
 import { ProfileSettingsModal } from "@/components/settings/settings-profile";
 import { Button } from "@/components/ui/button";
-import { SlideNav } from "@/components/ui/slide-tabs";
 import { UserAvatar } from "@/components/user/user-avatar";
 import { UserBio } from "@/components/user/user-bio";
 import { UserCover } from "@/components/user/user-cover";
 import { UserFollowButton } from "@/components/user/user-follow";
 import { UserFollowing } from "@/components/user/user-following";
 import { UserHandle } from "@/components/user/user-handle";
+import { UserLocation } from "@/components/user/user-location";
 import { UserName } from "@/components/user/user-name";
 import { UserNavigation } from "@/components/user/user-navigation";
-import { UserTheme } from "@/components/user/user-theme";
-import { UserLocation } from "@/components/user/user-location";
 import { UserSite } from "@/components/user/user-site";
+import { UserTheme } from "@/components/user/user-theme";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
-import { getUserSettings } from "@/lib/auth/get-user-settings";
 import { getLensClient } from "@/lib/lens/client";
+import { getUserSettings } from "@/lib/settings/get-settings";
 import { fetchAccount, fetchAccountStats } from "@lens-protocol/client/actions";
 import { AnimatePresence } from "framer-motion";
 import { notFound } from "next/navigation";
@@ -49,8 +48,8 @@ const UserLayout = async ({
 
   const settings = await getUserSettings(account.address);
   const themeName = settings?.theme?.name;
-  const title = settings?.blog?.title 
-  
+  const title = settings?.blog?.title;
+
   const { profileId, handle: userHandle } = await getUserProfile();
 
   const stats = await fetchAccountStats(lens, { account: account?.address }).unwrapOr(null);
@@ -62,60 +61,60 @@ const UserLayout = async ({
   const isUserProfile = profileId === account.address;
 
   return (
-  <UserTheme initialTheme={themeName}>
-    <div className="flex md:mt-20 flex-col items-center">
-      <div className="w-screen md:max-w-3xl">
-        <UserCover profile={account} />
-      </div>
-      <div className="w-full max-w-2xl flex flex-col">
-        <div className="flex justify-between px-4">
-          <div className="flex flex-col relative">
-            <UserAvatar
-              className="absolute transform -translate-y-[80%] w-32 h-32 md:w-40 md:h-40 ring-4 rounded-full ring-background"
-              account={account}
-            />
-            <div className="flex flex-col gap-2 mt-14 font-[family-name:--title-font]">
-              <UserName profile={account} className="md:font-4xl font-normal tracking-[-0.8px] " />
-              <UserHandle
-                profile={account}
-                className="md:font-xl -mt-3 font-normal text-normal tracking-wide text-foreground/65"
+    <UserTheme initialTheme={themeName}>
+      <div className="flex md:mt-20 flex-col items-center">
+        <div className="w-screen md:max-w-3xl">
+          <UserCover profile={account} />
+        </div>
+        <div className="w-full max-w-2xl flex flex-col">
+          <div className="flex justify-between px-4">
+            <div className="flex flex-col relative">
+              <UserAvatar
+                className="absolute transform -translate-y-[80%] w-32 h-32 md:w-40 md:h-40 ring-4 rounded-full ring-background"
+                account={account}
               />
-              <div className="flex items-center gap-4">
-                <UserFollowing stats={stats} className="" />
+              <div className="flex flex-col gap-2 mt-14 font-[family-name:--title-font]">
+                <UserName profile={account} className="md:font-4xl font-normal tracking-[-0.8px] " />
+                <UserHandle
+                  profile={account}
+                  className="md:font-xl -mt-3 font-normal text-normal tracking-wide text-foreground/65"
+                />
                 <div className="flex items-center gap-4">
-                  <UserLocation profile={account} />
-                  <UserSite profile={account} />
+                  <UserFollowing stats={stats} className="" />
+                  <div className="flex items-center gap-4">
+                    <UserLocation profile={account} />
+                    <UserSite profile={account} />
+                  </div>
                 </div>
               </div>
             </div>
+            <div className="mt-4">
+              {isUserProfile ? (
+                <ProfileSettingsModal
+                  profile={account}
+                  trigger={
+                    <Button variant="outline" className="w-fit">
+                      Edit profile
+                    </Button>
+                  }
+                />
+              ) : (
+                <UserFollowButton profile={account} />
+              )}
+            </div>
           </div>
-          <div className="mt-4">
-            {isUserProfile ? (
-              <ProfileSettingsModal
-                profile={account}
-                trigger={
-                  <Button variant="outline" className="w-fit">
-                    Edit profile
-                  </Button>
-                }
-              />
-            ) : (
-              <UserFollowButton profile={account} />
-            )}
+          <div className="p-4 font-[family-name:--title-font] text-foreground/65">
+            <UserBio profile={account} />
           </div>
+          <div className="p-4 pb-0 border-b border-border">
+            <UserNavigation username={params.user} isUserProfile={isUserProfile} />
+          </div>
+          <AnimatePresence mode="wait">
+            <PageTransition type="content">{children}</PageTransition>
+          </AnimatePresence>
         </div>
-        <div className="p-4 font-[family-name:--title-font] text-foreground/65">
-          <UserBio profile={account} />
-        </div>
-        <div className="p-4 pb-0 border-b border-border">
-          <UserNavigation username={params.user} isUserProfile={isUserProfile} />
-        </div>
-        <AnimatePresence mode="wait">
-          <PageTransition type="content">{children}</PageTransition>
-        </AnimatePresence>
       </div>
-    </div>
-  </UserTheme>
+    </UserTheme>
   );
 };
 

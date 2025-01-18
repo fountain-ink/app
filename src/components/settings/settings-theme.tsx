@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useSettings } from "@/hooks/use-settings";
+import { useMetadata } from "@/hooks/use-metadata";
 import { isValidTheme, type ThemeType } from "@/styles/themes";
 import { useEffect, useState } from "react";
 import { ThemeButtons } from "../theme/theme-buttons";
@@ -14,29 +14,29 @@ import { Input } from "../ui/input";
 interface ThemeSettingsProps {
   defaultTheme?: ThemeType;
   onThemeChange?: (theme: ThemeType) => void;
-  initialSettings?: any;
+  initialMetadata?: any;
 }
 
-export function ThemeSettings({ defaultTheme, onThemeChange, initialSettings = {} }: ThemeSettingsProps) {
+export function ThemeSettings({ defaultTheme, onThemeChange, initialMetadata = {} }: ThemeSettingsProps) {
   const { theme, setTheme } = useTheme();
-  const { settings, saveSettings } = useSettings(initialSettings);
+  const { metadata, saveMetadata } = useMetadata(initialMetadata);
   const [selectedTheme, setSelectedTheme] = useState<ThemeType>(() => {
-    const themeName = settings.theme?.name;
+    const themeName = metadata.theme?.name;
     return isValidTheme(themeName) ? themeName : theme;
   });
-  const [customColor, setCustomColor] = useState(settings.theme?.customColor || "#e2f3ab");
-  const [customBackground, setCustomBackground] = useState(settings.theme?.customBackground || "#bbccaa");
+  const [customColor, setCustomColor] = useState(metadata.theme?.customColor || "#e2f3ab");
+  const [customBackground, setCustomBackground] = useState(metadata.theme?.customBackground || "#bbccaa");
   const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
-    const themeName = settings.theme?.name;
+    const themeName = metadata.theme?.name;
     if (isValidTheme(themeName)) {
       setSelectedTheme(themeName);
     }
-    setCustomColor(settings.theme?.customColor || "#e2f3ab");
-    setCustomBackground(settings.theme?.customBackground || "#bbccaa");
+    setCustomColor(metadata.theme?.customColor || "#e2f3ab");
+    setCustomBackground(metadata.theme?.customBackground || "#bbccaa");
     setIsDirty(false);
-  }, [settings, theme]);
+  }, [metadata, theme]);
 
   const handleThemeChange = (newTheme: ThemeType) => {
     setSelectedTheme(newTheme);
@@ -58,8 +58,8 @@ export function ThemeSettings({ defaultTheme, onThemeChange, initialSettings = {
   };
 
   const handleSave = async () => {
-    const success = await saveSettings({
-      ...settings,
+    const success = await saveMetadata({
+      ...metadata,
       theme: {
         name: selectedTheme,
         customColor,

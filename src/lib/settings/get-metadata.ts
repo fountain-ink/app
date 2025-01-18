@@ -4,7 +4,7 @@ import { createClient } from "../supabase/server";
 import { createServiceClient } from "../supabase/service";
 import { UserMetadata } from "./types";
 
-export async function getSettings(): Promise<UserMetadata | null> {
+export async function getMetadata(): Promise<UserMetadata | null> {
   const cookieStore = cookies();
   const token = cookieStore.get("appToken")?.value;
 
@@ -25,18 +25,14 @@ export async function getSettings(): Promise<UserMetadata | null> {
     .single();
 
   if (error) {
-    console.error("Error fetching user settings:", error);
+    console.error("Error fetching user metadata:", error);
     return null;
   }
 
-  if (!data) {
-    return null;
-  }
-
-  return data.metadata as UserMetadata;
+  return data?.metadata as UserMetadata || null;
 }
 
-export async function getUserSettings(address: string): Promise<UserMetadata | null> {
+export async function getUserMetadata(address: string): Promise<UserMetadata | null> {
   try {
     const db = await createServiceClient();
     const { data, error } = await db
@@ -46,7 +42,7 @@ export async function getUserSettings(address: string): Promise<UserMetadata | n
       .single();
 
     if (error) {
-      console.error("Error fetching user settings:", error);
+      console.error("Error fetching user metadata:", error);
       return null;
     }
 
@@ -56,7 +52,7 @@ export async function getUserSettings(address: string): Promise<UserMetadata | n
 
     return data.metadata as UserMetadata;
   } catch (error) {
-    console.error("Error fetching user settings:", error);
+    console.error("Error fetching user metadata:", error);
     return null;
   }
-}
+} 

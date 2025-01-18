@@ -4,17 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { useSettings } from "@/hooks/use-settings";
+import { useEmail } from "@/hooks/use-email";
+import { Settings, useSettings } from "@/hooks/use-settings";
 import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 
 interface ApplicationSettingsProps {
-  initialSettings?: any;
-  initialEmail?: string | null;
+  initialSettings?: Settings;
+  initialEmail?: string;
 }
 
 export function ApplicationSettings({ initialSettings = {}, initialEmail }: ApplicationSettingsProps) {
-  const { settings, email: initialEmailFromHook, saveSettings } = useSettings(initialSettings, initialEmail);
+  const { settings, saveSettings } = useSettings(initialSettings);
+  const { email: initialEmailFromHook, saveEmail } = useEmail(initialEmail);
   const [isSmoothScrolling, setIsSmoothScrolling] = useState(settings.app?.isSmoothScrolling ?? false);
   const [isBlurEnabled, setIsBlurEnabled] = useState(settings.app?.isBlurEnabled ?? false);
   const [email, setEmail] = useState(initialEmailFromHook ?? "");
@@ -53,16 +55,16 @@ export function ApplicationSettings({ initialSettings = {}, initialEmail }: Appl
   const handleSave = async () => {
     if (!isEmailValid) return;
 
-    const success = await saveSettings({
-      ...settings,
+    const settingsSuccess = await saveSettings({
       app: {
-        ...settings.app,
         isSmoothScrolling,
         isBlurEnabled,
       },
-    }, email);
+    });
 
-    if (success) {
+    const emailSuccess = await saveEmail(email);
+
+    if (settingsSuccess && emailSuccess) {
       setIsDirty(false);
     }
   };
@@ -100,16 +102,11 @@ export function ApplicationSettings({ initialSettings = {}, initialEmail }: Appl
             onChange={handleEmailChange}
             className={!isEmailValid ? "border-destructive" : ""}
           />
-          {!isEmailValid && (
-            <p className="text-sm text-destructive">Please enter a valid email address</p>
-          )}
+          {!isEmailValid && <p className="text-sm text-destructive">Please enter a valid email address</p>}
         </div>
 
         <div className="flex justify-start pt-4">
-          <Button
-            onClick={handleSave}
-            disabled={!isDirty || !isEmailValid}
-          >
+          <Button onClick={handleSave} disabled={!isDirty || !isEmailValid}>
             Save Settings
           </Button>
         </div>

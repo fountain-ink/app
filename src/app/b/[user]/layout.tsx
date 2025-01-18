@@ -1,7 +1,6 @@
 import { BlogHeader } from "@/components/user/blog-header";
 import { UserTheme } from "@/components/user/user-theme";
-import { getUserSettings } from "@/lib/auth/get-user-settings";
-import { getBaseUrl } from "@/lib/get-base-url";
+import { getUserSettings } from "@/lib/settings/get-settings";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchAccount } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
@@ -9,18 +8,18 @@ import { notFound } from "next/navigation";
 export async function generateMetadata({ params }: { params: { user: string } }) {
   const handle = params.user;
   const lens = await getLensClient();
-  const profile = await fetchAccount(lens, {
+  const account = await fetchAccount(lens, {
     username: { localName: handle },
   }).unwrapOr(null);
 
-  if (!profile) {
+  if (!account) {
     return {
       title: `${handle}'s blog`,
       description: `@${handle}'s blog on Fountain`,
     };
   }
 
-  const settings = await getUserSettings(profile.address);
+  const settings = await getUserSettings(account.address);
   const icon = settings?.blog?.icon;
   const blogTitle = settings?.blog?.title || `${handle}'s blog`;
   const blogDescription = settings?.blog?.about || `@${handle}'s blog on Fountain`;
@@ -51,16 +50,16 @@ const BlogLayout = async ({
   params: { user: string };
 }) => {
   const lens = await getLensClient();
-  const profile = await fetchAccount(lens, {
+  const account = await fetchAccount(lens, {
     username: { localName: params.user },
   }).unwrapOr(null);
 
-  if (!profile) {
+  if (!account) {
     console.error("Failed to fetch user profile");
     return notFound();
   }
 
-  const settings = await getUserSettings(profile.address);
+  const settings = await getUserSettings(account.address);
   const themeName = settings?.theme?.name;
   const title = settings?.blog?.title;
   const icon = settings?.blog?.icon;

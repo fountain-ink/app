@@ -10,6 +10,7 @@ import { useSettings } from "@/hooks/use-settings";
 import { uploadFile } from "@/lib/upload/upload-file";
 import { useCallback, useEffect, useState } from "react";
 import { TextareaAutosize } from "../ui/textarea";
+import { useMetadata } from "@/hooks/use-metadata";
 
 interface BlogSettings {
   title?: string;
@@ -66,12 +67,12 @@ async function processImage(file: File): Promise<File> {
 }
 
 export function BlogSettings({ initialSettings }: BlogSettingsProps) {
-  const { settings, saveSettings } = useSettings(initialSettings);
-  const [blogTitle, setBlogTitle] = useState(settings.blog?.title || "");
-  const [blogAbout, setBlogAbout] = useState(settings.blog?.about || "");
-  const [showAuthor, setShowAuthor] = useState(settings.blog?.showAuthor ?? true);
-  const [showTags, setShowTags] = useState(settings.blog?.showTags ?? true);
-  const [showTitle, setShowTitle] = useState(settings.blog?.showTitle ?? true);
+  const { metadata, saveMetadata } = useMetadata(initialSettings);
+  const [blogTitle, setBlogTitle] = useState(metadata?.blog?.title || "");
+  const [blogAbout, setBlogAbout] = useState(metadata?.blog?.about || "");
+  const [showAuthor, setShowAuthor] = useState(metadata?.blog?.showAuthor ?? true);
+  const [showTags, setShowTags] = useState(metadata?.blog?.showTags ?? true);
+  const [showTitle, setShowTitle] = useState(metadata?.blog?.showTitle ?? true);
   const [blogIcon, setBlogIcon] = useState<File | null>(null);
   const [isIconDeleted, setIsIconDeleted] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -79,16 +80,16 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    setBlogTitle(settings.blog?.title || "");
-    setBlogAbout(settings.blog?.about || "");
-    setShowAuthor(settings.blog?.showAuthor ?? true);
-    setShowTags(settings.blog?.showTags ?? true);
-    setShowTitle(settings.blog?.showTitle ?? true);
+    setBlogTitle(metadata?.blog?.title || "");
+    setBlogAbout(metadata?.blog?.about || "");
+    setShowAuthor(metadata?.blog?.showAuthor ?? true);
+    setShowTags(metadata?.blog?.showTags ?? true);
+    setShowTitle(metadata?.blog?.showTitle ?? true);
     setBlogIcon(null);
     setPreviewUrl(null);
     setIsIconDeleted(false);
     setIsDirty(false);
-  }, [settings]);
+  }, [metadata]);
 
   useEffect(() => {
     if (blogIcon) {
@@ -117,7 +118,7 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
       }
     }
 
-    let iconUrl = settings.blog?.icon;
+    let iconUrl = metadata?.blog?.icon;
     if (blogIcon) {
       try {
         iconUrl = await uploadFile(blogIcon);
@@ -127,8 +128,8 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
       }
     }
 
-    const newSettings = {
-      ...settings,
+    const newMetadata = {
+      ...metadata,
       blog: {
         title: blogTitle.trim(),
         about: blogAbout,
@@ -140,7 +141,7 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
     };
 
     setValidationError(null);
-    const success = await saveSettings(newSettings);
+    const success = await saveMetadata(newMetadata);
     if (success) {
       setIsDirty(false);
     }
@@ -209,7 +210,7 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
                 <div className="w-32">
                   <ImageUploader
                     label="Icon"
-                    initialImage={settings.blog?.icon || ""}
+                    initialImage={metadata?.blog?.icon || ""}
                     onImageChange={handleIconChange}
                     className="!h-32"
                   />
@@ -221,9 +222,9 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
               <div className="flex items-start gap-4">
                 <div className="space-y-1.5">
                   <div className="relative w-[64px] h-[64px] rounded-md overflow-hidden ring-2 ring-background">
-                    {(!isIconDeleted && (previewUrl || settings.blog?.icon)) ? (
+                    {(!isIconDeleted && (previewUrl || metadata?.blog?.icon)) ? (
                       <img
-                        src={previewUrl || settings.blog?.icon}
+                        src={previewUrl || metadata?.blog?.icon}
                         alt="Small preview"
                         className="w-full h-full object-cover"
                       />
@@ -236,9 +237,9 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
 
                 <div className="space-y-1.5">
                   <div className="relative w-[32px] h-[32px] rounded-sm overflow-hidden ring-2 ring-background">
-                    {(!isIconDeleted && (previewUrl || settings.blog?.icon)) ? (
+                    {(!isIconDeleted && (previewUrl || metadata?.blog?.icon)) ? (
                       <img
-                        src={previewUrl || settings.blog?.icon}
+                        src={previewUrl || metadata?.blog?.icon}
                         alt="Medium preview"
                         className="w-full h-full object-cover"
                       />
@@ -252,9 +253,9 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
 
                 <div className="space-y-1.5">
                   <div className="relative w-[16px] h-[16px] rounded-none overflow-hidden ring-2 ring-background">
-                    {(!isIconDeleted && (previewUrl || settings.blog?.icon)) ? (
+                    {(!isIconDeleted && (previewUrl || metadata?.blog?.icon)) ? (
                       <img
-                        src={previewUrl || settings.blog?.icon}
+                        src={previewUrl || metadata?.blog?.icon}
                         className="w-full h-full object-cover"
                       />
                     ) : (

@@ -94,6 +94,7 @@ export type Database = {
           metadata: Json | null
           name: string | null
           profileId: string
+          settings: Json
           updatedAt: string
         }
         Insert: {
@@ -105,6 +106,7 @@ export type Database = {
           metadata?: Json | null
           name?: string | null
           profileId: string
+          settings?: Json
           updatedAt?: string
         }
         Update: {
@@ -116,6 +118,7 @@ export type Database = {
           metadata?: Json | null
           name?: string | null
           profileId?: string
+          settings?: Json
           updatedAt?: string
         }
         Relationships: []

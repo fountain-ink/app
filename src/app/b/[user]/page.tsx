@@ -3,24 +3,10 @@ import { Separator } from "@/components/ui/separator";
 import { AuthorView } from "@/components/user/user-author-view";
 import { UserContent } from "@/components/user/user-content";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
-import { getBaseUrl } from "@/lib/get-base-url";
+import { getUserSettings } from "@/lib/settings/get-settings";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchAccount, fetchPosts } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
-
-async function getUserSettings(address: string) {
-  const url = getBaseUrl();
-  const response = await fetch(`${url}/api/users/${address}/settings`, {
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    console.error("Failed to fetch user settings");
-    return null;
-  }
-  const data = await response.json();
-  return data.settings;
-}
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
   const lens = await getLensClient();

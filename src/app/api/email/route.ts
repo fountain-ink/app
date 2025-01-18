@@ -1,5 +1,4 @@
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
-import { Json } from "@/lib/supabase/database";
 import { createServiceClient } from "@/lib/supabase/service";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -15,30 +14,30 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
-    const { settings } = await req.json();
-    if (!settings) {
-      return NextResponse.json({ error: "No settings provided" }, { status: 400 });
+    const { email } = await req.json();
+    if (email === undefined) {
+      return NextResponse.json({ error: "No email provided" }, { status: 400 });
     }
 
     const db = await createServiceClient();
     const { error } = await db
       .from("users")
       .update({
-        settings: settings as Json,
+        email,
         updatedAt: new Date().toISOString(),
       })
       .eq("profileId", claims.user_metadata.profileId);
 
     if (error) {
-      console.error("Error updating user settings:", error);
-      return NextResponse.json({ error: "Failed to update settings" }, { status: 500 });
+      console.error("Error updating user email:", error);
+      return NextResponse.json({ error: "Failed to update email" }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error in settings update:", error);
+    console.error("Error in email update:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to update settings" },
+      { error: error instanceof Error ? error.message : "Failed to update email" },
       { status: 500 },
     );
   }
@@ -59,20 +58,20 @@ export async function GET(req: NextRequest) {
     const db = await createServiceClient();
     const { data, error } = await db
       .from("users")
-      .select("settings")
+      .select("email")
       .eq("profileId", claims.user_metadata.profileId)
       .single();
 
     if (error) {
-      console.error("Error fetching user settings:", error);
-      return NextResponse.json({ error: "Failed to fetch settings" }, { status: 500 });
+      console.error("Error fetching user email:", error);
+      return NextResponse.json({ error: "Failed to fetch email" }, { status: 500 });
     }
 
-    return NextResponse.json({ settings: data?.settings || {} });
+    return NextResponse.json({ email: data?.email || null });
   } catch (error) {
-    console.error("Error in settings fetch:", error);
+    console.error("Error in email fetch:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to fetch settings" },
+      { error: error instanceof Error ? error.message : "Failed to fetch email" },
       { status: 500 },
     );
   }
