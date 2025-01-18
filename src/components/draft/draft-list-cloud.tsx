@@ -3,7 +3,6 @@
 import { LoadingSpinner } from "@/components/misc/loading-spinner";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import type { ProfileId } from "@lens-protocol/react-web";
 import { useQueryClient } from "@tanstack/react-query";
 import { Trash, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -24,7 +23,7 @@ async function getCloudDrafts() {
   return data.drafts;
 }
 
-export function CloudDraftsList({ profileId }: { profileId?: EvmAddress | null }) {
+export function CloudDraftsList({ address }: { address?: EvmAddress | null }) {
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
@@ -81,7 +80,7 @@ export function CloudDraftsList({ profileId }: { profileId?: EvmAddress | null }
     );
   }
 
-  if (!profileId) {
+  if (!address) {
     return <div>Please login to see your drafts</div>;
   }
 
@@ -110,7 +109,7 @@ export function CloudDraftsList({ profileId }: { profileId?: EvmAddress | null }
         <div key={draft.documentId}>
           <DraftView
             draft={draft}
-            authorId={(draft.authorId || profileId) as EvmAddress}
+            authorId={(draft.authorId || address) as EvmAddress}
             isLocal={false}
             isSelected={selectedItems.has(draft.documentId)}
             onSelect={() => toggleSelection(draft.documentId)}

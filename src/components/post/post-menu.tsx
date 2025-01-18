@@ -1,17 +1,19 @@
+import { getTokenClaims } from "@/lib/auth/get-token-claims";
+import { getBaseUrl } from "@/lib/get-base-url";
 import { Post } from "@lens-protocol/client";
+import { getCookie } from "cookies-next";
 import { Bookmark, Link, MoreHorizontal, Trash2 } from "lucide-react";
 import { ActionButton, type DropdownItem } from "./post-action-button";
 
 export const PostMenu = ({ post }: { post: Post }) => {
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
+    navigator.clipboard.writeText(`${getBaseUrl()}/p/${post.id}`);
   };
 
-  // const profileId = useProfileId();
-  // 
-  //// FIXME
-  const profileId = "0x0000000000000000000000000000000000000000";
-  const isUserPost = post.author.address === profileId;
+  const appToken = getCookie("appToken");
+  const claims = getTokenClaims(appToken);
+
+  const isUserPost = post.author.address === claims?.sub;
 
   const handleDelete = () => {
     // Implement delete functionality

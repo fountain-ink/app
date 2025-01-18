@@ -50,7 +50,7 @@ const UserLayout = async ({
   const themeName = settings?.theme?.name;
   const title = settings?.blog?.title;
 
-  const { address: profileId, handle: userHandle } = await getUserProfile();
+  const { address, handle: userHandle } = await getUserProfile();
 
   const stats = await fetchAccountStats(lens, { account: account?.address }).unwrapOr(null);
 
@@ -58,7 +58,7 @@ const UserLayout = async ({
     return <ErrorPage error="User not found" />;
   }
 
-  const isUserProfile = profileId === account.address;
+  const isUserProfile = address === account.address;
 
   return (
     <UserTheme initialTheme={themeName}>

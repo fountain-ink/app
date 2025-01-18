@@ -10,7 +10,7 @@ export const maxDuration = 60;
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
   const lens = await getLensClient();
-  const { address: profileId, handle: userHandle } = await getUserProfile();
+  const { address, handle: userHandle } = await getUserProfile();
   const pageHandle = `lens/${params.user}`;
 
   const profile = await fetchAccount(lens, { username: { localName: params.user } });
@@ -24,7 +24,6 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
     return notFound();
   }
 
-  console.log(profileId, userHandle);
   if (params.user !== userHandle) {
     return <ErrorPage error="Can't access other user's drafts" />;
   }
@@ -33,7 +32,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
 
   return (
     <div className="flex flex-col my-4 gap-4">
-      <CloudDraftsList profileId={profileId} />
+      <CloudDraftsList address={address} />
     </div>
   );
 };

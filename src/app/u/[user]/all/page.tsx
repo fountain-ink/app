@@ -6,7 +6,7 @@ import { fetchAccount, fetchPosts } from "@lens-protocol/client/actions";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
   const lens = await getLensClient();
-  const { address: profileId } = await getUserProfile();
+  const { address } = await getUserProfile();
   const pageHandle = `lens/${params.user}`;
 
   const profile = await fetchAccount(lens, { username: { localName: params.user } }).unwrapOr(null);
@@ -21,7 +21,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
     return <ErrorPage error="User not found" />;
   }
 
-  const isUserProfile = profileId === profile.address;
+  const isUserProfile = address === profile.address;
 
   return (
     <div className="flex flex-col p-4">

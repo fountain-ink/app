@@ -108,7 +108,7 @@ export const PostView = ({
         <div className="flex flex-col w-full gap-2">
           {options.showAuthor && (
             <div>
-              <LazyAuthorView profileIds={authorIds} />
+              <LazyAuthorView authors={authorIds} />
             </div>
           )}
           {options.showTitle && title && (

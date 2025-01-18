@@ -7,17 +7,17 @@ import { UserAvatar } from "./user-avatar";
 import { UserCard } from "./user-card";
 
 export const LazyAuthorView = ({
-  profileIds,
+  authors,
   showAvatar = true,
   showName = true,
   showHandle = true,
 }: {
-  profileIds: EvmAddress[];
+  authors: EvmAddress[];
   showAvatar?: boolean;
   showName?: boolean;
   showHandle?: boolean;
 }) => {
-  const { data: account, loading, error } = useAccount({ address: profileIds[0] });
+  const { data: account, loading, error } = useAccount({ address: authors[0] });
 
   if (!account) {
     return null;
@@ -26,8 +26,8 @@ export const LazyAuthorView = ({
   if (loading) {
     return (
       <div className="flex flex-wrap gap-2">
-        {Array.from({ length: profileIds.length }).map((_e, index) => (
-          <span key={`skeleton-${index}-${profileIds[index]}`} className="flex flex-row gap-2 items-center">
+        {Array.from({ length: authors.length }).map((_e, index) => (
+          <span key={`skeleton-${index}-${authors[index]}`} className="flex flex-row gap-2 items-center">
             {showAvatar && <div className="w-6 h-6 rounded-full bg-muted animate-pulse" />}
             {showName && <div className="w-20 h-4 bg-muted animate-pulse rounded-full" />}
             {showHandle && <div className="w-24 h-4 bg-muted animate-pulse rounded-full" />}

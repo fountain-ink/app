@@ -22,7 +22,7 @@ export const EditorCollaborators = () => {
 
   return (
     <div className="flex flex-row gap-4  justify-center items-center py-2">
-      <LazyAuthorView profileIds={[session.address as EvmAddress]} />
+      <LazyAuthorView authors={[session.address as EvmAddress]} />
     </div>
   );
 };
