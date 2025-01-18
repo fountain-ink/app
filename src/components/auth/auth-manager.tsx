@@ -1,6 +1,6 @@
 "use client";
 
-import { isValidToken } from "@/lib/auth/validate-auth-token";
+import { isValidToken } from "@/lib/auth/validate-token";
 import { setCookie } from "cookies-next";
 import { useEffect, useRef } from "react";
 
