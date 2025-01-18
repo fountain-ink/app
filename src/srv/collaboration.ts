@@ -1,6 +1,6 @@
 import { env } from "@/env";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
-import { verifyToken } from "@/lib/auth/verify-auth-token";
+import { verifyToken } from "@/lib/auth/verify-token";
 import { extractMetadata } from "@/lib/get-article-title";
 import { Json } from "@/lib/supabase/database";
 import { createServiceClient } from "@/lib/supabase/service";

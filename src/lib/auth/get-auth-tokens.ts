@@ -1,7 +1,7 @@
 import { env } from "@/env";
 import { cookies } from "next/headers";
-import { verifyToken } from "./verify-auth-token";
-import { isValidToken } from "./validate-auth-token";
+import { verifyToken } from "./verify-token";
+import { isValidToken } from "./validate-token";
 
 const secret = env.SUPABASE_JWT_SECRET;
 

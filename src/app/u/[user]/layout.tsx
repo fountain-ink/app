@@ -50,7 +50,7 @@ const UserLayout = async ({
   const themeName = settings?.theme?.name;
   const title = settings?.blog?.title;
 
-  const { profileId, handle: userHandle } = await getUserProfile();
+  const { address: profileId, handle: userHandle } = await getUserProfile();
 
   const stats = await fetchAccountStats(lens, { account: account?.address }).unwrapOr(null);
 

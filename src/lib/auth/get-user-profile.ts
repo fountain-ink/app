@@ -54,7 +54,7 @@ export async function getUserProfile() {
   }
 
   return {
-    profileId: account.loggedInAs.account.address,
+    address: account.loggedInAs.account.address,
     profile: account,
     handle: account.loggedInAs.account.username?.localName,
     role: decoded["tag:lens.dev,2024:role"],

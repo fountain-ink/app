@@ -9,17 +9,17 @@ export async function signAppToken(refreshToken: string) {
   const lens = await getLensClient();
   const profile = await getUserProfile();
 
-  if (!profile?.profileId || !profile?.handle) {
+  if (!profile?.address || !profile?.handle) {
     throw new Error("Invalid Lens profile");
   }
 
   const claims = {
-    sub: profile.profileId,
+    sub: profile.address,
     role: "authenticated",
     user_metadata: {
       isAnonymous: false,
       handle: profile.handle,
-      profileId: profile.profileId,
+      profileId: profile.address,
     },
   };
 

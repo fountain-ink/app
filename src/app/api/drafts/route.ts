@@ -2,7 +2,7 @@ import { defaultContent } from "@/components/draft/draft-create-button";
 import { env } from "@/env";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
-import { verifyToken } from "@/lib/auth/verify-auth-token";
+import { verifyToken } from "@/lib/auth/verify-token";
 import { getRandomUid } from "@/lib/get-random-uid";
 import { getLensClient } from "@/lib/lens/client";
 import { createClient } from "@/lib/supabase/server";
@@ -22,14 +22,14 @@ export async function GET(req: NextRequest) {
     }
 
     const db = await createClient();
-    const profileId = claims.sub;
+    const address = claims.sub;
 
     // If not a guest user, verify with Lens
     if (!claims.user_metadata.isAnonymous) {
       const lens = await getLensClient();
-      const { profileId: lensProfileId } = await getUserProfile();
+      const { address: lensAddress } = await getUserProfile();
 
-      if (lensProfileId !== profileId) {
+      if (lensAddress !== address) {
         return NextResponse.json({ error: "Invalid profile" }, { status: 401 });
       }
     }
@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
         .from("drafts")
         .select()
         .eq("documentId", documentId)
-        .eq("authorId", profileId)
+        .eq("authorId", address)
         .single();
 
       if (error) {
@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ draft }, { status: 200 });
     }
 
-    const { data: drafts, error } = await db.from("drafts").select().eq("authorId", profileId);
+    const { data: drafts, error } = await db.from("drafts").select().eq("authorId", address);
 
     if (error) {
       throw new Error(error.message);
@@ -84,14 +84,14 @@ export async function POST(req: NextRequest) {
     }
 
     const db = await createClient();
-    const profileId = claims.sub;
+    const address = claims.sub;
 
     // If not a guest user, verify with Lens
     if (!claims.user_metadata.isAnonymous) {
       const lens = await getLensClient();
-      const { profileId: lensProfileId } = await getUserProfile();
+      const { address: lensAddress } = await getUserProfile();
 
-      if (lensProfileId !== profileId) {
+      if (lensAddress !== address) {
         return NextResponse.json({ error: "Invalid profile" }, { status: 401 });
       }
     }
@@ -102,7 +102,7 @@ export async function POST(req: NextRequest) {
 
     const { data, error } = await db
       .from("drafts")
-      .insert({ contentJson, documentId, authorId: profileId })
+      .insert({ contentJson, documentId, authorId: address })
       .select()
       .single();
 
@@ -132,14 +132,14 @@ export async function PUT(req: NextRequest) {
     }
 
     const db = await createClient();
-    const profileId = claims.sub;
+    const address = claims.sub;
 
     // If not a guest user, verify with Lens
     if (!claims.user_metadata.isAnonymous) {
       const lens = await getLensClient();
-      const { profileId: lensProfileId } = await getUserProfile();
+      const { address: lensAddress } = await getUserProfile();
 
-      if (lensProfileId !== profileId) {
+      if (lensAddress !== address) {
         return NextResponse.json({ error: "Invalid profile" }, { status: 401 });
       }
     }
@@ -164,7 +164,7 @@ export async function PUT(req: NextRequest) {
     const { data, error } = await db
       .from("drafts")
       .update(updateData)
-      .match({ documentId, authorId: profileId })
+      .match({ documentId, authorId: address })
       .select()
       .single();
 
@@ -198,14 +198,14 @@ export async function DELETE(req: NextRequest) {
     }
 
     const db = await createClient();
-    const profileId = claims.sub;
+    const address = claims.sub;
 
     // If not a guest user, verify with Lens
     if (!claims.user_metadata.isAnonymous) {
       const lens = await getLensClient();
-      const { profileId: lensProfileId } = await getUserProfile();
+      const { address: lensAddress } = await getUserProfile();
 
-      if (lensProfileId !== profileId) {
+      if (lensAddress !== address) {
         return NextResponse.json({ error: "Invalid profile" }, { status: 401 });
       }
     }
@@ -218,7 +218,7 @@ export async function DELETE(req: NextRequest) {
     const { data, error } = await db
       .from("drafts")
       .delete()
-      .match({ documentId, authorId: profileId })
+      .match({ documentId, authorId: address })
       .select()
       .single();
 

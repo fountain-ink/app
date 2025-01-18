@@ -1,6 +1,6 @@
 import { env } from "@/env";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
-import { verifyToken } from "@/lib/auth/verify-auth-token";
+import { verifyToken } from "@/lib/auth/verify-token";
 import { createClient } from "@/lib/supabase/server";
 import { type NextRequest, NextResponse } from "next/server";
 

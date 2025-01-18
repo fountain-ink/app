@@ -3,7 +3,7 @@ import { Web3Providers } from "@/components/misc/web3-providers";
 import { Header } from "@/components/navigation/header";
 import { ThemeProvider } from "@/components/theme/theme-context";
 import { Toaster } from "@/components/ui/sonner";
-import { getSessionProfile } from "@/lib/auth/get-session-profile";
+import { getSession } from "@/lib/auth/get-session";
 import "@/styles/globals.css";
 import { cn } from "@udecode/cn";
 import { GeistMono } from "geist/font/mono";
@@ -17,7 +17,7 @@ export const metadata = {
 };
 
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
-  const session = await getSessionProfile();
+  const session = await getSession();
 
   return (
     <html lang="en" suppressHydrationWarning className={cn(GeistSans.variable, GeistMono.variable)}>
