@@ -1,7 +1,8 @@
 "use client";
 
 import { isValidToken } from "@/lib/auth/validate-token";
-import { setCookie } from "cookies-next";
+import { AccessToken, IdToken, RefreshToken } from "@lens-protocol/client";
+import { getCookie, setCookie } from "cookies-next";
 import { useEffect, useRef } from "react";
 
 const getCookieConfig = () => {
@@ -70,29 +71,20 @@ export const setupUserAuth = async (refreshToken: string) => {
   }
 };
 
-const getCookie = (name: string) => {
-  return document.cookie
-    .split("; ")
-    .find((row) => row.startsWith(`${name}=`))
-    ?.split("=")[1];
+type Credentials = {
+  accessToken: AccessToken;
+  idToken: IdToken;
+  refreshToken: RefreshToken;
 };
 
-export function AuthManager() {
+export function AuthManager({ credentials }: { credentials: Credentials | null }) {
   const lastRefreshToken = useRef<string | undefined>();
   const lastAppToken = useRef<string | undefined>();
-  // const { data: session, loading, error } = useSessionClient();
-    const refreshToken = getCookie("refreshToken");
 
-  // if (loading) return null;
-  // if (error) {
-  //   toast.error("Failed to get session data");
-  //   return null;
-  // }
-  console.log("[Auth] Refresh token:", refreshToken);
 
   const checkAndUpdateAuth = async () => {
     try {
-      const currentRefreshToken = getCookie("refreshToken");
+      const currentRefreshToken = credentials?.refreshToken;
       const currentAppToken = getCookie("appToken");
 
       if (currentRefreshToken !== lastRefreshToken.current) {
@@ -119,16 +111,9 @@ export function AuthManager() {
   };
 
   useEffect(() => {
-    if (refreshToken) {
-      setCookie("refreshToken", refreshToken, getCookieConfig());
-    }
-  }, [refreshToken]);
-
-  useEffect(() => {
     checkAndUpdateAuth();
 
     const interval = setInterval(checkAndUpdateAuth, 500);
-
     return () => clearInterval(interval);
   }, []);
 

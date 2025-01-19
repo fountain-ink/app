@@ -4,6 +4,7 @@ import { Header } from "@/components/navigation/header";
 import { ThemeProvider } from "@/components/theme/theme-context";
 import { Toaster } from "@/components/ui/sonner";
 import { getSession } from "@/lib/auth/get-session";
+import { getLensClient } from "@/lib/lens/client";
 import "@/styles/globals.css";
 import { cn } from "@udecode/cn";
 import { GeistMono } from "geist/font/mono";
@@ -17,7 +18,9 @@ export const metadata = {
 };
 
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
+  const client = await getLensClient();
   const session = await getSession();
+  const credentials = client.isSessionClient() ? await client.getCredentials().unwrapOr(null) : null;
 
   return (
     <html lang="en" suppressHydrationWarning className={cn(GeistSans.variable, GeistMono.variable)}>
@@ -31,7 +34,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
         <Web3Providers>
           <DarkModeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
             <ThemeProvider>
-              <AuthManager />
+              <AuthManager credentials={credentials} />
               <Toaster position="top-center" offset={16} />
               <Header session={session} />
               {children}
