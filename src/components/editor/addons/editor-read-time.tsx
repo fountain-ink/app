@@ -13,7 +13,7 @@ export const EditorReadTime = ({ content }: EditorReadTimeProps) => {
           const blockText = block.children
             .map((child: any) => child.text || '')
             .join(' ');
-          return acc + ' ' + blockText;
+          return `${acc} ${blockText}`;
         }
         return acc;
       }, '');
