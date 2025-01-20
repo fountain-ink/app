@@ -37,7 +37,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
     <>
       {showAuthor && (
         <div className="p-4 ">
-          <AuthorView showHandle={false} profiles={[profile]} />
+          <AuthorView showHandle={false} accounts={[profile]} />
         </div>
       )}
 

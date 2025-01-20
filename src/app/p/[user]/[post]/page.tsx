@@ -1,5 +1,7 @@
+import { EditorReadTime } from "@/components/editor/addons/editor-read-time";
 import Editor from "@/components/editor/editor";
 import ErrorPage from "@/components/misc/error-page";
+import { AuthorView } from "@/components/user/user-author-view";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchPost } from "@lens-protocol/client/actions";
 import { sanitize } from "isomorphic-dompurify";
@@ -31,7 +33,16 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
   const contentHtml = post?.metadata?.attributes?.find((attr: any) => attr.key === "contentHtml")?.value;
 
   if (contentJson) {
-    return <Editor showToc value={contentJson} readOnly={true} />;
+    return (
+      <div>
+        <div className="flex flex-col gap-4 items-center justify-center">
+          <EditorReadTime content={contentJson} />
+          {/* <DateLabel /> */}
+          <AuthorView showHandle={false} accounts={[post.author]} />
+        </div>
+        <Editor showToc value={contentJson} readOnly={true} />
+      </div>
+    );
   }
 
   if (contentHtml) {

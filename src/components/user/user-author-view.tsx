@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Account } from "@lens-protocol/client";
 import { EvmAddress } from "@lens-protocol/metadata";
@@ -53,33 +53,34 @@ export const LazyAuthorView = ({
 };
 
 export const AuthorView = ({
-  profiles,
+  accounts,
   showAvatar = true,
   showName = true,
   showHandle = true,
   showCard = true,
 }: {
-  profiles: Account[] | null;
+  accounts: Account[] | null;
   showAvatar?: boolean;
   showName?: boolean;
   showHandle?: boolean;
   showCard?: boolean;
 }) => {
-  if (!profiles || profiles.length === 0) return null;
+  if (!accounts || accounts.length === 0) return null;
 
   const conent = (
     <div className="flex flex-wrap gap-2">
-      {profiles.map((profile) => {
+      {accounts.map((acc) => {
         const item = (
-          <span key={profile.address} className="flex flex-row gap-2 items-center">
-            {showAvatar && <UserAvatar className="w-6 h-6" account={profile} />}
-            {showName && <span className="font-[family-name:--title-font]">{profile.metadata?.name}</span>}
-            {showHandle && <span className="">@{profile.username?.localName}</span>}
+          <span key={acc.address} className="flex flex-row gap-2 items-center">
+            {showAvatar && <UserAvatar className="w-6 h-6" account={acc} />}
+            {showName && <span className="font-[family-name:--title-font]">{acc.metadata?.name}</span>}
+            {showHandle && <span className="text-sm">@{acc.username?.localName}</span>}
           </span>
         );
+
         if (showCard) {
           return (
-            <UserCard linkProfile handle={profile.username?.localName}>
+            <UserCard linkProfile handle={acc.username?.localName}>
               {item}
             </UserCard>
           );

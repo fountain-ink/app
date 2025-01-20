@@ -55,7 +55,9 @@ export default function PlateEditor(
           {props.children}
 
           <Editor
-            className={"overflow-visible w-full max-w-full sm:max-w-3xl md:max-w-4xl p-10 sm:px-30 md:px-40 mx-auto"}
+            className={
+              "overflow-visible w-full max-w-full sm:max-w-3xl md:max-w-4xl p-10 pt-0 sm:px-30 md:px-40 mx-auto"
+            }
             variant="fullWidth"
             autoFocus
           />

@@ -3,13 +3,10 @@ import { Footer } from "@/components/navigation/footer";
 import { GradientBlur } from "@/components/navigation/gradient-blur";
 import { BlogHeader } from "@/components/user/blog-header";
 import { UserTheme } from "@/components/user/user-theme";
-import { getUserSettings } from "@/lib/settings/get-settings";
 import { getLensClient } from "@/lib/lens/client";
+import { getUserSettings } from "@/lib/settings/get-settings";
 import { fetchAccount } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
-import { Separator } from "@/components/ui/separator";
-import { AuthorView } from "@/components/user/user-author-view";
-import { getUserProfile } from "@/lib/auth/get-user-profile";
 
 export async function generateMetadata({ params }: { params: { user: string; post: string } }) {
   const handle = params.user;
@@ -31,7 +28,7 @@ export async function generateMetadata({ params }: { params: { user: string; pos
   return {
     title: `${params.post} - ${handle}'s blog`,
     description: `@${handle}'s blog post on Fountain`,
-    icons: icon ? [{ rel: 'icon', url: icon }] : undefined,
+    icons: icon ? [{ rel: "icon", url: icon }] : undefined,
   };
 }
 
