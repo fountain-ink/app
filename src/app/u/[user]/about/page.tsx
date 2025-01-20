@@ -7,8 +7,6 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
   const lens = await getLensClient();
   const { address } = await getUserProfile();
 
-  const pageHandle = `lens/${params.user}`;
-
   const profile = await fetchAccount(lens, { username: { localName: params.user } });
 
   if (!profile) {

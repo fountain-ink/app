@@ -8,13 +8,13 @@ import { headers } from "next/headers";
 
 export default async function WriteDraft({ params }: { params: { id: string } }) {
   const lens = await getLensClient();
-  const { handle } = await getUserProfile();
+  const { username } = await getUserProfile();
   const { refreshToken, appToken } = getAuthTokens();
   const pathname = headers().get("x-url") ?? undefined;
 
   return (
     <ArticleLayout>
-      <Editor showToc pathname={pathname} handle={handle} refreshToken={refreshToken} appToken={appToken}>
+      <Editor showToc pathname={pathname} username={username} refreshToken={refreshToken} appToken={appToken}>
         <PublishDialog />
       </Editor>
     </ArticleLayout>

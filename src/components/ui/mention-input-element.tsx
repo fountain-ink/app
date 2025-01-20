@@ -4,7 +4,7 @@ import { cn, withRef } from "@udecode/cn";
 import { getMentionOnSelectItem } from "@udecode/plate-mention";
 import { useState } from "react";
 
-import { HandleSearch } from "../user/user-handle-search";
+import { UserSearch } from "../user/user-search";
 import { InlineCombobox, InlineComboboxContent, InlineComboboxEmpty, InlineComboboxInput } from "./inline-combobox";
 import { PlateElement } from "./plate-element";
 
@@ -25,7 +25,7 @@ export const MentionInputElement = withRef<typeof PlateElement>(({ className, ..
           {!search ? (
             <InlineComboboxEmpty>Type to search...</InlineComboboxEmpty>
           ) : (
-            <HandleSearch
+            <UserSearch
               query={search}
               maxResults={10}
               onResultsChange={(results) => {

@@ -38,7 +38,7 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
         <div className="flex flex-col gap-4 items-center justify-center">
           <EditorReadTime content={contentJson} />
           {/* <DateLabel /> */}
-          <AuthorView showHandle={false} accounts={[post.author]} />
+          <AuthorView showUsername={false} accounts={[post.author]} />
         </div>
         <Editor showToc value={contentJson} readOnly={true} />
       </div>

@@ -9,17 +9,17 @@ export async function signAppToken(refreshToken: string) {
   const lens = await getLensClient();
   const profile = await getUserProfile();
 
-  if (!profile?.address || !profile?.handle) {
+  if (!profile?.address || !profile?.username) {
     throw new Error("Invalid Lens profile");
   }
 
   const claims = {
     sub: profile.address,
     role: "authenticated",
-    user_metadata: {
+    metadata: {
       isAnonymous: false,
-      handle: profile.handle,
-      profileId: profile.address,
+      username: profile.username,
+      address: profile.address,
     },
   };
 
@@ -28,7 +28,8 @@ export async function signAppToken(refreshToken: string) {
     expiresIn: "30d",
     issuer: "fountain.ink",
   });
+
   const account = profile.profile.loggedInAs.account;
 
-  return { jwt, profile: account };
+  return { jwt, account };
 }

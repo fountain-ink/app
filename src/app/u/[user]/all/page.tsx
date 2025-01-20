@@ -7,7 +7,6 @@ import { fetchAccount, fetchPosts } from "@lens-protocol/client/actions";
 const UserPage = async ({ params }: { params: { user: string } }) => {
   const lens = await getLensClient();
   const { address } = await getUserProfile();
-  const pageHandle = `lens/${params.user}`;
 
   const profile = await fetchAccount(lens, { username: { localName: params.user } }).unwrapOr(null);
   const posts = await fetchPosts(lens, {

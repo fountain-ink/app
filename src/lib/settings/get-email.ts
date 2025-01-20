@@ -11,7 +11,7 @@ export async function getEmail(): Promise<string | null> {
   }
 
   const claims = getTokenClaims(token);
-  if (!claims?.user_metadata?.profileId) {
+  if (!claims?.metadata?.address) {
     return null;
   }
 
@@ -19,7 +19,7 @@ export async function getEmail(): Promise<string | null> {
   const { data, error } = await db
     .from("users")
     .select("email")
-    .eq("profileId", claims.user_metadata.profileId)
+    .eq("profileId", claims.metadata.address)
     .single();
 
   if (error) {

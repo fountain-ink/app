@@ -7,7 +7,7 @@ import { UserBio } from "@/components/user/user-bio";
 import { UserCover } from "@/components/user/user-cover";
 import { UserFollowButton } from "@/components/user/user-follow";
 import { UserFollowing } from "@/components/user/user-following";
-import { UserHandle } from "@/components/user/user-handle";
+import { UserUsername } from "@/components/user/user-handle";
 import { UserLocation } from "@/components/user/user-location";
 import { UserName } from "@/components/user/user-name";
 import { UserNavigation } from "@/components/user/user-navigation";
@@ -21,11 +21,11 @@ import { AnimatePresence } from "framer-motion";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }: { params: { user: string } }) {
-  const handle = params.user;
-  const title = `@${handle}`;
+  const username = params.user;
+  const title = `@${username}`;
   return {
     title,
-    description: `@${handle}'s profile on Fountain`,
+    description: `@${username}'s profile on Fountain`,
   };
 }
 
@@ -50,7 +50,7 @@ const UserLayout = async ({
   const themeName = settings?.theme?.name;
   const title = settings?.blog?.title;
 
-  const { address, handle: userHandle } = await getUserProfile();
+  const { address, username } = await getUserProfile();
 
   const stats = await fetchAccountStats(lens, { account: account?.address }).unwrapOr(null);
 
@@ -75,8 +75,8 @@ const UserLayout = async ({
               />
               <div className="flex flex-col gap-2 mt-14 font-[family-name:--title-font]">
                 <UserName profile={account} className="md:font-4xl font-normal tracking-[-0.8px] " />
-                <UserHandle
-                  profile={account}
+                <UserUsername
+                  account={account}
                   className="md:font-xl -mt-3 font-normal text-normal tracking-wide text-foreground/65"
                 />
                 <div className="flex items-center gap-4">

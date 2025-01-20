@@ -19,9 +19,9 @@ export async function getUserProfile() {
 
   if (!client.isSessionClient()) {
     return {
-      profileId: undefined,
+      address: undefined,
       profile: undefined,
-      handle: undefined,
+      username: undefined,
     };
   }
 
@@ -47,17 +47,15 @@ export async function getUserProfile() {
   if (!account) {
     console.error("Profile not found, returning empty profile");
     return {
-      profileId: undefined,
+      address: undefined,
       profile: undefined,
-      handle: undefined,
+      username: undefined,
     };
   }
 
   return {
     address: account.loggedInAs.account.address,
     profile: account,
-    handle: account.loggedInAs.account.username?.localName,
-    role: decoded["tag:lens.dev,2024:role"],
-    sponsored: decoded["tag:lens.dev,2024:sponsored"] || false,
+    username: account.loggedInAs.account.username?.localName,
   };
 }

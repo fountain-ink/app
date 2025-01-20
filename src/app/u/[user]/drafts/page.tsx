@@ -10,8 +10,7 @@ export const maxDuration = 60;
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
   const lens = await getLensClient();
-  const { address, handle: userHandle } = await getUserProfile();
-  const pageHandle = `lens/${params.user}`;
+  const { address, username } = await getUserProfile();
 
   const profile = await fetchAccount(lens, { username: { localName: params.user } });
 
@@ -24,11 +23,11 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
     return notFound();
   }
 
-  if (params.user !== userHandle) {
+  if (params.user !== username) {
     return <ErrorPage error="Can't access other user's drafts" />;
   }
 
-  const _isUserProfile = userHandle === params.user;
+  const _isUserProfile = username === params.user;
 
   return (
     <div className="flex flex-col my-4 gap-4">

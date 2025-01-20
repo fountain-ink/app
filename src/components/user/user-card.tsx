@@ -16,25 +16,25 @@ import { UserFollowButton } from "./user-follow";
 import { UserFollowing } from "./user-following";
 
 type UserCardProps = PropsWithChildren & {
-  handle?: string;
+  username?: string;
   linkProfile?: boolean;
 };
 
-export const UserCard = ({ children, handle, linkProfile = false }: UserCardProps) => {
+export const UserCard = ({ children, username, linkProfile = false }: UserCardProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [profile, setProfile] = useState<Account | null>(null);
   const [stats, setStats] = useState<any>(null);
 
   const loadCard = async () => {
-    if (!handle) return;
+    if (!username) return;
 
     setLoading(true);
     try {
       const client = await getLensClient();
       const result = await fetchAccount(client, {
         username: {
-          localName: handle,
+          localName: username,
         },
       });
 
@@ -63,7 +63,7 @@ export const UserCard = ({ children, handle, linkProfile = false }: UserCardProp
   return (
     <HoverCard defaultOpen={false} onOpenChange={(open: boolean) => open && loadCard()} closeDelay={100}>
       <HoverCardTrigger asChild>
-        {linkProfile && handle ? <Link href={`/u/${handle}`}>{children}</Link> : children}
+        {linkProfile && username ? <Link href={`/u/${username}`}>{children}</Link> : children}
       </HoverCardTrigger>
       <HoverCardContent className={`w-full min-w-64 max-w-64 overflow-hidden ${inter.className}`} side="top">
         {loading && !profile && <LoadingSpinner />}

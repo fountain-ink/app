@@ -47,13 +47,13 @@ export const PostView = ({
   let contentMarkdown: string;
   let date: string;
   let contentJson: string;
-  let handle: string;
+  let username: string;
   let title: string | undefined;
   let subtitle: string | undefined;
 
   if (isDraft) {
     const draft = item as Draft;
-    handle = "";
+    username = "";
     date = draft.updatedAt ?? draft.createdAt;
     const content = draft.contentJson ? draft.contentJson : {};
     title = draft.title ?? undefined;
@@ -67,7 +67,7 @@ export const PostView = ({
     title = "title" in metadata ? (metadata.title as string) : undefined;
     subtitle =
       (metadata.attributes?.find((attr) => "key" in attr && attr.key === "subtitle")?.value as string) ?? undefined;
-    handle = post.author.username?.localName || "";
+    username = post.author.username?.localName || "";
     contentMarkdown = "content" in metadata ? (metadata.content as string) : "";
     contentJson =
       (metadata?.attributes?.find((attr) => "key" in attr && attr.key === "contentJson")?.value as string) || "{}";
@@ -165,7 +165,7 @@ export const PostView = ({
           onClick={(e) => {
             // If not selecting (shift key or right click), navigate to the post
             if (!e.shiftKey && e.button !== 2) {
-              const href = isDraft ? `/write/${(item as Draft).documentId}` : `/p/${handle}/${(item as Post).slug}`;
+              const href = isDraft ? `/write/${(item as Draft).documentId}` : `/p/${username}/${(item as Post).slug}`;
               window.location.href = href;
             }
           }}

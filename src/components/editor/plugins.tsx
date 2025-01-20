@@ -77,7 +77,7 @@ import { RenderAboveEditableYjs } from "./plugins/yjs-above-editable";
 export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: boolean) => {
   const plugins = [...staticPlugins];
 
-  const handle = appToken ? getTokenClaims(appToken)?.user_metadata.handle : undefined;
+  const username = appToken ? getTokenClaims(appToken)?.metadata.username : undefined;
 
   if (appToken) {
     plugins.push(
@@ -89,7 +89,7 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
           cursorOptions: {
             autoSend: true,
             data: {
-              name: handle || "anonymous",
+              name: username || "anonymous",
               color: "#ff0000",
             },
           },
@@ -141,7 +141,7 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
           users: {
             1: {
               id: "1",
-              name: handle || "anonymous",
+              name: username || "anonymous",
               avatarUrl: "https://avatars.githubusercontent.com/u/19695832?s=96&v=4",
             },
           },

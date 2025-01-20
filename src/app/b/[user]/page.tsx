@@ -10,8 +10,7 @@ import { notFound } from "next/navigation";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
   const lens = await getLensClient();
-  const { handle: userHandle } = await getUserProfile();
-  const pageHandle = `lens/${params.user}`;
+  const { username } = await getUserProfile();
   const profile = await fetchAccount(lens, { username: { localName: params.user } }).unwrapOr(null);
 
   const posts = await fetchPosts(lens, {
@@ -31,13 +30,13 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
   const showTitle = settings?.blog?.showTitle ?? true;
   const blogTitle = settings?.blog?.title;
 
-  const isUserProfile = userHandle === params.user;
+  const isUserProfile = username === params.user;
 
   return (
     <>
       {showAuthor && (
         <div className="p-4 ">
-          <AuthorView showHandle={false} accounts={[profile]} />
+          <AuthorView showUsername={false} accounts={[profile]} />
         </div>
       )}
 

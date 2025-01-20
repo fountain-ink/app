@@ -22,24 +22,24 @@ export async function POST(req: Request) {
 
     if (!refreshToken) {
       console.log("[Login] Creating guest token");
-      const { jwt, handle } = await signGuestToken();
-      return NextResponse.json({ jwt, handle }, { status: 200 });
+      const { jwt, username } = await signGuestToken();
+      return NextResponse.json({ jwt, username }, { status: 200 });
     }
 
     console.log("[Login] Creating authenticated token");
-    const { jwt, profile } = await signAppToken(refreshToken);
-    await manageUserRecord(profile);
+    const { jwt, account } = await signAppToken(refreshToken);
+    await manageUserRecord(account);
 
     // If there's an existing guest token, migrate the data
     if (appToken) {
       const guestClaims = getTokenClaims(appToken);
-      if (guestClaims?.user_metadata?.isAnonymous) {
-        console.log("[Login] Migrating guest data from ", guestClaims.sub, " to ", profile.address);
-        await migrateGuestData(guestClaims.sub, profile.address);
+      if (guestClaims?.metadata?.isAnonymous) {
+        console.log("[Login] Migrating guest data from ", guestClaims.sub, " to ", account.address);
+        await migrateGuestData(guestClaims.sub, account.address);
       }
     }
 
-    return NextResponse.json({ jwt, handle: profile.username }, { status: 200 });
+    return NextResponse.json({ jwt, handle: account.username }, { status: 200 });
   } catch (error) {
     console.error("[Login Route Error]:", error);
     return NextResponse.json(

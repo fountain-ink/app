@@ -30,7 +30,7 @@ function ProfileSettingsForm({ profile, onSaved, onFormDataChange }: ProfileSett
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [coverPicture, setCoverPicture] = useState<File | null>(null);
   const currentMetadata = profile?.metadata;
-  const handle = profile?.username?.localName || "";
+  const username = profile?.username?.localName || "";
   const [profileTitle, setProfileTitle] = useState(currentMetadata?.name || "");
   const [profileDescription, setProfileDescription] = useState(currentMetadata?.bio || "");
   const [location, setLocation] = useState(
@@ -221,7 +221,7 @@ export function ProfileSettingsModal({ profile, trigger, open, onOpenChange }: P
   const [isUploading, setIsUploading] = useState(false);
   const { saveSettings, isSaving: isSavingProfileSettings } = useSaveProfileSettings();
   const [formData, setFormData] = useState<any>(null);
-  const handle = profile?.username?.localName || "";
+  const usernmae = profile?.username?.localName || "";
 
   const handleSave = useCallback(async () => {
     if (!formData) return;

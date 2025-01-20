@@ -10,12 +10,12 @@ export const LazyAuthorView = ({
   authors,
   showAvatar = true,
   showName = true,
-  showHandle = true,
+  showUsername = true,
 }: {
   authors: EvmAddress[];
   showAvatar?: boolean;
   showName?: boolean;
-  showHandle?: boolean;
+  showUsername?: boolean;
 }) => {
   const { data: account, loading, error } = useAccount({ address: authors[0] });
 
@@ -30,7 +30,7 @@ export const LazyAuthorView = ({
           <span key={`skeleton-${index}-${authors[index]}`} className="flex flex-row gap-2 items-center">
             {showAvatar && <div className="w-6 h-6 rounded-full bg-muted animate-pulse" />}
             {showName && <div className="w-20 h-4 bg-muted animate-pulse rounded-full" />}
-            {showHandle && <div className="w-24 h-4 bg-muted animate-pulse rounded-full" />}
+            {showUsername && <div className="w-24 h-4 bg-muted animate-pulse rounded-full" />}
           </span>
         ))}
       </div>
@@ -45,7 +45,7 @@ export const LazyAuthorView = ({
         <span key={profile.address} className="flex flex-row gap-2 items-center">
           {/* {showAvatar && <UserAvatar className="w-6 h-6" profile={profile} />} */}
           {showName && <b className="text-foreground">{profile.metadata?.name}</b>}
-          {showHandle && <span className="text-foreground">@{profile.username?.localName}</span>}
+          {showUsername && <span className="text-foreground">@{profile.username?.localName}</span>}
         </span>
       ))}
     </div>
@@ -56,13 +56,13 @@ export const AuthorView = ({
   accounts,
   showAvatar = true,
   showName = true,
-  showHandle = true,
+  showUsername = true,
   showCard = true,
 }: {
   accounts: Account[] | null;
   showAvatar?: boolean;
   showName?: boolean;
-  showHandle?: boolean;
+  showUsername?: boolean;
   showCard?: boolean;
 }) => {
   if (!accounts || accounts.length === 0) return null;
@@ -74,13 +74,13 @@ export const AuthorView = ({
           <span key={acc.address} className="flex flex-row gap-2 items-center">
             {showAvatar && <UserAvatar className="w-6 h-6" account={acc} />}
             {showName && <span className="font-[family-name:--title-font]">{acc.metadata?.name}</span>}
-            {showHandle && <span className="text-sm">@{acc.username?.localName}</span>}
+            {showUsername && <span className="text-sm">@{acc.username?.localName}</span>}
           </span>
         );
 
         if (showCard) {
           return (
-            <UserCard linkProfile handle={acc.username?.localName}>
+            <UserCard linkProfile username={acc.username?.localName}>
               {item}
             </UserCard>
           );

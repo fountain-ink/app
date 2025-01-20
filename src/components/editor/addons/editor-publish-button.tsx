@@ -69,7 +69,7 @@ export const PublishButton = ({
       return;
     }
 
-    const handle = session.signer;
+    const username = session.signer;
 
     const contentJson = editorState.children;
     const contentHtml = editor.api.htmlReact?.serialize({
@@ -155,12 +155,12 @@ export const PublishButton = ({
       }
 
       const postSlug = postValue.value?.__typename === "Post" ? postValue.value.slug : postValue.value?.id
-      const handle = postValue.value?.__typename === "Post" ? postValue.value.author.username?.localName : postValue.value?.id
+      const username = postValue.value?.__typename === "Post" ? postValue.value.author.username?.localName : postValue.value?.id
 
       // Show success and redirect
       toast.dismiss(pendingToast);
       toast.success("Post published successfully!");
-      router.push(`/p/${handle}/${postSlug}?success=true`);
+      router.push(`/p/${username}/${postSlug}?success=true`);
       router.refresh();
     } catch (error) {
       console.error("Error creating post:", error);

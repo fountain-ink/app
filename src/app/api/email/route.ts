@@ -10,7 +10,7 @@ export async function PUT(req: NextRequest) {
     }
 
     const claims = getTokenClaims(token);
-    if (!claims?.user_metadata?.profileId) {
+    if (!claims?.metadata?.address) {
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
@@ -26,7 +26,7 @@ export async function PUT(req: NextRequest) {
         email,
         updatedAt: new Date().toISOString(),
       })
-      .eq("profileId", claims.user_metadata.profileId);
+      .eq("profileId", claims.metadata.address);
 
     if (error) {
       console.error("Error updating user email:", error);

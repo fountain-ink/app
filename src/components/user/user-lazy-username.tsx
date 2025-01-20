@@ -3,16 +3,16 @@
 import Link from "next/link";
 import { UserCard } from "./user-card";
 
-export const UserLazyHandle = ({ handle }: { handle: string }) => {
+export const UserLazyUsername = ({ username }: { username: string }) => {
   return (
-    <UserCard handle={handle}>
+    <UserCard username={username}>
       <Link
         className="no-underline hover:underline font-semibold text-primary decoration-2 underline-offset-4"
         onClick={(e) => e.stopPropagation()}
-        href={`/u/${handle}`}
+        href={`/u/${username}`}
         prefetch
       >
-        @{handle}
+        @{username}
       </Link>
     </UserCard>
   );

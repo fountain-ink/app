@@ -7,12 +7,12 @@ const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 21);
 
 export async function signGuestToken() {
   const guestId = nanoid();
-  const handle = `guest-${guestId.slice(0, 8)}`;
+  const username = `guest-${guestId.slice(0, 8)}`;
 
   const db = await createServiceClient();
   await db.from("users").insert({
     profileId: guestId,
-    handle,
+    handle: username,
     isAnonymous: true,
     metadata: {},
     createdAt: new Date().toISOString(),
@@ -20,12 +20,12 @@ export async function signGuestToken() {
   });
 
   const claims = {
-    sub: handle,
+    sub: username,
     role: "authenticated",
-    user_metadata: {
+    metadata: {
       isAnonymous: true,
-      handle,
-      profileId: guestId,
+      username: username,
+      address: guestId,
     },
   };
 
@@ -35,5 +35,5 @@ export async function signGuestToken() {
     issuer: "fountain.ink",
   });
 
-  return { jwt, guestId, handle };
+  return { jwt, guestId, username: username };
 }

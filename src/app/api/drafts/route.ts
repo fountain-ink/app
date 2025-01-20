@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     const address = claims.sub;
 
     // If not a guest user, verify with Lens
-    if (!claims.user_metadata.isAnonymous) {
+    if (!claims.metadata.isAnonymous) {
       const lens = await getLensClient();
       const { address: lensAddress } = await getUserProfile();
 
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
     const address = claims.sub;
 
     // If not a guest user, verify with Lens
-    if (!claims.user_metadata.isAnonymous) {
+    if (!claims.metadata.isAnonymous) {
       const lens = await getLensClient();
       const { address: lensAddress } = await getUserProfile();
 
@@ -135,7 +135,7 @@ export async function PUT(req: NextRequest) {
     const address = claims.sub;
 
     // If not a guest user, verify with Lens
-    if (!claims.user_metadata.isAnonymous) {
+    if (!claims.metadata.isAnonymous) {
       const lens = await getLensClient();
       const { address: lensAddress } = await getUserProfile();
 
@@ -201,7 +201,7 @@ export async function DELETE(req: NextRequest) {
     const address = claims.sub;
 
     // If not a guest user, verify with Lens
-    if (!claims.user_metadata.isAnonymous) {
+    if (!claims.metadata.isAnonymous) {
       const lens = await getLensClient();
       const { address: lensAddress } = await getUserProfile();
 

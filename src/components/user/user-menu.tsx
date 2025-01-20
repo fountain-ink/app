@@ -43,7 +43,7 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
     return <ProfileSelectMenu />;
   }
 
-  const handle = session.loggedInAs.account.username?.localName;
+  const username = session.loggedInAs.account.username?.localName;
 
   // Get the settings path based on current route
   const getSettingsPath = () => {
@@ -61,11 +61,11 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent align="end" className="w-48">
-          <AnimatedMenuItem href={`/b/${handle}`} icon={PenToolIcon}>
+          <AnimatedMenuItem href={`/b/${username}`} icon={PenToolIcon}>
             Blog
           </AnimatedMenuItem>
 
-          <AnimatedMenuItem href={`/u/${handle}`} icon={UserIcon}>
+          <AnimatedMenuItem href={`/u/${username}`} icon={UserIcon}>
             Profile
           </AnimatedMenuItem>
 
@@ -80,7 +80,7 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
             Switch Profile
           </AnimatedMenuItem>
 
-          <AnimatedMenuItem href={`/u/${handle}/drafts`} icon={SquarePenIcon}>
+          <AnimatedMenuItem href={`/u/${username}/drafts`} icon={SquarePenIcon}>
             Drafts
           </AnimatedMenuItem>
 

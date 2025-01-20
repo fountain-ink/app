@@ -9,25 +9,25 @@ import { fetchAccount } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }: { params: { user: string; post: string } }) {
-  const handle = params.user;
+  const username = params.user;
   const lens = await getLensClient();
   const profile = await fetchAccount(lens, {
-    username: { localName: handle },
+    username: { localName: username },
   }).unwrapOr(null);
 
   if (!profile) {
     return {
-      title: `${params.post} - ${handle}'s blog`,
-      description: `@${handle}'s blog post on Fountain`,
+      title: `${params.post} - ${username}'s blog`,
+      description: `@${username}'s blog post on Fountain`,
     };
   }
 
-  const settings = await getUserSettings(handle);
+  const settings = await getUserSettings(username);
   const icon = settings?.blog?.icon;
 
   return {
-    title: `${params.post} - ${handle}'s blog`,
-    description: `@${handle}'s blog post on Fountain`,
+    title: `${params.post} - ${username}'s blog`,
+    description: `@${username}'s blog post on Fountain`,
     icons: icon ? [{ rel: "icon", url: icon }] : undefined,
   };
 }

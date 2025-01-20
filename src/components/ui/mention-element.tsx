@@ -7,7 +7,7 @@ import { useElement } from "@udecode/plate-common/react";
 import type { TMentionElement } from "@udecode/plate-mention";
 import React from "react";
 import { useFocused, useSelected } from "slate-react";
-import { UserLazyHandle } from "../user/user-lazy-handle";
+import { UserLazyUsername } from "../user/user-lazy-username";
 import { PlateElement } from "./plate-element";
 
 export const MentionElement = withRef<
@@ -41,7 +41,7 @@ export const MentionElement = withRef<
       {mounted && (
         <React.Fragment>
           {IS_APPLE && children}
-          <UserLazyHandle handle={element.value} />
+          <UserLazyUsername username={element.value} />
           {!IS_APPLE && children}
         </React.Fragment>
       )}

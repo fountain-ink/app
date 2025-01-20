@@ -10,11 +10,11 @@ export type MentionableUser = {
   key: string;
   name: string;
   text: string;
-  handle: string;
+  username: string;
   picture?: string;
 };
 
-export function HandleSearch({
+export function UserSearch({
   query,
   maxResults = 10,
   onResultsChange,
@@ -44,7 +44,7 @@ export function HandleSearch({
             key: item.address,
             name: item.metadata?.name || "",
             text: item.username?.localName || "",
-            handle: item.username?.localName || "",
+            username: item.username?.localName || "",
             picture: item.metadata?.picture
           }));
           setProfiles(mentionables);
@@ -77,16 +77,16 @@ export function HandleSearch({
         </InlineComboboxEmpty>
       ) : (
         profiles.map((user) => (
-          <InlineComboboxItem key={user.handle} value={user.handle} onClick={() => onResultsChange?.([user])}>
+          <InlineComboboxItem key={user.username} value={user.username} onClick={() => onResultsChange?.([user])}>
             <div className="flex items-center min-w-48 max-w-96 w-full gap-2">
               {user.picture ? (
-                <img src={user.picture} alt={user.handle} className="w-8 h-8 rounded-full" />
+                <img src={user.picture} alt={user.username} className="w-8 h-8 rounded-full" />
               ) : (
                 <span className="w-8 h-8 bg-primary/40 rounded-full" />
               )}
               <span className="flex flex-col">
                 <span className="font-semibold truncate text-ellipsis">{user.name}</span>
-                <span className="text-muted-foreground">@{user.handle}</span>
+                <span className="text-muted-foreground">@{user.username}</span>
               </span>
             </div>
           </InlineComboboxItem>

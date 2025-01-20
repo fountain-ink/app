@@ -20,7 +20,7 @@ export default function PlateEditor(
   props: PropsWithChildren & {
     showToolbar?: boolean;
     showToc?: boolean;
-    handle?: string;
+    username?: string;
     readOnly?: boolean;
     value?: string;
     pathname?: string;

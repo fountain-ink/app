@@ -1,10 +1,10 @@
 import { Account } from "@lens-protocol/client";
 
-export const UserHandle = ({ profile, className }: { profile?: Account | null; className?: string }) => {
-  const handle = profile?.username?.localName;
-  if (!handle) {
+export const UserUsername = ({ account, className }: { account?: Account | null; className?: string }) => {
+  const username = account?.username?.localName;
+  if (!username) {
     return null;
   }
 
-  return <div className={`text-foreground  ${className}`}>@{handle}</div>;
+  return <div className={`text-foreground  ${className}`}>@{username}</div>;
 };

@@ -13,7 +13,7 @@ export async function getSettings(): Promise<UserMetadata | null> {
   }
 
   const claims = getTokenClaims(token);
-  if (!claims?.user_metadata?.profileId) {
+  if (!claims?.metadata?.address) {
     return null;
   }
 
@@ -21,7 +21,7 @@ export async function getSettings(): Promise<UserMetadata | null> {
   const { data, error } = await db
     .from("users")
     .select("metadata")
-    .eq("profileId", claims.user_metadata.profileId)
+    .eq("profileId", claims.metadata.address)
     .single();
 
   if (error) {
