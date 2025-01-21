@@ -27,9 +27,9 @@ export async function GET(req: NextRequest) {
     // If not a guest user, verify with Lens
     if (!claims.metadata.isAnonymous) {
       const lens = await getLensClient();
-      const { address: lensAddress } = await getUserProfile();
+      const { address: userAddress } = await getUserProfile();
 
-      if (lensAddress !== address) {
+      if (userAddress !== address) {
         return NextResponse.json({ error: "Invalid profile" }, { status: 401 });
       }
     }
@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
         .from("drafts")
         .select()
         .eq("documentId", documentId)
-        .eq("authorId", address)
+        .eq("author", address)
         .single();
 
       if (error) {
@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ draft }, { status: 200 });
     }
 
-    const { data: drafts, error } = await db.from("drafts").select().eq("authorId", address);
+    const { data: drafts, error } = await db.from("drafts").select().eq("author", address);
 
     if (error) {
       throw new Error(error.message);
@@ -102,7 +102,7 @@ export async function POST(req: NextRequest) {
 
     const { data, error } = await db
       .from("drafts")
-      .insert({ contentJson, documentId, authorId: address })
+      .insert({ contentJson, documentId, author: address })
       .select()
       .single();
 
@@ -164,7 +164,7 @@ export async function PUT(req: NextRequest) {
     const { data, error } = await db
       .from("drafts")
       .update(updateData)
-      .match({ documentId, authorId: address })
+      .match({ documentId, author: address })
       .select()
       .single();
 
@@ -218,7 +218,7 @@ export async function DELETE(req: NextRequest) {
     const { data, error } = await db
       .from("drafts")
       .delete()
-      .match({ documentId, authorId: address })
+      .match({ documentId, author: address })
       .select()
       .single();
 

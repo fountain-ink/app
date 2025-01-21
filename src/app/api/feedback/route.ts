@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
         type,
         screenshot,
         createdAt: new Date().toISOString(),
-        address,
+        author: address,
       })
       .select()
       .single();

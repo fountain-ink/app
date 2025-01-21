@@ -29,7 +29,7 @@ export function AutoSave({ documentId }: { documentId: string }) {
           ...(existingDraft || {}),
           id: Date.now(),
           documentId,
-          authorId: "local",
+          author: "local",
           contentJson: content,
           updatedAt: now,
           createdAt: existingDraft?.createdAt || now,

@@ -20,7 +20,7 @@ interface PostViewOptions {
 
 interface PostViewProps {
   item: Post | Draft;
-  authorIds: EvmAddress[];
+  authors: EvmAddress[];
   options?: PostViewOptions;
   isDraft?: boolean;
   onDelete?: () => void;
@@ -30,7 +30,7 @@ interface PostViewProps {
 
 export const PostView = ({
   item,
-  authorIds,
+  authors,
   options = {
     showAuthor: true,
     showTitle: true,
@@ -108,7 +108,7 @@ export const PostView = ({
         <div className="flex flex-col w-full gap-2">
           {options.showAuthor && (
             <div>
-              <LazyAuthorView authors={authorIds} />
+              <LazyAuthorView authors={authors} />
             </div>
           )}
           {options.showTitle && title && (

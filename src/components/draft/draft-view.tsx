@@ -18,7 +18,7 @@ interface DraftViewOptions {
 
 interface DraftViewProps {
   draft: Draft;
-  authorId?: EvmAddress;
+  author?: EvmAddress;
   isLocal: boolean;
   options?: DraftViewOptions;
   isSelected?: boolean;
@@ -28,7 +28,7 @@ interface DraftViewProps {
 
 export const DraftView = ({
   draft,
-  authorId,
+  author,
   isLocal,
   isSelected,
   onSelect,
@@ -43,7 +43,7 @@ export const DraftView = ({
 }: DraftViewProps) => {
   const { deleteDocument } = useDocumentStorage();
   const queryClient = useQueryClient();
-  const authorIds = authorId ? [authorId] : [];
+  const authors = author ? [author] : [];
 
   const handleDelete = async () => {
     if (isLocal) {
@@ -80,7 +80,7 @@ export const DraftView = ({
   return (
     <PostView
       item={draft}
-      authorIds={authorIds}
+      authors={authors}
       options={options}
       isDraft={true}
       onDelete={handleDelete}

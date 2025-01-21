@@ -42,7 +42,7 @@ export const UserContent = ({
               showPreview: true,
             }}
             key={post.id}
-            authorIds={[post.author.address]}
+            authors={[post.author.address]}
             item={post}
           />
         );
@@ -59,7 +59,7 @@ export const UserContent = ({
             showPreview: false,
           }}
           key={post.id}
-          authorIds={[post.author.address]}
+          authors={[post.author.address]}
           item={post}
         />
       );

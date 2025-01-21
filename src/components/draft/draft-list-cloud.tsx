@@ -109,7 +109,7 @@ export function CloudDraftsList({ address }: { address?: EvmAddress | null }) {
         <div key={draft.documentId}>
           <DraftView
             draft={draft}
-            authorId={(draft.address || address) as EvmAddress}
+            author={(draft.address || address) as EvmAddress}
             isLocal={false}
             isSelected={selectedItems.has(draft.documentId)}
             onSelect={() => toggleSelection(draft.documentId)}
