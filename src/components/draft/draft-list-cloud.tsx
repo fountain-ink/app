@@ -3,13 +3,13 @@
 import { LoadingSpinner } from "@/components/misc/loading-spinner";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { EvmAddress } from "@lens-protocol/metadata";
 import { useQueryClient } from "@tanstack/react-query";
 import { Trash, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { Draft } from "./draft";
 import { DraftView } from "./draft-view";
-import { EvmAddress } from "@lens-protocol/metadata";
 
 async function getCloudDrafts() {
   const response = await fetch("/api/drafts", {
@@ -109,7 +109,7 @@ export function CloudDraftsList({ address }: { address?: EvmAddress | null }) {
         <div key={draft.documentId}>
           <DraftView
             draft={draft}
-            authorId={(draft.authorId || address) as EvmAddress}
+            authorId={(draft.address || address) as EvmAddress}
             isLocal={false}
             isSelected={selectedItems.has(draft.documentId)}
             onSelect={() => toggleSelection(draft.documentId)}

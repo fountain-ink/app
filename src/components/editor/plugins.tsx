@@ -497,9 +497,9 @@ export const staticPlugins = [
   TabbablePlugin.configure(({ editor }) => ({
     options: {
       query: () => {
-        if (isSelectionAtBlockStart(editor)) return false;
+        if (isSelectionAtBlockStart(editor as any)) return false;
 
-        return !someNode(editor, {
+        return !someNode(editor as any, {
           match: (n) => {
             return !!(
               n.type &&
