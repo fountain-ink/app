@@ -21,7 +21,7 @@ export async function getMetadata(): Promise<UserMetadata | null> {
   const { data, error } = await db
     .from("users")
     .select("metadata")
-    .eq("profileId", claims.metadata.address)
+    .eq("address", claims.metadata.address)
     .single();
 
   if (error) {
@@ -38,7 +38,7 @@ export async function getUserMetadata(address: string): Promise<UserMetadata | n
     const { data, error } = await db
       .from("users")
       .select("metadata")
-      .eq("profileId", address)
+      .eq("address", address)
       .single();
 
     if (error) {

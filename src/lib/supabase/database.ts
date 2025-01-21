@@ -11,7 +11,7 @@ export type Database = {
     Tables: {
       drafts: {
         Row: {
-          authorId: string | null
+          address: string | null
           contentHtml: string | null
           contentJson: Json | null
           contributors: string[] | null
@@ -24,7 +24,7 @@ export type Database = {
           yDoc: string | null
         }
         Insert: {
-          authorId?: string | null
+          address?: string | null
           contentHtml?: string | null
           contentJson?: Json | null
           contributors?: string[] | null
@@ -37,7 +37,7 @@ export type Database = {
           yDoc?: string | null
         }
         Update: {
-          authorId?: string | null
+          address?: string | null
           contentHtml?: string | null
           contentJson?: Json | null
           contributors?: string[] | null
@@ -53,6 +53,7 @@ export type Database = {
       }
       feedback: {
         Row: {
+          address: string | null
           createdAt: string
           id: number
           resolvedAt: string | null
@@ -60,9 +61,9 @@ export type Database = {
           status: string | null
           text: string
           type: string
-          userId: string | null
         }
         Insert: {
+          address?: string | null
           createdAt?: string
           id?: number
           resolvedAt?: string | null
@@ -70,9 +71,9 @@ export type Database = {
           status?: string | null
           text: string
           type: string
-          userId?: string | null
         }
         Update: {
+          address?: string | null
           createdAt?: string
           id?: number
           resolvedAt?: string | null
@@ -80,44 +81,43 @@ export type Database = {
           status?: string | null
           text?: string
           type?: string
-          userId?: string | null
         }
         Relationships: []
       }
       users: {
         Row: {
-          address: string | null
+          address: string
           createdAt: string
           email: string | null
           handle: string | null
           isAnonymous: boolean
           metadata: Json | null
           name: string | null
-          profileId: string
+          owner: string | null
           settings: Json
           updatedAt: string
         }
         Insert: {
-          address?: string | null
+          address: string
           createdAt?: string
           email?: string | null
           handle?: string | null
           isAnonymous?: boolean
           metadata?: Json | null
           name?: string | null
-          profileId: string
+          owner?: string | null
           settings?: Json
           updatedAt?: string
         }
         Update: {
-          address?: string | null
+          address?: string
           createdAt?: string
           email?: string | null
           handle?: string | null
           isAnonymous?: boolean
           metadata?: Json | null
           name?: string | null
-          profileId?: string
+          owner?: string | null
           settings?: Json
           updatedAt?: string
         }

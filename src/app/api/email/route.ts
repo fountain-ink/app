@@ -26,7 +26,7 @@ export async function PUT(req: NextRequest) {
         email,
         updatedAt: new Date().toISOString(),
       })
-      .eq("profileId", claims.metadata.address);
+      .eq("address", claims.metadata.address);
 
     if (error) {
       console.error("Error updating user email:", error);

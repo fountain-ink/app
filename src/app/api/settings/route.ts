@@ -28,7 +28,7 @@ export async function PUT(req: NextRequest) {
         settings: settings as Json,
         updatedAt: new Date().toISOString(),
       })
-      .eq("profileId", claims.metadata.address);
+      .eq("address", claims.metadata.address);
 
     if (error) {
       console.error("Error updating user settings:", error);

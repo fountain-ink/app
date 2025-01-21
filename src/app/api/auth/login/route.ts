@@ -8,11 +8,11 @@ import { NextResponse } from "next/server";
 async function migrateGuestData(guestId: string, newAddress: string) {
   const db = await createServiceClient();
 
-  await db.from("drafts").update({ authorId: newAddress }).eq("authorId", guestId);
+  await db.from("drafts").update({ address: newAddress }).eq("address", guestId);
 
-  await db.from("feedback").update({ userId: newAddress }).eq("userId", guestId);
+  await db.from("feedback").update({ address: newAddress }).eq("address", guestId);
 
-  await db.from("users").update({ isAnonymous: false, profileId: newAddress }).eq("profileId", guestId);
+  await db.from("users").update({ isAnonymous: false, address: newAddress }).eq("address", guestId);
 }
 
 export async function POST(req: Request) {
@@ -55,16 +55,16 @@ async function manageUserRecord(account: Account | null) {
   const db = await createServiceClient();
 
   // Check if user exists
-  const { data: existingUser } = await db.from("users").select().eq("profileId", account.address).single();
+  const { data: existingUser } = await db.from("users").select().eq("address", account.address).single();
 
   if (!existingUser) {
     // Create new user record
     const { error: insertError } = await db.from("users").insert({
-      profileId: account.address,
+      address: account.address,
       handle: account.username?.localName ?? null,
       isAnonymous: false,
       name: account.metadata?.name ?? null,
-      address: account.owner ?? null,
+      owner: account.owner ?? null,
       metadata: {},
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -84,7 +84,7 @@ async function manageUserRecord(account: Account | null) {
         address: account.owner ?? null,
         updatedAt: new Date().toISOString(),
       })
-      .eq("profileId", account.address);
+      .eq("address", account.address);
 
     if (updateError) {
       console.error("Error updating user record:", updateError);

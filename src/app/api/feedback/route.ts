@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     }
 
     const db = await createClient();
-    const profileId = claims.sub;
+    const address = claims.sub;
 
     const body = await req.json();
     const { type, text, screenshot } = body as FeedbackPayload;
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
         type,
         screenshot,
         createdAt: new Date().toISOString(),
-        userId: profileId,
+        address,
       })
       .select()
       .single();

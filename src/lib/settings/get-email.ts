@@ -19,7 +19,7 @@ export async function getEmail(): Promise<string | null> {
   const { data, error } = await db
     .from("users")
     .select("email")
-    .eq("profileId", claims.metadata.address)
+    .eq("address", claims.metadata.address)
     .single();
 
   if (error) {

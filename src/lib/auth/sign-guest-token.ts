@@ -11,7 +11,7 @@ export async function signGuestToken() {
 
   const db = await createServiceClient();
   await db.from("users").insert({
-    profileId: guestId,
+    address: guestId,
     handle: username,
     isAnonymous: true,
     metadata: {},

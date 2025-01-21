@@ -26,7 +26,7 @@ export async function getSettings(): Promise<Settings | null> {
   const { data, error } = await db
     .from("users")
     .select("settings")
-    .eq("profileId", claims.metadata.address)
+    .eq("address", claims.metadata.address)
     .single();
 
   if (error) {
