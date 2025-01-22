@@ -7,9 +7,8 @@ import {
   DropdownMenuPortal,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { clearAllCookies, clearAuthCookies } from "@/lib/auth/clear-cookies";
+import { clearAllCookies } from "@/lib/auth/clear-cookies";
 import { MeResult } from "@lens-protocol/client";
-import { useLogout } from "@lens-protocol/react";
 import { useTheme } from "next-themes";
 import { usePathname, useRouter } from "next/navigation";
 import { useAccount, useDisconnect } from "wagmi";
@@ -20,20 +19,30 @@ import { MoonIcon } from "../icons/moon";
 import { PenToolIcon } from "../icons/pen-tool";
 import { SettingsGearIcon } from "../icons/settings";
 import { SquarePenIcon } from "../icons/square-pen";
+import { SunIcon } from "../icons/sun";
 import { UserRoundPenIcon } from "../icons/switch-profile";
 import { UserIcon } from "../icons/user";
 import { AnimatedMenuItem } from "../navigation/animated-item";
 import { SessionAvatar } from "./user-avatar";
-import { SunIcon } from "../icons/sun";
 
 export const UserMenu = ({ session }: { session: MeResult | null }) => {
   const { isConnected: isWalletConnected } = useAccount();
   const { disconnect } = useDisconnect();
-  const { execute: logout, loading: logoutLoading } = useLogout();
   const pathname = usePathname();
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const isDarkMode = theme === "dark";
+
+  const handleLogout = async () => {
+    clearAllCookies();
+    router.refresh();
+  };
+
+  const handleDisconnect = async () => {
+    disconnect();
+    clearAllCookies();
+    router.refresh();
+  };
 
   if (!isWalletConnected) {
     return <ConnectWalletButton />;
@@ -69,14 +78,7 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
             Profile
           </AnimatedMenuItem>
 
-          <AnimatedMenuItem
-            icon={UserRoundPenIcon}
-            onClick={async () => {
-              await logout();
-              clearAuthCookies();
-              router.refresh();
-            }}
-          >
+          <AnimatedMenuItem icon={UserRoundPenIcon} onClick={handleLogout}>
             Switch Profile
           </AnimatedMenuItem>
 
@@ -108,15 +110,7 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
             </AnimatedMenuItem>
           )}
 
-          <AnimatedMenuItem
-            icon={LogoutIcon}
-            onClick={async () => {
-              disconnect();
-              await logout();
-              clearAllCookies();
-              router.refresh();
-            }}
-          >
+          <AnimatedMenuItem icon={LogoutIcon} onClick={handleDisconnect}>
             Disconnect
           </AnimatedMenuItem>
         </DropdownMenuContent>
