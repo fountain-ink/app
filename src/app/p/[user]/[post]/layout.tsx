@@ -5,7 +5,7 @@ import { BlogHeader } from "@/components/user/blog-header";
 import { UserTheme } from "@/components/user/user-theme";
 import { getLensClient } from "@/lib/lens/client";
 import { getUserSettings } from "@/lib/settings/get-settings";
-import { fetchAccount } from "@lens-protocol/client/actions";
+import { fetchAccount, fetchPost } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }: { params: { user: string; post: string } }) {
@@ -41,8 +41,17 @@ const UserPostLayout = async ({
     username: { localName: params.user },
   }).unwrapOr(null);
 
+  const post = await fetchPost(lens, {
+    post: params.post,
+  }).unwrapOr(null);
+
   if (!account) {
     console.error("Failed to fetch user profile");
+    return notFound();
+  }
+
+  if (!post) {
+    console.error("Failed to fetch post");
     return notFound();
   }
 
@@ -57,7 +66,7 @@ const UserPostLayout = async ({
       <ArticleLayout>
         <GradientBlur />
         {children}
-        <Footer />
+        <Footer post={post} />
       </ArticleLayout>
     </UserTheme>
   );

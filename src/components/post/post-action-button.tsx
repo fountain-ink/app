@@ -27,71 +27,8 @@ export type ActionButtonProps = {
   dropdownItems?: DropdownItem[];
   className?: string;
   showChevron?: boolean;
-};
-
-const ButtonHoverEffect = ({
-  isHovered,
-  strokeColor,
-}: {
-  isHovered: boolean;
-  strokeColor: string;
-}) => {
-  return (
-    <motion.div
-      initial={false}
-      animate={{
-        scale: isHovered ? 1 : 0,
-        opacity: isHovered ? 0.1 : 0,
-      }}
-      transition={{
-        type: "spring",
-        stiffness: 400,
-        damping: 20,
-      }}
-      className="absolute inset-0 rounded-full"
-      style={{ backgroundColor: strokeColor }}
-    />
-  );
-};
-
-const formatNumber = (num: number): string => {
-  if (num === 0) return "";
-  if (num >= 1000000) {
-    return `${(num / 1000000).toFixed(1).replace(/\.0$/, "")}M`;
-  }
-  if (num >= 1000) {
-    return `${(num / 1000).toFixed(1).replace(/\.0$/, "")}K`;
-  }
-  return num.toString();
-};
-
-const CounterAnimation = ({
-  value,
-  prevValue,
-  strokeColor,
-}: {
-  value: number;
-  prevValue: number;
-  strokeColor?: string;
-}) => {
-  const isIncreasing = value > prevValue;
-  const formattedValue = formatNumber(value);
-
-  if (!formattedValue) return null;
-
-  return (
-    <motion.span
-      key={value}
-      initial={{ y: isIncreasing ? -30 : 30, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      exit={{ y: isIncreasing ? 30 : -30, opacity: 0 }}
-      transition={{ duration: 0.2 }}
-      className="absolute"
-      style={{ color: strokeColor }}
-    >
-      {formattedValue}
-    </motion.span>
-  );
+  onClick?: () => Promise<any> | undefined;
+  isActive?: boolean;
 };
 
 export const ActionButton = ({
@@ -103,9 +40,11 @@ export const ActionButton = ({
   dropdownItems,
   className,
   showChevron = false,
+  onClick,
+  isActive: initialIsActive = false,
 }: ActionButtonProps) => {
   const [state, setState] = useState({
-    isActive: false,
+    isActive: initialIsActive,
     count: initialCount,
     isHovered: false,
   });
@@ -116,12 +55,33 @@ export const ActionButton = ({
     previousCount.current = state.count;
   }, [state.count]);
 
-  const handleClick = () => {
-    setState((prev) => ({
-      ...prev,
-      isActive: !prev.isActive,
-      count: prev.isActive ? prev.count - 1 : prev.count + 1,
-    }));
+  const handleClick = async () => {
+    if (onClick) {
+      // Optimistically update the UI
+      setState((prev) => ({
+        ...prev,
+        isActive: !prev.isActive,
+        count: prev.isActive ? prev.count - 1 : prev.count + 1,
+      }));
+
+      try {
+        await onClick();
+      } catch (error) {
+        // Revert the optimistic update on error
+        setState((prev) => ({
+          ...prev,
+          isActive: !prev.isActive,
+          count: prev.isActive ? prev.count - 1 : prev.count + 1,
+        }));
+        console.error("Error in action button click:", error);
+      }
+    } else {
+      setState((prev) => ({
+        ...prev,
+        isActive: !prev.isActive,
+        count: prev.isActive ? prev.count - 1 : prev.count + 1,
+      }));
+    }
   };
 
   const handleHover = (isHovered: boolean) => {
@@ -225,5 +185,70 @@ export const ActionButton = ({
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
+  );
+};
+
+const ButtonHoverEffect = ({
+  isHovered,
+  strokeColor,
+}: {
+  isHovered: boolean;
+  strokeColor: string;
+}) => {
+  return (
+    <motion.div
+      initial={false}
+      animate={{
+        scale: isHovered ? 1 : 0,
+        opacity: isHovered ? 0.1 : 0,
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 400,
+        damping: 20,
+      }}
+      className="absolute inset-0 rounded-full"
+      style={{ backgroundColor: strokeColor }}
+    />
+  );
+};
+
+const formatNumber = (num: number): string => {
+  if (num === 0) return "";
+  if (num >= 1000000) {
+    return `${(num / 1000000).toFixed(1).replace(/\.0$/, "")}M`;
+  }
+  if (num >= 1000) {
+    return `${(num / 1000).toFixed(1).replace(/\.0$/, "")}K`;
+  }
+  return num.toString();
+};
+
+const CounterAnimation = ({
+  value,
+  prevValue,
+  strokeColor,
+}: {
+  value: number;
+  prevValue: number;
+  strokeColor?: string;
+}) => {
+  const isIncreasing = value > prevValue;
+  const formattedValue = formatNumber(value);
+
+  if (!formattedValue) return null;
+
+  return (
+    <motion.span
+      key={value}
+      initial={{ y: isIncreasing ? -30 : 30, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: isIncreasing ? 30 : -30, opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      className="absolute"
+      style={{ color: strokeColor }}
+    >
+      {formattedValue}
+    </motion.span>
   );
 };

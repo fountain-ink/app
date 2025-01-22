@@ -3,6 +3,9 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useScroll } from "@/hooks/use-scroll";
 import { handlePlatformShare } from "@/lib/get-share-url";
+import { getLensClient } from "@/lib/lens/client";
+import { AnyPost, PostReactionType } from "@lens-protocol/client";
+import { addReaction, undoReaction } from "@lens-protocol/client/actions";
 import { motion } from "framer-motion";
 import {
   Bookmark,
@@ -15,81 +18,129 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
+import { useWalletClient } from "wagmi";
 import { ActionButton } from "../post/post-action-button";
 
-const actionButtons = [
-  {
-    icon: Share2,
-    label: "Share",
-    initialCount: 0,
-    strokeColor: "hsl(var(--primary))",
-    fillColor: "hsl(var(--primary) / 0.8)",
-    dropdownItems: [
-      {
-        icon: TbLink,
-        label: "Copy Link",
-        onClick: () => handlePlatformShare("copy"),
-      },
-      {
-        icon: TbBrandX,
-        label: "Twitter",
-        onClick: () => handlePlatformShare("x"),
-      },
-      {
-        icon: TbBrandBluesky,
-        label: "Bluesky",
-        onClick: () => handlePlatformShare("bluesky"),
-      },
-      {
-        icon: Share2Icon,
-        label: "Lens",
-        onClick: () => handlePlatformShare("lens"),
-      },
-      {
-        icon: Repeat2Icon,
-        label: "Repost",
-        onClick: () => {},
-      },
-      {
-        icon: PenLineIcon,
-        label: "Quote",
-        onClick: () => {},
-      },
-    ],
-  },
-  {
-    icon: Bookmark,
-    label: "Bookmark",
-    initialCount: 5600,
-    strokeColor: "hsl(var(--primary))",
-    fillColor: "hsl(var(--primary) / 0.8)",
-  },
-  {
-    icon: ShoppingBag,
-    label: "Collect",
-    initialCount: 23,
-    strokeColor: "rgb(254,178,4)",
-    fillColor: "rgba(254, 178, 4, 0.3)",
-  },
-  {
-    icon: MessageCircle,
-    label: "Comment",
-    initialCount: 8900,
-    strokeColor: "hsl(var(--primary))",
-    fillColor: "hsl(var(--primary) / 0.8)",
-  },
-  {
-    icon: Heart,
-    label: "Like",
-    initialCount: 124000,
-    strokeColor: "rgb(215, 84, 127)",
-    fillColor: "rgba(215, 84, 127, 0.9)",
-  },
-];
-
-export const Footer = () => {
+export const Footer = ({ post }: { post: AnyPost }) => {
   const { scrollProgress, shouldShow, shouldAnimate } = useScroll();
   const translateY = scrollProgress * 100;
+  const walletClient = useWalletClient();
+
+  if (post.__typename !== "Post") {
+    return null;
+  }
+
+  const likes = post.stats.reactions;
+  const collects = post.stats.collects;
+  const comments = post.stats.comments;
+  const reposts = post.stats.reposts;
+  const bookmarks = post.stats.bookmarks;
+  const quotes = post.stats.quotes;
+  const isLikedByMe = post.operations?.hasUpvoted;
+  const isCommented = post.operations?.hasCommented.optimistic;
+  const isBookmarked = post.operations?.hasBookmarked;
+  const isReposted = post.operations?.hasReposted;
+  const isQuoted = post.operations?.hasQuoted;
+
+  const upvote = async () => {
+    const lens = await getLensClient();
+
+    if (!lens.isSessionClient()) {
+      return null;
+    }
+
+    try {
+      if (isLikedByMe) {
+        await undoReaction(lens, {
+          post: post.id,
+          reaction: PostReactionType.Upvote,
+        });
+      } else {
+        await addReaction(lens, {
+          post: post.id,
+          reaction: PostReactionType.Upvote,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to handle reaction:", error);
+      throw error; // Propagate error to revert optimistic update
+    }
+  };
+
+  const actionButtons = [
+    {
+      icon: Share2,
+      label: "Share",
+      isActive: isQuoted?.optimistic || isReposted?.optimistic,
+      initialCount: reposts + quotes,
+      strokeColor: "hsl(var(--primary))",
+      fillColor: "hsl(var(--primary) / 0.8)",
+      dropdownItems: [
+        {
+          icon: TbLink,
+          label: "Copy Link",
+          onClick: () => handlePlatformShare("copy"),
+        },
+        {
+          icon: TbBrandX,
+          label: "Twitter",
+          onClick: () => handlePlatformShare("x"),
+        },
+        {
+          icon: TbBrandBluesky,
+          label: "Bluesky",
+          onClick: () => handlePlatformShare("bluesky"),
+        },
+        {
+          icon: Share2Icon,
+          label: "Lens",
+          onClick: () => handlePlatformShare("lens"),
+        },
+        {
+          icon: Repeat2Icon,
+          label: "Repost",
+          onClick: () => {},
+        },
+        {
+          icon: PenLineIcon,
+          label: "Quote",
+          onClick: () => {},
+        },
+      ],
+    },
+    {
+      icon: Bookmark,
+      label: "Bookmark",
+      isActive: isBookmarked,
+      initialCount: bookmarks,
+      strokeColor: "hsl(var(--primary))",
+      fillColor: "hsl(var(--primary) / 0.8)",
+    },
+    {
+      icon: ShoppingBag,
+      label: "Collect",
+      initialCount: collects,
+      strokeColor: "rgb(254,178,4)",
+      fillColor: "rgba(254, 178, 4, 0.3)",
+    },
+    {
+      icon: MessageCircle,
+      label: "Comment",
+      initialCount: comments,
+      strokeColor: "hsl(var(--primary))",
+      fillColor: "hsl(var(--primary) / 0.8)",
+      isActive: isCommented,
+    },
+    {
+      icon: Heart,
+      label: "Like",
+      initialCount: likes,
+      strokeColor: "rgb(215, 84, 127)",
+      fillColor: "rgba(215, 84, 127, 0.9)",
+      onClick: upvote,
+      isActive: isLikedByMe,
+    },
+  ];
 
   return (
     <TooltipProvider delayDuration={300}>
@@ -118,6 +169,8 @@ export const Footer = () => {
               strokeColor={button.strokeColor}
               fillColor={button.fillColor}
               dropdownItems={button.dropdownItems}
+              onClick={button.onClick}
+              isActive={button.isActive}
             />
           ))}
         </nav>
