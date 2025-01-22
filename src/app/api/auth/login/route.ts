@@ -54,11 +54,9 @@ async function manageUserRecord(account: Account | null) {
 
   const db = await createServiceClient();
 
-  // Check if user exists
   const { data: existingUser } = await db.from("users").select().eq("address", account.address).single();
 
   if (!existingUser) {
-    // Create new user record
     const { error: insertError } = await db.from("users").insert({
       address: account.address,
       handle: account.username?.localName ?? null,
@@ -75,13 +73,13 @@ async function manageUserRecord(account: Account | null) {
       throw new Error("Failed to create user record");
     }
   } else {
-    // Update existing user record
     const { error: updateError } = await db
       .from("users")
       .update({
         handle: account.username?.localName ?? null,
         name: account.metadata?.name ?? null,
-        address: account.owner ?? null,
+        address: account.address ?? null,
+        owner: account.owner ?? null,
         updatedAt: new Date().toISOString(),
       })
       .eq("address", account.address);
