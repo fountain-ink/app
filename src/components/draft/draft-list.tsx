@@ -23,10 +23,11 @@ async function getCloudDrafts() {
   return data.drafts;
 }
 
-export function CloudDraftsList({ address }: { address?: EvmAddress | null }) {
+export function DraftList({ address }: { address?: EvmAddress | null }) {
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+  const [isSelectionMode, setIsSelectionMode] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -37,11 +38,13 @@ export function CloudDraftsList({ address }: { address?: EvmAddress | null }) {
   }, []);
 
   const toggleSelection = useCallback((id: string) => {
-    console.log(id);
     setSelectedItems((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(id)) {
         newSet.delete(id);
+        if (newSet.size === 0) {
+          setIsSelectionMode(false);
+        }
       } else {
         newSet.add(id);
       }
@@ -49,8 +52,14 @@ export function CloudDraftsList({ address }: { address?: EvmAddress | null }) {
     });
   }, []);
 
+  const enterSelectionMode = useCallback((id: string) => {
+    setIsSelectionMode(true);
+    setSelectedItems(new Set([id]));
+  }, []);
+
   const clearSelection = useCallback(() => {
     setSelectedItems(new Set());
+    setIsSelectionMode(false);
   }, []);
 
   const removeDraft = useCallback((draftId: string) => {
@@ -113,6 +122,8 @@ export function CloudDraftsList({ address }: { address?: EvmAddress | null }) {
             isLocal={false}
             isSelected={selectedItems.has(draft.documentId)}
             onSelect={() => toggleSelection(draft.documentId)}
+            onEnterSelectionMode={() => enterSelectionMode(draft.documentId)}
+            isSelectionMode={isSelectionMode}
             onDelete={() => removeDraft(draft.documentId)}
           />
           {index < drafts.length - 1 && <Separator className="mx-auto max-w-[92%] my-0.5" />}

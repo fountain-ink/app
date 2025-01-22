@@ -26,6 +26,8 @@ interface PostViewProps {
   onDelete?: () => void;
   isSelected?: boolean;
   onSelect?: () => void;
+  onEnterSelectionMode?: () => void;
+  isSelectionMode?: boolean;
 }
 
 export const PostView = ({
@@ -41,6 +43,8 @@ export const PostView = ({
   },
   isSelected = false,
   onSelect,
+  onEnterSelectionMode,
+  isSelectionMode = false,
   isDraft = false,
   onDelete,
 }: PostViewProps) => {
@@ -83,6 +87,7 @@ export const PostView = ({
     <div
       className={`group/post flex flex-row items-start justify-start gap-4
       ${isSelected ? "bg-primary/10" : "bg-transparent hover:bg-card/50"}
+      ${isSelectionMode ? "select-none" : ""}
       hover:text-card-foreground transition-all ease-in duration-100
       border-0 shadow-none relative w-screen rounded-sm p-4
       max-w-full sm:max-w-2xl ${options.showPreview ? "h-48" : "h-fit"}`}
@@ -152,6 +157,8 @@ export const PostView = ({
                   onDeleteClick={onDelete ?? (() => {})}
                   onSelect={onSelect ?? (() => {})}
                   isSelected={isSelected}
+                  onEnterSelectionMode={onEnterSelectionMode}
+                  isSelectionMode={isSelectionMode}
                 />
               </>
             ) : (
@@ -163,21 +170,29 @@ export const PostView = ({
         <div
           className="absolute inset-0 cursor-pointer z-0"
           onClick={(e) => {
-            // If not selecting (shift key or right click), navigate to the post
-            if (!e.shiftKey && e.button !== 2) {
+            if (isSelectionMode) {
+              onSelect?.();
+            } else if (e.shiftKey) {
+              e.preventDefault();
+              // Prevent text selection
+              window.getSelection()?.removeAllRanges();
+              onEnterSelectionMode?.();
+            } else {
               const href = isDraft ? `/write/${(item as Draft).documentId}` : `/p/${username}/${(item as Post).slug}`;
               window.location.href = href;
             }
           }}
           onPointerDown={(e) => {
-            if (e.shiftKey || e.button === 2 || (e.pointerType === "touch" && e.isPrimary)) {
+            if (e.pointerType === "touch" && e.isPrimary) {
               e.preventDefault();
-              onSelect?.();
+              // Prevent text selection
+              window.getSelection()?.removeAllRanges();
+              if (isSelectionMode) {
+                onSelect?.();
+              } else {
+                onEnterSelectionMode?.();
+              }
             }
-          }}
-          onContextMenu={(e) => {
-            e.preventDefault();
-            onSelect?.();
           }}
         />
       </div>

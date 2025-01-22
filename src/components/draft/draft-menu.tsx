@@ -8,11 +8,15 @@ export const DraftMenu = ({
   onDeleteClick,
   onSelect,
   isSelected,
+  onEnterSelectionMode,
+  isSelectionMode,
 }: {
   draft: Draft;
   onDeleteClick: () => void;
   onSelect: () => void;
   isSelected?: boolean;
+  onEnterSelectionMode?: () => void;
+  isSelectionMode?: boolean;
 }) => {
   const handleCopyLink = () => {
     navigator.clipboard.writeText(`${draft.id}`);
@@ -23,7 +27,7 @@ export const DraftMenu = ({
     {
       icon: isSelected ? X : Check,
       label: isSelected ? "Deselect" : "Select",
-      onClick: onSelect,
+      onClick: isSelectionMode ? onSelect : onEnterSelectionMode ?? (() => {}),
     },
     {
       icon: Link,

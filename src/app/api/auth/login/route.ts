@@ -5,14 +5,14 @@ import { createServiceClient } from "@/lib/supabase/service";
 import { Account } from "@lens-protocol/client";
 import { NextResponse } from "next/server";
 
-async function migrateGuestData(guestId: string, newAddress: string) {
+async function migrateGuestData(guestAddress: string, newAddress: string) {
   const db = await createServiceClient();
 
-  await db.from("drafts").update({ address: newAddress }).eq("address", guestId);
+  await db.from("drafts").update({ address: newAddress }).eq("address", guestAddress);
 
-  await db.from("feedback").update({ address: newAddress }).eq("address", guestId);
+  await db.from("feedback").update({ address: newAddress }).eq("address", guestAddress);
 
-  await db.from("users").update({ isAnonymous: false, address: newAddress }).eq("address", guestId);
+  await db.from("users").update({ isAnonymous: false, address: newAddress }).eq("address", guestAddress);
 }
 
 export async function POST(req: Request) {

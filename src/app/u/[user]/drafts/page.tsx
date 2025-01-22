@@ -1,4 +1,4 @@
-import { CloudDraftsList } from "@/components/draft/draft-list-cloud";
+import { DraftList } from "@/components/draft/draft-list"
 import ErrorPage from "@/components/misc/error-page";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
@@ -31,7 +31,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
 
   return (
     <div className="flex flex-col my-4 gap-4">
-      <CloudDraftsList address={address} />
+      <DraftList address={address} />
     </div>
   );
 };

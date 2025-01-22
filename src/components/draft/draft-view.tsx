@@ -23,6 +23,8 @@ interface DraftViewProps {
   options?: DraftViewOptions;
   isSelected?: boolean;
   onSelect?: () => void;
+  onEnterSelectionMode?: () => void;
+  isSelectionMode?: boolean;
   onDelete?: () => void;
 }
 
@@ -32,6 +34,8 @@ export const DraftView = ({
   isLocal,
   isSelected,
   onSelect,
+  onEnterSelectionMode,
+  isSelectionMode,
   onDelete,
   options = {
     showAuthor: false,
@@ -86,6 +90,8 @@ export const DraftView = ({
       onDelete={handleDelete}
       isSelected={isSelected}
       onSelect={onSelect}
+      onEnterSelectionMode={onEnterSelectionMode}
+      isSelectionMode={isSelectionMode}
     />
   );
 };
