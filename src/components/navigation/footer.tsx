@@ -52,6 +52,13 @@ export const Footer = ({ post }: { post: AnyPost }) => {
     return undefined;
   };
 
+  const handleCollect = async () => {
+    const params = new URLSearchParams(searchParams);
+    params.set("collect", "true");
+    router.push(`?${params.toString()}`, { scroll: false });
+    return undefined;
+  };
+
   const upvote = async () => {
     const lens = await getLensClient();
 
@@ -85,6 +92,7 @@ export const Footer = ({ post }: { post: AnyPost }) => {
       initialCount: reposts + quotes,
       strokeColor: "hsl(var(--primary))",
       fillColor: "hsl(var(--primary) / 0.8)",
+      shouldIncrementOnClick: false,
       dropdownItems: [
         {
           icon: TbLink,
@@ -125,6 +133,7 @@ export const Footer = ({ post }: { post: AnyPost }) => {
       initialCount: bookmarks,
       strokeColor: "hsl(var(--primary))",
       fillColor: "hsl(var(--primary) / 0.8)",
+      shouldIncrementOnClick: true,
     },
     {
       icon: ShoppingBag,
@@ -132,6 +141,8 @@ export const Footer = ({ post }: { post: AnyPost }) => {
       initialCount: collects,
       strokeColor: "rgb(254,178,4)",
       fillColor: "rgba(254, 178, 4, 0.3)",
+      shouldIncrementOnClick: false,
+      onClick: handleCollect,
     },
     {
       icon: MessageCircle,
@@ -141,6 +152,7 @@ export const Footer = ({ post }: { post: AnyPost }) => {
       fillColor: "hsl(var(--primary) / 0.8)",
       isActive: isCommented,
       onClick: handleComment,
+      shouldIncrementOnClick: false,
     },
     {
       icon: Heart,
@@ -150,6 +162,7 @@ export const Footer = ({ post }: { post: AnyPost }) => {
       fillColor: "rgba(215, 84, 127, 0.9)",
       onClick: upvote,
       isActive: isLikedByMe,
+      shouldIncrementOnClick: true,
     },
   ];
 
@@ -182,6 +195,7 @@ export const Footer = ({ post }: { post: AnyPost }) => {
               dropdownItems={button.dropdownItems}
               onClick={button.onClick}
               isActive={button.isActive}
+              shouldIncrementOnClick={button.shouldIncrementOnClick}
             />
           ))}
         </nav>

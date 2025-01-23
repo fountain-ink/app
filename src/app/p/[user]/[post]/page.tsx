@@ -1,6 +1,7 @@
 import { EditorReadTime } from "@/components/editor/addons/editor-read-time";
 import Editor from "@/components/editor/editor";
 import ErrorPage from "@/components/misc/error-page";
+import { PostCollect } from "@/components/post/post-collect";
 import { PostComments } from "@/components/post/post-comments";
 import { AuthorView } from "@/components/user/user-author-view";
 import { getLensClient } from "@/lib/lens/client";
@@ -36,6 +37,7 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
         </div>
         <Editor showToc value={contentJson} readOnly={true} />
         <PostComments post={post} />
+        <PostCollect post={post} />
       </div>
     );
   }
@@ -48,6 +50,7 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
           dangerouslySetInnerHTML={{ __html: sanitize(contentHtml) }}
         />
         <PostComments post={post} />
+        <PostCollect post={post} />
       </div>
     );
   }

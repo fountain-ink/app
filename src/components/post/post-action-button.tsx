@@ -29,6 +29,18 @@ export type ActionButtonProps = {
   showChevron?: boolean;
   onClick?: () => Promise<any> | undefined;
   isActive?: boolean;
+  shouldIncrementOnClick?: boolean;
+};
+
+const formatNumber = (num: number): string => {
+  if (num === 0) return "";
+  if (num >= 1000000) {
+    return `${(num / 1000000).toFixed(1).replace(/\.0$/, "")}M`;
+  }
+  if (num >= 1000) {
+    return `${(num / 1000).toFixed(1).replace(/\.0$/, "")}K`;
+  }
+  return num.toString();
 };
 
 export const ActionButton = ({
@@ -42,6 +54,7 @@ export const ActionButton = ({
   showChevron = false,
   onClick,
   isActive: initialIsActive = false,
+  shouldIncrementOnClick = true,
 }: ActionButtonProps) => {
   const [state, setState] = useState({
     isActive: initialIsActive,
@@ -61,7 +74,7 @@ export const ActionButton = ({
       setState((prev) => ({
         ...prev,
         isActive: !prev.isActive,
-        count: prev.isActive ? prev.count - 1 : prev.count + 1,
+        count: shouldIncrementOnClick ? (prev.isActive ? prev.count - 1 : prev.count + 1) : prev.count,
       }));
 
       try {
@@ -71,7 +84,7 @@ export const ActionButton = ({
         setState((prev) => ({
           ...prev,
           isActive: !prev.isActive,
-          count: prev.isActive ? prev.count - 1 : prev.count + 1,
+          count: shouldIncrementOnClick ? (prev.isActive ? prev.count - 1 : prev.count + 1) : prev.count,
         }));
         console.error("Error in action button click:", error);
       }
@@ -79,7 +92,7 @@ export const ActionButton = ({
       setState((prev) => ({
         ...prev,
         isActive: !prev.isActive,
-        count: prev.isActive ? prev.count - 1 : prev.count + 1,
+        count: shouldIncrementOnClick ? (prev.isActive ? prev.count - 1 : prev.count + 1) : prev.count,
       }));
     }
   };
@@ -162,7 +175,7 @@ export const ActionButton = ({
               <CounterAnimation
                 value={state.count}
                 prevValue={previousCount.current}
-                strokeColor={state.isActive ? "var(--primary-foreground)" : "var(--primary-foreground)"}
+                strokeColor={state.isActive ? strokeColor : undefined}
               />
             </AnimatePresence>
           </div>
@@ -211,17 +224,6 @@ const ButtonHoverEffect = ({
       style={{ backgroundColor: strokeColor }}
     />
   );
-};
-
-const formatNumber = (num: number): string => {
-  if (num === 0) return "";
-  if (num >= 1000000) {
-    return `${(num / 1000000).toFixed(1).replace(/\.0$/, "")}M`;
-  }
-  if (num >= 1000) {
-    return `${(num / 1000).toFixed(1).replace(/\.0$/, "")}K`;
-  }
-  return num.toString();
 };
 
 const CounterAnimation = ({
