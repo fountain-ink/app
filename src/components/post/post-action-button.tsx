@@ -59,7 +59,13 @@ export const ActionButton = ({
   const [state, setState] = useState({
     count: initialCount,
     isHovered: false,
+    isPressedLocally: isActive,
   });
+
+  // Keep local state in sync with prop for URL-based states (comment/collect)
+  useEffect(() => {
+    setState(prev => ({ ...prev, isPressedLocally: isActive }));
+  }, [isActive]);
 
   const previousCount = useRef(initialCount);
 
@@ -69,27 +75,27 @@ export const ActionButton = ({
 
   const handleClick = async () => {
     if (onClick) {
-      // Optimistically update the UI
-      setState((prev) => ({
-        ...prev,
-        count: shouldIncrementOnClick ? (!isActive ? prev.count + 1 : prev.count - 1) : prev.count,
-      }));
+      if (!dropdownItems) {
+        setState((prev) => ({
+          ...prev,
+          isPressedLocally: !prev.isPressedLocally,
+          count: shouldIncrementOnClick ? (!prev.isPressedLocally ? prev.count + 1 : prev.count - 1) : prev.count,
+        }));
+      }
 
       try {
         await onClick();
       } catch (error) {
         // Revert the optimistic update on error
-        setState((prev) => ({
-          ...prev,
-          count: shouldIncrementOnClick ? (isActive ? prev.count + 1 : prev.count - 1) : prev.count,
-        }));
+        if (!dropdownItems) {
+          setState((prev) => ({
+            ...prev,
+            isPressedLocally: !prev.isPressedLocally,
+            count: shouldIncrementOnClick ? (prev.isPressedLocally ? prev.count + 1 : prev.count - 1) : prev.count,
+          }));
+        }
         console.error("Error in action button click:", error);
       }
-    } else {
-      setState((prev) => ({
-        ...prev,
-        count: shouldIncrementOnClick ? (!isActive ? prev.count + 1 : prev.count - 1) : prev.count,
-      }));
     }
   };
 
@@ -102,8 +108,8 @@ export const ActionButton = ({
     strokeWidth: 1.5,
     className: "transition-all duration-200 group-hover:scale-110 group-active:scale-95",
     style: {
-      color: isActive || state.isHovered ? strokeColor : undefined,
-      fill: isActive ? fillColor : undefined,
+      color: state.isPressedLocally || state.isHovered ? strokeColor : undefined,
+      fill: state.isPressedLocally ? fillColor : undefined,
     },
   };
 
@@ -122,7 +128,7 @@ export const ActionButton = ({
                 onMouseEnter={() => handleHover(true)}
                 onMouseLeave={() => handleHover(false)}
                 style={{
-                  backgroundColor: isActive ? `${strokeColor}10` : undefined,
+                  backgroundColor: state.isPressedLocally ? `${strokeColor}10` : undefined,
                 }}
                 className="flex items-center transition-all duration-200 text-foreground rounded-full p-0 w-10 h-10
                           focus:outline-none group-hover:bg-transparent relative"
@@ -132,8 +138,8 @@ export const ActionButton = ({
             </div>
             {showChevron && (
               <AnimatedChevron
-                isOpen={isActive}
-                color={isActive || state.isHovered ? strokeColor : undefined}
+                isOpen={state.isPressedLocally}
+                color={state.isPressedLocally || state.isHovered ? strokeColor : undefined}
                 direction="up"
               />
             )}
@@ -154,7 +160,7 @@ export const ActionButton = ({
             onMouseEnter={() => handleHover(true)}
             onMouseLeave={() => handleHover(false)}
             style={{
-              backgroundColor: isActive ? `${strokeColor}10` : undefined,
+              backgroundColor: state.isPressedLocally ? `${strokeColor}10` : undefined,
             }}
             className="flex items-center transition-all duration-200 text-foreground rounded-full p-0 w-10 h-10
                       focus:outline-none group-hover:bg-transparent relative"
@@ -171,7 +177,7 @@ export const ActionButton = ({
               <CounterAnimation
                 value={state.count}
                 prevValue={previousCount.current}
-                strokeColor={isActive ? strokeColor : undefined}
+                strokeColor={state.isPressedLocally ? strokeColor : undefined}
               />
             </AnimatePresence>
           </div>

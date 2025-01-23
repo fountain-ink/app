@@ -3,9 +3,7 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useScroll } from "@/hooks/use-scroll";
 import { handlePlatformShare } from "@/lib/get-share-url";
-import { getLensClient } from "@/lib/lens/client";
-import { AnyPost, PostReactionType } from "@lens-protocol/client";
-import { addReaction, bookmarkPost, undoBookmarkPost, undoReaction } from "@lens-protocol/client/actions";
+import { AnyPost } from "@lens-protocol/client";
 import { motion } from "framer-motion";
 import {
   Bookmark,
@@ -20,20 +18,27 @@ import {
 import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
 import { useWalletClient } from "wagmi";
 import { ActionButton } from "../post/post-action-button";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePostActions } from "@/hooks/use-post-actions";
 
 export const Footer = ({ post }: { post: AnyPost }) => {
   const { scrollProgress, shouldShow, shouldAnimate } = useScroll();
   const translateY = scrollProgress * 100;
   const walletClient = useWalletClient();
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const isCommentOpen = searchParams.has("comment");
-  const isCollectOpen = searchParams.has("collect");
 
   if (post.__typename !== "Post") {
     return null;
   }
+
+  const {
+    handleComment,
+    handleCollect,
+    handleBookmark,
+    handleLike,
+    isCommentOpen,
+    isCollectOpen,
+    isLikedByMe,
+    isBookmarked,
+  } = usePostActions(post);
 
   const likes = post.stats.reactions;
   const collects = post.stats.collects;
@@ -41,80 +46,8 @@ export const Footer = ({ post }: { post: AnyPost }) => {
   const reposts = post.stats.reposts;
   const bookmarks = post.stats.bookmarks;
   const quotes = post.stats.quotes;
-  const isLikedByMe = post.operations?.hasUpvoted;
-  const isBookmarked = post.operations?.hasBookmarked;
   const isReposted = post.operations?.hasReposted;
   const isQuoted = post.operations?.hasQuoted;
-
-  const handleComment = async () => {
-    const params = new URLSearchParams(searchParams);
-    if (isCommentOpen) {
-      params.delete("comment");
-    } else {
-      params.set("comment", "true");
-    }
-    router.push(`?${params.toString()}`, { scroll: false });
-    return undefined;
-  };
-
-  const handleCollect = async () => {
-    const params = new URLSearchParams(searchParams);
-    if (isCollectOpen) {
-      params.delete("collect");
-    } else {
-      params.set("collect", "true");
-    }
-    router.push(`?${params.toString()}`, { scroll: false });
-    return undefined;
-  };
-
-  const handleBookmark = async () => {
-    const lens = await getLensClient();
-
-    if (!lens.isSessionClient()) {
-      return null;
-    }
-
-    try {
-      if (isBookmarked) {
-        await undoBookmarkPost(lens, {
-          post: post.id,
-        });
-      } else {
-        await bookmarkPost(lens, {
-          post: post.id,
-        });
-      }
-    } catch (error) {
-      console.error("Failed to handle bookmark:", error);
-      throw error; // Propagate error to revert optimistic update
-    }
-  };
-
-  const upvote = async () => {
-    const lens = await getLensClient();
-
-    if (!lens.isSessionClient()) {
-      return null;
-    }
-
-    try {
-      if (isLikedByMe) {
-        await undoReaction(lens, {
-          post: post.id,
-          reaction: PostReactionType.Upvote,
-        });
-      } else {
-        await addReaction(lens, {
-          post: post.id,
-          reaction: PostReactionType.Upvote,
-        });
-      }
-    } catch (error) {
-      console.error("Failed to handle like:", error);
-      throw error; // Propagate error to revert optimistic update
-    }
-  };
 
   const actionButtons = [
     {
@@ -184,7 +117,7 @@ export const Footer = ({ post }: { post: AnyPost }) => {
       initialCount: comments,
       strokeColor: "hsl(var(--primary))",
       fillColor: "hsl(var(--primary) / 0.8)",
-      onClick: handleComment,
+      onClick: () => handleComment(false),
       shouldIncrementOnClick: false,
       isActive: isCommentOpen,
     },
@@ -194,7 +127,7 @@ export const Footer = ({ post }: { post: AnyPost }) => {
       initialCount: likes,
       strokeColor: "rgb(215, 84, 127)",
       fillColor: "rgba(215, 84, 127, 0.9)",
-      onClick: upvote,
+      onClick: handleLike,
       isActive: isLikedByMe,
       shouldIncrementOnClick: true,
     },

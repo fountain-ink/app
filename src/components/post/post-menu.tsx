@@ -4,8 +4,11 @@ import { Post } from "@lens-protocol/client";
 import { getCookie } from "cookies-next";
 import { Bookmark, Link, MoreHorizontal, Trash2 } from "lucide-react";
 import { ActionButton, type DropdownItem } from "./post-action-button";
+import { usePostActions } from "@/hooks/use-post-actions";
 
 export const PostMenu = ({ post }: { post: Post }) => {
+  const { handleBookmark, isBookmarked } = usePostActions(post);
+
   const handleCopyLink = () => {
     navigator.clipboard.writeText(`${getBaseUrl()}/p/${post.id}`);
   };
@@ -44,6 +47,10 @@ export const PostMenu = ({ post }: { post: Post }) => {
         label="Bookmark"
         strokeColor="hsl(var(--primary))"
         fillColor="hsl(var(--primary) / 0.8)"
+        onClick={handleBookmark}
+        isActive={isBookmarked}
+        shouldIncrementOnClick={true}
+        initialCount={post.stats.bookmarks}
       />
       <ActionButton
         icon={MoreHorizontal}
