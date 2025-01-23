@@ -5,7 +5,7 @@ import { useScroll } from "@/hooks/use-scroll";
 import { handlePlatformShare } from "@/lib/get-share-url";
 import { getLensClient } from "@/lib/lens/client";
 import { AnyPost, PostReactionType } from "@lens-protocol/client";
-import { addReaction, undoReaction } from "@lens-protocol/client/actions";
+import { addReaction, bookmarkPost, undoBookmarkPost, undoReaction } from "@lens-protocol/client/actions";
 import { motion } from "framer-motion";
 import {
   Bookmark,
@@ -59,6 +59,29 @@ export const Footer = ({ post }: { post: AnyPost }) => {
     return undefined;
   };
 
+  const handleBookmark = async () => {
+    const lens = await getLensClient();
+
+    if (!lens.isSessionClient()) {
+      return null;
+    }
+
+    try {
+      if (isBookmarked) {
+        await undoBookmarkPost(lens, {
+          post: post.id,
+        });
+      } else {
+        await bookmarkPost(lens, {
+          post: post.id,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to handle bookmark:", error);
+      throw error; // Propagate error to revert optimistic update
+    }
+  };
+
   const upvote = async () => {
     const lens = await getLensClient();
 
@@ -79,7 +102,7 @@ export const Footer = ({ post }: { post: AnyPost }) => {
         });
       }
     } catch (error) {
-      console.error("Failed to handle reaction:", error);
+      console.error("Failed to handle like:", error);
       throw error; // Propagate error to revert optimistic update
     }
   };
@@ -134,6 +157,7 @@ export const Footer = ({ post }: { post: AnyPost }) => {
       strokeColor: "hsl(var(--primary))",
       fillColor: "hsl(var(--primary) / 0.8)",
       shouldIncrementOnClick: true,
+      onClick: handleBookmark,
     },
     {
       icon: ShoppingBag,
