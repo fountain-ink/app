@@ -53,11 +53,10 @@ export const ActionButton = ({
   className,
   showChevron = false,
   onClick,
-  isActive: initialIsActive = false,
+  isActive = false,
   shouldIncrementOnClick = true,
 }: ActionButtonProps) => {
   const [state, setState] = useState({
-    isActive: initialIsActive,
     count: initialCount,
     isHovered: false,
   });
@@ -73,8 +72,7 @@ export const ActionButton = ({
       // Optimistically update the UI
       setState((prev) => ({
         ...prev,
-        isActive: !prev.isActive,
-        count: shouldIncrementOnClick ? (prev.isActive ? prev.count - 1 : prev.count + 1) : prev.count,
+        count: shouldIncrementOnClick ? (!isActive ? prev.count + 1 : prev.count - 1) : prev.count,
       }));
 
       try {
@@ -83,16 +81,14 @@ export const ActionButton = ({
         // Revert the optimistic update on error
         setState((prev) => ({
           ...prev,
-          isActive: !prev.isActive,
-          count: shouldIncrementOnClick ? (prev.isActive ? prev.count - 1 : prev.count + 1) : prev.count,
+          count: shouldIncrementOnClick ? (isActive ? prev.count + 1 : prev.count - 1) : prev.count,
         }));
         console.error("Error in action button click:", error);
       }
     } else {
       setState((prev) => ({
         ...prev,
-        isActive: !prev.isActive,
-        count: shouldIncrementOnClick ? (prev.isActive ? prev.count - 1 : prev.count + 1) : prev.count,
+        count: shouldIncrementOnClick ? (!isActive ? prev.count + 1 : prev.count - 1) : prev.count,
       }));
     }
   };
@@ -106,8 +102,8 @@ export const ActionButton = ({
     strokeWidth: 1.5,
     className: "transition-all duration-200 group-hover:scale-110 group-active:scale-95",
     style: {
-      color: state.isActive || state.isHovered ? strokeColor : undefined,
-      fill: state.isActive ? fillColor : undefined,
+      color: isActive || state.isHovered ? strokeColor : undefined,
+      fill: isActive ? fillColor : undefined,
     },
   };
 
@@ -117,7 +113,7 @@ export const ActionButton = ({
       onClick={() => !dropdownItems && handleClick()}
     >
       {dropdownItems ? (
-        <DropdownMenu onOpenChange={(open) => setState((prev) => ({ ...prev, isActive: open }))}>
+        <DropdownMenu>
           <DropdownMenuTrigger className="flex items-center gap-0.5">
             <div className="relative">
               <ButtonHoverEffect isHovered={state.isHovered} strokeColor={strokeColor} />
@@ -126,7 +122,7 @@ export const ActionButton = ({
                 onMouseEnter={() => handleHover(true)}
                 onMouseLeave={() => handleHover(false)}
                 style={{
-                  backgroundColor: state.isActive ? `${strokeColor}10` : undefined,
+                  backgroundColor: isActive ? `${strokeColor}10` : undefined,
                 }}
                 className="flex items-center transition-all duration-200 text-foreground rounded-full p-0 w-10 h-10
                           focus:outline-none group-hover:bg-transparent relative"
@@ -136,8 +132,8 @@ export const ActionButton = ({
             </div>
             {showChevron && (
               <AnimatedChevron
-                isOpen={state.isActive}
-                color={state.isActive || state.isHovered ? strokeColor : undefined}
+                isOpen={isActive}
+                color={isActive || state.isHovered ? strokeColor : undefined}
                 direction="up"
               />
             )}
@@ -158,7 +154,7 @@ export const ActionButton = ({
             onMouseEnter={() => handleHover(true)}
             onMouseLeave={() => handleHover(false)}
             style={{
-              backgroundColor: state.isActive ? `${strokeColor}10` : undefined,
+              backgroundColor: isActive ? `${strokeColor}10` : undefined,
             }}
             className="flex items-center transition-all duration-200 text-foreground rounded-full p-0 w-10 h-10
                       focus:outline-none group-hover:bg-transparent relative"
@@ -175,7 +171,7 @@ export const ActionButton = ({
               <CounterAnimation
                 value={state.count}
                 prevValue={previousCount.current}
-                strokeColor={state.isActive ? strokeColor : undefined}
+                strokeColor={isActive ? strokeColor : undefined}
               />
             </AnimatePresence>
           </div>

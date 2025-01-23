@@ -28,6 +28,8 @@ export const Footer = ({ post }: { post: AnyPost }) => {
   const walletClient = useWalletClient();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const isCommentOpen = searchParams.has("comment");
+  const isCollectOpen = searchParams.has("collect");
 
   if (post.__typename !== "Post") {
     return null;
@@ -40,21 +42,28 @@ export const Footer = ({ post }: { post: AnyPost }) => {
   const bookmarks = post.stats.bookmarks;
   const quotes = post.stats.quotes;
   const isLikedByMe = post.operations?.hasUpvoted;
-  const isCommented = post.operations?.hasCommented.optimistic;
   const isBookmarked = post.operations?.hasBookmarked;
   const isReposted = post.operations?.hasReposted;
   const isQuoted = post.operations?.hasQuoted;
 
   const handleComment = async () => {
     const params = new URLSearchParams(searchParams);
-    params.set("comments", "true");
+    if (isCommentOpen) {
+      params.delete("comment");
+    } else {
+      params.set("comment", "true");
+    }
     router.push(`?${params.toString()}`, { scroll: false });
     return undefined;
   };
 
   const handleCollect = async () => {
     const params = new URLSearchParams(searchParams);
-    params.set("collect", "true");
+    if (isCollectOpen) {
+      params.delete("collect");
+    } else {
+      params.set("collect", "true");
+    }
     router.push(`?${params.toString()}`, { scroll: false });
     return undefined;
   };
@@ -167,6 +176,7 @@ export const Footer = ({ post }: { post: AnyPost }) => {
       fillColor: "rgba(254, 178, 4, 0.3)",
       shouldIncrementOnClick: false,
       onClick: handleCollect,
+      isActive: isCollectOpen,
     },
     {
       icon: MessageCircle,
@@ -174,9 +184,9 @@ export const Footer = ({ post }: { post: AnyPost }) => {
       initialCount: comments,
       strokeColor: "hsl(var(--primary))",
       fillColor: "hsl(var(--primary) / 0.8)",
-      isActive: isCommented,
       onClick: handleComment,
       shouldIncrementOnClick: false,
+      isActive: isCommentOpen,
     },
     {
       icon: Heart,

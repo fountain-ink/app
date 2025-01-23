@@ -8,14 +8,16 @@ export const PostCollect = ({ post }: { post: Post }) => {
   const searchParams = useSearchParams();
   const isOpen = searchParams.has("collect");
 
-  const handleClose = () => {
+  const handleOpenChange = (open: boolean) => {
     const params = new URLSearchParams(searchParams);
-    params.delete("collect");
-    router.push(`?${params.toString()}`, { scroll: false });
+    if (!open) {
+      params.delete("collect");
+      router.push(`?${params.toString()}`, { scroll: false });
+    }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
