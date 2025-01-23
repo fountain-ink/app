@@ -20,11 +20,14 @@ import {
 import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
 import { useWalletClient } from "wagmi";
 import { ActionButton } from "../post/post-action-button";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export const Footer = ({ post }: { post: AnyPost }) => {
   const { scrollProgress, shouldShow, shouldAnimate } = useScroll();
   const translateY = scrollProgress * 100;
   const walletClient = useWalletClient();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   if (post.__typename !== "Post") {
     return null;
@@ -41,6 +44,13 @@ export const Footer = ({ post }: { post: AnyPost }) => {
   const isBookmarked = post.operations?.hasBookmarked;
   const isReposted = post.operations?.hasReposted;
   const isQuoted = post.operations?.hasQuoted;
+
+  const handleComment = async () => {
+    const params = new URLSearchParams(searchParams);
+    params.set("comments", "true");
+    router.push(`?${params.toString()}`, { scroll: false });
+    return undefined;
+  };
 
   const upvote = async () => {
     const lens = await getLensClient();
@@ -130,6 +140,7 @@ export const Footer = ({ post }: { post: AnyPost }) => {
       strokeColor: "hsl(var(--primary))",
       fillColor: "hsl(var(--primary) / 0.8)",
       isActive: isCommented,
+      onClick: handleComment,
     },
     {
       icon: Heart,
