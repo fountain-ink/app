@@ -67,6 +67,8 @@ export const GraphicHand = () => {
 };
 
 export const GraphicHand2 = () => {
+  const { theme } = useTheme();
+
   return (
     <svg
       width="434"
@@ -74,7 +76,11 @@ export const GraphicHand2 = () => {
       viewBox="0 0 434 290"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      style={{ width: "100%", height: "100%" }}
+      style={{
+        width: "100%",
+        height: "100%",
+        opacity: theme === "dark" ? 0.65 : 1,
+      }}
     >
       <title> </title>
       <g clipPath="url(#clip0_1374_7962)">
