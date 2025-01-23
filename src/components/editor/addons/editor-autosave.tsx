@@ -1,11 +1,8 @@
 "use client";
 
 import type { Draft } from "@/components/draft/draft";
-import { LoadingSpinner } from "@/components/misc/loading-spinner";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { useEditorState } from "@udecode/plate-common/react";
-import { AnimatePresence, motion } from "framer-motion";
-import { CheckIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -24,7 +21,7 @@ export function AutoSave({ documentId }: { documentId: string }) {
       try {
         const now = new Date().toISOString();
         const existingDraft = getDocument(documentId);
-        
+
         const draft = {
           ...(existingDraft || {}),
           id: Date.now(),
@@ -64,28 +61,29 @@ export function AutoSave({ documentId }: { documentId: string }) {
     debouncedSave(editor.children);
   }, [editor, editor?.children, debouncedSave]);
 
-  return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
-          className="fixed bottom-4 right-4 flex items-center gap-2 rounded-md bg-background px-4 py-2 text-sm shadow-lg"
-        >
-          {isSaving ? (
-            <>
-              <LoadingSpinner size={16} />
-              <span>Saving...</span>
-            </>
-          ) : (
-            <>
-              <CheckIcon className="h-4 w-4 text-green-500" />
-              <span>Saved</span>
-            </>
-          )}
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
+  return null;
+  // return (
+  //   <AnimatePresence>
+  //     {isVisible && (
+  //       <motion.div
+  //         initial={{ opacity: 0, y: 10 }}
+  //         animate={{ opacity: 1, y: 0 }}
+  //         exit={{ opacity: 0, y: 10 }}
+  //         className="fixed bottom-4 right-4 flex items-center gap-2 rounded-md bg-background px-4 py-2 text-sm shadow-lg"
+  //       >
+  //         {isSaving ? (
+  //           <>
+  //             <LoadingSpinner size={16} />
+  //             <span>Saving...</span>
+  //           </>
+  //         ) : (
+  //           <>
+  //             <CheckIcon className="h-4 w-4 text-green-500" />
+  //             <span>Saved</span>
+  //           </>
+  //         )}
+  //       </motion.div>
+  //     )}
+  //   </AnimatePresence>
+  // );
 }
