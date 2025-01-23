@@ -28,7 +28,7 @@
     "@lens-protocol/metadata": "^2.0.0-next.3",
     "@lens-protocol/react": "^0.0.0-canary-20250110105901",
     "@lens-protocol/shared-kernel": "^0.12.0",
-    "@lens-protocol/storage-node-client": "^0.0.0-next-20241217195719",
+    "@lens-protocol/storage-node-client": "^0.0.0-next-20250114134800",
     "@lens-protocol/wagmi": "^4.1.4",
     "@radix-ui/react-accordion": "^1.2.1",
     "@radix-ui/react-alert-dialog": "^1.1.4",
