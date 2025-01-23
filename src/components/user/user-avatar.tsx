@@ -45,8 +45,8 @@ export const UserAvatar = ({
 
 export const AvatarSuspense = () => {
   return (
-    <div className="flex h-full w-full items-center justify-center rounded-full bg-muted">
-      <User2Icon size={30} className="text-secondary -mb-1" />
+    <div className="flex h-full w-full items-center justify-center rounded-full border border-border">
+      <User2Icon size={20} className="text-primary" />
     </div>
   );
 };
