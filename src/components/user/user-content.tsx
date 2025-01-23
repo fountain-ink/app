@@ -1,10 +1,11 @@
 "use client";
 
-import type { Account, AnyPost, Post } from "@lens-protocol/client";
+import type { Account, AnyPost } from "@lens-protocol/client";
 import { motion } from "framer-motion";
 import { DraftCreateButton } from "../draft/draft-create-button";
+import { GraphicHand2 } from "../icons/custom-icons";
 import { PostView } from "../post/post-view";
-import { Card, CardFooter, CardHeader } from "../ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 
 export const UserContent = ({
   posts,
@@ -68,13 +69,16 @@ export const UserContent = ({
 
   if (posts.length === 0) {
     return (
-      <Card className="m-20 bg-transparent group border-0 flex flex-col gap-4 items-center justify-center shadow-none drop-shadow-none">
+      <Card className="m-0 md:m-10 bg-transparent group border-0 flex flex-col gap-4 items-center justify-center shadow-none drop-shadow-none">
         <CardHeader>
-          <span className="font-[family-name:var(--title-font)] text-[1.5rem] sm:text-[2rem] lg:text-[2.5rem] text-center font-[letter-spacing:var(--title-letter-spacing)] font-[color:var(--title-color)] overflow-hidden line-clamp-2">
-            Nothing here yet...
-          </span>
+          <GraphicHand2 />
         </CardHeader>
-        <CardFooter>{isUserProfile && <DraftCreateButton />}</CardFooter>
+        <CardContent>
+          <span className="font-[family-name:var(--title-font)] text-lg lg:text-xl text-center font-[letter-spacing:var(--title-letter-spacing)] font-[color:var(--title-color)] overflow-hidden line-clamp-2">
+            Nothing here yet{isUserProfile ? ", but the world awaits your words" : ".."}.
+          </span>
+        </CardContent>
+        <CardFooter>{isUserProfile && <DraftCreateButton text="Start writing" />}</CardFooter>
       </Card>
     );
   }

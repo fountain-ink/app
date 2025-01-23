@@ -1,10 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { getRandomUid } from "@/lib/get-random-uid";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoadingSpinner } from "../misc/loading-spinner";
-import { getRandomUid } from "@/lib/get-random-uid";
 
 export const defaultContent: any = [
   {
@@ -34,17 +34,17 @@ export const defaultContent: any = [
   },
 ];
 
-export const DraftCreateButton = () => {
+export const DraftCreateButton = ({ text = "Write" }: { text?: string }) => {
   const [isCreating, setIsCreating] = useState(false);
   const router = useRouter();
 
   const handleCreate = async () => {
     setIsCreating(true);
     const documentId = getRandomUid();
-    
+
     // Optimistically navigate
     router.push(`/write/${documentId}`);
-    
+
     // Create draft in background
     fetch("/api/drafts", {
       method: "POST",
@@ -52,7 +52,7 @@ export const DraftCreateButton = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ documentId }),
-    }).catch(error => {
+    }).catch((error) => {
       console.error("Failed to create draft:", error);
       // Could add error handling/toast here
     });
@@ -69,7 +69,7 @@ export const DraftCreateButton = () => {
           <LoadingSpinner size={20} className="w-4 h-4 flex items-center justify-center" />
         </div>
       ) : (
-        "Write"
+        text
       )}
     </Button>
   );
