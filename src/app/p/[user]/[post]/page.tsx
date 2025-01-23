@@ -1,6 +1,7 @@
 import { EditorReadTime } from "@/components/editor/addons/editor-read-time";
 import Editor from "@/components/editor/editor";
 import ErrorPage from "@/components/misc/error-page";
+import { PostComments } from "@/components/post/post-comments";
 import { AuthorView } from "@/components/user/user-author-view";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchPost } from "@lens-protocol/client/actions";
@@ -17,12 +18,6 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
     return null;
   }
 
-  // if (post?.app?.metadata?.name !== "fountain") {
-  //   const markdown = "content" in post.metadata ? post?.metadata?.content : "";
-
-  //   return <Markdown content={markdown} />;
-  // }
-
   //// FIXME: Add app metadata check
 
   if (post.metadata.__typename !== "ArticleMetadata") {
@@ -37,20 +32,23 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
       <div>
         <div className="flex flex-col gap-4 items-center justify-center">
           <EditorReadTime content={contentJson} />
-          {/* <DateLabel /> */}
           <AuthorView showUsername={false} accounts={[post.author]} />
         </div>
         <Editor showToc value={contentJson} readOnly={true} />
+        <PostComments post={post} />
       </div>
     );
   }
 
   if (contentHtml) {
     return (
-      <div
-        // biome-ignore lint/security/noDangerouslySetInnerHtml: intended use
-        dangerouslySetInnerHTML={{ __html: sanitize(contentHtml) }}
-      />
+      <div>
+        <div
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: intended use
+          dangerouslySetInnerHTML={{ __html: sanitize(contentHtml) }}
+        />
+        <PostComments post={post} />
+      </div>
     );
   }
 
