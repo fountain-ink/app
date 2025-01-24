@@ -5,10 +5,6 @@ import { User2Icon } from "lucide-react";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
-export const SessionAvatar = ({ account }: { account: Account }) => {
-  return <UserAvatar className="w-10 h-10" account={account} />;
-};
-
 export const UserAvatar = ({
   account: profile,
   loading,

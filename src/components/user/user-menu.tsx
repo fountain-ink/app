@@ -22,8 +22,8 @@ import { SquarePenIcon } from "../icons/square-pen";
 import { SunIcon } from "../icons/sun";
 import { UserRoundPenIcon } from "../icons/switch-profile";
 import { UserIcon } from "../icons/user";
+import { UserAvatar } from "./user-avatar";
 import { AnimatedMenuItem } from "../navigation/animated-item";
-import { SessionAvatar } from "./user-avatar";
 
 export const UserMenu = ({ session }: { session: MeResult | null }) => {
   const { isConnected: isWalletConnected } = useAccount();
@@ -65,7 +65,7 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-full shrink-0">
-          <SessionAvatar account={session.loggedInAs.account} />
+          <UserAvatar account={session.loggedInAs.account} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuPortal>

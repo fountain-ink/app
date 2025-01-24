@@ -6,51 +6,8 @@ import { AnyPost, Post, PostReferenceType, postId } from "@lens-protocol/client"
 import { fetchPostReferences } from "@lens-protocol/client/actions";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-
-interface CreateCommentAreaProps {
-  onSubmit: (content: string) => Promise<void>;
-  disabled?: boolean;
-}
-
-const CreateCommentArea = ({ onSubmit, disabled }: CreateCommentAreaProps) => {
-  const [content, setContent] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleSubmit = async () => {
-    if (!content.trim() || isSubmitting) return;
-
-    setIsSubmitting(true);
-    try {
-      await onSubmit(content.trim());
-      setContent("");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  return (
-    <div className="space-y-4 mb-6">
-      <Textarea
-        placeholder="Write a comment..."
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        disabled={disabled || isSubmitting}
-        rows={3}
-        className="resize-none"
-      />
-      <div className="flex justify-end">
-        <Button 
-          onClick={handleSubmit} 
-          disabled={!content.trim() || disabled || isSubmitting}
-        >
-          {isSubmitting ? "Posting..." : "Reply"}
-        </Button>
-      </div>
-    </div>
-  );
-};
+import { PostReplyArea } from "./post-reply-area";
+import { GraphicHand2 } from "../icons/custom-icons";
 
 export const PostComments = ({ post }: { post: Post }) => {
   const router = useRouter();
@@ -146,11 +103,14 @@ export const PostComments = ({ post }: { post: Post }) => {
     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
       <SheetContent side="right" className="w-full sm:w-[500px] p-0">
         <div className="h-full flex flex-col p-6">
-          <h2 className="text-2xl font-semibold mb-4">Comments</h2>
-          <CreateCommentArea onSubmit={handleCreateComment} />
+          <h2 className="text-lg mb-4">Comments</h2>
+          <PostReplyArea onSubmit={handleCreateComment} />
           <div ref={containerRef} className="flex-1 overflow-auto">
             {comments.length === 0 && !loading ? (
-              <div className="text-muted-foreground">No comments yet</div>
+              <div className="text-muted-foreground flex flex-col items-center gap-4">
+                <GraphicHand2 />
+                <span>Be the first one to comment</span>
+              </div>
             ) : (
               <div className="space-y-4">
                 {comments.map((comment) => renderComment(comment))}
