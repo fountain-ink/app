@@ -30,32 +30,30 @@ import { Ariakit } from "./menu";
 const menuAnimationVariants = {
   hidden: {
     opacity: 0,
-    scale: 0.95,
     height: 0,
     transition: {
       height: {
-        type: "spring",
-        stiffness: 200,
-        damping: 25,
-        duration: 0.1,
+        duration: 0.2,
+        ease: [0.32, 0.72, 0, 1],
       },
-      opacity: { duration: 0.2 },
-      scale: { duration: 0.2 },
+      opacity: {
+        duration: 0.15,
+        ease: [0.4, 0, 0.2, 1],
+      },
     },
   },
   visible: {
     opacity: 1,
-    scale: 1,
     height: "auto",
     transition: {
       height: {
-        type: "spring",
-        stiffness: 200,
-        damping: 25,
-        duration: 0.1,
+        duration: 0.2,
+        ease: [0.32, 0.72, 0, 1],
       },
-      opacity: { duration: 0.1 },
-      scale: { duration: 0.1 },
+      opacity: {
+        duration: 0.15,
+        ease: [0.4, 0, 0.2, 1],
+      },
     },
   },
 };
@@ -243,7 +241,7 @@ const InlineComboboxInput = forwardRef<HTMLInputElement, HTMLAttributes<HTMLInpu
 InlineComboboxInput.displayName = "InlineComboboxInput";
 
 const comboboxVariants = cva(
-  "z-[500] mt-1 min-w-[180px] max-w-[calc(100vw-24px)] animate-popover rounded-lg bg-popover border border-border shadow-floating",
+  "z-[500] mt-1 min-w-[180px] max-w-[calc(100vw-24px)] backdrop-blur-md bg-popover/80 border border-border/50 shadow-lg shadow-black/10 rounded-lg",
   {
     defaultVariants: {
       variant: "default",
@@ -279,9 +277,31 @@ const InlineComboboxContent = ({
             }}
             className={cn(comboboxVariants({ variant }), className)}
           >
-            <ScrollArea className="h-full max-h-[40vh]">
-              <div className="flex flex-col gap-1 py-1 max-h-[40vh]">{props.children}</div>
-            </ScrollArea>
+            <motion.div
+              layout
+              transition={{
+                layout: {
+                  duration: 0.2,
+                  ease: [0.32, 0.72, 0, 1],
+                }
+              }}
+              className="overflow-hidden"
+            >
+              <ScrollArea className="h-full max-h-[40vh]">
+                <motion.div 
+                  layout="position"
+                  transition={{
+                    layout: {
+                      duration: 0.2,
+                      ease: [0.32, 0.72, 0, 1],
+                    }
+                  }}
+                  className="flex flex-col gap-1 py-1 max-h-[40vh]"
+                >
+                  {props.children}
+                </motion.div>
+              </ScrollArea>
+            </motion.div>
           </motion.div>
         </Ariakit.ComboboxPopover>
       </AnimatePresence>
