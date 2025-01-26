@@ -1,7 +1,7 @@
 "use client";
 
 import { settingsEvents } from "@/lib/settings/events";
-import { UserMetadata } from "@/lib/settings/types";
+import { UserMetadata } from "@/lib/settings/user-settings";
 import { useState } from "react";
 
 export function useMetadata(initialMetadata: UserMetadata = {}) {

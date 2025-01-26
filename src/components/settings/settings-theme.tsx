@@ -14,37 +14,28 @@ import { Input } from "../ui/input";
 
 interface ThemeSettingsProps {
   defaultTheme?: ThemeType;
-  onThemeChange?: (theme: ThemeType) => void;
   initialMetadata?: UserMetadata;
 }
 
-export function ThemeSettings({ defaultTheme, onThemeChange, initialMetadata = {} }: ThemeSettingsProps) {
+export function ThemeSettings({ defaultTheme, initialMetadata = {} }: ThemeSettingsProps) {
   const { theme, setTheme } = useTheme();
   const { metadata, saveMetadata } = useMetadata(initialMetadata);
   const [customColor, setCustomColor] = useState(metadata.theme?.customColor || "#e2f3ab");
   const [customBackground, setCustomBackground] = useState(metadata.theme?.customBackground || "#bbccaa");
   const [isDirty, setIsDirty] = useState(false);
-  const [selectedTheme, setSelectedTheme] = useState<ThemeType>(() => {
+
+  const [currentTheme, setCurrentTheme] = useState<ThemeType>(() => {
     const themeName = metadata.theme?.name;
     return isValidTheme(themeName) ? themeName : theme;
   });
 
   useEffect(() => {
-    const themeName = metadata.theme?.name;
-
-    if (isValidTheme(themeName)) {
-      setSelectedTheme(themeName);
-    }
-
-    setCustomColor(metadata.theme?.customColor || "#e2f3ab");
-    setCustomBackground(metadata.theme?.customBackground || "#bbccaa");
-    setIsDirty(false);
-  }, [metadata, theme]);
+    console.log(theme, metadata, isDirty);
+  }, [theme, metadata, isDirty]);
 
   const handleThemeChange = (newTheme: ThemeType) => {
-    setSelectedTheme(newTheme);
+    setCurrentTheme(newTheme);
     setTheme(newTheme);
-    onThemeChange?.(newTheme);
     setIsDirty(true);
   };
 
@@ -64,12 +55,14 @@ export function ThemeSettings({ defaultTheme, onThemeChange, initialMetadata = {
     const success = await saveMetadata({
       ...metadata,
       theme: {
-        name: selectedTheme,
+        name: currentTheme,
         customColor,
         customBackground,
       },
     });
     if (success) {
+      setCurrentTheme(currentTheme);
+      setTheme(currentTheme);
       setIsDirty(false);
     }
   };
@@ -89,7 +82,7 @@ export function ThemeSettings({ defaultTheme, onThemeChange, initialMetadata = {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="presets">
-            <ThemeButtons currentTheme={selectedTheme} onChange={handleThemeChange} />
+            <ThemeButtons currentTheme={currentTheme} onChange={handleThemeChange} />
           </TabsContent>
           <TabsContent value="custom">
             <div className="grid gap-4 py-4">
