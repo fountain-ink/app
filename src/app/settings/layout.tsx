@@ -29,17 +29,17 @@ export default function SettingsLayout({
   const pathname = usePathname();
 
   return (
-    <div className="container mx-auto p-6 py-10 mt-16 max-w-6xl">
+    <div className="container mx-auto p-0 sm:p-6 sm:py-10 mt-16 max-w-6xl">
       <h1 className="text-3xl font-bold ml-4 mb-10">Settings</h1>
-      <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-4 lg:space-y-0">
-        <nav className="flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-2 lg:w-1/5">
+      <div className="flex flex-row sm:gap-2 lg:gap-4">
+        <nav className="flex flex-col lg:w-1/5 p-2 gap-2">
           {navItems.map((item) => {
             const isActive = pathname === `/settings/${item.id}`;
             return (
               <Link
                 key={item.id}
                 href={`/settings/${item.id}`}
-                className={`px-4 py-2 flex items-center justify-between rounded-lg text-sm font-medium transition-colors
+                className={`px-2 md:px-4 py-2 flex items-center justify-between rounded-lg text-sm font-medium transition-colors
                   ${
                     item.enabled
                       ? isActive
@@ -55,7 +55,8 @@ export default function SettingsLayout({
                   {item.icon && <item.icon className="w-4 h-4" />}
                   <span className="hidden sm:inline">{item.label}</span>
                 </div>
-                {!item.enabled && <Badge variant="outline">Soon</Badge>}
+
+                <span className="hidden lg:inline">{!item.enabled && <Badge variant="outline">Soon</Badge>}</span>
               </Link>
             );
           })}

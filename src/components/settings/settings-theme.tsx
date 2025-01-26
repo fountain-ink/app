@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMetadata } from "@/hooks/use-metadata";
 import { UserMetadata } from "@/lib/settings/user-settings";
 import { isValidTheme, type ThemeType } from "@/styles/themes";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ThemeButtons } from "../theme/theme-buttons";
 import { useTheme } from "../theme/theme-context";
 import { Input } from "../ui/input";
@@ -28,10 +28,6 @@ export function ThemeSettings({ defaultTheme, initialMetadata = {} }: ThemeSetti
     const themeName = metadata.theme?.name;
     return isValidTheme(themeName) ? themeName : theme;
   });
-
-  useEffect(() => {
-    console.log(theme, metadata, isDirty);
-  }, [theme, metadata, isDirty]);
 
   const handleThemeChange = (newTheme: ThemeType) => {
     setCurrentTheme(newTheme);
@@ -60,6 +56,7 @@ export function ThemeSettings({ defaultTheme, initialMetadata = {} }: ThemeSetti
         customBackground,
       },
     });
+
     if (success) {
       setCurrentTheme(currentTheme);
       setTheme(currentTheme);
