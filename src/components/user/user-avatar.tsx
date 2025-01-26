@@ -29,7 +29,7 @@ export const UserAvatar = ({
 
   return (
     <div className={className}>
-      <Avatar className="w-full h-full m-0">
+      <Avatar className="w-full h-full border border-border m-0">
         <AvatarImage className="m-0" src={avatar} />
         <AvatarFallback>
           <AvatarSuspense />

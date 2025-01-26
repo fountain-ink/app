@@ -9,11 +9,12 @@ import { UserAvatar } from "../user/user-avatar";
 
 interface PostReplyAreaProps {
   onSubmit: (content: string) => Promise<void>;
+  onCancel?: () => void;
   disabled?: boolean;
   account?: Account;
 }
 
-export const PostReplyArea = ({ onSubmit, disabled, account }: PostReplyAreaProps) => {
+export const PostReplyArea = ({ onSubmit, onCancel, disabled, account }: PostReplyAreaProps) => {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -27,6 +28,11 @@ export const PostReplyArea = ({ onSubmit, disabled, account }: PostReplyAreaProp
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleCancel = () => {
+    setContent("");
+    onCancel?.();
   };
 
   return (
@@ -48,7 +54,7 @@ export const PostReplyArea = ({ onSubmit, disabled, account }: PostReplyAreaProp
           <ImageIcon className="h-5 w-5" />
         </Button>
         <div className="space-x-2">
-          <Button variant="ghost" onClick={() => setContent("")} disabled={!content.trim() || disabled || isSubmitting}>
+          <Button variant="ghost" onClick={handleCancel} disabled={disabled || isSubmitting}>
             Cancel
           </Button>
           <Button onClick={handleSubmit} disabled={!content.trim() || disabled || isSubmitting}>
