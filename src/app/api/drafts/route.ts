@@ -215,12 +215,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "Missing draft ID" }, { status: 400 });
     }
 
-    const { data, error } = await db
-      .from("drafts")
-      .delete()
-      .match({ documentId, author: address })
-      .select()
-      .single();
+    const { data, error } = await db.from("drafts").delete().match({ documentId, author: address }).select().single();
 
     if (error) {
       throw new Error(error.message);

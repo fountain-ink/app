@@ -1,9 +1,8 @@
 "use client";
 
 import { settingsEvents } from "@/lib/settings/events";
-import { UserSettings } from "@/lib/settings/types";
+import { UserSettings } from "@/lib/settings/user-settings";
 import { useState } from "react";
-
 
 export function useSettings(initialSettings: UserSettings = {}) {
   const [settings, setSettings] = useState<UserSettings>(initialSettings);
@@ -42,7 +41,7 @@ export function useSettings(initialSettings: UserSettings = {}) {
       setIsLoading(true);
       const response = await fetch("/api/settings");
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.error || "Failed to fetch settings");
       }

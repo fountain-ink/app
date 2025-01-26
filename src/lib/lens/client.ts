@@ -34,9 +34,9 @@ export const getOnboardingClient = async (address: string, signMessage: (message
   if (!address) return null;
 
   const authenticated = await publicClient.login({
-    onboardingUser: { 
-      app: "0xF9F360bb2bFA920a19cB5DedFd4d2d9e7ecc5904", 
-      wallet: address
+    onboardingUser: {
+      app: "0xF9F360bb2bFA920a19cB5DedFd4d2d9e7ecc5904",
+      wallet: address,
     },
     signMessage,
   });
@@ -50,9 +50,9 @@ export const getOnboardingClient = async (address: string, signMessage: (message
 };
 
 export const getAccountOwnerClient = async (
-  ownerAddress: string, 
-  accountAddress: string, 
-  signMessage: (message: string) => Promise<string>
+  ownerAddress: string,
+  accountAddress: string,
+  signMessage: (message: string) => Promise<string>,
 ) => {
   if (!ownerAddress || !accountAddress) return null;
 
@@ -81,4 +81,3 @@ export const getLensClient = async () => {
 
   return resumed.value;
 };
-

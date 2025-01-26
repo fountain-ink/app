@@ -14,5 +14,5 @@ export const getAppToken = () => {
     appToken = undefined;
   }
 
-  return appToken
+  return appToken;
 };

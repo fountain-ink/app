@@ -81,7 +81,6 @@ export function AuthManager({ credentials }: { credentials: Credentials | null }
   const lastRefreshToken = useRef<string | undefined>();
   const lastAppToken = useRef<string | undefined>();
 
-
   const checkAndUpdateAuth = async () => {
     try {
       const currentRefreshToken = credentials?.refreshToken;

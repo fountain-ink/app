@@ -25,4 +25,4 @@ class SettingsEvents {
   }
 }
 
-export const settingsEvents = new SettingsEvents(); 
+export const settingsEvents = new SettingsEvents();

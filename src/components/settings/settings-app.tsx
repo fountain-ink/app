@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useEmail } from "@/hooks/use-email";
 import { useSettings } from "@/hooks/use-settings";
-import { UserSettings } from "@/lib/settings/types";
+import { UserSettings } from "@/lib/settings/user-settings";
 import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 

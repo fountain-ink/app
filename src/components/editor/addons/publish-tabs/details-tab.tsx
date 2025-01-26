@@ -49,7 +49,7 @@ export const DetailsTab = () => {
   // Load initial state from draft
   useEffect(() => {
     if (!documentId) return;
-    
+
     const draft = getDocument(documentId);
     if (draft) {
       setTitle(draft.title || "");
@@ -60,17 +60,20 @@ export const DetailsTab = () => {
   }, [documentId, getDocument]);
 
   // Save changes back to draft
-  const saveDraft = useCallback((updates: Partial<Draft>) => {
-    if (!documentId) return;
-    
-    const draft = getDocument(documentId);
-    if (draft) {
-      saveDocument(documentId, {
-        ...draft,
-        ...updates
-      });
-    }
-  }, [documentId, getDocument, saveDocument]);
+  const saveDraft = useCallback(
+    (updates: Partial<Draft>) => {
+      if (!documentId) return;
+
+      const draft = getDocument(documentId);
+      if (draft) {
+        saveDocument(documentId, {
+          ...draft,
+          ...updates,
+        });
+      }
+    },
+    [documentId, getDocument, saveDocument],
+  );
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
@@ -84,15 +87,21 @@ export const DetailsTab = () => {
     saveDraft({ subtitle: newSubtitle });
   };
 
-  const handleTagsChange = useCallback((newTags: Tag[]) => {
-    setTags(newTags);
-    saveDraft({ tags: newTags.map(t => t.text) });
-  }, [saveDraft]);
+  const handleTagsChange = useCallback(
+    (newTags: Tag[]) => {
+      setTags(newTags);
+      saveDraft({ tags: newTags.map((t) => t.text) });
+    },
+    [saveDraft],
+  );
 
-  const handleSetTags = useCallback((newTags: Tag[] | ((prev: Tag[]) => Tag[])) => {
-    const resolvedTags = typeof newTags === 'function' ? newTags(tags) : newTags;
-    handleTagsChange(resolvedTags);
-  }, [handleTagsChange, tags]);
+  const handleSetTags = useCallback(
+    (newTags: Tag[] | ((prev: Tag[]) => Tag[])) => {
+      const resolvedTags = typeof newTags === "function" ? newTags(tags) : newTags;
+      handleTagsChange(resolvedTags);
+    },
+    [handleTagsChange, tags],
+  );
 
   // Update cover image when found in editor
   useEffect(() => {

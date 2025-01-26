@@ -64,12 +64,7 @@ export const EmailSubscription = () => {
                   <span className="text-sm text-destructive">Please enter a valid email address</span>
                 )}
               </div>
-              <Button
-                name="submit"
-                type="submit"
-                disabled={!isEmailValid || !email}
-
-              >
+              <Button name="submit" type="submit" disabled={!isEmailValid || !email}>
                 Join Waitlist
               </Button>
             </div>

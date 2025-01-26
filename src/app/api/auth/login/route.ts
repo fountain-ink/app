@@ -25,11 +25,14 @@ export async function POST(req: Request) {
       const jwt = await signGuestToken();
       const claims = getTokenClaims(jwt);
       if (!claims) throw new Error("Failed to create guest token");
-      
-      return NextResponse.json({ 
-        jwt, 
-        username: claims.metadata.username 
-      }, { status: 200 });
+
+      return NextResponse.json(
+        {
+          jwt,
+          username: claims.metadata.username,
+        },
+        { status: 200 },
+      );
     }
 
     console.log("[Login] Creating authenticated token");
@@ -51,10 +54,13 @@ export async function POST(req: Request) {
       }
     }
 
-    return NextResponse.json({ 
-      jwt, 
-      handle: claims.metadata.username 
-    }, { status: 200 });
+    return NextResponse.json(
+      {
+        jwt,
+        handle: claims.metadata.username,
+      },
+      { status: 200 },
+    );
   } catch (error) {
     console.error("[Login Route Error]:", error);
     return NextResponse.json(

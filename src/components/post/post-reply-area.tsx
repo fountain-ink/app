@@ -36,13 +36,10 @@ export const PostReplyArea = ({ onSubmit, disabled }: PostReplyAreaProps) => {
         className="resize-none"
       />
       <div className="flex justify-end">
-        <Button 
-          onClick={handleSubmit} 
-          disabled={!content.trim() || disabled || isSubmitting}
-        >
+        <Button onClick={handleSubmit} disabled={!content.trim() || disabled || isSubmitting}>
           {isSubmitting ? "Posting..." : "Reply"}
         </Button>
       </div>
     </div>
   );
-}; 
+};

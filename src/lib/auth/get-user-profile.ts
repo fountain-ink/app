@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import { getLensClient } from "../lens/client";
 import { LensIdToken } from "./app-token";
 
-
 export async function getUserProfile() {
   const client = await getLensClient();
 

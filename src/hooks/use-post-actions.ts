@@ -3,7 +3,6 @@ import { Post, PostReactionType } from "@lens-protocol/client";
 import { addReaction, bookmarkPost, undoBookmarkPost, undoReaction } from "@lens-protocol/client/actions";
 import { useRouter, useSearchParams } from "next/navigation";
 
-
 export const usePostActions = (post: Post) => {
   const router = useRouter();
   const searchParams = useSearchParams();

@@ -81,12 +81,12 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
       console.log("Account:", accountResult);
 
       const switchToast = toast.loading("Switching to your new account...");
-      const switchResult = await client.switchAccount({account: accountResult.address});
+      const switchResult = await client.switchAccount({ account: accountResult.address });
       toast.dismiss(switchToast);
 
       if (switchResult.isErr()) {
         toast.error(`Failed to switch account ${switchResult.error.message}`);
-        console.error(switchResult.error.message)
+        console.error(switchResult.error.message);
         return onOpenChange(false);
       }
 
@@ -139,7 +139,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
       toast.success("Account created successfully!");
       onSuccess();
       onOpenChange(false);
-      
+
       // Reload the page
       window.location.reload();
     } catch (err) {
@@ -168,24 +168,19 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
               />
             </div>
             <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="signless" 
+              <Checkbox
+                id="signless"
                 checked={enableSignlessMode}
                 onCheckedChange={(checked) => setEnableSignlessMode(checked as boolean)}
               />
               <div className="grid gap-0.5 leading-none">
                 <Label htmlFor="signless">Enable signless</Label>
-                <p className="text-xs text-muted-foreground">
-                  Sign simple actions for me (recommended)
-                </p>
+                <p className="text-xs text-muted-foreground">Sign simple actions for me (recommended)</p>
               </div>
             </div>
           </div>
           <div className="mt-auto pt-6 flex justify-end">
-            <Button 
-              onClick={handleOnboarding} 
-              disabled={loading || !username}
-            >
+            <Button onClick={handleOnboarding} disabled={loading || !username}>
               {loading ? "Creating..." : "Create Account"}
             </Button>
           </div>

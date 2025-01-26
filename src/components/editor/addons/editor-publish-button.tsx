@@ -102,8 +102,8 @@ export const PublishButton = ({
       const result = await post(lens, {
         contentUri: uri,
       })
-      .andThen(handleOperationWith(walletClient as any))
-      .andThen(lens.waitForTransaction); ;
+        .andThen(handleOperationWith(walletClient as any))
+        .andThen(lens.waitForTransaction);
 
       if (result.isErr()) {
         toast.dismiss(pendingToast);
@@ -144,9 +144,9 @@ export const PublishButton = ({
         }
       }
 
-      const hash = result.value
+      const hash = result.value;
 
-      const postValue = await fetchPost(lens, {txHash: hash})
+      const postValue = await fetchPost(lens, { txHash: hash });
 
       if (postValue.isErr()) {
         toast.error(`Failed to fetch post: ${postValue.error.message}`);
@@ -154,8 +154,9 @@ export const PublishButton = ({
         return;
       }
 
-      const postSlug = postValue.value?.__typename === "Post" ? postValue.value.slug : postValue.value?.id
-      const username = postValue.value?.__typename === "Post" ? postValue.value.author.username?.localName : postValue.value?.id
+      const postSlug = postValue.value?.__typename === "Post" ? postValue.value.slug : postValue.value?.id;
+      const username =
+        postValue.value?.__typename === "Post" ? postValue.value.author.username?.localName : postValue.value?.id;
 
       // Show success and redirect
       toast.dismiss(pendingToast);

@@ -41,4 +41,4 @@ export function useMetadata(initialMetadata: UserMetadata = {}) {
     saveMetadata,
     isLoading,
   };
-} 
+}

@@ -14,10 +14,10 @@ const iconVariants: Variants = {
     transition: {
       rotate: {
         duration: 0.5,
-        ease: 'easeInOut',
+        ease: "easeInOut",
       },
       scale: {
-        type: 'spring',
+        type: "spring",
         stiffness: 400,
         damping: 10,
       },
@@ -61,4 +61,4 @@ const MessageCircleIcon = ({ animate = false }: { animate?: boolean }) => {
   );
 };
 
-export { MessageCircleIcon }; 
+export { MessageCircleIcon };

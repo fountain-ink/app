@@ -34,7 +34,7 @@ export function useEmail(initialEmail?: string | null) {
       setIsLoading(true);
       const response = await fetch("/api/email");
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.error || "Failed to fetch email");
       }
@@ -55,4 +55,4 @@ export function useEmail(initialEmail?: string | null) {
     fetchEmail,
     isLoading,
   };
-} 
+}

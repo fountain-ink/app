@@ -6,20 +6,18 @@ export const EditorReadTime = ({ content }: EditorReadTimeProps) => {
   const calculateReadTime = (jsonContent: string) => {
     try {
       const blocks = JSON.parse(jsonContent);
-      
+
       // Extract text from each block's children
       const textContent = blocks.reduce((acc: string, block: any) => {
         if (block.children) {
-          const blockText = block.children
-            .map((child: any) => child.text || '')
-            .join(' ');
+          const blockText = block.children.map((child: any) => child.text || "").join(" ");
           return `${acc} ${blockText}`;
         }
         return acc;
-      }, '');
+      }, "");
 
       const words = textContent.trim().split(/\s+/).length;
-      
+
       const minutes = Math.ceil(words / 200);
 
       return Math.max(1, minutes);

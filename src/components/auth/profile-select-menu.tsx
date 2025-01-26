@@ -56,7 +56,7 @@ export function ProfileSelectMenu() {
 
   const handleShowOnboarding = () => {
     // Hide profile select when showing onboarding
-    setShowProfileSelect(false); 
+    setShowProfileSelect(false);
     setShowOnboarding(true);
   };
 
@@ -64,7 +64,7 @@ export function ProfileSelectMenu() {
     setShowOnboarding(open);
     if (!open) {
       // Show profile select when closing onboarding
-      setShowProfileSelect(true); 
+      setShowProfileSelect(true);
     }
   };
 

@@ -76,4 +76,4 @@ export const useAccountOwnerClient = () => {
   };
 
   return authenticate;
-}; 
+};

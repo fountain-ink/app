@@ -4,12 +4,7 @@ import { toast } from "sonner";
 import { AnimatedMenuItem } from "../navigation/animated-item";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuPortal,
-    DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuPortal, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Label } from "../ui/label";
 import { TextareaAutosize } from "../ui/textarea";
 
@@ -90,11 +85,7 @@ export function FeedbackForm() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
-        <DropdownMenuContent
-          align="end"
-          className="w-48 min-w-48 data-[state=open]:w-auto"
-        >
-
+        <DropdownMenuContent align="end" className="w-48 min-w-48 data-[state=open]:w-auto">
           {!feedbackType ? (
             <div className="flex flex-col">
               <AnimatedMenuItem
@@ -145,11 +136,7 @@ export function FeedbackForm() {
                 <Label htmlFor="screenshot">Include screenshot</Label>
               </div>
               <div className="flex justify-end gap-2">
-                <Button
-                  onClick={handleSubmit}
-                  disabled={!feedbackText.trim() || isSubmitting}
-                  size="default"
-                >
+                <Button onClick={handleSubmit} disabled={!feedbackText.trim() || isSubmitting} size="default">
                   {isSubmitting ? "Submitting..." : "Submit"}
                 </Button>
               </div>

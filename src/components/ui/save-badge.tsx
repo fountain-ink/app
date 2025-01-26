@@ -50,4 +50,4 @@ export function SaveBadge({ status, error, className }: SaveBadgeProps) {
       )}
     </AnimatePresence>
   );
-} 
+}

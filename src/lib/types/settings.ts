@@ -20,4 +20,4 @@ export interface UserMetadata {
 
 export interface PrivateUserData {
   email: string | null;
-} 
+}

@@ -1,7 +1,7 @@
 import { BlogHeader } from "@/components/user/blog-header";
 import { UserTheme } from "@/components/user/user-theme";
 import { getLensClient } from "@/lib/lens/client";
-import { getUserMetadata } from "@/lib/settings/get-metadata";
+import { getUserMetadata } from "@/lib/settings/get-user-metadata";
 import { fetchAccount } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
 

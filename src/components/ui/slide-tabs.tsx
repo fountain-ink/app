@@ -29,15 +29,12 @@ export function SlideNav({ items, className }: SlideNavProps) {
     <nav className={cn("relative flex justify-center", className)}>
       <div className="relative flex gap-4">
         {visibleItems.map((item) => (
-          <div
-            key={item.href}
-            className="flex items-center"
-          >
+          <div key={item.href} className="flex items-center">
             {item.disabled ? (
               <span
                 className={cn(
                   "px-4 py-2 text-sm font-medium transition-colors relative cursor-not-allowed",
-                  "text-muted-foreground/50"
+                  "text-muted-foreground/50",
                 )}
               >
                 {item.label}
@@ -54,7 +51,7 @@ export function SlideNav({ items, className }: SlideNavProps) {
                 prefetch
                 className={cn(
                   "px-4 py-2 text-sm font-medium transition-colors relative",
-                  pathname === item.href ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                  pathname === item.href ? "text-foreground" : "text-muted-foreground hover:text-foreground",
                 )}
               >
                 {item.label}

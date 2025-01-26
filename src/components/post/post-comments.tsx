@@ -92,9 +92,7 @@ export const PostComments = ({ post }: { post: Post }) => {
     return (
       <div key={comment.id} className="border-b pb-4">
         <div className="font-medium">{comment.author.username?.localName}</div>
-        <div className="text-sm text-muted-foreground">
-          {"content" in comment.metadata && comment.metadata.content}
-        </div>
+        <div className="text-sm text-muted-foreground">{"content" in comment.metadata && comment.metadata.content}</div>
       </div>
     );
   };

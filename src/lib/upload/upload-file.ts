@@ -37,7 +37,6 @@ export const uploadFile = async (input: File | ArrayBuffer | string) => {
     const { uri } = await storageClient.uploadFile(fileToUpload);
     console.log(`Uploading file to ${uri}`);
 
-
     return getIpfsImageUrl(uri);
   } catch (error) {
     console.error(error);

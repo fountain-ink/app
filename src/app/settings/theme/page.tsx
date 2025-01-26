@@ -1,7 +1,7 @@
 import { ThemeSettings } from "@/components/settings/settings-theme";
 import { getAppToken } from "@/lib/auth/get-app-token";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
-import { getUserMetadata } from "@/lib/settings/get-metadata";
+import { getUserMetadata } from "@/lib/settings/get-user-metadata";
 import { notFound } from "next/navigation";
 
 export const metadata = {

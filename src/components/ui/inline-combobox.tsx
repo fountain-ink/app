@@ -283,18 +283,18 @@ const InlineComboboxContent = ({
                 layout: {
                   duration: 0.2,
                   ease: [0.32, 0.72, 0, 1],
-                }
+                },
               }}
               className="overflow-hidden"
             >
               <ScrollArea className="h-full max-h-[40vh]">
-                <motion.div 
+                <motion.div
                   layout="position"
                   transition={{
                     layout: {
                       duration: 0.2,
                       ease: [0.32, 0.72, 0, 1],
-                    }
+                    },
                   }}
                   className="flex flex-col gap-1 py-1 max-h-[40vh]"
                 >

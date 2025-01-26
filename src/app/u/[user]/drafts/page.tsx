@@ -1,4 +1,4 @@
-import { DraftList } from "@/components/draft/draft-list"
+import { DraftList } from "@/components/draft/draft-list";
 import ErrorPage from "@/components/misc/error-page";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";

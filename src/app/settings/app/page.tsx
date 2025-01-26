@@ -2,7 +2,7 @@ import { ApplicationSettings } from "@/components/settings/settings-app";
 import { getAppToken } from "@/lib/auth/get-app-token";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { getEmail } from "@/lib/settings/get-user-email";
-import { getUserSettings } from "@/lib/settings/get-settings";
+import { getUserSettings } from "@/lib/settings/get-user-settings";
 import { notFound } from "next/navigation";
 
 export const metadata = {
@@ -17,8 +17,8 @@ export default async function AppSettingsPage() {
     return notFound();
   }
 
-  const settings = await getUserSettings(claims.metadata.address) ?? {};
-  const email = await getEmail(claims.metadata.address) ?? "";
+  const settings = (await getUserSettings(claims.metadata.address)) ?? {};
+  const email = (await getEmail(claims.metadata.address)) ?? "";
 
   return <ApplicationSettings initialSettings={settings} initialEmail={email} />;
 }

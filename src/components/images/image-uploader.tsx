@@ -68,7 +68,12 @@ interface ImageCropperUploaderProps {
   onImageChange: (newImage: File | null) => void;
 }
 
-export const ImageCropperUploader = ({ label, initialImage, aspectRatio, onImageChange }: ImageCropperUploaderProps) => {
+export const ImageCropperUploader = ({
+  label,
+  initialImage,
+  aspectRatio,
+  onImageChange,
+}: ImageCropperUploaderProps) => {
   const [image, setImage] = useState(initialImage);
   const [localImage, setLocalImage] = useState<string | null>(null);
   const [showCropModal, setShowCropModal] = useState(false);

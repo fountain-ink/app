@@ -1,14 +1,10 @@
 import { createServiceClient } from "../supabase/service";
-import { UserMetadata } from "./types";
+import { UserMetadata } from "./user-settings";
 
 export async function getUserMetadata(address: string): Promise<UserMetadata | null> {
   try {
     const db = await createServiceClient();
-    const { data, error } = await db
-      .from("users")
-      .select("metadata")
-      .eq("address", address)
-      .single();
+    const { data, error } = await db.from("users").select("metadata").eq("address", address).single();
 
     if (error) {
       console.error("Error fetching user metadata:", error);

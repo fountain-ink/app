@@ -1,5 +1,5 @@
 import { createClient } from "../supabase/server";
-import { UserSettings } from "./types";
+import { UserSettings } from "./user-settings";
 
 export async function getUserSettings(address: string): Promise<UserSettings | null> {
   try {

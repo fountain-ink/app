@@ -20,10 +20,7 @@ export const arweaveAPI = "https://arweave.net";
 
 const arweave = new Arweave({ url: arweaveAPI });
 
-export async function getTransactionId(
-  query: string,
-  variables: Record<string, any>,
-) {
+export async function getTransactionId(query: string, variables: Record<string, any>) {
   const client = new GraphQLClient(graphqlAPI);
   const data = await client.request<TransactionsData>(query, variables);
   return data.transactions.edges[0]?.node.id;

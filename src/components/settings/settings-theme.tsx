@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMetadata } from "@/hooks/use-metadata";
-import { UserMetadata } from "@/lib/settings/types";
+import { UserMetadata } from "@/lib/settings/user-settings";
 import { isValidTheme, type ThemeType } from "@/styles/themes";
 import { useEffect, useState } from "react";
 import { ThemeButtons } from "../theme/theme-buttons";

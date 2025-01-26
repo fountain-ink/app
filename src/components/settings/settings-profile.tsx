@@ -34,10 +34,10 @@ function ProfileSettingsForm({ profile, onSaved, onFormDataChange }: ProfileSett
   const [profileTitle, setProfileTitle] = useState(currentMetadata?.name || "");
   const [profileDescription, setProfileDescription] = useState(currentMetadata?.bio || "");
   const [location, setLocation] = useState(
-    currentMetadata?.attributes?.find((attr: any) => attr.key === "location")?.value || ""
+    currentMetadata?.attributes?.find((attr: any) => attr.key === "location")?.value || "",
   );
   const [websiteUrl, setWebsiteUrl] = useState(
-    currentMetadata?.attributes?.find((attr: any) => attr.key === "website")?.value?.replace(/^https?:\/\//, "") || ""
+    currentMetadata?.attributes?.find((attr: any) => attr.key === "website")?.value?.replace(/^https?:\/\//, "") || "",
   );
 
   useEffect(() => {
@@ -195,11 +195,7 @@ export function ProfileSettingsCard({ profile }: { profile?: Account | null }) {
       <CardContent className="space-y-4">
         <ProfileSettingsForm profile={profile} onFormDataChange={setFormData} />
         <div className="pt-4">
-          <Button 
-            onClick={handleSave} 
-            disabled={isUploading || isSavingProfileSettings}
-            className=""
-          >
+          <Button onClick={handleSave} disabled={isUploading || isSavingProfileSettings} className="">
             {isUploading ? "Uploading..." : isSavingProfileSettings ? "Saving..." : "Save Settings"}
           </Button>
         </div>
@@ -277,22 +273,13 @@ export function ProfileSettingsModal({ profile, trigger, open, onOpenChange }: P
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader className="">
           <DialogTitle>Edit Profile</DialogTitle>
-          <DialogDescription className="flex items-center gap-2">
-            Customize your profile preferences
-          </DialogDescription>
+          <DialogDescription className="flex items-center gap-2">Customize your profile preferences</DialogDescription>
         </DialogHeader>
         <div className="">
-          <ProfileSettingsForm 
-            profile={profile} 
-            onFormDataChange={setFormData}
-          />
+          <ProfileSettingsForm profile={profile} onFormDataChange={setFormData} />
         </div>
         <div className="pt-4">
-          <Button 
-            onClick={handleSave} 
-            disabled={isUploading || isSavingProfileSettings}
-            className=""
-          >
+          <Button onClick={handleSave} disabled={isUploading || isSavingProfileSettings} className="">
             {isUploading ? "Uploading..." : isSavingProfileSettings ? "Saving..." : "Save Settings"}
           </Button>
         </div>

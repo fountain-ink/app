@@ -10,7 +10,7 @@ import { useMetadata } from "@/hooks/use-metadata";
 import { uploadFile } from "@/lib/upload/upload-file";
 import { useCallback, useEffect, useState } from "react";
 import { TextareaAutosize } from "../ui/textarea";
-import { UserMetadata } from "@/lib/settings/types";
+import { UserMetadata } from "@/lib/settings/user-settings";
 
 interface BlogSettings {
   title?: string;
@@ -29,13 +29,13 @@ async function processImage(file: File): Promise<File> {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
-      const canvas = document.createElement('canvas');
+      const canvas = document.createElement("canvas");
       canvas.width = 256;
       canvas.height = 256;
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext("2d");
 
       if (!ctx) {
-        reject(new Error('Could not get canvas context'));
+        reject(new Error("Could not get canvas context"));
         return;
       }
 
@@ -47,19 +47,29 @@ async function processImage(file: File): Promise<File> {
       // Draw the image with square crop and resize
       ctx.drawImage(
         img,
-        x, y, size, size,  // Source crop
-        0, 0, 256, 256     // Destination size
+        x,
+        y,
+        size,
+        size, // Source crop
+        0,
+        0,
+        256,
+        256, // Destination size
       );
 
-      canvas.toBlob((blob) => {
-        if (!blob) {
-          reject(new Error('Failed to create blob'));
-          return;
-        }
-        resolve(new File([blob], file.name, { type: 'image/jpeg' }));
-      }, 'image/jpeg', 0.9);
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            reject(new Error("Failed to create blob"));
+            return;
+          }
+          resolve(new File([blob], file.name, { type: "image/jpeg" }));
+        },
+        "image/jpeg",
+        0.9,
+      );
     };
-    img.onerror = () => reject(new Error('Failed to load image'));
+    img.onerror = () => reject(new Error("Failed to load image"));
     img.src = URL.createObjectURL(file);
   });
 }
@@ -121,7 +131,7 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
       try {
         iconUrl = await uploadFile(blogIcon);
       } catch (error) {
-        console.error('Failed to upload blog icon:', error);
+        console.error("Failed to upload blog icon:", error);
         return;
       }
     }
@@ -180,7 +190,7 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
         setIsIconDeleted(false);
         setIsDirty(true);
       } catch (error) {
-        console.error('Failed to process image:', error);
+        console.error("Failed to process image:", error);
       }
     } else {
       setBlogIcon(null);
@@ -216,11 +226,10 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
                 <p className="text-xs text-center text-muted-foreground">Original</p>
               </div>
 
-
               <div className="flex items-start gap-4">
                 <div className="space-y-1.5">
                   <div className="relative w-[64px] h-[64px] rounded-md overflow-hidden ring-2 ring-background">
-                    {(!isIconDeleted && (previewUrl || metadata?.blog?.icon)) ? (
+                    {!isIconDeleted && (previewUrl || metadata?.blog?.icon) ? (
                       <img
                         src={previewUrl || metadata?.blog?.icon}
                         alt="Small preview"
@@ -235,7 +244,7 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
 
                 <div className="space-y-1.5">
                   <div className="relative w-[32px] h-[32px] rounded-sm overflow-hidden ring-2 ring-background">
-                    {(!isIconDeleted && (previewUrl || metadata?.blog?.icon)) ? (
+                    {!isIconDeleted && (previewUrl || metadata?.blog?.icon) ? (
                       <img
                         src={previewUrl || metadata?.blog?.icon}
                         alt="Medium preview"
@@ -248,14 +257,10 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
                   <p className="text-xs text-center text-muted-foreground">32px</p>
                 </div>
 
-
                 <div className="space-y-1.5">
                   <div className="relative w-[16px] h-[16px] rounded-none overflow-hidden ring-2 ring-background">
-                    {(!isIconDeleted && (previewUrl || metadata?.blog?.icon)) ? (
-                      <img
-                        src={previewUrl || metadata?.blog?.icon}
-                        className="w-full h-full object-cover"
-                      />
+                    {!isIconDeleted && (previewUrl || metadata?.blog?.icon) ? (
+                      <img src={previewUrl || metadata?.blog?.icon} className="w-full h-full object-cover" />
                     ) : (
                       <div className="placeholder-background" />
                     )}
@@ -322,10 +327,7 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
         </div>
 
         <div className="flex justify-start pt-4">
-          <Button
-            onClick={handleSave}
-            disabled={!isDirty || !!validationError}
-          >
+          <Button onClick={handleSave} disabled={!isDirty || !!validationError}>
             Save Settings
           </Button>
         </div>

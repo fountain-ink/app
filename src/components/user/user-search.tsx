@@ -40,12 +40,12 @@ export function UserSearch({
         const items = account?.items || [];
 
         if (items.length > 0) {
-          const mentionables = items.slice(0, maxResults).map(item => ({
+          const mentionables = items.slice(0, maxResults).map((item) => ({
             key: item.address,
             name: item.metadata?.name || "",
             text: item.username?.localName || "",
             username: item.username?.localName || "",
-            picture: item.metadata?.picture
+            picture: item.metadata?.picture,
           }));
           setProfiles(mentionables);
         } else {

@@ -3,11 +3,10 @@ import { Separator } from "@/components/ui/separator";
 import { AuthorView } from "@/components/user/user-author-view";
 import { UserContent } from "@/components/user/user-content";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
-import { getUserSettings } from "@/lib/settings/get-settings";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchAccount, fetchPosts } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
-import { getUserMetadata } from "@/lib/settings/get-metadata";
+import { getUserMetadata } from "@/lib/settings/get-user-metadata";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
   const lens = await getLensClient();
@@ -42,7 +41,10 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
       )}
 
       {showTitle && (
-        <div data-blog-title className="text-[1.5rem] sm:text-[2rem] lg:text-[2.5rem] text-center font-[letter-spacing:var(--title-letter-spacing)] font-[family-name:var(--title-font)] font-normal font-[color:var(--title-color)] overflow-hidden line-clamp-2">
+        <div
+          data-blog-title
+          className="text-[1.5rem] sm:text-[2rem] lg:text-[2.5rem] text-center font-[letter-spacing:var(--title-letter-spacing)] font-[family-name:var(--title-font)] font-normal font-[color:var(--title-color)] overflow-hidden line-clamp-2"
+        >
           {blogTitle ?? `${profile.username?.localName}'s blog`}
         </div>
       )}

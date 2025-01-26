@@ -22,9 +22,7 @@ export const PostCollect = ({ post }: { post: Post }) => {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <h2 className="text-2xl font-semibold">Collect Post</h2>
-            <p className="text-sm text-muted-foreground">
-              Support the creator by collecting this post
-            </p>
+            <p className="text-sm text-muted-foreground">Support the creator by collecting this post</p>
           </div>
           {/* TODO: Add collect functionality */}
           <div className="text-muted-foreground">Collect functionality coming soon...</div>
@@ -32,4 +30,4 @@ export const PostCollect = ({ post }: { post: Post }) => {
       </DialogContent>
     </Dialog>
   );
-}; 
+};

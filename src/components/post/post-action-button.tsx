@@ -64,7 +64,7 @@ export const ActionButton = ({
 
   // Keep local state in sync with prop for URL-based states (comment/collect)
   useEffect(() => {
-    setState(prev => ({ ...prev, isPressedLocally: isActive }));
+    setState((prev) => ({ ...prev, isPressedLocally: isActive }));
   }, [isActive]);
 
   const previousCount = useRef(initialCount);
