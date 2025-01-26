@@ -7,6 +7,7 @@ import { getUserSettings } from "@/lib/settings/get-settings";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchAccount, fetchPosts } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
+import { getUserMetadata } from "@/lib/settings/get-metadata";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
   const lens = await getLensClient();
@@ -24,11 +25,11 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
     return notFound();
   }
 
-  const settings = await getUserSettings(profile.address);
-  const showAuthor = settings?.blog?.showAuthor ?? true;
-  const showTags = settings?.blog?.showTags ?? true;
-  const showTitle = settings?.blog?.showTitle ?? true;
-  const blogTitle = settings?.blog?.title;
+  const metadata = await getUserMetadata(profile.address);
+  const showAuthor = metadata?.blog?.showAuthor ?? true;
+  const showTags = metadata?.blog?.showTags ?? true;
+  const showTitle = metadata?.blog?.showTitle ?? true;
+  const blogTitle = metadata?.blog?.title;
 
   const isUserProfile = username === params.user;
 

@@ -10,9 +10,6 @@ export const clearAllCookies = () => {
 
 
 export const clearAuthCookies = () => {
-  // delete all cookies
-  const cookies = getCookies();
-  
   deleteCookie("appToken");
   deleteCookie("refreshToken");
 };

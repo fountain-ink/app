@@ -4,7 +4,7 @@ import { GradientBlur } from "@/components/navigation/gradient-blur";
 import { BlogHeader } from "@/components/user/blog-header";
 import { UserTheme } from "@/components/user/user-theme";
 import { getLensClient } from "@/lib/lens/client";
-import { getUserSettings } from "@/lib/settings/get-settings";
+import { getUserMetadata } from "@/lib/settings/get-metadata";
 import { fetchAccount, fetchPost } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
 
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: { user: string; pos
     };
   }
 
-  const settings = await getUserSettings(username);
+  const settings = await getUserMetadata(username);
   const icon = settings?.blog?.icon;
 
   return {
@@ -55,7 +55,7 @@ const UserPostLayout = async ({
     return notFound();
   }
 
-  const settings = await getUserSettings(account.address);
+  const settings = await getUserMetadata(account.address);
   const themeName = settings?.theme?.name;
   const title = settings?.blog?.title;
   const icon = settings?.blog?.icon;

@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMetadata } from "@/hooks/use-metadata";
+import { UserMetadata } from "@/lib/settings/types";
 import { isValidTheme, type ThemeType } from "@/styles/themes";
 import { useEffect, useState } from "react";
 import { ThemeButtons } from "../theme/theme-buttons";
@@ -14,25 +15,27 @@ import { Input } from "../ui/input";
 interface ThemeSettingsProps {
   defaultTheme?: ThemeType;
   onThemeChange?: (theme: ThemeType) => void;
-  initialMetadata?: any;
+  initialMetadata?: UserMetadata;
 }
 
 export function ThemeSettings({ defaultTheme, onThemeChange, initialMetadata = {} }: ThemeSettingsProps) {
   const { theme, setTheme } = useTheme();
   const { metadata, saveMetadata } = useMetadata(initialMetadata);
+  const [customColor, setCustomColor] = useState(metadata.theme?.customColor || "#e2f3ab");
+  const [customBackground, setCustomBackground] = useState(metadata.theme?.customBackground || "#bbccaa");
+  const [isDirty, setIsDirty] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState<ThemeType>(() => {
     const themeName = metadata.theme?.name;
     return isValidTheme(themeName) ? themeName : theme;
   });
-  const [customColor, setCustomColor] = useState(metadata.theme?.customColor || "#e2f3ab");
-  const [customBackground, setCustomBackground] = useState(metadata.theme?.customBackground || "#bbccaa");
-  const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
     const themeName = metadata.theme?.name;
+
     if (isValidTheme(themeName)) {
       setSelectedTheme(themeName);
     }
+
     setCustomColor(metadata.theme?.customColor || "#e2f3ab");
     setCustomBackground(metadata.theme?.customBackground || "#bbccaa");
     setIsDirty(false);

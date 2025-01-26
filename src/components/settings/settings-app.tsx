@@ -5,12 +5,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useEmail } from "@/hooks/use-email";
-import { Settings, useSettings } from "@/hooks/use-settings";
+import { useSettings } from "@/hooks/use-settings";
+import { UserSettings } from "@/lib/settings/types";
 import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 
 interface ApplicationSettingsProps {
-  initialSettings?: Settings;
+  initialSettings?: UserSettings;
   initialEmail?: string;
 }
 

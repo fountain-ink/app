@@ -6,11 +6,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { useSettings } from "@/hooks/use-settings";
+import { useMetadata } from "@/hooks/use-metadata";
 import { uploadFile } from "@/lib/upload/upload-file";
 import { useCallback, useEffect, useState } from "react";
 import { TextareaAutosize } from "../ui/textarea";
-import { useMetadata } from "@/hooks/use-metadata";
+import { UserMetadata } from "@/lib/settings/types";
 
 interface BlogSettings {
   title?: string;
@@ -22,9 +22,7 @@ interface BlogSettings {
 }
 
 interface BlogSettingsProps {
-  initialSettings?: {
-    blog?: BlogSettings;
-  };
+  initialSettings?: UserMetadata;
 }
 
 async function processImage(file: File): Promise<File> {

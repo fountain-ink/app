@@ -1,11 +1,12 @@
 import { createServiceClient } from "@/lib/supabase/service";
 import { sign } from "jsonwebtoken";
 import { customAlphabet } from "nanoid";
+import { AppToken, TokenClaims } from "./app-token";
 
 const SUPABASE_JWT_SECRET = process.env.SUPABASE_JWT_SECRET!;
 const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 21);
 
-export async function signGuestToken() {
+export async function signGuestToken(): Promise<AppToken> {
   const guestId = nanoid();
   const username = `guest-${guestId.slice(0, 8)}`;
 
@@ -19,7 +20,7 @@ export async function signGuestToken() {
     updatedAt: new Date().toISOString(),
   });
 
-  const claims = {
+  const claims: TokenClaims = {
     sub: username,
     role: "authenticated",
     metadata: {
@@ -29,11 +30,9 @@ export async function signGuestToken() {
     },
   };
 
-  const jwt = sign(claims, SUPABASE_JWT_SECRET, {
+  return sign(claims, SUPABASE_JWT_SECRET, {
     algorithm: "HS256",
     expiresIn: "30d",
     issuer: "fountain.ink",
   });
-
-  return { jwt, guestId, username: username };
 }

@@ -24,7 +24,6 @@ export default function PlateEditor(
     readOnly?: boolean;
     value?: string;
     pathname?: string;
-    refreshToken?: string;
     appToken?: string;
   },
 ) {

@@ -1,62 +1,23 @@
-import { cookies } from "next/headers";
-import { getTokenClaims } from "../auth/get-token-claims";
 import { createClient } from "../supabase/server";
-import { createServiceClient } from "../supabase/service";
-import { UserMetadata } from "./types";
+import { UserSettings } from "./types";
 
-export async function getSettings(): Promise<UserMetadata | null> {
-  const cookieStore = cookies();
-  const token = cookieStore.get("appToken")?.value;
-
-  if (!token) {
-    return null;
-  }
-
-  const claims = getTokenClaims(token);
-  if (!claims?.metadata?.address) {
-    return null;
-  }
-
-  const db = await createClient();
-  const { data, error } = await db
-    .from("users")
-    .select("metadata")
-    .eq("address", claims.metadata.address)
-    .single();
-
-  if (error) {
-    console.error("Error fetching user settings:", error);
-    return null;
-  }
-
-  if (!data) {
-    return null;
-  }
-
-  return data.metadata as UserMetadata;
-}
-
-export async function getUserSettings(address: string): Promise<UserMetadata | null> {
+export async function getUserSettings(address: string): Promise<UserSettings | null> {
   try {
-    const db = await createServiceClient();
-    const { data, error } = await db
-      .from("users")
-      .select("metadata")
-      .eq("address", address)
-      .single();
+    const db = await createClient();
+    const { data, error } = await db.from("users").select("settings").eq("address", address).single();
 
     if (error) {
-      console.error("Error fetching user settings:", error);
+      console.error("Error fetching user metadata:", error);
       return null;
     }
 
-    if (!data?.metadata) {
+    if (!data?.settings) {
       return null;
     }
 
-    return data.metadata as UserMetadata;
+    return data.settings as UserSettings;
   } catch (error) {
-    console.error("Error fetching user settings:", error);
+    console.error("Error fetching user metadata:", error);
     return null;
   }
 }

@@ -1,20 +1,15 @@
 "use client";
 
 import { settingsEvents } from "@/lib/settings/events";
+import { UserSettings } from "@/lib/settings/types";
 import { useState } from "react";
 
-export interface Settings {
-  app?: {
-    isSmoothScrolling?: boolean;
-    isBlurEnabled?: boolean;
-  };
-}
 
-export function useSettings(initialSettings: Settings = {}) {
-  const [settings, setSettings] = useState<Settings>(initialSettings);
+export function useSettings(initialSettings: UserSettings = {}) {
+  const [settings, setSettings] = useState<UserSettings>(initialSettings);
   const [isLoading, setIsLoading] = useState(!Object.keys(initialSettings).length);
 
-  const saveSettings = async (newSettings: Settings) => {
+  const saveSettings = async (newSettings: UserSettings) => {
     try {
       const response = await fetch("/api/settings", {
         method: "PUT",

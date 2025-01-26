@@ -1,36 +1,5 @@
-import { cookies } from "next/headers";
-import { getTokenClaims } from "../auth/get-token-claims";
-import { createClient } from "../supabase/server";
 import { createServiceClient } from "../supabase/service";
 import { UserMetadata } from "./types";
-
-export async function getMetadata(): Promise<UserMetadata | null> {
-  const cookieStore = cookies();
-  const token = cookieStore.get("appToken")?.value;
-
-  if (!token) {
-    return null;
-  }
-
-  const claims = getTokenClaims(token);
-  if (!claims?.metadata?.address) {
-    return null;
-  }
-
-  const db = await createClient();
-  const { data, error } = await db
-    .from("users")
-    .select("metadata")
-    .eq("address", claims.metadata.address)
-    .single();
-
-  if (error) {
-    console.error("Error fetching user metadata:", error);
-    return null;
-  }
-
-  return data?.metadata as UserMetadata || null;
-}
 
 export async function getUserMetadata(address: string): Promise<UserMetadata | null> {
   try {
@@ -55,4 +24,4 @@ export async function getUserMetadata(address: string): Promise<UserMetadata | n
     console.error("Error fetching user metadata:", error);
     return null;
   }
-} 
+}

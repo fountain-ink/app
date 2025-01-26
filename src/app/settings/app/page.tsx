@@ -1,14 +1,24 @@
 import { ApplicationSettings } from "@/components/settings/settings-app";
-import { getSettings } from "@/lib/settings/get-private-settings";
-import { getEmail } from "@/lib/settings/get-email";
+import { getAppToken } from "@/lib/auth/get-app-token";
+import { getTokenClaims } from "@/lib/auth/get-token-claims";
+import { getEmail } from "@/lib/settings/get-user-email";
+import { getUserSettings } from "@/lib/settings/get-settings";
+import { notFound } from "next/navigation";
 
 export const metadata = {
   title: "Application Settings",
 };
 
 export default async function AppSettingsPage() {
-  const settings = await getSettings() ?? {};
-  const email = await getEmail() ?? "";
+  const appToken = getAppToken();
+  const claims = getTokenClaims(appToken);
+
+  if (!claims) {
+    return notFound();
+  }
+
+  const settings = await getUserSettings(claims.metadata.address) ?? {};
+  const email = await getEmail(claims.metadata.address) ?? "";
 
   return <ApplicationSettings initialSettings={settings} initialEmail={email} />;
 }

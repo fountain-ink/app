@@ -2,7 +2,7 @@ import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { signAppToken } from "@/lib/auth/sign-app-token";
 import { signGuestToken } from "@/lib/auth/sign-guest-token";
 import { createServiceClient } from "@/lib/supabase/service";
-import { Account } from "@lens-protocol/client";
+import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { NextResponse } from "next/server";
 
 async function migrateGuestData(guestAddress: string, newAddress: string) {
@@ -22,24 +22,39 @@ export async function POST(req: Request) {
 
     if (!refreshToken) {
       console.log("[Login] Creating guest token");
-      const { jwt, username } = await signGuestToken();
-      return NextResponse.json({ jwt, username }, { status: 200 });
+      const jwt = await signGuestToken();
+      const claims = getTokenClaims(jwt);
+      if (!claims) throw new Error("Failed to create guest token");
+      
+      return NextResponse.json({ 
+        jwt, 
+        username: claims.metadata.username 
+      }, { status: 200 });
     }
 
     console.log("[Login] Creating authenticated token");
-    const { jwt, account } = await signAppToken(refreshToken);
-    await manageUserRecord(account);
+    const jwt = await signAppToken();
+    const claims = getTokenClaims(jwt);
+    if (!claims) throw new Error("Failed to create app token");
+
+    const profile = await getUserProfile();
+    if (!profile) throw new Error("Failed to get user profile");
+
+    await manageUserRecord(profile);
 
     // If there's an existing guest token, migrate the data
     if (appToken) {
       const guestClaims = getTokenClaims(appToken);
       if (guestClaims?.metadata?.isAnonymous) {
-        console.log("[Login] Migrating guest data from ", guestClaims.sub, " to ", account.address);
-        await migrateGuestData(guestClaims.sub, account.address);
+        console.log("[Login] Migrating guest data from ", guestClaims.sub, " to ", claims.metadata.address);
+        await migrateGuestData(guestClaims.sub, claims.metadata.address);
       }
     }
 
-    return NextResponse.json({ jwt, handle: account.username }, { status: 200 });
+    return NextResponse.json({ 
+      jwt, 
+      handle: claims.metadata.username 
+    }, { status: 200 });
   } catch (error) {
     console.error("[Login Route Error]:", error);
     return NextResponse.json(
@@ -49,20 +64,21 @@ export async function POST(req: Request) {
   }
 }
 
-async function manageUserRecord(account: Account | null) {
-  if (!account) return;
+async function manageUserRecord(profile: Awaited<ReturnType<typeof getUserProfile>>) {
+  if (!profile) return;
 
   const db = await createServiceClient();
+  const account = profile.profile?.loggedInAs?.account;
 
-  const { data: existingUser } = await db.from("users").select().eq("address", account.address).single();
+  const { data: existingUser } = await db.from("users").select().eq("address", profile.address).single();
 
   if (!existingUser) {
     const { error: insertError } = await db.from("users").insert({
-      address: account.address,
-      handle: account.username?.localName ?? null,
+      address: profile.address,
+      handle: profile.username ?? null,
       isAnonymous: false,
-      name: account.metadata?.name ?? null,
-      owner: account.owner ?? null,
+      name: account?.metadata?.name ?? null,
+      owner: account?.owner ?? null,
       metadata: {},
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -76,13 +92,12 @@ async function manageUserRecord(account: Account | null) {
     const { error: updateError } = await db
       .from("users")
       .update({
-        handle: account.username?.localName ?? null,
-        name: account.metadata?.name ?? null,
-        address: account.address ?? null,
-        owner: account.owner ?? null,
+        handle: profile.username ?? null,
+        name: account?.metadata?.name ?? null,
+        owner: account?.owner ?? null,
         updatedAt: new Date().toISOString(),
       })
-      .eq("address", account.address);
+      .eq("address", profile.address);
 
     if (updateError) {
       console.error("Error updating user record:", updateError);

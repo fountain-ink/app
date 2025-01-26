@@ -2,18 +2,18 @@ import { env } from "@/env";
 import { sign } from "jsonwebtoken";
 import { getLensClient } from "../lens/client";
 import { getUserProfile } from "./get-user-profile";
+import { AppToken, TokenClaims } from "./app-token";
 
 const SUPABASE_JWT_SECRET = env.SUPABASE_JWT_SECRET;
 
-export async function signAppToken(refreshToken: string) {
-  const lens = await getLensClient();
+export async function signAppToken(): Promise<AppToken> {
   const profile = await getUserProfile();
 
   if (!profile?.address || !profile?.username) {
     throw new Error("Invalid Lens profile");
   }
 
-  const claims = {
+  const claims: TokenClaims = {
     sub: profile.address,
     role: "authenticated",
     metadata: {
@@ -23,13 +23,9 @@ export async function signAppToken(refreshToken: string) {
     },
   };
 
-  const jwt = sign(claims, SUPABASE_JWT_SECRET, {
+  return sign(claims, SUPABASE_JWT_SECRET, {
     algorithm: "HS256",
     expiresIn: "30d",
     issuer: "fountain.ink",
   });
-
-  const account = profile.profile.loggedInAs.account;
-
-  return { jwt, account };
 }

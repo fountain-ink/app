@@ -1,7 +1,7 @@
 import { BlogHeader } from "@/components/user/blog-header";
 import { UserTheme } from "@/components/user/user-theme";
-import { getUserSettings } from "@/lib/settings/get-settings";
 import { getLensClient } from "@/lib/lens/client";
+import { getUserMetadata } from "@/lib/settings/get-metadata";
 import { fetchAccount } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
 
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: { user: string } })
     };
   }
 
-  const settings = await getUserSettings(account.address);
+  const settings = await getUserMetadata(account.address);
   const icon = settings?.blog?.icon;
   const blogTitle = settings?.blog?.title || `${username}'s blog`;
   const blogDescription = settings?.blog?.about || `@${username}'s blog on Fountain`;
@@ -27,14 +27,14 @@ export async function generateMetadata({ params }: { params: { user: string } })
   return {
     title: blogTitle,
     description: blogDescription,
-    icons: icon ? [{ rel: 'icon', url: icon }] : undefined,
+    icons: icon ? [{ rel: "icon", url: icon }] : undefined,
     openGraph: {
       title: blogTitle,
       description: blogDescription,
       ...(icon && { images: [{ url: icon, alt: `${blogTitle} icon` }] }),
     },
     twitter: {
-      card: 'summary',
+      card: "summary",
       title: blogTitle,
       description: blogDescription,
       ...(icon && { images: [icon] }),
@@ -59,10 +59,10 @@ const BlogLayout = async ({
     return notFound();
   }
 
-  const settings = await getUserSettings(account.address);
-  const themeName = settings?.theme?.name;
-  const title = settings?.blog?.title;
-  const icon = settings?.blog?.icon;
+  const metadata = await getUserMetadata(account.address);
+  const themeName = metadata?.theme?.name;
+  const title = metadata?.blog?.title;
+  const icon = metadata?.blog?.icon;
 
   return (
     <UserTheme initialTheme={themeName}>

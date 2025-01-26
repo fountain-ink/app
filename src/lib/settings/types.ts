@@ -1,5 +1,3 @@
-import { Database } from "../supabase/database";
-
 export interface UserMetadata {
   blog?: {
     title?: string;
@@ -14,12 +12,11 @@ export interface UserMetadata {
     customColor?: string;
     customBackground?: string;
   };
+}
+
+export interface UserSettings {
   app?: {
     isSmoothScrolling?: boolean;
     isBlurEnabled?: boolean;
   };
 }
-
-export type UserSettings = {
-  metadata: UserMetadata;
-}; 
