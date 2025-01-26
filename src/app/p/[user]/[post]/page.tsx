@@ -4,6 +4,7 @@ import ErrorPage from "@/components/misc/error-page";
 import { PostCollect } from "@/components/post/post-collect";
 import { PostComments } from "@/components/post/post-comments";
 import { AuthorView } from "@/components/user/user-author-view";
+import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchPost } from "@lens-protocol/client/actions";
 import { sanitize } from "isomorphic-dompurify";
@@ -12,6 +13,7 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
   const lens = await getLensClient();
   const id = params.post;
   const post = await fetchPost(lens, { post: id }).unwrapOr(null);
+  const { profile } = await getUserProfile();
 
   if (!post) return <ErrorPage error="Couldn't find post to show" />;
 
@@ -36,7 +38,7 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
           <AuthorView showUsername={false} accounts={[post.author]} />
         </div>
         <Editor showToc value={contentJson} readOnly={true} />
-        <PostComments post={post} />
+        <PostComments post={post} account={profile?.loggedInAs.account} />
         <PostCollect post={post} />
       </div>
     );

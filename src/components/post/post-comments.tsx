@@ -2,14 +2,15 @@
 
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { getLensClient } from "@/lib/lens/client";
-import { AnyPost, Post, PostReferenceType, postId } from "@lens-protocol/client";
+import { Account, AnyPost, Post, PostReferenceType, postId } from "@lens-protocol/client";
 import { fetchPostReferences } from "@lens-protocol/client/actions";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PostReplyArea } from "./post-reply-area";
 import { GraphicHand2 } from "../icons/custom-icons";
+import { UserAvatar } from "../user/user-avatar";
 
-export const PostComments = ({ post }: { post: Post }) => {
+export const PostComments = ({ post, account }: { post: Post; account?: Account }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isOpen = searchParams.has("comment");
@@ -102,7 +103,14 @@ export const PostComments = ({ post }: { post: Post }) => {
       <SheetContent side="right" className="w-full sm:w-[500px] p-0">
         <div className="h-full flex flex-col p-6">
           <h2 className="text-lg mb-4">Comments</h2>
-          <PostReplyArea onSubmit={handleCreateComment} />
+
+          <div className="flex gap-4 p-4 border border-border rounded-lg bg-background drop-shadow-md mb-4">
+            <UserAvatar account={account} className="w-10 h-10" />
+            <div className="flex-1">
+              <PostReplyArea onSubmit={handleCreateComment} />
+            </div>
+          </div>
+
           <div ref={containerRef} className="flex-1 overflow-auto">
             {comments.length === 0 && !loading ? (
               <div className="text-muted-foreground flex flex-col items-center gap-4">

@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export const UserAvatar = ({
-  account: profile,
+  account,
   loading,
   error,
   className,
@@ -25,7 +25,7 @@ export const UserAvatar = ({
     return <AvatarSuspense />;
   }
 
-  const avatar = profile?.metadata?.picture;
+  const avatar = account?.metadata?.picture;
 
   return (
     <div className={className}>
