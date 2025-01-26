@@ -99,21 +99,21 @@ export const PostComments = ({ post, account }: { post: Post; account?: Account 
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={handleOpenChange}>
-      <SheetContent side="right" className="w-full sm:w-[500px] p-0">
+    <Sheet open={isOpen} onOpenChange={handleOpenChange} >
+      <SheetContent side="right" className="w-full sm:min-w-[450px] p-0">
         <div className="h-full flex flex-col p-6">
-          <h2 className="text-lg mb-4">Comments</h2>
 
-          <div className="flex gap-4 p-4 border border-border rounded-lg bg-background drop-shadow-md mb-4">
-            <UserAvatar account={account} className="w-10 h-10" />
+          <span className="text-sm -mt-2 mb-4">Comments</span>
+
+          <div className="flex gap-4 p-4 border border-border rounded-lg bg-background drop-shadow-md mb-6">
             <div className="flex-1">
-              <PostReplyArea onSubmit={handleCreateComment} />
+              <PostReplyArea account={account} onSubmit={handleCreateComment} />
             </div>
           </div>
 
           <div ref={containerRef} className="flex-1 overflow-auto">
             {comments.length === 0 && !loading ? (
-              <div className="text-muted-foreground flex flex-col items-center gap-4">
+              <div className="text-muted-foreground flex flex-col items-center gap-4 mt-10">
                 <GraphicHand2 />
                 <span>Be the first one to comment</span>
               </div>
