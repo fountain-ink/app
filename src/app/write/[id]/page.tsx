@@ -1,4 +1,3 @@
-import { PublishDialog } from "@/components/editor/addons/editor-publish-dialog";
 import Editor from "@/components/editor/editor";
 import { ArticleLayout } from "@/components/navigation/article-layout";
 import { getAppToken } from "@/lib/auth/get-app-token";
@@ -12,9 +11,7 @@ export default async function WriteDraft({ params }: { params: { id: string } })
 
   return (
     <ArticleLayout>
-      <Editor showToc pathname={pathname} username={username} appToken={appToken}>
-        <PublishDialog />
-      </Editor>
+      <Editor showToc pathname={pathname} username={username} appToken={appToken} />
     </ArticleLayout>
   );
 }

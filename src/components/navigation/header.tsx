@@ -11,7 +11,7 @@ import { FeedbackForm } from "../misc/feedback-form";
 import { SettingsBadge } from "../settings/settings-badge";
 import { ConnectionBadge } from "../ui/connection-badge";
 import { UserMenu } from "../user/user-menu";
-import { PublishMenu } from "./publish-menu-button";
+import { PublishMenu } from "./publish-menu";
 
 export const Header = ({ session }: { session: MeResult | null }) => {
   const pathname = usePathname();

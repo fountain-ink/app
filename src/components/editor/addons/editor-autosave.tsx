@@ -44,7 +44,7 @@ export function AutoSave({ documentId }: { documentId: string }) {
         setSaveSuccess(true);
         setTimeout(() => {
           setIsVisible(false);
-        }, 2000);
+        }, 500);
       } catch (error) {
         console.error("Error saving draft:", error);
       } finally {
