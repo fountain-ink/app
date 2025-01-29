@@ -13,6 +13,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useWalletClient } from "wagmi";
 import { UserAvatar } from "../user/user-avatar";
+import { UserUsername } from "../user/user-handle";
+import { UserName } from "../user/user-name";
 import { cn } from "@/lib/utils";
 
 
@@ -105,36 +107,43 @@ export const CommentReplyArea = ({
   };
 
   return (
-    <div className={cn("flex gap-4 p-4 border border-border rounded-sm bg-background drop-shadow-md mb-6", {
+    <div className={cn("p-4 border border-border drop-shadow-lg rounded-sm bg-background", {
       "mb-0": isCompact
     })}>
-      <div className="flex-1">
-        <div className="space-y-4">
-          <div className="flex gap-4">
-            {!isCompact && <UserAvatar account={account} className="w-10 h-10 flex-shrink-0" />}
-            <TextareaAutosize
-              placeholder="Add your comment here..."
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              disabled={disabled || isSubmitting}
-              rows={3}
-              className="resize-none flex-grow border-none shadow-none p-0 pt-2"
-            />
-          </div>
-
-          <div className="flex justify-between">
-            <Button variant="ghost" size="icon" disabled>
-              <ImageIcon className="h-5 w-5" />
-            </Button>
-            <div className="space-x-2">
-                <Button variant="ghost" onClick={handleCancel} disabled={disabled || isSubmitting}>
-                  Cancel
-                </Button>
-
-              <Button onClick={handleSubmit} disabled={!content.trim() || disabled || isSubmitting}>
-                {isSubmitting ? "Posting..." : "Reply"}
-              </Button>
+      <div className="flex flex-col gap-4">
+        {!isCompact && (
+          <div className="flex items-start gap-3">
+            <UserAvatar account={account} className="w-10 h-10" />
+            <div className="flex flex-col">
+              <UserName profile={account} className="text-sm font-medium" />
+              <UserUsername account={account} className="text-sm text-muted-foreground" />
             </div>
+          </div>
+        )}
+
+        <div className="flex gap-3">
+          <TextareaAutosize
+            placeholder="Add your comment here..."
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            disabled={disabled || isSubmitting}
+            rows={1}
+            className="resize-none flex-grow min-h-8 border-none shadow-none p-0"
+          />
+        </div>
+
+        <div className="flex justify-between items-center">
+          <Button variant="ghost" size="icon" disabled>
+            <ImageIcon className="h-5 w-5" />
+          </Button>
+          <div className="space-x-2">
+              <Button variant="ghost" onClick={handleCancel} disabled={disabled || isSubmitting}>
+                Cancel
+              </Button>
+
+            <Button onClick={handleSubmit} disabled={!content.trim() || disabled || isSubmitting}>
+              {isSubmitting ? "Posting..." : "Reply"}
+            </Button>
           </div>
         </div>
       </div>

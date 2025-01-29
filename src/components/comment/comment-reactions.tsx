@@ -18,10 +18,8 @@ export const CommentReactions = ({
   isLoadingReplies = false,
 }: CommentReactionsProps) => {
   const { handleLike } = usePostActions(comment);
-  const [isRepliesVisible, setIsRepliesVisible] = useState(false);
 
-  const handleToggleReplies = async () => {
-    setIsRepliesVisible(!isRepliesVisible);
+  const handleShowReplies = async () => {
     onShowReplies?.();
     return undefined;
   };
@@ -44,9 +42,10 @@ export const CommentReactions = ({
         initialCount={comment.stats.comments}
         strokeColor="hsl(var(--primary))"
         fillColor="hsl(var(--primary) / 0.8)"
-        onClick={handleToggleReplies}
-        isActive={isRepliesVisible}
+        onClick={handleShowReplies}
         shouldIncrementOnClick={false}
+        fillOnHover={false}
+        fillOnClick={false}
       />
     </div>
   );

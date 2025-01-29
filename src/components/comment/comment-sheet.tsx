@@ -88,28 +88,28 @@ export const CommentSheet = ({ post, account }: { post: Post; account?: Account 
     }
   };
 
-  const renderComment = (comment: AnyPost) => {
-    if (comment.__typename !== "Post") return null;
-    return <CommentView key={comment.id} comment={comment} />;
-  };
 
   return (
     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
       <SheetContent side="right" className="w-full sm:min-w-[450px] p-0">
         <div className="h-full flex flex-col">
-          <div className="flex-none p-6 pb-0">
-            <span className="text-sm -mt-2 mb-4 block">Comments</span>
-            <CommentReplyArea 
-              postId={post.id} 
-              account={account} 
-              onSubmit={handleCreateComment} 
-              onCancel={() => handleOpenChange(false)} 
-            />
+          <div className="flex-none p-6 py-3">
+            <span className="text-sm block">
+              Comments {post.stats.comments > 0 && `(${post.stats.comments})`}
+            </span>
           </div>
 
+          <ScrollArea className="flex-1 h-full mr-1">
+            <div ref={containerRef} className="py-2 overflow-visible">
+              <div className="m-4 mt-0">
+                <CommentReplyArea 
+                  postId={post.id} 
+                  account={account} 
+                  onSubmit={handleCreateComment} 
+                  onCancel={() => handleOpenChange(false)} 
+                />
+              </div>
 
-          <ScrollArea className="flex-1 px-6 mr-1" onScrollCapture={handleScroll}>
-            <div ref={containerRef}>
               {comments.length === 0 && !loading ? (
                 <div className="text-muted-foreground flex flex-col items-center gap-4">
                   <div className="w-[70%] mx-auto">
@@ -118,8 +118,11 @@ export const CommentSheet = ({ post, account }: { post: Post; account?: Account 
                   <span>Be the first one to comment</span>
                 </div>
               ) : (
-                <div className="space-y-4 overflow-visible">
-                  {comments.map((comment) => renderComment(comment))}
+                <div className="flex flex-col gap-4 m-6 overflow-visible">
+                  {comments.map((comment) => {
+                    if (comment.__typename !== "Post") return null;
+                    return <CommentView key={comment.id} comment={comment} />;
+                  })}
                   {loading && <div className="text-center py-4 text-muted-foreground">Loading more comments...</div>}
                 </div>
               )}

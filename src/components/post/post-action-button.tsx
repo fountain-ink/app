@@ -11,6 +11,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { AnimatedChevron } from "../ui/animated-chevron";
+import { cn } from "@/lib/utils";
+import { LucideIcon } from "lucide-react";
 
 export type DropdownItem = {
   icon: any;
@@ -19,7 +21,7 @@ export type DropdownItem = {
 };
 
 export type ActionButtonProps = {
-  icon: any;
+  icon: LucideIcon;
   label: string;
   initialCount?: number;
   strokeColor: string;
@@ -30,6 +32,8 @@ export type ActionButtonProps = {
   onClick?: () => Promise<any> | undefined;
   isActive?: boolean;
   shouldIncrementOnClick?: boolean;
+  fillOnHover?: boolean;
+  fillOnClick?: boolean;
 };
 
 const formatNumber = (num: number): string => {
@@ -55,6 +59,8 @@ export const ActionButton = ({
   onClick,
   isActive = false,
   shouldIncrementOnClick = true,
+  fillOnHover = true,
+  fillOnClick = true,
 }: ActionButtonProps) => {
   const [state, setState] = useState({
     count: initialCount,
@@ -108,8 +114,8 @@ export const ActionButton = ({
     strokeWidth: 1.5,
     className: "transition-all duration-200 group-hover:scale-110 group-active:scale-95",
     style: {
-      color: state.isPressedLocally || state.isHovered ? strokeColor : undefined,
-      fill: state.isPressedLocally ? fillColor : undefined,
+      color: (state.isPressedLocally && fillOnClick) || (state.isHovered && fillOnHover) ? strokeColor : undefined,
+      fill: (state.isPressedLocally && fillOnClick) ? fillColor : undefined,
     },
   };
 
