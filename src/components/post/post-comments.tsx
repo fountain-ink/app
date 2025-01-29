@@ -9,6 +9,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { PostReplyArea } from "./post-reply-area";
 import { GraphicHand2 } from "../icons/custom-icons";
 import { UserAvatar } from "../user/user-avatar";
+import { CommentView } from "./post-comment-view";
 
 export const PostComments = ({ post, account }: { post: Post; account?: Account }) => {
   const router = useRouter();
@@ -89,13 +90,7 @@ export const PostComments = ({ post, account }: { post: Post; account?: Account 
 
   const renderComment = (comment: AnyPost) => {
     if (comment.__typename !== "Post") return null;
-
-    return (
-      <div key={comment.id} className="border-b pb-4">
-        <div className="font-medium">{comment.author.username?.localName}</div>
-        <div className="text-sm text-muted-foreground">{"content" in comment.metadata && comment.metadata.content}</div>
-      </div>
-    );
+    return <CommentView key={comment.id} comment={comment} />;
   };
 
   return (
