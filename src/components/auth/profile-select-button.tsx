@@ -2,14 +2,14 @@
 
 import { useAccountOwnerClient } from "@/hooks/use-lens-clients";
 import { Account } from "@lens-protocol/client";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { Button } from "../ui/button";
 import { UserAvatar } from "../user/user-avatar";
 import { setupUserAuth } from "./auth-manager";
-import { useRouter } from "next/navigation";
 
-export function LoginButton({ profile, onSuccess }: { profile: Account; onSuccess?: () => void }) {
+export function ProfileSelectButotn({ profile, onSuccess }: { profile: Account; onSuccess?: () => void }) {
   const { address } = useAccount();
   const accountOwnerAuth = useAccountOwnerClient();
   const router = useRouter();

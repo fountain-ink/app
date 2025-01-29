@@ -10,7 +10,7 @@ import { AnimatedMenuItem } from "../navigation/animated-item";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { ScrollArea } from "../ui/scroll-area";
-import { LoginButton } from "./login-button";
+import { ProfileSelectButotn } from "./profile-select-button";
 import { OnboardingModal } from "./onboarding-modal";
 
 export function ProfileSelectMenu() {
@@ -103,7 +103,7 @@ export function ProfileSelectMenu() {
               <ScrollArea className="w-full pr-4 max-h-[300px]">
                 <div className="w-full flex flex-col gap-1">
                   {profiles.map((entry: any) => (
-                    <LoginButton key={entry.id} profile={entry.account} />
+                    <ProfileSelectButotn key={entry.id} profile={entry.account} />
                   ))}
                 </div>
               </ScrollArea>

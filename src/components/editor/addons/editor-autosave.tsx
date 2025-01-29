@@ -2,6 +2,7 @@
 
 import type { Draft } from "@/components/draft/draft";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
+import { extractMetadata } from "@/lib/get-article-title";
 import { useEditorState } from "@udecode/plate-common/react";
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
@@ -21,6 +22,7 @@ export function AutoSave({ documentId }: { documentId: string }) {
       try {
         const now = new Date().toISOString();
         const existingDraft = getDocument(documentId);
+        const { title, subtitle, coverImage } = extractMetadata(editor.children as any);
 
         const draft = {
           ...(existingDraft || {}),
@@ -30,14 +32,14 @@ export function AutoSave({ documentId }: { documentId: string }) {
           contentJson: content,
           updatedAt: now,
           createdAt: existingDraft?.createdAt || now,
-          title: existingDraft?.title || "",
-          subtitle: existingDraft?.subtitle || null,
+          title,
+          subtitle,
           contentHtml: null,
           contributors: null,
           yDoc: null,
           // Local-only fields for UI state
           tags: existingDraft?.tags || [],
-          coverImage: existingDraft?.coverImage || null,
+          coverImage,
         } as Draft;
 
         saveDocument(documentId, draft);
