@@ -4,7 +4,7 @@ import { Post } from "@lens-protocol/client";
 import { usePostActions } from "@/hooks/use-post-actions";
 
 export const PostReactions = ({ post }: { post: Post }) => {
-  const { handleLike, handleComment, handleCollect, isLikedByMe } = usePostActions(post);
+  const { handleLike, handleComment, handleCollect, } = usePostActions(post);
 
   const handleCollectRedirect = async () => {
     window.location.href = `/p/${post.author.username?.localName}/${post.slug}?collect=1`;
@@ -20,6 +20,7 @@ export const PostReactions = ({ post }: { post: Post }) => {
         strokeColor="hsl(var(--primary))"
         fillColor="hsl(var(--primary) / 0.8)"
         onClick={() => handleComment(true)}
+        isActive={post.operations?.hasCommented.optimistic}
         shouldIncrementOnClick={false}
       />
       <ActionButton
@@ -29,6 +30,7 @@ export const PostReactions = ({ post }: { post: Post }) => {
         strokeColor="rgb(254,178,4)"
         fillColor="rgba(254, 178, 4, 0.3)"
         onClick={handleCollectRedirect}
+        // isActive={post.stats.isCollectedByMe}
         shouldIncrementOnClick={false}
       />
       <ActionButton
@@ -38,7 +40,7 @@ export const PostReactions = ({ post }: { post: Post }) => {
         strokeColor="rgb(215, 84, 127)"
         fillColor="rgba(215, 84, 127, 0.9)"
         onClick={handleLike}
-        isActive={isLikedByMe}
+        isActive={post.operations?.hasUpvoted}
         shouldIncrementOnClick={true}
       />
     </div>

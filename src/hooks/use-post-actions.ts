@@ -91,7 +91,5 @@ export const usePostActions = (post: Post) => {
     handleLike,
     isCommentOpen,
     isCollectOpen,
-    isLikedByMe: post.operations?.hasUpvoted,
-    isBookmarked: post.operations?.hasBookmarked,
   };
 };

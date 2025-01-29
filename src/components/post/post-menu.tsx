@@ -7,7 +7,7 @@ import { ActionButton, type DropdownItem } from "./post-action-button";
 import { usePostActions } from "@/hooks/use-post-actions";
 
 export const PostMenu = ({ post }: { post: Post }) => {
-  const { handleBookmark, isBookmarked } = usePostActions(post);
+  const { handleBookmark, } = usePostActions(post);
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(`${getBaseUrl()}/p/${post.id}`);
@@ -48,7 +48,7 @@ export const PostMenu = ({ post }: { post: Post }) => {
         strokeColor="hsl(var(--primary))"
         fillColor="hsl(var(--primary) / 0.8)"
         onClick={handleBookmark}
-        isActive={isBookmarked}
+        isActive={post.operations?.hasBookmarked}
         shouldIncrementOnClick={true}
         initialCount={post.stats.bookmarks}
       />

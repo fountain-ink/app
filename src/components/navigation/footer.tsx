@@ -1,6 +1,7 @@
 "use client";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { usePostActions } from "@/hooks/use-post-actions";
 import { useScroll } from "@/hooks/use-scroll";
 import { handlePlatformShare } from "@/lib/get-share-url";
 import { AnyPost } from "@lens-protocol/client";
@@ -18,7 +19,6 @@ import {
 import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
 import { useWalletClient } from "wagmi";
 import { ActionButton } from "../post/post-action-button";
-import { usePostActions } from "@/hooks/use-post-actions";
 
 export const Footer = ({ post }: { post: AnyPost }) => {
   const { scrollProgress, shouldShow, shouldAnimate } = useScroll();
@@ -29,16 +29,8 @@ export const Footer = ({ post }: { post: AnyPost }) => {
     return null;
   }
 
-  const {
-    handleComment,
-    handleCollect,
-    handleBookmark,
-    handleLike,
-    isCommentOpen,
-    isCollectOpen,
-    isLikedByMe,
-    isBookmarked,
-  } = usePostActions(post);
+  const { handleComment, handleCollect, handleBookmark, handleLike, isCommentOpen, isCollectOpen } =
+    usePostActions(post);
 
   const likes = post.stats.reactions;
   const collects = post.stats.collects;
@@ -94,7 +86,7 @@ export const Footer = ({ post }: { post: AnyPost }) => {
     {
       icon: Bookmark,
       label: "Bookmark",
-      isActive: isBookmarked,
+      isActive: post.operations?.hasBookmarked,
       initialCount: bookmarks,
       strokeColor: "hsl(var(--primary))",
       fillColor: "hsl(var(--primary) / 0.8)",
@@ -128,7 +120,7 @@ export const Footer = ({ post }: { post: AnyPost }) => {
       strokeColor: "rgb(215, 84, 127)",
       fillColor: "rgba(215, 84, 127, 0.9)",
       onClick: handleLike,
-      isActive: isLikedByMe,
+      isActive: post.operations?.hasUpvoted,
       shouldIncrementOnClick: true,
     },
   ];
