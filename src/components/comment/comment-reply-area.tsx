@@ -2,17 +2,18 @@
 
 import { Button } from "@/components/ui/button";
 import { TextareaAutosize } from "@/components/ui/textarea";
-import { Account } from "@lens-protocol/client";
-import { ImageIcon } from "lucide-react";
-import { useState } from "react";
-import { UserAvatar } from "../user/user-avatar";
 import { getLensClient } from "@/lib/lens/client";
 import { storageClient } from "@/lib/lens/storage-client";
+import { Account } from "@lens-protocol/client";
 import { currentSession, post } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { textOnly } from "@lens-protocol/metadata";
+import { ImageIcon } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { useWalletClient } from "wagmi";
+import { UserAvatar } from "../user/user-avatar";
+
 
 interface PostReplyAreaProps {
   postId: string;
@@ -22,7 +23,7 @@ interface PostReplyAreaProps {
   account?: Account;
 }
 
-export const PostReplyArea = ({ postId, onSubmit, onCancel, disabled, account }: PostReplyAreaProps) => {
+export const CommentReplyArea = ({ postId, onSubmit, onCancel, disabled, account }: PostReplyAreaProps) => {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: walletClient } = useWalletClient();
@@ -73,10 +74,10 @@ export const PostReplyArea = ({ postId, onSubmit, onCancel, disabled, account }:
 
       toast.dismiss(pendingToast);
       toast.success("Comment published successfully!");
-      
+
       // Clear the input
       setContent("");
-      
+
       // Call the onSubmit callback if provided
       if (onSubmit) {
         await onSubmit(content.trim());

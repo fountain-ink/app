@@ -6,7 +6,7 @@ import { Account, AnyPost, Post, PostReferenceType, postId } from "@lens-protoco
 import { fetchPostReferences } from "@lens-protocol/client/actions";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { PostReplyArea } from "../post/post-reply-area";
+import { CommentReplyArea } from "./comment-reply-area";
 import { GraphicHand2 } from "../icons/custom-icons";
 import { UserAvatar } from "../user/user-avatar";
 import { CommentView } from "./comment-view";
@@ -101,7 +101,7 @@ export const CommentSheet = ({ post, account }: { post: Post; account?: Account 
 
           <div className="flex gap-4 p-4 border border-border rounded-sm bg-background drop-shadow-md mb-6">
             <div className="flex-1">
-              <PostReplyArea postId={post.id} account={account} onSubmit={handleCreateComment} onCancel={() => handleOpenChange(false)} />
+              <CommentReplyArea postId={post.id} account={account} onSubmit={handleCreateComment} onCancel={() => handleOpenChange(false)} />
             </div>
           </div>
 

@@ -2,7 +2,7 @@ import { formatRelativeTime } from "@/lib/utils";
 import { AnyPost } from "@lens-protocol/client";
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
-import { PostReplyArea } from "../post/post-reply-area";
+import { CommentReplyArea } from "./comment-reply-area";
 import { Button } from "../ui/button";
 import { UserAvatar } from "../user/user-avatar";
 import { UserUsername } from "../user/user-handle";
@@ -56,7 +56,7 @@ export const CommentView = ({ comment }: CommentViewProps) => {
 
       {showReplyArea && (
         <div className="pl-11">
-          <PostReplyArea
+          <CommentReplyArea
             postId={comment.id}
             onSubmit={async () => {
               setShowReplyArea(false);
