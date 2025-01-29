@@ -45,7 +45,7 @@ export const PostReplyArea = ({ onSubmit, onCancel, disabled, account }: PostRep
           onChange={(e) => setContent(e.target.value)}
           disabled={disabled || isSubmitting}
           rows={3}
-          className="resize-none flex-grow"
+          className="resize-none flex-grow border-none p-0 pt-2"
         />
       </div>
 
