@@ -102,7 +102,7 @@ export const CommentSheet = ({ post, account }: { post: Post; account?: Account 
 
           <div ref={containerRef} className="flex-1 overflow-auto">
             {comments.length === 0 && !loading ? (
-              <div className="text-muted-foreground flex flex-col items-centermt-10">
+              <div className="text-muted-foreground flex flex-col items-center gap-4 mt-10">
                 <div className="w-[70%] mx-auto">
                   <GraphicHand2 />
                 </div>

@@ -61,6 +61,7 @@ export const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         ghost2: "text-muted-foreground hover:bg-accent",
         ghost3: "text-muted-foreground/80 hover:bg-accent",
+        ghostText: "hover:text-accent-foreground",
         ghostActive: "bg-accent hover:bg-accent hover:text-accent-foreground",
         menuAction: "text-muted-foreground/80 hover:bg-primary/[.06]",
         nav: "rounded-sm text-muted-foreground transition hover:bg-primary/[.04]",

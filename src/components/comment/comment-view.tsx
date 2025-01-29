@@ -1,16 +1,16 @@
+import { getLensClient } from "@/lib/lens/client";
 import { formatRelativeTime } from "@/lib/utils";
-import { AnyPost } from "@lens-protocol/client";
+import { AnyPost, PostReferenceType, postId } from "@lens-protocol/client";
+import { fetchPostReferences } from "@lens-protocol/client/actions";
 import { MoreHorizontal } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { CommentReplyArea } from "./comment-reply-area";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { UserAvatar } from "../user/user-avatar";
 import { UserUsername } from "../user/user-handle";
 import { UserName } from "../user/user-name";
 import { CommentReactions } from "./comment-reactions";
-import { getLensClient } from "@/lib/lens/client";
-import { PostReferenceType, postId } from "@lens-protocol/client";
-import { fetchPostReferences } from "@lens-protocol/client/actions";
+import { CommentReplyArea } from "./comment-reply-area";
+import { cn } from "@/lib/utils";
 
 interface CommentViewProps {
   comment: AnyPost;
@@ -94,66 +94,74 @@ export const CommentView = ({ comment }: CommentViewProps) => {
             isLoadingReplies={loading && nestedComments.length === 0}
           />
         </div>
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghostText"
           className="text-sm text-muted-foreground hover:text-foreground p-0 h-auto"
           onClick={() => setShowReplyArea(!showReplyArea)}
         >
-          {showReplyArea ? 'Cancel' : 'Reply'}
+          {showReplyArea ? "Cancel" : "Reply"}
         </Button>
       </div>
 
-      {showReplies && comment.stats.comments > 0 && (
-        <div className="border-l-2 border-border ml-1 mt-1">
-          <div className="pl-4">
-            {nestedComments.length === 0 && loading ? (
-              <div className="text-sm text-muted-foreground">Loading replies...</div>
-            ) : nestedComments.length === 0 ? (
-              <div className="text-sm text-muted-foreground">No replies yet</div>
-            ) : (
-              <div className="space-y-4">
-                {nestedComments.map((nestedComment) => (
-                  nestedComment.__typename === "Post" && (
-                    <CommentView key={nestedComment.id} comment={nestedComment} />
-                  )
-                ))}
-                {loading && (
-                  <div className="text-sm text-muted-foreground">Loading more replies...</div>
-                )}
-                {!loading && hasMore && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-muted-foreground"
-                    onClick={() => fetchNestedComments(nextCursor.current)}
-                  >
-                    Show more replies
-                  </Button>
-                )}
-              </div>
-            )}
+      <div className="relative">
+        {showReplyArea && (
+          <div className="relative mb-4">
+            <div className="absolute left-[11px] top-0 w-px bg-border h-full" />
+            <div className="pl-8">
+              <CommentReplyArea
+                postId={comment.id}
+                isCompact={true}
+                onSubmit={async () => {
+                  setShowReplyArea(false);
+                  // Refresh nested comments when a new reply is added
+                  setNestedComments([]);
+                  nextCursor.current = undefined;
+                  setHasMore(true);
+                  await fetchNestedComments();
+                }}
+                onCancel={() => setShowReplyArea(false)}
+              />
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-
-      {showReplyArea && (
-        <div className="">
-          <CommentReplyArea
-            postId={comment.id}
-            isCompact={true}
-            onSubmit={async () => {
-              setShowReplyArea(false);
-              // Refresh nested comments when a new reply is added
-              setNestedComments([]);
-              nextCursor.current = undefined;
-              setHasMore(true);
-              await fetchNestedComments();
-            }}
-            onCancel={() => setShowReplyArea(false)}
-          />
-        </div>
-      )}
+        {showReplies && comment.stats.comments > 0 && (
+          <div className="relative">
+            <div className={cn(
+              "absolute left-[11px] w-px bg-border",
+              showReplyArea ? "-top-4" : "top-0",
+              "h-full"
+            )} />
+            <div className="pl-8">
+              {nestedComments.length === 0 && loading ? (
+                <div className="text-sm text-muted-foreground">Loading replies...</div>
+              ) : nestedComments.length === 0 ? (
+                <div className="text-sm text-muted-foreground">No replies yet</div>
+              ) : (
+                <div className="space-y-4">
+                  {nestedComments.map(
+                    (nestedComment) =>
+                      nestedComment.__typename === "Post" && (
+                        <CommentView key={nestedComment.id} comment={nestedComment} />
+                      ),
+                  )}
+                  {loading && <div className="text-sm text-muted-foreground">Loading more replies...</div>}
+                  {!loading && hasMore && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-muted-foreground"
+                      onClick={() => fetchNestedComments(nextCursor.current)}
+                    >
+                      Show more replies
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
