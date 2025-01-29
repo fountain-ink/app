@@ -11,11 +11,11 @@ interface CommentReactionsProps {
   isLoadingReplies?: boolean;
 }
 
-export const CommentReactions = ({ 
-  comment, 
-  onShowReplies, 
+export const CommentReactions = ({
+  comment,
+  onShowReplies,
   hasReplies = false,
-  isLoadingReplies = false 
+  isLoadingReplies = false,
 }: CommentReactionsProps) => {
   const { handleLike } = usePostActions(comment);
   const [isRepliesVisible, setIsRepliesVisible] = useState(false);

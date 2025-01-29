@@ -1,6 +1,7 @@
 "use client";
 
 import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { getLensClient } from "@/lib/lens/client";
 import { Account, AnyPost, Post, PostReferenceType, postId } from "@lens-protocol/client";
 import { fetchPostReferences } from "@lens-protocol/client/actions";
@@ -93,28 +94,37 @@ export const CommentSheet = ({ post, account }: { post: Post; account?: Account 
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={handleOpenChange} >
+    <Sheet open={isOpen} onOpenChange={handleOpenChange}>
       <SheetContent side="right" className="w-full sm:min-w-[450px] p-0">
-        <div className="h-full flex flex-col p-6">
-          <span className="text-sm -mt-2 mb-4">Comments</span>
-
-              <CommentReplyArea postId={post.id} account={account} onSubmit={handleCreateComment} onCancel={() => handleOpenChange(false)} />
-
-          <div ref={containerRef} className="flex-1 overflow-auto">
-            {comments.length === 0 && !loading ? (
-              <div className="text-muted-foreground flex flex-col items-center gap-4 mt-10">
-                <div className="w-[70%] mx-auto">
-                  <GraphicHand2 />
-                </div>
-                <span>Be the first one to comment</span>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {comments.map((comment) => renderComment(comment))}
-                {loading && <div className="text-center py-4 text-muted-foreground">Loading more comments...</div>}
-              </div>
-            )}
+        <div className="h-full flex flex-col">
+          <div className="flex-none p-6 pb-0">
+            <span className="text-sm -mt-2 mb-4 block">Comments</span>
+            <CommentReplyArea 
+              postId={post.id} 
+              account={account} 
+              onSubmit={handleCreateComment} 
+              onCancel={() => handleOpenChange(false)} 
+            />
           </div>
+
+
+          <ScrollArea className="flex-1 px-6 mr-1" onScrollCapture={handleScroll}>
+            <div ref={containerRef}>
+              {comments.length === 0 && !loading ? (
+                <div className="text-muted-foreground flex flex-col items-center gap-4">
+                  <div className="w-[70%] mx-auto">
+                    <GraphicHand2 />
+                  </div>
+                  <span>Be the first one to comment</span>
+                </div>
+              ) : (
+                <div className="space-y-4 overflow-visible">
+                  {comments.map((comment) => renderComment(comment))}
+                  {loading && <div className="text-center py-4 text-muted-foreground">Loading more comments...</div>}
+                </div>
+              )}
+            </div>
+          </ScrollArea>
         </div>
       </SheetContent>
     </Sheet>
