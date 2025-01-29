@@ -167,18 +167,22 @@ export const PublishMenu = () => {
     });
 
     const contentMarkdown = editor.api.markdown.serialize();
+    const attributes: any = [
+      { key: "contentJson", type: MetadataAttributeType.JSON, value: JSON.stringify(draft.contentJson) },
+      { key: "contentHtml", type: MetadataAttributeType.STRING, value: contentHtml },
+    ];
 
+    if (subtitle) {
+      attributes.push({ key: "subtitle", type: MetadataAttributeType.STRING, value: subtitle || "" });
+    }
+    
     try {
       const metadata = article({
         title,
         content: contentMarkdown,
         locale: "en",
         tags: tags.map((t) => t.text),
-        attributes: [
-          { key: "contentJson", type: MetadataAttributeType.JSON, value: JSON.stringify(draft.contentJson) },
-          { key: "contentHtml", type: MetadataAttributeType.STRING, value: contentHtml },
-          { key: "subtitle", type: MetadataAttributeType.STRING, value: subtitle || "" },
-        ],
+        attributes,
       });
 
       const { uri } = await storageClient.uploadAsJson(metadata);
