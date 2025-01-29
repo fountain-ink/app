@@ -2,6 +2,7 @@ import { getLensClient } from "@/lib/lens/client";
 import { formatRelativeTime } from "@/lib/utils";
 import { AnyPost, PostReferenceType, postId } from "@lens-protocol/client";
 import { fetchPostReferences } from "@lens-protocol/client/actions";
+import { motion, AnimatePresence } from "framer-motion";
 import { MoreHorizontal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
@@ -61,7 +62,7 @@ export const CommentView = ({ comment }: CommentViewProps) => {
   if (comment.__typename !== "Post") return null;
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col">
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-3">
           <UserAvatar account={comment.author} className="w-10 h-10" />
@@ -78,9 +79,9 @@ export const CommentView = ({ comment }: CommentViewProps) => {
         </Button>
       </div>
 
-      <div className="text-sm ">{"content" in comment.metadata && comment.metadata.content}</div>
+      <div className="text-sm mt-2">{"content" in comment.metadata && comment.metadata.content}</div>
 
-      <div className="flex items-center gap-4 -mt-2">
+      <div className="flex items-center gap-4 mt-2">
         <div className="-ml-2">
           <CommentReactions
             comment={comment}
@@ -94,73 +95,126 @@ export const CommentView = ({ comment }: CommentViewProps) => {
             isLoadingReplies={loading && nestedComments.length === 0}
           />
         </div>
-        <Button
-          variant="ghostText"
-          className="text-sm text-muted-foreground hover:text-foreground p-0 h-auto"
-          onClick={() => setShowReplyArea(!showReplyArea)}
-        >
-          {showReplyArea ? "Cancel" : "Reply"}
-        </Button>
+        {!showReplyArea && (
+          <Button
+            variant="ghostText"
+            className="text-sm text-muted-foreground hover:text-foreground p-0 h-auto"
+            onClick={() => setShowReplyArea(!showReplyArea)}
+          >
+            Reply
+          </Button>
+        )}
       </div>
 
-      <div className="relative">
-        {showReplyArea && (
-          <div className="relative mb-4">
-            <div className="absolute left-[11px] top-0 w-px bg-border h-full" />
-            <div className="pl-8">
-              <CommentReplyArea
-                postId={comment.id}
-                isCompact={true}
-                onSubmit={async () => {
-                  setShowReplyArea(false);
-                  // Refresh nested comments when a new reply is added
-                  setNestedComments([]);
-                  nextCursor.current = undefined;
-                  setHasMore(true);
-                  await fetchNestedComments();
-                }}
-                onCancel={() => setShowReplyArea(false)}
-              />
-            </div>
-          </div>
-        )}
+      <div className="relative mt-2">
+        <AnimatePresence mode="popLayout">
+          {showReplyArea && (
+            <motion.div
+              layout
+              initial={{ opacity: 0, y: -8, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.95 }}
+              transition={{ 
+                duration: 0.25,
+                ease: [0.32, 0.72, 0, 1]
+              }}
+              className="relative mb-4"
+            >
+              <div className="absolute left-[11px] top-0 w-px bg-border h-full" />
+              <div className="pl-8">
+                <CommentReplyArea
+                  postId={comment.id}
+                  isCompact={true}
+                  onSubmit={async () => {
+                    setShowReplyArea(false);
+                    // Refresh nested comments when a new reply is added
+                    setNestedComments([]);
+                    nextCursor.current = undefined;
+                    setHasMore(true);
+                    await fetchNestedComments();
+                  }}
+                  onCancel={() => setShowReplyArea(false)}
+                />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        {showReplies && comment.stats.comments > 0 && (
-          <div className="relative">
-            <div className={cn(
-              "absolute left-[11px] w-px bg-border",
-              showReplyArea ? "-top-4" : "top-0",
-              "h-full"
-            )} />
-            <div className="pl-8">
-              {nestedComments.length === 0 && loading ? (
-                <div className="text-sm text-muted-foreground">Loading replies...</div>
-              ) : nestedComments.length === 0 ? (
-                <div className="text-sm text-muted-foreground">No replies yet</div>
-              ) : (
-                <div className="space-y-4">
-                  {nestedComments.map(
-                    (nestedComment) =>
-                      nestedComment.__typename === "Post" && (
-                        <CommentView key={nestedComment.id} comment={nestedComment} />
-                      ),
-                  )}
-                  {loading && <div className="text-sm text-muted-foreground">Loading more replies...</div>}
-                  {!loading && hasMore && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-muted-foreground"
-                      onClick={() => fetchNestedComments(nextCursor.current)}
-                    >
-                      Show more replies
-                    </Button>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+        <AnimatePresence mode="popLayout">
+          {showReplies && comment.stats.comments > 0 && (
+            <motion.div
+              layout
+              initial={{ opacity: 0, y: -8, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.95 }}
+              transition={{ 
+                duration: 0.25,
+                ease: [0.32, 0.72, 0, 1]
+              }}
+              className="relative"
+            >
+              <div className={cn(
+                "absolute left-[11px] w-px bg-border",
+                showReplyArea ? "-top-4" : "top-0",
+                "h-full"
+              )} />
+              <div className="pl-8">
+                {nestedComments.length === 0 && loading ? (
+                  <div className="text-sm text-muted-foreground">Loading replies...</div>
+                ) : nestedComments.length === 0 ? (
+                  <div className="text-sm text-muted-foreground">No replies yet</div>
+                ) : (
+                  <motion.div 
+                    layout
+                    className="space-y-4"
+                    initial="hidden"
+                    animate="visible"
+                    variants={{
+                      hidden: { opacity: 0 },
+                      visible: {
+                        opacity: 1,
+                        transition: {
+                          staggerChildren: 0.05
+                        }
+                      }
+                    }}
+                  >
+                    {nestedComments.map(
+                      (nestedComment) =>
+                        nestedComment.__typename === "Post" && (
+                          <motion.div
+                            layout
+                            key={nestedComment.id}
+                            variants={{
+                              hidden: { opacity: 0, y: -8, scale: 0.95 },
+                              visible: { opacity: 1, y: 0, scale: 1 }
+                            }}
+                            transition={{
+                              duration: 0.25,
+                              ease: [0.32, 0.72, 0, 1]
+                            }}
+                          >
+                            <CommentView comment={nestedComment} />
+                          </motion.div>
+                        ),
+                    )}
+                    {loading && <div className="text-sm text-muted-foreground">Loading...</div>}
+                    {!loading && hasMore && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-muted-foreground"
+                        onClick={() => fetchNestedComments(nextCursor.current)}
+                      >
+                        Show more replies
+                      </Button>
+                    )}
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

@@ -127,11 +127,10 @@ export const CommentReplyArea = ({
               <ImageIcon className="h-5 w-5" />
             </Button>
             <div className="space-x-2">
-              {!isCompact && (
                 <Button variant="ghost" onClick={handleCancel} disabled={disabled || isSubmitting}>
                   Cancel
                 </Button>
-              )}
+
               <Button onClick={handleSubmit} disabled={!content.trim() || disabled || isSubmitting}>
                 {isSubmitting ? "Posting..." : "Reply"}
               </Button>
