@@ -8,9 +8,15 @@ interface CommentReactionsProps {
   comment: Post;
   onShowReplies?: () => void;
   hasReplies?: boolean;
+  isLoadingReplies?: boolean;
 }
 
-export const CommentReactions = ({ comment, onShowReplies, hasReplies = false }: CommentReactionsProps) => {
+export const CommentReactions = ({ 
+  comment, 
+  onShowReplies, 
+  hasReplies = false,
+  isLoadingReplies = false 
+}: CommentReactionsProps) => {
   const { handleLike } = usePostActions(comment);
   const [isRepliesVisible, setIsRepliesVisible] = useState(false);
 
@@ -21,7 +27,7 @@ export const CommentReactions = ({ comment, onShowReplies, hasReplies = false }:
   };
 
   return (
-    <div className="flex flex-row gap-3 items-center justify-center">
+    <div className="flex gap-3">
       <ActionButton
         icon={Heart}
         label="Like"
@@ -34,7 +40,7 @@ export const CommentReactions = ({ comment, onShowReplies, hasReplies = false }:
       />
       <ActionButton
         icon={MessageCircle}
-        label="Reply"
+        label={isLoadingReplies ? "Loading..." : "Comments"}
         initialCount={comment.stats.comments}
         strokeColor="hsl(var(--primary))"
         fillColor="hsl(var(--primary) / 0.8)"

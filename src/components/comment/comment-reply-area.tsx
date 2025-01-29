@@ -13,6 +13,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useWalletClient } from "wagmi";
 import { UserAvatar } from "../user/user-avatar";
+import { cn } from "@/lib/utils";
 
 
 interface PostReplyAreaProps {
@@ -21,9 +22,17 @@ interface PostReplyAreaProps {
   onCancel?: () => void;
   disabled?: boolean;
   account?: Account;
+  isCompact?: boolean;
 }
 
-export const CommentReplyArea = ({ postId, onSubmit, onCancel, disabled, account }: PostReplyAreaProps) => {
+export const CommentReplyArea = ({
+  postId,
+  onSubmit,
+  onCancel,
+  disabled,
+  account,
+  isCompact = false
+}: PostReplyAreaProps) => {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: walletClient } = useWalletClient();
@@ -96,30 +105,38 @@ export const CommentReplyArea = ({ postId, onSubmit, onCancel, disabled, account
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex gap-4">
-        <UserAvatar account={account} className="w-10 h-10 flex-shrink-0" />
-        <TextareaAutosize
-          placeholder="Add your comment here..."
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          disabled={disabled || isSubmitting}
-          rows={3}
-          className="resize-none flex-grow border-none p-0 pt-2"
-        />
-      </div>
+    <div className={cn("flex gap-4 p-4 border border-border rounded-sm bg-background drop-shadow-md mb-6", {
+      "mb-0": isCompact
+    })}>
+      <div className="flex-1">
+        <div className="space-y-4">
+          <div className="flex gap-4">
+            {!isCompact && <UserAvatar account={account} className="w-10 h-10 flex-shrink-0" />}
+            <TextareaAutosize
+              placeholder="Add your comment here..."
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              disabled={disabled || isSubmitting}
+              rows={3}
+              className="resize-none flex-grow border-none shadow-none p-0 pt-2"
+            />
+          </div>
 
-      <div className="flex justify-between">
-        <Button variant="ghost" size="icon" disabled>
-          <ImageIcon className="h-5 w-5" />
-        </Button>
-        <div className="space-x-2">
-          <Button variant="ghost" onClick={handleCancel} disabled={disabled || isSubmitting}>
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} disabled={!content.trim() || disabled || isSubmitting}>
-            {isSubmitting ? "Posting..." : "Reply"}
-          </Button>
+          <div className="flex justify-between">
+            <Button variant="ghost" size="icon" disabled>
+              <ImageIcon className="h-5 w-5" />
+            </Button>
+            <div className="space-x-2">
+              {!isCompact && (
+                <Button variant="ghost" onClick={handleCancel} disabled={disabled || isSubmitting}>
+                  Cancel
+                </Button>
+              )}
+              <Button onClick={handleSubmit} disabled={!content.trim() || disabled || isSubmitting}>
+                {isSubmitting ? "Posting..." : "Reply"}
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

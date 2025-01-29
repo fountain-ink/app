@@ -22,7 +22,6 @@ export const CommentSheet = ({ post, account }: { post: Post; account?: Account 
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleCreateComment = async (content: string) => {
-    // TODO: Implement comment creation
     console.log("Creating comment:", content);
   };
 
@@ -99,15 +98,11 @@ export const CommentSheet = ({ post, account }: { post: Post; account?: Account 
         <div className="h-full flex flex-col p-6">
           <span className="text-sm -mt-2 mb-4">Comments</span>
 
-          <div className="flex gap-4 p-4 border border-border rounded-sm bg-background drop-shadow-md mb-6">
-            <div className="flex-1">
               <CommentReplyArea postId={post.id} account={account} onSubmit={handleCreateComment} onCancel={() => handleOpenChange(false)} />
-            </div>
-          </div>
 
           <div ref={containerRef} className="flex-1 overflow-auto">
             {comments.length === 0 && !loading ? (
-              <div className="text-muted-foreground flex flex-col items-center gap-4 mt-10">
+              <div className="text-muted-foreground flex flex-col items-centermt-10">
                 <div className="w-[70%] mx-auto">
                   <GraphicHand2 />
                 </div>
