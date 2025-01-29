@@ -6,12 +6,12 @@ import { Account, AnyPost, Post, PostReferenceType, postId } from "@lens-protoco
 import { fetchPostReferences } from "@lens-protocol/client/actions";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { PostReplyArea } from "./post-reply-area";
+import { PostReplyArea } from "../post/post-reply-area";
 import { GraphicHand2 } from "../icons/custom-icons";
 import { UserAvatar } from "../user/user-avatar";
-import { CommentView } from "./post-comment-view";
+import { CommentView } from "./comment-view";
 
-export const PostComments = ({ post, account }: { post: Post; account?: Account }) => {
+export const CommentSheet = ({ post, account }: { post: Post; account?: Account }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isOpen = searchParams.has("comment");
