@@ -16,7 +16,6 @@ import { TransactionIndexingError } from "@lens-protocol/client";
 import { currentSession, fetchPost, post } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { MetadataAttributeType, article } from "@lens-protocol/metadata";
-import { useSessionClient } from "@lens-protocol/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { createPlateEditor } from "@udecode/plate-common/react";
 import type { Tag } from "emblor";
@@ -32,20 +31,33 @@ import { useAccount, useWalletClient } from "wagmi";
 export const PublishMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [tab, setTab] = useState("article");
+  const pathname = usePathname();
+  const documentId = pathname.split("/").at(-1);
+  const { getDocument, saveDocument } = useDocumentStorage();
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { isConnected: isWalletConnected } = useAccount();
+  const { data: walletClient } = useWalletClient();
+
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [coverUrl, setCoverUrl] = useState("");
   const [titleError, setTitleError] = useState<string | null>(null);
   const [tags, setTags] = useState<Tag[]>([]);
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
-  const pathname = usePathname();
-  const documentId = pathname.split("/").at(-1);
-  const { getDocument, saveDocument } = useDocumentStorage();
-  const router = useRouter();
-  const queryClient = useQueryClient();
-  const { data: session } = useSessionClient();
-  const { isConnected: isWalletConnected } = useAccount();
-  const { data: walletClient } = useWalletClient();
+  const [isPublishing, setIsPublishing] = useState(false);
+
+  useEffect(() => {
+    if (isOpen && documentId) {
+      const draft = getDocument(documentId);
+      if (draft) {
+        setTitle(draft.title || "");
+        setSubtitle(draft.subtitle || "");
+        setCoverUrl(draft.coverImage || "");
+        setTags((draft.tags || []).map((text: string) => ({ text, id: crypto.randomUUID() })));
+      }
+    }
+  }, [isOpen, documentId, getDocument]);
 
   useEffect(() => {
     const error = validateTitle(title);
@@ -61,19 +73,6 @@ export const PublishMenu = () => {
     }
     return null;
   };
-
-  // Load initial state from draft
-  useEffect(() => {
-    if (!documentId) return;
-
-    const draft = getDocument(documentId);
-    if (draft) {
-      setTitle(draft.title || "");
-      setSubtitle(draft.subtitle || "");
-      setCoverUrl(draft.coverImage || "");
-      setTags((draft.tags || []).map((text: string) => ({ text, id: crypto.randomUUID() })));
-    }
-  }, [documentId, getDocument]);
 
   // Save changes back to draft
   const saveDraft = useCallback(
@@ -156,27 +155,29 @@ export const PublishMenu = () => {
       return;
     }
 
-    editor.children = draft.contentJson as any;
-
-    const contentHtml = editor.api.htmlReact?.serialize({
-      nodes: draft.contentJson as Json[],
-      stripDataAttributes: true,
-      preserveClassNames: [],
-      stripWhitespace: true,
-      dndWrapper: (props: any) => <DndProvider context={window} backend={HTML5Backend} {...props} />,
-    });
-
-    const contentMarkdown = editor.api.markdown.serialize();
-    const attributes: any = [
-      { key: "contentJson", type: MetadataAttributeType.JSON, value: JSON.stringify(draft.contentJson) },
-      { key: "contentHtml", type: MetadataAttributeType.STRING, value: contentHtml },
-    ];
-
-    if (subtitle) {
-      attributes.push({ key: "subtitle", type: MetadataAttributeType.STRING, value: subtitle || "" });
-    }
+    setIsPublishing(true);
     
     try {
+      editor.children = draft.contentJson as any;
+
+      const contentHtml = editor.api.htmlReact?.serialize({
+        nodes: draft.contentJson as Json[],
+        stripDataAttributes: true,
+        preserveClassNames: [],
+        stripWhitespace: true,
+        dndWrapper: (props: any) => <DndProvider context={window} backend={HTML5Backend} {...props} />,
+      });
+
+      const contentMarkdown = editor.api.markdown.serialize();
+      const attributes: any = [
+        { key: "contentJson", type: MetadataAttributeType.JSON, value: JSON.stringify(draft.contentJson) },
+        { key: "contentHtml", type: MetadataAttributeType.STRING, value: contentHtml },
+      ];
+
+      if (subtitle) {
+        attributes.push({ key: "subtitle", type: MetadataAttributeType.STRING, value: subtitle || "" });
+      }
+      
       const metadata = article({
         title,
         content: contentMarkdown,
@@ -208,6 +209,7 @@ export const PublishMenu = () => {
         } else {
           toast.error("Unexpected error occurred while processing transaction");
         }
+        setIsPublishing(false);
         return;
       }
 
@@ -217,6 +219,7 @@ export const PublishMenu = () => {
       if (postValue.isErr()) {
         toast.error(`Failed to fetch post: ${postValue.error.message}`);
         console.error("Failed to fetch post:", postValue.error);
+        setIsPublishing(false);
         return;
       }
 
@@ -251,6 +254,8 @@ export const PublishMenu = () => {
     } catch (error) {
       console.error("Error creating post:", error);
       toast.error("An error occurred while creating the post. See console for details");
+    } finally {
+      setIsPublishing(false);
     }
   };
 
@@ -260,12 +265,13 @@ export const PublishMenu = () => {
         className="trasition-all duration-300"
         variant={isOpen ? "outline" : "default"}
         onClick={() => setIsOpen(true)}
+        disabled={isPublishing}
       >
-        Publish
+        {isPublishing ? "Publishing..." : "Publish"}
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-[700px] h-[90vh] rounded-none flex flex-col">
+        <DialogContent className="max-w-[600px] h-[90vh] rounded-none flex flex-col">
           <div className="">
             <div className="flex items-center mb-2">
               <div className="text-lg font-semibold">
@@ -341,6 +347,9 @@ export const PublishMenu = () => {
                           maxTags={5}
                           styleClasses={{
                             input: "shadow-none h-6",
+                            tag: {
+                              body: "border border-secondary",
+                            },
                           }}
                           placeholder="Add a tag"
                           tags={tags}
@@ -353,8 +362,11 @@ export const PublishMenu = () => {
                     </div>
                   </ScrollArea>
                   <div className="flex items-center p-2 ">
-                    <Button onClick={handlePublish} disabled={!!titleError}>
-                      Publish
+                    <Button 
+                      onClick={handlePublish} 
+                      disabled={!!titleError || isPublishing}
+                    >
+                      {isPublishing ? "Publishing..." : "Publish"}
                     </Button>
                   </div>
                 </div>
