@@ -106,7 +106,7 @@ export const PostComments = ({ post, account }: { post: Post; account?: Account 
 
           <div className="flex gap-4 p-4 border border-border rounded-sm bg-background drop-shadow-md mb-6">
             <div className="flex-1">
-              <PostReplyArea account={account} onSubmit={handleCreateComment} onCancel={() => handleOpenChange(false)} />
+              <PostReplyArea postId={post.id} account={account} onSubmit={handleCreateComment} onCancel={() => handleOpenChange(false)} />
             </div>
           </div>
 

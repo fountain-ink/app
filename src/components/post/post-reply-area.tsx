@@ -6,25 +6,84 @@ import { Account } from "@lens-protocol/client";
 import { ImageIcon } from "lucide-react";
 import { useState } from "react";
 import { UserAvatar } from "../user/user-avatar";
+import { getLensClient } from "@/lib/lens/client";
+import { storageClient } from "@/lib/lens/storage-client";
+import { currentSession, post } from "@lens-protocol/client/actions";
+import { handleOperationWith } from "@lens-protocol/client/viem";
+import { textOnly } from "@lens-protocol/metadata";
+import { toast } from "sonner";
+import { useWalletClient } from "wagmi";
 
 interface PostReplyAreaProps {
-  onSubmit: (content: string) => Promise<void>;
+  postId: string;
+  onSubmit?: (content: string) => Promise<void>;
   onCancel?: () => void;
   disabled?: boolean;
   account?: Account;
 }
 
-export const PostReplyArea = ({ onSubmit, onCancel, disabled, account }: PostReplyAreaProps) => {
+export const PostReplyArea = ({ postId, onSubmit, onCancel, disabled, account }: PostReplyAreaProps) => {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { data: walletClient } = useWalletClient();
 
   const handleSubmit = async () => {
     if (!content.trim() || isSubmitting) return;
 
     setIsSubmitting(true);
+    const pendingToast = toast.loading("Publishing comment...");
+
     try {
-      await onSubmit(content.trim());
+      const lens = await getLensClient();
+      if (!lens.isSessionClient()) {
+        toast.error("Please log in to comment");
+        return;
+      }
+
+      const session = await currentSession(lens).unwrapOr(null);
+      if (!session) {
+        toast.error("Please log in to comment");
+        return;
+      }
+
+      // Create metadata for the comment
+      const metadata = textOnly({
+        content: content.trim(),
+      });
+
+      // Upload metadata to IPFS
+      const { uri } = await storageClient.uploadAsJson(metadata);
+
+      // Create the comment post
+      const result = await post(lens, {
+        contentUri: uri,
+        commentOn: {
+          post: postId
+        },
+      })
+        .andThen(handleOperationWith(walletClient as any))
+        .andThen(lens.waitForTransaction);
+
+      if (result.isErr()) {
+        toast.dismiss(pendingToast);
+        toast.error("Failed to publish comment");
+        console.error("Error publishing comment:", result.error);
+        return;
+      }
+
+      toast.dismiss(pendingToast);
+      toast.success("Comment published successfully!");
+      
+      // Clear the input
       setContent("");
+      
+      // Call the onSubmit callback if provided
+      if (onSubmit) {
+        await onSubmit(content.trim());
+      }
+    } catch (error) {
+      console.error("Error publishing comment:", error);
+      toast.error("An error occurred while publishing the comment");
     } finally {
       setIsSubmitting(false);
     }
