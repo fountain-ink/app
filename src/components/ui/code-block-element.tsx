@@ -14,7 +14,6 @@ import { CodeBlockCombobox } from "./code-block-combobox";
 import "./code-block-element.css";
 import { ElementPopover, widthVariants, type ElementWidth } from "./element-popover";
 import { PlateElement } from "./plate-element";
-
 import { ScrollArea } from "./scroll-area";
 
 export const CodeBlockElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
@@ -90,7 +89,6 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
         <motion.figure
           ref={figureRef}
           className="group w-full flex flex-col items-center"
-          contentEditable={false}
           layout={true}
           initial={width}
           animate={width}
