@@ -78,12 +78,21 @@ export const useComments = (postId: string) => {
     }
   }, [fetchComments]);
 
+  // Add a function to manually set comments
+  const setCommentsManually = useCallback((newComments: AnyPost[]) => {
+    setComments(newComments);
+    currentCommentCount.current = newComments.length;
+    nextCursor.current = undefined;
+    setHasMore(false);
+  }, []);
+
   return {
     comments,
     loading,
     hasMore,
     nextCursor: nextCursor.current,
     fetchComments,
-    refresh
+    refresh,
+    setComments: setCommentsManually
   };
 }; 

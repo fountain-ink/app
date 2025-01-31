@@ -11,7 +11,7 @@ export const usePostActions = (post: Post) => {
 
   const handleComment = async (redirectToPost?: boolean) => {
     if (redirectToPost) {
-      window.location.href = `/p/${post.author.username?.localName}/${post.slug}?comment=1`;
+      window.location.href = `/p/${post.author.username?.localName}/${post.slug}?comment=${post.slug}`;
       return;
     }
 
@@ -19,7 +19,7 @@ export const usePostActions = (post: Post) => {
     if (isCommentOpen) {
       params.delete("comment");
     } else {
-      params.append("comment", "1");
+      params.append("comment", post.slug);
     }
     router.push(`?${params.toString()}`, { scroll: false });
     return undefined;
@@ -30,7 +30,7 @@ export const usePostActions = (post: Post) => {
     if (isCollectOpen) {
       params.delete("collect");
     } else {
-      params.append("collect", "1");
+      params.append("collect", post.slug);
     }
     router.push(`?${params.toString()}`, { scroll: false });
     return undefined;

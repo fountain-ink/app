@@ -1,6 +1,8 @@
-import { formatRelativeTime } from "@/lib/utils";
-import { AnyPost } from "@lens-protocol/client";
-import { motion, AnimatePresence } from "framer-motion";
+import { useComments } from "@/hooks/use-comments";
+import { cn, formatRelativeTime } from "@/lib/utils";
+import { AnyPost, PostReferenceType, postId } from "@lens-protocol/client";
+import { fetchPostReferences } from "@lens-protocol/client/actions";
+import { AnimatePresence, motion } from "framer-motion";
 import { MoreHorizontal } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
@@ -9,25 +11,53 @@ import { UserUsername } from "../user/user-handle";
 import { UserName } from "../user/user-name";
 import { CommentReactions } from "./comment-reactions";
 import { CommentReplyArea } from "./comment-reply-area";
-import { cn } from "@/lib/utils";
-import { useComments } from "@/hooks/use-comments";
+import { getLensClient } from "@/lib/lens/client";
 
 interface CommentViewProps {
   comment: AnyPost;
+  nestingLevel?: number;
+  maxNestingLevel?: number;
+  onMaxNestingReached?: (comment: AnyPost) => void;
+  autoShowReplies?: boolean;
 }
 
-export const CommentView = ({ comment }: CommentViewProps) => {
+export const CommentView = ({ 
+  comment, 
+  nestingLevel = 1,
+  maxNestingLevel = 4,
+  onMaxNestingReached,
+  autoShowReplies = false
+}: CommentViewProps) => {
   const [showReplyArea, setShowReplyArea] = useState(false);
-  const [showReplies, setShowReplies] = useState(false);
+  const [showReplies, setShowReplies] = useState(autoShowReplies);
   const [hasFetched, setHasFetched] = useState(false);
   const { comments: nestedComments, loading, hasMore, fetchComments, refresh, nextCursor } = useComments(comment.id);
 
+  const isAtMaxNesting = nestingLevel >= maxNestingLevel;
+
+  const handleShowReplies = () => {
+    if (isAtMaxNesting && onMaxNestingReached) {
+      onMaxNestingReached(comment);
+      return;
+    }
+
+    setShowReplies(!showReplies);
+  };
+
+  // Handle both auto-show and manual show replies
   useEffect(() => {
-    if (showReplies && !hasFetched) {
+    if ((showReplies || autoShowReplies) && !hasFetched) {
       fetchComments();
       setHasFetched(true);
     }
-  }, [showReplies, hasFetched, fetchComments]);
+  }, [showReplies, autoShowReplies, hasFetched, fetchComments]);
+
+  // Update showReplies when autoShowReplies changes
+  useEffect(() => {
+    if (autoShowReplies) {
+      setShowReplies(true);
+    }
+  }, [autoShowReplies]);
 
   if (comment.__typename !== "Post") return null;
 
@@ -51,13 +81,11 @@ export const CommentView = ({ comment }: CommentViewProps) => {
 
       <div className="text-sm mt-2">{"content" in comment.metadata && comment.metadata.content}</div>
 
-      <div className="flex items-center gap-4 mt-2">
+      <div className="flex items-center gap-4">
         <div className="-ml-2">
           <CommentReactions
             comment={comment}
-            onShowReplies={() => {
-              setShowReplies(!showReplies);
-            }}
+            onShowReplies={handleShowReplies}
             hasReplies={comment.stats.comments > 0}
             isLoadingReplies={loading && !hasFetched}
           />
@@ -75,13 +103,13 @@ export const CommentView = ({ comment }: CommentViewProps) => {
 
       <div className="relative mt-2">
         <AnimatePresence mode="popLayout">
-          {showReplyArea && (
+          {showReplyArea && !isAtMaxNesting && (
             <motion.div
               layout
               initial={{ opacity: 0, y: -8, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -8, scale: 0.95 }}
-              transition={{ 
+              transition={{
                 duration: 0.25,
                 ease: [0.32, 0.72, 0, 1]
               }}
@@ -105,13 +133,13 @@ export const CommentView = ({ comment }: CommentViewProps) => {
         </AnimatePresence>
 
         <AnimatePresence mode="popLayout">
-          {showReplies && (nestedComments.length > 0 || (loading && !hasFetched)) && (
+          {showReplies && !isAtMaxNesting && (nestedComments.length > 0 || (loading && !hasFetched)) && (
             <motion.div
               layout
               initial={{ opacity: 0, y: -8, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -8, scale: 0.95 }}
-              transition={{ 
+              transition={{
                 duration: 0.25,
                 ease: [0.32, 0.72, 0, 1]
               }}
@@ -128,7 +156,7 @@ export const CommentView = ({ comment }: CommentViewProps) => {
                 ) : nestedComments.length === 0 ? (
                   null
                 ) : (
-                  <motion.div 
+                  <motion.div
                     layout
                     className="space-y-4"
                     initial="hidden"
@@ -158,7 +186,12 @@ export const CommentView = ({ comment }: CommentViewProps) => {
                               ease: [0.32, 0.72, 0, 1]
                             }}
                           >
-                            <CommentView comment={nestedComment} />
+                            <CommentView 
+                              comment={nestedComment} 
+                              nestingLevel={nestingLevel + 1}
+                              maxNestingLevel={maxNestingLevel}
+                              onMaxNestingReached={onMaxNestingReached}
+                            />
                           </motion.div>
                         ),
                     )}
