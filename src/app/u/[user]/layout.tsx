@@ -103,9 +103,12 @@ const UserLayout = async ({
               )}
             </div>
           </div>
-          <div className="p-4 font-[family-name:--title-font] text-foreground/65">
-            <UserBio profile={account} />
-          </div>
+
+          {account?.metadata?.bio && account?.metadata?.bio?.length > 0 && (
+            <div className="p-4 font-[family-name:--title-font] text-foreground/65">
+              <UserBio profile={account} />
+            </div>
+          )}
           <div className="p-4 pb-0 border-b border-border">
             <UserNavigation username={params.user} isUserProfile={isUserProfile} />
           </div>

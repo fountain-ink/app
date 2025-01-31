@@ -2,56 +2,23 @@
 
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getLensClient } from "@/lib/lens/client";
-import { Account, AnyPost, Post, PostReferenceType, postId } from "@lens-protocol/client";
-import { fetchPostReferences } from "@lens-protocol/client/actions";
+import { Account, Post } from "@lens-protocol/client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { CommentReplyArea } from "./comment-reply-area";
 import { GraphicHand2 } from "../icons/custom-icons";
-import { UserAvatar } from "../user/user-avatar";
 import { CommentView } from "./comment-view";
+import { useComments } from "@/hooks/use-comments";
 
 export const CommentSheet = ({ post, account }: { post: Post; account?: Account }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isOpen = searchParams.has("comment");
-  const [comments, setComments] = useState<AnyPost[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const nextCursor = useRef<string | undefined>(undefined);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { comments, loading, hasMore, fetchComments, refresh, nextCursor } = useComments(post.id);
 
-  const handleCreateComment = async (content: string) => {
-    console.log("Creating comment:", content);
-  };
-
-  const fetchComments = async (cursor?: string) => {
-    if (loading || (!cursor && !hasMore)) return;
-
-    setLoading(true);
-    try {
-      const client = await getLensClient();
-      const result = await fetchPostReferences(client, {
-        referencedPost: postId(post.id),
-        referenceTypes: [PostReferenceType.CommentOn],
-        ...(cursor ? { cursor } : {}),
-      });
-
-      if (result.isErr()) {
-        console.error("Failed to fetch comments:", result.error);
-        return;
-      }
-
-      const { items, pageInfo } = result.value;
-      setComments((prev) => (cursor ? [...prev, ...Array.from(items)] : Array.from(items)));
-      nextCursor.current = pageInfo.next ?? undefined;
-      setHasMore(!!pageInfo.next);
-    } catch (error) {
-      console.error("Error fetching comments:", error);
-    } finally {
-      setLoading(false);
-    }
+  const handleCreateComment = async () => {
+    await refresh();
   };
 
   const handleScroll = useCallback(() => {
@@ -59,18 +26,15 @@ export const CommentSheet = ({ post, account }: { post: Post; account?: Account 
 
     const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
     if (scrollHeight - scrollTop <= clientHeight * 1.5) {
-      fetchComments(nextCursor.current);
+      fetchComments(nextCursor);
     }
-  }, [loading, hasMore]);
+  }, [loading, hasMore, fetchComments, nextCursor]);
 
   useEffect(() => {
-    if (isOpen) {
-      setComments([]);
-      nextCursor.current = undefined;
-      setHasMore(true);
-      fetchComments();
+    if (isOpen && comments.length === 0) {
+      refresh();
     }
-  }, [isOpen, post.id]);
+  }, [isOpen, post.id, comments.length, refresh]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -87,7 +51,6 @@ export const CommentSheet = ({ post, account }: { post: Post; account?: Account 
       router.push(`?${params.toString()}`, { scroll: false });
     }
   };
-
 
   return (
     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
@@ -123,7 +86,7 @@ export const CommentSheet = ({ post, account }: { post: Post; account?: Account 
                     if (comment.__typename !== "Post") return null;
                     return <CommentView key={comment.id} comment={comment} />;
                   })}
-                  {loading && <div className="text-center py-4 text-muted-foreground">Loading more comments...</div>}
+                  {loading && <div className="text-center py-4 text-muted-foreground">Loading...</div>}
                 </div>
               )}
             </div>

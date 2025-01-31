@@ -84,7 +84,6 @@ export const CommentReplyArea = ({
       }
 
       toast.dismiss(pendingToast);
-      toast.success("Comment published successfully!");
 
       // Clear the input
       setContent("");

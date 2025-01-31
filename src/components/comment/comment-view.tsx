@@ -1,10 +1,8 @@
-import { getLensClient } from "@/lib/lens/client";
 import { formatRelativeTime } from "@/lib/utils";
-import { AnyPost, PostReferenceType, postId } from "@lens-protocol/client";
-import { fetchPostReferences } from "@lens-protocol/client/actions";
+import { AnyPost } from "@lens-protocol/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { MoreHorizontal } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { UserAvatar } from "../user/user-avatar";
 import { UserUsername } from "../user/user-handle";
@@ -12,6 +10,7 @@ import { UserName } from "../user/user-name";
 import { CommentReactions } from "./comment-reactions";
 import { CommentReplyArea } from "./comment-reply-area";
 import { cn } from "@/lib/utils";
+import { useComments } from "@/hooks/use-comments";
 
 interface CommentViewProps {
   comment: AnyPost;
@@ -20,44 +19,15 @@ interface CommentViewProps {
 export const CommentView = ({ comment }: CommentViewProps) => {
   const [showReplyArea, setShowReplyArea] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
-  const [nestedComments, setNestedComments] = useState<AnyPost[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const nextCursor = useRef<string | undefined>(undefined);
-
-  const fetchNestedComments = async (cursor?: string) => {
-    if (loading || (!cursor && !hasMore) || comment.__typename !== "Post") return;
-
-    setLoading(true);
-    try {
-      const client = await getLensClient();
-      const result = await fetchPostReferences(client, {
-        referencedPost: postId(comment.id),
-        referenceTypes: [PostReferenceType.CommentOn],
-        ...(cursor ? { cursor } : {}),
-      });
-
-      if (result.isErr()) {
-        console.error("Failed to fetch nested comments:", result.error);
-        return;
-      }
-
-      const { items, pageInfo } = result.value;
-      setNestedComments((prev) => (cursor ? [...prev, ...Array.from(items)] : Array.from(items)));
-      nextCursor.current = pageInfo.next ?? undefined;
-      setHasMore(!!pageInfo.next);
-    } catch (error) {
-      console.error("Error fetching nested comments:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [hasFetched, setHasFetched] = useState(false);
+  const { comments: nestedComments, loading, hasMore, fetchComments, refresh, nextCursor } = useComments(comment.id);
 
   useEffect(() => {
-    if (showReplies && nestedComments.length === 0) {
-      fetchNestedComments();
+    if (showReplies && !hasFetched) {
+      fetchComments();
+      setHasFetched(true);
     }
-  }, [showReplies]);
+  }, [showReplies, hasFetched, fetchComments]);
 
   if (comment.__typename !== "Post") return null;
 
@@ -87,12 +57,9 @@ export const CommentView = ({ comment }: CommentViewProps) => {
             comment={comment}
             onShowReplies={() => {
               setShowReplies(!showReplies);
-              if (!showReplies && nestedComments.length === 0) {
-                fetchNestedComments();
-              }
             }}
             hasReplies={comment.stats.comments > 0}
-            isLoadingReplies={loading && nestedComments.length === 0}
+            isLoadingReplies={loading && !hasFetched}
           />
         </div>
         {!showReplyArea && (
@@ -127,11 +94,8 @@ export const CommentView = ({ comment }: CommentViewProps) => {
                   isCompact={true}
                   onSubmit={async () => {
                     setShowReplyArea(false);
-                    // Refresh nested comments when a new reply is added
-                    setNestedComments([]);
-                    nextCursor.current = undefined;
-                    setHasMore(true);
-                    await fetchNestedComments();
+                    setShowReplies(true);
+                    await refresh();
                   }}
                   onCancel={() => setShowReplyArea(false)}
                 />
@@ -141,7 +105,7 @@ export const CommentView = ({ comment }: CommentViewProps) => {
         </AnimatePresence>
 
         <AnimatePresence mode="popLayout">
-          {showReplies && comment.stats.comments > 0 && (
+          {showReplies && (nestedComments.length > 0 || (loading && !hasFetched)) && (
             <motion.div
               layout
               initial={{ opacity: 0, y: -8, scale: 0.95 }}
@@ -159,10 +123,10 @@ export const CommentView = ({ comment }: CommentViewProps) => {
                 "h-full"
               )} />
               <div className="pl-8">
-                {nestedComments.length === 0 && loading ? (
+                {nestedComments.length === 0 && loading && !hasFetched ? (
                   <div className="text-sm text-muted-foreground">Loading replies...</div>
                 ) : nestedComments.length === 0 ? (
-                  <div className="text-sm text-muted-foreground">No replies yet</div>
+                  null
                 ) : (
                   <motion.div 
                     layout
@@ -198,13 +162,13 @@ export const CommentView = ({ comment }: CommentViewProps) => {
                           </motion.div>
                         ),
                     )}
-                    {loading && <div className="text-sm text-muted-foreground">Loading...</div>}
+                    {loading && hasMore && <div className="text-sm text-muted-foreground">Loading...</div>}
                     {!loading && hasMore && (
                       <Button
                         variant="ghost"
                         size="sm"
                         className="text-muted-foreground"
-                        onClick={() => fetchNestedComments(nextCursor.current)}
+                        onClick={() => fetchComments(nextCursor)}
                       >
                         Show more replies
                       </Button>
