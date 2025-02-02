@@ -25,7 +25,7 @@ export const CommentSheet = ({ post, account }: { post: Post; account?: Account 
     if (!commentId || commentId === post.id || commentId === post.slug) {
       // If we're viewing root comments
       setIsViewingNested(false);
-      refresh();
+      refresh(0, false);
     } else {
       // If we're viewing a specific comment's replies
       const fetchComment = async () => {
@@ -46,7 +46,7 @@ export const CommentSheet = ({ post, account }: { post: Post; account?: Account 
   }, [commentId]);
 
   const handleCreateComment = async () => {
-    await refresh();
+    await refresh(0, true);
   };
 
   const handleMaxNestingReached = (comment: AnyPost) => {

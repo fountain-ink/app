@@ -123,7 +123,7 @@ export const CommentView = ({
                   onSubmit={async () => {
                     setShowReplyArea(false);
                     setShowReplies(true);
-                    await refresh();
+                    await refresh(0, true);
                   }}
                   onCancel={() => setShowReplyArea(false)}
                 />

@@ -47,12 +47,12 @@ export const useComments = (postId: string) => {
     }
   }, [loading, hasMore, postId]);
 
-  const refresh = useCallback(async (retryCount = 0) => {
+  const refresh = useCallback(async (retryCount = 0, expectNew = false) => {
     const maxRetries = 3;
     const retryDelay = 1000; // 1 second
 
-    if (retryCount === 0) {
-      // Mark that we're expecting a new comment on first try
+    if (retryCount === 0 && expectNew) {
+      // Only mark that we're expecting a new comment if explicitly told to
       expectingNewComment.current = true;
     }
 
@@ -60,15 +60,17 @@ export const useComments = (postId: string) => {
     setHasMore(true);
     const newCommentCount = await fetchComments();
     
-    // If we got a valid comment count and either:
-    // 1. The count hasn't changed and we're expecting a new comment, or
-    // 2. The count is 0 and we're expecting the first comment
+    // Only retry if:
+    // 1. We got a valid count
+    // 2. We're expecting a new comment (e.g., after posting)
+    // 3. Either the count hasn't changed or it's still 0
+    // 4. We haven't exceeded max retries
     if (typeof newCommentCount === 'number' && 
-        ((newCommentCount === currentCommentCount.current && expectingNewComment.current) ||
-         (newCommentCount === 0 && expectingNewComment.current)) &&
+        expectingNewComment.current &&
+        newCommentCount === currentCommentCount.current &&
         retryCount < maxRetries) {
       await new Promise(resolve => setTimeout(resolve, retryDelay));
-      return refresh(retryCount + 1);
+      return refresh(retryCount + 1, expectNew);
     }
     
     // Update the comment count and reset expectation flag
