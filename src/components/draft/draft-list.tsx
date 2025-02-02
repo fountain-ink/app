@@ -20,6 +20,7 @@ async function getCloudDrafts() {
   });
 
   const data = await response.json();
+  console.log(data);
   return data.drafts;
 }
 
@@ -118,7 +119,7 @@ export function DraftList({ address }: { address?: EvmAddress | null }) {
         <div key={draft.documentId}>
           <DraftView
             draft={draft}
-            author={(draft.address || address) as EvmAddress}
+            author={(draft.author || address) as EvmAddress}
             isLocal={false}
             isSelected={selectedItems.has(draft.documentId)}
             onSelect={() => toggleSelection(draft.documentId)}

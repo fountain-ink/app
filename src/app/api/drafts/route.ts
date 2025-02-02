@@ -39,7 +39,16 @@ export async function GET(req: NextRequest) {
     if (documentId) {
       const { data: draft, error } = await db
         .from("drafts")
-        .select()
+        .select(`
+          id,
+          documentId,
+          title,
+          subtitle,
+          author,
+          createdAt,
+          updatedAt,
+          contentHtml
+        `)
         .eq("documentId", documentId)
         .eq("author", address)
         .single();
@@ -55,7 +64,19 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ draft }, { status: 200 });
     }
 
-    const { data: drafts, error } = await db.from("drafts").select().eq("author", address);
+    const { data: drafts, error } = await db
+      .from("drafts")
+      .select(`
+        id,
+        documentId,
+        title,
+        subtitle,
+        author,
+        createdAt,
+        updatedAt,
+        contentHtml
+      `)
+      .eq("author", address);
 
     if (error) {
       throw new Error(error.message);
