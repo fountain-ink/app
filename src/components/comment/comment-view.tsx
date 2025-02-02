@@ -21,12 +21,12 @@ interface CommentViewProps {
   autoShowReplies?: boolean;
 }
 
-export const CommentView = ({ 
-  comment, 
+export const CommentView = ({
+  comment,
   nestingLevel = 1,
   maxNestingLevel = 4,
   onMaxNestingReached,
-  autoShowReplies = false
+  autoShowReplies = false,
 }: CommentViewProps) => {
   const [showReplyArea, setShowReplyArea] = useState(false);
   const [showReplies, setShowReplies] = useState(autoShowReplies);
@@ -111,7 +111,7 @@ export const CommentView = ({
               exit={{ opacity: 0, y: -8, scale: 0.95 }}
               transition={{
                 duration: 0.25,
-                ease: [0.32, 0.72, 0, 1]
+                ease: [0.32, 0.72, 0, 1],
               }}
               className="relative mb-4"
             >
@@ -141,21 +141,17 @@ export const CommentView = ({
               exit={{ opacity: 0, y: -8, scale: 0.95 }}
               transition={{
                 duration: 0.25,
-                ease: [0.32, 0.72, 0, 1]
+                ease: [0.32, 0.72, 0, 1],
               }}
               className="relative"
             >
-              <div className={cn(
-                "absolute left-[11px] w-px bg-border",
-                showReplyArea ? "-top-4" : "top-0",
-                "h-full"
-              )} />
+              <div
+                className={cn("absolute left-[11px] w-px bg-border", showReplyArea ? "-top-4" : "top-0", "h-full")}
+              />
               <div className="pl-8">
                 {nestedComments.length === 0 && loading && !hasFetched ? (
                   <div className="text-sm text-muted-foreground">Loading replies...</div>
-                ) : nestedComments.length === 0 ? (
-                  null
-                ) : (
+                ) : nestedComments.length === 0 ? null : (
                   <motion.div
                     layout
                     className="space-y-4"
@@ -166,9 +162,9 @@ export const CommentView = ({
                       visible: {
                         opacity: 1,
                         transition: {
-                          staggerChildren: 0.05
-                        }
-                      }
+                          staggerChildren: 0.05,
+                        },
+                      },
                     }}
                   >
                     {nestedComments.map(
@@ -179,15 +175,15 @@ export const CommentView = ({
                             key={nestedComment.id}
                             variants={{
                               hidden: { opacity: 0, y: -8, scale: 0.95 },
-                              visible: { opacity: 1, y: 0, scale: 1 }
+                              visible: { opacity: 1, y: 0, scale: 1 },
                             }}
                             transition={{
                               duration: 0.25,
-                              ease: [0.32, 0.72, 0, 1]
+                              ease: [0.32, 0.72, 0, 1],
                             }}
                           >
-                            <CommentView 
-                              comment={nestedComment} 
+                            <CommentView
+                              comment={nestedComment}
                               nestingLevel={nestingLevel + 1}
                               maxNestingLevel={maxNestingLevel}
                               onMaxNestingReached={onMaxNestingReached}

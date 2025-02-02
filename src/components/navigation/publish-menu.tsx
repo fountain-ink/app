@@ -156,7 +156,7 @@ export const PublishMenu = () => {
     }
 
     setIsPublishing(true);
-    
+
     try {
       editor.children = draft.contentJson as any;
 
@@ -177,7 +177,7 @@ export const PublishMenu = () => {
       if (subtitle) {
         attributes.push({ key: "subtitle", type: MetadataAttributeType.STRING, value: subtitle });
       }
-      
+
       const metadata = article({
         title,
         content: contentMarkdown,
@@ -362,10 +362,7 @@ export const PublishMenu = () => {
                     </div>
                   </ScrollArea>
                   <div className="flex items-center p-2 ">
-                    <Button 
-                      onClick={handlePublish} 
-                      disabled={!!titleError || isPublishing}
-                    >
+                    <Button onClick={handlePublish} disabled={!!titleError || isPublishing}>
                       {isPublishing ? "Publishing..." : "Publish"}
                     </Button>
                   </div>

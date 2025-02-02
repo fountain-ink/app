@@ -17,7 +17,6 @@ import { UserUsername } from "../user/user-handle";
 import { UserName } from "../user/user-name";
 import { cn } from "@/lib/utils";
 
-
 interface PostReplyAreaProps {
   postId: string;
   onSubmit?: (content: string) => Promise<void>;
@@ -33,7 +32,7 @@ export const CommentReplyArea = ({
   onCancel,
   disabled,
   account,
-  isCompact = false
+  isCompact = false,
 }: PostReplyAreaProps) => {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -70,7 +69,7 @@ export const CommentReplyArea = ({
       const result = await post(lens, {
         contentUri: uri,
         commentOn: {
-          post: postId
+          post: postId,
         },
       })
         .andThen(handleOperationWith(walletClient as any))
@@ -106,9 +105,11 @@ export const CommentReplyArea = ({
   };
 
   return (
-    <div className={cn("p-4 border border-border drop-shadow-lg rounded-sm bg-background", {
-      "mb-0": isCompact
-    })}>
+    <div
+      className={cn("p-4 border border-border drop-shadow-lg rounded-sm bg-background", {
+        "mb-0": isCompact,
+      })}
+    >
       <div className="flex flex-col gap-4">
         {!isCompact && (
           <div className="flex items-start gap-3">
@@ -136,9 +137,9 @@ export const CommentReplyArea = ({
             <ImageIcon className="h-5 w-5" />
           </Button>
           <div className="space-x-2">
-              <Button variant="ghost" onClick={handleCancel} disabled={disabled || isSubmitting}>
-                Cancel
-              </Button>
+            <Button variant="ghost" onClick={handleCancel} disabled={disabled || isSubmitting}>
+              Cancel
+            </Button>
 
             <Button onClick={handleSubmit} disabled={!content.trim() || disabled || isSubmitting}>
               {isSubmitting ? "Posting..." : "Reply"}

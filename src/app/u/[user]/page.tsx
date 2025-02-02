@@ -14,7 +14,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
     filter: {
       // apps: [appEvmAddress],
       authors: [profile?.address],
-      metadata: {mainContentFocus: [MainContentFocus.Article]},
+      metadata: { mainContentFocus: [MainContentFocus.Article] },
     },
   }).unwrapOr(null);
 

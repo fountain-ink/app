@@ -115,7 +115,7 @@ export const ActionButton = ({
     className: "transition-all duration-200 group-hover:scale-110 group-active:scale-95",
     style: {
       color: (state.isPressedLocally && fillOnClick) || (state.isHovered && fillOnHover) ? strokeColor : undefined,
-      fill: (state.isPressedLocally && fillOnClick) ? fillColor : undefined,
+      fill: state.isPressedLocally && fillOnClick ? fillColor : undefined,
     },
   };
 

@@ -1,16 +1,16 @@
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
+import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { signAppToken } from "@/lib/auth/sign-app-token";
 import { signGuestToken } from "@/lib/auth/sign-guest-token";
 import { createServiceClient } from "@/lib/supabase/service";
-import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { NextResponse } from "next/server";
 
 async function migrateGuestData(guestAddress: string, newAddress: string) {
   const db = await createServiceClient();
 
-  await db.from("drafts").update({ address: newAddress }).eq("address", guestAddress);
+  await db.from("drafts").update({ author: newAddress }).eq("address", guestAddress);
 
-  await db.from("feedback").update({ address: newAddress }).eq("address", guestAddress);
+  await db.from("feedback").update({ author: newAddress }).eq("address", guestAddress);
 
   await db.from("users").update({ isAnonymous: false, address: newAddress }).eq("address", guestAddress);
 }

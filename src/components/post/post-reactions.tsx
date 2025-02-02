@@ -4,7 +4,7 @@ import { Post } from "@lens-protocol/client";
 import { usePostActions } from "@/hooks/use-post-actions";
 
 export const PostReactions = ({ post }: { post: Post }) => {
-  const { handleLike, handleComment, handleCollect, } = usePostActions(post);
+  const { handleLike, handleComment, handleCollect } = usePostActions(post);
 
   const handleCollectRedirect = async () => {
     window.location.href = `/p/${post.author.username?.localName}/${post.slug}?collect=1`;

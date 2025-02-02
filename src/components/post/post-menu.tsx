@@ -7,7 +7,7 @@ import { ActionButton, type DropdownItem } from "./post-action-button";
 import { usePostActions } from "@/hooks/use-post-actions";
 
 export const PostMenu = ({ post }: { post: Post }) => {
-  const { handleBookmark, } = usePostActions(post);
+  const { handleBookmark } = usePostActions(post);
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(`${getBaseUrl()}/p/${post.id}`);
