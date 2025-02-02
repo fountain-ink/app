@@ -175,7 +175,7 @@ export const PublishMenu = () => {
       ];
 
       if (subtitle) {
-        attributes.push({ key: "subtitle", type: MetadataAttributeType.STRING, value: subtitle || "" });
+        attributes.push({ key: "subtitle", type: MetadataAttributeType.STRING, value: subtitle });
       }
       
       const metadata = article({
@@ -271,7 +271,7 @@ export const PublishMenu = () => {
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-[600px] h-[90vh] rounded-none flex flex-col">
+        <DialogContent className="max-w-[700px] h-[90vh] rounded-none flex flex-col">
           <div className="">
             <div className="flex items-center mb-2">
               <div className="text-lg font-semibold">
@@ -294,7 +294,7 @@ export const PublishMenu = () => {
             <div className="flex-1 min-h-0">
               <TabsContent value="article" className="h-full">
                 <div className="flex flex-col h-full">
-                  <ScrollArea className="flex-1 min-h-0 pr-2">
+                  <ScrollArea className="flex-1 min-h-0 pr-[10%]">
                     <div className="space-y-6 p-4 px-2">
                       <div className="space-y-2">
                         <div className="pb-2">

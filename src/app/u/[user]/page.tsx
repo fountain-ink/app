@@ -1,6 +1,7 @@
 import { UserContent } from "@/components/user/user-content";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
+import { MainContentFocus } from "@lens-protocol/client";
 import { fetchAccount, fetchPosts } from "@lens-protocol/client/actions";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
@@ -13,6 +14,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
     filter: {
       // apps: [appEvmAddress],
       authors: [profile?.address],
+      metadata: {mainContentFocus: [MainContentFocus.Article]},
     },
   }).unwrapOr(null);
 
