@@ -27,6 +27,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { toast } from "sonner";
 import { useAccount, useWalletClient } from "wagmi";
+import {   MediaImageMimeType,  MetadataLicenseType,} from "@lens-protocol/metadata";
 
 export const PublishMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,7 +54,7 @@ export const PublishMenu = () => {
       if (draft) {
         setTitle(draft.title || "");
         setSubtitle(draft.subtitle || "");
-        setCoverUrl(draft.coverImage || "");
+        setCoverUrl(draft.coverUrl || "");
         setTags((draft.tags || []).map((text: string) => ({ text, id: crypto.randomUUID() })));
       }
     }
@@ -177,10 +178,15 @@ export const PublishMenu = () => {
       if (subtitle) {
         attributes.push({ key: "subtitle", type: MetadataAttributeType.STRING, value: subtitle });
       }
+      
+      if (coverUrl) {
+        attributes.push({ key: "coverUrl", type: MetadataAttributeType.STRING, value: coverUrl });
+      }
 
       const metadata = article({
         title,
         content: contentMarkdown,
+        // attachments: coverUrl ? [{item: coverUrl, type: MediaImageMimeType.JPEG, attributes: [{key: "cover", }]}] : [],
         locale: "en",
         tags: tags.map((t) => t.text),
         attributes,

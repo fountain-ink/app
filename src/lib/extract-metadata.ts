@@ -9,15 +9,15 @@ interface ContentNode {
 interface ArticleMetadata {
   title: string;
   subtitle: string;
-  coverImage: string | null;
+  coverUrl: string | null;
 }
 
-export const extractMetadata = (content: ContentNode[] | undefined): ArticleMetadata => {
+export const extractMetadata = (content?: ContentNode[]): ArticleMetadata => {
   if (!content || !Array.isArray(content)) {
     return {
       title: "Untitled",
       subtitle: "",
-      coverImage: null,
+      coverUrl: null,
     };
   }
 
@@ -35,6 +35,6 @@ export const extractMetadata = (content: ContentNode[] | undefined): ArticleMeta
   return {
     title: extractText(titleNode) || "Untitled",
     subtitle: extractText(subtitleNode),
-    coverImage: imageNode?.url ?? null,
+    coverUrl: imageNode?.url ?? null,
   };
 };

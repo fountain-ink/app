@@ -1,7 +1,7 @@
 import { env } from "@/env";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { verifyToken } from "@/lib/auth/verify-token";
-import { extractMetadata } from "@/lib/get-article-title";
+import { extractMetadata } from "@/lib/extract-metadata";
 import { Json } from "@/lib/supabase/database";
 import { createServiceClient } from "@/lib/supabase/service";
 import { Database } from "@hocuspocus/extension-database";
@@ -63,7 +63,7 @@ const server = Server.configure({
       store: async ({ documentName, state, document }) => {
         const yDoc = `\\x${state.toString("hex")}`;
         const contentJson = yTextToSlateElement(document.get("content", Y.XmlText)).children;
-        const { title, subtitle } = extractMetadata(contentJson as any);
+        const { title, subtitle, coverUrl } = extractMetadata(contentJson as any);
 
         const { data: response, error } = await db
           .from("drafts")
@@ -71,6 +71,7 @@ const server = Server.configure({
             yDoc,
             title,
             subtitle,
+            coverUrl,
             contentJson: contentJson as any,
             updatedAt: new Date().toISOString(),
           })

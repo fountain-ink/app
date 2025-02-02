@@ -1,4 +1,3 @@
-import { extractMetadata } from "@/lib/get-article-title";
 import { formatDate, formatRelativeTime } from "@/lib/utils";
 import { Post } from "@lens-protocol/client";
 import { ArticleMetadata, EvmAddress } from "@lens-protocol/metadata";
@@ -54,6 +53,7 @@ export const PostView = ({
   let username: string;
   let title: string | undefined;
   let subtitle: string | undefined;
+  let coverUrl: string | undefined;
 
   if (isDraft) {
     const draft = item as Draft;
@@ -63,6 +63,7 @@ export const PostView = ({
     title = draft.title ?? undefined;
     subtitle = draft.subtitle ?? undefined;
     contentMarkdown = draft.contentHtml ?? "";
+    coverUrl = draft.coverUrl ?? undefined;
     contentJson = String(draft.contentJson ?? "{}");
   } else {
     const post = item as Post;
@@ -73,11 +74,10 @@ export const PostView = ({
       (metadata.attributes?.find((attr) => "key" in attr && attr.key === "subtitle")?.value as string) ?? undefined;
     username = post.author.username?.localName || "";
     contentMarkdown = "content" in metadata ? (metadata.content as string) : "";
+    coverUrl = metadata.attributes?.find((attr) => "key" in attr && attr.key === "coverUrl")?.value as string;
     contentJson =
       (metadata?.attributes?.find((attr) => "key" in attr && attr.key === "contentJson")?.value as string) || "{}";
   }
-
-  const contentMetadata = extractMetadata(isDraft ? contentJson : JSON.parse(contentJson));
 
   if (options.showContent && !contentMarkdown) {
     return null;
@@ -94,10 +94,10 @@ export const PostView = ({
     >
       {options.showPreview && (
         <div className="h-40 w-40 shrink-0 aspect-square rounded-sm overflow-hidden">
-          {contentMetadata.coverImage ? (
+          {coverUrl ? (
             <div className="h-full w-full overflow-hidden">
               <img
-                src={contentMetadata.coverImage}
+                src={coverUrl}
                 alt="Cover"
                 className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover/post:scale-110"
               />
