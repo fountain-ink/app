@@ -47,7 +47,8 @@ export async function GET(req: NextRequest) {
           author,
           createdAt,
           updatedAt,
-          contentHtml
+          contentHtml,
+          coverUrl
         `)
         .eq("documentId", documentId)
         .eq("author", address)
@@ -74,7 +75,8 @@ export async function GET(req: NextRequest) {
         author,
         createdAt,
         updatedAt,
-        contentHtml
+        contentHtml,
+        coverUrl
       `)
       .eq("author", address);
 
