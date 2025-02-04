@@ -4,7 +4,7 @@ import { AuthorView } from "@/components/user/user-author-view";
 import { UserContent } from "@/components/user/user-content";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
-import { fetchAccount, fetchPosts } from "@lens-protocol/client/actions";
+import { fetchAccount, fetchPosts, fetchPostTags } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
 import { getUserMetadata } from "@/lib/settings/get-user-metadata";
 import { MainContentFocus } from "@lens-protocol/client";
@@ -20,6 +20,10 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
       authors: [profile?.address],
       metadata: { mainContentFocus: [MainContentFocus.Article] },
     },
+  }).unwrapOr(null);
+  
+  const tags = await fetchPostTags(lens, {
+    forFeeds: []
   }).unwrapOr(null);
 
   if (!profile || !posts) {

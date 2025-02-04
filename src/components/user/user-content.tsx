@@ -89,7 +89,7 @@ export const UserContent = ({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="flex flex-col gap-4"
+      className="flex flex-col gap-4 my-4"
     >
       {postViews}
     </motion.div>

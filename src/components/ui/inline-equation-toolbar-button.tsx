@@ -19,6 +19,7 @@ export const InlineEquationToolbarButton = withRef<typeof ToolbarButton>((props,
       }}
     >
       <RadicalIcon />
+      Equation
     </ToolbarButton>
   );
 });

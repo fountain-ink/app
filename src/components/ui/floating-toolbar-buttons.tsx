@@ -70,8 +70,6 @@ export function FloatingToolbarButtons() {
               <Code2 />
             </MarkToolbarButton>
 
-            <InlineEquationToolbarButton />
-
             <LinkToolbarButton />
           </ToolbarGroup>
           <ToolbarGroup>{!isSelectionAcrossBlocks && <MoreDropdownMenu />}</ToolbarGroup>

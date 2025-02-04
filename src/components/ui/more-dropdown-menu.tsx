@@ -4,8 +4,9 @@ import { collapseSelection } from "@udecode/plate-common";
 import { focusEditor, useEditorRef } from "@udecode/plate-common/react";
 import { HighlightPlugin } from "@udecode/plate-highlight/react";
 import { KbdPlugin } from "@udecode/plate-kbd/react";
-import { HighlighterIcon, KeyboardIcon, MoreHorizontalIcon } from "lucide-react";
+import { HighlighterIcon, KeyboardIcon, MoreHorizontalIcon, RadicalIcon } from "lucide-react";
 
+import { insertInlineEquation } from "@udecode/plate-math";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -55,6 +56,16 @@ export function MoreDropdownMenu(props: DropdownMenuProps) {
           >
             <KeyboardIcon />
             Keyboard input
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            onSelect={() => {
+              insertInlineEquation(editor);
+            }}
+            className="flex items-center gap-2"
+          >
+            <RadicalIcon />
+            Equation
           </DropdownMenuItem>
 
           {/* <DropdownMenuItem
