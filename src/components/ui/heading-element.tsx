@@ -19,10 +19,19 @@ const headingVariants = cva("relative mb-1", {
 
 const HeadingElementVariants = withVariants(PlateElement, headingVariants, ["variant"]);
 
-export const HeadingElement = withRef<typeof HeadingElementVariants>(({ children, variant = "h1", ...props }, ref) => {
-  return (
-    <HeadingElementVariants ref={ref} as={variant!} {...props}>
-      {children}
-    </HeadingElementVariants>
-  );
-});
+export const HeadingElement = withRef<typeof HeadingElementVariants>(
+  ({ children, element, variant = "h1", ...props }, ref) => {
+    return (
+      <HeadingElementVariants
+        id={element?.id as string}
+        ref={ref}
+        as={variant!}
+        variant={variant}
+        element={element}
+        {...props}
+      >
+        {children}
+      </HeadingElementVariants>
+    );
+  },
+);

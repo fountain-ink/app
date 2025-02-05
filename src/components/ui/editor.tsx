@@ -6,7 +6,7 @@ import type { PlateContentProps } from "@udecode/plate-common/react";
 import type { VariantProps } from "class-variance-authority";
 
 import { cn } from "@udecode/cn";
-import { PlateContent } from "@udecode/plate-common/react";
+import { PlateContent, useEditorContainerRef, useEditorRef } from "@udecode/plate-common/react";
 import { cva } from "class-variance-authority";
 
 const editorContainerVariants = cva("relative flex cursor-text", {
@@ -21,57 +21,71 @@ const editorContainerVariants = cva("relative flex cursor-text", {
   },
 });
 
-export const EditorContainer = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentPropsWithoutRef<"div"> & VariantProps<typeof editorContainerVariants>
->(({ className, variant, ...props }, ref) => {
+export const EditorContainer = ({
+  className,
+  variant,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof editorContainerVariants>) => {
+  const editor = useEditorRef();
+  const containerRef = useEditorContainerRef();
+
   return (
     <div
-      ref={ref}
+      id={editor.uid}
+      ref={containerRef}
       className={cn("ignore-click-outside/toolbar", editorContainerVariants({ variant }), className)}
-      role="button"
       {...props}
     />
   );
-});
+};
 
 EditorContainer.displayName = "EditorContainer";
 
 const editorVariants = cva(
   cn(
-    "group/editor",
-    "relative w-full whitespace-pre-wrap break-words",
-    "rounded-md ring-offset-background placeholder:text-muted-foreground/80 focus-visible:outline-none",
-    "[&_[data-slate-placeholder]]:text-muted-foreground/80 [&_[data-slate-placeholder]]:!opacity-100",
-    "[&_[data-slate-placeholder]]:top-[auto_!important]",
-    "[&_strong]:font-bold",
+    'group/editor',
+    'relative w-full overflow-visible whitespace-pre-wrap break-words',
+    'rounded-md ring-offset-background placeholder:text-muted-foreground/80 focus-visible:outline-none',
+    '[&_[data-slate-placeholder]]:text-muted-foreground/80 [&_[data-slate-placeholder]]:!opacity-100',
+    '[&_[data-slate-placeholder]]:top-[auto_!important]',
+    '[&_strong]:font-bold'
   ),
   {
     defaultVariants: {
-      variant: "default",
+      variant: 'default',
     },
     variants: {
       disabled: {
-        true: "cursor-not-allowed opacity-50",
+        true: 'cursor-not-allowed opacity-50',
       },
       focused: {
-        true: "ring-2 ring-ring ring-offset-2",
+        true: 'ring-2 ring-ring ring-offset-2',
       },
       variant: {
-        ai: "w-full px-0 text-sm",
-        aiChat: "max-h-[min(70vh,320px)] w-full max-w-[700px] overflow-y-auto px-3 py-2 text-sm",
-        default: "min-h-full w-full px-16 pb-72 pt-4 text-base sm:px-[max(64px,calc(50%-350px))]",
-        demo: "min-h-full w-full px-16 pb-72 pt-4 text-base sm:px-[max(64px,calc(50%-350px))]",
-        fullWidth: "min-h-full w-full text-base",
+        ai: 'px-0 text-base md:text-sm',
+        aiChat:
+          'max-h-[min(70vh,320px)] max-w-[700px] overflow-y-auto px-3 py-2 text-base md:text-sm',
+        comment: cn('rounded-none border-none bg-transparent text-sm'),
+        default:
+          'min-h-full px-16 pb-72 text-base sm:px-[max(64px,calc(50%-350px))]',
+        demo: 'h-full px-16 pb-72 pt-4 text-base sm:px-[max(64px,calc(50%-350px))]',
+        fullWidth: 'min-h-full px-16 pb-72 text-base sm:px-24',
+        select: 'px-3 py-2 text-base data-[readonly]:w-fit',
+        update: 'px-0 text-sm',
+        versionHistory: 'px-0 pb-[30vh] text-base',
       },
     },
-  },
+  }
 );
 
-export type EditorProps = PlateContentProps & VariantProps<typeof editorVariants>;
+export type EditorProps = PlateContentProps &
+  VariantProps<typeof editorVariants>;
 
 export const Editor = React.forwardRef<HTMLDivElement, EditorProps>(
-  ({ className, disabled, focused, variant, ...props }, ref) => {
+  (
+    { className, disabled, focused, variant, onClick, onMouseDown, ...props },
+    ref
+  ) => {
     return (
       <PlateContent
         ref={ref}
@@ -81,14 +95,27 @@ export const Editor = React.forwardRef<HTMLDivElement, EditorProps>(
             focused,
             variant,
           }),
-          className,
+          className
         )}
-        disabled={disabled}
+        onClick={(e) => {
+          if (variant === 'comment') {
+            e.stopPropagation();
+          }
+
+          onClick?.(e);
+        }}
+        onMouseDown={(e) => {
+          if (variant === 'comment') {
+            e.stopPropagation();
+          }
+
+          onMouseDown?.(e);
+        }}
         disableDefaultStyles
         {...props}
       />
     );
-  },
+  }
 );
 
 Editor.displayName = "Editor";

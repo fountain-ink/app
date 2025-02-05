@@ -1,11 +1,18 @@
 "use client";
+import React from 'react';
 
-import { cn } from "@udecode/cn";
-import { type TocSideBarProps, useTocSideBar, useTocSideBarState } from "@udecode/plate-heading/react";
-import { cva } from "class-variance-authority";
+import { cn } from '@udecode/cn';
+import {
+  type TocSideBarProps,
+  useTocSideBar,
+  useTocSideBarState,
+} from '@udecode/plate-heading/react';
+import { cva } from 'class-variance-authority';
 
-import { inter } from "@/styles/google-fonts";
-import { popoverVariants } from "./popover";
+import { Button } from './button';
+import { popoverVariants } from './popover';
+import { inter } from '@/styles/google-fonts';
+
 
 const tocSidebarButtonVariants = cva(
   "block h-auto w-full rounded-sm p-0 text-left hover:bg-transparent overflow-visible text-xs pointer-events-auto cursor-pointer",
@@ -24,7 +31,7 @@ const tocSidebarButtonVariants = cva(
   },
 );
 
-export const TocSideBar = ({
+export const TocSidebar = ({
   className,
   maxShowCount = 20,
   ...props
@@ -77,26 +84,26 @@ export const TocSideBar = ({
               <div className="font-semibold text-sm select-none">Table of contents</div>
               <div className={cn("relative z-10 p-2", !open && "hidden")}>
                 {headingList.map((item, index) => {
-                  const isActive = activeContentId ? activeContentId === item.id : index === 0;
-                  if (item.depth === 1 || item.depth === 2) {
-                    return null;
-                  }
+                  const isActive = activeContentId
+                    ? activeContentId === item.id
+                    : index === 0;
 
                   return (
-                    <div
-                      id={isActive ? "toc_item_active" : "toc_item"}
+                    <Button
+                      id={isActive ? 'toc_item_active' : 'toc_item'}
                       key={`${item.id}-${index}`}
+                      variant="ghost"
                       className={cn(
                         tocSidebarButtonVariants({
                           active: isActive,
                           depth: item.depth as any,
-                        }),
+                        })
                       )}
-                      onClick={(e) => onContentClick(e, item, "smooth")}
+                      onClick={(e) => onContentClick(e, item, 'smooth')}
                       aria-current={isActive}
                     >
-                      <div className="p-1 line-clamp-2">{item.title}</div>
-                    </div>
+                      <div className="p-1">{item.title}</div>
+                    </Button>
                   );
                 })}
               </div>

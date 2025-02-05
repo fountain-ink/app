@@ -30,7 +30,13 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
         <script defer src="https://stats.kualta.dev/script.js" data-website-id="7bdb552a-61f0-47f6-839e-11a53444dfc0" />
         <script defer src="https://stats.kualta.dev/script.js" data-website-id="42c57186-3cbd-4221-91e1-083ccb710ae8" />
       </head>
-      <body className={cn("overflow-x-hidden scroll-smooth text-clip bg-background text-foreground min-h-dvh")}>
+      <body
+        data-plate-selectable
+        className={cn(
+          "overflow-x-hidden scroll-smooth text-clip bg-background text-foreground min-h-dvh",
+          "[&_.slate-selection-area]:border [&_.slate-selection-area]:border-primary [&_.slate-selection-area]:bg-primary/10 ",
+        )}
+      >
         <Web3Providers>
           <DarkModeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
             <ThemeProvider>

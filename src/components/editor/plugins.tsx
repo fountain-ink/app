@@ -166,10 +166,10 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
               },
               startThreshold: 4,
             },
-            boundaries: "#scroll_container",
-            container: "#scroll_container",
-            selectables: "#scroll_container .slate-selectable",
-            selectionAreaClass: "slate-selection-area",
+            // boundaries: "#scroll_container",
+            // container: "#scroll_container",
+            // selectables: "#scroll_container .slate-selectable",
+            // selectionAreaClass: "slate-selection-area",
           },
           enableContextMenu: true,
         },
@@ -270,7 +270,7 @@ export const staticPlugins = [
   TogglePlugin,
   TocPlugin.configure({
     options: {
-      isScroll: true,
+      // isScroll: true,
       topOffset: 80,
     },
   }),

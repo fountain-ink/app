@@ -6,12 +6,12 @@ import type { PropsWithChildren } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { CommentsPopover } from "../ui/comments-popover";
-import { Editor } from "../ui/editor";
+import { Editor, EditorContainer } from "../ui/editor";
 import { FixedToolbar } from "../ui/fixed-toolbar";
 import { FixedToolbarButtons } from "../ui/fixed-toolbar-buttons";
 import { FloatingToolbar } from "../ui/floating-toolbar";
 import { FloatingToolbarButtons } from "../ui/floating-toolbar-buttons";
-import { TocSideBar } from "../ui/toc-sidebar";
+import { TocSidebar } from "../ui/toc-sidebar";
 import { AutoSave } from "./addons/editor-autosave";
 import { getRichElements } from "./elements";
 import { getEditorPlugins } from "./plugins";
@@ -43,7 +43,7 @@ export default function PlateEditor(
     <DndProvider backend={HTML5Backend}>
       <Plate editor={editor} readOnly={isReadOnly}>
         <div data-plate-selectable="true">
-          {props.showToc && <TocSideBar className="top-[80px]" topOffset={30} />}
+          {props.showToc && <TocSidebar className="top-[80px]" topOffset={30} />}
 
           {props.showToolbar && (
             <FixedToolbar>
@@ -53,13 +53,14 @@ export default function PlateEditor(
 
           {props.children}
 
-          <Editor
-            className={
-              "overflow-visible w-full max-w-full sm:max-w-3xl md:max-w-4xl p-10 pt-0 sm:px-30 md:px-40 mx-auto"
-            }
-            variant="fullWidth"
-            autoFocus
-          />
+          <EditorContainer
+            className={"w-full overflow-visible"}
+            data-plate-selectable
+          >
+            <div className="w-[65ch] mx-auto overflow-visible">
+              <Editor variant={"fullWidth"} autoFocus />
+            </div>
+          </EditorContainer>
 
           {!isReadOnly && <AutoSave documentId={documentId} />}
 
