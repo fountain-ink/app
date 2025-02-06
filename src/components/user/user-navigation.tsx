@@ -22,6 +22,11 @@ export const UserNavigation = ({ username, isUserProfile }: { username: string; 
           disabled: true,
         },
         {
+          href: `/u/${username}/bookmarks`,
+          label: "Bookmarks",
+          isVisible: isUserProfile,
+        },
+        {
           href: `/u/${username}/drafts`,
           label: "Drafts",
           isVisible: isUserProfile,
