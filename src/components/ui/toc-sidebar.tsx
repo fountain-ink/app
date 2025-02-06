@@ -84,6 +84,9 @@ export const TocSidebar = ({
               <div className="font-semibold text-sm select-none">Table of contents</div>
               <div className={cn("relative z-10 p-2", !open && "hidden")}>
                 {headingList.map((item, index) => {
+                  if (item.depth === 1 || item.depth === 2) {
+                    return null;
+                  }
                   const isActive = activeContentId
                     ? activeContentId === item.id
                     : index === 0;
