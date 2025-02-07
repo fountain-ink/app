@@ -5,7 +5,6 @@ import { getLensClient } from "@/lib/lens/client";
 import { fetchAccount } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
 
-// FIXME: Stop downloading the entirety of draft content for drafts list
 export const maxDuration = 60;
 
 const UserPage = async ({ params }: { params: { user: string } }) => {

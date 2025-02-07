@@ -1,5 +1,4 @@
 "use client";
-import React from 'react';
 
 import { cn } from '@udecode/cn';
 import {
@@ -9,9 +8,9 @@ import {
 } from '@udecode/plate-heading/react';
 import { cva } from 'class-variance-authority';
 
+import { inter } from '@/styles/google-fonts';
 import { Button } from './button';
 import { popoverVariants } from './popover';
-import { inter } from '@/styles/google-fonts';
 
 
 const tocSidebarButtonVariants = cva(
@@ -102,7 +101,19 @@ export const TocSidebar = ({
                           depth: item.depth as any,
                         })
                       )}
-                      onClick={(e) => onContentClick(e, item, 'smooth')}
+
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById(item.id);
+                        if (element) {
+                          const elementPosition = element.getBoundingClientRect().top;
+                          const offsetPosition = elementPosition + window.scrollY - 50;
+                          window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                          });
+                        }
+                      }}
                       aria-current={isActive}
                     >
                       <div className="p-1">{item.title}</div>

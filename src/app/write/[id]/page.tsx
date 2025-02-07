@@ -4,6 +4,7 @@ import { getAppToken } from "@/lib/auth/get-app-token";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { headers } from "next/headers";
 
+
 export default async function WriteDraft({ params }: { params: { id: string } }) {
   const { username } = await getUserProfile();
   const appToken = getAppToken();
