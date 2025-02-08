@@ -9,6 +9,7 @@ import {
   useFloatingToolbar,
   useFloatingToolbarState,
 } from "@udecode/plate-floating";
+import { TITLE_KEYS } from "@/components/editor/plugins/title-plugin";
 
 import { Toolbar } from "./toolbar";
 
@@ -25,8 +26,8 @@ export const FloatingToolbar = withRef<
   const isAIChatOpen = editor.useOption({ key: "aiChat" }, "open");
 
   const selected = editor.children[editor?.selection?.anchor.path[0] ?? 0];
-  const isOnTitle = selected?.type === "h1";
-  const isOnSubtitle = selected?.type === "h2";
+  const isOnTitle = selected?.type === TITLE_KEYS.title;
+  const isOnSubtitle = selected?.type === TITLE_KEYS.subtitle;
   const isOnCodeblock = selected?.type === "code_block";
 
   const floatingToolbarState = useFloatingToolbarState({

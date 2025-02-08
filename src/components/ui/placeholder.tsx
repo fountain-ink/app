@@ -1,17 +1,11 @@
 "use client";
 
-import React from "react";
-
 import { cn } from "@udecode/cn";
-import {
-  ParagraphPlugin,
-  type PlaceholderProps,
-  createNodeHOC,
-  createNodesHOC,
-  usePlaceholderState,
-} from "@udecode/plate-common/react";
+import { createNodeHOC, createNodesHOC, ParagraphPlugin, usePlaceholderState, type PlaceholderProps } from "@udecode/plate-common/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
 import { useReadOnly } from "slate-react";
+import { TITLE_KEYS } from "@/components/editor/plugins/title-plugin";
+import React from "react";
 
 export const Placeholder = (props: PlaceholderProps) => {
   const { children, nodeProps, placeholder } = props;
@@ -31,7 +25,7 @@ export const Placeholder = (props: PlaceholderProps) => {
         ...nodeProps,
         className: cn(
           enabled &&
-            "before:absolute before:cursor-text before:opacity-30 before:left-0 before:right-0 before:content-[attr(placeholder)]",
+          "before:absolute before:cursor-text before:opacity-30 before:left-0 before:right-0 before:content-[attr(placeholder)]",
         ),
         placeholder,
       },
@@ -54,23 +48,33 @@ export const withPlaceholders = (components: any) =>
       },
     },
     {
-      key: HEADING_KEYS.h1,
+      key: TITLE_KEYS.title,
       hideOnBlur: false,
       placeholder: "Title",
     },
     {
-      key: HEADING_KEYS.h2,
+      key: TITLE_KEYS.subtitle,
       hideOnBlur: false,
       placeholder: "Subtitle",
     },
     {
-      key: HEADING_KEYS.h3,
+      key: HEADING_KEYS.h1,
       hideOnBlur: false,
       placeholder: "Heading",
     },
     {
-      key: HEADING_KEYS.h4,
+      key: HEADING_KEYS.h2,
       hideOnBlur: false,
-      placeholder: "subheading",
+      placeholder: "Subheading",
     },
+    // {
+    //   key: HEADING_KEYS.h3,
+    //   hideOnBlur: false,
+    //   placeholder: "Subheading",
+    // },
+    // {
+    //   key: HEADING_KEYS.h4,
+    //   hideOnBlur: false,
+    //   placeholder: "Subheading",
+    // },
   ]);

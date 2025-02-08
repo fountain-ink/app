@@ -23,6 +23,7 @@ import type { TableCellPlugin, TablePlugin, TableRowPlugin } from "@udecode/plat
 import type { TToggleElement } from "@udecode/plate-toggle";
 import type { TogglePlugin } from "@udecode/plate-toggle/react";
 import type React from "react";
+import { TITLE_KEYS } from "@/components/editor/plugins/title-plugin";
 
 /** Text */
 
@@ -101,6 +102,16 @@ export interface MyBlockElement extends TElement, MyIndentListProps, MyLineHeigh
 export interface MyParagraphElement extends MyBlockElement {
   children: MyInlineChildren;
   type: typeof ParagraphPlugin.key;
+}
+
+export interface MyTitleElement extends MyBlockElement {
+  children: MyInlineChildren;
+  type: typeof TITLE_KEYS.title;
+}
+
+export interface MySubtitleElement extends MyBlockElement {
+  children: MyInlineChildren;
+  type: typeof TITLE_KEYS.subtitle;
 }
 
 export interface MyH1Element extends MyBlockElement {
@@ -218,13 +229,12 @@ export type MyRootBlock =
   | MyBlockquoteElement
   | MyBulletedListElement
   | MyCodeBlockElement
-  // | MyExcalidrawElement
+  | MyTitleElement
+  | MySubtitleElement
   | MyH1Element
   | MyH2Element
   | MyH3Element
   | MyH4Element
-  | MyH5Element
-  | MyH6Element
   | MyHrElement
   | MyImageElement
   | MyMediaEmbedElement

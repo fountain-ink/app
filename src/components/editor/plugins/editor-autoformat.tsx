@@ -27,6 +27,7 @@ import { INDENT_LIST_KEYS, ListStyleType, toggleIndentList } from "@udecode/plat
 import { toggleList, unwrapList } from "@udecode/plate-list";
 import { BulletedListPlugin, ListItemPlugin, NumberedListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
 import { openNextToggles, TogglePlugin } from "@udecode/plate-toggle/react";
+import { TITLE_KEYS } from "@/components/editor/plugins/title-plugin";
 
 import type { AutoformatBlockRule, AutoformatRule } from "@udecode/plate-autoformat";
 import type { SlateEditor } from "@udecode/plate-common";
@@ -131,41 +132,25 @@ export const autoformatMarks: AutoformatRule[] = [
 
 export const autoformatBlocks: AutoformatRule[] = [
   {
+    mode: "block",
+    type: HEADING_KEYS.h1,
     match: "# ",
-    mode: "block",
-    preFormat,
-    type: HEADING_KEYS.h3,
   },
   {
+    mode: "block",
+    type: HEADING_KEYS.h2,
     match: "## ",
-    mode: "block",
-    preFormat,
-    type: HEADING_KEYS.h4,
   },
   {
-    match: "### ",
     mode: "block",
-    preFormat,
     type: HEADING_KEYS.h3,
+    match: "### ",
   },
   {
-    match: "#### ",
     mode: "block",
-    preFormat,
     type: HEADING_KEYS.h4,
+    match: "#### ",
   },
-  // {
-  //   match: "##### ",
-  //   mode: "block",
-  //   preFormat,
-  //   type: HEADING_KEYS.h5,
-  // },
-  // {
-  //   match: "###### ",
-  //   mode: "block",
-  //   preFormat,
-  //   type: HEADING_KEYS.h6,
-  // },
   {
     match: "> ",
     mode: "block",

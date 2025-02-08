@@ -193,6 +193,7 @@ export const PublishMenu = () => {
       });
 
       const { uri } = await storageClient.uploadAsJson(metadata);
+      console.log(uri);
       const pendingToast = toast.loading("Publishing post...");
 
       const result = await post(lens, {

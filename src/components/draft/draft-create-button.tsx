@@ -5,10 +5,11 @@ import { getRandomUid } from "@/lib/get-random-uid";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoadingSpinner } from "../misc/loading-spinner";
+import { TITLE_KEYS } from "@/components/editor/plugins/title-plugin";
 
 export const defaultContent: any = [
   {
-    type: "h1",
+    type: TITLE_KEYS.title,
     children: [
       {
         text: "",
@@ -16,7 +17,7 @@ export const defaultContent: any = [
     ],
   },
   {
-    type: "h2",
+    type: TITLE_KEYS.subtitle,
     children: [
       {
         text: "",

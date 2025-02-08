@@ -21,8 +21,8 @@ export const extractMetadata = (content?: ContentNode[]): ArticleMetadata => {
     };
   }
 
-  const titleNode = content.find((node) => node.type === "h1");
-  const subtitleNode = content.find((node) => node.type === "h2");
+  const titleNode = content.find((node) => node.type === "title");
+  const subtitleNode = content.find((node) => node.type === "subtitle");
   const imageNode = content.find((node) => node.type === "img");
 
   const extractText = (node: ContentNode | undefined): string => {

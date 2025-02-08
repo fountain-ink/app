@@ -68,6 +68,7 @@ export const PostView = ({
   } else {
     const post = item as Post;
     const metadata = post?.metadata as ArticleMetadata;
+
     date = post.timestamp;
     title = "title" in metadata ? (metadata.title as string) : undefined;
     subtitle =

@@ -26,6 +26,9 @@ import {
   Heading1Icon,
   Heading2Icon,
   Heading3Icon,
+  Heading4Icon,
+  Heading5Icon,
+  Heading6Icon,
   ImageIcon,
   Link2Icon,
   ListIcon,
@@ -44,6 +47,7 @@ import { insertBlock, insertInlineElement } from "@/lib/transforms";
 
 import { DropdownMenu, DropdownMenuTrigger, useOpenState } from "./dropdown-menu";
 import { ToolbarButton } from "./toolbar";
+import { TITLE_KEYS } from "@/components/editor/plugins/title-plugin";
 
 type Group = {
   group: string;
@@ -58,152 +62,106 @@ interface Item {
   label?: string;
 }
 
-const _groups: Group[] = [
+export const insertItems = [
   {
-    group: "Basic blocks",
-    items: [
-      {
-        icon: <PilcrowIcon />,
-        label: "Paragraph",
-        value: ParagraphPlugin.key,
-      },
-      {
-        icon: <Heading1Icon />,
-        label: "Heading 1",
-        value: HEADING_KEYS.h1,
-      },
-      {
-        icon: <Heading2Icon />,
-        label: "Heading 2",
-        value: HEADING_KEYS.h2,
-      },
-      {
-        icon: <Heading3Icon />,
-        label: "Heading 3",
-        value: HEADING_KEYS.h3,
-      },
-      {
-        icon: <TableIcon />,
-        label: "Table",
-        value: TablePlugin.key,
-      },
-      {
-        icon: <FileCodeIcon />,
-        label: "Code",
-        value: CodeBlockPlugin.key,
-      },
-      {
-        icon: <QuoteIcon />,
-        label: "Quote",
-        value: BlockquotePlugin.key,
-      },
-      {
-        icon: <MinusIcon />,
-        label: "Divider",
-        value: HorizontalRulePlugin.key,
-      },
-    ].map((item) => ({
-      ...item,
-      onSelect: (editor, value) => {
-        insertBlock(editor, value);
-      },
-    })),
+    icon: <Heading1Icon />,
+    keywords: ["header", "heading", "h1"],
+    label: "Header",
+    value: HEADING_KEYS.h1,
   },
   {
-    group: "Lists",
-    items: [
-      {
-        icon: <ListIcon />,
-        label: "Bulleted list",
-        value: ListStyleType.Disc,
-      },
-      {
-        icon: <ListOrderedIcon />,
-        label: "Numbered list",
-        value: ListStyleType.Decimal,
-      },
-      {
-        icon: <SquareIcon />,
-        label: "To-do list",
-        value: INDENT_LIST_KEYS.todo,
-      },
-      {
-        icon: <ChevronRightIcon />,
-        label: "Toggle list",
-        value: TogglePlugin.key,
-      },
-    ].map((item) => ({
-      ...item,
-      onSelect: (editor, value) => {
-        insertBlock(editor, value);
-      },
-    })),
+    icon: <Heading2Icon />,
+    keywords: ["subheader", "heading", "h2"],
+    label: "Subheader",
+    value: HEADING_KEYS.h2,
   },
   {
-    group: "Media",
-    items: [
-      {
-        icon: <ImageIcon />,
-        label: "Image",
-        value: ImagePlugin.key,
-      },
-      {
-        icon: <FilmIcon />,
-        label: "Embed",
-        value: MediaEmbedPlugin.key,
-      },
-      {
-        icon: <PenToolIcon />,
-        label: "Excalidraw",
-        value: ExcalidrawPlugin.key,
-      },
-    ].map((item) => ({
-      ...item,
-      onSelect: (editor, value) => {
-        insertBlock(editor, value);
-      },
-    })),
+    icon: <Heading3Icon />,
+    keywords: ["heading", "h3"],
+    label: "Heading 3",
+    value: HEADING_KEYS.h3,
   },
   {
-    group: "Advanced blocks",
-    items: [
-      {
-        icon: <TableOfContentsIcon />,
-        label: "Table of contents",
-        value: TocPlugin.key,
-      },
-      {
-        icon: <Columns3Icon />,
-        label: "3 columns",
-        value: "action_three_columns",
-      },
-    ].map((item) => ({
-      ...item,
-      onSelect: (editor, value) => {
-        insertBlock(editor, value);
-      },
-    })),
+    icon: <Heading4Icon />,
+    keywords: ["heading", "h4"],
+    label: "Heading 4",
+    value: HEADING_KEYS.h4,
   },
   {
-    group: "Inline",
-    items: [
-      {
-        icon: <Link2Icon />,
-        label: "Link",
-        value: LinkPlugin.key,
-      },
-      {
-        focusEditor: true,
-        icon: <CalendarIcon />,
-        label: "Date",
-        value: DatePlugin.key,
-      },
-    ].map((item) => ({
-      ...item,
-      onSelect: (editor, value) => {
-        insertInlineElement(editor, value);
-      },
-    })),
+    icon: <TableIcon />,
+    label: "Table",
+    value: TablePlugin.key,
+  },
+  {
+    icon: <FileCodeIcon />,
+    label: "Code",
+    value: CodeBlockPlugin.key,
+  },
+  {
+    icon: <QuoteIcon />,
+    label: "Quote",
+    value: BlockquotePlugin.key,
+  },
+  {
+    icon: <MinusIcon />,
+    label: "Divider",
+    value: HorizontalRulePlugin.key,
+  },
+  {
+    icon: <ListIcon />,
+    label: "Bulleted list",
+    value: ListStyleType.Disc,
+  },
+  {
+    icon: <ListOrderedIcon />,
+    label: "Numbered list",
+    value: ListStyleType.Decimal,
+  },
+  {
+    icon: <SquareIcon />,
+    label: "To-do list",
+    value: INDENT_LIST_KEYS.todo,
+  },
+  {
+    icon: <ChevronRightIcon />,
+    label: "Toggle list",
+    value: TogglePlugin.key,
+  },
+  {
+    icon: <ImageIcon />,
+    label: "Image",
+    value: ImagePlugin.key,
+  },
+  {
+    icon: <FilmIcon />,
+    label: "Embed",
+    value: MediaEmbedPlugin.key,
+  },
+  {
+    icon: <PenToolIcon />,
+    label: "Excalidraw",
+    value: ExcalidrawPlugin.key,
+  },
+  {
+    icon: <TableOfContentsIcon />,
+    label: "Table of contents",
+    value: TocPlugin.key,
+  },
+  {
+    icon: <Columns3Icon />,
+    label: "3 columns",
+    value: "action_three_columns",
+  },
+  {
+    icon: <Link2Icon />,
+    label: "Link",
+    value: LinkPlugin.key,
+  },
+  {
+    focusEditor: true,
+    icon: <CalendarIcon />,
+    label: "Date",
+    value: DatePlugin.key,
   },
 ];
 

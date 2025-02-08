@@ -9,14 +9,15 @@ import { Logger } from "@hocuspocus/extension-logger";
 import { Server } from "@hocuspocus/server";
 import { slateNodesToInsertDelta, yTextToSlateElement } from "@slate-yjs/core";
 import * as Y from "yjs";
+import { TITLE_KEYS } from "@/components/editor/plugins/title-plugin";
 
 const initialValue = [
   {
-    type: "h1",
+    type: TITLE_KEYS.title,
     children: [{ text: "" }],
   },
   {
-    type: "h2",
+    type: TITLE_KEYS.subtitle,
     children: [{ text: "" }],
   },
   {

@@ -61,6 +61,8 @@ import { ListItemElement } from "../ui/list-item";
 import { TodoListElement } from "../ui/todo-list-element";
 import { EmojiInputElement } from "../ui/emoji-input-element";
 import { EmojiInputPlugin } from "@udecode/plate-emoji/react";
+import { TITLE_KEYS } from "./plugins/title-plugin";
+import { TitleElement } from "@/components/ui/title-element";
 
 export const getRichElements = () => {
   return withPlaceholders(withDraggables(getElements()));
@@ -83,8 +85,6 @@ export const getElements = () => {
     [HEADING_KEYS.h2]: withProps(HeadingElement, { variant: "h2" }),
     [HEADING_KEYS.h3]: withProps(HeadingElement, { variant: "h3" }),
     [HEADING_KEYS.h4]: withProps(HeadingElement, { variant: "h4" }),
-    [HEADING_KEYS.h5]: withProps(HeadingElement, { variant: "h5" }),
-    [HEADING_KEYS.h6]: withProps(HeadingElement, { variant: "h6" }),
     [EquationPlugin.key]: EquationElement,
     [InlineEquationPlugin.key]: InlineEquationElement,
     [KbdPlugin.key]: KbdLeaf,
@@ -110,5 +110,7 @@ export const getElements = () => {
     [StrikethroughPlugin.key]: withProps(PlateLeaf, { as: "s" }),
     [UnderlinePlugin.key]: withProps(PlateLeaf, { as: "u" }),
     [CommentsPlugin.key]: CommentLeaf,
+    [TITLE_KEYS.title]: withProps(TitleElement, { variant: "title" }),
+    [TITLE_KEYS.subtitle]: withProps(TitleElement, { variant: "subtitle" }),
   };
 };

@@ -9,7 +9,7 @@
   border-radius: var(--image-border-radius);
 }
 
-.article h1 {
+.article .title {
   color: var(--title-color);
   margin-top: var(--header-margin);
   margin-bottom: var(--header-margin);
@@ -22,7 +22,7 @@
   letter-spacing: var(--title-letter-spacing);
 }
 
-.article h2 {
+.article .subtitle {
   color: var(--subtitle-color);
   margin-top: var(--header-margin);
   margin-bottom: var(--header-margin);
@@ -35,7 +35,7 @@
   letter-spacing: var(--subtitle-letter-spacing);
 }
 
-.article h3 {
+.article h1 {
   color: var(--header-color);
   padding-top: var(--header-margin);
   padding-bottom: var(--header-margin);
@@ -49,7 +49,7 @@
   letter-spacing: var(--header-letter-spacing);
 }
 
-.article h4 {
+.article h2 {
   color: var(--header-color);
   padding-top: var(--header-margin);
   padding-bottom: var(--header-margin);
@@ -59,6 +59,34 @@
   font-weight: var(--header-weight);
   font-style: var(--header-style);
   font-size: 1.3rem;
+  line-height: var(--header-line-height);
+  letter-spacing: var(--header-letter-spacing);
+}
+
+.article h3 {
+  color: var(--header-color);
+  padding-top: var(--header-margin);
+  padding-bottom: var(--header-margin);
+  margin-top: 0;
+  margin-bottom: 0;
+  font-family: var(--header-font);
+  font-weight: var(--header-weight);
+  font-style: var(--header-style);
+  font-size: 1.2rem;
+  line-height: var(--header-line-height);
+  letter-spacing: var(--header-letter-spacing);
+}
+
+.article h4 {
+  color: var(--header-color);
+  padding-top: var(--header-margin);
+  padding-bottom: var(--header-margin);
+  margin-top: 0;
+  margin-bottom: 0;
+  font-family: var(--header-font);
+  font-weight: var(--header-weight);
+  font-style: var(--header-style);
+  font-size: 1rem;
   line-height: var(--header-line-height);
   letter-spacing: var(--header-letter-spacing);
 }
@@ -157,8 +185,8 @@
   border: none;
 }
 
-.not-article h1,
-.not-article h2,
+.not-article .title,
+.not-article .subtitle,
 .not-article h3,
 .not-article h4,
 .not-article p,
@@ -175,6 +203,7 @@
   color: revert;
   letter-spacing: revert;
 }
+
 @media (min-width: 640px) {
   .article {
     font-size: 1rem;

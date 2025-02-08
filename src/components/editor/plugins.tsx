@@ -73,6 +73,7 @@ import { toast } from "sonner";
 import { autoformatRules } from "./plugins/editor-autoformat";
 import { NormalizePlugin } from "./plugins/editor-normalization";
 import { RenderAboveEditableYjs } from "./plugins/yjs-above-editable";
+import { TitlePlugin, SubtitlePlugin, TITLE_KEYS } from "./plugins/title-plugin";
 
 export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: boolean) => {
   const plugins = [...staticPlugins];
@@ -182,8 +183,10 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
 
 export const staticPlugins = [
   NormalizePlugin,
+  TitlePlugin,
+  SubtitlePlugin,
   HeadingPlugin.configure({
-    options: { levels: 4 },
+    options: { levels: 2 },
     handlers: {
       onKeyDown: ({ event, editor }) => {
         const anchor = editor.selection?.anchor?.path;
@@ -193,8 +196,9 @@ export const staticPlugins = [
         if (!currentNode) return;
 
         const [node, path] = currentNode;
-        const isTitle = node.type === HEADING_KEYS.h1;
-        const isSubtitle = node.type === HEADING_KEYS.h2;
+
+        const isTitle = node.type === TITLE_KEYS.title;
+        const isSubtitle = node.type === TITLE_KEYS.subtitle;
         const isImage = node.type === ImagePlugin.key;
 
         if (event.key === "Enter") {
@@ -204,12 +208,12 @@ export const staticPlugins = [
 
           if (isTitle) {
             const nextNode = getNextNode(editor, { at: path });
-            const isNextSubtitle = nextNode?.[0]?.type === HEADING_KEYS.h2;
+            const isNextSubtitle = nextNode?.[0]?.type === TITLE_KEYS.subtitle;
 
             if (!isNextSubtitle) {
               insertNodes(
                 editor,
-                { type: HEADING_KEYS.h2, children: [{ text: "" }] },
+                { type: TITLE_KEYS.subtitle, children: [{ text: "" }] },
                 { at: Path.next(path), select: true },
               );
             } else {
@@ -306,13 +310,9 @@ export const staticPlugins = [
       targetPlugins: [
         ParagraphPlugin.key,
         MediaEmbedPlugin.key,
-        // HEADING_KEYS.h1,
-        // HEADING_KEYS.h2,
-        HEADING_KEYS.h3,
-        HEADING_KEYS.h4,
-        HEADING_KEYS.h5,
+        HEADING_KEYS.h1,
+        HEADING_KEYS.h2,
         ImagePlugin.key,
-        HEADING_KEYS.h6,
       ],
     },
   }),
@@ -320,12 +320,8 @@ export const staticPlugins = [
     inject: {
       targetPlugins: [
         ParagraphPlugin.key,
-        // HEADING_KEYS.h1,
-        // HEADING_KEYS.h2,
-        HEADING_KEYS.h3,
-        HEADING_KEYS.h4,
-        HEADING_KEYS.h5,
-        HEADING_KEYS.h6,
+        HEADING_KEYS.h1,
+        HEADING_KEYS.h2,
         BlockquotePlugin.key,
         CodeBlockPlugin.key,
         TogglePlugin.key,
