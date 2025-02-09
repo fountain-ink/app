@@ -7,7 +7,7 @@ import { UserAvatar } from "../user/user-avatar";
 import { UserUsername } from "../user/user-handle";
 import { UserName } from "../user/user-name";
 import { PostReactions } from "./post-reactions";
-import { CommentReplyArea } from "./post-reply-area";
+import { CommentReplyArea } from "../comment/comment-reply-area";
 
 interface CommentViewProps {
   comment: AnyPost;
