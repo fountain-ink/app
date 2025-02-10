@@ -1,7 +1,7 @@
-import { EmailSubscription } from "@/components/misc/email-subscription";
 import { GraphicHand, GraphicInk } from "@/components/icons/custom-icons";
-import { GradientBlur } from "@/components/navigation/gradient-blur";
+import { EmailSubscription } from "@/components/misc/email-subscription";
 import { SmoothScroll } from "@/components/misc/smooth-scroll";
+import { GradientBlur } from "@/components/navigation/gradient-blur";
 import { proseClasses } from "@/styles/prose";
 
 export default function HomePage() {
@@ -14,7 +14,7 @@ export default function HomePage() {
             <div className="w-full h-auto">
               <GraphicHand />
             </div>
-            <h1>Welcome To Fountain</h1>
+            <header className="title">Welcome To Fountain</header>
             <p>
               In a world dominated by fast-paced social media and endless scrolling, there emerges a sanctuary for
               writers and readers alike. Fountain a serene escape, a return to mindful engagement and authentic
