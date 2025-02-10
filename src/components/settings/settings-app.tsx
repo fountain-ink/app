@@ -9,6 +9,11 @@ import { useSettings } from "@/hooks/use-settings";
 import { UserSettings } from "@/lib/settings/user-settings";
 import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
+import { getLensClient } from "@/lib/lens/client";
+import { enableSignless, fetchMeDetails, removeSignless } from "@lens-protocol/client/actions";
+import { handleOperationWith } from "@lens-protocol/client/viem";
+import { useWalletClient } from "wagmi";
+import { toast } from "sonner";
 
 interface ApplicationSettingsProps {
   initialSettings?: UserSettings;
@@ -23,6 +28,56 @@ export function ApplicationSettings({ initialSettings = {}, initialEmail }: Appl
   const [email, setEmail] = useState(initialEmailFromHook ?? "");
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isDirty, setIsDirty] = useState(false);
+  const [isSignless, setIsSignless] = useState(false);
+  const { data: walletClient } = useWalletClient();
+
+  useEffect(() => {
+    const fetchSignlessStatus = async () => {
+      const client = await getLensClient();
+      if (client.isSessionClient()) {
+        const result = await fetchMeDetails(client);
+        if (result.isOk()) {
+          setIsSignless(result.value.isSignless);
+        }
+      }
+    };
+    fetchSignlessStatus();
+  }, []);
+
+  const handleSignlessChange = async (checked: boolean) => {
+    const client = await getLensClient();
+    if (!client.isSessionClient() || !walletClient) {
+      toast.error("Please connect your wallet first");
+      return;
+    }
+
+    try {
+      const signlessToast = toast.loading(checked ? "Enabling signless mode..." : "Disabling signless mode...");
+      const signlessResult = checked
+        ? await enableSignless(client)
+            .andThen((tx) => handleOperationWith(walletClient as any)(tx))
+            .andThen(client.waitForTransaction)
+        : await removeSignless(client)
+            .andThen((tx) => handleOperationWith(walletClient as any)(tx))
+            .andThen(client.waitForTransaction);
+
+      if (signlessResult.isErr()) {
+        toast.dismiss(signlessToast);
+        console.error("Failed to update signless mode:", signlessResult.error);
+        toast.error("Failed to update signless mode");
+        setIsSignless(!checked);
+        return;
+      }
+
+      toast.dismiss(signlessToast);
+      toast.success(checked ? "Signless mode enabled" : "Signless mode disabled");
+      setIsSignless(checked);
+    } catch (error) {
+      console.error("Error updating signless mode:", error);
+      toast.error("Failed to update signless mode");
+      setIsSignless(!checked);
+    }
+  };
 
   useEffect(() => {
     setIsSmoothScrolling(settings.app?.isSmoothScrolling ?? false);
@@ -77,6 +132,15 @@ export function ApplicationSettings({ initialSettings = {}, initialEmail }: Appl
         <CardDescription>Manage your application settings.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div className="flex items-center justify-between space-y-2">
+          <div className="space-y-0.5">
+            <Label htmlFor="signless">Enable signless experience</Label>
+            <p className="text-sm text-muted-foreground">
+              Adds an account manager to enable a signature-free experience
+            </p>
+          </div>
+          <Switch id="signless" checked={isSignless} onCheckedChange={handleSignlessChange} />
+        </div>
         <div className="flex items-center justify-between space-y-2">
           <div className="space-y-0.5">
             <Label htmlFor="smoothScrolling">Enable smooth scrolling</Label>

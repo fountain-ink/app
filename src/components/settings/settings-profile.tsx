@@ -15,15 +15,12 @@ import { useSaveProfileSettings } from "@/hooks/use-save-profile-settings";
 import { getLensClient } from "@/lib/lens/client";
 import { uploadFile } from "@/lib/upload/upload-file";
 import { Account } from "@lens-protocol/client";
-import { enableSignless, fetchMeDetails, removeSignless } from "@lens-protocol/client/actions";
-import { handleOperationWith } from "@lens-protocol/client/viem";
 import { Globe } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useWalletClient } from "wagmi";
 import { ImageCropperUploader } from "../images/image-uploader";
 import { Button } from "../ui/button";
-import { Switch } from "../ui/switch";
 import { TextareaAutosize } from "../ui/textarea";
 
 interface ProfileSettingsFormProps {
@@ -45,58 +42,6 @@ function ProfileSettingsForm({ profile, onSaved, onFormDataChange }: ProfileSett
   const [websiteUrl, setWebsiteUrl] = useState(
     currentMetadata?.attributes?.find((attr: any) => attr.key === "website")?.value?.replace(/^https?:\/\//, "") || "",
   );
-  const [isSignless, setIsSignless] = useState(false);
-  const { data: walletClient } = useWalletClient();
-
-  useEffect(() => {
-    const fetchSignlessStatus = async () => {
-      const client = await getLensClient();
-      if (client.isSessionClient()) {
-        const result = await fetchMeDetails(client);
-        if (result.isOk()) {
-          setIsSignless(result.value.isSignless);
-        }
-      }
-    };
-    fetchSignlessStatus();
-  }, []);
-
-  const handleSignlessChange = async (checked: boolean) => {
-    const client = await getLensClient();
-    if (!client.isSessionClient() || !walletClient) {
-      toast.error("Please connect your wallet first");
-      return;
-    }
-
-    try {
-      const signlessToast = toast.loading(checked ? "Enabling signless mode..." : "Disabling signless mode...");
-      const signlessResult = checked
-        ? await enableSignless(client)
-            .andThen((tx) => handleOperationWith(walletClient as any)(tx))
-            .andThen(client.waitForTransaction)
-        : await removeSignless(client)
-            .andThen((tx) => handleOperationWith(walletClient as any)(tx))
-            .andThen(client.waitForTransaction);
-
-      if (signlessResult.isErr()) {
-        toast.dismiss(signlessToast);
-        console.error("Failed to update signless mode:", signlessResult.error);
-        toast.error("Failed to update signless mode");
-        // Reset the toggle to its previous state
-        setIsSignless(!checked);
-        return;
-      }
-
-      toast.dismiss(signlessToast);
-      toast.success(checked ? "Signless mode enabled" : "Signless mode disabled");
-      setIsSignless(checked);
-    } catch (error) {
-      console.error("Error updating signless mode:", error);
-      toast.error("Failed to update signless mode");
-      // Reset the toggle to its previous state
-      setIsSignless(!checked);
-    }
-  };
 
   useEffect(() => {
     onFormDataChange?.({
@@ -185,16 +130,6 @@ function ProfileSettingsForm({ profile, onSaved, onFormDataChange }: ProfileSett
             />
           </div>
         </div>
-      </div>
-
-      <div className="flex items-center justify-between mt-2 space-y-2">
-        <div className="space-y-0.5">
-          <Label htmlFor="signless">Enable signless experience</Label>
-          <p className="text-sm text-muted-foreground">
-            Adds Fountain as an account manager to enable a signature-free experience
-          </p>
-        </div>
-        <Switch id="signless" checked={isSignless} onCheckedChange={handleSignlessChange} />
       </div>
     </div>
   );
