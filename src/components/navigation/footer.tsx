@@ -32,7 +32,7 @@ export const Footer = ({ post }: { post: AnyPost }) => {
   const { handleComment, handleCollect, handleBookmark, handleLike, isCommentOpen, isCollectOpen } =
     usePostActions(post);
 
-  const likes = post.stats.reactions;
+  const likes = post.stats.upvotes;
   const collects = post.stats.collects;
   const comments = post.stats.comments;
   const reposts = post.stats.reposts;

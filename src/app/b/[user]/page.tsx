@@ -23,7 +23,9 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
   }).unwrapOr(null);
   
   const tags = await fetchPostTags(lens, {
-    forFeeds: []
+    filter: {
+      feeds: []
+    }
   }).unwrapOr(null);
 
   if (!profile || !posts) {

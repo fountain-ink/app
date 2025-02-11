@@ -52,7 +52,7 @@ export const CommentSheet = ({ post, account }: { post: Post; account?: Account 
   const handleMaxNestingReached = (comment: AnyPost) => {
     // Update URL to show the new comment's slug
     const params = new URLSearchParams(searchParams);
-    const commentIdentifier = "slug" in comment ? comment.slug : comment.id;
+    const commentIdentifier = comment.slug;
     params.set("comment", commentIdentifier);
     router.push(`?${params.toString()}`, { scroll: false });
   };

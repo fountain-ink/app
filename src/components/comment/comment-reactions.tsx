@@ -29,7 +29,7 @@ export const CommentReactions = ({
       <ActionButton
         icon={Heart}
         label="Like"
-        initialCount={comment.stats.reactions}
+        initialCount={comment.stats.upvotes}
         strokeColor="rgb(215, 84, 127)"
         fillColor="rgba(215, 84, 127, 0.9)"
         onClick={handleLike}

@@ -62,7 +62,6 @@ import { Path } from "slate";
 import { toast } from "sonner";
 import { ImagePreview } from "../ui/image-preview";
 import { autoformatRules } from "./plugins/editor-autoformat";
-import { NormalizePlugin } from "./plugins/editor-normalization";
 import { SubtitlePlugin, TITLE_KEYS, TitlePlugin } from "./plugins/title-plugin";
 import { RenderAboveEditableYjs } from "./plugins/yjs-above-editable";
 
@@ -184,7 +183,7 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
 };
 
 export const staticPlugins = [
-  NormalizePlugin,
+  // NormalizePlugin,
   TitlePlugin,
   SubtitlePlugin,
   HeadingPlugin.configure({

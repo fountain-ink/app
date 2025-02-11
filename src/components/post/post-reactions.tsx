@@ -1,7 +1,7 @@
+import { usePostActions } from "@/hooks/use-post-actions";
+import { Post } from "@lens-protocol/client";
 import { Heart, MessageCircle, ShoppingBag } from "lucide-react";
 import { ActionButton } from "./post-action-button";
-import { Post } from "@lens-protocol/client";
-import { usePostActions } from "@/hooks/use-post-actions";
 
 export const PostReactions = ({ post }: { post: Post }) => {
   const { handleLike, handleComment, handleCollect } = usePostActions(post);
@@ -36,7 +36,7 @@ export const PostReactions = ({ post }: { post: Post }) => {
       <ActionButton
         icon={Heart}
         label="Like"
-        initialCount={post.stats.reactions}
+        initialCount={post.stats.upvotes}
         strokeColor="rgb(215, 84, 127)"
         fillColor="rgba(215, 84, 127, 0.9)"
         onClick={handleLike}
