@@ -58,12 +58,14 @@ import { TogglePlugin } from "@udecode/plate-toggle/react";
 import { TrailingBlockPlugin } from "@udecode/plate-trailing-block";
 import { YjsPlugin } from "@udecode/plate-yjs/react";
 import Prism from "prismjs";
-import { Path } from "slate";
 import { toast } from "sonner";
 import { ImagePreview } from "../ui/image-preview";
+import { RemoteCursorOverlay } from "../ui/remote-cursor-overlay";
 import { autoformatRules } from "./plugins/editor-autoformat";
 import { SubtitlePlugin, TITLE_KEYS, TitlePlugin } from "./plugins/title-plugin";
+import { Path } from "slate";
 import { RenderAboveEditableYjs } from "./plugins/yjs-above-editable";
+import { NormalizePlugin } from "./plugins/editor-normalization";
 
 const resetBlockTypesCommonRule = {
   defaultType: ParagraphPlugin.key,
@@ -87,6 +89,9 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
         render: {
           aboveEditable: RenderAboveEditableYjs,
         },
+        // render: {
+        //   aboveEditable: RemoteCursorOverlay,
+        // },
         options: {
           cursorOptions: {
             autoSend: true,
@@ -183,7 +188,7 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
 };
 
 export const staticPlugins = [
-  // NormalizePlugin,
+  NormalizePlugin,
   TitlePlugin,
   SubtitlePlugin,
   HeadingPlugin.configure({

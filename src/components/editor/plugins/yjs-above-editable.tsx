@@ -3,37 +3,37 @@ import { HEADING_KEYS } from "@udecode/plate-heading";
 import { BaseYjsPlugin, type YjsConfig } from "@udecode/plate-yjs";
 import { useEffect } from "react";
 import { RemoteCursorOverlay } from "./yjs-overlay";
-import { useEditorPlugin } from "@udecode/plate/react";
+import { useEditorPlugin, usePluginOption } from "@udecode/plate/react";
 
 export const RenderAboveEditableYjs: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const { editor, getOption } = useEditorPlugin<YjsConfig>(BaseYjsPlugin);
+  const { editor } = useEditorPlugin<YjsConfig>(BaseYjsPlugin);
 
-  const { normalizeNode } = editor;
+  const provider = usePluginOption(BaseYjsPlugin, 'provider');
+  const isSynced = usePluginOption(BaseYjsPlugin, 'isSynced');
 
-  const provider = getOption("provider");
-  const isSynced = getOption("isSynced");
 
   useEffect(() => {
     void provider.connect();
 
-    return () => {
-      provider.disconnect();
-    };
+    return () => provider.disconnect();
   }, [provider]);
+
 
   useEffect(() => {
     YjsEditor.connect(editor as any);
 
-    return () => {
-      YjsEditor.disconnect(editor as any);
-    };
+    return () => YjsEditor.disconnect(editor as any);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provider.awareness, provider.document]);
 
   if (!isSynced) return null;
 
-  return <RemoteCursorOverlay className="flex justify-center">{children}</RemoteCursorOverlay>;
+  if (!isSynced) return null;
+
+  // return <RemoteCursorOverlay className="flex justify-center">{children}</RemoteCursorOverlay>;
+  return <>{children}</>;
 };
 
 // TODO refactor for v38
