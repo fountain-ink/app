@@ -1,30 +1,15 @@
 "use client";
 
-import React from "react";
-
 import { cn } from "@udecode/cn";
-import {
-  useCommentDeleteButton,
-  useCommentDeleteButtonState,
-  useCommentEditButton,
-  useCommentEditButtonState,
-} from "@udecode/plate-comments/react";
+import { useCommentDeleteButton, useCommentEditButton } from "@udecode/plate-comments/react";
 import { MoreHorizontal } from "lucide-react";
 
 import { Button } from "./button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu";
 
 export function CommentMoreDropdown() {
-  const editButtonState = useCommentEditButtonState();
-  const { props: editProps } = useCommentEditButton(editButtonState);
-  const deleteButtonState = useCommentDeleteButtonState();
-  const { props: deleteProps } = useCommentDeleteButton(deleteButtonState);
+  const { props: editProps } = useCommentEditButton();
+  const { props: deleteProps } = useCommentDeleteButton();
 
   return (
     <DropdownMenu modal={false}>
@@ -34,10 +19,8 @@ export function CommentMoreDropdown() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuGroup>
-          <DropdownMenuItem {...editProps}>Edit comment</DropdownMenuItem>
-          <DropdownMenuItem {...deleteProps}>Delete comment</DropdownMenuItem>
-        </DropdownMenuGroup>
+        <DropdownMenuItem {...editProps}>Edit comment</DropdownMenuItem>
+        <DropdownMenuItem {...deleteProps}>Delete comment</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

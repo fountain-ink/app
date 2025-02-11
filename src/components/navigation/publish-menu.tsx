@@ -17,8 +17,10 @@ import { currentSession, fetchPost, post } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { MetadataAttributeType, article } from "@lens-protocol/metadata";
 import { useQueryClient } from "@tanstack/react-query";
-import { createPlateEditor } from "@udecode/plate-common/react";
+import { serializeHtml } from "@udecode/plate-core";
+import { createPlateEditor } from "@udecode/plate/react";
 import type { Tag } from "emblor";
+
 import { TagInput } from "emblor";
 import { PenIcon, ShoppingBag } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
@@ -27,7 +29,6 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { toast } from "sonner";
 import { useAccount, useWalletClient } from "wagmi";
-import {   MediaImageMimeType,  MetadataLicenseType,} from "@lens-protocol/metadata";
 
 export const PublishMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -161,12 +162,11 @@ export const PublishMenu = () => {
     try {
       editor.children = draft.contentJson as any;
 
-      const contentHtml = editor.api.htmlReact?.serialize({
-        nodes: draft.contentJson as Json[],
+      const contentHtml = await serializeHtml(editor, {
+        components: getElements(),
+        // editorComponent: StaticEditor
         stripDataAttributes: true,
         preserveClassNames: [],
-        stripWhitespace: true,
-        dndWrapper: (props: any) => <DndProvider context={window} backend={HTML5Backend} {...props} />,
       });
 
       const contentMarkdown = editor.api.markdown.serialize();
@@ -178,7 +178,7 @@ export const PublishMenu = () => {
       if (subtitle) {
         attributes.push({ key: "subtitle", type: MetadataAttributeType.STRING, value: subtitle });
       }
-      
+
       if (coverUrl) {
         attributes.push({ key: "coverUrl", type: MetadataAttributeType.STRING, value: coverUrl });
       }

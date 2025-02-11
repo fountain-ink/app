@@ -1,46 +1,65 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 
+import { NodeApi } from "@udecode/plate";
 import { AIChatPlugin, AIPlugin } from "@udecode/plate-ai/react";
-import { getAncestorNode, getEndPoint, getNodeString, type TNode } from "@udecode/plate-common";
-import { type PlateEditor, focusEditor, useEditorPlugin } from "@udecode/plate-common/react";
 import { useIsSelecting } from "@udecode/plate-selection/react";
+import { type PlateEditor, useEditorRef, usePluginOption } from "@udecode/plate/react";
 import {
-  Album,
-  BadgeHelp,
-  Check,
-  CornerUpLeft,
+  AlbumIcon,
+  BadgeHelpIcon,
+  CheckIcon,
+  CornerUpLeftIcon,
   FeatherIcon,
+  LanguagesIcon,
   ListEnd,
-  ListMinus,
-  ListPlus,
-  PenLine,
+  ListMinusIcon,
+  ListPlusIcon,
+  PenLineIcon,
   Wand,
   X,
 } from "lucide-react";
 
-import { CommandGroup, CommandItem } from "./command";
+import {
+  type Action,
+  filterMenuGroups,
+  filterMenuItems,
+  Menu,
+  MenuContent,
+  MenuGroup,
+  MenuItem,
+  MenuTrigger,
+  useComboboxValueState,
+} from "./menu";
 
 export type EditorChatState = "cursorCommand" | "cursorSuggestion" | "selectionCommand" | "selectionSuggestion";
 
+export const GROUP = {
+  LANGUAGES: "group_languages",
+  SELECTION_LANGUAGES: "group_selection_languages",
+} as const;
+
 export const aiChatItems = {
   accept: {
-    icon: <Check />,
+    icon: <CheckIcon />,
     label: "Accept",
     value: "accept",
     onSelect: ({ editor }) => {
       editor.getTransforms(AIChatPlugin).aiChat.accept();
-      focusEditor(editor, getEndPoint(editor, editor.selection!));
+      editor.tf.focus({ at: editor.api.end(editor.selection!) });
     },
   },
   continueWrite: {
-    icon: <PenLine />,
+    icon: <PenLineIcon />,
     label: "Continue writing",
     value: "continueWrite",
     onSelect: ({ editor }) => {
-      const ancestorNode = getAncestorNode(editor);
-      const isEmpty = getNodeString(ancestorNode?.[0] as TNode).trim().length === 0;
+      const ancestorNode = editor.api.block({ highest: true });
+
+      if (!ancestorNode) return;
+
+      const isEmpty = NodeApi.string(ancestorNode[0]).trim().length === 0;
 
       void editor.getApi(AIChatPlugin).aiChat.submit({
         mode: "insert",
@@ -59,12 +78,13 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
     shortcut: "Escape",
     value: "discard",
     onSelect: ({ editor }) => {
-      editor?.getTransforms(AIPlugin)?.ai?.undo();
+      editor.getTransforms(AIPlugin).ai?.undo();
       editor.getApi(AIChatPlugin).aiChat.hide();
     },
   },
+
   explain: {
-    icon: <BadgeHelp />,
+    icon: <BadgeHelpIcon />,
     label: "Explain",
     value: "explain",
     onSelect: ({ editor }) => {
@@ -77,7 +97,7 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
     },
   },
   fixSpelling: {
-    icon: <Check />,
+    icon: <CheckIcon />,
     label: "Fix spelling & grammar",
     value: "fixSpelling",
     onSelect: ({ editor }) => {
@@ -85,6 +105,70 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
         prompt: "Fix spelling and grammar",
       });
     },
+  },
+  [GROUP.LANGUAGES]: {
+    component: TranslateMenuItems,
+    filterItems: true,
+    icon: <LanguagesIcon className="text-green-800" />,
+    items: [
+      { label: "English", value: "translate_english" },
+      { label: "Korean", value: "translate_korean" },
+      {
+        label: "Chinese, Simplified",
+        value: "translate_chinese_simplified",
+      },
+      {
+        label: "Chinese, Traditional",
+        value: "translate_chinese_traditional",
+      },
+      { label: "Japanese", value: "translate_japanese" },
+      { label: "Spanish", value: "translate_spanish" },
+      { label: "Russian", value: "translate_russian" },
+      { label: "French", value: "translate_french" },
+      { label: "Portuguese", value: "translate_portuguese" },
+      { label: "German", value: "translate_german" },
+      { label: "Italian", value: "translate_italian" },
+      { label: "Dutch", value: "translate_dutch" },
+      { label: "Indonesian", value: "translate_indonesian" },
+      { label: "Filipino", value: "translate_filipino" },
+      { label: "Vietnamese", value: "translate_vietnamese" },
+      { label: "Turkish", value: "translate_turkish" },
+      { label: "Arabic", value: "translate_arabic" },
+    ],
+    label: "Languages",
+    value: GROUP.LANGUAGES,
+  },
+  [GROUP.SELECTION_LANGUAGES]: {
+    component: TranslateMenuItems,
+    filterItems: true,
+    icon: <LanguagesIcon className="text-green-800" />,
+    items: [
+      { label: "English", value: "translate_english" },
+      { label: "Korean", value: "translate_korean" },
+      {
+        label: "Chinese, Simplified",
+        value: "translate_chinese_simplified",
+      },
+      {
+        label: "Chinese, Traditional",
+        value: "translate_chinese_traditional",
+      },
+      { label: "Japanese", value: "translate_japanese" },
+      { label: "Spanish", value: "translate_spanish" },
+      { label: "Russian", value: "translate_russian" },
+      { label: "French", value: "translate_french" },
+      { label: "Portuguese", value: "translate_portuguese" },
+      { label: "German", value: "translate_german" },
+      { label: "Italian", value: "translate_italian" },
+      { label: "Dutch", value: "translate_dutch" },
+      { label: "Indonesian", value: "translate_indonesian" },
+      { label: "Filipino", value: "translate_filipino" },
+      { label: "Vietnamese", value: "translate_vietnamese" },
+      { label: "Turkish", value: "translate_turkish" },
+      { label: "Arabic", value: "translate_arabic" },
+    ],
+    label: "Languages",
+    value: GROUP.LANGUAGES,
   },
   improveWriting: {
     icon: <Wand />,
@@ -105,7 +189,7 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
     },
   },
   makeLonger: {
-    icon: <ListPlus />,
+    icon: <ListPlusIcon />,
     label: "Make longer",
     value: "makeLonger",
     onSelect: ({ editor }) => {
@@ -115,7 +199,7 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
     },
   },
   makeShorter: {
-    icon: <ListMinus />,
+    icon: <ListMinusIcon />,
     label: "Make shorter",
     value: "makeShorter",
     onSelect: ({ editor }) => {
@@ -125,7 +209,7 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
     },
   },
   replace: {
-    icon: <Check />,
+    icon: <CheckIcon />,
     label: "Replace selection",
     value: "replace",
     onSelect: ({ aiEditor, editor }) => {
@@ -143,7 +227,7 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
     },
   },
   summarize: {
-    icon: <Album />,
+    icon: <AlbumIcon />,
     label: "Add a summary",
     value: "summarize",
     onSelect: ({ editor }) => {
@@ -157,7 +241,7 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
     },
   },
   tryAgain: {
-    icon: <CornerUpLeft />,
+    icon: <CornerUpLeftIcon />,
     label: "Try again",
     value: "tryAgain",
     onSelect: ({ editor }) => {
@@ -184,13 +268,7 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
   }
 >;
 
-const menuStateItems: Record<
-  EditorChatState,
-  {
-    items: (typeof aiChatItems)[keyof typeof aiChatItems][];
-    heading?: string;
-  }[]
-> = {
+const menuStateItems = {
   cursorCommand: [
     {
       items: [aiChatItems.continueWrite, aiChatItems.summarize, aiChatItems.explain],
@@ -211,6 +289,9 @@ const menuStateItems: Record<
         aiChatItems.simplifyLanguage,
       ],
     },
+    {
+      items: [aiChatItems[GROUP.SELECTION_LANGUAGES]],
+    },
   ],
   selectionSuggestion: [
     {
@@ -219,15 +300,11 @@ const menuStateItems: Record<
   ],
 };
 
-export const AIMenuItems = ({
-  aiEditorRef,
-  setValue,
-}: {
-  aiEditorRef: React.MutableRefObject<PlateEditor | null>;
-  setValue: (value: string) => void;
-}) => {
-  const { editor, useOption } = useEditorPlugin(AIChatPlugin);
-  const { messages } = useOption("chat");
+export function AIMenuItems() {
+  const editor = useEditorRef();
+  const [searchValue] = useComboboxValueState();
+  const { messages } = usePluginOption(AIChatPlugin, "chat");
+  const aiEditor = usePluginOption(AIChatPlugin, "aiEditor")!;
   const isSelecting = useIsSelecting();
 
   const menuState = useMemo(() => {
@@ -239,39 +316,87 @@ export const AIMenuItems = ({
   }, [isSelecting, messages]);
 
   const menuGroups = useMemo(() => {
-    const items = menuStateItems[menuState];
+    const items = menuStateItems[menuState] || [];
 
-    return items;
-  }, [menuState]);
-
-  useEffect(() => {
-    if (menuGroups && menuGroups.length > 0 && menuGroups?.[0]?.items.length && menuGroups?.[0]?.items?.length > 0) {
-      setValue(menuGroups?.[0]?.items?.[0]?.value ?? "");
-    }
-  }, [menuGroups, setValue]);
+    return filterMenuGroups(items, searchValue) || items;
+  }, [menuState, searchValue]);
 
   return (
     <>
       {menuGroups.map((group, index) => (
-        <CommandGroup key={`${index}-${group.heading}`} heading={group.heading}>
-          {group.items.map((menuItem) => (
-            <CommandItem
-              key={menuItem.value}
-              className="[&_svg]:text-muted-foreground"
-              value={menuItem.value}
-              onSelect={() => {
-                menuItem.onSelect?.({
-                  aiEditor: aiEditorRef.current!,
-                  editor: editor,
-                });
-              }}
-            >
-              {menuItem.icon}
-              <span>{menuItem.label}</span>
-            </CommandItem>
-          ))}
-        </CommandGroup>
+        <MenuGroup key={`${index}-${group.label}`} label={group.label}>
+          {group.items?.map((item: Action) => {
+            const menuItem: any = aiChatItems[item.value as keyof typeof aiChatItems];
+
+            if (menuItem.component) {
+              const ItemComponent = menuItem.component;
+
+              return <ItemComponent key={item.value} menuState={menuState} />;
+            }
+
+            return (
+              <MenuItem
+                key={item.value}
+                onClick={() => menuItem.onSelect?.({ aiEditor, editor })}
+                label={menuItem.label}
+                icon={menuItem.icon}
+                shortcutEnter
+              />
+            );
+          })}
+        </MenuGroup>
       ))}
     </>
   );
-};
+}
+
+function TranslateMenuItems({ menuState }: { menuState: EditorChatState }) {
+  const editor = useEditorRef();
+  const [searchValue] = useComboboxValueState();
+
+  const menuItems = useMemo(() => {
+    return filterMenuItems(aiChatItems[GROUP.LANGUAGES], searchValue);
+  }, [searchValue]);
+
+  const handleTranslate = (value: string) => {
+    if (menuState === "cursorCommand") {
+      void editor.getApi(AIChatPlugin).aiChat.submit({
+        mode: "insert",
+        prompt: `Translate to ${value} the "Block" content`,
+      });
+
+      return;
+    }
+    if (menuState === "selectionCommand") {
+      void editor.getApi(AIChatPlugin).aiChat.submit({
+        prompt: `Translate to ${value}`,
+      });
+
+      return;
+    }
+  };
+
+  const content = (
+    <>
+      {menuItems.map((item) => (
+        <MenuItem
+          key={item.value}
+          onClick={() => handleTranslate(item.label!)}
+          label={item.label}
+          icon={item.icon}
+          shortcutEnter
+        />
+      ))}
+    </>
+  );
+
+  if (searchValue) return <MenuGroup label={aiChatItems[GROUP.LANGUAGES].label}>{content}</MenuGroup>;
+
+  return (
+    <Menu trigger={<MenuTrigger label={aiChatItems[GROUP.LANGUAGES].label} icon={aiChatItems[GROUP.LANGUAGES].icon} />}>
+      <MenuContent variant="aiSub">
+        <MenuGroup>{content}</MenuGroup>
+      </MenuContent>
+    </Menu>
+  );
+}

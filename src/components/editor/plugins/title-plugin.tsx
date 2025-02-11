@@ -1,4 +1,4 @@
-import { createPlatePlugin } from '@udecode/plate-common/react';
+import { createPlatePlugin } from "@udecode/plate/react";
 
 export const TITLE_KEYS = {
   title: 'title',

@@ -1,16 +1,14 @@
 "use client";
 
 import { cn, withRef } from "@udecode/cn";
-import {
-  createPrimitiveComponent,
-  selectSiblingNodePoint,
-  setNode,
-  useEditorRef,
-  useElement,
-} from "@udecode/plate-common/react";
 import type { TEquationElement } from "@udecode/plate-math";
 import { useEquationElement, useEquationInput } from "@udecode/plate-math/react";
 import { useMediaState } from "@udecode/plate-media/react";
+import {
+    createPrimitiveComponent,
+    useEditorRef,
+    useElement,
+} from "@udecode/plate/react";
 import { RadicalIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useReadOnly } from "slate-react";
@@ -50,17 +48,13 @@ export const EquationElement = withRef<typeof PlateElement>(({ children, classNa
     };
   }, [readOnly]);
 
-  const handleClose = () => {
-    selectSiblingNodePoint(editor, { node: element });
-  };
-
   const renderEquationInput = () => {
     if (readOnly) return null;
 
     return (
       <EquationInput
         className="grow w-full rounded-[4px]"
-        state={{ isInline: false, open: true, onClose: handleClose }}
+        state={{ isInline: false, open: true }}
         autoFocus
         variant={"default"}
       />
@@ -85,8 +79,9 @@ export const EquationElement = withRef<typeof PlateElement>(({ children, classNa
 
   const handleWidth = (newWidth: ElementWidth) => {
     setWidth(newWidth);
-    setNode(editor, element, { width: newWidth });
+    editor.tf.setNodes({ width: newWidth }, {at: element});
   };
+
 
   return (
     <ElementPopover

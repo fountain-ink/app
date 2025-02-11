@@ -7,7 +7,6 @@ import {
   StrikethroughPlugin,
   UnderlinePlugin,
 } from "@udecode/plate-basic-marks/react";
-import { useEditorReadOnly, useEditorRef, useSelectionAcrossBlocks } from "@udecode/plate-common/react";
 import { Bold, Code2, Italic, Strikethrough, Underline } from "lucide-react";
 
 import { LinkToolbarButton } from "./link-toolbar-button";
@@ -16,6 +15,7 @@ import { MoreDropdownMenu } from "./more-dropdown-menu";
 import { ToolbarGroup } from "./toolbar";
 import { TurnIntoDropdownMenu } from "./turn-into-dropdown-menu";
 import { InlineEquationToolbarButton } from "./inline-equation-toolbar-button";
+import { useEditorReadOnly, useEditorRef, useSelectionAcrossBlocks } from "@udecode/plate/react";
 
 export function FloatingToolbarButtons() {
   const _editor = useEditorRef();

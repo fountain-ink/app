@@ -3,8 +3,7 @@
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { cn, withRef } from "@udecode/cn";
 import { useCodeBlockElementState } from "@udecode/plate-code-block/react";
-import { getNodeString } from "@udecode/plate-common";
-import { setNode, useEditorRef } from "@udecode/plate-common/react";
+import { useEditorRef } from "@udecode/plate/react";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useReadOnly } from "slate-react";
@@ -15,6 +14,7 @@ import "./code-block-element.css";
 import { ElementPopover, widthVariants, type ElementWidth } from "./element-popover";
 import { PlateElement } from "./plate-element";
 import { ScrollArea } from "./scroll-area";
+import { NodeApi } from "@udecode/plate";
 
 export const CodeBlockElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
   const { element } = props;
@@ -51,7 +51,7 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
 
   const handleWidth = (newWidth: ElementWidth) => {
     setWidth(newWidth);
-    setNode(editor, element, { width: newWidth });
+    editor.tf.setNodes({ width: newWidth }, { at: element },  ); // ??
   };
 
   const popoverContent = (
@@ -62,7 +62,7 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
         size="default"
         variant={"ghost"}
         onClick={() => {
-          const lines = element.children.map((child) => getNodeString(child));
+          const lines = element.children.map((child) => NodeApi.string(child));
           copyToClipboard(lines.join("\n\n"), {
             tooltip: "Copied code to clipboard",
           });

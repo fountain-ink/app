@@ -2,10 +2,8 @@
 
 import { useMemo } from "react";
 
-import type { TElement } from "@udecode/plate-common";
-
 import { showCaption } from "@udecode/plate-caption/react";
-import { ParagraphPlugin, focusEditor, useEditorRef } from "@udecode/plate-common/react";
+import { ParagraphPlugin, useEditorRef } from "@udecode/plate/react";
 import { AudioPlugin, FilePlugin, ImagePlugin, MediaEmbedPlugin, VideoPlugin } from "@udecode/plate-media/react";
 import {
   BlockSelectionPlugin,
@@ -27,6 +25,7 @@ import {
   useComboboxValueState,
 } from "./menu";
 import { turnIntoItems } from "./turn-into-dropdown-menu";
+import { TElement } from "@udecode/plate";
 
 export const GROUP = {
   ALIGN: "align",
@@ -185,7 +184,7 @@ export function BlockMenuItems() {
                     menuItem.onSelect?.({ editor });
                   }
                   if ("focusEditor" in menuItem && menuItem.focusEditor !== false) {
-                    focusEditor(editor);
+                    editor.tf.focus();
                   }
                 }}
                 label={menuItem.label}
@@ -220,7 +219,7 @@ function AlignMenuItem() {
           checked={value === item.value}
           onClick={() => {
             editor.getTransforms(BlockSelectionPlugin).blockSelection.setNodes({ align: item.value });
-            focusEditor(editor);
+            editor.tf.focus();
           }}
           label={item.label}
           icon={item.icon}

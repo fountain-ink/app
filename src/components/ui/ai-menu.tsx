@@ -1,95 +1,65 @@
 "use client";
 
-import * as React from "react";
+import { useEffect } from "react";
 
-import { faker } from "@faker-js/faker";
-import { AIChatPlugin, useEditorChat } from "@udecode/plate-ai/react";
-import {
-  type TElement,
-  type TNode,
-  type TNodeEntry,
-  getAncestorNode,
-  getBlocks,
-  isElementEmpty,
-  isHotkey,
-  isSelectionAtBlockEnd,
-} from "@udecode/plate-common";
-import { type PlateEditor, toDOMNode, useEditorPlugin, useHotkeys } from "@udecode/plate-common/react";
+import { cn } from "@udecode/cn";
+import { type NodeEntry, isHotkey } from "@udecode/plate";
+import { AIChatPlugin, useEditorChat, useLastAssistantMessage } from "@udecode/plate-ai/react";
 import { BlockSelectionPlugin, useIsSelecting } from "@udecode/plate-selection/react";
-import { useChat } from "ai/react";
-import { Loader2Icon } from "lucide-react";
+import { useEditorPlugin, useHotkeys, usePluginOption } from "@udecode/plate/react";
+import { ArrowUpIcon } from "lucide-react";
+
 
 import { AIChatEditor } from "./ai-chat-editor";
 import { AIMenuItems } from "./ai-menu-items";
-import { Command, CommandList, InputCommand } from "./command";
-import { Popover, PopoverAnchor, PopoverContent } from "./popover";
+import { Button } from "./button";
+import {
+  ComboboxContent,
+  ComboboxInput,
+  ComboboxList,
+  Menu,
+  MenuContent,
+  useComboboxValueState,
+  useMenuStore,
+} from "./menu";
+import { TextareaAutosize } from "./textarea";
+import { useChat } from "@/hooks/use-chat";
 
-export function AIMenu() {
-  const { api, editor, useOption } = useEditorPlugin(AIChatPlugin);
-  const open = useOption("open");
-  const mode = useOption("mode");
+export const AIMenu = () => {
+  const { api, editor } = useEditorPlugin(AIChatPlugin);
+  const open = usePluginOption(AIChatPlugin, "open");
+  const mode = usePluginOption(AIChatPlugin, "mode");
   const isSelecting = useIsSelecting();
 
-  const aiEditorRef = React.useRef<PlateEditor | null>(null);
-  const [value, setValue] = React.useState("");
-
-  const chat = useChat({
-    id: "editor",
-    // API to be implemented
-    api: "/api/ai",
-    // Mock the API response. Remove it when you implement the route /api/ai
-    fetch: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 400));
-
-      const stream = fakeStreamText();
-
-      return new Response(stream, {
-        headers: {
-          Connection: "keep-alive",
-          "Content-Type": "text/plain",
-        },
-      });
-    },
-  });
-
+  const chat = useChat();
   const { input, isLoading, messages, setInput } = chat;
-  const [anchorElement, setAnchorElement] = React.useState<HTMLElement | null>(null);
 
-  const setOpen = (open: boolean) => {
-    if (open) {
-      api.aiChat.show();
-    } else {
-      api.aiChat.hide();
-    }
-  };
+  const content = useLastAssistantMessage()?.content;
 
-  const show = (anchorElement: HTMLElement) => {
-    setAnchorElement(anchorElement);
-    setOpen(true);
-  };
+  const { show, store } = useMenuStore();
 
   useEditorChat({
     chat,
-    onOpenBlockSelection: (blocks: TNodeEntry[]) => {
-      show(toDOMNode(editor, blocks.at(-1)?.[0] as TNode)!);
+    onOpenBlockSelection: (blocks: NodeEntry[]) => {
+      show(editor.api.toDOMNode(blocks.at(-1)![0])!);
     },
     onOpenChange: (open) => {
       if (!open) {
-        setAnchorElement(null);
+        store.hideAll();
         setInput("");
       }
     },
     onOpenCursor: () => {
-      const ancestor = getAncestorNode(editor)?.[0] as TElement;
+      const [ancestor] = editor.api.block({ highest: true })!;
 
-      if (!isSelectionAtBlockEnd(editor) && !isElementEmpty(editor, ancestor)) {
+      if (!editor.api.isAt({ end: true }) && !editor.api.isEmpty(ancestor)) {
         editor.getApi(BlockSelectionPlugin).blockSelection.addSelectedRow(ancestor.id as string);
       }
 
-      show(toDOMNode(editor, ancestor)!);
+      show(editor.api.toDOMNode(ancestor)!);
     },
     onOpenSelection: () => {
-      show(toDOMNode(editor, getBlocks(editor).at(-1)?.[0] as TNode)!);
+      show(editor.api.toDOMNode(editor.api.blocks().at(-1)![0])!);
     },
   });
 
@@ -101,103 +71,138 @@ export function AIMenu() {
     { enableOnContentEditable: true, enableOnFormTags: true },
   );
 
+  useHotkeys("escape", () => {
+    if (isLoading) {
+      api.aiChat.stop();
+    } else {
+      api.aiChat.hide();
+    }
+  });
+
   return (
-    <Popover open={open} onOpenChange={setOpen} modal={false}>
-      <PopoverAnchor virtualRef={{ current: anchorElement }} />
-
-      <PopoverContent
-        className="border-none bg-transparent p-0 shadow-none"
-        style={{
-          width: anchorElement?.offsetWidth,
+    <Menu open={open} placement="bottom-start" store={store}>
+      <MenuContent
+        variant="ai"
+        onClickOutside={() => {
+          api.aiChat.hide();
         }}
-        onEscapeKeyDown={(e) => {
-          e.preventDefault();
-
-          if (isLoading) {
-            api.aiChat.stop();
-          } else {
-            api.aiChat.hide();
-          }
+        flip={false}
+        wrapperProps={{
+          // FIXME: It is best to set it to 100.
+          // But it will cause a horizontal scrollbar to appear.
+          // A method should be found to disable translate-x.
+          className: "w-[98%]!",
         }}
-        align="center"
-        avoidCollisions={false}
-        side="bottom"
       >
-        <Command className="w-full rounded-lg border shadow-md" value={value} onValueChange={setValue}>
-          {mode === "chat" && isSelecting && messages.length > 0 && <AIChatEditor aiEditorRef={aiEditorRef} />}
+        <ComboboxContent variant="ai">
+          {mode === "chat" && isSelecting && content && <AIChatEditor content={content} />}
 
-          {isLoading ? (
-            <div className="flex grow select-none items-center gap-2 p-2 text-sm text-muted-foreground">
-              <Loader2Icon className="size-4 animate-spin" />
-              {messages.length > 1 ? "Editing..." : "Thinking..."}
-            </div>
-          ) : (
-            <InputCommand
+          <div className="flex gap-1.5 px-3 text-sm">
+            {isLoading ? (
+              <div className="flex grow items-center gap-2 py-2 text-muted-foreground select-none">
+                {messages.length > 1 ? "Editing" : "Thinking"}
+
+                <LoadingIcon />
+              </div>
+            ) : (
+              <AIMenuCombobox />
+            )}
+
+            <Button
+              size="iconSm"
               variant="ghost"
-              className="rounded-none border-b border-solid border-border [&_svg]:hidden"
-              value={input}
-              onKeyDown={(e) => {
-                if (isHotkey("backspace")(e) && input.length === 0) {
-                  e.preventDefault();
-                  api.aiChat.hide();
-                }
-                if (isHotkey("enter")(e) && !e.shiftKey && !value) {
-                  e.preventDefault();
+              className="mt-1 shrink-0 no-focus-ring"
+              disabled={!isLoading && input.trim().length === 0}
+              onClick={() => {
+                if (isLoading) {
+                  api.aiChat.stop();
+                } else {
                   void api.aiChat.submit();
                 }
               }}
-              onValueChange={setInput}
-              placeholder="Ask AI anything..."
-              autoFocus
-            />
-          )}
+            >
+              {isLoading ? <StopIcon /> : <SubmitIcon />}
+            </Button>
+          </div>
+        </ComboboxContent>
 
-          {!isLoading && (
-            <CommandList>
-              <AIMenuItems aiEditorRef={aiEditorRef} setValue={setValue} />
-            </CommandList>
-          )}
-        </Command>
-      </PopoverContent>
-    </Popover>
+        {!isLoading && (
+          <ComboboxList variant="ai" className={cn("[&_.menu-item-icon]:text-purple-700")}>
+            {/* <AIMenuItems /> */}
+          </ComboboxList>
+        )}
+      </MenuContent>
+    </Menu>
+  );
+};
+
+function AIMenuCombobox() {
+  const { api } = useEditorPlugin(AIChatPlugin);
+  const { input, handleInputChange } = usePluginOption(AIChatPlugin, "chat");
+  const [, setValue] = useComboboxValueState();
+
+  useEffect(() => {
+    if (setValue) {
+      setValue(input ?? "");
+    }
+  }, [input, setValue]);
+
+  return (
+    <ComboboxInput autoSelect="always" autoFocus>
+      <TextareaAutosize
+        variant="ai"
+        className="grow"
+        onChange={handleInputChange}
+        onKeyDown={(e) => {
+          if (isHotkey("backspace")(e) && input?.length === 0) {
+            e.preventDefault();
+            api.aiChat.hide();
+          }
+          if (isHotkey("enter")(e) && !e.shiftKey) {
+            e.preventDefault();
+
+            if (input && input.length > 0) {
+              void api.aiChat.submit();
+            }
+          }
+        }}
+        placeholder="Ask AI anything..."
+        data-plate-focus
+      />
+    </ComboboxInput>
   );
 }
 
-// Used for testing. Remove it after implementing useChat api.
-const fakeStreamText = ({
-  chunkCount = 10,
-  streamProtocol = "data",
-}: {
-  chunkCount?: number;
-  streamProtocol?: "data" | "text";
-} = {}) => {
-  const chunks = Array.from({ length: chunkCount }, () => ({
-    // delay: faker.number.int({ max: 150, min: 50 }),
-    delay: 50,
-    // texts: `${faker.lorem.words({ max: 3, min: 1 })} `,
-    texts: `${faker.lorem.words(3)} `,
-  }));
-  const encoder = new TextEncoder();
+function StopIcon() {
+  return (
+    <svg height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="10" cy="10" fill="black" r="10" />
+      <rect fill="white" height="6" rx="1" width="6" x="7" y="7" />
+    </svg>
+  );
+}
 
-  return new ReadableStream({
-    async start(controller) {
-      for (const chunk of chunks) {
-        await new Promise((resolve) => setTimeout(resolve, chunk.delay));
+function SubmitIcon() {
+  return (
+    <div className={cn("flex size-5 items-center justify-center rounded-full bg-brand")}>
+      <ArrowUpIcon className="size-3! stroke-[3px] text-background" />
+    </div>
+  );
+}
 
-        if (streamProtocol === "text") {
-          controller.enqueue(encoder.encode(chunk.texts));
-        } else {
-          controller.enqueue(encoder.encode(`0:${JSON.stringify(chunk.texts)}\n`));
-        }
-      }
-
-      if (streamProtocol === "data") {
-        controller.enqueue(
-          `d:{"finishReason":"stop","usage":{"promptTokens":0,"completionTokens":${chunks.length}}}\n`,
-        );
-      }
-
-      controller.close();
-    },
-  });
-};
+function LoadingIcon() {
+  return (
+    <div className="flex gap-0.5">
+      {["#eab308", "#ea580c", "#6EB6F2"].map((color, index) => (
+        <div
+          key={color}
+          className="size-1 animate-ai-bounce rounded-full"
+          style={{
+            animationDelay: `${index * 0.1}s`,
+            backgroundColor: color,
+          }}
+        />
+      ))}
+    </div>
+  );
+}

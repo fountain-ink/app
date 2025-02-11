@@ -1,12 +1,7 @@
 "use client";
 
 import { withRef } from "@udecode/cn";
-import {
-  focusEditor,
-  useEditorRef,
-  useMarkToolbarButton,
-  useMarkToolbarButtonState,
-} from "@udecode/plate-common/react";
+import { useEditorRef, useMarkToolbarButton, useMarkToolbarButtonState } from "@udecode/plate/react";
 
 import { ToolbarButton } from "./toolbar";
 
@@ -28,7 +23,7 @@ export const MarkToolbarButton = withRef<
       {...rest}
       onClick={() => {
         props.onClick?.();
-        focusEditor(editor);
+        editor.tf.focus();
       }}
     />
   );

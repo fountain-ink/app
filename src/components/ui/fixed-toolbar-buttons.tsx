@@ -7,7 +7,7 @@ import {
   StrikethroughPlugin,
   UnderlinePlugin,
 } from "@udecode/plate-basic-marks/react";
-import { useEditorReadOnly } from "@udecode/plate-common/react";
+import { useEditorReadOnly } from "@udecode/plate/react";
 import { FontBackgroundColorPlugin, FontColorPlugin } from "@udecode/plate-font/react";
 import { ListStyleType } from "@udecode/plate-indent-list";
 import { BulletedListPlugin, NumberedListPlugin } from "@udecode/plate-list/react";
@@ -37,7 +37,6 @@ import { LinkToolbarButton } from "./link-toolbar-button";
 import { ListToolbarButton } from "./list-toolbar-button";
 import { MarkToolbarButton } from "./mark-toolbar-button";
 import { MediaToolbarButton } from "./media-toolbar-button";
-import { ModeDropdownMenu } from "./mode-dropdown-menu";
 import { MoreDropdownMenu } from "./more-dropdown-menu";
 import { OutdentToolbarButton } from "./outdent-toolbar-button";
 import { TableDropdownMenu } from "./table-dropdown-menu";
@@ -127,7 +126,7 @@ export function FixedToolbarButtons() {
 
       <ToolbarGroup>
         <CommentToolbarButton />
-        <ModeDropdownMenu />
+        {/* <ModeDropdownMenu /> */}
       </ToolbarGroup>
     </div>
   );

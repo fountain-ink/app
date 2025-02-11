@@ -7,9 +7,8 @@ import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { CalloutPlugin } from "@udecode/plate-callout/react";
 import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
-import { ParagraphPlugin, focusEditor, useEditorRef, useSelectionFragmentProp } from "@udecode/plate-common/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
-import { INDENT_LIST_KEYS } from "@udecode/plate-indent-list";
+import { ParagraphPlugin, useEditorRef, useSelectionFragmentProp } from "@udecode/plate/react";
 import {
   Code2Icon,
   Columns3Icon,
@@ -138,7 +137,7 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
               value={selectedItem?.value}
               onValueChange={(type) => {
                 setBlockType(editor, type);
-                focusEditor(editor);
+                editor.tf.focus();
               }}
             >
               {turnIntoItems.map(({ icon, label, value: itemValue }) => (

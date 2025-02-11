@@ -96,7 +96,7 @@ export function EmojiPickerContent({
         const { buttonSize } = settings;
 
         return (
-          <div key={categoryId} ref={section.root} style={{ width: getRowWidth }} data-id={categoryId}>
+          <div key={categoryId} ref={section.root as any} style={{ width: getRowWidth }} data-id={categoryId}>
             <div className="sticky -top-px z-[1] bg-popover/90 p-1 py-2 text-sm font-semibold backdrop-blur-sm">
               {i18n.categories[categoryId]}
             </div>
@@ -142,7 +142,7 @@ export function EmojiPickerContent({
 
   return (
     <div
-      ref={refs.current.contentRoot}
+      ref={refs.current.contentRoot as any}
       className={cn(
         "h-full min-h-[50%] overflow-y-auto overflow-x-hidden px-2",
         "[&::-webkit-scrollbar]:w-4",
@@ -152,7 +152,7 @@ export function EmojiPickerContent({
       )}
       data-id="scroll"
     >
-      <div ref={refs.current.content} className="h-full">
+      <div ref={refs.current.content as any} className="h-full">
         {isSearching ? SearchList() : EmojiList()}
       </div>
     </div>

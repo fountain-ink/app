@@ -1,7 +1,7 @@
 import { uploadFile } from "@/lib/upload/upload-file";
 import { cn, withRef } from "@udecode/cn";
-import { selectEditor, setNode, useEditorRef, useElement, useRemoveNodeButton } from "@udecode/plate-common/react";
 import { Image, useMediaState } from "@udecode/plate-media/react";
+import { useEditorRef, useElement, useRemoveNodeButton } from "@udecode/plate/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { UploadIcon } from "lucide-react";
 import type React from "react";
@@ -33,7 +33,7 @@ function ImagePopover({
 
   const handleWidth = (newWidth: ElementWidth) => {
     setWidth(newWidth);
-    setNode(editor, element, { url, width: newWidth });
+    editor.tf.setNodes({ url, width: newWidth }, { at: element });
   };
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,9 +44,8 @@ function ImagePopover({
     try {
       const url = await uploadFile(file);
       if (url) {
-        setNode(editor, element, { url, width });
-        selectEditor(editor, {
-          at: editor.selection || undefined,
+        editor.tf.setNodes({ url, width }, { at: element });
+        editor.tf.select(editor, {
           edge: editor.selection ? undefined : "end",
           focus: true,
         });
@@ -137,10 +136,8 @@ export const ImageElement = withRef<typeof PlateElement>(
       try {
         const url = await uploadFile(file);
         if (url) {
-          setUrl(url);
-          setNode(editor, element, { url, width });
-          selectEditor(editor, {
-            at: editor.selection || undefined,
+          editor.tf.setNodes({ url, width }, { at: element });
+          editor.tf.select(editor, {
             edge: editor.selection ? undefined : "end",
             focus: true,
           });

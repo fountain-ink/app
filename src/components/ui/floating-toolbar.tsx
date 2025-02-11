@@ -1,7 +1,7 @@
 "use client";
 
 import { cn, withRef } from "@udecode/cn";
-import { useComposedRef, useEditorId, useEditorRef, useEventEditorSelectors } from "@udecode/plate-common/react";
+import { useComposedRef, useEditorId, useEditorRef, useEventEditorValue } from "@udecode/plate/react";
 import {
   type FloatingToolbarState,
   flip,
@@ -21,9 +21,9 @@ export const FloatingToolbar = withRef<
 >(({ children, state, ...props }, componentRef) => {
   const editor = useEditorRef();
   const editorId = useEditorId();
-  const focusedEditorId = useEventEditorSelectors.focus();
-  const isFloatingLinkOpen = !!editor.useOption({ key: "a" }, "mode");
-  const isAIChatOpen = editor.useOption({ key: "aiChat" }, "open");
+  const focusedEditorId = useEventEditorValue('focus');
+  const isFloatingLinkOpen = !!editor.getOption({ key: "a" }, "mode");
+  const isAIChatOpen = editor.getOption({ key: "aiChat" }, "open");
 
   const selected = editor.children[editor?.selection?.anchor.path[0] ?? 0];
   const isOnTitle = selected?.type === TITLE_KEYS.title;

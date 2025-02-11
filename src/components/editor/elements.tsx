@@ -11,7 +11,6 @@ import { CommentLeaf } from "@/components/ui/comment-leaf";
 import { DateElement } from "@/components/ui/date-element";
 import { HeadingElement } from "@/components/ui/heading-element";
 import { HrElement } from "@/components/ui/hr-element";
-import { ImageElement } from "@/components/ui/image-element";
 import { LinkElement } from "@/components/ui/link-element";
 import { MediaEmbedElement } from "@/components/ui/media-embed-element";
 import { MentionElement } from "@/components/ui/mention-element";
@@ -22,22 +21,22 @@ import { SlashInputElement } from "@/components/ui/slash-input-element";
 import { TableCellElement, TableCellHeaderElement } from "@/components/ui/table-cell-element";
 import { TableElement } from "@/components/ui/table-element";
 import { TableRowElement } from "@/components/ui/table-row-element";
+import { TitleElement } from "@/components/ui/title-element";
 import { TocElement } from "@/components/ui/toc-element";
 import { ToggleElement } from "@/components/ui/toggle-element";
-import { withDraggables } from "@/components/ui/with-draggables";
 import { withProps } from "@udecode/cn";
 import {
-  BoldPlugin,
-  CodePlugin,
-  ItalicPlugin,
-  StrikethroughPlugin,
-  UnderlinePlugin,
+    BoldPlugin,
+    CodePlugin,
+    ItalicPlugin,
+    StrikethroughPlugin,
+    UnderlinePlugin,
 } from "@udecode/plate-basic-marks/react";
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { CodeBlockPlugin, CodeLinePlugin, CodeSyntaxPlugin } from "@udecode/plate-code-block/react";
 import { CommentsPlugin } from "@udecode/plate-comments/react";
-import { ParagraphPlugin, PlateLeaf } from "@udecode/plate-common/react";
 import { DatePlugin } from "@udecode/plate-date/react";
+import { EmojiInputPlugin } from "@udecode/plate-emoji/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
 import { TocPlugin } from "@udecode/plate-heading/react";
 import { HighlightPlugin } from "@udecode/plate-highlight/react";
@@ -47,25 +46,26 @@ import { ColumnItemPlugin, ColumnPlugin } from "@udecode/plate-layout/react";
 import { LinkPlugin } from "@udecode/plate-link/react";
 import { BulletedListPlugin, ListItemPlugin, NumberedListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
 import { EquationPlugin, InlineEquationPlugin } from "@udecode/plate-math/react";
-import { ImagePlugin, MediaEmbedPlugin } from "@udecode/plate-media/react";
+import { ImagePlugin, MediaEmbedPlugin, PlaceholderPlugin } from "@udecode/plate-media/react";
 import { MentionInputPlugin, MentionPlugin } from "@udecode/plate-mention/react";
 import { SlashInputPlugin } from "@udecode/plate-slash-command/react";
 import { TableCellHeaderPlugin, TableCellPlugin, TablePlugin, TableRowPlugin } from "@udecode/plate-table/react";
 import { TogglePlugin } from "@udecode/plate-toggle/react";
+import { ParagraphPlugin, PlateLeaf } from "@udecode/plate/react";
+import { EmojiInputElement } from "../ui/emoji-input-element";
 import { EquationElement } from "../ui/equation-element";
 import { HighlightLeaf } from "../ui/highlight-leaf";
+import { ImageElementPlate } from "../ui/image-element-plate";
 import { InlineEquationElement } from "../ui/inline-equation-element";
 import { KbdLeaf } from "../ui/kbd-leaf";
 import { ListElement } from "../ui/list-element";
 import { ListItemElement } from "../ui/list-item";
+import { MediaPlaceholderElement } from "../ui/media-placeholder-element";
 import { TodoListElement } from "../ui/todo-list-element";
-import { EmojiInputElement } from "../ui/emoji-input-element";
-import { EmojiInputPlugin } from "@udecode/plate-emoji/react";
 import { TITLE_KEYS } from "./plugins/title-plugin";
-import { TitleElement } from "@/components/ui/title-element";
 
 export const getRichElements = () => {
-  return withPlaceholders(withDraggables(getElements()));
+  return withPlaceholders(getElements());
 };
 
 export const getElements = () => {
@@ -89,7 +89,11 @@ export const getElements = () => {
     [InlineEquationPlugin.key]: InlineEquationElement,
     [KbdPlugin.key]: KbdLeaf,
     [HighlightPlugin.key]: HighlightLeaf,
-    [ImagePlugin.key]: ImageElement,
+    [PlaceholderPlugin.key]: MediaPlaceholderElement,
+    [ImagePlugin.key]: ImageElementPlate,
+    // [VideoPlugin.key]: VideoElement,
+    // [AudioPlugin.key]: AudioElement,
+    // [FilePlugin.key]: FileElement,
     [LinkPlugin.key]: LinkElement,
     [MediaEmbedPlugin.key]: MediaEmbedElement,
     [MentionPlugin.key]: MentionElement,

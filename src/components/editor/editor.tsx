@@ -1,6 +1,6 @@
 "use client";
 
-import { Plate, createPlateEditor, usePlateEditor } from "@udecode/plate-common/react";
+import { createPlateEditor, Plate, usePlateEditor } from "@udecode/plate/react";
 import { useSearchParams } from "next/navigation";
 import type { PropsWithChildren } from "react";
 import { DndProvider } from "react-dnd";
@@ -53,10 +53,7 @@ export default function PlateEditor(
 
           {props.children}
 
-          <EditorContainer
-            className={"w-full overflow-visible"}
-            data-plate-selectable
-          >
+          <EditorContainer className={"w-full overflow-visible"} data-plate-selectable>
             <div className="w-[65ch] mx-auto overflow-visible">
               <Editor variant={"fullWidth"} autoFocus />
             </div>

@@ -1,8 +1,6 @@
-import { ImageElement } from "@/components/ui/image-element";
 import { LinkFloatingToolbar } from "@/components/ui/link-floating-toolbar";
 import { useYjsState } from "@/hooks/use-yjs-state";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
-import { uploadFile } from "@/lib/upload/upload-file";
 import { AlignPlugin } from "@udecode/plate-alignment/react";
 import { AutoformatPlugin } from "@udecode/plate-autoformat/react";
 import {
@@ -19,18 +17,10 @@ import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { ExitBreakPlugin, SoftBreakPlugin } from "@udecode/plate-break/react";
 import { CalloutPlugin } from "@udecode/plate-callout/react";
 import { CaptionPlugin } from "@udecode/plate-caption/react";
-import { isCodeBlockEmpty, isSelectionAtCodeBlockStart, unwrapCodeBlock } from "@udecode/plate-code-block";
+import { isCodeBlockEmpty, unwrapCodeBlock } from "@udecode/plate-code-block";
 import { CodeBlockPlugin, CodeSyntaxPlugin } from "@udecode/plate-code-block/react";
 import { CommentsPlugin } from "@udecode/plate-comments/react";
-import {
-  getNextNode,
-  getParentNode,
-  insertNodes,
-  isBlockAboveEmpty,
-  isSelectionAtBlockStart,
-  someNode,
-} from "@udecode/plate-common";
-import { ParagraphPlugin } from "@udecode/plate-common/react";
+import { ParagraphPlugin } from "@udecode/plate-core/react";
 import { DatePlugin } from "@udecode/plate-date/react";
 import { DndPlugin } from "@udecode/plate-dnd";
 import { DocxPlugin } from "@udecode/plate-docx";
@@ -39,7 +29,7 @@ import { HEADING_KEYS, HEADING_LEVELS } from "@udecode/plate-heading";
 import { HeadingPlugin, TocPlugin } from "@udecode/plate-heading/react";
 import { HighlightPlugin } from "@udecode/plate-highlight/react";
 import { HorizontalRulePlugin } from "@udecode/plate-horizontal-rule/react";
-import { HtmlReactPlugin } from "@udecode/plate-html/react";
+import { ListStyleType } from "@udecode/plate-indent-list";
 import { IndentPlugin } from "@udecode/plate-indent/react";
 import { JuicePlugin } from "@udecode/plate-juice";
 import { KbdPlugin } from "@udecode/plate-kbd/react";
@@ -70,10 +60,22 @@ import { YjsPlugin } from "@udecode/plate-yjs/react";
 import Prism from "prismjs";
 import { Path } from "slate";
 import { toast } from "sonner";
+import { ImagePreview } from "../ui/image-preview";
 import { autoformatRules } from "./plugins/editor-autoformat";
 import { NormalizePlugin } from "./plugins/editor-normalization";
+import { SubtitlePlugin, TITLE_KEYS, TitlePlugin } from "./plugins/title-plugin";
 import { RenderAboveEditableYjs } from "./plugins/yjs-above-editable";
-import { TitlePlugin, SubtitlePlugin, TITLE_KEYS } from "./plugins/title-plugin";
+
+const resetBlockTypesCommonRule = {
+  defaultType: ParagraphPlugin.key,
+  types: [...HEADING_LEVELS, BlockquotePlugin.key, ListStyleType.Disc, ListStyleType.Decimal, CalloutPlugin.key],
+};
+
+const resetBlockTypesCodeBlockRule = {
+  defaultType: ParagraphPlugin.key,
+  types: [CodeBlockPlugin.key],
+  onReset: unwrapCodeBlock,
+};
 
 export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: boolean) => {
   const plugins = [...staticPlugins];
@@ -109,10 +111,10 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
               useYjsState.getState().setStatus(path, "disconnected");
               useYjsState.getState().setActiveDocument(null);
             },
-            onStatus(data) {
+            onStatus(data: any) {
               useYjsState.getState().setStatus(path, data.status);
             },
-            onClose(data) {
+            onClose(data: any) {
               useYjsState.getState().setError(path, `Connection closed: ${data.event.reason}`);
             },
             onAuthenticated() {
@@ -124,11 +126,11 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
             onSynced() {
               useYjsState.getState().setStatus(path, "synced");
             },
-            onAuthenticationFailed(data) {
+            onAuthenticationFailed(data: any) {
               toast.error(`Authentication failed: ${data.reason}`);
               useYjsState.getState().setError(path, `Authentication failed: ${data.reason}`);
             },
-            onDisconnect(data) {
+            onDisconnect(data: any) {
               useYjsState.getState().setStatus(path, "disconnected");
               if (data.event.reason) {
                 useYjsState.getState().setError(path, data.event.reason);
@@ -186,13 +188,13 @@ export const staticPlugins = [
   TitlePlugin,
   SubtitlePlugin,
   HeadingPlugin.configure({
-    options: { levels: 2 },
+    options: { levels: 4 },
     handlers: {
-      onKeyDown: ({ event, editor }) => {
+      onKeyDown: ({ event, editor }: { event: any; editor: any }) => {
         const anchor = editor.selection?.anchor?.path;
         if (!anchor) return;
 
-        const currentNode = getParentNode(editor, anchor);
+        const currentNode = editor.api.parent(editor, anchor);
         if (!currentNode) return;
 
         const [node, path] = currentNode;
@@ -207,11 +209,11 @@ export const staticPlugins = [
           event.preventDefault();
 
           if (isTitle) {
-            const nextNode = getNextNode(editor, { at: path });
+            const nextNode = editor.api.next(editor, { at: path });
             const isNextSubtitle = nextNode?.[0]?.type === TITLE_KEYS.subtitle;
 
             if (!isNextSubtitle) {
-              insertNodes(
+              editor.tf.insertNodes(
                 editor,
                 { type: TITLE_KEYS.subtitle, children: [{ text: "" }] },
                 { at: Path.next(path), select: true },
@@ -224,7 +226,7 @@ export const staticPlugins = [
           }
 
           if (isSubtitle) {
-            insertNodes(
+            editor.tf.insertNodes(
               editor,
               { type: ParagraphPlugin.key, children: [{ text: "" }] },
               { at: Path.next(path), select: true },
@@ -232,9 +234,8 @@ export const staticPlugins = [
 
             return;
           }
-
           if (isImage) {
-            insertNodes(
+            editor.tf.insertNodes(
               editor,
               { type: ParagraphPlugin.key, children: [{ text: "" }] },
               { at: Path.next(path), select: true },
@@ -265,7 +266,6 @@ export const staticPlugins = [
 
   TablePlugin.configure({
     options: {
-      enableMerging: true,
       minColumnWidth: 60,
       disableExpandOnInsert: true,
       initialTableWidth: 600,
@@ -278,22 +278,33 @@ export const staticPlugins = [
       topOffset: 80,
     },
   }),
-  PlaceholderPlugin,
+  PlaceholderPlugin.configure({
+    options: {
+      // disableEmptyPlaceholder: true,
+    },
+    // render: { afterEditable: MediaUploadToast },
+  }),
   ImagePlugin.extend({
     render: {
-      node: ImageElement,
-    },
-  }).configure({
-    options: {
-      uploadImage: uploadFile,
-      // disableUploadInsert: true,
-      // disableEmbedInsert: true,
+      afterEditable: ImagePreview,
     },
   }),
   VideoPlugin,
   AudioPlugin,
-  MediaEmbedPlugin,
   FilePlugin,
+  MediaEmbedPlugin,
+
+  // ImagePlugin.extend({
+  //   render: {
+  //     node: ImageElement,
+  //   },
+  // }).configure({
+  //   options: {
+  //     uploadImage: uploadFile,
+  //     // disableUploadInsert: true,
+  //     // disableEmbedInsert: true,
+  //   },
+  // }),
   InlineEquationPlugin,
   EquationPlugin,
   CalloutPlugin,
@@ -307,13 +318,7 @@ export const staticPlugins = [
   // Block Style
   AlignPlugin.extend({
     inject: {
-      targetPlugins: [
-        ParagraphPlugin.key,
-        MediaEmbedPlugin.key,
-        HEADING_KEYS.h1,
-        HEADING_KEYS.h2,
-        ImagePlugin.key,
-      ],
+      targetPlugins: [ParagraphPlugin.key, MediaEmbedPlugin.key, HEADING_KEYS.h1, HEADING_KEYS.h2, ImagePlugin.key],
     },
   }),
   IndentPlugin.extend({
@@ -408,7 +413,7 @@ export const staticPlugins = [
   SelectOnBackspacePlugin.configure({
     options: {
       query: {
-        allow: [ImagePlugin.key, HorizontalRulePlugin.key],
+        allow: [ImagePlugin.key, VideoPlugin.key, AudioPlugin.key, FilePlugin.key, MediaEmbedPlugin.key],
       },
     },
   }),
@@ -438,7 +443,6 @@ export const staticPlugins = [
     },
   }),
   JuicePlugin,
-  HtmlReactPlugin,
   CodeSyntaxPlugin,
   MentionInputPlugin,
   TableRowPlugin,
@@ -462,47 +466,34 @@ export const staticPlugins = [
     options: {
       rules: [
         {
-          types: [BlockquotePlugin.key, TodoListPlugin.key],
-          defaultType: ParagraphPlugin.key,
+          ...resetBlockTypesCommonRule,
           hotkey: "Enter",
-          predicate: isBlockAboveEmpty,
+          predicate: (editor) => editor.api.isEmpty(editor.selection, { block: true }),
         },
         {
-          types: [BlockquotePlugin.key, TodoListPlugin.key],
-          defaultType: ParagraphPlugin.key,
+          ...resetBlockTypesCommonRule,
           hotkey: "Backspace",
-          predicate: isSelectionAtBlockStart,
+          predicate: (editor) => editor.api.isAt({ start: true }),
         },
         {
-          types: [CodeBlockPlugin.key],
-          defaultType: ParagraphPlugin.key,
-          onReset: unwrapCodeBlock,
+          ...resetBlockTypesCodeBlockRule,
           hotkey: "Enter",
-          predicate: isCodeBlockEmpty,
+          predicate: (editor) => isCodeBlockEmpty(editor),
         },
         {
-          types: [CodeBlockPlugin.key],
-          defaultType: ParagraphPlugin.key,
-          onReset: unwrapCodeBlock,
+          ...resetBlockTypesCodeBlockRule,
           hotkey: "Backspace",
-          predicate: isSelectionAtCodeBlockStart,
+          predicate: (editor) => editor.api.isAt({ start: true }),
         },
       ],
     },
   }),
-  TabbablePlugin.configure(({ editor }) => ({
+  TabbablePlugin.configure(({ editor }: { editor: any }) => ({
     options: {
-      query: () => {
-        if (isSelectionAtBlockStart(editor as any)) return false;
-
-        return !someNode(editor as any, {
-          match: (n) => {
-            return !!(
-              n.type &&
-              ([TablePlugin.key, TodoListPlugin.key, CodeBlockPlugin.key].includes(n.type as string) || n.listStyleType)
-            );
-          },
-        });
+      query: (event) => {
+        const inList = editor.api.node(editor, { match: { type: ListPlugin.key } });
+        const inCodeBlock = editor.api.node(editor, { match: { type: CodeBlockPlugin.key } });
+        return !inList && !inCodeBlock;
       },
     },
   })),

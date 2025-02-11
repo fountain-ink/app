@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 
-import { useEditorPlugin, useEditorRef, useHotkeys } from "@udecode/plate-common/react";
+import { useEditorPlugin, useEditorRef, useHotkeys } from "@udecode/plate/react";
 import { BlockMenuPlugin, BlockSelectionPlugin } from "@udecode/plate-selection/react";
 
 import { BlockMenuItems } from "./block-menu-items";
@@ -98,7 +98,7 @@ function BlockMenuInput({ onHide }: { onHide: () => void }) {
     (e) => {
       if (value.length === 0) {
         e.preventDefault();
-        blockSelectionTf.duplicate(blockSelectionApi.getNodes());
+        blockSelectionTf.duplicate();
         onHide();
       }
     },

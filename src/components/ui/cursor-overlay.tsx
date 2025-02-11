@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 
 import { cn } from "@udecode/cn";
-import { createPlatePlugin, useEditorPlugin, useEditorRef } from "@udecode/plate-common/react";
+import { createPlatePlugin, useEditorPlugin, useEditorRef } from "@udecode/plate/react";
 import {
   type CursorData,
   type CursorOverlayProps,
@@ -48,7 +48,7 @@ export function Selection({
 
 export function SelectionOverlay({ cursors, ...props }: CursorOverlayProps) {
   const editor = useEditorRef();
-  const dynamicCursors = editor.useOption(SelectionOverlayPlugin, "cursors");
+  const dynamicCursors = editor.getOption(SelectionOverlayPlugin, "cursors");
 
   const allCursors = { ...cursors, ...dynamicCursors };
 
@@ -60,7 +60,7 @@ export const SelectionOverlayPlugin = createPlatePlugin({
   options: { cursors: {} as Record<string, CursorState<CursorData>> },
   useHooks: ({ setOption }) => {
     const { editor } = useEditorPlugin(BlockSelectionPlugin);
-    const isSelecting = editor.useOptions(BlockSelectionPlugin).isSelecting;
+    const isSelecting = editor.getOptions(BlockSelectionPlugin).isSelecting;
 
     useEffect(() => {
       if (isSelecting) {

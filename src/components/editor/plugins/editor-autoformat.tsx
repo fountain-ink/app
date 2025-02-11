@@ -18,8 +18,7 @@ import {
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { insertEmptyCodeBlock } from "@udecode/plate-code-block";
 import { CodeBlockPlugin, CodeLinePlugin } from "@udecode/plate-code-block/react";
-import { getParentNode, insertNodes, isBlock, isElement, isType, setNodes } from "@udecode/plate-common";
-import { ParagraphPlugin } from "@udecode/plate-common/react";
+// import { getParentNode, insertNodes, isBlock, isElement, isType, setNodes } from "@udecode/plate";
 import { HEADING_KEYS } from "@udecode/plate-heading";
 import { HighlightPlugin } from "@udecode/plate-highlight/react";
 import { HorizontalRulePlugin } from "@udecode/plate-horizontal-rule/react";
@@ -27,23 +26,23 @@ import { INDENT_LIST_KEYS, ListStyleType, toggleIndentList } from "@udecode/plat
 import { toggleList, unwrapList } from "@udecode/plate-list";
 import { BulletedListPlugin, ListItemPlugin, NumberedListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
 import { openNextToggles, TogglePlugin } from "@udecode/plate-toggle/react";
-import { TITLE_KEYS } from "@/components/editor/plugins/title-plugin";
 
 import type { AutoformatBlockRule, AutoformatRule } from "@udecode/plate-autoformat";
-import type { SlateEditor } from "@udecode/plate-common";
+import { SlateEditor } from "@udecode/plate-core";
+import { ParagraphPlugin, PlateEditor } from "@udecode/plate-core/react";
 import type { TTodoListItemElement } from "@udecode/plate-list";
 
 export const preFormat: AutoformatBlockRule["preFormat"] = (editor) => unwrapList(editor);
 
 export const format = (editor: SlateEditor, customFormatting: any) => {
   if (editor.selection) {
-    const parentEntry = getParentNode(editor, editor.selection);
+    const parentEntry = editor.api.parent(editor.selection);
 
     if (!parentEntry) return;
 
     const [node] = parentEntry;
 
-    if (isElement(node) && !isType(editor, node, CodeBlockPlugin.key) && !isType(editor, node, CodeLinePlugin.key)) {
+    if (node.isElement && !(node.type === CodeBlockPlugin.key) && !(node.type === CodeLinePlugin.key)) {
       customFormatting();
     }
   }
@@ -178,8 +177,8 @@ export const autoformatBlocks: AutoformatRule[] = [
   },
   {
     format: (editor) => {
-      setNodes(editor, { type: HorizontalRulePlugin.key });
-      insertNodes(editor, {
+      editor.tf.setNodes({ type: HorizontalRulePlugin.key });
+      editor.tf.insertNodes({
         children: [{ text: "" }],
         type: ParagraphPlugin.key,
       });
@@ -213,11 +212,10 @@ export const autoformatLists: AutoformatRule[] = [
   },
   {
     format: (editor) =>
-      setNodes<TTodoListItemElement>(
-        editor,
+      editor.tf.setNodes<TTodoListItemElement>(
         { checked: true, type: TodoListPlugin.key },
         {
-          match: (n) => isBlock(editor, n),
+          match: (n) => editor.api.isBlock(n),
         },
       ),
     match: "[x] ",
@@ -252,7 +250,7 @@ export const autoformatIndentLists: AutoformatRule[] = [
       toggleIndentList(editor, {
         listStyleType: INDENT_LIST_KEYS.todo,
       });
-      setNodes(editor, {
+      editor.tf.setNodes({
         checked: false,
         listStyleType: INDENT_LIST_KEYS.todo,
       });
@@ -266,7 +264,7 @@ export const autoformatIndentLists: AutoformatRule[] = [
       toggleIndentList(editor, {
         listStyleType: INDENT_LIST_KEYS.todo,
       });
-      setNodes(editor, {
+      editor.tf.setNodes({
         checked: true,
         listStyleType: INDENT_LIST_KEYS.todo,
       });

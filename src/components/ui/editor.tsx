@@ -2,11 +2,11 @@
 
 import React from "react";
 
-import type { PlateContentProps } from "@udecode/plate-common/react";
+import type { PlateContentProps } from "@udecode/plate/react";
 import type { VariantProps } from "class-variance-authority";
 
 import { cn } from "@udecode/cn";
-import { PlateContent, useEditorContainerRef, useEditorRef } from "@udecode/plate-common/react";
+import { PlateContent, useEditorContainerRef, useEditorRef } from "@udecode/plate/react";
 import { cva } from "class-variance-authority";
 
 const editorContainerVariants = cva("relative flex cursor-text", {
@@ -32,7 +32,7 @@ export const EditorContainer = ({
   return (
     <div
       id={editor.uid}
-      ref={containerRef}
+      ref={containerRef as any}
       className={cn("ignore-click-outside/toolbar", editorContainerVariants({ variant }), className)}
       {...props}
     />

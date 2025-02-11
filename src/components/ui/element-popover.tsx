@@ -1,4 +1,4 @@
-import { setNode, useEditorRef, useElement, useRemoveNodeButton } from "@udecode/plate-common/react";
+import { useEditorRef, useElement, useRemoveNodeButton } from "@udecode/plate/react";
 import type { Variant } from "framer-motion";
 import type React from "react";
 import { forwardRef, useState } from "react";
@@ -67,9 +67,8 @@ export const ElementPopover = forwardRef<HTMLDivElement, ElementPopoverProps>(
     const handleWidth = (newWidth: ElementWidth) => {
       setWidth(newWidth);
       onWidthChange?.(newWidth);
-      setNode(editor, element, { width: newWidth });
-
-      editor.select(editor.selection?.anchor.path ?? []);
+      editor.tf.setNodes({ width: newWidth }, { at: element }, );
+      editor.tf.select(editor.selection?.anchor.path ?? []);
     };
 
     if (readOnly) return <>{children}</>;

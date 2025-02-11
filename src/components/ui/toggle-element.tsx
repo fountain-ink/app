@@ -1,5 +1,5 @@
 import { cn, withRef } from "@udecode/cn";
-import { useElement } from "@udecode/plate-common/react";
+import { useElement } from "@udecode/plate/react";
 import { useToggleButton, useToggleButtonState } from "@udecode/plate-toggle/react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 

@@ -1,20 +1,19 @@
 import { YjsEditor } from "@slate-yjs/core";
-import { insertNodes, isEditor, removeNodes, type TElement } from "@udecode/plate-common";
-import { useEditorPlugin } from "@udecode/plate-common/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
 import { BaseYjsPlugin, type YjsConfig } from "@udecode/plate-yjs";
 import { useEffect } from "react";
 import { RemoteCursorOverlay } from "./yjs-overlay";
+import { useEditorPlugin } from "@udecode/plate/react";
 
 export const RenderAboveEditableYjs: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const { editor, useOption } = useEditorPlugin<YjsConfig>(BaseYjsPlugin);
+  const { editor, getOption } = useEditorPlugin<YjsConfig>(BaseYjsPlugin);
 
   const { normalizeNode } = editor;
 
-  const provider = useOption("provider");
-  const isSynced = useOption("isSynced");
+  const provider = getOption("provider");
+  const isSynced = getOption("isSynced");
 
   useEffect(() => {
     void provider.connect();
@@ -42,10 +41,10 @@ export const RenderAboveEditableYjs: React.FC<{
 // export const RenderAboveEditableYjs =
 //   (doc: Y.Doc, pageId?: string) =>
 //   ({ children }: { children: ReactNode }) => {
-//     const { editor, useOption } = useEditorPlugin<YjsConfig>(BaseYjsPlugin);
+//     const { editor, getOption } = useEditorPlugin<YjsConfig>(BaseYjsPlugin);
 
-//     const provider = useOption("provider");
-//     const isSynced = useOption("isSynced");
+//     const provider = getOption("provider");
+//     const isSynced = getOption("isSynced");
 
 //     useMemo(() => {
 //       // Ensure editor always has at least 1 valid child

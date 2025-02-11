@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@udecode/cn";
-import { createNodeHOC, createNodesHOC, ParagraphPlugin, usePlaceholderState, type PlaceholderProps } from "@udecode/plate-common/react";
+import { createNodeHOC, createNodesHOC, ParagraphPlugin, usePlaceholderState, type PlaceholderProps } from "@udecode/plate/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
 import { useReadOnly } from "slate-react";
 import { TITLE_KEYS } from "@/components/editor/plugins/title-plugin";

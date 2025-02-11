@@ -1,14 +1,13 @@
 "use client";
 
 import { cn, withRef } from "@udecode/cn";
-import {
-  createPrimitiveComponent,
-  selectSiblingNodePoint,
-  useEditorRef,
-  useElement,
-} from "@udecode/plate-common/react";
 import type { TEquationElement } from "@udecode/plate-math";
 import { useEquationElement, useEquationInput } from "@udecode/plate-math/react";
+import {
+    createPrimitiveComponent,
+    useEditorRef,
+    useElement,
+} from "@udecode/plate/react";
 import { RadicalIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useReadOnly, useSelected } from "slate-react";
@@ -35,8 +34,9 @@ export const InlineEquationElement = withRef<typeof PlateElement>(({ children, c
 
   const handleClose = () => {
     setOpen(false);
-    selectSiblingNodePoint(editor, { node: element });
+    editor.tf.select (element, {next: true});
   };
+
 
   const renderEquationInput = () => {
     if (readOnly) return null;

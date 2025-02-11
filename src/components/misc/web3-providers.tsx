@@ -5,6 +5,7 @@ import { getPublicClient } from "@/lib/lens/client";
 import { chains } from "@lens-network/sdk/viem";
 import { LensProvider } from "@lens-protocol/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { PlateController } from "@udecode/plate/react";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { polygon } from "viem/chains";
 import { createConfig, http, WagmiProvider } from "wagmi";
@@ -32,7 +33,9 @@ export const Web3Providers = ({ children }: { children: JSX.Element }) => {
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <ConnectKitProvider>
-          <LensProvider client={publicClient}>{children}</LensProvider>
+          <PlateController>
+            <LensProvider client={publicClient}>{children}</LensProvider>
+          </PlateController>
         </ConnectKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

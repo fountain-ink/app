@@ -3,7 +3,7 @@
 import type { Draft } from "@/components/draft/draft";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { extractMetadata } from "@/lib/extract-metadata";
-import { useEditorState } from "@udecode/plate-common/react";
+import { useEditorState } from "@udecode/plate/react";
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 

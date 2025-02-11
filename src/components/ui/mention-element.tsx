@@ -2,8 +2,8 @@
 
 import { useMounted } from "@/hooks/use-mounted";
 import { cn, withRef } from "@udecode/cn";
-import { IS_APPLE, getHandler } from "@udecode/plate-common";
-import { useElement } from "@udecode/plate-common/react";
+import { IS_APPLE, getHandler } from "@udecode/plate";
+import { useElement } from "@udecode/plate/react";
 import type { TMentionElement } from "@udecode/plate-mention";
 import React from "react";
 import { useFocused, useSelected } from "slate-react";

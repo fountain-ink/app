@@ -1,14 +1,12 @@
 "use client";
 
-import { type TElement, insertNodes, nanoid } from "@udecode/plate-common";
+import { type TElement, nanoid } from "@udecode/plate";
 import {
   ParagraphPlugin,
   type PlateEditor,
-  findNodePath,
-  focusEditor,
   useEditorRef,
   useElement,
-} from "@udecode/plate-common/react";
+} from "@udecode/plate/react";
 import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
 import { Plus } from "lucide-react";
 import { Path } from "slate";
@@ -27,11 +25,11 @@ export const DraggableInsertHandle = () => {
         event.stopPropagation();
         event.preventDefault();
 
-        const at = findNodePath(editor, element);
+        const at = editor.api.findPath( element);
         triggerComboboxNextBlock(editor, "/", at, event.altKey);
       }}
       onMouseDown={() => {
-        focusEditor(editor);
+        editor.tf.focus();
         editor.getApi(BlockSelectionPlugin).blockSelection.resetSelectedIds();
       }}
       tabIndex={-1}
@@ -65,9 +63,9 @@ const triggerComboboxNextBlock = (editor: PlateEditor, triggerText: string, at?:
     _at = insertAbove ? slicedPath : Path.next(slicedPath);
   }
 
-  insertNodes<TElement>(editor, emptyBlock, {
+  editor.tf.insertNodes<TElement>(emptyBlock, {
     at: _at,
     select: true,
   });
-  editor.insertText(triggerText);
+  editor.tf.insertText(triggerText);
 };

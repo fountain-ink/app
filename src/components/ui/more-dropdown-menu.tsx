@@ -1,12 +1,10 @@
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
-import { collapseSelection } from "@udecode/plate-common";
-import { focusEditor, useEditorRef } from "@udecode/plate-common/react";
 import { HighlightPlugin } from "@udecode/plate-highlight/react";
 import { KbdPlugin } from "@udecode/plate-kbd/react";
-import { HighlighterIcon, KeyboardIcon, MoreHorizontalIcon, RadicalIcon } from "lucide-react";
-
 import { insertInlineEquation } from "@udecode/plate-math";
+import { HighlighterIcon, KeyboardIcon, MoreHorizontalIcon, RadicalIcon } from "lucide-react";
+import { useEditorRef } from "@udecode/plate/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,9 +34,9 @@ export function MoreDropdownMenu(props: DropdownMenuProps) {
         <DropdownMenuGroup>
           <DropdownMenuItem
             onSelect={() => {
-              editor.tf.toggle.mark({ key: HighlightPlugin.key });
-              collapseSelection(editor, { edge: "end" });
-              focusEditor(editor);
+              editor.tf.toggleMark(HighlightPlugin.key);
+              editor.tf.collapse({ edge: "end" });
+              editor.tf.focus();
             }}
             className="flex items-center gap-2"
           >
@@ -48,9 +46,9 @@ export function MoreDropdownMenu(props: DropdownMenuProps) {
 
           <DropdownMenuItem
             onSelect={() => {
-              editor.tf.toggle.mark({ key: KbdPlugin.key });
-              collapseSelection(editor, { edge: "end" });
-              focusEditor(editor);
+              editor.tf.toggleMark(KbdPlugin.key);
+              editor.tf.collapse({ edge: "end" });
+              editor.tf.focus();
             }}
             className="flex items-center gap-2"
           >

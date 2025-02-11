@@ -3,20 +3,20 @@
 import React from "react";
 
 import { cn } from "@udecode/cn";
-import { useEditorPlugin, useEditorRef, useElement } from "@udecode/plate-common/react";
 import { BLOCK_CONTEXT_MENU_ID, BlockMenuPlugin } from "@udecode/plate-selection/react";
 import { MoreHorizontal } from "lucide-react";
 
+import { useIsTouchDevice } from "@/hooks/use-is-touch";
+import { useLockScroll } from "@/hooks/use-lock-scroll";
+import { useEditorPlugin, useEditorRef, useElement } from "@udecode/plate/react";
 import { BlockMenu } from "./block-menu";
 import { type ButtonProps, Button } from "./button";
 import { useContextMenu } from "./menu";
-import { useIsTouchDevice } from "@/hooks/use-is-touch";
-import { useLockScroll } from "@/hooks/use-lock-scroll";
 
 export function BlockContextMenu({ children }: { children: React.ReactNode }) {
-  const { api, editor, useOption } = useEditorPlugin(BlockMenuPlugin);
-  const anchorRect = useOption("position");
-  const openId = useOption("openId");
+  const { api, editor, getOption } = useEditorPlugin(BlockMenuPlugin);
+  const anchorRect = getOption("position");
+  const openId = getOption("openId");
   const isTouch = useIsTouchDevice();
   useLockScroll(openId === BLOCK_CONTEXT_MENU_ID, `#${editor.uid}`);
 

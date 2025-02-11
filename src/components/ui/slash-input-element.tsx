@@ -10,8 +10,8 @@ import {
 } from "./inline-combobox";
 import { PlateElement } from "./plate-element";
 
-import type { PlateEditor } from "@udecode/plate-common/react";
 import { ImagePlugin } from "@udecode/plate-media/react";
+import type { PlateEditor } from "@udecode/plate/react";
 import {
   Heading2Icon,
   HeadingIcon,
@@ -28,8 +28,7 @@ import type { ComponentType, SVGProps } from "react";
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { QuoteIcon } from "lucide-react";
 
-import { insertEmptyElement } from "@udecode/plate-common";
-import { ParagraphPlugin } from "@udecode/plate-common/react";
+import { ParagraphPlugin } from "@udecode/plate/react";
 
 import { insertEmptyCodeBlock } from "@udecode/plate-code-block";
 import { CodeIcon } from "lucide-react";
@@ -37,7 +36,7 @@ import { CodeIcon } from "lucide-react";
 import { insertBlock } from "@/lib/transforms";
 import { ListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
 import { EquationPlugin } from "@udecode/plate-math/react";
-import { insertTable } from "@udecode/plate-table/react";
+import { insertTable } from "@udecode/plate-table";
 
 interface SlashCommandRule {
   icon: ComponentType<SVGProps<SVGSVGElement>>;
@@ -76,7 +75,7 @@ const rules: SlashCommandRule[] = [
     description: "Add a paragraph.",
     keywords: ["paragraph", "text", "p", "plain"],
     onSelect: (editor) => {
-      insertEmptyElement(editor, ParagraphPlugin.key, {
+      editor.tf.insertNodes(editor.api.create.block({ type: ParagraphPlugin.key }), {
         nextBlock: true,
         select: true,
       });
@@ -88,7 +87,7 @@ const rules: SlashCommandRule[] = [
     description: "Add an image.",
     keywords: ["image", "img", "picture", "png", "photo", "jpg", "jpeg"],
     onSelect: (editor) => {
-      editor.tf.toggle.block({ type: ImagePlugin.key });
+      editor.tf.toggleBlock( ImagePlugin.key );
       // insertBlock(editor, ImagePlugin.key);
     },
   },

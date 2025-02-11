@@ -7,6 +7,7 @@ import { getSession } from "@/lib/auth/get-session";
 import { getLensClient } from "@/lib/lens/client";
 import "@/styles/globals.css";
 import { cn } from "@udecode/cn";
+import { PlateController } from "@udecode/plate/react";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider as DarkModeProvider } from "next-themes";
@@ -38,14 +39,14 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
         )}
       >
         <Web3Providers>
-          <DarkModeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
-            <ThemeProvider>
-              <AuthManager credentials={credentials} />
-              <Toaster position="top-center" offset={16} />
-              <Header session={session} />
-              {children}
-            </ThemeProvider>
-          </DarkModeProvider>
+            <DarkModeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
+              <ThemeProvider>
+                <AuthManager credentials={credentials} />
+                <Toaster position="top-center" offset={16} />
+                <Header session={session} />
+                {children}
+              </ThemeProvider>
+            </DarkModeProvider>
         </Web3Providers>
       </body>
     </html>

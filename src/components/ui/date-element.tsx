@@ -1,8 +1,6 @@
 "use client";
 
 import { cn, withRef } from "@udecode/cn";
-import { setNodes } from "@udecode/plate-common";
-import { findNodePath } from "@udecode/plate-common/react";
 
 import { Calendar } from "./calendar";
 import { PlateElement } from "./plate-element";
@@ -54,7 +52,7 @@ export const DateElement = withRef<typeof PlateElement>(({ children, className, 
             onSelect={(date) => {
               if (!date) return;
 
-              setNodes(editor, { date: date.toDateString() }, { at: findNodePath(editor, element) });
+              editor.tf.setNodes({ date: date.toDateString() }, { at: editor.api.findPath(element) });
             }}
             mode="single"
             initialFocus

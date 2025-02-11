@@ -4,10 +4,9 @@ import React from "react";
 
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
-import { someNode } from "@udecode/plate-common";
-import { focusEditor, useEditorPlugin, useEditorSelector } from "@udecode/plate-common/react";
-import { deleteTable, insertTableRow } from "@udecode/plate-table";
-import { TablePlugin, deleteColumn, deleteRow, insertTable } from "@udecode/plate-table/react";
+import { useEditorPlugin, useEditorSelector } from "@udecode/plate/react";
+import { deleteColumn, deleteRow, deleteTable, insertTable, insertTableRow } from "@udecode/plate-table";
+import { TablePlugin } from "@udecode/plate-table/react";
 import { Minus, Plus, RectangleHorizontal, RectangleVertical, Table, Trash } from "lucide-react";
 
 import {
@@ -24,7 +23,7 @@ import {
 import { ToolbarButton } from "./toolbar";
 
 export function TableDropdownMenu(props: DropdownMenuProps) {
-  const tableSelected = useEditorSelector((editor) => someNode(editor, { match: { type: TablePlugin.key } }), []);
+  const tableSelected = useEditorSelector((editor) => editor.api.some( { match: { type: TablePlugin.key } }), []);
 
   const { editor, tf } = useEditorPlugin(TablePlugin);
 
@@ -50,7 +49,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
                 className="min-w-[180px]"
                 onSelect={() => {
                   insertTable(editor, {}, { select: true });
-                  focusEditor(editor);
+                  editor.tf.focus();
                 }}
               >
                 <Plus />
@@ -61,7 +60,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
                 disabled={!tableSelected}
                 onSelect={() => {
                   deleteTable(editor);
-                  focusEditor(editor);
+                  editor.tf.focus();
                 }}
               >
                 <Trash />
@@ -81,7 +80,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
                 disabled={!tableSelected}
                 onSelect={() => {
                   tf.insert.tableColumn();
-                  focusEditor(editor);
+                  editor.tf.focus();
                 }}
               >
                 <Plus />
@@ -92,7 +91,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
                 disabled={!tableSelected}
                 onSelect={() => {
                   deleteColumn(editor);
-                  focusEditor(editor);
+                  editor.tf.focus();
                 }}
               >
                 <Minus />
@@ -112,7 +111,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
                 disabled={!tableSelected}
                 onSelect={() => {
                   insertTableRow(editor);
-                  focusEditor(editor);
+                  editor.tf.focus();
                 }}
               >
                 <Plus />
@@ -123,7 +122,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
                 disabled={!tableSelected}
                 onSelect={() => {
                   deleteRow(editor);
-                  focusEditor(editor);
+                  editor.tf.focus();
                 }}
               >
                 <Minus />

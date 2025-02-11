@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@udecode/cn";
-import { useFormInputProps } from "@udecode/plate-common/react";
+import { useFormInputProps } from "@udecode/plate/react";
 import { type UseVirtualFloatingOptions, flip, offset } from "@udecode/plate-floating";
 import {
   type LinkFloatingToolbarState,

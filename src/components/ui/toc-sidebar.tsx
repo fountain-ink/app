@@ -39,7 +39,7 @@ export const TocSidebar = ({
     ...props,
   });
   const { activeContentId, headingList, open } = state;
-  const { navProps, onContentClick } = useTocSideBar(state);
+  const { navProps } = useTocSideBar(state);
 
   return (
     <div className={cn("sticky left-0 top-0 z-[5]", className)}>
@@ -74,7 +74,7 @@ export const TocSidebar = ({
               inter.className,
             )}
             aria-label="Table of contents"
-            {...navProps}
+            {...navProps as any}
           >
             <div
               id="toc_wrap"
