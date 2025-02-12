@@ -142,114 +142,105 @@ export const TableFloatingToolbar = withRef<
   };
 
   const tableContent = (
-    <Toolbar className="flex flex-row items-center w-full gap-1">
-      <ToolbarGroup>
-        {canMerge && (
-          <ToolbarButton
-            variant="default"
-            onClick={() => tf.table.merge()}
-            onMouseDown={(e) => e.preventDefault()}
-            tooltip="Merge cells"
-            size="sm"
-          >
-            <CombineIcon className="h-3.5 w-3.5" />
-          </ToolbarButton>
-        )}
-        {canSplit && (
-          <ToolbarButton
-            variant="default"
-            onClick={() => tf.table.split()}
-            onMouseDown={(e) => e.preventDefault()}
-            tooltip="Split cell"
-            size="sm"
-          >
-            <SquareSplitHorizontalIcon className="h-3.5 w-3.5" />
-          </ToolbarButton>
-        )}
+    <Toolbar className="flex flex-row items-center w-full">
+      {canMerge && (
+        <ToolbarButton
+          variant="ghost"
+          onClick={() => tf.table.merge()}
+          onMouseDown={(e) => e.preventDefault()}
+          tooltip="Merge cells"
+          size="icon"
+          className="h-10 w-10 p-0"
+        >
+          <CombineIcon className="h-3.5 w-3.5" />
+        </ToolbarButton>
+      )}
+      {canSplit && (
+        <ToolbarButton
+          variant="ghost"
+          onClick={() => tf.table.split()}
+          onMouseDown={(e) => e.preventDefault()}
+          tooltip="Split cell"
+          size="icon"
+          className="h-10 w-10 p-0"
+        >
+          <SquareSplitHorizontalIcon className="h-3.5 w-3.5" />
+        </ToolbarButton>
+      )}
 
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger asChild>
-            <ToolbarButton variant="default" tooltip="Cell borders" size="sm">
-              <Grid2X2Icon className="h-3.5 w-3.5" />
-            </ToolbarButton>
-          </DropdownMenuTrigger>
+      <DropdownMenu modal={false}>
+        <DropdownMenuTrigger asChild>
+          <ToolbarButton variant="ghost" tooltip="Cell borders" size="icon" className="h-10 w-10 p-0">
+            <Grid2X2Icon className="h-3.5 w-3.5" />
+          </ToolbarButton>
+        </DropdownMenuTrigger>
 
-          <DropdownMenuPortal>
-            <TableBordersDropdownMenuContent />
-          </DropdownMenuPortal>
-        </DropdownMenu>
-      </ToolbarGroup>
+        <DropdownMenuPortal>
+          <TableBordersDropdownMenuContent />
+        </DropdownMenuPortal>
+      </DropdownMenu>
 
       {collapsed && (
         <>
-          <Separator orientation="vertical" className="my-1" />
-          <ToolbarGroup>
-            <div className="flex gap-0.5">
-              <ToolbarButton
-                variant="default"
-                onClick={() => tf.insert.tableRow({ before: true })}
-                onMouseDown={(e) => e.preventDefault()}
-                tooltip="Insert row before"
-                size="sm"
-              >
-                <ArrowUp className="h-3.5 w-3.5" />
-              </ToolbarButton>
-              <ToolbarButton
-                variant="default"
-                onClick={() => tf.insert.tableRow()}
-                onMouseDown={(e) => e.preventDefault()}
-                tooltip="Insert row after"
-                size="sm"
-              >
-                <ArrowDown className="h-3.5 w-3.5" />
-              </ToolbarButton>
-              <Separator orientation="vertical" className="mx-0.5 my-1" />
-              <ToolbarButton
-                variant="default"
-                onClick={() => tf.remove.tableRow()}
-                onMouseDown={(e) => e.preventDefault()}
-                tooltip="Delete row"
-                size="sm"
-              >
-                <XIcon className="h-3.5 w-3.5" />
-              </ToolbarButton>
-            </div>
-          </ToolbarGroup>
+          <Separator orientation="vertical" className="mx-1 h-6 bg-border" />
+            <ToolbarButton
+              variant="ghost"
+              onClick={() => tf.insert.tableRow({ before: true })}
+              onMouseDown={(e) => e.preventDefault()}
+              tooltip="Insert row before"
+              size="icon"
+            >
+              <ArrowUp className="h-3.5 w-3.5" />
+            </ToolbarButton>
+            <ToolbarButton
+              variant="ghost"
+              onClick={() => tf.insert.tableRow()}
+              onMouseDown={(e) => e.preventDefault()}
+              tooltip="Insert row after"
+              size="icon"
+            >
+              <ArrowDown className="h-3.5 w-3.5" />
+            </ToolbarButton>
+            <ToolbarButton
+              variant="ghost"
+              onClick={() => tf.remove.tableRow()}
+              onMouseDown={(e) => e.preventDefault()}
+              tooltip="Delete row"
+              size="icon"
+            >
+              <XIcon className="h-3.5 w-3.5" />
+            </ToolbarButton>
 
-          <Separator orientation="vertical" className="my-1" />
+          <Separator orientation="vertical" className="mx-1 h-6 bg-border" />
 
-          <ToolbarGroup>
-            <div className="flex gap-0.5">
-              <ToolbarButton
-                variant="default"
-                onClick={() => tf.insert.tableColumn({ before: true })}
-                onMouseDown={(e) => e.preventDefault()}
-                tooltip="Insert column before"
-                size="sm"
-              >
-                <ArrowLeft className="h-3.5 w-3.5" />
-              </ToolbarButton>
-              <ToolbarButton
-                variant="default"
-                onClick={() => tf.insert.tableColumn()}
-                onMouseDown={(e) => e.preventDefault()}
-                tooltip="Insert column after"
-                size="sm"
-              >
-                <ArrowRight className="h-3.5 w-3.5" />
-              </ToolbarButton>
-              <Separator orientation="vertical" className="mx-0.5 my-1" />
-              <ToolbarButton
-                variant="default"
-                onClick={() => tf.remove.tableColumn()}
-                onMouseDown={(e) => e.preventDefault()}
-                tooltip="Delete column"
-                size="sm"
-              >
-                <XIcon className="h-3.5 w-3.5" />
-              </ToolbarButton>
-            </div>
-          </ToolbarGroup>
+
+            <ToolbarButton
+              variant="ghost"
+              onClick={() => tf.insert.tableColumn({ before: true })}
+              onMouseDown={(e) => e.preventDefault()}
+              tooltip="Insert column before"
+              size="icon"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+            </ToolbarButton>
+            <ToolbarButton
+              variant="ghost"
+              onClick={() => tf.insert.tableColumn()}
+              onMouseDown={(e) => e.preventDefault()}
+              tooltip="Insert column after"
+              size="icon"
+            >
+              <ArrowRight className="h-3.5 w-3.5" />
+            </ToolbarButton>
+            <ToolbarButton
+              variant="ghost"
+              onClick={() => tf.remove.tableColumn()}
+              onMouseDown={(e) => e.preventDefault()}
+              tooltip="Delete column"
+              size="icon"
+            >
+              <XIcon className="h-3.5 w-3.5" />
+            </ToolbarButton>
         </>
       )}
     </Toolbar>

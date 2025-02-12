@@ -16,7 +16,7 @@ const toolbarVariants = cva("relative flex select-none items-center", {
   },
   variants: {
     variant: {
-      default: "gap-1 bg-popover rounded-sm",
+      default: "bg-popover rounded-sm",
       media:
         "absolute z-[2] h-[26px] max-w-[calc(100%-16px)] overflow-hidden rounded-sm bg-black/60 transition-opacity",
     },
@@ -32,7 +32,7 @@ export const ToolbarLink = withCn(ToolbarPrimitive.Link, "font-medium underline 
 export const ToolbarSeparator = withCn(ToolbarPrimitive.Separator, "mx-2 my-1 w-px shrink-0 bg-border");
 
 export const toolbarButtonVariants = cva(
-  "inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-md text-sm font-medium text-foreground/80 ring-offset-background transition-bg-ease focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg:not([data-icon])]:size-4",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-bg-ease focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg:not([data-icon])]:size-4",
   {
     defaultVariants: {
       size: "sm",
@@ -44,12 +44,15 @@ export const toolbarButtonVariants = cva(
         lg: "h-11 px-5",
         none: "",
         sm: "h-[28px] px-1.5",
+        icon: "h-10 w-10 [&_svg]:size-5 ",
       },
       variant: {
-        default: "bg-transparent hover:bg-black/5 aria-checked:bg-accent aria-checked:text-accent-foreground",
+        default: "text-muted-foreground hover:bg-accent hover:text-accent-foreground aria-checked:bg-accent aria-checked:text-accent-foreground",
         media:
           "no-focus-ring m-0 h-auto rounded-none bg-black/20 px-1.5 py-1 text-white hover:bg-white/5 focus:bg-white/5 [&:not(:last-child)]:border-r [&:not(:last-child)]:border-r-white/20 [&_svg]:size-[14px] [&_svg]:text-white",
         outline: "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground",
+        muted: "text-muted-foreground hover:bg-accent",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
       },
     },
   },
