@@ -1,6 +1,7 @@
 import { LinkFloatingToolbar } from "@/components/ui/link-floating-toolbar";
 import { useYjsState } from "@/hooks/use-yjs-state";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
+import { PathApi } from "@udecode/plate";
 import { AlignPlugin } from "@udecode/plate-alignment/react";
 import { AutoformatPlugin } from "@udecode/plate-autoformat/react";
 import {
@@ -20,7 +21,7 @@ import { CaptionPlugin } from "@udecode/plate-caption/react";
 import { isCodeBlockEmpty, unwrapCodeBlock } from "@udecode/plate-code-block";
 import { CodeBlockPlugin, CodeSyntaxPlugin } from "@udecode/plate-code-block/react";
 import { CommentsPlugin } from "@udecode/plate-comments/react";
-import { ParagraphPlugin } from "@udecode/plate-core/react";
+import { ParagraphPlugin, PlateEditor } from "@udecode/plate-core/react";
 import { DatePlugin } from "@udecode/plate-date/react";
 import { DndPlugin } from "@udecode/plate-dnd";
 import { DocxPlugin } from "@udecode/plate-docx";
@@ -60,13 +61,11 @@ import { YjsPlugin } from "@udecode/plate-yjs/react";
 import Prism from "prismjs";
 import { toast } from "sonner";
 import { ImagePreview } from "../ui/image-preview";
-import { RemoteCursorOverlay } from "../ui/remote-cursor-overlay";
 import { autoformatRules } from "./plugins/editor-autoformat";
-import { SubtitlePlugin, TITLE_KEYS, TitlePlugin } from "./plugins/title-plugin";
-import { RenderAboveEditableYjs } from "./plugins/yjs-above-editable";
 import { NormalizePlugin } from "./plugins/editor-normalization";
 import { LeadingBlockPlugin } from "./plugins/leading-block-plugin";
-import { PathApi } from "@udecode/plate";
+import { SubtitlePlugin, TITLE_KEYS, TitlePlugin } from "./plugins/title-plugin";
+import { RenderAboveEditableYjs } from "./plugins/yjs-above-editable";
 
 const resetBlockTypesCommonRule = {
   defaultType: ParagraphPlugin.key,
@@ -200,11 +199,11 @@ export const staticPlugins = [
   HeadingPlugin.configure({
     options: { levels: 4 },
     handlers: {
-      onKeyDown: ({ event, editor }: { event: any; editor: any }) => {
+      onKeyDown: ({ event, editor }: { event: any; editor: PlateEditor }) => {
         const anchor = editor.selection?.anchor?.path;
         if (!anchor) return;
 
-        const currentNode = editor.api.parent(editor, anchor);
+        const currentNode = editor.api.parent(anchor);
         if (!currentNode) return;
 
         const [node, path] = currentNode;
@@ -219,34 +218,32 @@ export const staticPlugins = [
           event.preventDefault();
 
           if (isTitle) {
-            const nextNode = editor.api.next(editor, { at: path });
+            const nextNode = editor.api.next({ at: path });
             const isNextSubtitle = nextNode?.[0]?.type === TITLE_KEYS.subtitle;
 
             if (!isNextSubtitle) {
               editor.tf.insertNodes(
-                editor,
                 { type: TITLE_KEYS.subtitle, children: [{ text: "" }] },
                 { at: PathApi.next(path), select: true },
               );
             } else {
-              editor.select(nextNode[1]);
-              editor.collapse({ edge: "end" });
+              editor.tf.select(nextNode[1]);
+              editor.tf.collapse({ edge: "end" });
             }
             return;
           }
 
           if (isSubtitle) {
             editor.tf.insertNodes(
-              editor,
               { type: ParagraphPlugin.key, children: [{ text: "" }] },
               { at: PathApi.next(path), select: true },
             );
 
             return;
           }
+
           if (isImage) {
             editor.tf.insertNodes(
-              editor,
               { type: ParagraphPlugin.key, children: [{ text: "" }] },
               { at: PathApi.next(path), select: true },
             );
