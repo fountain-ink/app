@@ -1,7 +1,5 @@
 "use client";
 
-// Lifted from slate-yjs https://github.com/BitPhinix/slate-yjs/blob/main/examples/frontend/src/pages/RemoteCursorOverlay/Overlay.tsx
-
 import React, { type CSSProperties, useState } from "react";
 
 import { type CursorOverlayData, useRemoteCursorOverlayPositions } from "@slate-yjs/react";
@@ -74,7 +72,11 @@ function RemoteSelection({ caretPosition, data, selectionRects }: CursorOverlayD
   return (
     <React.Fragment>
       {selectionRects.map((position, i) => (
-        <div key={`${data.color}-${i}`} className="pointer-events-none absolute" style={{ ...selectionStyle, ...position }} />
+        <div
+          key={`${data.color}-${i}`}
+          className="pointer-events-none absolute"
+          style={{ ...selectionStyle, ...position }}
+        />
       ))}
       {caretPosition && <Caret data={data} caretPosition={caretPosition} />}
     </React.Fragment>

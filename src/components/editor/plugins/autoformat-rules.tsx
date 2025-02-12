@@ -18,7 +18,6 @@ import {
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { insertEmptyCodeBlock } from "@udecode/plate-code-block";
 import { CodeBlockPlugin, CodeLinePlugin } from "@udecode/plate-code-block/react";
-// import { getParentNode, insertNodes, isBlock, isElement, isType, setNodes } from "@udecode/plate";
 import { HEADING_KEYS } from "@udecode/plate-heading";
 import { HighlightPlugin } from "@udecode/plate-highlight/react";
 import { HorizontalRulePlugin } from "@udecode/plate-horizontal-rule/react";

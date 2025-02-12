@@ -1,7 +1,7 @@
 import { NodeApi, Path, TNode } from "@udecode/plate";
 import { ParagraphPlugin, createPlatePlugin } from "@udecode/plate-core/react";
 import { useYjsState } from "../../../hooks/use-yjs-state";
-import { TITLE_KEYS } from "../plugins/title-plugin";
+import { TITLE_KEYS } from "./title-plugin";
 
 function hasId(node: any): boolean {
   return typeof node === "object" && node !== null && "id" in node && typeof node.id === "string";

@@ -61,11 +61,11 @@ import { YjsPlugin } from "@udecode/plate-yjs/react";
 import Prism from "prismjs";
 import { toast } from "sonner";
 import { ImagePreview } from "../ui/image-preview";
-import { autoformatRules } from "./plugins/editor-autoformat";
-import { NormalizePlugin } from "./plugins/editor-normalization";
+import { RemoteCursorOverlay } from "../ui/remote-cursor-overlay";
+import { autoformatRules } from "./plugins/autoformat-rules";
+import { NormalizePlugin } from "./plugins/normalize-plugin";
 import { LeadingBlockPlugin } from "./plugins/leading-block-plugin";
 import { SubtitlePlugin, TITLE_KEYS, TitlePlugin } from "./plugins/title-plugin";
-import { RenderAboveEditableYjs } from "./plugins/yjs-above-editable";
 
 const resetBlockTypesCommonRule = {
   defaultType: ParagraphPlugin.key,
@@ -87,17 +87,14 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
     plugins.push(
       YjsPlugin.configure({
         render: {
-          aboveEditable: RenderAboveEditableYjs,
+          beforeEditable: RemoteCursorOverlay,
         },
-        // render: {
-        //   aboveEditable: RemoteCursorOverlay,
-        // },
         options: {
           cursorOptions: {
             autoSend: true,
             data: {
               name: username || "anonymous",
-              color: "#ff0000",
+              color: "#0101af",
             },
           },
           disableCursors: false,
@@ -108,7 +105,6 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
             connect: false,
             token: appToken,
             onOpen: () => {
-              // Set this document as active when YjsPlugin is initialized
               useYjsState.getState().setActiveDocument(path);
             },
             onDestroy: () => {
@@ -173,10 +169,6 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
               },
               startThreshold: 4,
             },
-            // boundaries: "#scroll_container",
-            // container: "#scroll_container",
-            // selectables: "#scroll_container .slate-selectable",
-            // selectionAreaClass: "slate-selection-area",
           },
           enableContextMenu: true,
         },
