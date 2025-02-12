@@ -213,7 +213,6 @@ export const TableFloatingToolbar = withRef<
 
           <Separator orientation="vertical" className="mx-1 h-6 bg-border" />
 
-
             <ToolbarButton
               variant="ghost"
               onClick={() => tf.insert.tableColumn({ before: true })}

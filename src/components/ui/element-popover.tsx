@@ -1,8 +1,7 @@
-import { useEditorRef, useElement, useRemoveNodeButton } from "@udecode/plate/react";
+import { useEditorRef, useElement, useReadOnly, useRemoveNodeButton } from "@udecode/plate/react";
 import type { Variant } from "framer-motion";
 import type React from "react";
 import { forwardRef, useState } from "react";
-import { useReadOnly } from "@udecode/plate/react";
 import { WidthColumn, WidthFull, WidthWide } from "../icons/custom-icons";
 import { Button } from "./button";
 import { CaptionButton } from "./caption";
@@ -67,7 +66,7 @@ export const ElementPopover = forwardRef<HTMLDivElement, ElementPopoverProps>(
     const handleWidth = (newWidth: ElementWidth) => {
       setWidth(newWidth);
       onWidthChange?.(newWidth);
-      editor.tf.setNodes({ width: newWidth }, { at: element }, );
+      editor.tf.setNodes({ width: newWidth }, { at: element });
       editor.tf.select(editor.selection?.anchor?.path);
     };
 
@@ -84,7 +83,7 @@ export const ElementPopover = forwardRef<HTMLDivElement, ElementPopoverProps>(
         >
           <div ref={ref} className="flex flex-col gap-1 items-center">
             {verticalContent}
-            <div className="box-content flex h-9 items-center gap-1">
+            <div className="box-content flex items-center gap-1">
               {showWidth && (
                 <>
                   <Button
@@ -111,7 +110,7 @@ export const ElementPopover = forwardRef<HTMLDivElement, ElementPopoverProps>(
                   >
                     <WidthFull />
                   </Button>
-                  <Separator orientation="vertical" className="my-1" />
+                  <Separator orientation="vertical" className="mx-1 h-6 bg-border" />
                 </>
               )}
 
