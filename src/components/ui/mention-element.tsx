@@ -3,10 +3,9 @@
 import { useMounted } from "@/hooks/use-mounted";
 import { cn, withRef } from "@udecode/cn";
 import { IS_APPLE, getHandler } from "@udecode/plate";
-import { useElement } from "@udecode/plate/react";
 import type { TMentionElement } from "@udecode/plate-mention";
+import { useElement, useFocused, useSelected } from "@udecode/plate/react";
 import React from "react";
-import { useFocused, useSelected } from "slate-react";
 import { UserLazyUsername } from "../user/user-lazy-username";
 import { PlateElement } from "./plate-element";
 

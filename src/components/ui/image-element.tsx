@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { UploadIcon } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
-import { useReadOnly } from "slate-react";
+import { useReadOnly } from "@udecode/plate/react";
 import { LoadingSpinner } from "../misc/loading-spinner";
 import { Button } from "./button";
 import { Caption, CaptionTextarea } from "./caption";

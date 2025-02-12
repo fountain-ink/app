@@ -7,7 +7,7 @@ import type { TColumnElement } from "@udecode/plate-layout";
 import { cn, withRef } from "@udecode/cn";
 import { useElement, withHOC } from "@udecode/plate/react";
 import { ResizableProvider } from "@udecode/plate-resizable";
-import { useReadOnly } from "slate-react";
+import { useReadOnly } from "@udecode/plate/react";
 
 import { PlateElement } from "./plate-element";
 

@@ -2,7 +2,7 @@ import { useEditorRef, useElement, useRemoveNodeButton } from "@udecode/plate/re
 import type { Variant } from "framer-motion";
 import type React from "react";
 import { forwardRef, useState } from "react";
-import { useReadOnly } from "slate-react";
+import { useReadOnly } from "@udecode/plate/react";
 import { WidthColumn, WidthFull, WidthWide } from "../icons/custom-icons";
 import { Button } from "./button";
 import { CaptionButton } from "./caption";

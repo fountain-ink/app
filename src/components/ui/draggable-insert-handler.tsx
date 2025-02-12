@@ -1,6 +1,6 @@
 "use client";
 
-import { type TElement, nanoid } from "@udecode/plate";
+import { Path, PathApi, type TElement, nanoid } from "@udecode/plate";
 import {
   ParagraphPlugin,
   type PlateEditor,
@@ -9,8 +9,6 @@ import {
 } from "@udecode/plate/react";
 import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
 import { Plus } from "lucide-react";
-import { Path } from "slate";
-
 import { Button } from "./button";
 
 export const DraggableInsertHandle = () => {
@@ -60,7 +58,7 @@ const triggerComboboxNextBlock = (editor: PlateEditor, triggerText: string, at?:
 
   if (at) {
     const slicedPath = at.slice(0, 1);
-    _at = insertAbove ? slicedPath : Path.next(slicedPath);
+    _at = insertAbove ? slicedPath : PathApi.next(slicedPath);
   }
 
   editor.tf.insertNodes<TElement>(emptyBlock, {

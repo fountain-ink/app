@@ -63,9 +63,10 @@ import { ImagePreview } from "../ui/image-preview";
 import { RemoteCursorOverlay } from "../ui/remote-cursor-overlay";
 import { autoformatRules } from "./plugins/editor-autoformat";
 import { SubtitlePlugin, TITLE_KEYS, TitlePlugin } from "./plugins/title-plugin";
-import { Path } from "slate";
 import { RenderAboveEditableYjs } from "./plugins/yjs-above-editable";
 import { NormalizePlugin } from "./plugins/editor-normalization";
+import { LeadingBlockPlugin } from "./plugins/leading-block-plugin";
+import { PathApi } from "@udecode/plate";
 
 const resetBlockTypesCommonRule = {
   defaultType: ParagraphPlugin.key,
@@ -189,6 +190,11 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
 
 export const staticPlugins = [
   NormalizePlugin,
+  LeadingBlockPlugin.configure({
+    options: {
+      type: TitlePlugin.key,
+    },
+  }),
   TitlePlugin,
   SubtitlePlugin,
   HeadingPlugin.configure({
@@ -220,7 +226,7 @@ export const staticPlugins = [
               editor.tf.insertNodes(
                 editor,
                 { type: TITLE_KEYS.subtitle, children: [{ text: "" }] },
-                { at: Path.next(path), select: true },
+                { at: PathApi.next(path), select: true },
               );
             } else {
               editor.select(nextNode[1]);
@@ -233,7 +239,7 @@ export const staticPlugins = [
             editor.tf.insertNodes(
               editor,
               { type: ParagraphPlugin.key, children: [{ text: "" }] },
-              { at: Path.next(path), select: true },
+              { at: PathApi.next(path), select: true },
             );
 
             return;
@@ -242,7 +248,7 @@ export const staticPlugins = [
             editor.tf.insertNodes(
               editor,
               { type: ParagraphPlugin.key, children: [{ text: "" }] },
-              { at: Path.next(path), select: true },
+              { at: PathApi.next(path), select: true },
             );
 
             return;

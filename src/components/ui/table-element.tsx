@@ -22,7 +22,7 @@
 // } from "@udecode/plate-table/react";
 
 // import type { LucideProps } from "lucide-react";
-// import { useReadOnly, useSelected } from "slate-react";
+// import { useReadOnly, useSelected } from "@udecode/plate/react";
 
 // import { Minus, Plus } from "lucide-react";
 // import { Button } from "./button";

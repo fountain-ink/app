@@ -1,22 +1,22 @@
 "use client";
 
-import { cn } from "@udecode/cn";
-import { createNodeHOC, createNodesHOC, ParagraphPlugin, usePlaceholderState, type PlaceholderProps } from "@udecode/plate/react";
-import { HEADING_KEYS } from "@udecode/plate-heading";
-import { useReadOnly } from "slate-react";
-import { TITLE_KEYS } from "@/components/editor/plugins/title-plugin";
 import React from "react";
+
+import { cn } from "@udecode/cn";
+import { HEADING_KEYS } from "@udecode/plate-heading";
+import {
+  ParagraphPlugin,
+  type PlaceholderProps,
+  createNodeHOC,
+  createNodesHOC,
+  usePlaceholderState,
+} from "@udecode/plate/react";
+import { TITLE_KEYS } from "../editor/plugins/title-plugin";
 
 export const Placeholder = (props: PlaceholderProps) => {
   const { children, nodeProps, placeholder } = props;
 
-  const readonly = useReadOnly();
-
   const { enabled } = usePlaceholderState(props);
-
-  if (readonly) {
-    return children;
-  }
 
   return React.Children.map(children, (child) => {
     return React.cloneElement(child, {
@@ -24,8 +24,7 @@ export const Placeholder = (props: PlaceholderProps) => {
       nodeProps: {
         ...nodeProps,
         className: cn(
-          enabled &&
-          "before:absolute before:cursor-text before:opacity-30 before:left-0 before:right-0 before:content-[attr(placeholder)]",
+          enabled && "before:absolute before:cursor-text before:opacity-30 before:content-[attr(placeholder)] before:left-0 before:right-0 before:text-inherit",
         ),
         placeholder,
       },
@@ -67,14 +66,4 @@ export const withPlaceholders = (components: any) =>
       hideOnBlur: false,
       placeholder: "Subheading",
     },
-    // {
-    //   key: HEADING_KEYS.h3,
-    //   hideOnBlur: false,
-    //   placeholder: "Subheading",
-    // },
-    // {
-    //   key: HEADING_KEYS.h4,
-    //   hideOnBlur: false,
-    //   placeholder: "Subheading",
-    // },
   ]);

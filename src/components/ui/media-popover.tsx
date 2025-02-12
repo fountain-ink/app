@@ -9,7 +9,7 @@ import {
   FloatingMedia as FloatingMediaPrimitive,
 } from "@udecode/plate-media/react";
 import { Link, Trash2Icon } from "lucide-react";
-import { useReadOnly, useSelected } from "slate-react";
+import { useReadOnly, useSelected } from "@udecode/plate/react";
 
 import { Button, buttonVariants } from "./button";
 import { CaptionButton } from "./caption";

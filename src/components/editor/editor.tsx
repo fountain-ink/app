@@ -1,6 +1,6 @@
 "use client";
 
-import { createPlateEditor, Plate, usePlateEditor } from "@udecode/plate/react";
+import { Plate, createPlateEditor, usePlateEditor } from "@udecode/plate/react";
 import { useSearchParams } from "next/navigation";
 import type { PropsWithChildren } from "react";
 import { DndProvider } from "react-dnd";
@@ -36,6 +36,7 @@ export default function PlateEditor(
     override: {
       components: getRichElements(),
     },
+    shouldNormalizeEditor: true,
     value: props.value ? JSON.parse(props.value) || "" : undefined,
   });
 

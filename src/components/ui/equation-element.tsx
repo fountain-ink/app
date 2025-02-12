@@ -11,7 +11,7 @@ import {
 } from "@udecode/plate/react";
 import { RadicalIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useReadOnly } from "slate-react";
+import { useReadOnly } from "@udecode/plate/react";
 import { Caption, CaptionTextarea } from "./caption";
 import { ELEMENT_WIDTH_CLASSES, ElementPopover, type ElementWidth } from "./element-popover";
 import { PlateElement } from "./plate-element";

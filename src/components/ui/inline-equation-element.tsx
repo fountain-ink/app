@@ -3,14 +3,10 @@
 import { cn, withRef } from "@udecode/cn";
 import type { TEquationElement } from "@udecode/plate-math";
 import { useEquationElement, useEquationInput } from "@udecode/plate-math/react";
-import {
-    createPrimitiveComponent,
-    useEditorRef,
-    useElement,
-} from "@udecode/plate/react";
+import { createPrimitiveComponent, useEditorRef, useElement } from "@udecode/plate/react";
 import { RadicalIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useReadOnly, useSelected } from "slate-react";
+import { useReadOnly, useSelected } from "@udecode/plate/react";
 import { ElementPopover } from "./element-popover";
 import { PlateElement } from "./plate-element";
 import { TextareaAutosize } from "./textarea";
@@ -34,9 +30,8 @@ export const InlineEquationElement = withRef<typeof PlateElement>(({ children, c
 
   const handleClose = () => {
     setOpen(false);
-    editor.tf.select (element, {next: true});
+    editor.tf.select(element, { next: true });
   };
-
 
   const renderEquationInput = () => {
     if (readOnly) return null;

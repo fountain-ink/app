@@ -3,10 +3,9 @@
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { cn, withRef } from "@udecode/cn";
 import { useCodeBlockElementState } from "@udecode/plate-code-block/react";
-import { useEditorRef } from "@udecode/plate/react";
+import { useEditorRef, useReadOnly } from "@udecode/plate/react";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { useReadOnly } from "slate-react";
 import { Button } from "./button";
 import { Caption, CaptionTextarea } from "./caption";
 import { CodeBlockCombobox } from "./code-block-combobox";
