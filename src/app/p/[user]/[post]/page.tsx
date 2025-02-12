@@ -7,7 +7,7 @@ import { AuthorView } from "@/components/user/user-author-view";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchPost } from "@lens-protocol/client/actions";
-import { sanitize } from "isomorphic-dompurify";
+import DOMPurify from "isomorphic-dompurify";
 
 const post = async ({ params }: { params: { user: string; post: string } }) => {
   const lens = await getLensClient();
@@ -49,7 +49,7 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
       <div>
         <div
           // biome-ignore lint/security/noDangerouslySetInnerHtml: intended use
-          dangerouslySetInnerHTML={{ __html: sanitize(contentHtml) }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(contentHtml) }}
         />
         <CommentSheet post={post} />
         <PostCollect post={post} />
