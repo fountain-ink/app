@@ -16,7 +16,7 @@ const toolbarVariants = cva("relative flex select-none items-center", {
   },
   variants: {
     variant: {
-      default: "gap-1 bg-background",
+      default: "gap-1 bg-popover rounded-sm",
       media:
         "absolute z-[2] h-[26px] max-w-[calc(100%-16px)] overflow-hidden rounded-sm bg-black/60 transition-opacity",
     },

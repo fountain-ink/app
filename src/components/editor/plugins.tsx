@@ -265,9 +265,9 @@ export const staticPlugins = [
 
   TablePlugin.configure({
     options: {
-      minColumnWidth: 60,
-      disableExpandOnInsert: true,
-      initialTableWidth: 600,
+      // minColumnWidth: 60,
+      // disableExpandOnInsert: true,
+      // initialTableWidth: 500,
     },
   }),
   TogglePlugin,

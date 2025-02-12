@@ -163,7 +163,7 @@ export const DropdownMenuCheckboxItem = withRef<typeof DropdownMenuPrimitive.Che
     <DropdownMenuPrimitive.CheckboxItem
       ref={ref}
       className={cn(
-        "relative flex select-none items-center rounded-sm p-1.5 pl-7 pr-2 transition-bg-ease focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "relative flex select-none items-center rounded-sm p-1.5 pl-10 pr-2 transition-bg-ease focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         "ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0",
         "outline-none focus:outline-none focus-visible:outline-none",
         "cursor-pointer",

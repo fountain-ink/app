@@ -68,7 +68,7 @@ export const ElementPopover = forwardRef<HTMLDivElement, ElementPopoverProps>(
       setWidth(newWidth);
       onWidthChange?.(newWidth);
       editor.tf.setNodes({ width: newWidth }, { at: element }, );
-      editor.tf.select(editor.selection?.anchor.path ?? []);
+      editor.tf.select(editor.selection?.anchor?.path);
     };
 
     if (readOnly) return <>{children}</>;
