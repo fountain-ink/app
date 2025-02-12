@@ -50,7 +50,7 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
 
   const handleWidth = (newWidth: ElementWidth) => {
     setWidth(newWidth);
-    editor.tf.setNodes({ width: newWidth }, { at: element },  ); // ??
+    editor.tf.setNodes({ width: newWidth }, { at: element },  ); 
   };
 
   const popoverContent = (
@@ -88,7 +88,8 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
         <motion.figure
           ref={figureRef}
           className="group w-full flex flex-col items-center"
-          layout={true}
+          layout="size"
+          layoutDependency={width}
           initial={width}
           animate={width}
           variants={widthVariants}
