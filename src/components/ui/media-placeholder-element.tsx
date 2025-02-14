@@ -1,48 +1,58 @@
 'use client';
 
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
-import React, { useEffect, useRef, useState } from 'react';
 
 import { cn } from '@udecode/cn';
 import {
-    AudioPlugin,
-    FilePlugin,
-    ImagePlugin,
-    PlaceholderProvider,
-    usePlaceholderElementState,
-    VideoPlugin,
+  AudioPlugin,
+  FilePlugin,
+  ImagePlugin,
+  PlaceholderPlugin,
+  PlaceholderProvider,
+  usePlaceholderElementState,
+  usePlaceholderPopoverState,
+  VideoPlugin,
 } from '@udecode/plate-media/react';
-
-import { withHOC, withRef } from '@udecode/plate/react';
+import { useEditorPlugin, withHOC, withRef, useReadOnly } from '@udecode/plate/react';
 import { AudioLinesIcon, FileUpIcon, FilmIcon, ImageIcon } from 'lucide-react';
 
 import { BlockActionButton } from './block-context-menu';
-import { MediaPlaceholderPopover } from './media-placeholder-popover';
 import { PlateElement } from './plate-element';
 import { LoadingSpinner } from '../misc/loading-spinner';
+import { Button } from './button';
+import { useFilePicker } from 'use-file-picker';
+import { nanoid } from '@udecode/plate';
+import { setMediaNode } from '@udecode/plate-media';
+import { useUploadFile } from '@/hooks/use-upload-file';
 
-const CONTENT: Record<
+const MEDIA_CONFIG: Record<
   string,
   {
-    content: ReactNode;
+    accept: string[];
+    buttonText: string;
     icon: ReactNode;
   }
 > = {
   [AudioPlugin.key]: {
-    content: 'Add an audio file',
-    icon: <AudioLinesIcon />,
+    accept: ['audio/*'],
+    buttonText: 'Upload Audio',
+    icon: <AudioLinesIcon className="size-6" />,
   },
   [FilePlugin.key]: {
-    content: 'Add a file',
-    icon: <FileUpIcon />,
+    accept: ['*'],
+    buttonText: 'Choose a file',
+    icon: <FileUpIcon className="size-6" />,
   },
   [ImagePlugin.key]: {
-    content: 'Add an image',
-    icon: <ImageIcon />,
+    accept: ['image/*'],
+    buttonText: 'Upload Image',
+    icon: <ImageIcon className="size-6" />,
   },
   [VideoPlugin.key]: {
-    content: 'Add a video',
-    icon: <FilmIcon />,
+    accept: ['video/*'],
+    buttonText: 'Upload Video',
+    icon: <FilmIcon className="size-6" />,
   },
 };
 
@@ -50,75 +60,179 @@ export const MediaPlaceholderElement = withHOC(
   PlaceholderProvider,
   withRef<typeof PlateElement>(
     ({ children, className, editor, nodeProps, ...props }, ref) => {
-      const { mediaType, progresses, progressing, setSize, updatedFiles } =
-        usePlaceholderElementState();
+      const {
+        mediaType,
+        progresses,
+        progressing,
+        setSize,
+        updatedFiles,
+        element,
+      } = usePlaceholderElementState();
 
-      const currentContent = CONTENT[mediaType];
+      const {
+        setIsUploading,
+        setProgresses,
+        setUpdatedFiles,
+      } = usePlaceholderPopoverState();
 
-      const isImage = mediaType === ImagePlugin.key;
+      const { api } = useEditorPlugin(PlaceholderPlugin);
+
+      const currentMedia = MEDIA_CONFIG[mediaType];
 
       const file: File | undefined = updatedFiles?.[0];
       const progress = file ? progresses?.[file.name] : undefined;
 
-      const imageRef = useRef<HTMLImageElement>(null);
+      const { isUploading, uploadedFile, uploadFile, uploadingFile } = useUploadFile({ });
+
+      const [isFocused, setIsFocused] = useState(false);
+      const readonly = useReadOnly();
+      const containerRef = useRef<HTMLDivElement>(null);
+      const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+      const replaceCurrentPlaceholder = useCallback(
+        (file: File) => {
+          setUpdatedFiles([file]);
+          void uploadFile(file);
+          api.placeholder.addUploadingFile(element.id as string, file);
+        },
+        [element.id, uploadFile, setUpdatedFiles, api.placeholder]
+      );
+
+      const { openFilePicker } = useFilePicker({
+        accept: currentMedia?.accept ?? [],
+        multiple: false,
+        onFilesSelected: ({ plainFiles: updatedFiles }) => {
+          const firstFile = updatedFiles[0];
+          replaceCurrentPlaceholder(firstFile);
+        },
+      });
+
+      // React dev mode will call useEffect twice
+      const isReplaced = useRef(false);
+      /** Paste and drop */
       useEffect(() => {
-        if (!imageRef.current) return;
+        if (isReplaced.current) return;
 
-        const { height, width } = imageRef.current;
+        isReplaced.current = true;
+        const currentFiles = api.placeholder.getUploadingFile(element.id as string);
 
-        setSize?.({
-          height,
-          width,
-        });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [imageRef.current]);
+        if (!currentFiles) return;
+
+        replaceCurrentPlaceholder(currentFiles);
+      }, [isReplaced, element.id, replaceCurrentPlaceholder, api.placeholder]);
+
+      useEffect(() => {
+        if (!uploadedFile) return;
+
+        const path = editor.api.findPath(element);
+
+        setMediaNode(
+          editor,
+          {
+            id: nanoid(),
+            initialHeight: undefined,
+            initialWidth: undefined,
+            isUpload: true,
+            name: mediaType === FilePlugin.key ? uploadedFile.name : '',
+            placeholderId: element.id as string,
+            type: mediaType!,
+            url: uploadedFile.url,
+          },
+          { at: path }
+        );
+      }, [uploadedFile, element.id, element, editor, mediaType]);
+
+      useEffect(() => {
+        setProgresses({ [uploadingFile?.name ?? '']: isUploading ? 100 : 0 });
+        setIsUploading(isUploading);
+      }, [isUploading, uploadingFile, setProgresses, setIsUploading]);
+
+      useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+          if (readonly) return;
+  
+          const target = event.target as Node;
+          const isClickInside = containerRef.current?.contains(target);
+  
+          setIsFocused(!!isClickInside);
+        };
+  
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+        };
+      }, [readonly]);
+
+      useEffect(() => {
+        if (!file) {
+          if (previewUrl) {
+            URL.revokeObjectURL(previewUrl);
+            setPreviewUrl(null);
+          }
+          return;
+        }
+
+        const url = URL.createObjectURL(file);
+        setPreviewUrl(url);
+
+        return () => {
+          URL.revokeObjectURL(url);
+          setPreviewUrl(null);
+        };
+      }, [file]);
 
       return (
         <PlateElement
           ref={ref}
-          className={cn('my-1', className)}
+          className={cn('my-4', className)}
           editor={editor}
           {...props}
         >
-          <MediaPlaceholderPopover>
-            {(!progressing || !isImage) && (
-              <div
-                className={cn(
-                  'flex cursor-pointer select-none items-center rounded-sm bg-muted p-3 pr-9 transition-bg-ease hover:bg-primary/10'
-                )}
-                contentEditable={false}
-                role="button"
-              >
-                <div className="relative mr-3 flex text-muted-foreground/80 [&_svg]:size-6">
-                  {currentContent?.icon}
-                </div>
-                <div className="whitespace-nowrap text-sm text-muted-foreground">
-                  <div>{progressing ? file?.name : currentContent?.content}</div>
-
-                  {progressing && !isImage && (
-                    <div className="mt-1 flex items-center gap-1.5">
-                      <div>{formatBytes(file?.size ?? 0)}</div>
-                      <div>–</div>
-                      <div className="flex items-center">
-                        <LoadingSpinner />
-                        {progress ?? 0}%
+          <div 
+            ref={containerRef}
+            className={cn(
+              "relative flex aspect-video w-full flex-col items-center justify-center rounded-lg",
+              isFocused && "ring-2 ring-ring"
+            )}
+          >
+            <div className="placeholder-background rounded-lg absolute inset-0" />
+            {progressing ? (
+              <>
+                {file && (
+                  <>
+                    {previewUrl && mediaType === ImagePlugin.key && (
+                      <div className="absolute inset-0">
+                        <img 
+                          src={previewUrl} 
+                          alt="Upload preview" 
+                          className="h-full w-full object-cover opacity-40 animate-pulse"
+                        />
                       </div>
+                    )}
+                    <div className="absolute inset-0 text-muted-foreground flex items-center justify-center">
+                      <LoadingSpinner />
+                      <span className="ml-2 text-sm">
+                        Uploading
+                      </span>
                     </div>
-                  )}
-                </div>
+                  </>
+                )}
+              </>
+            ) : (
+              <div className="relative z-10 flex flex-col items-center gap-2">
+                <Button
+                  variant="ghostText"
+                  className="relative"
+                  onClick={() => openFilePicker()}
+                >
+                  <div className="flex items-center gap-2">
+                    {currentMedia?.icon}
+                    {currentMedia?.buttonText}
+                  </div>
+                </Button>
               </div>
             )}
-          </MediaPlaceholderPopover>
-
-          {isImage && progressing && file && (
-            <ImageProgress
-              file={file}
-              imageRef={imageRef}
-              progress={progress}
-            />
-          )}
-
-          <BlockActionButton />
+          </div>
 
           {children}
         </PlateElement>
@@ -126,52 +240,6 @@ export const MediaPlaceholderElement = withHOC(
     }
   )
 );
-
-export function ImageProgress({
-  className,
-  file,
-  imageRef,
-  progress = 0,
-}: {
-  file: File;
-  className?: string;
-  imageRef?: React.RefObject<HTMLImageElement>;
-  progress?: number;
-}) {
-  const [objectUrl, setObjectUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    const url = URL.createObjectURL(file);
-    setObjectUrl(url);
-
-    return () => {
-      URL.revokeObjectURL(url);
-    };
-  }, [file]);
-
-  if (!objectUrl) {
-    return null;
-  }
-
-  return (
-    <div className={cn('relative', className)} contentEditable={false}>
-      <img
-        ref={imageRef}
-        className="h-auto w-full rounded-xs object-cover"
-        alt={file.name}
-        src={objectUrl}
-      />
-      {progress < 100 && (
-        <div className="absolute bottom-1 right-1 flex items-center space-x-2 rounded-full bg-black/50 px-1 py-0.5">
-          <LoadingSpinner />
-          <span className="text-xs font-medium text-white">
-            {Math.round(progress)}%
-          </span>
-        </div>
-      )}
-    </div>
-  );
-}
 
 export function formatBytes(
   bytes: number,
@@ -189,9 +257,8 @@ export function formatBytes(
 
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
 
-  return `${(bytes / 1024 ** i).toFixed(decimals)} ${
-    sizeType === 'accurate'
+  return `${(bytes / (1024 ** i)).toFixed(decimals)} ${sizeType === 'accurate'
       ? (accurateSizes[i] ?? 'Bytest')
       : (sizes[i] ?? 'Bytes')
-  }`;
+    }`;
 }

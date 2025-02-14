@@ -1,23 +1,48 @@
 import { uploadFile } from "@/lib/upload/upload-file";
 import { cn, withRef } from "@udecode/cn";
-import { Image, useMediaState } from "@udecode/plate-media/react";
-import { useEditorRef, useElement, useRemoveNodeButton } from "@udecode/plate/react";
+import { TImageElement } from "@udecode/plate-media";
+import { Image, PlaceholderPlugin, useImage, useMediaState } from "@udecode/plate-media/react";
+import { useEditorPlugin, useEditorRef, useElement, useReadOnly, useRemoveNodeButton } from "@udecode/plate/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { UploadIcon } from "lucide-react";
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
-import { useReadOnly } from "@udecode/plate/react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { LoadingSpinner } from "../misc/loading-spinner";
 import { Button } from "./button";
 import { Caption, CaptionTextarea } from "./caption";
-import { ElementPopover, widthVariants, type ElementWidth } from "./element-popover";
+import { ElementPopover, type ElementWidth, widthVariants } from "./element-popover";
 import { PlateElement } from "./plate-element";
 
-const ImagePlaceholder = () => (
-  <div className="flex relative aspect-video w-full rounded-sm -z-[1]">
-    <div className="placeholder-background rounded-sm" />
-  </div>
-);
+const ImagePlaceholder = ({ file }: { file?: File }) => {
+  const [objectUrl, setObjectUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!file) return;
+
+    const url = URL.createObjectURL(file);
+    setObjectUrl(url);
+
+    return () => {
+      URL.revokeObjectURL(url);
+    };
+  }, [file]);
+
+  return (
+    <div className="flex relative aspect-video w-full rounded-sm -z-[1]">
+      <div className="placeholder-background rounded-sm absolute inset-0" />
+      {file && objectUrl && (
+        <img 
+          className="h-auto w-full rounded-sm object-cover opacity-50" 
+          alt={file.name} 
+          src={objectUrl} 
+        />
+      )}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    </div>
+  );
+};
 
 function ImagePopover({
   children,
@@ -86,17 +111,27 @@ function ImagePopover({
 
 export const ImageElement = withRef<typeof PlateElement>(
   ({ children, className, nodeProps, autoFocus = true, ...props }, ref) => {
-    const { align = "center" } = useMediaState();
     const [_isImageLoaded, setIsImageLoaded] = useState(false);
     const [url, setUrl] = useState<string | undefined>(props?.element?.url as string | undefined);
-    const [isUploading, setIsUploading] = useState(false);
     const [width, setWidth] = useState<ElementWidth>((props.element.width as ElementWidth) || "column");
     const [isFocused, setIsFocused] = useState(false);
-    const editor = useEditorRef();
     const readonly = useReadOnly();
-    const element = useElement();
     const figureRef = useRef<HTMLElement>(null);
     const popoverRef = useRef<HTMLDivElement>(null);
+
+    const { api, editor } = useEditorPlugin(PlaceholderPlugin);
+    const print = editor.mode === "print";
+    const element = props.element as TImageElement;
+
+    const { align = "center", focused, readOnly, selected } = useMediaState();
+    const [loading, setLoading] = useState(true);
+    const { props: imageProps } = useImage();
+
+    const currentUploadingFile = useMemo(() => {
+      if (!element.placeholderId) return;
+
+      return api.placeholder.getUploadingFile(element.placeholderId);
+    }, [element.placeholderId, api.placeholder]);
 
     useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
@@ -128,25 +163,6 @@ export const ImageElement = withRef<typeof PlateElement>(
       }
     }, [props.element.width]);
 
-    const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-
-      setIsUploading(true);
-      try {
-        const url = await uploadFile(file);
-        if (url) {
-          editor.tf.setNodes({ url, width }, { at: element });
-          editor.tf.select(editor, {
-            edge: editor.selection ? undefined : "end",
-            focus: true,
-          });
-        }
-      } finally {
-        setIsUploading(false);
-      }
-    };
-
     return (
       <ImagePopover url={url} open={isFocused} popoverRef={popoverRef}>
         <PlateElement ref={ref} className={cn(className, "my-9 flex flex-col items-center")} {...props}>
@@ -164,35 +180,8 @@ export const ImageElement = withRef<typeof PlateElement>(
               damping: 30,
             }}
           >
-            {!url ? (
-              <div
-                className={cn("rounded-sm flex items-center justify-center w-full", isFocused && "ring-2 ring-ring")}
-              >
-                <div className="absolute">
-                  {!readonly && (
-                    <Button className="hover:bg-transparent" size="lg" variant="ghost" disabled={isUploading}>
-                      <div className="relative flex gap-1 text-base text-muted-foreground hover:text-foreground duration-300 transition-colors cursor-pointer items-center justify-center">
-                        <input
-                          title=""
-                          type="file"
-                          accept="image/*"
-                          onChange={handleFileSelect}
-                          className="absolute inset-0 cursor-pointer opacity-0"
-                          disabled={isUploading}
-                        />
-                        {isUploading ? (
-                          <LoadingSpinner />
-                        ) : (
-                          <>{!url && <UploadIcon className="size-4 mr-2 text-inherit" />}</>
-                        )}
-                        <span className="">{isUploading ? "Uploading..." : "Upload Image"}</span>
-                      </div>
-                    </Button>
-                  )}
-                </div>
-
-                <ImagePlaceholder />
-              </div>
+            {!url && loading && currentUploadingFile ? (
+              <ImagePlaceholder file={currentUploadingFile} />
             ) : (
               <Image
                 className={cn(
@@ -202,7 +191,13 @@ export const ImageElement = withRef<typeof PlateElement>(
                 )}
                 alt=""
                 {...nodeProps}
-                onLoad={() => setIsImageLoaded(true)}
+                {...imageProps}
+                onLoad={() => {
+                  setIsImageLoaded(true);
+                  setLoading(false);
+                  currentUploadingFile &&
+                    api.placeholder.removeUploadingFile(props.element.fromPlaceholderId as string);
+                }}
               />
             )}
 

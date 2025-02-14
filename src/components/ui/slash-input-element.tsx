@@ -87,8 +87,8 @@ const rules: SlashCommandRule[] = [
     description: "Add an image.",
     keywords: ["image", "img", "picture", "png", "photo", "jpg", "jpeg"],
     onSelect: (editor) => {
-      editor.tf.toggleBlock(ImagePlugin.key);
-      // insertBlock(editor, ImagePlugin.key);
+      // editor.tf.toggleBlock(ImagePlugin.key);
+      insertBlock(editor, ImagePlugin.key);
     },
   },
   {

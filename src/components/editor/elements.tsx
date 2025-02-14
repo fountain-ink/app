@@ -63,6 +63,7 @@ import { ListItemElement } from "../ui/list-item";
 import { MediaPlaceholderElement } from "../ui/media-placeholder-element";
 import { TodoListElement } from "../ui/todo-list-element";
 import { TITLE_KEYS } from "./plugins/title-plugin";
+import { ImageElement } from "../ui/image-element";
 
 export const getRichElements = () => {
   return withPlaceholders(getElements());
@@ -90,7 +91,7 @@ export const getElements = () => {
     [KbdPlugin.key]: KbdLeaf,
     [HighlightPlugin.key]: HighlightLeaf,
     [PlaceholderPlugin.key]: MediaPlaceholderElement,
-    [ImagePlugin.key]: ImageElementPlate,
+    [ImagePlugin.key]: ImageElement,
     // [VideoPlugin.key]: VideoElement,
     // [AudioPlugin.key]: AudioElement,
     // [FilePlugin.key]: FileElement,

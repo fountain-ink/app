@@ -66,6 +66,7 @@ import { autoformatRules } from "./plugins/autoformat-rules";
 import { NormalizePlugin } from "./plugins/normalize-plugin";
 import { LeadingBlockPlugin } from "./plugins/leading-block-plugin";
 import { SubtitlePlugin, TITLE_KEYS, TitlePlugin } from "./plugins/title-plugin";
+import { ImageElement } from "../ui/image-element";
 
 const resetBlockTypesCommonRule = {
   defaultType: ParagraphPlugin.key,
@@ -279,15 +280,17 @@ export const staticPlugins = [
   }),
   PlaceholderPlugin.configure({
     options: {
+      
       // disableEmptyPlaceholder: true,
     },
     // render: { afterEditable: MediaUploadToast },
   }),
   ImagePlugin.extend({
-    render: {
-      afterEditable: ImagePreview,
-    },
-  }),
+      render: {
+        afterEditable: ImagePreview,
+        node: ImageElement,
+      },
+    }),
   VideoPlugin,
   AudioPlugin,
   FilePlugin,

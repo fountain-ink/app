@@ -183,63 +183,63 @@ export const TableFloatingToolbar = withRef<
       {collapsed && (
         <>
           <Separator orientation="vertical" className="mx-1 h-6 bg-border" />
-            <ToolbarButton
-              variant="ghost"
-              onClick={() => tf.insert.tableRow({ before: true })}
-              onMouseDown={(e) => e.preventDefault()}
-              tooltip="Insert row before"
-              size="icon"
-            >
-              <ArrowUp className="h-3.5 w-3.5" />
-            </ToolbarButton>
-            <ToolbarButton
-              variant="ghost"
-              onClick={() => tf.insert.tableRow()}
-              onMouseDown={(e) => e.preventDefault()}
-              tooltip="Insert row after"
-              size="icon"
-            >
-              <ArrowDown className="h-3.5 w-3.5" />
-            </ToolbarButton>
-            <ToolbarButton
-              variant="ghost"
-              onClick={() => tf.remove.tableRow()}
-              onMouseDown={(e) => e.preventDefault()}
-              tooltip="Delete row"
-              size="icon"
-            >
-              <XIcon className="h-3.5 w-3.5" />
-            </ToolbarButton>
+          <ToolbarButton
+            variant="ghost"
+            onClick={() => tf.insert.tableRow({ before: true })}
+            onMouseDown={(e) => e.preventDefault()}
+            tooltip="Insert row before"
+            size="icon"
+          >
+            <ArrowUp className="h-3.5 w-3.5" />
+          </ToolbarButton>
+          <ToolbarButton
+            variant="ghost"
+            onClick={() => tf.insert.tableRow()}
+            onMouseDown={(e) => e.preventDefault()}
+            tooltip="Insert row after"
+            size="icon"
+          >
+            <ArrowDown className="h-3.5 w-3.5" />
+          </ToolbarButton>
+          <ToolbarButton
+            variant="ghost"
+            onClick={() => tf.remove.tableRow()}
+            onMouseDown={(e) => e.preventDefault()}
+            tooltip="Delete row"
+            size="icon"
+          >
+            <XIcon className="h-3.5 w-3.5" />
+          </ToolbarButton>
 
           <Separator orientation="vertical" className="mx-1 h-6 bg-border" />
 
-            <ToolbarButton
-              variant="ghost"
-              onClick={() => tf.insert.tableColumn({ before: true })}
-              onMouseDown={(e) => e.preventDefault()}
-              tooltip="Insert column before"
-              size="icon"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-            </ToolbarButton>
-            <ToolbarButton
-              variant="ghost"
-              onClick={() => tf.insert.tableColumn()}
-              onMouseDown={(e) => e.preventDefault()}
-              tooltip="Insert column after"
-              size="icon"
-            >
-              <ArrowRight className="h-3.5 w-3.5" />
-            </ToolbarButton>
-            <ToolbarButton
-              variant="ghost"
-              onClick={() => tf.remove.tableColumn()}
-              onMouseDown={(e) => e.preventDefault()}
-              tooltip="Delete column"
-              size="icon"
-            >
-              <XIcon className="h-3.5 w-3.5" />
-            </ToolbarButton>
+          <ToolbarButton
+            variant="ghost"
+            onClick={() => tf.insert.tableColumn({ before: true })}
+            onMouseDown={(e) => e.preventDefault()}
+            tooltip="Insert column before"
+            size="icon"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+          </ToolbarButton>
+          <ToolbarButton
+            variant="ghost"
+            onClick={() => tf.insert.tableColumn()}
+            onMouseDown={(e) => e.preventDefault()}
+            tooltip="Insert column after"
+            size="icon"
+          >
+            <ArrowRight className="h-3.5 w-3.5" />
+          </ToolbarButton>
+          <ToolbarButton
+            variant="ghost"
+            onClick={() => tf.remove.tableColumn()}
+            onMouseDown={(e) => e.preventDefault()}
+            tooltip="Delete column"
+            size="icon"
+          >
+            <XIcon className="h-3.5 w-3.5" />
+          </ToolbarButton>
         </>
       )}
     </Toolbar>

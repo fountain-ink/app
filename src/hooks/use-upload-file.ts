@@ -28,32 +28,17 @@ export function useUploadFile({
 }: UseUploadFileProps = {}) {
   const [uploadedFile, setUploadedFile] = useState<UploadedFile>();
   const [uploadingFile, setUploadingFile] = useState<File>();
-  const [progress, setProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
 
   async function uploadFileWrapper(file: File) {
     setIsUploading(true);
     setUploadingFile(file);
     onUploadBegin?.(file.name);
-    setProgress(0);
 
     try {
-      // Simulate progress since IPFS upload doesn't provide progress
-      const progressInterval = setInterval(() => {
-        setProgress((prev) => {
-          const newProgress = Math.min(prev + 10, 90);
-          onUploadProgress?.({ progress: newProgress });
-          return newProgress;
-        });
-      }, 100);
-
       console.log('uploading file', file);
       const url = await uploadFile(file);
       console.log('uploaded file', url);
-
-      clearInterval(progressInterval);
-      setProgress(100);
-      onUploadProgress?.({ progress: 100 });
 
       const uploadedFile = {
         key: url.split('/').pop() || '', // Use the IPFS hash as the key
@@ -72,7 +57,6 @@ export function useUploadFile({
       onUploadError?.(error);
       throw error;
     } finally {
-      setProgress(0);
       setIsUploading(false);
       setUploadingFile(undefined);
     }
@@ -80,7 +64,6 @@ export function useUploadFile({
 
   return {
     isUploading,
-    progress,
     uploadFile: uploadFileWrapper,
     uploadedFile,
     uploadingFile,
