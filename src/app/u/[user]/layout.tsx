@@ -17,7 +17,7 @@ import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { getUserMetadata } from "@/lib/settings/get-user-metadata";
 import { fetchAccount, fetchAccountStats } from "@lens-protocol/client/actions";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }: { params: { user: string } }) {

@@ -5,7 +5,7 @@ import { usePostActions } from "@/hooks/use-post-actions";
 import { useScroll } from "@/hooks/use-scroll";
 import { handlePlatformShare } from "@/lib/get-share-url";
 import { AnyPost } from "@lens-protocol/client";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import {
   Bookmark,
   Heart,

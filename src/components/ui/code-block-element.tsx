@@ -4,7 +4,7 @@ import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { cn, withRef } from "@udecode/cn";
 import { useCodeBlockElementState } from "@udecode/plate-code-block/react";
 import { useEditorRef, useReadOnly } from "@udecode/plate/react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "./button";
 import { Caption, CaptionTextarea } from "./caption";

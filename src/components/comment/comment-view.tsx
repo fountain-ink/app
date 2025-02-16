@@ -2,7 +2,7 @@ import { useComments } from "@/hooks/use-comments";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { AnyPost, PostReferenceType, postId } from "@lens-protocol/client";
 import { fetchPostReferences } from "@lens-protocol/client/actions";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { MoreHorizontal } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";

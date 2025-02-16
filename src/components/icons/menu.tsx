@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useAnimation, type Variants } from "framer-motion";
+import { motion, useAnimation, type Variants } from "motion/react";
 import { useEffect } from "react";
 
 const lineVariants: Variants = {

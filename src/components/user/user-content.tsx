@@ -1,7 +1,7 @@
 "use client";
 
 import type { Account, AnyPost } from "@lens-protocol/client";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { DraftCreateButton } from "../draft/draft-create-button";
 import { GraphicHand2 } from "../icons/custom-icons";
 import { PostView } from "../post/post-view";

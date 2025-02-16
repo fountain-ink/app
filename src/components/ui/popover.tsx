@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import type * as React from "react";
 
 import * as PopoverPrimitive from "@radix-ui/react-popover";

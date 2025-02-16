@@ -65,7 +65,6 @@ export function ProfileSelectMenu({ open, onOpenChange }: { open?: boolean; onOp
     }
   };
 
-  // Use controlled state if provided
   const isOpen = open ?? showProfileSelect;
   const handleOpenChange = onOpenChange ?? setShowProfileSelect;
 

@@ -2,7 +2,7 @@
 
 import { settingsEvents } from "@/lib/settings/events";
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Badge } from "../ui/badge";
 

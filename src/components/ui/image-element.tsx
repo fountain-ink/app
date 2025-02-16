@@ -3,7 +3,7 @@ import { cn, withRef } from "@udecode/cn";
 import { TImageElement } from "@udecode/plate-media";
 import { Image, PlaceholderPlugin, useImage, useMediaState } from "@udecode/plate-media/react";
 import { useEditorPlugin, useEditorRef, useElement, useReadOnly, useRemoveNodeButton } from "@udecode/plate/react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { UploadIcon } from "lucide-react";
 import type React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";

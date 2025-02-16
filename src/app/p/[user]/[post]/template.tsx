@@ -6,7 +6,7 @@ import { PageTransition } from "@/components/navigation/page-transition";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { handlePlatformShare } from "@/lib/get-share-url";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 import { LinkIcon, Share2Icon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { TbBrandBluesky, TbBrandX } from "react-icons/tb";

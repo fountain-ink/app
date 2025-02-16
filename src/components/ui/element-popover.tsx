@@ -1,5 +1,5 @@
 import { useEditorRef, useElement, useReadOnly, useRemoveNodeButton } from "@udecode/plate/react";
-import type { Variant } from "framer-motion";
+import type { Variant } from "motion/react";
 import type React from "react";
 import { forwardRef, useState } from "react";
 import { WidthColumn, WidthFull, WidthWide } from "../icons/custom-icons";

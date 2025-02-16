@@ -21,7 +21,7 @@ import { filterWords } from "@udecode/plate-combobox";
 import { type UseComboboxInputResult, useComboboxInput, useHTMLInputCursorState } from "@udecode/plate-combobox/react";
 import { useComposedRef, useEditorRef } from "@udecode/plate/react";
 import { type VariantProps, cva } from "class-variance-authority";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { ScrollArea } from "./scroll-area";
 
 import { TElement } from "@udecode/plate";
