@@ -22,6 +22,7 @@ export const setupGuestAuth = async () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ refreshToken: null }),
+      cache: "no-store",
     });
 
     const data = await response.json();
@@ -30,6 +31,8 @@ export const setupGuestAuth = async () => {
     const cookieConfig = getCookieConfig();
 
     setCookie("appToken", data.jwt, cookieConfig);
+
+    console.log("[Auth] Set up guest session");
 
     return data;
   } catch (error) {
@@ -58,12 +61,15 @@ export const setupUserAuth = async (refreshToken: string) => {
         refreshToken,
         appToken: existingAppToken,
       }),
+      cache: "no-store",
     });
 
     const data = await response.json();
     if (!data.jwt) throw new Error("Failed to authenticate user");
 
     setCookie("appToken", data.jwt, cookieConfig);
+    console.log("[Auth] Set up user session");
+
     return data;
   } catch (error) {
     console.error("Error setting up user auth:", error);
@@ -79,33 +85,41 @@ type Credentials = {
 
 export function AuthManager({ credentials }: { credentials: Credentials | null }) {
   const lastRefreshToken = useRef<string | undefined>();
-  const lastAppToken = useRef<string | undefined>();
+  const isSettingUpAuth = useRef(false);
 
   const checkAndUpdateAuth = async () => {
+    if (isSettingUpAuth.current) return;
+
     try {
-      const currentRefreshToken = credentials?.refreshToken;
       const currentAppToken = getCookie("appToken");
 
-      if (currentRefreshToken !== lastRefreshToken.current) {
-        lastRefreshToken.current = currentRefreshToken;
-      }
-      if (currentAppToken !== lastAppToken.current) {
-        lastAppToken.current = currentAppToken;
+      // Case 1: No credentials and no app token -> setup guest
+      if (!credentials && !currentAppToken) {
+        isSettingUpAuth.current = true;
+        await setupGuestAuth();
+        return;
       }
 
-      if (currentRefreshToken && isValidToken(currentRefreshToken)) {
-        if (!currentAppToken || !isValidToken(currentAppToken)) {
-          console.log("[Auth] App token missing or invalid");
-          await setupUserAuth(currentRefreshToken);
-          console.log("[Auth] Set up user session");
-        }
-      } else if (!currentAppToken || !isValidToken(currentAppToken)) {
-        console.log("[Auth] App token missing or invalid");
-        await setupGuestAuth();
-        console.log("[Auth] Set up guest session");
+      // Case 2: Has credentials but no app token -> setup user
+      if (credentials?.refreshToken && !currentAppToken) {
+        isSettingUpAuth.current = true;
+        await setupUserAuth(credentials.refreshToken);
+        lastRefreshToken.current = credentials.refreshToken;
+        return;
+      }
+
+      // Case 3: Credentials changed -> setup user again
+      if (credentials?.refreshToken && credentials.refreshToken !== lastRefreshToken.current) {
+        isSettingUpAuth.current = true;
+        await setupUserAuth(credentials.refreshToken);
+        lastRefreshToken.current = credentials.refreshToken;
+        return;
       }
     } catch (error) {
-      console.error("Auth check failed:", error);
+      console.error("Auth setup failed (This should never happen):", error);
+      // window.location.reload(); 
+    } finally {
+      isSettingUpAuth.current = false;
     }
   };
 

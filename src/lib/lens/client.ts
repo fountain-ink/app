@@ -75,7 +75,6 @@ export const getAccountOwnerClient = async (
 export const getLensClient = async () => {
   const resumed = await publicClient.resumeSession();
   if (resumed.isErr()) {
-    console.error(resumed.error);
     return publicClient;
   }
 

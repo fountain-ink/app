@@ -24,6 +24,8 @@ import { UserRoundPenIcon } from "../icons/switch-profile";
 import { UserIcon } from "../icons/user";
 import { UserAvatar } from "./user-avatar";
 import { AnimatedMenuItem } from "../navigation/animated-item";
+import { getLensClient } from "@/lib/lens/client";
+import { useState } from "react";
 
 export const UserMenu = ({ session }: { session: MeResult | null }) => {
   const { isConnected: isWalletConnected } = useAccount();
@@ -32,24 +34,25 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const isDarkMode = theme === "dark";
-
-  const handleLogout = async () => {
-    clearAllCookies();
-    router.refresh();
-  };
+  const [showProfileSelect, setShowProfileSelect] = useState(!session);
 
   const handleDisconnect = async () => {
+    const client = await getLensClient();
+    if (client.isSessionClient()) {
+      await client.logout();
+    }
     disconnect();
     clearAllCookies();
-    router.refresh();
+    router.push("/");
+    window.location.reload();
   };
 
   if (!isWalletConnected) {
     return <ConnectWalletButton />;
   }
 
-  if (!session) {
-    return <ProfileSelectMenu />;
+  if (!session || showProfileSelect) {
+    return <ProfileSelectMenu open={showProfileSelect} onOpenChange={setShowProfileSelect} />;
   }
 
   const username = session.loggedInAs.account.username?.localName;
@@ -78,7 +81,7 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
             Profile
           </AnimatedMenuItem>
 
-          <AnimatedMenuItem icon={UserRoundPenIcon} onClick={handleLogout}>
+          <AnimatedMenuItem icon={UserRoundPenIcon} onClick={() => setShowProfileSelect(true)}>
             Switch Profile
           </AnimatedMenuItem>
 

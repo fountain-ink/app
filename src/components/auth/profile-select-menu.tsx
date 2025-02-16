@@ -1,6 +1,5 @@
-import { useAccountOwnerClient } from "@/hooks/use-lens-clients";
 import { getLensClient } from "@/lib/lens/client";
-import { evmAddress } from "@lens-protocol/client";
+import { Account, evmAddress } from "@lens-protocol/client";
 import { fetchAccountsAvailable } from "@lens-protocol/client/actions";
 import { PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -10,12 +9,12 @@ import { AnimatedMenuItem } from "../navigation/animated-item";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { ScrollArea } from "../ui/scroll-area";
-import { ProfileSelectButotn } from "./profile-select-button";
 import { OnboardingModal } from "./onboarding-modal";
+import { ProfileSelectButotn } from "./profile-select-button";
 
-export function ProfileSelectMenu() {
+export function ProfileSelectMenu({ open, onOpenChange }: { open?: boolean; onOpenChange?: (open: boolean) => void }) {
   const { address } = useAccount();
-  const [profiles, setProfiles] = useState<any>([]);
+  const [profiles, setProfiles] = useState<Account[]>([]);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -41,7 +40,7 @@ export function ProfileSelectMenu() {
         throw result.error;
       }
 
-      setProfiles(result._unsafeUnwrap()?.items);
+      setProfiles(result.value.items.map((item: any) => item.account));
     } catch (err) {
       console.error("Error fetching profiles:", err);
       setError(err as Error);
@@ -55,7 +54,6 @@ export function ProfileSelectMenu() {
   }, [address]);
 
   const handleShowOnboarding = () => {
-    // Hide profile select when showing onboarding
     setShowProfileSelect(false);
     setShowOnboarding(true);
   };
@@ -63,10 +61,13 @@ export function ProfileSelectMenu() {
   const handleOnboardingClose = (open: boolean) => {
     setShowOnboarding(open);
     if (!open) {
-      // Show profile select when closing onboarding
       setShowProfileSelect(true);
     }
   };
+
+  // Use controlled state if provided
+  const isOpen = open ?? showProfileSelect;
+  const handleOpenChange = onOpenChange ?? setShowProfileSelect;
 
   if (loading) {
     return null;
@@ -83,7 +84,7 @@ export function ProfileSelectMenu() {
 
   return (
     <>
-      <Dialog open={showProfileSelect} onOpenChange={setShowProfileSelect}>
+      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
         <DialogTrigger className="p-2" asChild>
           <AnimatedMenuItem asButton icon={UserIcon} />
         </DialogTrigger>
@@ -102,8 +103,8 @@ export function ProfileSelectMenu() {
             {profiles?.length > 0 && (
               <ScrollArea className="w-full pr-4 max-h-[300px]">
                 <div className="w-full flex flex-col gap-1">
-                  {profiles.map((entry: any) => (
-                    <ProfileSelectButotn key={entry.id} profile={entry.account} />
+                  {profiles.map((entry) => (
+                    <ProfileSelectButotn key={entry.address} profile={entry} />
                   ))}
                 </div>
               </ScrollArea>
