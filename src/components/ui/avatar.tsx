@@ -9,5 +9,5 @@ export const AvatarImage = withCn(AvatarPrimitive.Image, "aspect-square size-ful
 
 export const AvatarFallback = withCn(
   AvatarPrimitive.Fallback,
-  "flex size-full items-center justify-center rounded-full bg-muted",
+  "flex size-full items-center justify-center rounded-full",
 );

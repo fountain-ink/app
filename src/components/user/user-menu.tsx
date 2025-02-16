@@ -64,7 +64,7 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full shrink-0">
+        <Button variant="outline" size="icon" className="rounded-full shrink-0">
           <UserAvatar account={session.loggedInAs.account} />
         </Button>
       </DropdownMenuTrigger>

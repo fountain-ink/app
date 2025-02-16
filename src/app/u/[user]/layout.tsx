@@ -70,7 +70,8 @@ const UserLayout = async ({
           <div className="flex justify-between px-4">
             <div className="flex flex-col relative">
               <UserAvatar
-                className="absolute transform -translate-y-[80%] w-32 h-32 md:w-40 md:h-40 ring-4 rounded-full ring-background"
+                size={40}
+                className="absolute transform -translate-y-[80%] bg-muted w-32 h-32 md:w-40 md:h-40 ring-4 rounded-full ring-background"
                 account={account}
               />
               <div className="flex flex-col gap-2 mt-14 font-[family-name:--title-font]">
