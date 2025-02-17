@@ -62,7 +62,7 @@ const UserLayout = async ({
 
   return (
     <UserTheme initialTheme={themeName}>
-      <div className="flex md:mt-20 flex-col items-center">
+      <div className="flex md:mt-10 flex-col items-center">
         <div className="w-screen md:max-w-3xl">
           <UserCover profile={account} />
         </div>

@@ -37,22 +37,22 @@ const MEDIA_CONFIG: Record<
   [AudioPlugin.key]: {
     accept: ['audio/*'],
     buttonText: 'Upload Audio',
-    icon: <AudioLinesIcon className="size-6" />,
+    icon: <AudioLinesIcon className="size-5" />,
   },
   [FilePlugin.key]: {
     accept: ['*'],
     buttonText: 'Choose a file',
-    icon: <FileUpIcon className="size-6" />,
+    icon: <FileUpIcon className="size-5" />,
   },
   [ImagePlugin.key]: {
     accept: ['image/*'],
     buttonText: 'Upload Image',
-    icon: <ImageIcon className="size-6" />,
+    icon: <ImageIcon className="size-5" />,
   },
   [VideoPlugin.key]: {
     accept: ['video/*'],
     buttonText: 'Upload Video',
-    icon: <FilmIcon className="size-6" />,
+    icon: <FilmIcon className="size-5" />,
   },
 };
 
@@ -184,18 +184,19 @@ export const MediaPlaceholderElement = withHOC(
       return (
         <PlateElement
           ref={ref}
-          className={cn('my-4', className)}
+          className={cn('my-4 [&_*]:caret-transparent select-none', className)}
           editor={editor}
+          contentEditable={false}
           {...props}
         >
           <div 
             ref={containerRef}
             className={cn(
-              "relative flex aspect-video w-full flex-col items-center justify-center rounded-lg",
+              "relative flex aspect-video w-full flex-col items-center justify-center rounded-sm",
               isFocused && "ring-2 ring-ring"
             )}
           >
-            <div className="placeholder-background rounded-lg absolute inset-0" />
+            <div className="placeholder-background rounded-sm absolute inset-0" />
             {progressing ? (
               <>
                 {file && (
@@ -225,7 +226,7 @@ export const MediaPlaceholderElement = withHOC(
                   className="relative"
                   onClick={() => openFilePicker()}
                 >
-                  <div className="flex items-center gap-2">
+                  <div className="flex text-base items-center gap-2">
                     {currentMedia?.icon}
                     {currentMedia?.buttonText}
                   </div>

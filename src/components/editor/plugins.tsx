@@ -279,18 +279,21 @@ export const staticPlugins = [
     },
   }),
   PlaceholderPlugin.configure({
-    options: {
-      
-      // disableEmptyPlaceholder: true,
+    node: {
+      isVoid: true,
+      isElement: true,
     },
-    // render: { afterEditable: MediaUploadToast },
   }),
   ImagePlugin.extend({
       render: {
         afterEditable: ImagePreview,
         node: ImageElement,
-      },
-    }),
+    },
+    node: {
+      isVoid: true,
+      isElement: true,
+    },
+  }),
   VideoPlugin,
   AudioPlugin,
   FilePlugin,

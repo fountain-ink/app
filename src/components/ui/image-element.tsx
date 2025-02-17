@@ -37,9 +37,6 @@ const ImagePlaceholder = ({ file }: { file?: File }) => {
           src={objectUrl} 
         />
       )}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <LoadingSpinner />
-      </div>
     </div>
   );
 };
@@ -113,6 +110,7 @@ export const ImageElement = withRef<typeof PlateElement>(
   ({ children, className, nodeProps, autoFocus = true, ...props }, ref) => {
     const [_isImageLoaded, setIsImageLoaded] = useState(false);
     const [url, setUrl] = useState<string | undefined>(props?.element?.url as string | undefined);
+    const [isUploading, setIsUploading] = useState(false);
     const [width, setWidth] = useState<ElementWidth>((props.element.width as ElementWidth) || "column");
     const [isFocused, setIsFocused] = useState(false);
     const readonly = useReadOnly();
@@ -163,9 +161,28 @@ export const ImageElement = withRef<typeof PlateElement>(
       }
     }, [props.element.width]);
 
+    const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      setIsUploading(true);
+      try {
+        const url = await uploadFile(file);
+        if (url) {
+          editor.tf.setNodes({ url, width }, { at: element });
+          editor.tf.select(editor, {
+            edge: editor.selection ? undefined : "end",
+            focus: true,
+          });
+        }
+      } finally {
+        setIsUploading(false);
+      }
+    };
+
     return (
       <ImagePopover url={url} open={isFocused} popoverRef={popoverRef}>
-        <PlateElement ref={ref} className={cn(className, "my-9 flex flex-col items-center")} {...props}>
+        <PlateElement ref={ref} className={cn(className, "my-9 flex flex-col items-center [&_*]:caret-transparent ")} {...props}>
           <motion.figure
             ref={figureRef}
             className="group w-full flex flex-col items-center"
@@ -180,8 +197,35 @@ export const ImageElement = withRef<typeof PlateElement>(
               damping: 30,
             }}
           >
-            {!url && loading && currentUploadingFile ? (
-              <ImagePlaceholder file={currentUploadingFile} />
+            {!url ? (
+              <div
+                className={cn("rounded-sm flex items-center justify-center w-full", isFocused && "ring-2 ring-ring")}
+              >
+                <div className="absolute">
+                  {!readonly && (
+                    <Button className="hover:bg-transparent" size="lg" variant="ghost" disabled={isUploading}>
+                      <div className="relative flex gap-1 text-base text-muted-foreground hover:text-foreground duration-300 transition-colors cursor-pointer items-center justify-center">
+                        <input
+                          title=""
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileSelect}
+                          className="absolute inset-0 cursor-pointer opacity-0"
+                          disabled={isUploading}
+                        />
+                        {isUploading ? (
+                          <LoadingSpinner />
+                        ) : (
+                          <>{!url && <UploadIcon className="size-4 mr-2 text-inherit" />}</>
+                        )}
+                        <span className="">{isUploading ? "Uploading..." : "Upload Image"}</span>
+                      </div>
+                    </Button>
+                  )}
+                </div>
+
+                <ImagePlaceholder file={currentUploadingFile} />
+              </div>
             ) : (
               <Image
                 className={cn(
