@@ -52,36 +52,36 @@ export const ImagePreview = () => {
       </div>
 
       <div
-        className="absolute bottom-[30px] left-1/2 z-40 flex -translate-x-1/2 justify-center gap-2 text-white"
+        className="absolute bottom-[40px] left-1/2 z-40 flex -translate-x-1/2 justify-center gap-2 text-white"
         onClick={(e) => e.stopPropagation()}
       >
         {!prevDisabled && !nextDisabled && (
-          <div className="flex rounded-sm bg-black/70">
-            <Button {...prevProps} disabled={prevDisabled}>
+          <div className="flex rounded-md bg-secondary/70">
+            <Button size={'icon'} variant={"ghost"} {...prevProps} disabled={prevDisabled}>
               <ArrowLeftIcon className="size-5" />
             </Button>
-            <Button {...nextProps} disabled={nextDisabled}>
+            <Button size={'icon'} variant={"ghost"} {...nextProps} disabled={nextDisabled}>
               <ArrowRightIcon className="size-5" />
             </Button>
           </div>
         )}
 
-        <div className="flex rounded-sm bg-black/70">
-          <Button {...zommOutProps} disabled={zoomOutDisabled} tooltip="Zoom out">
+        <div className="flex gap-2 rounded-md bg-secondary/70">
+          <Button size={'icon'} variant={'ghost'} {...zommOutProps} disabled={zoomOutDisabled} tooltip="Zoom out">
             <Minus className="size-4" />
           </Button>
           <div className="flex w-[46px] items-center justify-center space-x-1 text-neutral-400">
             {isEditingScale ? (
-              <ScaleInput className="h-[19px] w-full rounded-sm border border-brand/70 bg-transparent text-sm text-white outline-hidden" />
+              <ScaleInput className="h-[19px] w-full rounded-sm border border-border/70 bg-transparent text-sm text-white outline-hidden" />
             ) : (
               <div {...scaleTextProps}>{scale * 100}</div>
             )}
             <div>%</div>
           </div>
-          <Button {...zoomInProps} disabled={zoomInDisabled} tooltip="Zoom in">
+          <Button size={'icon'} variant={"ghost"} {...zoomInProps} disabled={zoomInDisabled} tooltip="Zoom in">
             <Plus className="size-4" />
           </Button>
-          <Button {...closeProps} tooltip="Close">
+          <Button size={'icon'} variant={"ghost"} {...closeProps} tooltip="Minimize">
             <Minimize2 className="size-4" />
           </Button>
         </div>
