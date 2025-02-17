@@ -65,12 +65,16 @@ import { BaseIndentPlugin } from "@udecode/plate-indent";
 import { BaseIndentListPlugin } from "@udecode/plate-indent-list";
 import Prism from "prismjs";
 import { TodoLiStatic, TodoMarkerStatic } from "../ui/static/indent-todo-marker-static";
+import { SubtitleElementStatic, TitleElementStatic } from "../ui/static/title-element-static";
+import { SubtitlePlugin, TitlePlugin } from "./plugins/title-plugin";
 
 export const staticComponents = {
   [BaseAudioPlugin.key]: MediaAudioElementStatic,
   [BaseFilePlugin.key]: MediaFileElementStatic,
   [BaseImagePlugin.key]: ImageElementStatic,
   [BaseVideoPlugin.key]: MediaVideoElementStatic,
+  [TitlePlugin.key]: TitleElementStatic,
+  [SubtitlePlugin.key]: SubtitleElementStatic,
 
   [BaseBlockquotePlugin.key]: BlockquoteElementStatic,
   [BaseBoldPlugin.key]: withProps(SlateLeaf, { as: "strong" }),
@@ -109,6 +113,8 @@ export const getStaticEditor = (value?: Value) =>
   createSlateEditor({
     plugins: [
       // MarkdownPlugin,
+      TitlePlugin,
+      SubtitlePlugin,
       BaseEquationPlugin,
       BaseColumnPlugin,
       BaseColumnItemPlugin,

@@ -80,12 +80,12 @@ const resetBlockTypesCodeBlockRule = {
 };
 
 export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: boolean) => {
-  const plugins = [...staticPlugins];
+  const pluginsList = [...plugins];
 
   const username = appToken ? getTokenClaims(appToken)?.metadata.username : undefined;
 
   if (appToken) {
-    plugins.push(
+    pluginsList.push(
       YjsPlugin.configure({
         render: {
           beforeEditable: RemoteCursorOverlay,
@@ -156,7 +156,7 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
   }
 
   if (!isReadOnly) {
-    plugins.push(
+    pluginsList.push(
       BlockSelectionPlugin.configure({
         inject: {
           excludeBelowPlugins: ["tr"],
@@ -177,10 +177,10 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
     );
   }
 
-  return plugins;
+  return pluginsList;
 };
 
-export const staticPlugins = [
+export const plugins = [
   NormalizePlugin,
   LeadingBlockPlugin.configure({
     options: {
@@ -503,3 +503,4 @@ export const staticPlugins = [
     },
   })),
 ];
+

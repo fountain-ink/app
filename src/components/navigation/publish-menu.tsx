@@ -1,7 +1,5 @@
 "use client";
 
-import { getElements } from "@/components/editor/elements";
-import { staticPlugins } from "@/components/editor/plugins";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -11,24 +9,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { getLensClient } from "@/lib/lens/client";
 import { storageClient } from "@/lib/lens/storage-client";
-import { Json } from "@/lib/supabase/database";
 import { TransactionIndexingError } from "@lens-protocol/client";
 import { currentSession, fetchPost, post } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { MetadataAttributeType, article } from "@lens-protocol/metadata";
 import { useQueryClient } from "@tanstack/react-query";
 import { serializeHtml } from "@udecode/plate-core";
-import { createPlateEditor } from "@udecode/plate/react";
 import type { Tag } from "emblor";
 
+import { Value } from "@udecode/plate";
+import { useEditorRef } from "@udecode/plate-core/react";
 import { TagInput } from "emblor";
 import { PenIcon, ShoppingBag } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useAccount, useWalletClient } from "wagmi";
+import { getStaticEditor, staticComponents } from "../editor/static";
 
 export const PublishMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,6 +37,7 @@ export const PublishMenu = () => {
   const queryClient = useQueryClient();
   const { isConnected: isWalletConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
+  const editor = useEditorRef();
 
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
@@ -120,13 +118,6 @@ export const PublishMenu = () => {
     [handleTagsChange, tags],
   );
 
-  const editor = useMemo(() => {
-    return createPlateEditor({
-      plugins: staticPlugins?.filter((plugin: any) => plugin?.key !== "toggle" && plugin?.key !== "blockSelection"),
-      override: { components: getElements() },
-    });
-  }, []);
-
   const handlePublish = async () => {
     if (!documentId) {
       toast.error("Invalid document ID");
@@ -157,19 +148,17 @@ export const PublishMenu = () => {
       return;
     }
 
+    const staticEditor = getStaticEditor(draft.contentJson as Value);
+
     setIsPublishing(true);
 
     try {
-      editor.children = draft.contentJson as any;
-
-      const contentHtml = await serializeHtml(editor, {
-        components: getElements(),
-        // editorComponent: StaticEditor
-        stripDataAttributes: true,
-        preserveClassNames: [],
+      const contentHtml = await serializeHtml(staticEditor, {
+        components: { ...staticComponents },
       });
 
-      const contentMarkdown = editor.api.markdown.serialize();
+      // const contentMarkdown = staticEditor.api.markdown.serialize();
+      const contentMarkdown = "# markdown is unsupported atm";
       const attributes: any = [
         { key: "contentJson", type: MetadataAttributeType.JSON, value: JSON.stringify(draft.contentJson) },
         { key: "contentHtml", type: MetadataAttributeType.STRING, value: contentHtml },
@@ -193,7 +182,7 @@ export const PublishMenu = () => {
       });
 
       const { uri } = await storageClient.uploadAsJson(metadata);
-      console.log(uri);
+      console.log(metadata, uri);
       const pendingToast = toast.loading("Publishing post...");
 
       const result = await post(lens, {
