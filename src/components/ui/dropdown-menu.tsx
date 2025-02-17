@@ -134,7 +134,7 @@ export const dropdownMenuItemVariants = cva(
   cn(
     "relative flex cursor-pointer select-none items-center rounded-md align-middle text-sm transition-bg-ease data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
     "[&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-subtle-foreground",
-    "text-accent-foreground hover:bg-accent focus:bg-accent focus:text-accent-foreground",
+    "text-accent-foreground hover:bg-accent/40 focus:bg-accent focus:text-accent-foreground",
     "ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0",
     "outline-none focus:outline-none focus-visible:outline-none",
   ),

@@ -35,7 +35,7 @@ export const Header = ({ session }: { session: MeResult | null }) => {
   }
 
   const HeaderContent = () => (
-    <div className="flex items-end justify-between absolute bg-gradient-to-t from-transparent to-background bottom-0 left-0 right-0 h-[80px] pb-2 px-2">
+    <div className="flex items-center justify-between h-full px-2">
       <div className="flex gap-4 items-center justify-center">
         <Link href={"/"} className="w-10 h-10 flex items-center justify-center pointer-events-auto">
           <FountainLogo />
@@ -56,14 +56,14 @@ export const Header = ({ session }: { session: MeResult | null }) => {
 
   if (isWritePage) {
     return (
-      <div className="fixed top-0 w-full h-[100px] -mt-[42px] pt-[50px] z-[40] bg-background/70 backdrop-blur-xl border-b border-border overflow-hidden">
+      <div className="sticky top-0 w-full h-[58px] z-[40] bg-background/70 backdrop-blur-xl border-b border-border">
         <HeaderContent />
       </div>
     );
   }
 
   return (
-    <div className="fixed top-0 w-full h-[100px] -mt-[42px] pt-[50px] z-[40] bg-background/70 backdrop-blur-xl border-b border-border overflow-hidden">
+    <div className="sticky top-0 w-full h-[58px] z-[40] bg-background/70 backdrop-blur-xl border-b border-border">
       <HeaderContent />
     </div>
   );
