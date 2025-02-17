@@ -11,16 +11,16 @@ export const UserNavigation = ({ username, isUserProfile }: { username: string; 
           href: `/u/${username}`,
           label: "Articles",
         },
-        {
-          href: `/u/${username}/all`,
-          label: "Activity",
-          disabled: true,
-        },
-        {
-          href: `/u/${username}/comments`,
-          label: "Comments",
-          disabled: true,
-        },
+        // {
+        //   href: `/u/${username}/all`,
+        //   label: "Activity",
+        //   disabled: true,
+        // },
+        // {
+        //   href: `/u/${username}/comments`,
+        //   label: "Comments",
+        //   disabled: true,
+        // },
         {
           href: `/u/${username}/bookmarks`,
           label: "Bookmarks",
