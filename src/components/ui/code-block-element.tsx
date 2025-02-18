@@ -3,7 +3,7 @@
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { cn, withRef } from "@udecode/cn";
 import { useCodeBlockElementState } from "@udecode/plate-code-block/react";
-import { useEditorRef, useReadOnly } from "@udecode/plate/react";
+import { useEditorRef, useReadOnly, useSelected } from "@udecode/plate/react";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "./button";
@@ -20,33 +20,12 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
   const state = useCodeBlockElementState({ element });
   const editor = useEditorRef();
   const [width, setWidth] = useState<ElementWidth>((element?.width as ElementWidth) || "column");
-  const [isFocused, setIsFocused] = useState(false);
+  const isSelected = useSelected()
   const { copyToClipboard } = useCopyToClipboard();
   const figureRef = useRef<HTMLElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
   const comboboxRef = useRef<HTMLDivElement>(null);
   const readOnly = useReadOnly();
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (readOnly) return;
-
-      const target = event.target as Node;
-
-      // Check if target is a child of either ref
-      const isClickInside =
-        figureRef.current?.contains(target) ||
-        popoverRef.current?.contains(target) ||
-        comboboxRef.current?.contains(target);
-
-      setIsFocused(isClickInside ?? false);
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [readOnly]);
 
   const handleWidth = (newWidth: ElementWidth) => {
     setWidth(newWidth);
@@ -75,7 +54,7 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
   return (
     <ElementPopover
       ref={popoverRef}
-      open={isFocused}
+      open={isSelected}
       sideOffset={5}
       onWidthChange={handleWidth}
       content={popoverContent}
@@ -103,7 +82,7 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
             orientation="horizontal"
             className={cn(
               "rounded-sm bg-muted text-foreground overflow-hidden w-full",
-              isFocused && "ring-2 ring-ring",
+              isSelected && "ring-2 ring-ring",
             )}
           >
             <pre className="bg-muted px-6 py-4 text-foreground/80 font-mono text-sm not-prose leading-[normal] [tab-size:2] min-w-full">

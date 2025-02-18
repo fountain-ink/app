@@ -8,6 +8,7 @@ import {
     createPrimitiveComponent,
     useEditorRef,
     useElement,
+    useSelected,
 } from "@udecode/plate/react";
 import { RadicalIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -26,27 +27,11 @@ export const EquationElement = withRef<typeof PlateElement>(({ children, classNa
   const editor = useEditorRef();
   const katexRef = useRef<HTMLDivElement | null>(null);
   const [width, setWidth] = useState<ElementWidth>((element?.width as ElementWidth) || "column");
-  const [isFocused, setIsFocused] = useState(false);
   const readOnly = useReadOnly();
+  const isSelected = useSelected();
   const { align = "center" } = useMediaState();
   const figureRef = useRef<HTMLElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (readOnly) return;
-
-      const target = event.target as Node;
-      const isClickInside = figureRef.current?.contains(target) || popoverRef.current?.contains(target);
-
-      setIsFocused(!!isClickInside);
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [readOnly]);
 
   const renderEquationInput = () => {
     if (readOnly) return null;
@@ -86,7 +71,7 @@ export const EquationElement = withRef<typeof PlateElement>(({ children, classNa
   return (
     <ElementPopover
       ref={popoverRef}
-      open={isFocused}
+      open={isSelected}
       sideOffset={10}
       verticalContent={renderEquationInput()}
       defaultWidth={width}
@@ -99,7 +84,7 @@ export const EquationElement = withRef<typeof PlateElement>(({ children, classNa
         {...props}
       >
         <figure ref={figureRef} className={cn("group rounded-sm")} contentEditable={false}>
-          <div className={cn(isFocused && "ring-2 ring-ring ", "rounded-sm p-2")}>
+          <div className={cn(isSelected && "ring-2 ring-ring ", "rounded-sm p-2")}>
             {element?.texExpression?.length > 0 ? (
               <span ref={katexRef} />
             ) : (

@@ -26,7 +26,6 @@ export function AutoSave({ documentId }: { documentId: string }) {
         const existingDraft = getDocument(documentId);
         const { title, subtitle, coverUrl } = extractMetadata(editor.children as any);
         const contentMarkdown = api.markdown.serialize();
-        console.log(contentMarkdown);
 
         const draft = {
           ...(existingDraft || {}),
