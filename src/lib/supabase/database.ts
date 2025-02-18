@@ -14,12 +14,14 @@ export type Database = {
           author: string | null
           contentHtml: string | null
           contentJson: Json | null
+          contentMarkdown: string | null
           contributors: string[] | null
           coverUrl: string | null
           createdAt: string
           documentId: string
           id: number
           subtitle: string | null
+          tags: string[] | null
           title: string
           updatedAt: string | null
           yDoc: string | null
@@ -28,12 +30,14 @@ export type Database = {
           author?: string | null
           contentHtml?: string | null
           contentJson?: Json | null
+          contentMarkdown?: string | null
           contributors?: string[] | null
           coverUrl?: string | null
           createdAt?: string
           documentId?: string
           id?: number
           subtitle?: string | null
+          tags?: string[] | null
           title?: string
           updatedAt?: string | null
           yDoc?: string | null
@@ -42,12 +46,14 @@ export type Database = {
           author?: string | null
           contentHtml?: string | null
           contentJson?: Json | null
+          contentMarkdown?: string | null
           contributors?: string[] | null
           coverUrl?: string | null
           createdAt?: string
           documentId?: string
           id?: number
           subtitle?: string | null
+          tags?: string[] | null
           title?: string
           updatedAt?: string | null
           yDoc?: string | null

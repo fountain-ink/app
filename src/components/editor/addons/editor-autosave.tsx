@@ -3,12 +3,14 @@
 import type { Draft } from "@/components/draft/draft";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { extractMetadata } from "@/lib/extract-metadata";
-import { useEditorState } from "@udecode/plate/react";
+import { MarkdownPlugin } from "@udecode/plate-markdown";
+import { useEditorPlugin, useEditorState } from "@udecode/plate/react";
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
 export function AutoSave({ documentId }: { documentId: string }) {
   const editor = useEditorState();
+  const { api } = useEditorPlugin(MarkdownPlugin);
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -23,6 +25,8 @@ export function AutoSave({ documentId }: { documentId: string }) {
         const now = new Date().toISOString();
         const existingDraft = getDocument(documentId);
         const { title, subtitle, coverUrl } = extractMetadata(editor.children as any);
+        const contentMarkdown = api.markdown.serialize();
+        console.log(contentMarkdown);
 
         const draft = {
           ...(existingDraft || {}),
@@ -30,6 +34,7 @@ export function AutoSave({ documentId }: { documentId: string }) {
           documentId,
           author: "local",
           contentJson: content,
+          contentMarkdown,
           updatedAt: now,
           createdAt: existingDraft?.createdAt || now,
           title,

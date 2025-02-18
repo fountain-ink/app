@@ -18,7 +18,6 @@ import { serializeHtml } from "@udecode/plate-core";
 import type { Tag } from "emblor";
 
 import { Value } from "@udecode/plate";
-import { useEditorRef } from "@udecode/plate-core/react";
 import { TagInput } from "emblor";
 import { PenIcon, ShoppingBag } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
@@ -37,7 +36,6 @@ export const PublishMenu = () => {
   const queryClient = useQueryClient();
   const { isConnected: isWalletConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
-  const editor = useEditorRef();
 
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
@@ -157,8 +155,6 @@ export const PublishMenu = () => {
         components: { ...staticComponents },
       });
 
-      // const contentMarkdown = staticEditor.api.markdown.serialize();
-      const contentMarkdown = "# markdown is unsupported atm";
       const attributes: any = [
         { key: "contentJson", type: MetadataAttributeType.JSON, value: JSON.stringify(draft.contentJson) },
         { key: "contentHtml", type: MetadataAttributeType.STRING, value: contentHtml },
@@ -174,8 +170,7 @@ export const PublishMenu = () => {
 
       const metadata = article({
         title,
-        content: contentMarkdown,
-        // attachments: coverUrl ? [{item: coverUrl, type: MediaImageMimeType.JPEG, attributes: [{key: "cover", }]}] : [],
+        content: draft.contentMarkdown ?? "",
         locale: "en",
         tags: tags.map((t) => t.text),
         attributes,
