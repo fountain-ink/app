@@ -18,7 +18,7 @@ import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { ExitBreakPlugin, SoftBreakPlugin } from "@udecode/plate-break/react";
 import { CalloutPlugin } from "@udecode/plate-callout/react";
 import { CaptionPlugin } from "@udecode/plate-caption/react";
-import { isCodeBlockEmpty, unwrapCodeBlock } from "@udecode/plate-code-block";
+import { unwrapCodeBlock } from "@udecode/plate-code-block";
 import { CodeBlockPlugin, CodeSyntaxPlugin } from "@udecode/plate-code-block/react";
 import { CommentsPlugin } from "@udecode/plate-comments/react";
 import { ParagraphPlugin, PlateEditor } from "@udecode/plate-core/react";
@@ -60,17 +60,25 @@ import { TrailingBlockPlugin } from "@udecode/plate-trailing-block";
 import { YjsPlugin } from "@udecode/plate-yjs/react";
 import Prism from "prismjs";
 import { toast } from "sonner";
+import { ImageElement } from "../ui/image-element";
 import { ImagePreview } from "../ui/image-preview";
 import { RemoteCursorOverlay } from "../ui/remote-cursor-overlay";
 import { autoformatRules } from "./plugins/autoformat-rules";
-import { NormalizePlugin } from "./plugins/normalize-plugin";
 import { LeadingBlockPlugin } from "./plugins/leading-block-plugin";
+import { NormalizePlugin } from "./plugins/normalize-plugin";
 import { SubtitlePlugin, TITLE_KEYS, TitlePlugin } from "./plugins/title-plugin";
-import { ImageElement } from "../ui/image-element";
+import { KeyboardEvent } from "react";
 
 const resetBlockTypesCommonRule = {
   defaultType: ParagraphPlugin.key,
-  types: [...HEADING_LEVELS, BlockquotePlugin.key, ListStyleType.Disc, ListStyleType.Decimal, CalloutPlugin.key],
+  types: [
+    ...HEADING_LEVELS,
+    ImagePlugin.key,
+    BlockquotePlugin.key,
+    ListStyleType.Disc,
+    ListStyleType.Decimal,
+    CalloutPlugin.key,
+  ],
 };
 
 const resetBlockTypesCodeBlockRule = {
@@ -285,9 +293,9 @@ export const plugins = [
     },
   }),
   ImagePlugin.extend({
-      render: {
-        afterEditable: ImagePreview,
-        node: ImageElement,
+    render: {
+      afterEditable: ImagePreview,
+      node: ImageElement,
     },
     node: {
       isVoid: true,
@@ -418,7 +426,42 @@ export const plugins = [
   SelectOnBackspacePlugin.configure({
     options: {
       query: {
-        allow: [ImagePlugin.key, VideoPlugin.key, AudioPlugin.key, FilePlugin.key, MediaEmbedPlugin.key],
+        allow: [
+          ImagePlugin.key,
+          PlaceholderPlugin.key,
+          VideoPlugin.key,
+          AudioPlugin.key,
+          FilePlugin.key,
+          MediaEmbedPlugin.key,
+        ],
+      },
+    },
+    handlers: {
+      onKeyDown: ({ event, editor }: { event: React.KeyboardEvent; editor: PlateEditor }) => {
+        if (event.key !== 'Backspace') return;
+        
+        const anchor = editor.selection?.anchor?.path;
+        if (!anchor) return;
+
+        const currentNode = editor.api.parent(anchor);
+        if (!currentNode) return;
+
+        const [node, path] = currentNode;
+
+        if (node.type === ParagraphPlugin.key && editor.api.isEmpty(editor.selection, { block: true })) {
+          event.preventDefault();
+          
+          // Get the previous node's path before removing the current one
+          const prevPath = PathApi.previous(path);
+          
+          editor.tf.removeNodes({ at: path });
+          
+          // Select the end of the previous node if it exists
+          if (prevPath) {
+            editor.tf.select(prevPath);
+            editor.tf.collapse({ edge: 'end' });
+          }
+        }
       },
     },
   }),
@@ -480,11 +523,11 @@ export const plugins = [
           hotkey: "Backspace",
           predicate: (editor) => editor.api.isAt({ start: true }),
         },
-        {
-          ...resetBlockTypesCodeBlockRule,
-          hotkey: "Enter",
-          predicate: (editor) => isCodeBlockEmpty(editor),
-        },
+        // {
+        //   ...resetBlockTypesCodeBlockRule,
+        //   hotkey: "Enter",
+        //   predicate: (editor) => isCodeBlockEmpty(editor),
+        // },
         {
           ...resetBlockTypesCodeBlockRule,
           hotkey: "Backspace",
@@ -503,4 +546,3 @@ export const plugins = [
     },
   })),
 ];
-
