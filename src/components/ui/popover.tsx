@@ -18,7 +18,7 @@ export const PopoverPortal = PopoverPrimitive.Portal;
 export const popoverVariants = cva(
   cn(
     "group/popover",
-    "z-50 max-w-[calc(100vw-24px)] animate-popover overflow-hidden rounded-md bg-popover border border-border text-popover-foreground shadow-floating outline-none",
+    "z-49 max-w-[calc(100vw-24px)] animate-popover overflow-hidden rounded-md bg-popover border border-border text-popover-foreground shadow-floating outline-none",
   ),
   {
     defaultVariants: {
