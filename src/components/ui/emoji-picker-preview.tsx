@@ -1,22 +1,26 @@
-"use client";
-
 import type { UseEmojiPickerType } from "@udecode/plate-emoji/react";
 
 export type EmojiPickerPreviewProps = Pick<UseEmojiPickerType, "emoji" | "hasFound" | "i18n" | "isSearching">;
 
 export type EmojiPreviewProps = Pick<UseEmojiPickerType, "emoji">;
-
 export type NoEmojiPreviewProps = Pick<UseEmojiPickerType, "i18n">;
-
 export type PickAnEmojiPreviewProps = NoEmojiPreviewProps;
 
 function EmojiPreview({ emoji }: EmojiPreviewProps) {
   return (
-    <div className="flex h-14 max-h-14 min-h-14 items-center border-t border-muted p-2">
-      <div className="flex items-center justify-center text-2xl">{emoji?.skins?.[0]?.native}</div>
+    <div className="flex h-20 items-center border-t border-muted p-2">
+      <div
+        className="flex items-center justify-center text-2xl"
+        style={{
+          fontFamily:
+            '"Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji, "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols',
+        }}
+      >
+        {emoji?.skins[0]?.native}
+      </div>
       <div className="overflow-hidden pl-2">
-        <div className="truncate text-sm font-semibold">{emoji?.name}</div>
-        <div className="truncate text-sm">{`:${emoji?.id}:`}</div>
+        <div className="truncate text-sm">{emoji?.name}</div>
+        <div className="truncate text-xs">{`:${emoji?.id}:`}</div>
       </div>
     </div>
   );
@@ -24,11 +28,11 @@ function EmojiPreview({ emoji }: EmojiPreviewProps) {
 
 function NoEmoji({ i18n }: NoEmojiPreviewProps) {
   return (
-    <div className="flex h-14 max-h-14 min-h-14 items-center border-t border-muted p-2">
+    <div className="flex h-20 items-center border-t border-muted p-2">
       <div className="flex items-center justify-center text-2xl">😢</div>
       <div className="overflow-hidden pl-2">
-        <div className="truncate text-sm font-bold">{i18n.searchNoResultsTitle}</div>
-        <div className="truncate text-sm">{i18n.searchNoResultsSubtitle}</div>
+        <div className="truncate text-sm font-semibold text-primary">{i18n.searchNoResultsTitle}</div>
+        <div className="truncate text-xs">{i18n.searchNoResultsSubtitle}</div>
       </div>
     </div>
   );
@@ -36,7 +40,7 @@ function NoEmoji({ i18n }: NoEmojiPreviewProps) {
 
 function PickAnEmoji({ i18n }: PickAnEmojiPreviewProps) {
   return (
-    <div className="flex h-14 max-h-14 min-h-14 items-center border-t border-muted p-2">
+    <div className="flex h-20 items-center border-t border-muted p-2">
       <div className="flex items-center justify-center text-2xl">☝️</div>
       <div className="overflow-hidden pl-2">
         <div className="truncate text-sm font-semibold">{i18n.pick}</div>
@@ -52,9 +56,9 @@ export function EmojiPickerPreview({
   isSearching = false,
   ...props
 }: EmojiPickerPreviewProps) {
-  const showPickEmoji = !emoji && (!isSearching || hasFound);
+  const showPickEmoji = !emoji && !(isSearching && !hasFound);
   const showNoEmoji = isSearching && !hasFound;
-  const showPreview = emoji && !showNoEmoji && !showNoEmoji;
+  const showPreview = emoji;
 
   return (
     <>

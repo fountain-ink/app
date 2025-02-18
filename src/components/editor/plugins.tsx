@@ -67,7 +67,8 @@ import { autoformatRules } from "./plugins/autoformat-rules";
 import { LeadingBlockPlugin } from "./plugins/leading-block-plugin";
 import { NormalizePlugin } from "./plugins/normalize-plugin";
 import { SubtitlePlugin, TITLE_KEYS, TitlePlugin } from "./plugins/title-plugin";
-import { KeyboardEvent } from "react";
+import emojiMartData, { type EmojiMartData } from '@emoji-mart/data';
+
 
 const resetBlockTypesCommonRule = {
   defaultType: ParagraphPlugin.key,
@@ -398,7 +399,7 @@ export const plugins = [
   //   render: { aboveEditable: BlockContextMenu },
   // }),
   DndPlugin.configure({ options: { enableScroller: true } }),
-  EmojiPlugin,
+  EmojiPlugin.configure({ options: { data: emojiMartData as EmojiMartData } }),
   ExitBreakPlugin.configure({
     options: {
       rules: [

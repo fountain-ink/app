@@ -241,7 +241,7 @@ const InlineComboboxInput = forwardRef<HTMLInputElement, HTMLAttributes<HTMLInpu
 InlineComboboxInput.displayName = "InlineComboboxInput";
 
 const comboboxVariants = cva(
-  "z-[500] mt-1 min-w-[180px] max-w-[calc(100vw-24px)] backdrop-blur-md bg-popover/80 border border-border/50 shadow-lg shadow-black/10 rounded-lg",
+  "z-[500] min-w-[180px] max-w-[calc(100vw-24px)] backdrop-blur-md bg-popover/80 border border-border/50 shadow-lg shadow-black/10 rounded-lg",
   {
     defaultVariants: {
       variant: "default",
@@ -393,7 +393,7 @@ const InlineComboboxEmpty = ({ children, className }: HTMLAttributes<HTMLDivElem
 const InlineComboboxRow = Ariakit.ComboboxRow;
 const InlineComboboxGroup = withCn(
   Ariakit.ComboboxGroup,
-  "hidden py-1.5 [&:has([role=option])]:block [&:not(:last-child)]:border-b",
+  "hidden py-1 [&:has([role=option])]:block [&:not(:last-child)]:border-b",
 );
 
 const InlineComboboxGroupLabel = withCn(

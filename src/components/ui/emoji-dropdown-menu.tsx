@@ -1,42 +1,30 @@
-"use client";
+'use client';
 
-import type React from "react";
 
-import { type EmojiDropdownMenuOptions, useEmojiDropdownMenuState } from "@udecode/plate-emoji/react";
-import { Smile } from "lucide-react";
+import { type ReactNode } from 'react';
 
-import { emojiCategoryIcons, emojiSearchIcons } from "./emoji-icons";
-import { EmojiPicker } from "./emoji-picker";
-import { EmojiToolbarDropdown } from "./emoji-toolbar-dropdown";
-import { ToolbarButton } from "./toolbar";
+import * as Popover from '@radix-ui/react-popover';
 
-type EmojiDropdownMenuProps = {
-  options?: EmojiDropdownMenuOptions;
-} & React.ComponentPropsWithoutRef<typeof ToolbarButton>;
+type EmojiToolbarDropdownProps = {
+  children: ReactNode;
+  control: ReactNode;
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
+};
 
-export function EmojiDropdownMenu({ options, ...props }: EmojiDropdownMenuProps) {
-  const { emojiPickerState, isOpen, setIsOpen } = useEmojiDropdownMenuState(options);
-
+export function EmojiToolbarDropdown({
+  children,
+  control,
+  isOpen,
+  setIsOpen,
+}: EmojiToolbarDropdownProps) {
   return (
-    <EmojiToolbarDropdown
-      control={
-        <ToolbarButton pressed={isOpen} tooltip="Emoji" isDropdown {...props}>
-          <Smile />
-        </ToolbarButton>
-      }
-      isOpen={isOpen}
-      setIsOpen={setIsOpen}
-    >
-      <EmojiPicker
-        {...emojiPickerState}
-        icons={{
-          categories: emojiCategoryIcons,
-          search: emojiSearchIcons,
-        }}
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        settings={options?.settings}
-      />
-    </EmojiToolbarDropdown>
+    <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
+      <Popover.Trigger asChild>{control}</Popover.Trigger>
+
+      <Popover.Portal>
+        <Popover.Content className="z-100">{children}</Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
   );
 }

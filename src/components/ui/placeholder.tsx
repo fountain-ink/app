@@ -24,7 +24,8 @@ export const Placeholder = (props: PlaceholderProps) => {
       nodeProps: {
         ...nodeProps,
         className: cn(
-          enabled && "before:absolute before:cursor-text before:opacity-30 before:content-[attr(placeholder)] before:left-0 before:right-0 before:text-inherit",
+          enabled &&
+            "before:absolute before:cursor-text before:opacity-30 before:content-[attr(placeholder)] before:left-0 before:right-0 before:text-inherit",
         ),
         placeholder,
       },
@@ -38,6 +39,17 @@ export const withPlaceholdersPrimitive = createNodesHOC(Placeholder);
 
 export const withPlaceholders = (components: any) =>
   withPlaceholdersPrimitive(components, [
+    // {
+    //   key: ParagraphPlugin.key,
+    //   hideOnBlur: true,
+    //   placeholder: "Tell your story...",
+    //   query: {
+    //     filter: (entry) => {
+    //       const [node, path] = entry;
+    //       return node.type === "paragraph" && path[0] === 0;
+    //     },
+    //   },
+    // },
     {
       key: ParagraphPlugin.key,
       hideOnBlur: true,

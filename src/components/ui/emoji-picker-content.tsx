@@ -1,11 +1,16 @@
-"use client";
-
 import { memo, useCallback } from "react";
 
 import type { UseEmojiPickerType } from "@udecode/plate-emoji/react";
 
 import { cn } from "@udecode/cn";
-import { type Emoji, type GridRow, EmojiSettings } from "@udecode/plate-emoji";
+import { type Emoji, EmojiSettings, type GridRow } from "@udecode/plate-emoji";
+
+export type EmojiButtonProps = {
+  emoji: Emoji;
+  index: number;
+  onMouseOver: (emoji?: Emoji) => void;
+  onSelect: (emoji: Emoji) => void;
+};
 
 export type EmojiPickerContentProps = Pick<
   UseEmojiPickerType,
@@ -20,13 +25,6 @@ export type EmojiPickerContentProps = Pick<
   | "visibleCategories"
 >;
 
-export type EmojiButtonProps = {
-  emoji: Emoji;
-  index: number;
-  onMouseOver: (emoji?: Emoji) => void;
-  onSelect: (emoji: Emoji) => void;
-};
-
 export type RowOfButtonsProps = {
   row: GridRow;
 } & Pick<UseEmojiPickerType, "emojiLibrary" | "onMouseOver" | "onSelectEmoji">;
@@ -38,14 +36,21 @@ const Button = memo(({ emoji, index, onMouseOver, onSelect }: EmojiButtonProps) 
       onClick={() => onSelect(emoji)}
       onMouseEnter={() => onMouseOver(emoji)}
       onMouseLeave={() => onMouseOver()}
-      aria-label={emoji?.skins?.[0]?.native}
+      aria-label={emoji.skins[0]?.native}
       data-index={index}
       tabIndex={-1}
       type="button"
     >
       <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100" aria-hidden="true" />
-      <span className="relative" data-emoji-set="native">
-        {emoji?.skins?.[0]?.native}
+      <span
+        className="relative"
+        style={{
+          fontFamily:
+            '"Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji, "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols',
+        }}
+        data-emoji-set="native"
+      >
+        {emoji.skins[0]?.native}
       </span>
     </button>
   );
@@ -96,8 +101,13 @@ export function EmojiPickerContent({
         const { buttonSize } = settings;
 
         return (
-          <div key={categoryId} ref={section.root as any} style={{ width: getRowWidth }} data-id={categoryId}>
-            <div className="sticky -top-px z-[1] bg-popover/90 p-1 py-2 text-sm font-semibold backdrop-blur-sm">
+          <div
+            key={categoryId}
+            ref={section.root as React.RefObject<HTMLDivElement>}
+            style={{ width: getRowWidth }}
+            data-id={categoryId}
+          >
+            <div className="sticky -top-px z-1 bg-popover/90 p-1 py-2 text-sm font-semibold backdrop-blur-xs">
               {i18n.categories[categoryId]}
             </div>
             <div className="relative flex flex-wrap" style={{ height: section.getRows().length * buttonSize.value }}>
@@ -122,7 +132,7 @@ export function EmojiPickerContent({
   const SearchList = useCallback(() => {
     return (
       <div style={{ width: getRowWidth }} data-id="search">
-        <div className="sticky -top-px z-[1] bg-popover/90 p-1 py-2 text-sm font-semibold text-card-foreground backdrop-blur-sm">
+        <div className="sticky -top-px z-1 bg-popover/90 p-1 py-2 text-sm font-semibold text-card-foreground backdrop-blur-xs">
           {i18n.searchResult}
         </div>
         <div className="relative flex flex-wrap">
@@ -142,17 +152,18 @@ export function EmojiPickerContent({
 
   return (
     <div
-      ref={refs.current.contentRoot as any}
+      ref={refs.current.contentRoot as React.RefObject<HTMLDivElement>}
       className={cn(
-        "h-full min-h-[50%] overflow-y-auto overflow-x-hidden px-2",
+        "h-full min-h-[50%] overflow-x-hidden overflow-y-auto px-2",
         "[&::-webkit-scrollbar]:w-4",
         "[&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-button]:size-0",
-        "[&::-webkit-scrollbar-thumb]:min-h-11 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted [&::-webkit-scrollbar-thumb]:hover:bg-muted-foreground/25",
-        "[&::-webkit-scrollbar-thumb]:border-4 [&::-webkit-scrollbar-thumb]:border-solid [&::-webkit-scrollbar-thumb]:border-popover [&::-webkit-scrollbar-thumb]:bg-clip-padding",
+        ":hover:[&::-webkit-scrollbar-thumb]:bg-[#f3f4f6]",
+        "[&::-webkit-scrollbar-thumb]:min-h-[65px] [&::-webkit-scrollbar-thumb]:rounded-2xl [&::-webkit-scrollbar-thumb]:border-4 [&::-webkit-scrollbar-thumb]:border-white",
+        "[&::-webkit-scrollbar-track]:border-0",
       )}
       data-id="scroll"
     >
-      <div ref={refs.current.content as any} className="h-full">
+      <div ref={refs.current.content as React.RefObject<HTMLDivElement>} className="h-full">
         {isSearching ? SearchList() : EmojiList()}
       </div>
     </div>
