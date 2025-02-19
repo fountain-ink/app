@@ -1,26 +1,25 @@
-'use client';
+"use client";
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
-import { nanoid } from '@udecode/plate';
-import { setMediaNode } from '@udecode/plate-media';
+import { nanoid } from "@udecode/plate";
+import { setMediaNode } from "@udecode/plate-media";
 import {
   AudioPlugin,
   FilePlugin,
   ImagePlugin,
   PlaceholderPlugin,
-  usePlaceholderPopoverState,
   VideoPlugin,
-} from '@udecode/plate-media/react';
-import { useEditorPlugin } from '@udecode/plate/react';
-import { useFilePicker } from 'use-file-picker';
+  usePlaceholderPopoverState,
+} from "@udecode/plate-media/react";
+import { useEditorPlugin } from "@udecode/plate/react";
+import { useFilePicker } from "use-file-picker";
 
-import { Button } from './button';
-import { Input } from './input';
-import { Popover, PopoverContent, PopoverTrigger } from './popover';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs';
-import { useUploadFile } from '@/hooks/use-upload-file';
-
+import { useUploadFile } from "@/hooks/use-upload-file";
+import { Button } from "./button";
+import { Input } from "./input";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
 
 const MEDIA_CONFIG: Record<
   string,
@@ -31,24 +30,24 @@ const MEDIA_CONFIG: Record<
   }
 > = {
   [AudioPlugin.key]: {
-    accept: ['audio/*'],
-    buttonText: 'Upload Audio',
-    embedText: 'Embed audio',
+    accept: ["audio/*"],
+    buttonText: "Upload Audio",
+    embedText: "Embed audio",
   },
   [FilePlugin.key]: {
-    accept: ['*'],
-    buttonText: 'Choose a file',
-    embedText: 'Embed file',
+    accept: ["*"],
+    buttonText: "Choose a file",
+    embedText: "Embed file",
   },
   [ImagePlugin.key]: {
-    accept: ['image/*'],
-    buttonText: 'Upload file',
-    embedText: 'Embed image',
+    accept: ["image/*"],
+    buttonText: "Upload file",
+    embedText: "Embed image",
   },
   [VideoPlugin.key]: {
-    accept: ['video/*'],
-    buttonText: 'Upload video',
-    embedText: 'Embed video',
+    accept: ["video/*"],
+    buttonText: "Upload video",
+    embedText: "Embed video",
   },
 };
 
@@ -59,41 +58,17 @@ export interface MediaPopoverProps {
 export const MediaPlaceholderPopover = ({ children }: MediaPopoverProps) => {
   const { api, editor, getOption, tf } = useEditorPlugin(PlaceholderPlugin);
 
-  const {
-    id,
-    element,
-    mediaType,
-    readOnly,
-    selected,
-    setIsUploading,
-    setProgresses,
-    setUpdatedFiles,
-    size,
-  } = usePlaceholderPopoverState();
+  const { id, element, mediaType, readOnly, selected, setIsUploading, setProgresses, setUpdatedFiles, size } =
+    usePlaceholderPopoverState();
   const [open, setOpen] = useState(false);
 
   const currentMedia = MEDIA_CONFIG[mediaType];
 
-  const multiple = getOption('multiple') ?? true;
+  const multiple = getOption("multiple") ?? true;
 
-  const { isUploading, progress, uploadedFile, uploadFile, uploadingFile } =
-    useUploadFile({
-      onUploadComplete() {
-        try {
-          // Potion-only
-          // createFile.mutate({
-          //   id: file.key,
-          //   appUrl: file.appUrl,
-          //   documentId: documentId,
-          //   size: file.size,
-          //   type: file.type,
-          //   url: file.url,
-          // });
-        } catch (error) {
-          console.error(error, 'error');
-        }
-      },
-    });
+  const { isUploading, uploadedFile, uploadFile, uploadingFile } = useUploadFile({
+    onUploadComplete() {},
+  });
 
   const replaceCurrentPlaceholder = useCallback(
     (file: File) => {
@@ -102,9 +77,8 @@ export const MediaPlaceholderPopover = ({ children }: MediaPopoverProps) => {
       api.placeholder.addUploadingFile(element.id as string, file);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [element.id]
+    [element.id],
   );
-
 
   const { openFilePicker } = useFilePicker({
     accept: currentMedia?.accept ?? [],
@@ -147,17 +121,17 @@ export const MediaPlaceholderPopover = ({ children }: MediaPopoverProps) => {
         initialHeight: size?.height,
         initialWidth: size?.width,
         isUpload: true,
-        name: mediaType === FilePlugin.key ? uploadedFile.name : '',
+        name: mediaType === FilePlugin.key ? uploadedFile.name : "",
         placeholderId: element.id as string,
         type: mediaType!,
         url: uploadedFile.url,
       },
-      { at: path }
+      { at: path },
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadedFile, element.id, size]);
 
-  const [embedValue, setEmbedValue] = useState('');
+  const [embedValue, setEmbedValue] = useState("");
 
   const onEmbed = useCallback(
     (value: string) => {
@@ -166,7 +140,7 @@ export const MediaPlaceholderPopover = ({ children }: MediaPopoverProps) => {
         url: value,
       });
     },
-    [editor, mediaType]
+    [editor, mediaType],
   );
 
   useEffect(() => {
@@ -180,10 +154,10 @@ export const MediaPlaceholderPopover = ({ children }: MediaPopoverProps) => {
   }, [isUploading]);
 
   useEffect(() => {
-    setProgresses({ [uploadingFile?.name ?? '']: progress });
+    setProgresses({ [uploadingFile?.name ?? ""]: 100 });
     setIsUploading(isUploading);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, progress, isUploading, uploadingFile]);
+  }, [id, isUploading, uploadingFile]);
 
   if (readOnly) return <>{children}</>;
 
@@ -191,11 +165,7 @@ export const MediaPlaceholderPopover = ({ children }: MediaPopoverProps) => {
     <Popover open={open} onOpenChange={setOpen} modal={false}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
 
-      <PopoverContent
-        variant="media"
-        className="flex flex-col"
-        onOpenAutoFocus={(e) => e.preventDefault()}
-      >
+      <PopoverContent variant="media" className="flex flex-col" onOpenAutoFocus={(e) => e.preventDefault()}>
         <Tabs className="w-full shrink-0" defaultValue="account">
           <TabsList className="px-2" onMouseDown={(e) => e.preventDefault()}>
             <TabsTrigger value="account">Upload</TabsTrigger>
@@ -205,26 +175,13 @@ export const MediaPlaceholderPopover = ({ children }: MediaPopoverProps) => {
             <Button variant="brand" className="w-full" onClick={openFilePicker}>
               {currentMedia?.buttonText}
             </Button>
-            <div className="mt-3 text-xs text-muted-foreground">
-              The maximum size per file is 5MB
-            </div>
+            <div className="mt-3 text-xs text-muted-foreground">The maximum size per file is 5MB</div>
           </TabsContent>
 
-          <TabsContent
-            className="w-[300px] px-3 pt-2 pb-3 text-center"
-            value="password"
-          >
-            <Input
-              value={embedValue}
-              onChange={(e) => setEmbedValue(e.target.value)}
-              placeholder="Paste the link..."
-            />
+          <TabsContent className="w-[300px] px-3 pt-2 pb-3 text-center" value="password">
+            <Input value={embedValue} onChange={(e) => setEmbedValue(e.target.value)} placeholder="Paste the link..." />
 
-            <Button
-              variant="brand"
-              className="mt-2 w-full max-w-[300px]"
-              onClick={() => onEmbed(embedValue)}
-            >
+            <Button variant="brand" className="mt-2 w-full max-w-[300px]" onClick={() => onEmbed(embedValue)}>
               {currentMedia?.embedText}
             </Button>
           </TabsContent>
