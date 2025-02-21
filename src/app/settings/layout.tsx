@@ -1,13 +1,14 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Brush, DollarSign, LayoutGrid, Mail, PenTool, Settings, User2, Users } from "lucide-react";
+import { Brush, DollarSign, LayoutGrid, Mail, PenTool, Settings, User2, Users, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navItems = [
   { id: "profile", label: "Profile", icon: User2, enabled: true },
   { id: "blog", label: "Blog", icon: PenTool, enabled: true },
+  { id: "blogs", label: "Blogs", icon: BookOpen, enabled: true },
   { id: "theme", label: "Theme", icon: Brush, enabled: true },
   { id: "app", label: "Application", icon: Settings, enabled: true },
   {
