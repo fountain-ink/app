@@ -13,6 +13,7 @@ import { evmAddress } from "@lens-protocol/client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EvmAddressDisplay } from "@/components/ui/metadata-display";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
+import Link from "next/link";
 
 interface PageInfo {
   prev: string | null;
@@ -103,9 +104,11 @@ export default function BlogsSettingsPage() {
                     {blog.metadata?.description || "No description"}
                   </p>
                 </div>
-                <Button variant="ghost" size="sm">
-                  Manage
-                </Button>
+                <Link href={`/blog/${blog.address}`}>
+                  <Button variant="ghost" size="sm">
+                    Manage
+                  </Button>
+                </Link>
               </div>
               <EvmAddressDisplay address={blog.address} />
               {/* {blog.feed && (

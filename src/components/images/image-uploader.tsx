@@ -208,14 +208,14 @@ export const ImageCropperUploader = ({
 };
 
 interface ImageUploaderProps {
-  label: string;
-  initialImage: string;
-  onImageChange: (newImage: File | null) => void;
+  label?: string;
+  onImageChange: (file: File | null) => void;
+  initialImage?: string | null;
   className?: string;
 }
 
-export const ImageUploader = ({ label, initialImage, onImageChange, className }: ImageUploaderProps) => {
-  const [image, setImage] = useState(initialImage);
+export function ImageUploader({ label, onImageChange, initialImage, className }: ImageUploaderProps) {
+  const [image, setImage] = useState(initialImage || "");
   const [localImage, setLocalImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -273,4 +273,4 @@ export const ImageUploader = ({ label, initialImage, onImageChange, className }:
       <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileSelection} className="hidden" />
     </span>
   );
-};
+}

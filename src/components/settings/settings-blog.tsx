@@ -6,23 +6,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { useMetadata } from "@/hooks/use-metadata";
 import { uploadFile } from "@/lib/upload/upload-file";
 import { useCallback, useEffect, useState } from "react";
 import { TextareaAutosize } from "../ui/textarea";
-import { UserMetadata } from "@/lib/settings/user-settings";
-
-interface BlogSettings {
-  title?: string;
-  about?: string;
-  showAuthor?: boolean;
-  showTags?: boolean;
-  showTitle?: boolean;
-  icon?: string;
-}
+import { BlogSettings as BlogSettingsType, BlogMetadata, useBlogSettings } from "@/hooks/use-blog-settings";
 
 interface BlogSettingsProps {
-  initialSettings?: UserMetadata;
+  blogAddress: string;
+  initialSettings: BlogSettingsType;
 }
 
 async function processImage(file: File): Promise<File> {
@@ -74,38 +65,72 @@ async function processImage(file: File): Promise<File> {
   });
 }
 
-export function BlogSettings({ initialSettings }: BlogSettingsProps) {
-  const { metadata, saveMetadata } = useMetadata(initialSettings);
-  const [blogTitle, setBlogTitle] = useState(metadata?.blog?.title || "");
-  const [blogAbout, setBlogAbout] = useState(metadata?.blog?.about || "");
-  const [showAuthor, setShowAuthor] = useState(metadata?.blog?.showAuthor ?? true);
-  const [showTags, setShowTags] = useState(metadata?.blog?.showTags ?? true);
-  const [showTitle, setShowTitle] = useState(metadata?.blog?.showTitle ?? true);
-  const [blogIcon, setBlogIcon] = useState<File | null>(null);
-  const [isIconDeleted, setIsIconDeleted] = useState(false);
-  const [validationError, setValidationError] = useState<string | null>(null);
-  const [isDirty, setIsDirty] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+interface FormState {
+  title: string;
+  about: string;
+  metadata: {
+    showAuthor: boolean;
+    showTags: boolean;
+    showTitle: boolean;
+  };
+  icon: string;
+  isDirty: boolean;
+  validationError: string | null;
+}
+
+interface ImageState {
+  file: File | null;
+  previewUrl: string | undefined;
+  isDeleted: boolean;
+}
+
+export function BlogSettings({ blogAddress, initialSettings }: BlogSettingsProps) {
+  const { settings, saveSettings } = useBlogSettings(blogAddress, initialSettings);
+  const [formState, setFormState] = useState<FormState>({
+    title: settings?.title || "",
+    about: settings?.about || "",
+    metadata: {
+      showAuthor: settings?.metadata?.showAuthor ?? true,
+      showTags: settings?.metadata?.showTags ?? true,
+      showTitle: settings?.metadata?.showTitle ?? true,
+    },
+    icon: settings?.icon || "",
+    isDirty: false,
+    validationError: null
+  });
+  const [imageState, setImageState] = useState<ImageState>({
+    file: null,
+    previewUrl: undefined,
+    isDeleted: false
+  });
 
   useEffect(() => {
-    setBlogTitle(metadata?.blog?.title || "");
-    setBlogAbout(metadata?.blog?.about || "");
-    setShowAuthor(metadata?.blog?.showAuthor ?? true);
-    setShowTags(metadata?.blog?.showTags ?? true);
-    setShowTitle(metadata?.blog?.showTitle ?? true);
-    setBlogIcon(null);
-    setPreviewUrl(null);
-    setIsIconDeleted(false);
-    setIsDirty(false);
-  }, [metadata]);
+    setFormState({
+      title: settings?.title || "",
+      about: settings?.about || "",
+      metadata: {
+        showAuthor: settings?.metadata?.showAuthor ?? true,
+        showTags: settings?.metadata?.showTags ?? true,
+        showTitle: settings?.metadata?.showTitle ?? true,
+      },
+      icon: settings?.icon || "",
+      isDirty: false,
+      validationError: null
+    });
+    setImageState({
+      file: null,
+      previewUrl: undefined,
+      isDeleted: false
+    });
+  }, [settings]);
 
   useEffect(() => {
-    if (blogIcon) {
-      const url = URL.createObjectURL(blogIcon);
-      setPreviewUrl(url);
+    if (imageState.file) {
+      const url = URL.createObjectURL(imageState.file);
+      setImageState(prev => ({ ...prev, previewUrl: url }));
       return () => URL.revokeObjectURL(url);
     }
-  }, [blogIcon]);
+  }, [imageState.file]);
 
   const validateBlogTitle = useCallback((title: string) => {
     if (title.trim().length === 0) {
@@ -118,85 +143,76 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
   }, []);
 
   const handleSave = async () => {
-    if (showTitle) {
-      const titleError = validateBlogTitle(blogTitle);
+    if (formState.metadata.showTitle) {
+      const titleError = validateBlogTitle(formState.title);
       if (titleError) {
-        setValidationError(titleError);
+        setFormState(prev => ({ ...prev, validationError: titleError }));
         return;
       }
     }
 
-    let iconUrl = metadata?.blog?.icon;
-    if (blogIcon) {
+    let iconUrl = settings?.icon;
+    if (imageState.file) {
       try {
-        iconUrl = await uploadFile(blogIcon);
+        iconUrl = await uploadFile(imageState.file);
       } catch (error) {
         console.error("Failed to upload blog icon:", error);
         return;
       }
     }
 
-    const newMetadata = {
-      ...metadata,
-      blog: {
-        title: blogTitle.trim(),
-        about: blogAbout,
-        showTags,
-        showTitle,
-        showAuthor,
-        icon: iconUrl,
-      },
-    };
+    const success = await saveSettings({
+      title: formState.title.trim(),
+      about: formState.about,
+      metadata: formState.metadata,
+      icon: imageState.isDeleted ? null : iconUrl,
+    });
 
-    setValidationError(null);
-    const success = await saveMetadata(newMetadata);
     if (success) {
-      setIsDirty(false);
+      setFormState(prev => ({ ...prev, isDirty: false, validationError: null }));
     }
   };
 
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTitle = e.target.value;
-    setBlogTitle(newTitle);
-    setValidationError(null);
-    setIsDirty(true);
+  const handleMetadataChange = (field: keyof BlogMetadata, value: boolean) => {
+    setFormState(prev => ({
+      ...prev,
+      metadata: {
+        ...prev.metadata,
+        [field]: value
+      },
+      isDirty: true,
+    }));
   };
 
-  const handleAboutChange = (value: string) => {
-    setBlogAbout(value);
-    setIsDirty(true);
-  };
-
-  const handleShowTitleChange = (checked: boolean) => {
-    setShowTitle(checked);
-    setIsDirty(true);
-  };
-
-  const handleShowAuthorChange = (checked: boolean) => {
-    setShowAuthor(checked);
-    setIsDirty(true);
-  };
-
-  const handleShowTagsChange = (checked: boolean) => {
-    setShowTags(checked);
-    setIsDirty(true);
+  const handleChange = (field: 'title' | 'about', value: string) => {
+    setFormState(prev => ({
+      ...prev,
+      [field]: value,
+      isDirty: true,
+      validationError: field === 'title' ? null : prev.validationError
+    }));
   };
 
   const handleIconChange = async (file: File | null) => {
     if (file) {
       try {
         const processedFile = await processImage(file);
-        setBlogIcon(processedFile);
-        setIsIconDeleted(false);
-        setIsDirty(true);
+        setImageState({
+          file: processedFile,
+          previewUrl: undefined,
+          isDeleted: false
+        });
+        setFormState(prev => ({ ...prev, isDirty: true }));
       } catch (error) {
         console.error("Failed to process image:", error);
       }
     } else {
-      setBlogIcon(null);
-      setPreviewUrl(null);
-      setIsIconDeleted(true);
-      setIsDirty(true);
+      setImageState({
+        file: null,
+        previewUrl: undefined,
+        isDeleted: true
+      });
+      setFormState(prev => ({ ...prev, isDirty: true }));
     }
   };
 
@@ -218,7 +234,7 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
                 <div className="w-32">
                   <ImageUploader
                     label="Icon"
-                    initialImage={metadata?.blog?.icon || ""}
+                    initialImage={settings?.icon || ""}
                     onImageChange={handleIconChange}
                     className="!h-32"
                   />
@@ -229,9 +245,9 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
               <div className="flex items-start gap-4">
                 <div className="space-y-1.5">
                   <div className="relative w-[64px] h-[64px] rounded-md overflow-hidden ring-2 ring-background">
-                    {!isIconDeleted && (previewUrl || metadata?.blog?.icon) ? (
+                    {!imageState.isDeleted && (imageState.previewUrl || settings?.icon) ? (
                       <img
-                        src={previewUrl || metadata?.blog?.icon}
+                        src={imageState.previewUrl || settings?.icon || ""}
                         alt="Small preview"
                         className="w-full h-full object-cover"
                       />
@@ -244,9 +260,9 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
 
                 <div className="space-y-1.5">
                   <div className="relative w-[32px] h-[32px] rounded-sm overflow-hidden ring-2 ring-background">
-                    {!isIconDeleted && (previewUrl || metadata?.blog?.icon) ? (
+                    {!imageState.isDeleted && (imageState.previewUrl || settings?.icon) ? (
                       <img
-                        src={previewUrl || metadata?.blog?.icon}
+                        src={imageState.previewUrl || settings?.icon || ""}
                         alt="Medium preview"
                         className="w-full h-full object-cover"
                       />
@@ -259,8 +275,12 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
 
                 <div className="space-y-1.5">
                   <div className="relative w-[16px] h-[16px] rounded-none overflow-hidden ring-2 ring-background">
-                    {!isIconDeleted && (previewUrl || metadata?.blog?.icon) ? (
-                      <img src={previewUrl || metadata?.blog?.icon} className="w-full h-full object-cover" />
+                    {!imageState.isDeleted && (imageState.previewUrl || settings?.icon) ? (
+                      <img 
+                        src={imageState.previewUrl || settings?.icon || ""} 
+                        className="w-full h-full object-cover"
+                        alt="Small preview"
+                      />
                     ) : (
                       <div className="placeholder-background" />
                     )}
@@ -276,24 +296,26 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
           <Label htmlFor="blog-title">Blog Title</Label>
           <Input
             id="blog-title"
-            value={blogTitle}
-            onChange={handleTitleChange}
+            value={formState.title}
+            onChange={(e) => handleChange('title', e.target.value)}
             placeholder="Enter your blog title"
-            aria-invalid={validationError ? "true" : "false"}
-            disabled={!showTitle}
-            className={!showTitle ? "opacity-50" : ""}
+            aria-invalid={formState.validationError ? "true" : "false"}
+            // disabled={!formState.metadata.showTitle}
+            className={!formState.metadata.showTitle ? "opacity-50" : ""}
           />
-          {validationError && <p className="text-sm text-destructive mt-2">{validationError}</p>}
+          {formState.validationError && (
+            <p className="text-sm text-destructive mt-2">{formState.validationError}</p>
+          )}
         </div>
 
         <div className="flex flex-col gap-2 relative">
           <Label htmlFor="blog-about">Blog About</Label>
           <TextareaAutosize
             id="blog-about"
-            value={blogAbout}
+            value={formState.about}
             variant="default"
             className="p-2"
-            onChange={(e) => handleAboutChange(e.target.value)}
+            onChange={(e) => handleChange('about', e.target.value)}
             placeholder="Write a description about your blog"
           />
         </div>
@@ -306,7 +328,11 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
               <Label htmlFor="show-title">Show Title</Label>
               <p className="text-sm text-muted-foreground">Display the blog title at the top of your page</p>
             </div>
-            <Switch id="show-title" checked={showTitle} onCheckedChange={handleShowTitleChange} />
+            <Switch 
+              id="show-title" 
+              checked={formState.metadata.showTitle}
+              onCheckedChange={(checked) => handleMetadataChange('showTitle', checked)}
+            />
           </div>
 
           <div className="flex items-center justify-between space-y-2">
@@ -314,7 +340,11 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
               <Label htmlFor="show-author">Show Author</Label>
               <p className="text-sm text-muted-foreground">Display your name above the blog title</p>
             </div>
-            <Switch id="show-author" checked={showAuthor} onCheckedChange={handleShowAuthorChange} />
+            <Switch 
+              id="show-author" 
+              checked={formState.metadata.showAuthor}
+              onCheckedChange={(checked) => handleMetadataChange('showAuthor', checked)}
+            />
           </div>
 
           <div className="flex items-center justify-between space-y-2">
@@ -322,12 +352,19 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
               <Label htmlFor="show-tags">Show Tags</Label>
               <p className="text-sm text-muted-foreground">Display article tags below the blog title</p>
             </div>
-            <Switch id="show-tags" checked={showTags} onCheckedChange={handleShowTagsChange} />
+            <Switch 
+              id="show-tags" 
+              checked={formState.metadata.showTags}
+              onCheckedChange={(checked) => handleMetadataChange('showTags', checked)}
+            />
           </div>
         </div>
 
         <div className="flex justify-start pt-4">
-          <Button onClick={handleSave} disabled={!isDirty || !!validationError}>
+          <Button 
+            onClick={handleSave} 
+            disabled={!formState.isDirty || !!formState.validationError}
+          >
             Save Settings
           </Button>
         </div>
