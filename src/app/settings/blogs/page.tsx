@@ -107,9 +107,10 @@ export default function BlogsSettingsPage() {
                   Manage
                 </Button>
               </div>
-              {blog.metadata && (
-                <EvmAddressDisplay address={blog.address} />
-              )}
+              <EvmAddressDisplay address={blog.address} />
+              {/* {blog.feed && (
+                <EvmAddressDisplay address={blog.feed} />
+              )} */}
             </div>
           </div>
         ))}

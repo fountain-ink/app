@@ -24,7 +24,7 @@
     "@hookform/resolvers": "^3.10.0",
     "@irys/arweave": "^0.0.3",
     "@lens-network/sdk": "^0.0.0-canary-20241203140504",
-    "@lens-protocol/client": "^0.0.0-canary-20250218142239",
+    "@lens-protocol/client": "^0.0.0-canary-20250221122245",
     "@lens-protocol/metadata": "^2.0.0-next.6",
     "@lens-protocol/react": "^0.0.0-canary-20250218142239",
     "@lens-protocol/shared-kernel": "^0.12.0",

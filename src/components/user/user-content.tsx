@@ -15,7 +15,7 @@ export const UserContent = ({
   isUserProfile = false,
 }: {
   posts: AnyPost[];
-  profile: Account;
+  profile: Account | null;
   loading?: boolean;
   contentType?: string;
   isUserProfile?: boolean;
