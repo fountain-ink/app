@@ -11,6 +11,7 @@ import { Group } from "@lens-protocol/client";
 import { useAccount } from "wagmi";
 import { evmAddress } from "@lens-protocol/client";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EvmAddressDisplay } from "@/components/ui/metadata-display";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 
 interface PageInfo {
@@ -94,16 +95,21 @@ export default function BlogsSettingsPage() {
             key={blog.address}
             className="p-4 rounded-lg border border-border hover:bg-accent transition-colors"
           >
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-medium">{blog.metadata?.name || "Untitled Blog"}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {blog.metadata?.description || "No description"}
-                </p>
+            <div className="flex flex-col space-y-2">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-medium">{blog.metadata?.name || "Untitled Blog"}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {blog.metadata?.description || "No description"}
+                  </p>
+                </div>
+                <Button variant="ghost" size="sm">
+                  Manage
+                </Button>
               </div>
-              <Button variant="ghost" size="sm">
-                Manage
-              </Button>
+              {blog.metadata && (
+                <EvmAddressDisplay address={blog.address} />
+              )}
             </div>
           </div>
         ))}
