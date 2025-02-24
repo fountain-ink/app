@@ -9,40 +9,19 @@ import { notFound } from "next/navigation";
 import { getUserMetadata } from "@/lib/settings/get-user-metadata";
 import { MainContentFocus } from "@lens-protocol/client";
 
-const isUsername = (identifier: string) => identifier.startsWith('@') || identifier.startsWith('%40');
-const isEvmAddress = (identifier: string) => /^0x[a-fA-F0-9]{40}$/.test(identifier);
-
-const BlogPage = async ({ params }: { params: { user: string } }) => {
+const UserBlogPage = async ({ params }: { params: { user: string } }) => {
   const lens = await getLensClient();
   const { username } = await getUserProfile();
-  
-  let profile = null;
-  let feedAddress = null;
-  
-  if (isUsername(params.user)) {
-    console.log("isUsername", params.user);
-    const localName = params.user.substring(1);
-    profile = await fetchAccount(lens, { username: { localName } }).unwrapOr(null);
-  } else if (isEvmAddress(params.user)) {
-    console.log("isEvmAddress", params.user);
-    feedAddress = params.user;
-  } else {
-    console.log("isSearchQuery", params.user);
-    const feed = await fetchFeeds(lens, { filter: { searchQuery: params.user } }).unwrapOr(null);
-    if (!feed) {
-      return notFound();
-    }
-    feedAddress = feed.items[0]?.address;
-  }
+  const localName = params.user
+  const profile = await fetchAccount(lens, { username: { localName } }).unwrapOr(null);
 
   const posts = await fetchPosts(lens, {
     filter: {
-      feeds: feedAddress ? [feedAddress]: undefined,
       authors: profile ? [profile.address] : undefined,
       metadata: { mainContentFocus: [MainContentFocus.Article] },
     },
   }).unwrapOr(null);
-  
+
   const tags = await fetchPostTags(lens, {
     filter: {
       feeds: []
@@ -87,4 +66,4 @@ const BlogPage = async ({ params }: { params: { user: string } }) => {
   );
 };
 
-export default BlogPage;
+export default UserBlogPage;

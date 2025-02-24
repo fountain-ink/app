@@ -429,10 +429,10 @@ export function BlogSettings({ blogAddress, initialSettings, isUserBlog = false,
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="blog-handle">Blog Handle</Label>
+        <div className="">
+          <Label htmlFor="blog-handle">Blog Slug</Label>
           <p className="text-sm text-muted-foreground mb-2">
-            Blog's URL path (e.g., {isUserBlog ? "/" : "/b/"}{formState.handle || "your-handle"})
+            Seen in the URL (e.g., {isUserBlog ? "/" : "/b/"}{formState.handle || "your-handle"})
           </p>
           <Input
             id="blog-handle"
