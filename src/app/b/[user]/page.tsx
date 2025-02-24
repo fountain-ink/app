@@ -4,35 +4,35 @@ import { AuthorView } from "@/components/user/user-author-view";
 import { UserContent } from "@/components/user/user-content";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
-import { fetchAccount, fetchPosts, fetchPostTags } from "@lens-protocol/client/actions";
+import { fetchAccount, fetchPosts, fetchPostTags, fetchFeed, fetchFeeds } from '@lens-protocol/client/actions';
 import { notFound } from "next/navigation";
 import { getUserMetadata } from "@/lib/settings/get-user-metadata";
 import { MainContentFocus } from "@lens-protocol/client";
 
-const UserPage = async ({ params }: { params: { user: string } }) => {
+const UserBlogPage = async ({ params }: { params: { user: string } }) => {
   const lens = await getLensClient();
   const { username } = await getUserProfile();
-  const profile = await fetchAccount(lens, { username: { localName: params.user } }).unwrapOr(null);
+  const localName = params.user
+  const profile = await fetchAccount(lens, { username: { localName } }).unwrapOr(null);
 
   const posts = await fetchPosts(lens, {
     filter: {
-      // apps: [appEvmAddress],
-      authors: [profile?.address],
+      authors: profile ? [profile.address] : undefined,
       metadata: { mainContentFocus: [MainContentFocus.Article] },
     },
   }).unwrapOr(null);
-  
+
   const tags = await fetchPostTags(lens, {
     filter: {
       feeds: []
     }
   }).unwrapOr(null);
 
-  if (!profile || !posts) {
+  if (!posts) {
     return notFound();
   }
 
-  const metadata = await getUserMetadata(profile.address);
+  const metadata = await getUserMetadata(profile?.address);
   const showAuthor = metadata?.blog?.showAuthor ?? true;
   const showTags = metadata?.blog?.showTags ?? true;
   const showTitle = metadata?.blog?.showTitle ?? true;
@@ -44,7 +44,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
     <>
       {showAuthor && (
         <div className="p-4 ">
-          <AuthorView showUsername={false} accounts={[profile]} />
+          <AuthorView showUsername={false} accounts={profile ? [profile] : []} />
         </div>
       )}
 
@@ -53,7 +53,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
           data-blog-title
           className="text-[1.5rem] sm:text-[2rem] lg:text-[2.5rem] text-center font-[letter-spacing:var(--title-letter-spacing)] font-[family-name:var(--title-font)] font-normal font-[color:var(--title-color)] overflow-hidden line-clamp-2"
         >
-          {blogTitle ?? `${profile.username?.localName}'s blog`}
+          {blogTitle ?? `${profile?.username?.localName}'s blog`}
         </div>
       )}
 
@@ -66,4 +66,4 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
   );
 };
 
-export default UserPage;
+export default UserBlogPage;

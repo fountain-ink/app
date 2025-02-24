@@ -22,7 +22,7 @@ export function EvmAddressDisplay({ address }: EvmAddressDisplayProps) {
   };
 
   return (
-    <div className="flex text-xs text-muted-foreground  items-center space-x-2">
+    <div className="flex pt-1 text-xs text-muted-foreground  items-center gap-2">
       <code className="font-mono">{truncateUri(address)}</code>
       <Button variant="ghost" className="p-0 w-4 h-4" onClick={handleCopy}>
         <Copy className="w-3 h-3" />

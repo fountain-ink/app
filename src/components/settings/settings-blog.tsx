@@ -6,23 +6,25 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { useMetadata } from "@/hooks/use-metadata";
 import { uploadFile } from "@/lib/upload/upload-file";
 import { useCallback, useEffect, useState } from "react";
 import { TextareaAutosize } from "../ui/textarea";
-import { UserMetadata } from "@/lib/settings/user-settings";
-
-interface BlogSettings {
-  title?: string;
-  about?: string;
-  showAuthor?: boolean;
-  showTags?: boolean;
-  showTitle?: boolean;
-  icon?: string;
-}
+import { BlogSettings as BlogSettingsType, BlogMetadata, useBlogSettings } from "@/hooks/use-blog-settings";
+import { useWalletClient } from "wagmi";
+import { toast } from "sonner";
+import { group } from "@lens-protocol/metadata";
+import { getLensClient } from "@/lib/lens/client";
+import { fetchGroup, setGroupMetadata } from "@lens-protocol/client/actions";
+import { handleOperationWith } from "@lens-protocol/client/viem";
+import { uri } from "@lens-protocol/client";
+import { storageClient } from "@/lib/lens/storage-client";
+import { clientCookieStorage } from "@/lib/lens/storage";
 
 interface BlogSettingsProps {
-  initialSettings?: UserMetadata;
+  blogAddress: string;
+  initialSettings: BlogSettingsType;
+  isUserBlog?: boolean;
+  userHandle?: string;
 }
 
 async function processImage(file: File): Promise<File> {
@@ -74,38 +76,85 @@ async function processImage(file: File): Promise<File> {
   });
 }
 
-export function BlogSettings({ initialSettings }: BlogSettingsProps) {
-  const { metadata, saveMetadata } = useMetadata(initialSettings);
-  const [blogTitle, setBlogTitle] = useState(metadata?.blog?.title || "");
-  const [blogAbout, setBlogAbout] = useState(metadata?.blog?.about || "");
-  const [showAuthor, setShowAuthor] = useState(metadata?.blog?.showAuthor ?? true);
-  const [showTags, setShowTags] = useState(metadata?.blog?.showTags ?? true);
-  const [showTitle, setShowTitle] = useState(metadata?.blog?.showTitle ?? true);
-  const [blogIcon, setBlogIcon] = useState<File | null>(null);
-  const [isIconDeleted, setIsIconDeleted] = useState(false);
-  const [validationError, setValidationError] = useState<string | null>(null);
-  const [isDirty, setIsDirty] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+interface FormState {
+  title: string;
+  about: string;
+  handle: string;
+  metadata: {
+    showAuthor: boolean;
+    showTags: boolean;
+    showTitle: boolean;
+  };
+  icon: string;
+  isDirty: boolean;
+  errors: {
+    title: string | null;
+    handle: string | null;
+  };
+}
+
+interface ImageState {
+  file: File | null;
+  previewUrl: string | undefined;
+  isDeleted: boolean;
+}
+
+export function BlogSettings({ blogAddress, initialSettings, isUserBlog = false, userHandle }: BlogSettingsProps) {
+  const { settings, saveSettings } = useBlogSettings(blogAddress, initialSettings);
+  const { data: walletClient } = useWalletClient();
+  const [formState, setFormState] = useState<FormState>({
+    title: settings?.title || "",
+    about: settings?.about || "",
+    handle: isUserBlog ? (userHandle || "") : (settings?.handle || ""),
+    metadata: {
+      showAuthor: settings?.metadata?.showAuthor ?? true,
+      showTags: settings?.metadata?.showTags ?? true,
+      showTitle: settings?.metadata?.showTitle ?? true,
+    },
+    icon: settings?.icon || "",
+    isDirty: false,
+    errors: {
+      title: null,
+      handle: null
+    }
+  });
+  const [imageState, setImageState] = useState<ImageState>({
+    file: null,
+    previewUrl: undefined,
+    isDeleted: false
+  });
 
   useEffect(() => {
-    setBlogTitle(metadata?.blog?.title || "");
-    setBlogAbout(metadata?.blog?.about || "");
-    setShowAuthor(metadata?.blog?.showAuthor ?? true);
-    setShowTags(metadata?.blog?.showTags ?? true);
-    setShowTitle(metadata?.blog?.showTitle ?? true);
-    setBlogIcon(null);
-    setPreviewUrl(null);
-    setIsIconDeleted(false);
-    setIsDirty(false);
-  }, [metadata]);
+    setFormState({
+      title: settings?.title || "",
+      about: settings?.about || "",
+      handle: isUserBlog ? (userHandle || "") : (settings?.handle || ""),
+      metadata: {
+        showAuthor: settings?.metadata?.showAuthor ?? true,
+        showTags: settings?.metadata?.showTags ?? true,
+        showTitle: settings?.metadata?.showTitle ?? true,
+      },
+      icon: settings?.icon || "",
+      isDirty: false,
+      errors: {
+        title: null,
+        handle: null
+      }
+    });
+    setImageState({
+      file: null,
+      previewUrl: undefined,
+      isDeleted: false
+    });
+  }, [settings, isUserBlog, userHandle]);
 
   useEffect(() => {
-    if (blogIcon) {
-      const url = URL.createObjectURL(blogIcon);
-      setPreviewUrl(url);
+    if (imageState.file) {
+      const url = URL.createObjectURL(imageState.file);
+      setImageState(prev => ({ ...prev, previewUrl: url }));
       return () => URL.revokeObjectURL(url);
     }
-  }, [blogIcon]);
+  }, [imageState.file]);
 
   const validateBlogTitle = useCallback((title: string) => {
     if (title.trim().length === 0) {
@@ -117,86 +166,164 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
     return null;
   }, []);
 
+  const validateHandle = useCallback((handle: string) => {
+    if (handle.trim().length === 0) {
+      return "Handle cannot be empty";
+    }
+    if (!/^[a-z0-9-]+$/.test(handle)) {
+      return "Handle can only contain lowercase letters, numbers, and hyphens";
+    }
+    if (handle.length > 50) {
+      return "Handle must be less than 50 characters";
+    }
+    return null;
+  }, []);
+
   const handleSave = async () => {
-    if (showTitle) {
-      const titleError = validateBlogTitle(blogTitle);
-      if (titleError) {
-        setValidationError(titleError);
-        return;
+    // Validate all fields before saving
+    const titleError = formState.metadata.showTitle ? validateBlogTitle(formState.title) : null;
+    const handleError = validateHandle(formState.handle);
+
+    setFormState(prev => ({
+      ...prev,
+      errors: {
+        title: titleError,
+        handle: handleError
       }
+    }));
+
+    if (titleError || handleError) {
+      return;
     }
 
-    let iconUrl = metadata?.blog?.icon;
-    if (blogIcon) {
+    let iconUrl = settings?.icon;
+    if (imageState.file) {
       try {
-        iconUrl = await uploadFile(blogIcon);
+        iconUrl = await uploadFile(imageState.file);
       } catch (error) {
         console.error("Failed to upload blog icon:", error);
         return;
       }
     }
 
-    const newMetadata = {
-      ...metadata,
-      blog: {
-        title: blogTitle.trim(),
-        about: blogAbout,
-        showTags,
-        showTitle,
-        showAuthor,
-        icon: iconUrl,
-      },
-    };
+    // Save to database
+    const success = await saveSettings({
+      title: formState.title.trim(),
+      about: formState.about,
+      handle: formState.handle.trim(),
+      metadata: formState.metadata,
+      icon: imageState.isDeleted ? null : iconUrl,
+    });
 
-    setValidationError(null);
-    const success = await saveMetadata(newMetadata);
+    // If this is a group, also save metadata on-chain
+  //   if (isGroup && success) {
+  //     try {
+  //       const sessionClient = await getLensClient();
+  //       if (!sessionClient.isSessionClient()) {
+  //         toast.error("Please login to update group settings");
+  //         return;
+  //       }
+
+  //       if (!walletClient) {
+  //         toast.error("Please connect your wallet");
+  //         return;
+  //       }
+
+  //       const currentGroup = await fetchGroup(sessionClient, { group: blogAddress })
+  //       if (currentGroup.isErr()) {
+  //         toast.error("Failed to fetch existing group metadata");
+  //         return;
+  //       }
+
+  //       const groupMetadata = group({
+  //         name: currentGroup?.value?.metadata?.name || "", 
+  //         icon: iconUrl || currentGroup?.value?.metadata?.icon || undefined,
+  //         coverPicture: currentGroup?.value?.metadata?.coverPicture || undefined,
+  //         description: formState.about,
+  //       });
+  //       console.log(currentGroup, groupMetadata)
+
+  //       const { uri: metadataUri } = await storageClient.uploadAsJson(groupMetadata);
+  //       console.log("Group metadata uploaded:", metadataUri);
+
+  //       const result = await setGroupMetadata(sessionClient, {
+  //         group: blogAddress,
+  //         metadataUri: uri(metadataUri),
+  //       }).andThen(handleOperationWith(walletClient as any));
+
+  //       if (result.isErr()) {
+  //         console.error("Failed to update group metadata:", result.error);
+  //         toast.error(`Error updating group metadata: ${result.error.message}`);
+  //         return;
+  //       }
+
+  //       toast.success("Group metadata updated on-chain!");
+  //     } catch (error) {
+  //       console.error("Failed to update group metadata:", error);
+  //       toast.error("Failed to update group metadata on-chain");
+  //       return;
+  //     }
+
     if (success) {
-      setIsDirty(false);
+      setFormState(prev => ({ ...prev, isDirty: false, errors: { title: null, handle: null } }));
     }
   };
 
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTitle = e.target.value;
-    setBlogTitle(newTitle);
-    setValidationError(null);
-    setIsDirty(true);
+  const handleMetadataChange = (field: keyof BlogMetadata, value: boolean) => {
+    setFormState(prev => ({
+      ...prev,
+      metadata: {
+        ...prev.metadata,
+        [field]: value
+      },
+      isDirty: true,
+    }));
   };
 
-  const handleAboutChange = (value: string) => {
-    setBlogAbout(value);
-    setIsDirty(true);
-  };
+  const handleChange = (field: 'title' | 'about' | 'handle', value: string) => {
+    // Don't allow handle changes for user blogs
+    if (field === 'handle' && isUserBlog) return;
 
-  const handleShowTitleChange = (checked: boolean) => {
-    setShowTitle(checked);
-    setIsDirty(true);
-  };
+    let fieldError: string | null = null;
 
-  const handleShowAuthorChange = (checked: boolean) => {
-    setShowAuthor(checked);
-    setIsDirty(true);
-  };
+    // Validate the field as it changes
+    if (field === 'title' && formState.metadata.showTitle) {
+      fieldError = validateBlogTitle(value);
+    } else if (field === 'handle') {
+      fieldError = validateHandle(value);
+    }
 
-  const handleShowTagsChange = (checked: boolean) => {
-    setShowTags(checked);
-    setIsDirty(true);
+    setFormState(prev => ({
+      ...prev,
+      [field]: value,
+      isDirty: true,
+      errors: {
+        ...prev.errors,
+        [field]: fieldError
+      }
+    }));
   };
 
   const handleIconChange = async (file: File | null) => {
     if (file) {
       try {
         const processedFile = await processImage(file);
-        setBlogIcon(processedFile);
-        setIsIconDeleted(false);
-        setIsDirty(true);
+        setImageState({
+          file: processedFile,
+          previewUrl: undefined,
+          isDeleted: false
+        });
+        setFormState(prev => ({ ...prev, isDirty: true }));
       } catch (error) {
         console.error("Failed to process image:", error);
       }
     } else {
-      setBlogIcon(null);
-      setPreviewUrl(null);
-      setIsIconDeleted(true);
-      setIsDirty(true);
+      setImageState({
+        file: null,
+        previewUrl: undefined,
+        isDeleted: true
+      });
+      setFormState(prev => ({ ...prev, isDirty: true }));
     }
   };
 
@@ -218,7 +345,7 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
                 <div className="w-32">
                   <ImageUploader
                     label="Icon"
-                    initialImage={metadata?.blog?.icon || ""}
+                    initialImage={settings?.icon || ""}
                     onImageChange={handleIconChange}
                     className="!h-32"
                   />
@@ -229,9 +356,9 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
               <div className="flex items-start gap-4">
                 <div className="space-y-1.5">
                   <div className="relative w-[64px] h-[64px] rounded-md overflow-hidden ring-2 ring-background">
-                    {!isIconDeleted && (previewUrl || metadata?.blog?.icon) ? (
+                    {!imageState.isDeleted && (imageState.previewUrl || settings?.icon) ? (
                       <img
-                        src={previewUrl || metadata?.blog?.icon}
+                        src={imageState.previewUrl || settings?.icon || ""}
                         alt="Small preview"
                         className="w-full h-full object-cover"
                       />
@@ -244,9 +371,9 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
 
                 <div className="space-y-1.5">
                   <div className="relative w-[32px] h-[32px] rounded-sm overflow-hidden ring-2 ring-background">
-                    {!isIconDeleted && (previewUrl || metadata?.blog?.icon) ? (
+                    {!imageState.isDeleted && (imageState.previewUrl || settings?.icon) ? (
                       <img
-                        src={previewUrl || metadata?.blog?.icon}
+                        src={imageState.previewUrl || settings?.icon || ""}
                         alt="Medium preview"
                         className="w-full h-full object-cover"
                       />
@@ -259,8 +386,12 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
 
                 <div className="space-y-1.5">
                   <div className="relative w-[16px] h-[16px] rounded-none overflow-hidden ring-2 ring-background">
-                    {!isIconDeleted && (previewUrl || metadata?.blog?.icon) ? (
-                      <img src={previewUrl || metadata?.blog?.icon} className="w-full h-full object-cover" />
+                    {!imageState.isDeleted && (imageState.previewUrl || settings?.icon) ? (
+                      <img
+                        src={imageState.previewUrl || settings?.icon || ""}
+                        className="w-full h-full object-cover"
+                        alt="Small preview"
+                      />
                     ) : (
                       <div className="placeholder-background" />
                     )}
@@ -276,58 +407,91 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
           <Label htmlFor="blog-title">Blog Title</Label>
           <Input
             id="blog-title"
-            value={blogTitle}
-            onChange={handleTitleChange}
+            value={formState.title}
+            onChange={(e) => handleChange('title', e.target.value)}
             placeholder="Enter your blog title"
-            aria-invalid={validationError ? "true" : "false"}
-            disabled={!showTitle}
-            className={!showTitle ? "opacity-50" : ""}
+            className={!formState.metadata.showTitle ? "opacity-50" : ""}
           />
-          {validationError && <p className="text-sm text-destructive mt-2">{validationError}</p>}
+          {formState.errors.title && (
+            <p className="text-sm text-destructive mt-2">{formState.errors.title}</p>
+          )}
         </div>
 
         <div className="flex flex-col gap-2 relative">
           <Label htmlFor="blog-about">Blog About</Label>
           <TextareaAutosize
             id="blog-about"
-            value={blogAbout}
+            value={formState.about}
             variant="default"
             className="p-2"
-            onChange={(e) => handleAboutChange(e.target.value)}
+            onChange={(e) => handleChange('about', e.target.value)}
             placeholder="Write a description about your blog"
           />
+        </div>
+
+        <div className="">
+          <Label htmlFor="blog-handle">Blog Slug</Label>
+          <p className="text-sm text-muted-foreground mb-2">
+            Seen in the URL (e.g., {isUserBlog ? "/b/" : "/blog/"}{formState.handle || "your-handle"})
+          </p>
+          <Input
+            id="blog-handle"
+            value={formState.handle}
+            onChange={(e) => handleChange('handle', e.target.value.toLowerCase())}
+            placeholder="your-blog-handle"
+            disabled={isUserBlog}
+            className={isUserBlog ? "opacity-50 cursor-not-allowed" : ""}
+          />
+          {formState.errors.handle && !isUserBlog && (
+            <p className="text-sm text-destructive mt-2">{formState.errors.handle}</p>
+          )}
         </div>
 
         <h2 className="text-lg font-semibold">Display Options</h2>
 
         <div className="p-4 pt-0 space-y-4">
-          <div className="flex items-center justify-between space-y-2">
+          <div className="flex items-center justify-between gap-2">
             <div className="space-y-0.5">
               <Label htmlFor="show-title">Show Title</Label>
               <p className="text-sm text-muted-foreground">Display the blog title at the top of your page</p>
             </div>
-            <Switch id="show-title" checked={showTitle} onCheckedChange={handleShowTitleChange} />
+            <Switch
+              id="show-title"
+              checked={formState.metadata.showTitle}
+              onCheckedChange={(checked) => handleMetadataChange('showTitle', checked)}
+            />
           </div>
 
-          <div className="flex items-center justify-between space-y-2">
+          <div className="flex items-center justify-between gap-2">
             <div className="space-y-0.5">
               <Label htmlFor="show-author">Show Author</Label>
               <p className="text-sm text-muted-foreground">Display your name above the blog title</p>
             </div>
-            <Switch id="show-author" checked={showAuthor} onCheckedChange={handleShowAuthorChange} />
+            <Switch
+              id="show-author"
+              checked={formState.metadata.showAuthor}
+              onCheckedChange={(checked) => handleMetadataChange('showAuthor', checked)}
+            />
           </div>
 
-          <div className="flex items-center justify-between space-y-2">
+          <div className="flex items-center justify-between gap-2">
             <div className="space-y-0.5">
               <Label htmlFor="show-tags">Show Tags</Label>
               <p className="text-sm text-muted-foreground">Display article tags below the blog title</p>
             </div>
-            <Switch id="show-tags" checked={showTags} onCheckedChange={handleShowTagsChange} />
+            <Switch
+              id="show-tags"
+              checked={formState.metadata.showTags}
+              onCheckedChange={(checked) => handleMetadataChange('showTags', checked)}
+            />
           </div>
         </div>
 
-        <div className="flex justify-start pt-4">
-          <Button onClick={handleSave} disabled={!isDirty || !!validationError}>
+        <div className="flex justify-start">
+          <Button
+            onClick={handleSave}
+            disabled={!formState.isDirty || Object.values(formState.errors).some(error => error !== null)}
+          >
             Save Settings
           </Button>
         </div>
@@ -335,3 +499,4 @@ export function BlogSettings({ initialSettings }: BlogSettingsProps) {
     </Card>
   );
 }
+

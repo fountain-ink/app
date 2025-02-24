@@ -9,6 +9,50 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      blogs: {
+        Row: {
+          about: string | null
+          address: string
+          created_at: string
+          handle: string | null
+          icon: string | null
+          metadata: Json
+          owner: string
+          title: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          about?: string | null
+          address: string
+          created_at?: string
+          handle?: string | null
+          icon?: string | null
+          metadata?: Json
+          owner: string
+          title?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          about?: string | null
+          address?: string
+          created_at?: string
+          handle?: string | null
+          icon?: string | null
+          metadata?: Json
+          owner?: string
+          title?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blogs_owner_fkey"
+            columns: ["owner"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["address"]
+          },
+        ]
+      }
       drafts: {
         Row: {
           author: string | null

@@ -36,6 +36,15 @@ export const useCreateLensApp = () => {
     try {
       const createResult = await createApp(sessionClient, {
         metadataUri,
+        namespace: {
+          globalNamespace: true,
+        },
+        defaultFeed: {
+          globalFeed: true,
+        },
+        graph: {
+          globalGraph: true,
+        },
       });
 
       if (createResult.isErr()) {
