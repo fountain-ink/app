@@ -26,7 +26,7 @@
     "@lens-network/sdk": "^0.0.0-canary-20241203140504",
     "@lens-protocol/client": "^0.0.0-canary-20250222105135",
     "@lens-protocol/metadata": "^2.0.0-next.6",
-    "@lens-protocol/react": "^0.0.0-canary-20250218142239",
+    "@lens-protocol/react": "^0.0.0-canary-20250224081220",
     "@lens-protocol/shared-kernel": "^0.12.0",
     "@lens-protocol/storage-node-client": "^0.0.0-next-20250114134800",
     "@lens-protocol/wagmi": "^0.0.0-canary-20240430125244",
