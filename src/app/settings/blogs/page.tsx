@@ -106,6 +106,7 @@ export default function BlogsSettingsPage() {
           address={personalBlog?.userAddress}
           href="/settings/blog"
           isUserBlog
+          icon={personalBlog?.icon}
         />
 
         {!blogs.length ? (
@@ -118,6 +119,7 @@ export default function BlogsSettingsPage() {
               description={blog.metadata?.description || undefined}
               address={blog.address}
               href={`/settings/blog/${blog.address}`}
+              icon={blog.metadata?.icon}
             />
           ))
         )}

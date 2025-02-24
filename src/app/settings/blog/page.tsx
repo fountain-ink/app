@@ -26,7 +26,6 @@ export default async function BlogSettingsPage() {
     .eq("address", claims.sub)
     .single();
 
-
   return <BlogSettings blogAddress={claims.sub} initialSettings={blogSettings as BlogSettingsType} />;
 }
 

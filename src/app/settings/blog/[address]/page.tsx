@@ -66,5 +66,5 @@ export default async function BlogPage({ params }: PageProps) {
     icon: null,
   };
 
-  return ( <BlogSettings blogAddress={params.address} initialSettings={initialSettings} />);
+  return ( <BlogSettings blogAddress={params.address} initialSettings={initialSettings} isGroup={true} />);
 } 
