@@ -7,8 +7,8 @@ import { usePathname } from "next/navigation";
 
 const navItems = [
   { id: "profile", label: "Profile", icon: User2, enabled: true },
-  { id: "blog", label: "Blog", icon: PenTool, enabled: true },
-  { id: "blogs", label: "Blogs", icon: BookOpen, enabled: true },
+  // { id: "blog", label: "Blog", icon: , enabled: true },
+  { id: "blogs", label: "Blogs", icon: PenTool, enabled: true },
   { id: "theme", label: "Theme", icon: Brush, enabled: true },
   { id: "app", label: "Application", icon: Settings, enabled: true },
   {

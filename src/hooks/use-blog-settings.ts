@@ -3,13 +3,13 @@ import { useState } from "react";
 import { Database } from "@/lib/supabase/database";
 
 export interface BlogMetadata {
-  showAuthor: boolean;
-  showTags: boolean;
-  showTitle: boolean;
+  showAuthor?: boolean;
+  showTags?: boolean;
+  showTitle?: boolean;
 }
 
 export type BlogSettings = Omit<Database["public"]["Tables"]["blogs"]["Row"], "metadata"> & {
-  metadata: BlogMetadata;
+  metadata?: BlogMetadata | null;
 };
 
 export function useBlogSettings(blogAddress: string, initialSettings: BlogSettings) {

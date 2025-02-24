@@ -8,12 +8,10 @@ import { getLensClient } from "@/lib/lens/client";
 import { CreateBlogModal } from "@/components/blog/create-blog-modal";
 import { fetchGroups } from "@lens-protocol/client/actions";
 import { Group } from "@lens-protocol/client";
-import { useAccount } from "wagmi";
 import { evmAddress } from "@lens-protocol/client";
 import { Skeleton } from "@/components/ui/skeleton";
-import { EvmAddressDisplay } from "@/components/ui/metadata-display";
-import { getUserProfile } from "@/lib/auth/get-user-profile";
-import Link from "next/link";
+import { BlogSettings } from "@/hooks/use-blog-settings";
+import { BlogCard } from "@/components/blog/blog-card";
 
 interface PageInfo {
   prev: string | null;
@@ -25,6 +23,20 @@ export default function BlogsSettingsPage() {
   const [blogs, setBlogs] = useState<Group[]>([]);
   const [pageInfo, setPageInfo] = useState<PageInfo>({ prev: null, next: null });
   const [isLoading, setIsLoading] = useState(true);
+  const [personalBlog, setPersonalBlog] = useState<BlogSettings & { userAddress?: string } | null>(null);
+
+  const fetchPersonalBlog = async () => {
+    try {
+      const response = await fetch('/api/blog/personal');
+      if (!response.ok) {
+        throw new Error('Failed to fetch personal blog');
+      }
+      const data = await response.json();
+      setPersonalBlog(data);
+    } catch (error) {
+      console.error("Error fetching personal blog:", error);
+    }
+  };
 
   const fetchUserBlogs = async (cursor?: string) => {
     const client = await getLensClient();
@@ -61,6 +73,7 @@ export default function BlogsSettingsPage() {
   };
 
   useEffect(() => {
+    fetchPersonalBlog();
     fetchUserBlogs();
   }, []);
 
@@ -85,38 +98,29 @@ export default function BlogsSettingsPage() {
       );
     }
 
-    if (!blogs.length) {
-      return <p className="text-sm text-muted-foreground">No blogs created yet.</p>;
-    }
-
     return (
       <div className="space-y-4">
-        {blogs.map((blog) => (
-          <div
-            key={blog.address}
-            className="p-4 rounded-lg border border-border hover:bg-accent transition-colors"
-          >
-            <div className="flex flex-col space-y-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-medium">{blog.metadata?.name || "Untitled Blog"}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {blog.metadata?.description || "No description"}
-                  </p>
-                </div>
-                <Link href={`/blog/${blog.address}`}>
-                  <Button variant="ghost" size="sm">
-                    Manage
-                  </Button>
-                </Link>
-              </div>
-              <EvmAddressDisplay address={blog.address} />
-              {/* {blog.feed && (
-                <EvmAddressDisplay address={blog.feed} />
-              )} */}
-            </div>
-          </div>
-        ))}
+        <BlogCard
+          title={personalBlog?.title || "Personal Blog"}
+          description={personalBlog?.about || "Your personal blog settings"}
+          address={personalBlog?.userAddress}
+          href="/settings/blog"
+          isUserBlog
+        />
+
+        {!blogs.length ? (
+          <p className="text-sm text-muted-foreground">No additional blogs created yet.</p>
+        ) : (
+          blogs.map((blog) => (
+            <BlogCard
+              key={blog.address}
+              title={blog.metadata?.name || "Untitled Blog"}
+              description={blog.metadata?.description || undefined}
+              address={blog.address}
+              href={`/settings/blog/${blog.address}`}
+            />
+          ))
+        )}
         
         {pageInfo.next && (
           <div className="flex justify-center pt-4">

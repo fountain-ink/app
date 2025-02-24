@@ -6,7 +6,6 @@ import { getLensClient } from "@/lib/lens/client";
 import { fetchGroup } from "@lens-protocol/client/actions";
 import { createClient } from "@/lib/supabase/server";
 import { BlogSettings as BlogSettingsType } from "@/hooks/use-blog-settings";
-import { Database } from "@/lib/supabase/database";
 
 interface PageProps {
   params: {
@@ -67,9 +66,5 @@ export default async function BlogPage({ params }: PageProps) {
     icon: null,
   };
 
-  return (
-    <div className="container max-w-4xl py-6">
-      <BlogSettings blogAddress={params.address} initialSettings={initialSettings} />
-    </div>
-  );
+  return ( <BlogSettings blogAddress={params.address} initialSettings={initialSettings} />);
 } 
