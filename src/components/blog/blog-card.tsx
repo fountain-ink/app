@@ -51,7 +51,7 @@ export function BlogCard({ title, description, address, isUserBlog, href, icon, 
               )}
               <h3 className="font-medium text-lg">{title}</h3>
               {handle && (
-                <code className="text-sm text-muted-foreground">{isUserBlog ? "/" : "/b/"}{handle}</code>
+                <code className="text-sm text-muted-foreground">{isUserBlog ? "/b/" : "/blog/"}{handle}</code>
               )}
             </div>
             <Link href={href}>
