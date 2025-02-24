@@ -20,7 +20,7 @@ interface PageInfo {
 
 export default function BlogsSettingsPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [blogs, setBlogs] = useState<Group[]>([]);
+  const [blogs, setBlogs] = useState<(Group & { db?: BlogSettings })[]>([]);
   const [pageInfo, setPageInfo] = useState<PageInfo>({ prev: null, next: null });
   const [isLoading, setIsLoading] = useState(true);
   const [personalBlog, setPersonalBlog] = useState<BlogSettings & { userAddress?: string } | null>(null);
@@ -35,6 +35,28 @@ export default function BlogsSettingsPage() {
       setPersonalBlog(data);
     } catch (error) {
       console.error("Error fetching personal blog:", error);
+    }
+  };
+
+  const fetchBlogSettings = async (addresses: string[]) => {
+    try {
+      const response = await fetch('/api/blogs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ addresses }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch blog settings');
+      }
+      
+      const { blogs: dbBlogs } = await response.json();
+      return dbBlogs as BlogSettings[];
+    } catch (error) {
+      console.error("Error fetching blog settings:", error);
+      return [] as BlogSettings[];
     }
   };
 
@@ -60,7 +82,21 @@ export default function BlogsSettingsPage() {
 
       const { items, pageInfo: newPageInfo } = result.value;
       
-      setBlogs(currentBlogs => cursor ? [...currentBlogs, ...items].map(item => ({ ...item })) : items.map(item => ({ ...item })));
+      // Fetch database settings for all blogs
+      const dbSettings = await fetchBlogSettings(items.map(item => item.address));
+      
+      // Merge on-chain data with database settings
+      const mergedBlogs = items.map(item => ({
+        ...item,
+        db: dbSettings.find(db => db.address === item.address),
+      }));
+
+      setBlogs(currentBlogs => 
+        cursor 
+          ? [...currentBlogs, ...mergedBlogs] 
+          : mergedBlogs
+      );
+      
       setPageInfo({
         prev: newPageInfo.prev,
         next: newPageInfo.next,
@@ -115,11 +151,11 @@ export default function BlogsSettingsPage() {
           blogs.map((blog) => (
             <BlogCard
               key={blog.address}
-              title={blog.metadata?.name || "Untitled Blog"}
-              description={blog.metadata?.description || undefined}
+              title={blog.db?.title || blog.metadata?.name || "Untitled Blog"}
+              description={blog.db?.about || blog.metadata?.description || undefined}
               address={blog.address}
               href={`/settings/blog/${blog.address}`}
-              icon={blog.metadata?.icon}
+              icon={blog.db?.icon || blog.metadata?.icon}
             />
           ))
         )}

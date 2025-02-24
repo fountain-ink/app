@@ -26,8 +26,8 @@ export function BlogCard({ title, description, address, isUserBlog, href, icon }
             className="w-full h-full"
           />
         ) : (
-          <div className="w-full h-full bg-muted flex items-center justify-center">
-            <User className="w-8 h-8 text-muted-foreground" />
+          <div className="w-full h-full flex relative items-center justify-center">
+            <div className="placeholder-background" />
           </div>
         )}
       </div>
