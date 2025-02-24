@@ -23,7 +23,8 @@ import { clientCookieStorage } from "@/lib/lens/storage";
 interface BlogSettingsProps {
   blogAddress: string;
   initialSettings: BlogSettingsType;
-  isGroup?: boolean;
+  isUserBlog?: boolean;
+  userHandle?: string;
 }
 
 async function processImage(file: File): Promise<File> {
@@ -78,6 +79,7 @@ async function processImage(file: File): Promise<File> {
 interface FormState {
   title: string;
   about: string;
+  handle: string;
   metadata: {
     showAuthor: boolean;
     showTags: boolean;
@@ -85,7 +87,10 @@ interface FormState {
   };
   icon: string;
   isDirty: boolean;
-  validationError: string | null;
+  errors: {
+    title: string | null;
+    handle: string | null;
+  };
 }
 
 interface ImageState {
@@ -94,12 +99,13 @@ interface ImageState {
   isDeleted: boolean;
 }
 
-export function BlogSettings({ blogAddress, initialSettings, isGroup = false }: BlogSettingsProps) {
+export function BlogSettings({ blogAddress, initialSettings, isUserBlog = false, userHandle }: BlogSettingsProps) {
   const { settings, saveSettings } = useBlogSettings(blogAddress, initialSettings);
   const { data: walletClient } = useWalletClient();
   const [formState, setFormState] = useState<FormState>({
     title: settings?.title || "",
     about: settings?.about || "",
+    handle: isUserBlog ? (userHandle || "") : (settings?.handle || ""),
     metadata: {
       showAuthor: settings?.metadata?.showAuthor ?? true,
       showTags: settings?.metadata?.showTags ?? true,
@@ -107,7 +113,10 @@ export function BlogSettings({ blogAddress, initialSettings, isGroup = false }: 
     },
     icon: settings?.icon || "",
     isDirty: false,
-    validationError: null
+    errors: {
+      title: null,
+      handle: null
+    }
   });
   const [imageState, setImageState] = useState<ImageState>({
     file: null,
@@ -119,6 +128,7 @@ export function BlogSettings({ blogAddress, initialSettings, isGroup = false }: 
     setFormState({
       title: settings?.title || "",
       about: settings?.about || "",
+      handle: isUserBlog ? (userHandle || "") : (settings?.handle || ""),
       metadata: {
         showAuthor: settings?.metadata?.showAuthor ?? true,
         showTags: settings?.metadata?.showTags ?? true,
@@ -126,14 +136,17 @@ export function BlogSettings({ blogAddress, initialSettings, isGroup = false }: 
       },
       icon: settings?.icon || "",
       isDirty: false,
-      validationError: null
+      errors: {
+        title: null,
+        handle: null
+      }
     });
     setImageState({
       file: null,
       previewUrl: undefined,
       isDeleted: false
     });
-  }, [settings]);
+  }, [settings, isUserBlog, userHandle]);
 
   useEffect(() => {
     if (imageState.file) {
@@ -153,13 +166,34 @@ export function BlogSettings({ blogAddress, initialSettings, isGroup = false }: 
     return null;
   }, []);
 
+  const validateHandle = useCallback((handle: string) => {
+    if (handle.trim().length === 0) {
+      return "Handle cannot be empty";
+    }
+    if (!/^[a-z0-9-]+$/.test(handle)) {
+      return "Handle can only contain lowercase letters, numbers, and hyphens";
+    }
+    if (handle.length > 50) {
+      return "Handle must be less than 50 characters";
+    }
+    return null;
+  }, []);
+
   const handleSave = async () => {
-    if (formState.metadata.showTitle) {
-      const titleError = validateBlogTitle(formState.title);
-      if (titleError) {
-        setFormState(prev => ({ ...prev, validationError: titleError }));
-        return;
+    // Validate all fields before saving
+    const titleError = formState.metadata.showTitle ? validateBlogTitle(formState.title) : null;
+    const handleError = validateHandle(formState.handle);
+
+    setFormState(prev => ({
+      ...prev,
+      errors: {
+        title: titleError,
+        handle: handleError
       }
+    }));
+
+    if (titleError || handleError) {
+      return;
     }
 
     let iconUrl = settings?.icon;
@@ -176,6 +210,7 @@ export function BlogSettings({ blogAddress, initialSettings, isGroup = false }: 
     const success = await saveSettings({
       title: formState.title.trim(),
       about: formState.about,
+      handle: formState.handle.trim(),
       metadata: formState.metadata,
       icon: imageState.isDeleted ? null : iconUrl,
     });
@@ -229,10 +264,9 @@ export function BlogSettings({ blogAddress, initialSettings, isGroup = false }: 
   //       return;
   //     }
 
-  //     if (success) {
-  //       setFormState(prev => ({ ...prev, isDirty: false, validationError: null }));
-  //     }
-  //   }
+    if (success) {
+      setFormState(prev => ({ ...prev, isDirty: false, errors: { title: null, handle: null } }));
+    }
   };
 
   const handleMetadataChange = (field: keyof BlogMetadata, value: boolean) => {
@@ -246,12 +280,27 @@ export function BlogSettings({ blogAddress, initialSettings, isGroup = false }: 
     }));
   };
 
-  const handleChange = (field: 'title' | 'about', value: string) => {
+  const handleChange = (field: 'title' | 'about' | 'handle', value: string) => {
+    // Don't allow handle changes for user blogs
+    if (field === 'handle' && isUserBlog) return;
+
+    let fieldError: string | null = null;
+
+    // Validate the field as it changes
+    if (field === 'title' && formState.metadata.showTitle) {
+      fieldError = validateBlogTitle(value);
+    } else if (field === 'handle') {
+      fieldError = validateHandle(value);
+    }
+
     setFormState(prev => ({
       ...prev,
       [field]: value,
       isDirty: true,
-      validationError: field === 'title' ? null : prev.validationError
+      errors: {
+        ...prev.errors,
+        [field]: fieldError
+      }
     }));
   };
 
@@ -361,12 +410,10 @@ export function BlogSettings({ blogAddress, initialSettings, isGroup = false }: 
             value={formState.title}
             onChange={(e) => handleChange('title', e.target.value)}
             placeholder="Enter your blog title"
-            aria-invalid={formState.validationError ? "true" : "false"}
-            // disabled={!formState.metadata.showTitle}
             className={!formState.metadata.showTitle ? "opacity-50" : ""}
           />
-          {formState.validationError && (
-            <p className="text-sm text-destructive mt-2">{formState.validationError}</p>
+          {formState.errors.title && (
+            <p className="text-sm text-destructive mt-2">{formState.errors.title}</p>
           )}
         </div>
 
@@ -382,10 +429,28 @@ export function BlogSettings({ blogAddress, initialSettings, isGroup = false }: 
           />
         </div>
 
+        <div className="space-y-2">
+          <Label htmlFor="blog-handle">Blog Handle</Label>
+          <p className="text-sm text-muted-foreground mb-2">
+            Blog's URL path (e.g., {isUserBlog ? "/" : "/b/"}{formState.handle || "your-handle"})
+          </p>
+          <Input
+            id="blog-handle"
+            value={formState.handle}
+            onChange={(e) => handleChange('handle', e.target.value.toLowerCase())}
+            placeholder="your-blog-handle"
+            disabled={isUserBlog}
+            className={isUserBlog ? "opacity-50 cursor-not-allowed" : ""}
+          />
+          {formState.errors.handle && !isUserBlog && (
+            <p className="text-sm text-destructive mt-2">{formState.errors.handle}</p>
+          )}
+        </div>
+
         <h2 className="text-lg font-semibold">Display Options</h2>
 
         <div className="p-4 pt-0 space-y-4">
-          <div className="flex items-center justify-between space-y-2">
+          <div className="flex items-center justify-between gap-2">
             <div className="space-y-0.5">
               <Label htmlFor="show-title">Show Title</Label>
               <p className="text-sm text-muted-foreground">Display the blog title at the top of your page</p>
@@ -397,7 +462,7 @@ export function BlogSettings({ blogAddress, initialSettings, isGroup = false }: 
             />
           </div>
 
-          <div className="flex items-center justify-between space-y-2">
+          <div className="flex items-center justify-between gap-2">
             <div className="space-y-0.5">
               <Label htmlFor="show-author">Show Author</Label>
               <p className="text-sm text-muted-foreground">Display your name above the blog title</p>
@@ -409,7 +474,7 @@ export function BlogSettings({ blogAddress, initialSettings, isGroup = false }: 
             />
           </div>
 
-          <div className="flex items-center justify-between space-y-2">
+          <div className="flex items-center justify-between gap-2">
             <div className="space-y-0.5">
               <Label htmlFor="show-tags">Show Tags</Label>
               <p className="text-sm text-muted-foreground">Display article tags below the blog title</p>
@@ -422,10 +487,10 @@ export function BlogSettings({ blogAddress, initialSettings, isGroup = false }: 
           </div>
         </div>
 
-        <div className="flex justify-start pt-4">
+        <div className="flex justify-start">
           <Button
             onClick={handleSave}
-            disabled={!formState.isDirty || !!formState.validationError}
+            disabled={!formState.isDirty || Object.values(formState.errors).some(error => error !== null)}
           >
             Save Settings
           </Button>

@@ -25,7 +25,8 @@ export async function GET() {
 
     return NextResponse.json({
       ...blogSettings,
-      userAddress: claims.metadata.address,
+      address: claims.sub,
+      handle: claims.metadata.username,
     });
   } catch (error) {
     console.error("Error in personal blog API:", error);

@@ -14,6 +14,7 @@ export type Database = {
           about: string | null
           address: string
           created_at: string
+          handle: string | null
           icon: string | null
           metadata: Json
           owner: string
@@ -24,6 +25,7 @@ export type Database = {
           about?: string | null
           address: string
           created_at?: string
+          handle?: string | null
           icon?: string | null
           metadata?: Json
           owner: string
@@ -34,6 +36,7 @@ export type Database = {
           about?: string | null
           address?: string
           created_at?: string
+          handle?: string | null
           icon?: string | null
           metadata?: Json
           owner?: string

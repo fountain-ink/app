@@ -4,7 +4,7 @@ import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { getUserMetadata } from "@/lib/settings/get-user-metadata";
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
-import { BlogSettings as BlogSettingsType  } from "@/hooks/use-blog-settings";
+import { BlogSettings as BlogSettingsType } from "@/hooks/use-blog-settings";
 
 
 export const metadata = {
@@ -26,6 +26,6 @@ export default async function BlogSettingsPage() {
     .eq("address", claims.sub)
     .single();
 
-  return <BlogSettings blogAddress={claims.sub} initialSettings={blogSettings as BlogSettingsType} />;
+  return <BlogSettings isUserBlog={true} userHandle={claims.metadata.username} blogAddress={claims.sub} initialSettings={blogSettings as BlogSettingsType} />;
 }
 

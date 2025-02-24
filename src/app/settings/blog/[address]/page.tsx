@@ -58,6 +58,7 @@ export default async function BlogPage({ params }: PageProps) {
     owner: claims.metadata.address,
     created_at: new Date().toISOString(),
     updated_at: null,
+    handle: null,
     metadata: {
       showAuthor: true,
       showTags: true,
@@ -66,5 +67,5 @@ export default async function BlogPage({ params }: PageProps) {
     icon: null,
   };
 
-  return ( <BlogSettings blogAddress={params.address} initialSettings={initialSettings} isGroup={true} />);
+  return ( <BlogSettings blogAddress={params.address} initialSettings={initialSettings} isUserBlog={false} />);
 } 

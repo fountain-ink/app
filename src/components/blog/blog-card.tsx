@@ -11,11 +11,12 @@ interface BlogCardProps {
   isUserBlog?: boolean;
   href: string;
   icon?: string | null;
+  handle?: string;
 }
 
-export function BlogCard({ title, description, address, isUserBlog, href, icon }: BlogCardProps) {
+export function BlogCard({ title, description, address, isUserBlog, href, icon, handle }: BlogCardProps) {
   return (
-    <div 
+    <div
       className="flex p-4 items-stretch rounded-lg border border-border hover:bg-accent transition-colors"
     >
       <div className="w-24 h-24 rounded-md overflow-hidden relative shrink-0">
@@ -36,12 +37,11 @@ export function BlogCard({ title, description, address, isUserBlog, href, icon }
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <h3 className="font-medium text-lg">{title}</h3>
               {isUserBlog && (
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      <User2Icon className="h-4 w-4 text-muted-foreground" />
+                      <User2Icon className="h-4 w-4" />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Your personal blog page</p>
@@ -49,10 +49,14 @@ export function BlogCard({ title, description, address, isUserBlog, href, icon }
                   </Tooltip>
                 </TooltipProvider>
               )}
+              <h3 className="font-medium text-lg">{title}</h3>
+              {handle && (
+                <code className="text-sm text-muted-foreground">{isUserBlog ? "/" : "/b/"}{handle}</code>
+              )}
             </div>
             <Link href={href}>
-              <Button 
-                variant={"ghostText"} 
+              <Button
+                variant={"ghostText"}
                 size="sm"
                 className="transition-colors"
               >

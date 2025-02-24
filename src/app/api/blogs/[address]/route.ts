@@ -39,6 +39,7 @@ export async function PUT(
       address: params.address,
       title: settings.title,
       about: settings.about,
+      handle: settings.handle,
       metadata: {
         showAuthor: settings.metadata?.showAuthor ?? true,
         showTags: settings.metadata?.showTags ?? true,

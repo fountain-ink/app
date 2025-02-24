@@ -10,7 +10,6 @@ import { fetchGroups } from "@lens-protocol/client/actions";
 import { Group } from "@lens-protocol/client";
 import { evmAddress } from "@lens-protocol/client";
 import { Skeleton } from "@/components/ui/skeleton";
-import { BlogSettings } from "@/hooks/use-blog-settings";
 import { BlogCard } from "@/components/blog/blog-card";
 
 interface PageInfo {
@@ -18,12 +17,20 @@ interface PageInfo {
   next: string | null;
 }
 
+interface BlogSettings {
+  address: string;
+  title: string;
+  about?: string;
+  icon?: string;
+  handle?: string;
+}
+
 export default function BlogsSettingsPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [blogs, setBlogs] = useState<(Group & { db?: BlogSettings })[]>([]);
   const [pageInfo, setPageInfo] = useState<PageInfo>({ prev: null, next: null });
   const [isLoading, setIsLoading] = useState(true);
-  const [personalBlog, setPersonalBlog] = useState<BlogSettings & { userAddress?: string } | null>(null);
+  const [personalBlog, setPersonalBlog] = useState<BlogSettings | null>(null);
 
   const fetchPersonalBlog = async () => {
     try {
@@ -32,7 +39,11 @@ export default function BlogsSettingsPage() {
         throw new Error('Failed to fetch personal blog');
       }
       const data = await response.json();
-      setPersonalBlog(data);
+      setPersonalBlog({
+        ...data,
+        address: data.address,
+        handle: data.handle
+      });
     } catch (error) {
       console.error("Error fetching personal blog:", error);
     }
@@ -139,10 +150,11 @@ export default function BlogsSettingsPage() {
         <BlogCard
           title={personalBlog?.title || "Personal Blog"}
           description={personalBlog?.about || "Your personal blog settings"}
-          address={personalBlog?.userAddress}
+          address={personalBlog?.address}
           href="/settings/blog"
-          isUserBlog
           icon={personalBlog?.icon}
+          handle={personalBlog?.handle}
+          isUserBlog
         />
 
         {!blogs.length ? (
@@ -156,6 +168,7 @@ export default function BlogsSettingsPage() {
               address={blog.address}
               href={`/settings/blog/${blog.address}`}
               icon={blog.db?.icon || blog.metadata?.icon}
+              handle={blog.db?.handle}
             />
           ))
         )}
