@@ -16,7 +16,6 @@ import { ConnectWalletButton } from "../auth/auth-wallet-button";
 import { ProfileSelectMenu } from "../auth/profile-select-menu";
 import { LogoutIcon } from "../icons/logout";
 import { MoonIcon } from "../icons/moon";
-import { PenToolIcon } from "../icons/pen-tool";
 import { SettingsGearIcon } from "../icons/settings";
 import { SquarePenIcon } from "../icons/square-pen";
 import { SunIcon } from "../icons/sun";
@@ -26,6 +25,7 @@ import { UserAvatar } from "./user-avatar";
 import { AnimatedMenuItem } from "../navigation/animated-item";
 import { getLensClient } from "@/lib/lens/client";
 import { useState } from "react";
+import { BlogMenu } from "../blog/blog-menu";
 
 export const UserMenu = ({ session }: { session: MeResult | null }) => {
   const { isConnected: isWalletConnected } = useAccount();
@@ -57,10 +57,9 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
 
   const username = session.loggedInAs.account.username?.localName;
 
-  // Get the settings path based on current route
   const getSettingsPath = () => {
     if (pathname.match(/^\/u\/[^/]+$/)) return "/settings/profile";
-    if (pathname.match(/^\/b\/[^/]+$/)) return "/settings/blog";
+    if (pathname.match(/^\/b\/[^/]+$/)) return "/settings/blogs";
     return "/settings";
   };
 
@@ -73,9 +72,7 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent align="end" className="w-48">
-          <AnimatedMenuItem href={`/b/${username}`} icon={PenToolIcon}>
-            Blog
-          </AnimatedMenuItem>
+          {username && <BlogMenu username={username} />}
 
           <AnimatedMenuItem href={`/u/${username}`} icon={UserIcon}>
             Profile

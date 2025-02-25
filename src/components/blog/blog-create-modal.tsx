@@ -53,7 +53,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
         description,
       });
 
-      const uploadToast = toast.loading("Uploading group metadata...");
+      const uploadToast = toast.loading("Uploading blog metadata...");
       const [blogUri, blogFeedUri] = await Promise.all([
         storageClient.uploadAsJson(blogMetadata),
         storageClient.uploadAsJson(blogFeedMetadata),

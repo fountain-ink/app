@@ -42,6 +42,7 @@ export async function GET(req: NextRequest) {
         title: `${username}'s Blog`,
         about: `${username}'s personal blog on Fountain`,
         owner: userAddress,
+        handle: username,
       });
       console.log(`[Blogs Sync] Personal blog created for: ${userAddress}`);
     } else {
