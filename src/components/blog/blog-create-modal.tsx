@@ -1,3 +1,5 @@
+"use client";
+
 import { feed, group } from "@lens-protocol/metadata";
 import { SessionClient, uri } from "@lens-protocol/client";
 import { createGroup } from "@lens-protocol/client/actions";
@@ -12,6 +14,8 @@ import { Textarea } from "../ui/textarea";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { useWalletClient } from "wagmi";
 import { getLensClient } from "@/lib/lens/client";
+import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface CreateGroupModalProps {
   open: boolean;
@@ -127,5 +131,29 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
         </div>
       </DialogContent>
     </Dialog>
+  );
+} 
+
+export function CreateBlogButton() {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const router = useRouter();
+
+  const handleCreateSuccess = () => {
+    router.refresh();
+  };
+
+  return (
+    <>
+      <Button onClick={() => setIsCreateModalOpen(true)}>
+        <Plus className="w-4 h-4 mr-2" />
+        Create Blog
+      </Button>
+
+      <CreateBlogModal
+        open={isCreateModalOpen}
+        onOpenChange={setIsCreateModalOpen}
+        onSuccess={handleCreateSuccess}
+      />
+    </>
   );
 } 
