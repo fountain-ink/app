@@ -26,6 +26,7 @@ import { AnimatedMenuItem } from "../navigation/animated-item";
 import { getLensClient } from "@/lib/lens/client";
 import { useState } from "react";
 import { BlogMenu } from "../blog/blog-menu";
+import { useBlogStorage } from "@/hooks/use-blog-storage";
 
 export const UserMenu = ({ session }: { session: MeResult | null }) => {
   const { isConnected: isWalletConnected } = useAccount();
@@ -35,6 +36,7 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
   const { theme, setTheme } = useTheme();
   const isDarkMode = theme === "dark";
   const [showProfileSelect, setShowProfileSelect] = useState(!session);
+  const resetBlogStorage = useBlogStorage((state) => state.resetState);
 
   const handleDisconnect = async () => {
     const client = await getLensClient();
@@ -43,6 +45,7 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
     }
     disconnect();
     clearAllCookies();
+    resetBlogStorage();
     router.push("/");
     window.location.reload();
   };
@@ -78,7 +81,10 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
             Profile
           </AnimatedMenuItem>
 
-          <AnimatedMenuItem icon={UserRoundPenIcon} onClick={() => setShowProfileSelect(true)}>
+          <AnimatedMenuItem icon={UserRoundPenIcon} onClick={() => {
+            resetBlogStorage();
+            setShowProfileSelect(true);
+          }}>
             Switch Profile
           </AnimatedMenuItem>
 

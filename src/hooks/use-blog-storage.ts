@@ -42,31 +42,23 @@ export const useBlogStorage = create<BlogStorage>()(
       },
       updateLastSynced: () => {
         const timestamp = Date.now();
-        console.log('Updating lastSynced timestamp', timestamp);
         set((state) => {
           const newState = {
             blogState: { ...state.blogState, lastSynced: timestamp },
           };
-          console.log('New state after update:', newState);
           return newState;
         });
       },
       getLastSynced: () => {
         const state = get();
-        console.log('Full state in getLastSynced:', state);
         return state.blogState.lastSynced;
       },
       needsSync: () => {
         const state = get();
         const lastSynced = state.blogState.lastSynced;
-        console.log('Full state in needsSync:', state);
-        console.log('Last synced timestamp:', lastSynced);
-        console.log('Current time:', Date.now());
-        console.log('Difference (minutes):', (Date.now() - lastSynced) / (60 * 1000));
         return !lastSynced || Date.now() - lastSynced > 5 * 60 * 1000;
       },
       resetState: () => {
-        console.log('Resetting blog storage state');
         set({
           blogState: {
             blogs: [],

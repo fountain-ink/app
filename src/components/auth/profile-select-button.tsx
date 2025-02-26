@@ -8,11 +8,13 @@ import { useAccount } from "wagmi";
 import { Button } from "../ui/button";
 import { UserAvatar } from "../user/user-avatar";
 import { setupUserAuth } from "./auth-manager";
+import { useBlogStorage } from "@/hooks/use-blog-storage";
 
 export function ProfileSelectButotn({ profile, onSuccess }: { profile: Account; onSuccess?: () => void }) {
   const { address } = useAccount();
   const accountOwnerAuth = useAccountOwnerClient();
   const router = useRouter();
+  const resetBlogStorage = useBlogStorage((state) => state.resetState);
 
   if (!address) {
     return null;
@@ -47,6 +49,9 @@ export function ProfileSelectButotn({ profile, onSuccess }: { profile: Account; 
         return toast.error("Failed to complete authentication");
       }
 
+      // Reset blog storage when switching profiles
+      resetBlogStorage();
+      
       toast.success("Successfully logged in");
 
       if (onSuccess) {

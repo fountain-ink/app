@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { PenToolIcon } from "../icons/pen-tool";
 import { AnimatedMenuItem } from "../navigation/animated-item";
-import { ChevronRightIcon, PenTool } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { ChevronRightIcon } from "lucide-react";
 import { BlogSettings } from "@/hooks/use-blog-settings";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
+import Link from "next/link";
 
 interface BlogMenuProps {
   username: string;
@@ -22,10 +22,8 @@ interface BlogMenuProps {
 export function BlogMenu({ username }: BlogMenuProps) {
   const [blogs, setBlogs] = useState<BlogSettings[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
   const { fetchBlogsIfNeeded } = useBlogStorage();
 
-  // Load blogs using the centralized fetch method
   useEffect(() => {
     setIsLoading(true);
     fetchBlogsIfNeeded()
@@ -39,13 +37,13 @@ export function BlogMenu({ username }: BlogMenuProps) {
       });
   }, [fetchBlogsIfNeeded]);
 
-  const navigateToBlog = (blog: BlogSettings) => {
+  const getBlogUrl = (blog: BlogSettings): string => {
     if (blog.address === blog.owner) {
-      router.push(`/b/${username}`);
+      return `/b/${username}`;
     } else if (blog.handle) {
-      router.push(`/blog/${blog.handle}`);
-    } else if (blog.address) {
-      router.push(`/blog/${blog.address}`);
+      return `/blog/${blog.handle}`;
+    } else {
+      return `/blog/${blog.address}`;
     }
   };
 
@@ -56,15 +54,9 @@ export function BlogMenu({ username }: BlogMenuProps) {
     return true;
   };
 
-  const handleClick = () => {
-    if (!shouldShowDropdown()) {
-      router.push(`/b/${username}`);
-    }
-  };
-
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger onClick={handleClick} disabled={!shouldShowDropdown()}>
+      <DropdownMenuTrigger disabled={!shouldShowDropdown()}>
         <AnimatedMenuItem href={!shouldShowDropdown() ? `/b/${username}` : undefined} icon={PenToolIcon}>
           <div className="flex justify-between items-center text-base w-[134px]">
             Blog
@@ -74,25 +66,25 @@ export function BlogMenu({ username }: BlogMenuProps) {
       </DropdownMenuTrigger>
       {shouldShowDropdown() && (
         <DropdownMenuPortal>
-          <DropdownMenuContent className="w-fit min-w-48" side="left" align="start">
+          <DropdownMenuContent className="w-fit min-w-48 py-1" side="left" align="start">
             {blogs.map((blog) => (
-              <DropdownMenuItem
-                key={blog.address}
-                onClick={() => navigateToBlog(blog)}
-                className="flex justify-start h-8 gap-2 p-1 items-center text-base "
-              >
-                <div className="rounded-sm h-full overflow-hidden relative flex-shrink-0 aspect-square">
-                  {blog.icon ? (
-                    <img src={blog.icon} className="w-full h-full object-cover absolute inset-0" alt={`${blog.handle || blog.address.substring(0, 6)} icon`} />
-                  ) : (
-                    <div className="placeholder-background absolute inset-0" />
-                  )}
-                </div>
-                <span>
-                  {blog.handle || blog.address.substring(0, 9)}
-                  {blog.address === blog.owner && " (Personal)"}
-                </span>
-              </DropdownMenuItem>
+              <Link href={getBlogUrl(blog)} key={blog.address} passHref>
+                <DropdownMenuItem
+                  className="flex justify-start h-8 gap-2 p-1 items-center text-base"
+                >
+                  <div className="rounded-sm h-full overflow-hidden relative flex-shrink-0 aspect-square">
+                    {blog.icon ? (
+                      <img src={blog.icon} className="w-full h-full object-cover absolute inset-0" alt={`${blog.handle || blog.address.substring(0, 6)} icon`} />
+                    ) : (
+                      <div className="placeholder-background absolute inset-0" />
+                    )}
+                  </div>
+                  <span>
+                    {blog.handle || blog.address.substring(0, 9)}
+                    {blog.address === blog.owner && " (Personal)"}
+                  </span>
+                </DropdownMenuItem>
+              </Link>
             ))}
           </DropdownMenuContent>
         </DropdownMenuPortal>
