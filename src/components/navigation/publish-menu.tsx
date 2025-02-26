@@ -8,7 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
-import { BlogSettings, useBlogStorage } from "@/hooks/use-blog-settings";
+import { BlogSettings } from "@/hooks/use-blog-settings";
 import { getLensClient } from "@/lib/lens/client";
 import { storageClient } from "@/lib/lens/storage-client";
 import { TransactionIndexingError } from "@lens-protocol/client";
@@ -27,6 +27,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useAccount, useWalletClient } from "wagmi";
 import { getStaticEditor, staticComponents } from "../editor/static";
+import { useBlogStorage } from "@/hooks/use-blog-storage";
 
 export const PublishMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -85,7 +86,6 @@ export const PublishMenu = () => {
     return null;
   };
 
-  // Save changes back to draft
   const saveDraft = useCallback(
     (updates: Partial<any>) => {
       if (!documentId) return;
@@ -374,15 +374,15 @@ export const PublishMenu = () => {
                         </div>
                       </div>
 
-                      {blogs.length > 0 && (
-                        <div className="space-y-2">
-                          <Label>Blog (Optional)</Label>
-                          <Select value={selectedBlogAddress || undefined} onValueChange={handleBlogChange}>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select a blog to publish to (optional)" />
-                            </SelectTrigger>
-                            <SelectContent position="popper" sideOffset={5} className="z-[60]" side="bottom">
-                              {blogs.map((blog) => (
+                      <div className="space-y-2">
+                        <Label>Publish in</Label>
+                        <Select value={selectedBlogAddress || undefined} onValueChange={handleBlogChange}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select a blog to publish to (optional)" />
+                          </SelectTrigger>
+                          <SelectContent position="popper" sideOffset={5} className="z-[60]" side="bottom">
+                            {blogs.length > 0 ? (
+                              blogs.map((blog) => (
                                 <SelectItem key={blog.address} value={blog.address} className="flex items-center gap-2">
                                   <div className="flex items-center gap-2">
                                     <div className="rounded-sm h-5 w-5 overflow-hidden relative flex-shrink-0">
@@ -398,11 +398,13 @@ export const PublishMenu = () => {
                                     </span>
                                   </div>
                                 </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      )}
+                              ))
+                            ) : (
+                              <div className="py-2 px-2 text-sm text-muted-foreground">No blogs found</div>
+                            )}
+                          </SelectContent>
+                        </Select>
+                      </div>
 
                       <div className="space-y-2">
                         <Label>Tags</Label>

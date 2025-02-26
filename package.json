@@ -28,6 +28,7 @@
     "@lens-protocol/metadata": "^2.0.0-next.6",
     "@lens-protocol/react": "^0.0.0-canary-20250224081220",
     "@lens-protocol/shared-kernel": "^0.12.0",
+    "@lens-protocol/storage": "^0.0.0-frame-20250225202940",
     "@lens-protocol/storage-node-client": "^0.0.0-next-20250114134800",
     "@lens-protocol/wagmi": "^0.0.0-canary-20240430125244",
     "@radix-ui/react-accordion": "^1.2.1",

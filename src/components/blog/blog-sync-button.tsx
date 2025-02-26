@@ -12,7 +12,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useBlogStorage } from "@/hooks/use-blog-settings";
+import { useBlogStorage } from "@/hooks/use-blog-storage";
 
 export function SyncButton() {
   const [isSyncing, setIsSyncing] = useState(false);

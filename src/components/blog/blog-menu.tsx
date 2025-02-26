@@ -12,7 +12,8 @@ import { PenToolIcon } from "../icons/pen-tool";
 import { AnimatedMenuItem } from "../navigation/animated-item";
 import { ChevronRightIcon, PenTool } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { BlogSettings, useBlogStorage } from "@/hooks/use-blog-settings";
+import { BlogSettings } from "@/hooks/use-blog-settings";
+import { useBlogStorage } from "@/hooks/use-blog-storage";
 
 interface BlogMenuProps {
   username: string;
