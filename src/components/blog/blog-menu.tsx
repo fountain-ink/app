@@ -8,7 +8,6 @@ import {
   DropdownMenuTrigger,
   DropdownMenuPortal
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { PenToolIcon } from "../icons/pen-tool";
 import { AnimatedMenuItem } from "../navigation/animated-item";
 import { ChevronRightIcon, PenTool } from "lucide-react";
@@ -54,23 +53,30 @@ export function BlogMenu({ username }: BlogMenuProps) {
     }
   };
 
+  const shouldShowDropdown = () => {
+    if (blogs.length === 0) return false;
+    if (blogs.length === 1 && blogs[0] && blogs[0].address === blogs[0].owner) return false;
+    
+    return true;
+  };
+
   const handleClick = () => {
-    if (blogs.length === 0) {
+    if (!shouldShowDropdown()) {
       router.push(`/b/${username}`);
     }
   };
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger onClick={handleClick} disabled={blogs.length === 0}>
-        <AnimatedMenuItem href={blogs.length === 0 ? `/b/${username}` : undefined} icon={PenToolIcon}>
+      <DropdownMenuTrigger onClick={handleClick} disabled={!shouldShowDropdown()}>
+        <AnimatedMenuItem href={!shouldShowDropdown() ? `/b/${username}` : undefined} icon={PenToolIcon}>
           <div className="flex justify-between items-center text-base w-[134px]">
             Blog
-            {blogs.length > 0 && <ChevronRightIcon className="ml-auto h-4 w-4" />}
+            {shouldShowDropdown() && <ChevronRightIcon className="ml-auto h-4 w-4" />}
           </div>
         </AnimatedMenuItem>
       </DropdownMenuTrigger>
-      {blogs.length > 0 && (
+      {shouldShowDropdown() && (
         <DropdownMenuPortal>
           <DropdownMenuContent className="w-48" side="left" align="start">
             {blogs.map((blog) => (
