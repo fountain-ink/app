@@ -1,3 +1,3 @@
-import { StorageClient, testnet } from "@lens-protocol/storage-node-client";
+import { StorageClient, staging } from "@lens-chain/storage-client";
 
-export const storageClient = StorageClient.create(testnet);
+export const storageClient = StorageClient.create(staging);

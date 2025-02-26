@@ -154,7 +154,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-96  flex flex-col">
         <DialogHeader>
-          <DialogTitle>Create Testnet Profile</DialogTitle>
+          <DialogTitle>Create Profile</DialogTitle>
         </DialogHeader>
         <div className="flex-1 flex flex-col">
           <div className="space-y-6">

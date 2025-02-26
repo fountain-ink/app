@@ -6,6 +6,7 @@ import Cropper from "react-easy-crop";
 
 import { useRef, useState } from "react";
 import { Button } from "../ui/button";
+import { storageClient } from "@/lib/lens/storage-client";
 
 export const getIpfsImageUrl = (uri: string | undefined): string => {
   if (!uri) return "";
@@ -13,7 +14,7 @@ export const getIpfsImageUrl = (uri: string | undefined): string => {
     return `https://fountain.4everland.link/ipfs/${uri.slice(7)}`;
   }
   if (uri.startsWith("lens://")) {
-    return `https://storage-api.testnet.lens.dev/${uri.slice(7)}`;
+    return storageClient.resolve(uri);
   }
   return uri;
 };

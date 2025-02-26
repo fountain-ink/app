@@ -1,10 +1,10 @@
-import { PublicClient, testnet } from "@lens-protocol/client";
+import { PublicClient, staging } from "@lens-protocol/client";
 import { clientCookieStorage, cookieStorage } from "./storage";
 
 const isServer = typeof window === "undefined";
 
 const publicClient = PublicClient.create({
-  environment: testnet,
+  environment: staging,
   origin: "https://fountain.ink",
   storage: isServer ? cookieStorage : clientCookieStorage,
 });

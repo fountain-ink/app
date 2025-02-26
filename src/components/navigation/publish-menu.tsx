@@ -222,11 +222,13 @@ export const PublishMenu = () => {
         feedValue = blog.value?.feed ?? undefined;
       }
 
+      console.log("feed is", feedValue)
       const result = await post(lens, {
         contentUri: uri,
         feed: feedValue,
       })
         .andThen(handleOperationWith(walletClient as any))
+        .andTee((v) => { console.log(v) })
         .andThen(lens.waitForTransaction);
 
       if (result.isErr()) {
