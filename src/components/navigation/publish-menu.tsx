@@ -5,12 +5,14 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
+import { BlogSettings, useBlogStorage } from "@/hooks/use-blog-settings";
 import { getLensClient } from "@/lib/lens/client";
 import { storageClient } from "@/lib/lens/storage-client";
 import { TransactionIndexingError } from "@lens-protocol/client";
-import { currentSession, fetchPost, post } from "@lens-protocol/client/actions";
+import { currentSession, fetchGroup, fetchPost, post } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { MetadataAttributeType, article } from "@lens-protocol/metadata";
 import { useQueryClient } from "@tanstack/react-query";
@@ -44,6 +46,17 @@ export const PublishMenu = () => {
   const [tags, setTags] = useState<Tag[]>([]);
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [blogs, setBlogs] = useState<BlogSettings[]>([]);
+  const [selectedBlogAddress, setSelectedBlogAddress] = useState<string | null>(null);
+  const { fetchBlogsIfNeeded } = useBlogStorage();
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchBlogsIfNeeded().then(blogs => {
+        setBlogs(blogs || []);
+      });
+    }
+  }, [isOpen, fetchBlogsIfNeeded]);
 
   useEffect(() => {
     if (isOpen && documentId) {
@@ -116,6 +129,18 @@ export const PublishMenu = () => {
     [handleTagsChange, tags],
   );
 
+  const handleBlogChange = (value: string) => {
+    setSelectedBlogAddress(value);
+    saveDraft({ blogAddress: value });
+  };
+
+  const isUserBlog = useCallback(() => {
+    if (!selectedBlogAddress) return false;
+    
+    const selectedBlog = blogs.find(blog => blog.address === selectedBlogAddress);
+    return selectedBlog ? selectedBlog.address === selectedBlog.owner : false;
+  }, [selectedBlogAddress, blogs]);
+
   const handlePublish = async () => {
     if (!documentId) {
       toast.error("Invalid document ID");
@@ -180,8 +205,26 @@ export const PublishMenu = () => {
       console.log(metadata, uri);
       const pendingToast = toast.loading("Publishing post...");
 
+      let feedValue: string | undefined = undefined;
+      
+      if (selectedBlogAddress && !isUserBlog()) {
+        const blog = await fetchGroup(lens, {
+          group: selectedBlogAddress,
+        });
+
+        if (blog.isErr()) {
+          toast.dismiss(pendingToast);
+          toast.error("Failed to fetch blog data");
+          setIsPublishing(false);
+          return;
+        }
+        
+        feedValue = blog.value?.feed ?? undefined;
+      }
+
       const result = await post(lens, {
         contentUri: uri,
+        feed: feedValue,
       })
         .andThen(handleOperationWith(walletClient as any))
         .andThen(lens.waitForTransaction);
@@ -223,7 +266,6 @@ export const PublishMenu = () => {
       router.push(`/p/${username}/${postSlug}?success=true`);
       router.refresh();
 
-      // Clean up draft
       if (documentId) {
         try {
           const res = await fetch(`/api/drafts?id=${documentId}`, {
@@ -331,6 +373,36 @@ export const PublishMenu = () => {
                           </div>
                         </div>
                       </div>
+
+                      {blogs.length > 0 && (
+                        <div className="space-y-2">
+                          <Label>Blog (Optional)</Label>
+                          <Select value={selectedBlogAddress || undefined} onValueChange={handleBlogChange}>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select a blog to publish to (optional)" />
+                            </SelectTrigger>
+                            <SelectContent position="popper" sideOffset={5} className="z-[60]" side="bottom">
+                              {blogs.map((blog) => (
+                                <SelectItem key={blog.address} value={blog.address} className="flex items-center gap-2">
+                                  <div className="flex items-center gap-2">
+                                    <div className="rounded-sm h-5 w-5 overflow-hidden relative flex-shrink-0">
+                                      {blog.icon ? (
+                                        <img src={blog.icon} className="w-full h-full object-cover absolute inset-0" alt={`${blog.handle || blog.address.substring(0, 6)} icon`} />
+                                      ) : (
+                                        <div className="placeholder-background absolute inset-0" />
+                                      )}
+                                    </div>
+                                    <span>
+                                      {blog.handle || blog.address.substring(0, 9)}
+                                      {blog.address === blog.owner && " (Personal Blog)"}
+                                    </span>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      )}
 
                       <div className="space-y-2">
                         <Label>Tags</Label>

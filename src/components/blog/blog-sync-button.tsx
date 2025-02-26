@@ -34,6 +34,7 @@ export function SyncButton() {
         const data = await blogsResponse.json();
         setBlogs(data.blogs);
         updateLastSynced();
+        console.log('Sync completed, lastSynced updated to:', useBlogStorage.getState().getLastSynced());
       }
       
       router.refresh();

@@ -22,35 +22,21 @@ export function BlogMenu({ username }: BlogMenuProps) {
   const [blogs, setBlogs] = useState<BlogSettings[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { getBlogs, setBlogs: storeBlogsInCache, needsSync, updateLastSynced } = useBlogStorage();
+  const { fetchBlogsIfNeeded } = useBlogStorage();
 
+  // Load blogs using the centralized fetch method
   useEffect(() => {
-    const cachedBlogs = getBlogs();
-    
-    console.log(cachedBlogs, needsSync());
-    if (cachedBlogs && cachedBlogs.length > 0 && !needsSync()) {
-      setBlogs(cachedBlogs);
-    } else {
-      fetchBlogs();
-    }
-  }, [username]);
-
-  const fetchBlogs = async () => {
-    try {
-      setIsLoading(true);
-      const response = await fetch('/api/blogs');
-      if (!response.ok) throw new Error('Failed to fetch blogs');
-      const data = await response.json();
-      
-      setBlogs(data.blogs);
-      storeBlogsInCache(data.blogs);
-      updateLastSynced();
-    } catch (error) {
-      console.error('Error fetching blogs:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    setIsLoading(true);
+    fetchBlogsIfNeeded()
+      .then(fetchedBlogs => {
+        setBlogs(fetchedBlogs || []);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching blogs:', error);
+        setIsLoading(false);
+      });
+  }, [fetchBlogsIfNeeded]);
 
   const navigateToBlog = (blog: BlogSettings) => {
     if (blog.address === blog.owner) {
@@ -101,7 +87,10 @@ export function BlogMenu({ username }: BlogMenuProps) {
                     <div className="placeholder-background absolute inset-0" />
                   )}
                 </div>
-                <span>{blog.handle || blog.address.substring(0, 9)}</span>
+                <span>
+                  {blog.handle || blog.address.substring(0, 9)}
+                  {blog.address === blog.owner && " (Personal)"}
+                </span>
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
