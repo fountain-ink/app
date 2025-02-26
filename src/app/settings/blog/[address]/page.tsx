@@ -18,6 +18,7 @@ export default async function BlogPage({ params }: PageProps) {
   const claims = getTokenClaims(appToken);
 
   if (!claims) {
+    console.log(claims)
     return notFound();
   }
 
@@ -27,13 +28,11 @@ export default async function BlogPage({ params }: PageProps) {
   });
 
   if (result.isErr()) {
+    console.log(result.error)
     return notFound();
   }
 
   const blog = result.value;
-  if (!blog?.metadata) {
-    return notFound();
-  }
 
   const db = await createClient();
   const { data: blogSettings } = await db
@@ -52,8 +51,8 @@ export default async function BlogPage({ params }: PageProps) {
       showTitle: (blogSettings.metadata as any)?.showTitle ?? true,
     },
   } : {
-    title: blog.metadata.name || "",
-    about: blog.metadata.description || "",
+    title: blog?.metadata?.name || "",
+    about: blog?.metadata?.description || "",
     address: params.address,
     owner: claims.metadata.address,
     created_at: new Date().toISOString(),
