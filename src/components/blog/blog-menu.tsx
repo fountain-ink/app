@@ -12,7 +12,7 @@ import { PenToolIcon } from "../icons/pen-tool";
 import { AnimatedMenuItem } from "../navigation/animated-item";
 import { ChevronRightIcon, PenTool } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { BlogSettings } from "@/hooks/use-blog-settings";
+import { BlogSettings, useBlogStorage } from "@/hooks/use-blog-settings";
 
 interface BlogMenuProps {
   username: string;
@@ -22,26 +22,35 @@ export function BlogMenu({ username }: BlogMenuProps) {
   const [blogs, setBlogs] = useState<BlogSettings[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { getBlogs, setBlogs: storeBlogsInCache, needsSync, updateLastSynced } = useBlogStorage();
 
   useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch('/api/blogs');
-        if (!response.ok) throw new Error('Failed to fetch blogs');
-
-        const data = await response.json();
-
-        setBlogs(data.blogs);
-      } catch (error) {
-        console.error('Error fetching blogs:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchBlogs();
+    const cachedBlogs = getBlogs();
+    
+    console.log(cachedBlogs, needsSync());
+    if (cachedBlogs && cachedBlogs.length > 0 && !needsSync()) {
+      setBlogs(cachedBlogs);
+    } else {
+      fetchBlogs();
+    }
   }, [username]);
+
+  const fetchBlogs = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/blogs');
+      if (!response.ok) throw new Error('Failed to fetch blogs');
+      const data = await response.json();
+      
+      setBlogs(data.blogs);
+      storeBlogsInCache(data.blogs);
+      updateLastSynced();
+    } catch (error) {
+      console.error('Error fetching blogs:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const navigateToBlog = (blog: BlogSettings) => {
     if (blog.address === blog.owner) {
@@ -78,21 +87,21 @@ export function BlogMenu({ username }: BlogMenuProps) {
       </DropdownMenuTrigger>
       {shouldShowDropdown() && (
         <DropdownMenuPortal>
-          <DropdownMenuContent className="w-48" side="left" align="start">
+          <DropdownMenuContent className="w-fit min-w-48" side="left" align="start">
             {blogs.map((blog) => (
               <DropdownMenuItem
                 key={blog.address}
                 onClick={() => navigateToBlog(blog)}
-                className="flex justify-start gap-2 m-0 p-2 py-3 items-center text-base "
+                className="flex justify-start h-8 gap-2 p-1 items-center text-base "
               >
-                <div className="w-5 h-5 rounded-[4px] overflow-hidden relative flex-shrink-0 aspect-square">
+                <div className="rounded-sm h-full overflow-hidden relative flex-shrink-0 aspect-square">
                   {blog.icon ? (
                     <img src={blog.icon} className="w-full h-full object-cover absolute inset-0" alt={`${blog.handle || blog.address.substring(0, 6)} icon`} />
                   ) : (
                     <div className="placeholder-background absolute inset-0" />
                   )}
                 </div>
-                <span>/{blog.handle || blog.address.substring(0, 6)}</span>
+                <span>{blog.handle || blog.address.substring(0, 9)}</span>
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>

@@ -389,7 +389,7 @@ export function BlogSettings({ blogAddress, initialSettings, isUserBlog = false,
                     {!imageState.isDeleted && (imageState.previewUrl || settings?.icon) ? (
                       <img
                         src={imageState.previewUrl || settings?.icon || ""}
-                        className="w-full h-full object-cover"
+                        className="absolute w-full h-full object-cover"
                         alt="Small preview"
                       />
                     ) : (

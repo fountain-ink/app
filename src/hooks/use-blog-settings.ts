@@ -1,6 +1,8 @@
 import { settingsEvents } from "@/lib/settings/events";
 import { useState } from "react";
 import { Database } from "@/lib/supabase/database";
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export interface BlogMetadata {
   showAuthor?: boolean;
@@ -49,4 +51,44 @@ export function useBlogSettings(blogAddress: string, initialSettings: BlogSettin
     saveSettings,
     isLoading,
   };
-} 
+}
+
+interface BlogState {
+  blogs: BlogSettings[];
+  lastSynced: number;
+}
+
+interface BlogStorage {
+  blogState: BlogState;
+  setBlogs: (blogs: BlogSettings[]) => void;
+  getBlogs: () => BlogSettings[];
+  updateLastSynced: () => void;
+  needsSync: () => boolean;
+}
+
+export const useBlogStorage = create<BlogStorage>()(
+  persist(
+    (set, get) => ({
+      blogState: {
+        blogs: [],
+        lastSynced: 0,
+      },
+      setBlogs: (blogs: BlogSettings[]) =>
+        set((state) => ({
+          blogState: { ...state.blogState, blogs },
+        })),
+      getBlogs: () => get().blogState.blogs,
+      updateLastSynced: () =>
+        set((state) => ({
+          blogState: { ...state.blogState, lastSynced: Date.now() },
+        })),
+      needsSync: () => {
+        const { lastSynced } = get().blogState;
+        return !lastSynced || Date.now() - lastSynced > 5 * 60 * 1000;
+      },
+    }),
+    {
+      name: "blog-storage",
+    }
+  )
+); 

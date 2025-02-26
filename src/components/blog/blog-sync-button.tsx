@@ -12,10 +12,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useBlogStorage } from "@/hooks/use-blog-settings";
 
 export function SyncButton() {
   const [isSyncing, setIsSyncing] = useState(false);
   const router = useRouter();
+  const { setBlogs, updateLastSynced } = useBlogStorage();
 
   const handleSync = async () => {
     try {
@@ -25,6 +27,13 @@ export function SyncButton() {
       
       if (!response.ok) {
         throw new Error('Failed to sync blogs');
+      }
+      
+      const blogsResponse = await fetch('/api/blogs');
+      if (blogsResponse.ok) {
+        const data = await blogsResponse.json();
+        setBlogs(data.blogs);
+        updateLastSynced();
       }
       
       router.refresh();
