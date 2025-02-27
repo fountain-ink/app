@@ -3,7 +3,7 @@ import { Separator } from "@/components/ui/separator";
 import { AuthorView } from "@/components/user/user-author-view";
 import { UserContent } from "@/components/user/user-content";
 import { getLensClient } from "@/lib/lens/client";
-import { fetchGroup, fetchPosts, fetchPostTags } from '@lens-protocol/client/actions';
+import { fetchGroup, fetchGroupMembers, fetchPosts, fetchPostTags } from '@lens-protocol/client/actions';
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { MainContentFocus } from "@lens-protocol/client";
@@ -38,11 +38,16 @@ const BlogPage = async ({ params }: { params: { blog: string } }) => {
     return notFound();
   }
 
+  const groupMembers = await fetchGroupMembers(lens, {
+    group: groupAddress,
+  }).unwrapOr(null).then((members) => members?.items.map((member) => member.account));
+
+
   const feedAddress = group.feed;
   const posts = await fetchPosts(lens, {
     filter: {
       metadata: { mainContentFocus: [MainContentFocus.Article] },
-      feeds: feedAddress ? [feedAddress] : undefined
+      feeds: feedAddress ? [{ feed: feedAddress }] : []
     },
   }).unwrapOr(null);
 
@@ -69,7 +74,7 @@ const BlogPage = async ({ params }: { params: { blog: string } }) => {
     <>
       {showAuthor && group.owner && (
         <div className="p-4">
-          <AuthorView showUsername={false} accounts={[group.owner]} />
+          <AuthorView showUsername={false} accounts={[...groupMembers ?? []]} />
         </div>
       )}
 
