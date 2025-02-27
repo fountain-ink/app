@@ -66,11 +66,15 @@ export async function GET(req: NextRequest) {
     const result = await fetchGroups(client, {
       filter: {
         member: evmAddress(user.value.address),
+        // managedBy: {
+        //   includeOwners: true,
+        //   address: evmAddress(user.value.address),
+        // },
       },
     });
 
     if (result.isErr()) {
-      console.log("[Blogs Sync] Failed to fetch on-chain blogs");
+      console.log("[Blogs Sync] Failed to fetch on-chain blogs: ", result.error);
       return NextResponse.json({ error: "Failed to fetch on-chain blogs" }, { status: 500 });
     }
 

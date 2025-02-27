@@ -92,6 +92,8 @@ export function AuthManager({ credentials }: { credentials: Credentials | null }
 
     try {
       const currentAppToken = getCookie("appToken");
+      // console.log("[Auth] Current app token:", currentAppToken);
+      // console.log("[Auth] Credentials:", credentials);
 
       // Case 1: No credentials and no app token -> setup guest
       if (!credentials && !currentAppToken) {
@@ -109,12 +111,13 @@ export function AuthManager({ credentials }: { credentials: Credentials | null }
       }
 
       // Case 3: Credentials changed -> setup user again
-      if (credentials?.refreshToken && credentials.refreshToken !== lastRefreshToken.current) {
-        isSettingUpAuth.current = true;
-        await setupUserAuth(credentials.refreshToken);
-        lastRefreshToken.current = credentials.refreshToken;
-        return;
-      }
+      // Disabled due to continuous user setup on page refresh
+      // if (credentials?.refreshToken && credentials.refreshToken !== lastRefreshToken.current) {
+      //   isSettingUpAuth.current = true;
+      //   await setupUserAuth(credentials.refreshToken);
+      //   lastRefreshToken.current = credentials.refreshToken;
+      //   return;
+      // }
     } catch (error) {
       console.error("Auth setup failed (This should never happen):", error);
       // window.location.reload(); 

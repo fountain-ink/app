@@ -1,7 +1,7 @@
 import { getLensClient } from "@/lib/lens/client";
 import { Account, evmAddress } from "@lens-protocol/client";
 import { fetchAccountsAvailable } from "@lens-protocol/client/actions";
-import { PlusIcon } from "lucide-react";
+import { Plus, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { UserIcon } from "../icons/user";
@@ -92,7 +92,7 @@ export function ProfileSelectMenu({ open, onOpenChange }: { open?: boolean; onOp
           <DialogHeader>
             <DialogTitle>Select profile</DialogTitle>
           </DialogHeader>
-          <div className="flex flex-col gap-3 items-center justify-center">
+          <div className="flex flex-col gap-4 items-center justify-center">
             {profiles?.length === 0 && (
               <div className="text-center">
                 <p className="mb-4">No profiles found</p>
@@ -109,8 +109,8 @@ export function ProfileSelectMenu({ open, onOpenChange }: { open?: boolean; onOp
               </ScrollArea>
             )}
 
-            <Button className="flex gap-2" variant="outline" onClick={handleShowOnboarding}>
-              <PlusIcon size={16} />
+            <Button className="flex gap-2" variant="default" onClick={handleShowOnboarding}>
+              <Plus className="w-4 h-4" />
               New Profile
             </Button>
           </div>
