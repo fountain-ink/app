@@ -30,7 +30,7 @@ export function BlockSelection({
   const isBlockSelected = useBlockSelected();
 
   return (
-    <div
+    <span
       className={blockSelectionVariants({
         active: isBlockSelected,
         className,

@@ -366,7 +366,7 @@ export function BlogSettings({ blogAddress, initialSettings, isUserBlog = false,
                 <p className="text-xs text-center text-muted-foreground">Original</p>
               </div>
 
-              <div className="flex items-start gap-4">
+              {/* <div className="flex items-start gap-4">
                 <div className="space-y-1.5">
                   <div className="relative w-[64px] h-[64px] rounded-md overflow-hidden ring-2 ring-background">
                     {!imageState.isDeleted && (imageState.previewUrl || settings?.icon) ? (
@@ -410,8 +410,8 @@ export function BlogSettings({ blogAddress, initialSettings, isUserBlog = false,
                     )}
                   </div>
                   <p className="text-xs text-center text-muted-foreground">16px</p>
-                </div>
-              </div>
+                </div> */}
+              {/* </div> */}
             </div>
           </div>
         </div>
@@ -455,7 +455,7 @@ export function BlogSettings({ blogAddress, initialSettings, isUserBlog = false,
 
         <div className="relative">
           <Label htmlFor="blog-about" className="flex flex-row items-center gap-2">
-            Tagline
+            About
             <p className="text-sm font-normal text-muted-foreground">(optional)</p>
           </Label>
           <p className="text-sm text-muted-foreground mb-2">
