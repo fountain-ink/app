@@ -154,7 +154,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-96  flex flex-col">
         <DialogHeader>
-          <DialogTitle>Create Profile</DialogTitle>
+          <DialogTitle>Create profile</DialogTitle>
         </DialogHeader>
         <div className="flex-1 flex flex-col">
           <div className="space-y-6">
@@ -179,9 +179,12 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
               </div>
             </div>
           </div>
-          <div className="mt-auto pt-6 flex justify-end">
+          <div className="mt-auto pt-6 flex justify-end gap-2">
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
+              Back
+            </Button>
             <Button onClick={handleOnboarding} disabled={loading || !username}>
-              {loading ? "Creating..." : "Create Account"}
+              {loading ? "Creating..." : "Create profile"}
             </Button>
           </div>
         </div>

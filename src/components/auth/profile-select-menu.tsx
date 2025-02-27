@@ -65,7 +65,8 @@ export function ProfileSelectMenu({ open, onOpenChange }: { open?: boolean; onOp
     }
   };
 
-  const isOpen = open ?? showProfileSelect;
+  // Hide select menu when onboarding is open
+  const isOpen = showOnboarding ? false : (open ?? showProfileSelect);
   const handleOpenChange = onOpenChange ?? setShowProfileSelect;
 
   if (loading) {
@@ -109,15 +110,24 @@ export function ProfileSelectMenu({ open, onOpenChange }: { open?: boolean; onOp
               </ScrollArea>
             )}
 
-            <Button className="flex gap-2" variant="default" onClick={handleShowOnboarding}>
-              <Plus className="w-4 h-4" />
-              New Profile
-            </Button>
+            <div className="w-full flex justify-end gap-2">
+              <Button variant="outline" onClick={() => handleOpenChange(false)}>
+                Close
+              </Button>
+              <Button className="flex gap-2" variant="default" onClick={handleShowOnboarding}>
+                {/* <Plus className="w-4 h-4" /> */}
+                New Profile
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
 
-      <OnboardingModal open={showOnboarding} onOpenChange={handleOnboardingClose} onSuccess={fetchProfiles} />
+      <OnboardingModal 
+        open={showOnboarding} 
+        onOpenChange={handleOnboardingClose} 
+        onSuccess={fetchProfiles} 
+      />
     </>
   );
 }
