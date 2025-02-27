@@ -42,7 +42,6 @@ const BlogPage = async ({ params }: { params: { blog: string } }) => {
     group: groupAddress,
   }).unwrapOr(null).then((members) => members?.items.map((member) => member.account));
 
-
   const feedAddress = group.feed;
   const posts = await fetchPosts(lens, {
     filter: {

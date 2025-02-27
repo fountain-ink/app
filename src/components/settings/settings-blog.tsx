@@ -11,14 +11,16 @@ import { useCallback, useEffect, useState } from "react";
 import { TextareaAutosize } from "../ui/textarea";
 import { BlogSettings as BlogSettingsType, BlogMetadata, useBlogSettings } from "@/hooks/use-blog-settings";
 import { useWalletClient } from "wagmi";
-import { toast } from "sonner";
-import { group } from "@lens-protocol/metadata";
-import { getLensClient } from "@/lib/lens/client";
-import { fetchGroup, setGroupMetadata } from "@lens-protocol/client/actions";
-import { handleOperationWith } from "@lens-protocol/client/viem";
-import { uri } from "@lens-protocol/client";
-import { storageClient } from "@/lib/lens/storage-client";
-import { clientCookieStorage } from "@/lib/lens/storage";
+import Link from "next/link";
+import { ArrowLeftIcon } from "lucide-react";
+// import { toast } from "sonner";
+// import { group } from "@lens-protocol/metadata";
+// import { getLensClient } from "@/lib/lens/client";
+// import { fetchGroup, setGroupMetadata } from "@lens-protocol/client/actions";
+// import { handleOperationWith } from "@lens-protocol/client/viem";
+// import { uri } from "@lens-protocol/client";
+// import { storageClient } from "@/lib/lens/storage-client";
+// import { clientCookieStorage } from "@/lib/lens/storage";
 
 interface BlogSettingsProps {
   blogAddress: string;
@@ -329,16 +331,27 @@ export function BlogSettings({ blogAddress, initialSettings, isUserBlog = false,
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Blog Settings</CardTitle>
-        <CardDescription>Configure your blog preferences.</CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <div>
+          <div className="mb-2">
+            <Link 
+              href="/settings/blogs/" 
+              className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-muted-foreground hover:text-accent-foreground h-9 px-3 py-2 pl-0"
+            >
+              <ArrowLeftIcon className="w-4 h-4 mr-2" />
+              Back
+            </Link>
+          </div>
+          <CardTitle>Blog Settings</CardTitle>
+          <CardDescription>Configure your blog preferences.</CardDescription>
+        </div>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-4">
-          <div className="space-y-2">
+          <div className="">
             <Label>Blog Icon</Label>
-            <p className="text-sm text-muted-foreground">
-              Square PNG or JPG, best results with 256x256 pixels or larger.
+            <p className="text-sm text-muted-foreground mb-2">
+              Best results with square images, 256x256 or larger.
             </p>
             <div className="flex items-start gap-4">
               <div className="space-y-1.5">
@@ -403,48 +416,59 @@ export function BlogSettings({ blogAddress, initialSettings, isUserBlog = false,
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="blog-title">Blog Title</Label>
-          <Input
-            id="blog-title"
-            value={formState.title}
-            onChange={(e) => handleChange('title', e.target.value)}
-            placeholder="Enter your blog title"
-            className={!formState.metadata.showTitle ? "opacity-50" : ""}
-          />
-          {formState.errors.title && (
-            <p className="text-sm text-destructive mt-2">{formState.errors.title}</p>
-          )}
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="">
+            <Label htmlFor="blog-title">Title</Label>
+            <p className="text-sm text-muted-foreground mb-2">
+              Main header on your blog page
+            </p>
+            <Input
+              id="blog-title"
+              value={formState.title}
+              onChange={(e) => handleChange('title', e.target.value)}
+              placeholder="Enter your blog title"
+              className={!formState.metadata.showTitle ? "opacity-50" : ""}
+            />
+            {formState.errors.title && (
+              <p className="text-sm text-destructive mt-2">{formState.errors.title}</p>
+            )}
+          </div>
+
+          <div className="">
+            <Label htmlFor="blog-handle">Slug</Label>
+            <p className="text-sm text-muted-foreground mb-2">
+              URL slug for your blog, i.e. {isUserBlog ? "/b/" : "/blog/"}{formState.handle || "your-handle"}
+            </p>
+            <Input
+              id="blog-handle"
+              value={formState.handle}
+              onChange={(e) => handleChange('handle', e.target.value.toLowerCase())}
+              placeholder="your-blog-handle"
+              disabled={isUserBlog}
+              className={isUserBlog ? "opacity-50 cursor-not-allowed" : ""}
+            />
+            {formState.errors.handle && !isUserBlog && (
+              <p className="text-sm text-destructive mt-2">{formState.errors.handle}</p>
+            )}
+          </div>
         </div>
 
-        <div className="flex flex-col gap-2 relative">
-          <Label htmlFor="blog-about">Blog About</Label>
+        <div className="relative">
+          <Label htmlFor="blog-about" className="flex flex-row items-center gap-2">
+            Tagline
+            <p className="text-sm font-normal text-muted-foreground">(optional)</p>
+          </Label>
+          <p className="text-sm text-muted-foreground mb-2">
+            Short description of your blog
+          </p>
           <TextareaAutosize
             id="blog-about"
             value={formState.about}
             variant="default"
             className="p-2"
             onChange={(e) => handleChange('about', e.target.value)}
-            placeholder="Write a description about your blog"
+            placeholder="A short description of your blog"
           />
-        </div>
-
-        <div className="">
-          <Label htmlFor="blog-handle">Blog Slug</Label>
-          <p className="text-sm text-muted-foreground mb-2">
-            Seen in the URL (e.g., {isUserBlog ? "/b/" : "/blog/"}{formState.handle || "your-handle"})
-          </p>
-          <Input
-            id="blog-handle"
-            value={formState.handle}
-            onChange={(e) => handleChange('handle', e.target.value.toLowerCase())}
-            placeholder="your-blog-handle"
-            disabled={isUserBlog}
-            className={isUserBlog ? "opacity-50 cursor-not-allowed" : ""}
-          />
-          {formState.errors.handle && !isUserBlog && (
-            <p className="text-sm text-destructive mt-2">{formState.errors.handle}</p>
-          )}
         </div>
 
         <h2 className="text-lg font-semibold">Display Options</h2>
