@@ -1,7 +1,7 @@
 import { BlogSettings } from "@/components/settings/settings-blog";
 import { getAppToken } from "@/lib/auth/get-app-token";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
-import { getUserMetadata } from "@/lib/settings/get-user-metadata";
+import { getBlogData } from "@/lib/settings/get-user-metadata";
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import { BlogSettings as BlogSettingsType } from "@/hooks/use-blog-settings";
@@ -26,6 +26,13 @@ export default async function BlogSettingsPage() {
     .eq("address", claims.sub)
     .single();
 
-  return <BlogSettings isUserBlog={true} userHandle={claims.metadata.username} blogAddress={claims.sub} initialSettings={blogSettings as BlogSettingsType} />;
+  return (
+    <BlogSettings 
+      isUserBlog={true} 
+      userHandle={claims.metadata.username} 
+      blogAddress={claims.sub} 
+      initialSettings={blogSettings as BlogSettingsType} 
+    />
+  );
 }
 

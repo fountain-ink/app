@@ -1,42 +1,67 @@
 import { BlogHeader } from "@/components/user/blog-header";
 import { UserTheme } from "@/components/user/user-theme";
 import { getLensClient } from "@/lib/lens/client";
-import { getUserMetadata } from "@/lib/settings/get-user-metadata";
-import { fetchAccount } from "@lens-protocol/client/actions";
+import { getBlogData } from "@/lib/settings/get-user-metadata";
+import { fetchAccount, fetchGroup } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
+import { isEvmAddress } from "@/lib/utils/address";
 
 export async function generateMetadata({ params }: { params: { user: string } }) {
-  const username = params.user;
   const lens = await getLensClient();
-  const account = await fetchAccount(lens, {
-    username: { localName: username },
-  }).unwrapOr(null);
+  let profile;
+  let address;
+  let groupMetadata = null;
+  
+  if (isEvmAddress(params.user)) {
+    const group = await fetchGroup(lens, {
+      group: params.user,
+    }).unwrapOr(null);
+    
+    if (!group) {
+      return {
+        title: `${params.user}'s blog`,
+        description: `${params.user} on Fountain`,
+      };
+    }
+    
+    address = group.address;
+    groupMetadata = group.metadata;
+  } else {
+    profile = await fetchAccount(lens, {
+      username: { localName: params.user },
+    }).unwrapOr(null);
+    
+    if (!profile) {
+      return {
+        title: `${params.user}'s blog`,
+        description: `@${params.user}'s blog on Fountain`,
+      };
+    }
 
-  if (!account) {
-    return {
-      title: `${username}'s blog`,
-      description: `@${username}'s blog on Fountain`,
-    };
+    address = profile.address;
   }
-
-  const settings = await getUserMetadata(account.address);
-  const icon = settings?.blog?.icon;
-  const blogTitle = settings?.blog?.title || `${username}'s blog`;
-  const blogDescription = settings?.blog?.about || `@${username}'s blog on Fountain`;
+  
+  const blog = await getBlogData(address);
+  
+  const username = profile?.username?.localName || params.user;
+  const icon = blog?.icon || groupMetadata?.icon;
+  const title = blog?.title || groupMetadata?.name || `${username}'s blog`;
+  const description = blog?.about || groupMetadata?.description || 
+    (profile ? `@${username}'s blog on Fountain` : `${params.user} on Fountain`);
 
   return {
-    title: blogTitle,
-    description: blogDescription,
+    title,
+    description,
     icons: icon ? [{ rel: "icon", url: icon }] : undefined,
     openGraph: {
-      title: blogTitle,
-      description: blogDescription,
-      ...(icon && { images: [{ url: icon, alt: `${blogTitle} icon` }] }),
+      title,
+      description,
+      ...(icon && { images: [{ url: icon, alt: `${title} icon` }] }),
     },
     twitter: {
       card: "summary",
-      title: blogTitle,
-      description: blogDescription,
+      title,
+      description,
       ...(icon && { images: [icon] }),
     },
   };
@@ -50,23 +75,37 @@ const BlogLayout = async ({
   params: { user: string };
 }) => {
   const lens = await getLensClient();
-  const account = await fetchAccount(lens, {
-    username: { localName: params.user },
-  }).unwrapOr(null);
-
-  if (!account) {
-    console.error("Failed to fetch user profile");
-    return notFound();
+  let address;
+  
+  if (isEvmAddress(params.user)) {
+    const group = await fetchGroup(lens, {
+      group: params.user,
+    }).unwrapOr(null);
+    
+    if (!group) {
+      console.error("Failed to fetch group");
+      return notFound();
+    }
+    
+    address = group.address;
+  } else {
+    const profile = await fetchAccount(lens, {
+      username: { localName: params.user },
+    }).unwrapOr(null);
+    
+    if (!profile) {
+      console.error("Failed to fetch user profile");
+      return notFound();
+    }
+    
+    address = profile.address;
   }
-
-  const metadata = await getUserMetadata(account.address);
-  const themeName = metadata?.theme?.name;
-  const title = metadata?.blog?.title;
-  const icon = metadata?.blog?.icon;
+  
+  const blog = await getBlogData(address);
 
   return (
-    <UserTheme initialTheme={themeName}>
-      <BlogHeader title={title} icon={icon} username={params.user} />
+    <UserTheme initialTheme={blog?.theme?.name}>
+      <BlogHeader title={blog?.title} icon={blog?.icon} username={params.user} />
       <div className="flex flex-col mt-5 md:mt-10 items-center justify-center w-full max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
         {children}
       </div>

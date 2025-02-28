@@ -5,19 +5,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMetadata } from "@/hooks/use-metadata";
-import { UserMetadata } from "@/lib/settings/user-settings";
 import { isValidTheme, type ThemeType } from "@/styles/themes";
 import { useState } from "react";
 import { ThemeButtons } from "../theme/theme-buttons";
 import { useTheme } from "../theme/theme-context";
 import { Input } from "../ui/input";
+import { BlogData } from "@/lib/settings/get-user-metadata";
 
 interface ThemeSettingsProps {
   defaultTheme?: ThemeType;
-  initialMetadata?: UserMetadata;
+  initialMetadata?: BlogData;
 }
 
-export function ThemeSettings({ defaultTheme, initialMetadata = {} }: ThemeSettingsProps) {
+export function ThemeSettings({ defaultTheme, initialMetadata }: ThemeSettingsProps) {
   const { theme, setTheme } = useTheme();
   const { metadata, saveMetadata } = useMetadata(initialMetadata);
   const [customColor, setCustomColor] = useState(metadata.theme?.customColor || "#e2f3ab");

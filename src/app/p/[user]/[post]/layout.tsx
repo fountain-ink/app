@@ -4,7 +4,7 @@ import { GradientBlur } from "@/components/navigation/gradient-blur";
 import { BlogHeader } from "@/components/user/blog-header";
 import { UserTheme } from "@/components/user/user-theme";
 import { getLensClient } from "@/lib/lens/client";
-import { getUserMetadata } from "@/lib/settings/get-user-metadata";
+import { getBlogData } from "@/lib/settings/get-user-metadata";
 import { fetchAccount, fetchPost } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
 
@@ -15,15 +15,19 @@ export async function generateMetadata({ params }: { params: { user: string; pos
     username: { localName: username },
   }).unwrapOr(null);
 
-  if (!profile) {
+  const post = await fetchPost(lens, {
+    post: params.post,
+  }).unwrapOr(null);
+
+  if (!profile || !post || post?.__typename !== "Post") {
     return {
       title: `${params.post} - ${username}'s blog`,
       description: `@${username}'s blog post on Fountain`,
     };
   }
 
-  const settings = await getUserMetadata(username);
-  const icon = settings?.blog?.icon;
+  const blog = await getBlogData(post.feed.group?.address || profile.address);
+  const icon = blog?.icon;
 
   return {
     title: `${params.post} - ${username}'s blog`,
@@ -50,15 +54,15 @@ const UserPostLayout = async ({
     return notFound();
   }
 
-  if (!post) {
+  if (!post || post?.__typename !== "Post") {
     console.error("Failed to fetch post");
     return notFound();
   }
 
-  const settings = await getUserMetadata(account.address);
+  const settings = await getBlogData(post.feed.group?.address || account.address);
   const themeName = settings?.theme?.name;
-  const title = settings?.blog?.title;
-  const icon = settings?.blog?.icon;
+  const title = settings?.title;
+  const icon = settings?.icon;
 
   return (
     <UserTheme initialTheme={themeName}>

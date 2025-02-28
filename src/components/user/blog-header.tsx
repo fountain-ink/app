@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface BlogHeaderProps {
-  title?: string;
-  icon?: string;
+  title?: string | null;
+  icon?: string | null;
   username?: string;
 }
 

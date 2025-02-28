@@ -18,6 +18,7 @@ export type Database = {
           icon: string | null
           metadata: Json
           owner: string
+          theme: Json | null
           title: string | null
           updated_at: string | null
         }
@@ -29,6 +30,7 @@ export type Database = {
           icon?: string | null
           metadata?: Json
           owner: string
+          theme?: Json | null
           title?: string | null
           updated_at?: string | null
         }
@@ -40,6 +42,7 @@ export type Database = {
           icon?: string | null
           metadata?: Json
           owner?: string
+          theme?: Json | null
           title?: string | null
           updated_at?: string | null
         }

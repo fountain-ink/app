@@ -1,14 +1,14 @@
 "use client";
 
 import { settingsEvents } from "@/lib/settings/events";
-import { UserMetadata } from "@/lib/settings/user-settings";
+import { BlogData } from "@/lib/settings/user-settings";
 import { useState } from "react";
 
-export function useMetadata(initialMetadata: UserMetadata = {}) {
-  const [metadata, setMetadata] = useState<UserMetadata>(initialMetadata);
+export function useMetadata(initialMetadata: BlogData = {}) {
+  const [metadata, setMetadata] = useState<BlogData>(initialMetadata);
   const [isLoading, setIsLoading] = useState(!Object.keys(initialMetadata).length);
 
-  const saveMetadata = async (newMetadata: UserMetadata) => {
+  const saveMetadata = async (newMetadata: BlogData) => {
     try {
       const response = await fetch("/api/metadata", {
         method: "PUT",
