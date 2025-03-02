@@ -434,10 +434,10 @@ export function BlogSettings({ blogAddress, initialSettings, isUserBlog = false,
             )}
           </div>
 
-          <div className="">
+          {/* <div className="">
             <Label htmlFor="blog-handle">Slug</Label>
             <p className="text-sm text-muted-foreground mb-2">
-              URL slug for your blog, i.e. {isUserBlog ? "/b/" : "/blog/"}{formState.handle || "your-handle"}
+              URL slug for your blog, i.e. /b/{formState.handle || "your-handle"}
             </p>
             <Input
               id="blog-handle"
@@ -450,8 +450,8 @@ export function BlogSettings({ blogAddress, initialSettings, isUserBlog = false,
             {formState.errors.handle && !isUserBlog && (
               <p className="text-sm text-destructive mt-2">{formState.errors.handle}</p>
             )}
-          </div>
-        </div>
+          </div> */}
+        </div> 
 
         <div className="relative">
           <Label htmlFor="blog-about" className="flex flex-row items-center gap-2">

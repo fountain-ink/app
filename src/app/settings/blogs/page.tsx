@@ -69,7 +69,7 @@ export default async function BlogsSettingsPage() {
               title={personalBlog.title || "Personal Blog"}
               description={personalBlog.about || "Your personal blog settings"}
               address={personalBlog.address}
-              href="/settings/blog"
+              href={`/settings/b/${personalBlog.address}`}
               icon={personalBlog.icon || undefined}
               handle={personalBlog.handle || undefined}
               isUserBlog
@@ -85,9 +85,8 @@ export default async function BlogsSettingsPage() {
                 title={blog.title || "Untitled Blog"}
                 description={blog.about || undefined}
                 address={blog.address}
-                href={`/settings/blog/${blog.address}`}
+                href={`/settings/b/${blog.address}`}
                 icon={blog.icon || undefined}
-                handle={blog.handle || undefined}
               />
             ))
           )}

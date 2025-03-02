@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { User, User2Icon } from "lucide-react";
+import { ExternalLinkIcon, User, User2Icon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { EvmAddressDisplay } from "@/components/ui/metadata-display";
 
@@ -38,7 +38,7 @@ export function BlogCard({ title, description, address, isUserBlog, href, icon, 
       <div className="flex-1 pl-4">
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               {isUserBlog && (
                 <TooltipProvider>
                   <Tooltip>
@@ -52,8 +52,29 @@ export function BlogCard({ title, description, address, isUserBlog, href, icon, 
                 </TooltipProvider>
               )}
               <h3 className="font-medium text-lg">{title}</h3>
-              {handle && (
-                <code className="text-sm text-muted-foreground">{isUserBlog ? "/b/" : "/blog/"}{handle}</code>
+              {isUserBlog && (
+                <Link href={`/b/${handle}`} target="_blank" rel="noopener noreferrer">
+                  <Button
+                    variant={"ghostText"}
+                    size="sm"
+                    className="transition-colors flex items-center gap-1 h-auto py-0"
+                  >
+                    <span className="text-sm">/b/{handle}</span>
+                    <ExternalLinkIcon className="h-3 w-3" />
+                  </Button>
+                </Link>
+              )}
+              {!isUserBlog && (
+                <Link href={`/b/${address}`} target="_blank" rel="noopener noreferrer">
+                  <Button
+                    variant={"ghostText"}
+                    size="sm"
+                    className="transition-colors flex items-center gap-1 h-auto py-0"
+                  >
+                    <span className="text-sm">/b/{address?.substring(0, 4)}...{address?.substring(address.length - 3)}</span>
+                    <ExternalLinkIcon className="h-3 w-3" />
+                  </Button>
+                </Link>
               )}
             </div>
             <Link href={href}>
@@ -69,7 +90,7 @@ export function BlogCard({ title, description, address, isUserBlog, href, icon, 
           <p className="text-sm text-muted-foreground">
             {description || "No description"}
           </p>
-          {address && <EvmAddressDisplay address={address} />}
+          {/* {address && <EvmAddressDisplay address={address} />} */}
         </div>
       </div>
     </div>

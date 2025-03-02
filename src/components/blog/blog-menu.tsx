@@ -40,10 +40,8 @@ export function BlogMenu({ username }: BlogMenuProps) {
   const getBlogUrl = (blog: BlogSettings): string => {
     if (blog.address === blog.owner) {
       return `/b/${username}`;
-    } else if (blog.handle) {
-      return `/blog/${blog.handle}`;
     } else {
-      return `/blog/${blog.address}`;
+      return `/b/${blog.address}`;
     }
   };
 
