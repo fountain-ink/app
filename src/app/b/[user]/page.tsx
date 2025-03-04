@@ -6,7 +6,7 @@ import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchAccount, fetchPosts, fetchPostTags, fetchGroup, fetchGroupMembers } from '@lens-protocol/client/actions';
 import { notFound } from "next/navigation";
-import { getBlogData } from "@/lib/settings/get-user-metadata";
+import { getBlogData } from "@/lib/settings/get-blog-metadata";
 import { MainContentFocus, Account } from "@lens-protocol/client";
 import { isEvmAddress } from "@/lib/utils/address";
 

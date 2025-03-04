@@ -1,22 +1,22 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { BlogSettings } from "@/hooks/use-blog-settings";
+import { BlogData } from "@/lib/settings/get-blog-metadata";
 
 interface BlogState {
-  blogs: BlogSettings[];
+  blogs: BlogData[];
   lastSynced: number;
   isFetching: boolean;
 }
 
 interface BlogStorage {
   blogState: BlogState;
-  setBlogs: (blogs: BlogSettings[]) => void;
-  getBlogs: () => BlogSettings[];
+  setBlogs: (blogs: BlogData[]) => void;
+  getBlogs: () => BlogData[];
   updateLastSynced: () => void;
   needsSync: () => boolean;
   getLastSynced: () => number;
   resetState: () => void;
-  fetchBlogsIfNeeded: () => Promise<BlogSettings[]>;
+  fetchBlogsIfNeeded: () => Promise<BlogData[]>;
   isFetching: () => boolean;
 }
 
@@ -28,7 +28,7 @@ export const useBlogStorage = create<BlogStorage>()(
         lastSynced: 0,
         isFetching: false
       },
-      setBlogs: (blogs: BlogSettings[]) =>
+      setBlogs: (blogs: BlogData[]) =>
         set((state) => {
           console.log('Setting blogs:', blogs);
           return {

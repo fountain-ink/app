@@ -1,11 +1,9 @@
 import { BlogSettings } from "@/components/settings/settings-blog";
 import { getAppToken } from "@/lib/auth/get-app-token";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
-import { getBlogData } from "@/lib/settings/get-user-metadata";
+import { BlogData, getBlogData } from "@/lib/settings/get-blog-metadata";
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
-import { BlogSettings as BlogSettingsType } from "@/hooks/use-blog-settings";
-
 
 export const metadata = {
   title: "Blog Settings",
@@ -30,8 +28,7 @@ export default async function BlogSettingsPage() {
     <BlogSettings 
       isUserBlog={true} 
       userHandle={claims.metadata.username} 
-      blogAddress={claims.sub} 
-      initialSettings={blogSettings as BlogSettingsType} 
+      initialSettings={blogSettings as BlogData} 
     />
   );
 }

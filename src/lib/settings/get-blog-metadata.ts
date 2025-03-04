@@ -1,20 +1,24 @@
 import { Database } from "../supabase/database";
 import { createClient } from "../supabase/server";
 
-export type BlogData = Database["public"]["Tables"]["blogs"]["Row"];
+type Blog = Database["public"]["Tables"]["blogs"]["Row"];
 
-type ThemeData =  {
+export type BlogThemeData =  {
   name?: string;
   customColor?: string;
   customBackground?: string;
 }
 
-type Metadata = {
+export type BlogMetadata = {
   showAuthor?: boolean;
   showTags?: boolean;
   showTitle?: boolean;
 }
 
+export type BlogData = Omit<Blog, 'theme' | 'metadata'> & {
+  theme: BlogThemeData;
+  metadata: BlogMetadata;
+}
 
 export const getBlogData = async (address: string) => {
   try {
@@ -26,13 +30,13 @@ export const getBlogData = async (address: string) => {
       return null;
     }
 
-    const blog = data as BlogData;
+    const blog = data as Blog;
 
     return {
       ...blog,
-      theme: blog?.theme as ThemeData,
-      metadata: blog?.metadata as Metadata,
-    };
+      theme: blog?.theme as BlogThemeData,
+      metadata: blog?.metadata as BlogMetadata,
+    } as BlogData;
 
   } catch (error) {
     console.error("Error fetching user metadata:", error);

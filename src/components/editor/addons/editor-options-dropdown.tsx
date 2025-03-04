@@ -45,11 +45,11 @@ export const EditorOptionsDropdown = () => {
         <AnimatedMenuItem icon={isPreview ? EyeOffIcon : EyeIcon} onClick={onPreview}>
           {isPreview ? "Exit preview" : "Preview post"}
         </AnimatedMenuItem>
-        <Link href={"/settings/theme"} prefetch>
+        {/* <Link href={"/settings/theme"} prefetch>
           <AnimatedMenuItem icon={BrushIcon} onClick={onEditTheme}>
             Edit theme
           </AnimatedMenuItem>
-        </Link>
+        </Link> */}
       </DropdownMenuContent>
       <DraftShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
     </DropdownMenu>

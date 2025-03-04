@@ -8,7 +8,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
-import { BlogSettings } from "@/hooks/use-blog-settings";
 import { getLensClient } from "@/lib/lens/client";
 import { storageClient } from "@/lib/lens/storage-client";
 import { TransactionIndexingError } from "@lens-protocol/client";
@@ -30,6 +29,7 @@ import { getStaticEditor, staticComponents } from "../editor/static";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
+import { BlogData } from "@/lib/settings/get-blog-metadata";
 
 export const PublishMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -49,7 +49,7 @@ export const PublishMenu = () => {
   const [tags, setTags] = useState<Tag[]>([]);
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
   const [isPublishing, setIsPublishing] = useState(false);
-  const [blogs, setBlogs] = useState<BlogSettings[]>([]);
+  const [blogs, setBlogs] = useState<BlogData[]>([]);
   const [selectedBlogAddress, setSelectedBlogAddress] = useState<string | null>(null);
   const { fetchBlogsIfNeeded } = useBlogStorage();
 

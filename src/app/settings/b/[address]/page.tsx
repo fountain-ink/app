@@ -3,7 +3,7 @@ import { getAppToken } from "@/lib/auth/get-app-token";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { BlogSettings as BlogSettingsType } from "@/hooks/use-blog-settings";
+import { BlogData } from "@/lib/settings/get-blog-metadata";
 
 interface PageProps {
   params: {
@@ -32,21 +32,9 @@ export default async function BlogPage({ params }: PageProps) {
 
   const isUserBlog = blogSettings.owner === claims.metadata.address;
 
-  const initialSettings: BlogSettingsType = {
-    ...blogSettings,
-    title: blogSettings.title || "",
-    about: blogSettings.about || "",
-    metadata: {
-      showAuthor: (blogSettings.metadata as any)?.showAuthor ?? true,
-      showTags: (blogSettings.metadata as any)?.showTags ?? true,
-      showTitle: (blogSettings.metadata as any)?.showTitle ?? true,
-    },
-  };
-
   return (
     <BlogSettings
-      blogAddress={params.address}
-      initialSettings={initialSettings}
+      initialSettings={blogSettings as BlogData}
       isUserBlog={isUserBlog}
     />);
 } 

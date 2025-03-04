@@ -4,7 +4,7 @@ import { GradientBlur } from "@/components/navigation/gradient-blur";
 import { BlogHeader } from "@/components/user/blog-header";
 import { UserTheme } from "@/components/user/user-theme";
 import { getLensClient } from "@/lib/lens/client";
-import { getBlogData } from "@/lib/settings/get-user-metadata";
+import { getBlogData } from "@/lib/settings/get-blog-metadata";
 import { fetchAccount, fetchPost } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
 

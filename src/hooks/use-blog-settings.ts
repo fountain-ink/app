@@ -2,24 +2,15 @@ import { settingsEvents } from "@/lib/settings/events";
 import { useState } from "react";
 import { Database } from "@/lib/supabase/database";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
+import { BlogData } from "@/lib/settings/get-blog-metadata";
 
-export interface BlogMetadata {
-  showAuthor?: boolean;
-  showTags?: boolean;
-  showTitle?: boolean;
-}
-
-export type BlogSettings = Omit<Database["public"]["Tables"]["blogs"]["Row"], "metadata"> & {
-  metadata?: BlogMetadata | null;
-};
-
-export function useBlogSettings(blogAddress: string, initialSettings: BlogSettings) {
-  const [settings, setSettings] = useState<BlogSettings>( initialSettings );
+export function useBlogSettings(initialSettings: BlogData) {
+  const [settings, setSettings] = useState<BlogData>( initialSettings );
   const [isLoading, setIsLoading] = useState(!initialSettings);
 
-  const saveSettings = async (newSettings: Partial<BlogSettings>) => {
+  const saveSettings = async (newSettings: Partial<BlogData>) => {
     try {
-      const response = await fetch(`/api/blogs/${blogAddress}`, {
+      const response = await fetch(`/api/blogs/${settings.address}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

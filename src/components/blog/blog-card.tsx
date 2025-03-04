@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ExternalLinkIcon, User, User2Icon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { EvmAddressDisplay } from "@/components/ui/metadata-display";
 
 interface BlogCardProps {
   title: string;

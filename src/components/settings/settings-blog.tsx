@@ -9,10 +9,12 @@ import { Switch } from "@/components/ui/switch";
 import { uploadFile } from "@/lib/upload/upload-file";
 import { useCallback, useEffect, useState } from "react";
 import { TextareaAutosize } from "../ui/textarea";
-import { BlogSettings as BlogSettingsType, BlogMetadata, useBlogSettings } from "@/hooks/use-blog-settings";
+import { BlogData, BlogMetadata } from "@/lib/settings/get-blog-metadata";
+import { useBlogSettings } from "@/hooks/use-blog-settings";
 import { useWalletClient } from "wagmi";
 import Link from "next/link";
 import { ArrowLeftIcon } from "lucide-react";
+import { isValidTheme, ThemeType, themeNames, defaultThemeName } from "@/styles/themes";
 // import { toast } from "sonner";
 // import { group } from "@lens-protocol/metadata";
 // import { getLensClient } from "@/lib/lens/client";
@@ -23,8 +25,7 @@ import { ArrowLeftIcon } from "lucide-react";
 // import { clientCookieStorage } from "@/lib/lens/storage";
 
 interface BlogSettingsProps {
-  blogAddress: string;
-  initialSettings: BlogSettingsType;
+  initialSettings: BlogData;
   isUserBlog?: boolean;
   userHandle?: string;
 }
@@ -87,6 +88,9 @@ interface FormState {
     showTags: boolean;
     showTitle: boolean;
   };
+  theme: {
+    name: ThemeType;
+  };
   icon: string;
   isDirty: boolean;
   errors: {
@@ -101,8 +105,8 @@ interface ImageState {
   isDeleted: boolean;
 }
 
-export function BlogSettings({ blogAddress, initialSettings, isUserBlog = false, userHandle }: BlogSettingsProps) {
-  const { settings, saveSettings } = useBlogSettings(blogAddress, initialSettings);
+export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }: BlogSettingsProps) {
+  const { settings, saveSettings } = useBlogSettings(initialSettings);
   const { data: walletClient } = useWalletClient();
   const [formState, setFormState] = useState<FormState>({
     title: settings?.title || "",
@@ -112,6 +116,9 @@ export function BlogSettings({ blogAddress, initialSettings, isUserBlog = false,
       showAuthor: settings?.metadata?.showAuthor ?? true,
       showTags: settings?.metadata?.showTags ?? true,
       showTitle: settings?.metadata?.showTitle ?? true,
+    },
+    theme: {
+      name: settings?.theme?.name as ThemeType || defaultThemeName,
     },
     icon: settings?.icon || "",
     isDirty: false,
@@ -135,6 +142,9 @@ export function BlogSettings({ blogAddress, initialSettings, isUserBlog = false,
         showAuthor: settings?.metadata?.showAuthor ?? true,
         showTags: settings?.metadata?.showTags ?? true,
         showTitle: settings?.metadata?.showTitle ?? true,
+      },
+      theme: {
+        name: settings?.theme?.name as ThemeType || defaultThemeName,
       },
       icon: settings?.icon || "",
       isDirty: false,
@@ -214,6 +224,7 @@ export function BlogSettings({ blogAddress, initialSettings, isUserBlog = false,
       about: formState.about,
       handle: formState.handle.trim(),
       metadata: formState.metadata,
+      theme: formState.theme,
       icon: imageState.isDeleted ? null : iconUrl,
     });
 
@@ -327,6 +338,18 @@ export function BlogSettings({ blogAddress, initialSettings, isUserBlog = false,
       });
       setFormState(prev => ({ ...prev, isDirty: true }));
     }
+  };
+
+  // Add a new handler for theme changes
+  const handleThemeChange = (themeName: ThemeType) => {
+    setFormState(prev => ({
+      ...prev,
+      theme: {
+        ...prev.theme,
+        name: themeName
+      },
+      isDirty: true
+    }));
   };
 
   return (
@@ -508,6 +531,42 @@ export function BlogSettings({ blogAddress, initialSettings, isUserBlog = false,
               checked={formState.metadata.showTags}
               onCheckedChange={(checked) => handleMetadataChange('showTags', checked)}
             />
+          </div>
+        </div>
+
+        <div className="space-y-4 py-2 pb-4">
+          <div className="space-y-2">
+            <Label htmlFor="theme">Theme</Label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {themeNames.map((themeName) => {
+                const isSelected = formState.theme.name === themeName;
+                return (
+                  <div
+                    key={themeName}
+                    className={`border rounded-lg relative cursor-pointer overflow-hidden transition-all hover:border-primary ${
+                      isSelected ? "border-primary ring-2 ring-primary ring-offset-2" : "border-border"
+                    }`}
+                    onClick={() => handleThemeChange(themeName)}
+                  >
+                    <div className="p-6">
+                      <div className="capitalize font-medium text-xl mb-1">
+                        {themeName === "editorial" ? "Editorial" : "Modern"}
+                        <div className="text-muted-foreground text-sm font-normal">
+                          {themeName === "editorial" ? "Classic readable serif" : "Clean modern sans-serif"}
+                        </div>
+                      </div>
+                    </div>
+                    {isSelected && (
+                      <div className="absolute top-2 right-2 h-6 w-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M20 6L9 17l-5-5" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
 

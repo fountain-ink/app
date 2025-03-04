@@ -15,7 +15,7 @@ import { UserSite } from "@/components/user/user-site";
 import { UserTheme } from "@/components/user/user-theme";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
-import { getBlogData } from "@/lib/settings/get-user-metadata";
+import { getBlogData } from "@/lib/settings/get-blog-metadata";
 import { fetchAccount, fetchAccountStats } from "@lens-protocol/client/actions";
 import { AnimatePresence } from "motion/react";
 import { notFound } from "next/navigation";
@@ -48,7 +48,7 @@ const UserLayout = async ({
 
   const settings = await getBlogData(account.address);
   const themeName = settings?.theme?.name;
-  const title = settings?.blog?.title;
+  const title = settings?.title;
 
   const { address, username } = await getUserProfile();
 

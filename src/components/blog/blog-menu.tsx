@@ -11,16 +11,16 @@ import {
 import { PenToolIcon } from "../icons/pen-tool";
 import { AnimatedMenuItem } from "../navigation/animated-item";
 import { ChevronRightIcon } from "lucide-react";
-import { BlogSettings } from "@/hooks/use-blog-settings";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 import Link from "next/link";
+import { BlogData } from "@/lib/settings/get-blog-metadata";
 
 interface BlogMenuProps {
   username: string;
 }
 
 export function BlogMenu({ username }: BlogMenuProps) {
-  const [blogs, setBlogs] = useState<BlogSettings[]>([]);
+  const [blogs, setBlogs] = useState<BlogData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { fetchBlogsIfNeeded } = useBlogStorage();
 
@@ -37,7 +37,7 @@ export function BlogMenu({ username }: BlogMenuProps) {
       });
   }, [fetchBlogsIfNeeded]);
 
-  const getBlogUrl = (blog: BlogSettings): string => {
+  const getBlogUrl = (blog: BlogData): string => {
     if (blog.address === blog.owner) {
       return `/b/${username}`;
     } else {
