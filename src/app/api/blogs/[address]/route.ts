@@ -45,6 +45,7 @@ export async function PUT(
         showTags: settings.metadata?.showTags ?? true,
         showTitle: settings.metadata?.showTitle ?? true,
       },
+      theme: settings.theme,
       icon: settings.icon,
       updated_at: new Date().toISOString(),
       owner: claims.metadata.address,

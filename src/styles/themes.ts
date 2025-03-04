@@ -1,10 +1,16 @@
-export const themeNames = ["editorial", "romantic"] as const;
+export const themeNames = ["editorial", "modern"] as const;
 export type ThemeType = (typeof themeNames)[number];
 
 export const isValidTheme = (theme: unknown): theme is ThemeType =>
   typeof theme === "string" && themeNames.includes(theme as ThemeType);
 
 export const defaultThemeName = themeNames[0];
+
+// Theme descriptions for display in settings
+export const themeDescriptions: Record<ThemeType, string> = {
+  editorial: "Classic readable serif",
+  modern: "Clean minimalist sans-serif"
+};
 
 type SharedVariables = {
   "--title-font": string;
@@ -124,7 +130,7 @@ type ColorTheme = {
 };
 
 export const globalThemes: Record<ThemeType, ColorTheme> = {
-  romantic: {
+  modern: {
     light: {
       "--card": "350 20% 99%",
       "--popover": "0 0% 99%",
@@ -169,9 +175,9 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
     },
     shared: {
       "--radius": "0.75rem",
-      "--title-font": "plantin",
-      "--title-weight": "300",
-      "--title-style": "italic",
+      "--title-font": "Geist, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      "--title-weight": "500",
+      "--title-style": "normal",
       "--title-align": "center",
       "--title-size": "4rem",
       "--title-line-height": "4rem",
@@ -179,9 +185,9 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--title-color": "hsl(var(--foreground))",
       "--title-margin": "3rem",
 
-      "--subtitle-font": "plantin",
+      "--subtitle-font": "Geist, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       "--subtitle-weight": "400",
-      "--subtitle-style": "italic",
+      "--subtitle-style": "normal",
       "--subtitle-size": "1.5rem",
       "--subtitle-line-height": "1.4",
       "--subtitle-letter-spacing": "-0.8px",
@@ -189,9 +195,9 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--subtitle-margin": "2rem",
       "--subtitle-align": "center",
 
-      "--header-font": "plantin",
-      "--header-weight": "500",
-      "--header-style": "italic",
+      "--header-font": "Geist, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      "--header-weight": "600",
+      "--header-style": "normal",
       "--header-size": "1.75rem",
       "--header-line-height": "1.2",
       "--header-letter-spacing": "-0.8px",
@@ -199,20 +205,20 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--header-margin": "2rem",
       "--header-align": "left",
 
-      "--paragraph-font": "plantin",
+      "--paragraph-font": "Geist, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       "--paragraph-weight": "400",
       "--paragraph-style": "normal",
-      "--paragraph-size": "1.25rem",
+      "--paragraph-size": "1.125rem",
       "--paragraph-line-height": "1.7",
-      "--paragraph-letter-spacing": "-1%",
+      "--paragraph-letter-spacing": "0",
       "--paragraph-color": "hsl(var(--foreground))",
       "--paragraph-margin": "1rem",
       "--paragraph-align": "left",
-      "--paragraph-first-letter-size": "7.5rem",
+      "--paragraph-first-letter-size": "3rem",
       "--paragraph-first-letter-float": "left",
-      "--paragraph-first-letter-padding-right": "1rem",
-      "--paragraph-first-letter-padding-top": "0.5rem",
-      "--paragraph-first-letter-initial": "3",
+      "--paragraph-first-letter-padding-right": "0.5rem",
+      "--paragraph-first-letter-padding-top": "0.25rem",
+      "--paragraph-first-letter-initial": "1",
 
       "--list-margin": "1rem",
       "--list-font": "var(--paragraph-font)",

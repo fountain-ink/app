@@ -14,7 +14,8 @@ import { useBlogSettings } from "@/hooks/use-blog-settings";
 import { useWalletClient } from "wagmi";
 import Link from "next/link";
 import { ArrowLeftIcon } from "lucide-react";
-import { isValidTheme, ThemeType, themeNames, defaultThemeName } from "@/styles/themes";
+import { isValidTheme, ThemeType, themeNames, themeDescriptions, defaultThemeName } from "@/styles/themes";
+import { ThemeButtons } from "@/components/theme/theme-buttons";
 // import { toast } from "sonner";
 // import { group } from "@lens-protocol/metadata";
 // import { getLensClient } from "@/lib/lens/client";
@@ -192,7 +193,6 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
   }, []);
 
   const handleSave = async () => {
-    // Validate all fields before saving
     const titleError = formState.metadata.showTitle ? validateBlogTitle(formState.title) : null;
     const handleError = validateHandle(formState.handle);
 
@@ -218,7 +218,6 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
       }
     }
 
-    // Save to database
     const success = await saveSettings({
       title: formState.title.trim(),
       about: formState.about,
@@ -342,6 +341,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
 
   // Add a new handler for theme changes
   const handleThemeChange = (themeName: ThemeType) => {
+    console.log(themeName, formState)
     setFormState(prev => ({
       ...prev,
       theme: {
@@ -457,10 +457,10 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
             )}
           </div>
 
-          {/* <div className="">
+          <div className="">
             <Label htmlFor="blog-handle">Slug</Label>
             <p className="text-sm text-muted-foreground mb-2">
-              URL slug for your blog, i.e. /b/{formState.handle || "your-handle"}
+              {isUserBlog ? `URL slug for your blog, i.e. /b/${userHandle}` : `URL slug for your blog, i.e. /b/${userHandle}/${formState.handle || 'your-handle'}`}
             </p>
             <Input
               id="blog-handle"
@@ -473,7 +473,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
             {formState.errors.handle && !isUserBlog && (
               <p className="text-sm text-destructive mt-2">{formState.errors.handle}</p>
             )}
-          </div> */}
+          </div>
         </div> 
 
         <div className="relative">
@@ -492,6 +492,16 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
             onChange={(e) => handleChange('about', e.target.value)}
             placeholder="A short description of your blog"
           />
+        </div>
+
+        <div className="space-y-4 py-2 pb-4">
+          <div className="space-y-2">
+            <Label htmlFor="theme">Theme</Label>
+            <ThemeButtons
+              currentTheme={formState.theme.name}
+              onChange={handleThemeChange}
+            />
+          </div>
         </div>
 
         <h2 className="text-lg font-semibold">Display Options</h2>
@@ -534,41 +544,6 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
           </div>
         </div>
 
-        <div className="space-y-4 py-2 pb-4">
-          <div className="space-y-2">
-            <Label htmlFor="theme">Theme</Label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {themeNames.map((themeName) => {
-                const isSelected = formState.theme.name === themeName;
-                return (
-                  <div
-                    key={themeName}
-                    className={`border rounded-lg relative cursor-pointer overflow-hidden transition-all hover:border-primary ${
-                      isSelected ? "border-primary ring-2 ring-primary ring-offset-2" : "border-border"
-                    }`}
-                    onClick={() => handleThemeChange(themeName)}
-                  >
-                    <div className="p-6">
-                      <div className="capitalize font-medium text-xl mb-1">
-                        {themeName === "editorial" ? "Editorial" : "Modern"}
-                        <div className="text-muted-foreground text-sm font-normal">
-                          {themeName === "editorial" ? "Classic readable serif" : "Clean modern sans-serif"}
-                        </div>
-                      </div>
-                    </div>
-                    {isSelected && (
-                      <div className="absolute top-2 right-2 h-6 w-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M20 6L9 17l-5-5" />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
 
         <div className="flex justify-start">
           <Button
