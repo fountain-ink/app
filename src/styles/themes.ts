@@ -6,7 +6,6 @@ export const isValidTheme = (theme: unknown): theme is ThemeType =>
 
 export const defaultThemeName = themeNames[0];
 
-// Theme descriptions for display in settings
 export const themeDescriptions: Record<ThemeType, string> = {
   editorial: "Classic readable serif",
   modern: "Clean minimalist sans-serif"
@@ -195,7 +194,7 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--subtitle-margin": "2rem",
       "--subtitle-align": "center",
 
-      "--header-font": "Geist, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      "--header-font": "Geist",
       "--header-weight": "600",
       "--header-style": "normal",
       "--header-size": "1.75rem",
@@ -205,7 +204,7 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--header-margin": "2rem",
       "--header-align": "left",
 
-      "--paragraph-font": "Geist, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      "--paragraph-font": "Geist",
       "--paragraph-weight": "400",
       "--paragraph-style": "normal",
       "--paragraph-size": "1.125rem",
