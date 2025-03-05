@@ -7,6 +7,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import Image from "next/image";
 import { BookOpenIcon } from "lucide-react";
+import { useState } from "react";
 
 interface BlogCardProps {
   title: string;
@@ -19,18 +20,28 @@ interface BlogCardProps {
 }
 
 export function BlogCard({ title, description, address, isUserBlog, href, icon, handle }: BlogCardProps) {
+  const [imageLoaded, setImageLoaded] = useState(true);
+
   return (
     <Link href={href} className="block">
       <Card className="h-full transition-all hover:bg-accent/50">
         <CardHeader className="flex flex-row items-center p-4 gap-4 space-y-0">
           <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-sm bg-muted">
-            {icon ? (
+            {icon && imageLoaded ? (
               <Image
                 src={icon}
                 alt={title}
                 className="rounded-sm object-cover"
                 width={64}
                 height={64}
+                onLoadingComplete={(result) => {
+                  if (result.naturalWidth === 0) {
+                    setImageLoaded(false);
+                  }
+                }}
+                onError={() => {
+                  setImageLoaded(false);
+                }}
               />
             ) : (
               <PenToolIcon className="h-5 w-5" />

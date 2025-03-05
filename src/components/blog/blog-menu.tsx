@@ -8,12 +8,13 @@ import {
   DropdownMenuTrigger,
   DropdownMenuPortal
 } from "@/components/ui/dropdown-menu";
-import { PenToolIcon } from "../icons/pen-tool";
+import { PenToolIcon as CustomPenToolIcon } from "../icons/pen-tool";
 import { AnimatedMenuItem } from "../navigation/animated-item";
-import { ChevronRightIcon } from "lucide-react";
+import { ChevronRightIcon, PenToolIcon } from "lucide-react";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 import Link from "next/link";
 import { BlogData } from "@/lib/settings/get-blog-metadata";
+import Image from "next/image";
 
 interface BlogMenuProps {
   username: string;
@@ -22,6 +23,7 @@ interface BlogMenuProps {
 export function BlogMenu({ username }: BlogMenuProps) {
   const [blogs, setBlogs] = useState<BlogData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [imageLoadStatus, setImageLoadStatus] = useState<Record<string, boolean>>({});
   const { getBlogs } = useBlogStorage();
 
   useEffect(() => {
@@ -55,7 +57,7 @@ export function BlogMenu({ username }: BlogMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger disabled={!shouldShowDropdown() || isLoading}>
-        <AnimatedMenuItem href={!shouldShowDropdown() ? `/b/${username}` : undefined} icon={PenToolIcon}>
+        <AnimatedMenuItem href={!shouldShowDropdown() ? `/b/${username}` : undefined} icon={CustomPenToolIcon}>
           <div className="flex justify-between items-center text-base w-[134px]">
             Blog
             {shouldShowDropdown() && <ChevronRightIcon className="ml-auto h-4 w-4" />}
@@ -71,10 +73,33 @@ export function BlogMenu({ username }: BlogMenuProps) {
                   className="flex justify-start h-8 gap-2 p-1 items-center text-base"
                 >
                   <div className="rounded-sm h-full overflow-hidden relative flex-shrink-0 aspect-square">
-                    {blog.icon ? (
-                      <img src={blog.icon} className="w-full h-full object-cover absolute inset-0" alt={`${blog.handle || blog.address.substring(0, 6)} icon`} />
+                    {blog.icon && (imageLoadStatus[blog.address] !== false) ? (
+                      <Image 
+                        src={blog.icon} 
+                        className="w-full h-full object-cover absolute inset-0" 
+                        alt={`${blog.handle || blog.address.substring(0, 6)} icon`}
+                        width={64}
+                        height={64}
+                        onLoad={(e) => {
+                          const img = e.target as HTMLImageElement;
+                          if (img.naturalWidth === 0) {
+                            setImageLoadStatus(prev => ({
+                              ...prev,
+                              [blog.address]: false
+                            }));
+                          }
+                        }}
+                        onError={() => {
+                          setImageLoadStatus(prev => ({
+                            ...prev,
+                            [blog.address]: false
+                          }));
+                        }}
+                      />
                     ) : (
-                      <div className="placeholder-background absolute inset-0" />
+                      <div className="flex items-center justify-center w-full h-full absolute inset-0">
+                        <PenToolIcon className="h-4 w-4" />
+                      </div>
                     )}
                   </div>
                   <span>
