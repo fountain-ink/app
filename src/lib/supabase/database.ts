@@ -14,6 +14,7 @@ export type Database = {
           about: string | null
           address: string
           created_at: string
+          feed: string | null
           handle: string | null
           icon: string | null
           metadata: Json
@@ -26,6 +27,7 @@ export type Database = {
           about?: string | null
           address: string
           created_at?: string
+          feed?: string | null
           handle?: string | null
           icon?: string | null
           metadata?: Json
@@ -38,6 +40,7 @@ export type Database = {
           about?: string | null
           address?: string
           created_at?: string
+          feed?: string | null
           handle?: string | null
           icon?: string | null
           metadata?: Json

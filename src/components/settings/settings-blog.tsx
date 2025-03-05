@@ -135,10 +135,10 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     isDeleted: false
   });
   const [isSaving, setIsSaving] = useState(false);
+  const [feedAddress, setFeedAddress] = useState<string | null>(null);
 
   const blogAddress = initialSettings.address;
   const blogUrl = isUserBlog ? `/b/${userHandle}` : `/b/${blogAddress}`;
-
 
   useEffect(() => {
     setFormState({
@@ -302,9 +302,9 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     //     setFormState(prev => ({ ...prev, isDirty: false, errors: { title: null, handle: null } }));
     //   }
 
-    //   setIsSaving(false);
-    // };
+    setIsSaving(false);
   }
+
 
 
   const handleMetadataChange = (field: keyof BlogMetadata, value: boolean) => {
@@ -391,12 +391,13 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
       <CardContent className="space-y-6">
         <div className="space-y-4">
           <div className="">
-            <Label>Blog Icon</Label>
-            <p className="text-sm text-muted-foreground mb-2">
-              Best results with square images, 256x256 or larger.
-            </p>
-            <div className="flex items-start gap-4">
+            <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-1.5">
+
+                <Label>Blog Icon</Label>
+                <p className="text-sm text-muted-foreground mb-2">
+                  Best results with square images, 256x256 or larger.
+                </p>
                 <div className="w-32">
                   <ImageUploader
                     label="Icon"
@@ -405,55 +406,37 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                     className="!h-32"
                   />
                 </div>
-                <p className="text-xs text-center text-muted-foreground">Original</p>
               </div>
 
-              {/* <div className="flex items-start gap-4">
-                <div className="space-y-1.5">
-                  <div className="relative w-[64px] h-[64px] rounded-md overflow-hidden ring-2 ring-background">
-                    {!imageState.isDeleted && (imageState.previewUrl || settings?.icon) ? (
-                      <img
-                        src={imageState.previewUrl || settings?.icon || ""}
-                        alt="Small preview"
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="placeholder-background" />
-                    )}
+              {!isUserBlog && (
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="blog-address">Blog Address</Label>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      On-chain address of the blog
+                    </p>
+                    <Input
+                      id="blog-address"
+                      value={blogAddress}
+                      readOnly
+                      className="opacity-70 cursor-not-allowed font-mono text-sm"
+                    />
                   </div>
-                  <p className="text-xs text-center text-muted-foreground">64px</p>
-                </div>
 
-                <div className="space-y-1.5">
-                  <div className="relative w-[32px] h-[32px] rounded-sm overflow-hidden ring-2 ring-background">
-                    {!imageState.isDeleted && (imageState.previewUrl || settings?.icon) ? (
-                      <img
-                        src={imageState.previewUrl || settings?.icon || ""}
-                        alt="Medium preview"
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="placeholder-background" />
-                    )}
+                  <div>
+                    <Label htmlFor="feed-address">Feed Address</Label>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      On-chain address of the blog feed
+                    </p>
+                    <Input
+                      id="feed-address"
+                      value={initialSettings.feed || "No feed address available"}
+                      readOnly
+                      className="opacity-70 cursor-not-allowed font-mono text-sm"
+                    />
                   </div>
-                  <p className="text-xs text-center text-muted-foreground">32px</p>
                 </div>
-
-                <div className="space-y-1.5">
-                  <div className="relative w-[16px] h-[16px] rounded-none overflow-hidden ring-2 ring-background">
-                    {!imageState.isDeleted && (imageState.previewUrl || settings?.icon) ? (
-                      <img
-                        src={imageState.previewUrl || settings?.icon || ""}
-                        className="absolute w-full h-full object-cover"
-                        alt="Small preview"
-                      />
-                    ) : (
-                      <div className="placeholder-background" />
-                    )}
-                  </div>
-                  <p className="text-xs text-center text-muted-foreground">16px</p>
-                </div> */}
-              {/* </div> */}
+              )}
             </div>
           </div>
         </div>
