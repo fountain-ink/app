@@ -11,13 +11,8 @@ interface BlogState {
 interface BlogStorage {
   blogState: BlogState;
   setBlogs: (blogs: BlogData[]) => void;
-  getBlogs: () => BlogData[];
-  updateLastSynced: () => void;
-  needsSync: () => boolean;
-  getLastSynced: () => number;
+  getBlogs: () => Promise<BlogData[]>;
   resetState: () => void;
-  fetchBlogsIfNeeded: () => Promise<BlogData[]>;
-  isFetching: () => boolean;
 }
 
 export const useBlogStorage = create<BlogStorage>()(
@@ -32,64 +27,49 @@ export const useBlogStorage = create<BlogStorage>()(
         set((state) => {
           console.log('Setting blogs:', blogs);
           return {
-            blogState: { ...state.blogState, blogs },
+            blogState: { 
+              ...state.blogState, 
+              blogs,
+              lastSynced: Date.now() 
+            },
           };
         }),
-      getBlogs: () => {
+      getBlogs: async () => {
         const state = get();
-        console.log('Full state in getBlogs:', state);
-        return state.blogState.blogs;
-      },
-      updateLastSynced: () => {
-        const timestamp = Date.now();
-        set((state) => {
-          const newState = {
-            blogState: { ...state.blogState, lastSynced: timestamp },
-          };
-          return newState;
-        });
-      },
-      getLastSynced: () => {
-        const state = get();
-        return state.blogState.lastSynced;
-      },
-      needsSync: () => {
-        const state = get();
-        const lastSynced = state.blogState.lastSynced;
-        return !lastSynced || Date.now() - lastSynced > 5 * 60 * 1000;
-      },
-      resetState: () => {
-        set({
-          blogState: {
-            blogs: [],
-            lastSynced: Date.now(),
-            isFetching: false
-          }
-        });
-      },
-      isFetching: () => {
-        return get().blogState.isFetching;
-      },
-      fetchBlogsIfNeeded: async () => {
-        const state = get();
+        const { blogs, lastSynced, isFetching } = state.blogState;
         
-        if (state.blogState.blogs.length > 0 && !get().needsSync() && !state.blogState.isFetching) {
+        // If we have blogs and they're fresh (synced within the last 5 minutes), return them
+        const isFresh = lastSynced && (Date.now() - lastSynced < 5 * 60 * 1000);
+        if (blogs.length > 0 && isFresh && !isFetching) {
           console.log('Using cached blogs, no fetch needed');
-          return state.blogState.blogs;
+          return blogs;
         }
         
-        if (state.blogState.isFetching) {
+        // If already fetching, wait for it to complete
+        if (isFetching) {
           console.log('Already fetching blogs, waiting...');
           return new Promise((resolve) => {
+            const maxWaitTime = 10000; // 10 seconds
+            const startTime = Date.now();
+            
             const checkInterval = setInterval(() => {
-              if (!get().isFetching()) {
+              const currentState = get().blogState;
+              if (!currentState.isFetching) {
                 clearInterval(checkInterval);
+                resolve(currentState.blogs);
+              } else if (Date.now() - startTime > maxWaitTime) {
+                console.warn('Blog fetch timeout exceeded, resetting fetch state');
+                clearInterval(checkInterval);
+                set(state => ({ 
+                  blogState: { ...state.blogState, isFetching: false } 
+                }));
                 resolve(get().blogState.blogs);
               }
             }, 100);
           });
         }
         
+        // Start fetching
         set(state => ({ 
           blogState: { ...state.blogState, isFetching: true } 
         }));
@@ -119,11 +99,20 @@ export const useBlogStorage = create<BlogStorage>()(
           }));
           return get().blogState.blogs;
         }
+      },
+      resetState: () => {
+        set({
+          blogState: {
+            blogs: [],
+            lastSynced: 0,
+            isFetching: false
+          }
+        });
       }
     }),
     {
       name: "blog-storage",
-      version: 2,
+      version: 3, // Increment version due to interface changes
       migrate: (persistedState: any, version) => {
         console.log('Migrating storage', persistedState, version);
         
@@ -133,7 +122,7 @@ export const useBlogStorage = create<BlogStorage>()(
           return {
             blogState: {
               blogs: [],
-              lastSynced: Date.now(),
+              lastSynced: 0,
               isFetching: false
             }
           };

@@ -22,11 +22,11 @@ interface BlogMenuProps {
 export function BlogMenu({ username }: BlogMenuProps) {
   const [blogs, setBlogs] = useState<BlogData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { fetchBlogsIfNeeded } = useBlogStorage();
+  const { getBlogs } = useBlogStorage();
 
   useEffect(() => {
     setIsLoading(true);
-    fetchBlogsIfNeeded()
+    getBlogs()
       .then(fetchedBlogs => {
         setBlogs(fetchedBlogs || []);
         setIsLoading(false);
@@ -35,7 +35,7 @@ export function BlogMenu({ username }: BlogMenuProps) {
         console.error('Error fetching blogs:', error);
         setIsLoading(false);
       });
-  }, [fetchBlogsIfNeeded]);
+  }, [getBlogs]);
 
   const getBlogUrl = (blog: BlogData): string => {
     if (blog.address === blog.owner) {
@@ -54,7 +54,7 @@ export function BlogMenu({ username }: BlogMenuProps) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger disabled={!shouldShowDropdown()}>
+      <DropdownMenuTrigger disabled={!shouldShowDropdown() || isLoading}>
         <AnimatedMenuItem href={!shouldShowDropdown() ? `/b/${username}` : undefined} icon={PenToolIcon}>
           <div className="flex justify-between items-center text-base w-[134px]">
             Blog

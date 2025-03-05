@@ -51,7 +51,7 @@ export const PublishMenu = () => {
   const [isPublishing, setIsPublishing] = useState(false);
   const [blogs, setBlogs] = useState<BlogData[]>([]);
   const [selectedBlogAddress, setSelectedBlogAddress] = useState<string | null>(null);
-  const { fetchBlogsIfNeeded } = useBlogStorage();
+  const { getBlogs } = useBlogStorage();
 
   // Collecting settings
   const [isCollectingEnabled, setIsCollectingEnabled] = useState(false);
@@ -73,11 +73,15 @@ export const PublishMenu = () => {
 
   useEffect(() => {
     if (isOpen) {
-      fetchBlogsIfNeeded().then(blogs => {
-        setBlogs(blogs || []);
-      });
+      getBlogs()
+        .then(fetchedBlogs => {
+          setBlogs(fetchedBlogs || []);
+        })
+        .catch(error => {
+          console.error('Error fetching blogs:', error);
+        });
     }
-  }, [isOpen, fetchBlogsIfNeeded]);
+  }, [isOpen, getBlogs]);
 
   useEffect(() => {
     if (isOpen && documentId) {

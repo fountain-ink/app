@@ -17,7 +17,7 @@ import { useBlogStorage } from "@/hooks/use-blog-storage";
 export function SyncButton() {
   const [isSyncing, setIsSyncing] = useState(false);
   const router = useRouter();
-  const { setBlogs, updateLastSynced } = useBlogStorage();
+  const { setBlogs } = useBlogStorage();
 
   const handleSync = async () => {
     try {
@@ -33,8 +33,7 @@ export function SyncButton() {
       if (blogsResponse.ok) {
         const data = await blogsResponse.json();
         setBlogs(data.blogs);
-        updateLastSynced();
-        console.log('Sync completed, lastSynced updated to:', useBlogStorage.getState().getLastSynced());
+        console.log('Blogs synced successfully');
       }
       
       router.refresh();
