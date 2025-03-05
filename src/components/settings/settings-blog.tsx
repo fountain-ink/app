@@ -18,6 +18,8 @@ import { isValidTheme, ThemeType, themeNames, themeDescriptions, defaultThemeNam
 import { ThemeButtons } from "@/components/theme/theme-buttons";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
+import { getBaseUrl } from "@/lib/get-base-url";
+import { motion, AnimatePresence } from "motion/react";
 // import { setGroupMetadata } from "@lens-protocol/client/actions";
 // import { handleOperationWith } from "@lens-protocol/client/viem";
 // import { storageClient } from "@/lib/lens/storage-client";
@@ -136,6 +138,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
   });
   const [isSaving, setIsSaving] = useState(false);
   const [feedAddress, setFeedAddress] = useState<string | null>(null);
+  const [highlightedElement, setHighlightedElement] = useState<string | null>(null);
 
   const blogAddress = initialSettings.address;
   const blogUrl = isUserBlog ? `/b/${userHandle}` : `/b/${blogAddress}`;
@@ -392,8 +395,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
         <div className="space-y-4">
           <div className="">
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="space-y-1.5">
-
+              <div className="">
                 <Label>Blog Icon</Label>
                 <p className="text-sm text-muted-foreground mb-2">
                   Best results with square images, 256x256 or larger.
@@ -498,7 +500,8 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
 
         <div className="space-y-4 py-2 pb-4">
           <div className="space-y-2">
-            <Label htmlFor="theme">Theme</Label>
+            <h2 className="text-lg font-semibold">Theme</h2>
+
             <ThemeButtons
               currentTheme={formState.theme.name}
               onChange={handleThemeChange}
@@ -508,44 +511,201 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
 
         <h2 className="text-lg font-semibold">Display Options</h2>
 
-        <div className="p-4 pt-0 space-y-4">
-          <div className="flex items-center justify-between gap-2">
-            <div className="space-y-0.5">
-              <Label htmlFor="show-title">Show Title</Label>
-              <p className="text-sm text-muted-foreground">Display the blog title at the top of your page</p>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="md:col-span-1 p-4 pt-0 space-y-4">
+            <div 
+              className="flex items-center justify-between gap-2 group p-2 rounded-md transition-all duration-300 hover:bg-muted/50"
+              onMouseEnter={() => setHighlightedElement('author')}
+              onMouseLeave={() => setHighlightedElement(null)}
+            >
+              <div className="space-y-0.5">
+                <Label htmlFor="show-author">Show Author</Label>
+                <p className="text-sm text-muted-foreground">Display your name above the blog title</p>
+              </div>
+              <Switch
+                id="show-author"
+                checked={formState.metadata.showAuthor}
+                onCheckedChange={(checked) => handleMetadataChange('showAuthor', checked)}
+              />
             </div>
-            <Switch
-              id="show-title"
-              checked={formState.metadata.showTitle}
-              onCheckedChange={(checked) => handleMetadataChange('showTitle', checked)}
-            />
+
+            <div 
+              className="flex items-center justify-between gap-2 group p-2 rounded-md transition-all duration-300 hover:bg-muted/50"
+              onMouseEnter={() => setHighlightedElement('title')}
+              onMouseLeave={() => setHighlightedElement(null)}
+            >
+              <div className="space-y-0.5">
+                <Label htmlFor="show-title">Show Title</Label>
+                <p className="text-sm text-muted-foreground">Display the blog title at the top of your page</p>
+              </div>
+              <Switch
+                id="show-title"
+                checked={formState.metadata.showTitle}
+                onCheckedChange={(checked) => handleMetadataChange('showTitle', checked)}
+              />
+            </div>
+
+
+            <div 
+              className="flex items-center justify-between gap-2 group p-2 rounded-md transition-all duration-300 hover:bg-muted/50"
+              onMouseEnter={() => setHighlightedElement('tags')}
+              onMouseLeave={() => setHighlightedElement(null)}
+            >
+              <div className="space-y-0.5">
+                <Label htmlFor="show-tags">Show Tags</Label>
+                <p className="text-sm text-muted-foreground">Display article tags below the blog title</p>
+              </div>
+              <Switch
+                id="show-tags"
+                checked={formState.metadata.showTags}
+                onCheckedChange={(checked) => handleMetadataChange('showTags', checked)}
+              />
+            </div>
           </div>
 
-          <div className="flex items-center justify-between gap-2">
-            <div className="space-y-0.5">
-              <Label htmlFor="show-author">Show Author</Label>
-              <p className="text-sm text-muted-foreground">Display your name above the blog title</p>
+          {/* Blog Preview */}
+          <div className="md:col-span-1 h-64 border rounded-lg bg-card/50 overflow-hidden">
+            {/* Browser Navigation Bar */}
+            <div className="w-full">
+              <div className="flex flex-col rounded-t-lg overflow-hidden border-b border-border/50 shadow-sm">
+                {/* Browser Controls */}
+                <div className="bg-muted/70 px-3 py-2 flex items-center gap-1.5">
+                  <div className="flex gap-1.5">
+                    <div className="w-3 h-3 rounded-full bg-red-300"></div>
+                    <div className="w-3 h-3 rounded-full bg-yellow-300"></div>
+                    <div className="w-3 h-3 rounded-full bg-green-300"></div>
+                  </div>
+                </div>
+                {/* URL Bar */}
+                <div className="bg-background px-3 py-1.5 flex items-center gap-2">
+                  {/* Navigation Buttons */}
+                  <div className="flex items-center gap-1">
+                    <button className="text-muted-foreground hover:text-foreground transition-colors w-5 h-5 flex items-center justify-center rounded-full">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="m15 18-6-6 6-6"/>
+                      </svg>
+                    </button>
+                    <button className="text-muted-foreground hover:text-foreground transition-colors w-5 h-5 flex items-center justify-center rounded-full">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="m9 18 6-6-6-6"/>
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  <div className="bg-muted/50 rounded-md px-2 py-1 text-xs w-full flex items-center overflow-hidden">
+                    {/* <span className="text-muted-foreground mr-1 flex-shrink-0">https://</span> */}
+                    <span className="text-foreground truncate">
+                      {/* {getBaseUrl().replace(/^https?:\/\//, '').replace(/\/$/, '')}/b/ */}
+                      fountain.ink/b/
+                      {isUserBlog 
+                        ? userHandle 
+                        : formState.handle 
+                          ? `${userHandle}/${formState.handle}` 
+                          : blogAddress
+                      }
+                    </span>
+                  </div>
+                  
+                  {/* Reload Button */}
+                  <button className="text-muted-foreground hover:text-foreground transition-colors w-5 h-5 flex items-center justify-center rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                      <path d="M21 3v5h-5"/>
+                      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                      <path d="M8 16H3v5"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
             </div>
-            <Switch
-              id="show-author"
-              checked={formState.metadata.showAuthor}
-              onCheckedChange={(checked) => handleMetadataChange('showAuthor', checked)}
-            />
-          </div>
+            
+            <div className="flex flex-col items-center scale-[0.8] origin-top p-4 pb-2">
+              {/* Author Preview */}
+              <AnimatePresence>
+                {formState.metadata.showAuthor && (
+                  <motion.div 
+                    className="flex items-center gap-2 mb-2 w-full justify-center rounded-md"
+                    initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                    animate={{ opacity: 1, height: 'auto', marginBottom: 8 }}
+                    exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div 
+                      className={`w-8 h-8 rounded-full transition-colors duration-300 ${
+                        highlightedElement === 'author' ? 'bg-primary/70' : 'bg-muted'
+                      }`}
+                    />
+                    <div 
+                      className={`h-4 w-24 rounded-md transition-colors duration-300 ${
+                        highlightedElement === 'author' ? 'bg-primary/70' : 'bg-muted'
+                      }`}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-          <div className="flex items-center justify-between gap-2">
-            <div className="space-y-0.5">
-              <Label htmlFor="show-tags">Show Tags</Label>
-              <p className="text-sm text-muted-foreground">Display article tags below the blog title</p>
+              {/* Title Preview */}
+              <AnimatePresence>
+                {formState.metadata.showTitle && (
+                  <motion.div 
+                    className={`h-6 w-48 rounded-md mb-3 transition-colors duration-300 ${
+                      highlightedElement === 'title' ? 'bg-primary/70' : 'bg-muted'
+                    }`}
+                    initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                    animate={{ opacity: 1, height: 24, marginBottom: 12 }}
+                    exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                )}
+              </AnimatePresence>
+
+              {/* Tags Preview */}
+              <AnimatePresence>
+                {formState.metadata.showTags && (
+                  <motion.div 
+                    className="flex gap-2 mb-4 flex-wrap justify-center rounded-md"
+                    initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                    animate={{ opacity: 1, height: 'auto', marginBottom: 16 }}
+                    exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div 
+                      className={`h-5 w-16 rounded-full transition-colors duration-300 ${
+                        highlightedElement === 'tags' ? 'bg-primary/70' : 'bg-muted'
+                      }`}
+                    />
+                    <div 
+                      className={`h-5 w-20 rounded-full transition-colors duration-300 ${
+                        highlightedElement === 'tags' ? 'bg-primary/70' : 'bg-muted'
+                      }`}
+                    />
+                    <div 
+                      className={`h-5 w-14 rounded-full transition-colors duration-300 ${
+                        highlightedElement === 'tags' ? 'bg-primary/70' : 'bg-muted'
+                      }`}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Posts Preview */}
+              <div className="w-[70%] space-y-3 mt-2">
+                <div className="flex gap-3 w-full">
+                  <div className="h-12 w-12 rounded-lg bg-muted animate-pulse flex-shrink-0"></div>
+                  <div className="h-12 flex-grow rounded-lg bg-muted animate-pulse"></div>
+                </div>
+                <div className="flex gap-3 w-full">
+                  <div className="h-12 w-12 rounded-lg bg-muted animate-pulse flex-shrink-0"></div>
+                  <div className="h-12 flex-grow rounded-lg bg-muted animate-pulse"></div>
+                </div>
+                <div className="flex gap-3 w-full">
+                  <div className="h-12 w-12 rounded-lg bg-muted animate-pulse flex-shrink-0"></div>
+                  <div className="h-12 flex-grow rounded-lg bg-muted animate-pulse"></div>
+                </div>
+              </div>
             </div>
-            <Switch
-              id="show-tags"
-              checked={formState.metadata.showTags}
-              onCheckedChange={(checked) => handleMetadataChange('showTags', checked)}
-            />
           </div>
         </div>
-
 
         <div className="flex justify-start">
           <Button

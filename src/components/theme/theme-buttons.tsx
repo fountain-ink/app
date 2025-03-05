@@ -3,6 +3,7 @@
 import { globalThemes, themeNames, themeDescriptions } from "@/styles/themes";
 import { useTheme as useNextTheme } from "next-themes";
 import type { ThemeType } from "@/styles/themes";
+import { motion, AnimatePresence } from "motion/react";
 
 interface ThemeButtonsProps {
   onChange?: (theme: ThemeType) => void;
@@ -56,7 +57,7 @@ export const ThemeButtons = ({ onChange, disabled, currentTheme }: ThemeButtonsP
         return (
           <div
             key={themeName}
-            className={`border rounded-sm relative cursor-pointer overflow-hidden transition-all hover:border-primary ${
+            className={`border rounded-sm relative cursor-pointer overflow-hidden transition-all duration-300 hover:bg-muted/50 hover:border-primary ${
               isSelected ? "border-primary" : "border-border"
             }`}
             style={cardStyle}
@@ -70,13 +71,21 @@ export const ThemeButtons = ({ onChange, disabled, currentTheme }: ThemeButtonsP
                 {themeDescriptions[themeName]}
               </p>
             </div>
-            {isSelected && (
-              <div className="absolute top-4 right-4 h-4 w-4 bg-primary text-primary-foreground rounded-full flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 6L9 17l-5-5" />
-                </svg>
-              </div>
-            )}
+            <AnimatePresence>
+              {isSelected && (
+                <motion.div 
+                  className="absolute top-4 right-4 h-4 w-4 bg-primary text-primary-foreground rounded-full flex items-center justify-center"
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 6L9 17l-5-5" />
+                  </svg>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         );
       })}
