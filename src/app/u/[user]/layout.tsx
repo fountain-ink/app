@@ -66,16 +66,16 @@ const UserLayout = async ({
 
   return (
     <UserTheme initialTheme={themeName}>
-      <div className="flex md:mt-10 flex-col items-center">
+      <div className="flex flex-col items-center">
         <div className="w-screen md:max-w-3xl">
-          <UserCover profile={account} />
+          <UserCover account={account} />
         </div>
         <div className="w-full max-w-2xl flex flex-col">
           <div className="flex justify-between px-4">
             <div className="flex flex-col relative">
               <UserAvatar
                 size={40}
-                className="absolute transform -translate-y-[80%] bg-muted w-32 h-32 md:w-40 md:h-40 ring-4 rounded-full ring-background"
+                className="absolute transform -translate-y-[70%] bg-muted w-32 h-32 md:w-40 md:h-40 ring-4 rounded-full ring-background"
                 account={account}
               />
               <div className="flex flex-col gap-2 mt-14 font-[family-name:--title-font]">

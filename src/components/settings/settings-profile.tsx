@@ -281,7 +281,7 @@ export function ProfileSettingsModal({ profile, trigger, open, onOpenChange }: P
         <div className="">
           <ProfileSettingsForm profile={profile} onFormDataChange={setFormData} />
         </div>
-        <div className="pt-4">
+        <div className="pt-4 flex justify-end gap-2">
           <Button onClick={handleSave} disabled={isUploading || isSavingProfileSettings} className="">
             {isUploading ? "Uploading..." : isSavingProfileSettings ? "Saving..." : "Save Settings"}
           </Button>

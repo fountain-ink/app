@@ -30,7 +30,7 @@ export default function SettingsLayout({
   const pathname = usePathname();
 
   return (
-    <div className="container mx-auto p-0 sm:p-6 sm:py-10 mt-16 max-w-6xl">
+    <div className="container mx-auto p-0 sm:p-6 sm:py-10 max-w-6xl">
       <h1 className="text-3xl font-bold ml-4 mb-10">Settings</h1>
       <div className="flex flex-row sm:gap-2 lg:gap-4">
         <nav className="flex flex-col lg:w-1/5 p-2 gap-2">

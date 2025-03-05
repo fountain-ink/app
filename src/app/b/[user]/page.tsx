@@ -140,7 +140,7 @@ export const UserBlogPage = async ({ params }: { params: { user: string } }) => 
   return (
     <UserTheme initialTheme={blog?.theme?.name}>
       <BlogHeader title={blog?.title} icon={blog?.icon} username={params.user} />
-      <div className="flex flex-col mt-5 md:mt-10 items-center justify-center w-full max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
+      <div className="flex flex-col mt-5 items-center justify-center w-full max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
         {showAuthor && (
           <div className="p-4 ">
             <AuthorView
