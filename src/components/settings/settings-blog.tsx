@@ -18,7 +18,13 @@ import { isValidTheme, ThemeType, themeNames, themeDescriptions, defaultThemeNam
 import { ThemeButtons } from "@/components/theme/theme-buttons";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
-import { v4 as uuidv4 } from "uuid";
+// import { setGroupMetadata } from "@lens-protocol/client/actions";
+// import { handleOperationWith } from "@lens-protocol/client/viem";
+// import { storageClient } from "@/lib/lens/storage-client";
+// import { fetchGroup } from "@lens-protocol/client/actions";
+// import { group } from "@lens-protocol/metadata";
+// import { getLensClient } from "@/lib/lens/client";
+// import { uri } from "@lens-protocol/client";
 
 interface BlogSettingsProps {
   initialSettings: BlogData;
@@ -130,6 +136,10 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
   });
   const [isSaving, setIsSaving] = useState(false);
 
+  const blogAddress = initialSettings.address;
+  const blogUrl = isUserBlog ? `/b/${userHandle}` : `/b/${blogAddress}`;
+
+
   useEffect(() => {
     setFormState({
       title: settings?.title || "",
@@ -182,7 +192,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     if (handle.length > 50) {
       return "Handle must be less than 50 characters";
     }
-    
+
     try {
       const db = await createClient();
       const { data: existingBlogs } = await db
@@ -190,23 +200,23 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
         .select("handle, address")
         .eq("owner", initialSettings.owner)
         .neq("address", initialSettings.address);
-        
+
       if (existingBlogs && existingBlogs.some(blog => blog.handle === handle)) {
         return `You already have a blog with handle "${handle}"`;
       }
     } catch (error) {
       console.error("Error validating handle:", error);
     }
-    
+
     return null;
   }, [initialSettings.owner, initialSettings.address]);
 
   const handleSave = async () => {
     setIsSaving(true);
-    
+
     const titleError = formState.metadata.showTitle ? validateBlogTitle(formState.title) : null;
     const handleError = await validateHandle(formState.handle);
-    
+
     setFormState(prev => ({
       ...prev,
       errors: {
@@ -214,14 +224,14 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
         handle: handleError
       }
     }));
-    
+
     if (titleError || handleError) {
       setIsSaving(false);
       return;
     }
-    
+
     let iconUrl = settings?.icon;
-      if (imageState.file) {
+    if (imageState.file) {
       try {
         iconUrl = await uploadFile(imageState.file);
       } catch (error) {
@@ -237,63 +247,65 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
       metadata: formState.metadata,
       theme: formState.theme,
       icon: imageState.isDeleted ? null : iconUrl,
-          });
-          
-    // If this is a group, also save metadata on-chain
-  //   if (isGroup && success) {
-  //     try {
-  //       const sessionClient = await getLensClient();
-  //       if (!sessionClient.isSessionClient()) {
-  //         toast.error("Please login to update group settings");
-  //         return;
-  //       }
+    });
 
-  //       if (!walletClient) {
-  //         toast.error("Please connect your wallet");
-  //         return;
-  //       }
 
-  //       const currentGroup = await fetchGroup(sessionClient, { group: blogAddress })
-  //       if (currentGroup.isErr()) {
-  //         toast.error("Failed to fetch existing group metadata");
-  //         return;
-  //       }
+    // if (!isUserBlog && success) {
+    //   try {
+    //     const sessionClient = await getLensClient();
+    //     if (!sessionClient.isSessionClient()) {
+    //       toast.error("Please login to update group settings");
+    //       return;
+    //     }
 
-  //       const groupMetadata = group({
-  //         name: currentGroup?.value?.metadata?.name || "", 
-  //         icon: iconUrl || currentGroup?.value?.metadata?.icon || undefined,
-  //         coverPicture: currentGroup?.value?.metadata?.coverPicture || undefined,
-  //         description: formState.about,
-  //       });
-  //       console.log(currentGroup, groupMetadata)
+    //     if (!walletClient) {
+    //       toast.error("Please connect your wallet");
+    //       return;
+    //     }
 
-  //       const { uri: metadataUri } = await storageClient.uploadAsJson(groupMetadata);
-  //       console.log("Group metadata uploaded:", metadataUri);
+    //     const currentGroup = await fetchGroup(sessionClient, { group: blogAddress })
+    //     if (currentGroup.isErr()) {
+    //       toast.error("Failed to fetch existing group metadata");
+    //       return;
+    //     }
 
-  //       const result = await setGroupMetadata(sessionClient, {
-  //         group: blogAddress,
-  //         metadataUri: uri(metadataUri),
-  //       }).andThen(handleOperationWith(walletClient as any));
+    //     const groupMetadata = group({
+    //       name: currentGroup?.value?.metadata?.name || "",
+    //       icon: iconUrl || currentGroup?.value?.metadata?.icon || undefined,
+    //       coverPicture: currentGroup?.value?.metadata?.coverPicture || undefined,
+    //       description: formState.about,
+    //     });
+    //     console.log(currentGroup, groupMetadata)
 
-  //       if (result.isErr()) {
-  //         console.error("Failed to update group metadata:", result.error);
-  //         toast.error(`Error updating group metadata: ${result.error.message}`);
-  //         return;
-  //       }
+    //     const { uri: metadataUri } = await storageClient.uploadAsJson(groupMetadata);
+    //     console.log("Group metadata uploaded:", metadataUri);
 
-  //       toast.success("Group metadata updated on-chain!");
-  //     } catch (error) {
-  //       console.error("Failed to update group metadata:", error);
-  //       toast.error("Failed to update group metadata on-chain");
-  //       return;
-  //     }
+    //     const result = await setGroupMetadata(sessionClient, {
+    //       group: blogAddress,
+    //       metadataUri: uri(metadataUri),
+    //     }).andThen(handleOperationWith(walletClient as any));
 
-    if (success) {
-      setFormState(prev => ({ ...prev, isDirty: false, errors: { title: null, handle: null } }));
-    }
-    
-    setIsSaving(false);
-  };
+    //     if (result.isErr()) {
+    //       console.error("Failed to update group metadata:", result.error);
+    //       toast.error(`Error updating group metadata: ${result.error.message}`);
+    //       return;
+    //     }
+
+    //     toast.success("Group metadata updated on-chain!");
+    //   } catch (error) {
+    //     console.error("Failed to update group metadata:", error);
+    //     toast.error("Failed to update group metadata on-chain");
+    //     return;
+    //   }
+
+    //   if (success) {
+    //     setFormState(prev => ({ ...prev, isDirty: false, errors: { title: null, handle: null } }));
+    //   }
+
+    //   setIsSaving(false);
+    // };
+  }
+
 
   const handleMetadataChange = (field: keyof BlogMetadata, value: boolean) => {
     setFormState(prev => ({
@@ -308,11 +320,11 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
 
   const handleChange = (field: 'title' | 'about' | 'handle', value: string) => {
     let fieldError: string | null = null;
-    
+
     if (field === 'title') {
       fieldError = validateBlogTitle(value);
     }
-    
+
     setFormState(prev => ({
       ...prev,
       [field]: value,
@@ -328,22 +340,22 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     if (file) {
       try {
         const processedFile = await processImage(file);
-    setImageState({
+        setImageState({
           file: processedFile,
           previewUrl: undefined,
-      isDeleted: false
-    });
-    setFormState(prev => ({ ...prev, isDirty: true }));
+          isDeleted: false
+        });
+        setFormState(prev => ({ ...prev, isDirty: true }));
       } catch (error) {
         console.error("Failed to process image:", error);
       }
     } else {
-    setImageState({
-      file: null,
-      previewUrl: undefined,
-      isDeleted: true
-    });
-    setFormState(prev => ({ ...prev, isDirty: true }));
+      setImageState({
+        file: null,
+        previewUrl: undefined,
+        isDeleted: true
+      });
+      setFormState(prev => ({ ...prev, isDirty: true }));
     }
   };
 
@@ -359,16 +371,13 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     }));
   };
 
-  const blogAddress = initialSettings.address;
-  const blogUrl = isUserBlog ? `/b/${userHandle}` : `/b/${blogAddress}`;
-  
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <div>
           <div className="mb-2">
-            <Link 
-              href="/settings/blogs/" 
+            <Link
+              href="/settings/blogs/"
               className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-muted-foreground hover:text-accent-foreground h-9 px-3 py-2 pl-0"
             >
               <ArrowLeftIcon className="w-4 h-4 mr-2" />
@@ -484,7 +493,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
               <p className="text-sm text-destructive mt-2">{formState.errors.handle}</p>
             )}
           </div>
-        </div> 
+        </div>
 
         <div className="relative">
           <Label htmlFor="blog-about" className="flex flex-row items-center gap-2">
@@ -567,4 +576,3 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     </Card>
   );
 }
-
