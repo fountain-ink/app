@@ -19,6 +19,8 @@ import { getBlogData } from "@/lib/settings/get-blog-metadata";
 import { fetchAccount, fetchAccountStats } from "@lens-protocol/client/actions";
 import { AnimatePresence } from "motion/react";
 import { notFound } from "next/navigation";
+import { UserBlogsList } from "@/components/user/user-blogs-list";
+import { getBlogsByOwner } from "@/lib/settings/get-blogs-by-owner";
 
 export async function generateMetadata({ params }: { params: { user: string } }) {
   const username = params.user;
@@ -59,6 +61,8 @@ const UserLayout = async ({
   }
 
   const isUserProfile = address === account.address;
+  
+  const userBlogs = await getBlogsByOwner(account.address);
 
   return (
     <UserTheme initialTheme={themeName}>
@@ -110,6 +114,12 @@ const UserLayout = async ({
               <UserBio profile={account} />
             </div>
           )}
+          
+          {/* User's blogs list */}
+          {userBlogs.length > 0 && (
+            <UserBlogsList blogs={userBlogs} />
+          )}
+          
           <div className="p-4 pb-0 border-b border-border">
             <UserNavigation username={params.user} isUserProfile={isUserProfile} />
           </div>
