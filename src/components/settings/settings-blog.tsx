@@ -691,16 +691,16 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
               {/* Posts Preview */}
               <div className="w-[70%] space-y-3 mt-2">
                 <div className="flex gap-3 w-full">
-                  <div className="h-12 w-12 rounded-lg bg-muted animate-pulse flex-shrink-0"></div>
-                  <div className="h-12 flex-grow rounded-lg bg-muted animate-pulse"></div>
+                  <div className="h-12 w-12 rounded-lg bg-muted flex-shrink-0"></div>
+                  <div className="h-12 flex-grow rounded-lg bg-muted"></div>
                 </div>
                 <div className="flex gap-3 w-full">
-                  <div className="h-12 w-12 rounded-lg bg-muted animate-pulse flex-shrink-0"></div>
-                  <div className="h-12 flex-grow rounded-lg bg-muted animate-pulse"></div>
+                  <div className="h-12 w-12 rounded-lg bg-muted flex-shrink-0"></div>
+                  <div className="h-12 flex-grow rounded-lg bg-muted"></div>
                 </div>
                 <div className="flex gap-3 w-full">
-                  <div className="h-12 w-12 rounded-lg bg-muted animate-pulse flex-shrink-0"></div>
-                  <div className="h-12 flex-grow rounded-lg bg-muted animate-pulse"></div>
+                  <div className="h-12 w-12 rounded-lg bg-muted flex-shrink-0"></div>
+                  <div className="h-12 flex-grow rounded-lg bg-muted"></div>
                 </div>
               </div>
             </div>
