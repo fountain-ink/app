@@ -16,14 +16,9 @@ import Link from "next/link";
 import { ArrowLeftIcon } from "lucide-react";
 import { isValidTheme, ThemeType, themeNames, themeDescriptions, defaultThemeName } from "@/styles/themes";
 import { ThemeButtons } from "@/components/theme/theme-buttons";
-// import { toast } from "sonner";
-// import { group } from "@lens-protocol/metadata";
-// import { getLensClient } from "@/lib/lens/client";
-// import { fetchGroup, setGroupMetadata } from "@lens-protocol/client/actions";
-// import { handleOperationWith } from "@lens-protocol/client/viem";
-// import { uri } from "@lens-protocol/client";
-// import { storageClient } from "@/lib/lens/storage-client";
-// import { clientCookieStorage } from "@/lib/lens/storage";
+import { toast } from "sonner";
+import { createClient } from "@/lib/supabase/client";
+import { v4 as uuidv4 } from "uuid";
 
 interface BlogSettingsProps {
   initialSettings: BlogData;
@@ -133,6 +128,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     previewUrl: undefined,
     isDeleted: false
   });
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     setFormState({
@@ -170,32 +166,44 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
   }, [imageState.file]);
 
   const validateBlogTitle = useCallback((title: string) => {
-    if (title.trim().length === 0) {
-      return "Blog title cannot be empty";
-    }
     if (title.length > 100) {
       return "Blog title must be less than 100 characters";
     }
     return null;
   }, []);
 
-  const validateHandle = useCallback((handle: string) => {
-    if (handle.trim().length === 0) {
-      return "Handle cannot be empty";
-    }
-    if (!/^[a-z0-9-]+$/.test(handle)) {
-      return "Handle can only contain lowercase letters, numbers, and hyphens";
+  const validateHandle = useCallback(async (handle: string): Promise<string | null> => {
+    if (!/^[a-zA-Z0-9-]+$/.test(handle)) {
+      return "Handle can only contain letters, numbers, and hyphens";
     }
     if (handle.length > 50) {
       return "Handle must be less than 50 characters";
     }
+    
+    try {
+      const db = await createClient();
+      const { data: existingBlogs } = await db
+        .from("blogs")
+        .select("handle, address")
+        .eq("owner", initialSettings.owner)
+        .neq("address", initialSettings.address);
+        
+      if (existingBlogs && existingBlogs.some(blog => blog.handle === handle)) {
+        return `You already have a blog with handle "${handle}"`;
+      }
+    } catch (error) {
+      console.error("Error validating handle:", error);
+    }
+    
     return null;
-  }, []);
+  }, [initialSettings.owner, initialSettings.address]);
 
   const handleSave = async () => {
+    setIsSaving(true);
+    
     const titleError = formState.metadata.showTitle ? validateBlogTitle(formState.title) : null;
-    const handleError = validateHandle(formState.handle);
-
+    const handleError = await validateHandle(formState.handle);
+    
     setFormState(prev => ({
       ...prev,
       errors: {
@@ -203,13 +211,14 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
         handle: handleError
       }
     }));
-
+    
     if (titleError || handleError) {
+      setIsSaving(false);
       return;
     }
-
+    
     let iconUrl = settings?.icon;
-    if (imageState.file) {
+      if (imageState.file) {
       try {
         iconUrl = await uploadFile(imageState.file);
       } catch (error) {
@@ -225,8 +234,8 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
       metadata: formState.metadata,
       theme: formState.theme,
       icon: imageState.isDeleted ? null : iconUrl,
-    });
-
+          });
+          
     // If this is a group, also save metadata on-chain
   //   if (isGroup && success) {
   //     try {
@@ -288,23 +297,17 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
         ...prev.metadata,
         [field]: value
       },
-      isDirty: true,
+      isDirty: true
     }));
   };
 
   const handleChange = (field: 'title' | 'about' | 'handle', value: string) => {
-    // Don't allow handle changes for user blogs
-    if (field === 'handle' && isUserBlog) return;
-
     let fieldError: string | null = null;
-
-    // Validate the field as it changes
-    if (field === 'title' && formState.metadata.showTitle) {
+    
+    if (field === 'title') {
       fieldError = validateBlogTitle(value);
-    } else if (field === 'handle') {
-      fieldError = validateHandle(value);
     }
-
+    
     setFormState(prev => ({
       ...prev,
       [field]: value,
@@ -320,26 +323,25 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     if (file) {
       try {
         const processedFile = await processImage(file);
-        setImageState({
+    setImageState({
           file: processedFile,
           previewUrl: undefined,
-          isDeleted: false
-        });
-        setFormState(prev => ({ ...prev, isDirty: true }));
+      isDeleted: false
+    });
+    setFormState(prev => ({ ...prev, isDirty: true }));
       } catch (error) {
         console.error("Failed to process image:", error);
       }
     } else {
-      setImageState({
-        file: null,
-        previewUrl: undefined,
-        isDeleted: true
-      });
-      setFormState(prev => ({ ...prev, isDirty: true }));
+    setImageState({
+      file: null,
+      previewUrl: undefined,
+      isDeleted: true
+    });
+    setFormState(prev => ({ ...prev, isDirty: true }));
     }
   };
 
-  // Add a new handler for theme changes
   const handleThemeChange = (themeName: ThemeType) => {
     console.log(themeName, formState)
     setFormState(prev => ({
@@ -352,6 +354,9 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     }));
   };
 
+  const blogAddress = initialSettings.address;
+  const blogUrl = isUserBlog ? `/b/${userHandle}` : `/b/${blogAddress}`;
+  
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

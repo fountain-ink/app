@@ -10,7 +10,7 @@ import { getBlogData } from "@/lib/settings/get-blog-metadata";
 import { MainContentFocus, Account } from "@lens-protocol/client";
 import { isEvmAddress } from "@/lib/utils/address";
 
-const UserBlogPage = async ({ params }: { params: { user: string } }) => {
+export const UserBlogPage = async ({ params }: { params: { user: string } }) => {
   const lens = await getLensClient();
   const { username } = await getUserProfile();
   let profile;
