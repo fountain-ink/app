@@ -173,6 +173,9 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
   }, []);
 
   const validateHandle = useCallback(async (handle: string): Promise<string | null> => {
+    if (!handle) {
+      return null;
+    }
     if (!/^[a-zA-Z0-9-]+$/.test(handle)) {
       return "Handle can only contain letters, numbers, and hyphens";
     }
@@ -288,6 +291,8 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     if (success) {
       setFormState(prev => ({ ...prev, isDirty: false, errors: { title: null, handle: null } }));
     }
+    
+    setIsSaving(false);
   };
 
   const handleMetadataChange = (field: keyof BlogMetadata, value: boolean) => {
@@ -471,7 +476,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
               id="blog-handle"
               value={formState.handle}
               onChange={(e) => handleChange('handle', e.target.value.toLowerCase())}
-              placeholder="your-blog-handle"
+              placeholder="your-handle"
               disabled={isUserBlog}
               className={isUserBlog ? "opacity-50 cursor-not-allowed" : ""}
             />
@@ -553,9 +558,9 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
         <div className="flex justify-start">
           <Button
             onClick={handleSave}
-            disabled={!formState.isDirty || Object.values(formState.errors).some(error => error !== null)}
+            disabled={!formState.isDirty || Object.values(formState.errors).some(error => error !== null) || isSaving}
           >
-            Save Settings
+            {isSaving ? "Saving..." : "Save Settings"}
           </Button>
         </div>
       </CardContent>
