@@ -13,7 +13,7 @@ export const themeDescriptions: Record<ThemeType, string> = {
 
 type SharedVariables = {
   "--title-font": string;
-  "--title-weight": "100" | "200" | "300" | "400" | "500" | "600" | "800" | "900";
+  "--title-weight": "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900";
   "--title-style": "normal" | "italic";
   "--title-align": "left" | "center" | "right";
   "--title-size": string;
@@ -24,7 +24,7 @@ type SharedVariables = {
 
   "--subtitle-align": "left" | "center" | "right";
   "--subtitle-font": string;
-  "--subtitle-weight": "100" | "200" | "300" | "400" | "500" | "600" | "800" | "900";
+  "--subtitle-weight": "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900";
   "--subtitle-style": "normal" | "italic";
   "--subtitle-size": string;
   "--subtitle-color": string;
@@ -174,8 +174,8 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
     },
     shared: {
       "--radius": "0.75rem",
-      "--title-font": "Geist, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-      "--title-weight": "500",
+      "--title-font": "var(--font-geist-sans), sans-serif",
+      "--title-weight": "600",
       "--title-style": "normal",
       "--title-align": "center",
       "--title-size": "4rem",
@@ -184,7 +184,7 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--title-color": "hsl(var(--foreground))",
       "--title-margin": "3rem",
 
-      "--subtitle-font": "Geist, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      "--subtitle-font": "var(--font-geist-sans), Roboto, sans-serif",
       "--subtitle-weight": "400",
       "--subtitle-style": "normal",
       "--subtitle-size": "1.5rem",
@@ -194,17 +194,17 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--subtitle-margin": "2rem",
       "--subtitle-align": "center",
 
-      "--header-font": "Geist",
-      "--header-weight": "600",
+      "--header-font": "var(--font-geist-sans), Roboto, sans-serif",
+      "--header-weight": "500",
       "--header-style": "normal",
       "--header-size": "1.75rem",
       "--header-line-height": "1.2",
       "--header-letter-spacing": "-0.8px",
       "--header-color": "hsl(var(--foreground))",
-      "--header-margin": "2rem",
+      "--header-margin": "1.5rem",
       "--header-align": "left",
 
-      "--paragraph-font": "Geist",
+      "--paragraph-font": "var(--font-geist-sans), sans-serif",
       "--paragraph-weight": "400",
       "--paragraph-style": "normal",
       "--paragraph-size": "1.125rem",
