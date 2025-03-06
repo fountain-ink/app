@@ -289,19 +289,19 @@ export const PublishMenu = () => {
       return;
     }
 
-    const staticEditor = getStaticEditor(draft.contentJson as Value);
+    // const staticEditor = getStaticEditor(draft.contentJson as Value);
 
     setIsPublishing(true);
 
     try {
       /// FIXME
-      const contentHtml = await serializeHtml(staticEditor as any, {
-        components: { ...staticComponents },
-      });
+      // const contentHtml = await serializeHtml(staticEditor as any, {
+      //   components: { ...staticComponents },
+      // });
 
       const attributes: any = [
         { key: "contentJson", type: MetadataAttributeType.JSON, value: JSON.stringify(draft.contentJson) },
-        { key: "contentHtml", type: MetadataAttributeType.STRING, value: contentHtml },
+        // { key: "contentHtml", type: MetadataAttributeType.STRING, value: draft.contentHtml },
       ];
 
       if (subtitle) {

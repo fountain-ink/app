@@ -3,10 +3,12 @@
 import type { Draft } from "@/components/draft/draft";
 import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { extractMetadata } from "@/lib/extract-metadata";
+import { serializeHtml, Value } from "@udecode/plate";
 import { MarkdownPlugin } from "@udecode/plate-markdown";
 import { useEditorPlugin, useEditorState } from "@udecode/plate/react";
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import { getStaticEditor, staticComponents } from "../static";
 
 export function AutoSave({ documentId }: { documentId: string }) {
   const editor = useEditorState();
@@ -17,7 +19,7 @@ export function AutoSave({ documentId }: { documentId: string }) {
   const { saveDocument, getDocument } = useDocumentStorage();
 
   const saveContent = useCallback(
-    async (content: unknown) => {
+    async (content: Value) => {
       setIsSaving(true);
       setIsVisible(true);
       setSaveSuccess(false);
@@ -26,6 +28,10 @@ export function AutoSave({ documentId }: { documentId: string }) {
         const existingDraft = getDocument(documentId);
         const { title, subtitle, coverUrl } = extractMetadata(editor.children as any);
         const contentMarkdown = api.markdown.serialize();
+        // const staticEditor = getStaticEditor(content);
+        // const contentHtml = await serializeHtml(staticEditor, {
+        //   components: { ...staticComponents },
+        // });
 
         const draft = {
           ...(existingDraft || {}),
@@ -41,7 +47,6 @@ export function AutoSave({ documentId }: { documentId: string }) {
           contentHtml: null,
           contributors: null,
           yDoc: null,
-          // Local-only fields for UI state
           tags: existingDraft?.tags || [],
           coverUrl,
         } as Draft;
