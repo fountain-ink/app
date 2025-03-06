@@ -1,69 +1,17 @@
-// "use client";
+"use client";
 
-// import React from "react";
+import React from "react";
 
-// import { cn } from "@udecode/cn";
-// import { HEADING_KEYS } from "@udecode/plate-heading";
-// import {
-//   ParagraphPlugin,
-//   type PlaceholderProps,
-//   createNodeHOC,
-//   createNodesHOC,
-//   usePlaceholderState,
-// } from "@udecode/plate/react";
-// import { TITLE_KEYS } from "../editor/plugins/title-plugin";
-
-// export const Placeholder = (props: PlaceholderProps) => {
-//   const { children, nodeProps, placeholder } = props;
-
-//   const { enabled } = usePlaceholderState(props);
-
-//   return React.Children.map(children, (child) => {
-//     return React.cloneElement(child, {
-//       className: child.props.className,
-//       nodeProps: {
-//         ...nodeProps,
-//         className: cn(
-//           enabled &&
-//             "before:absolute before:cursor-text before:opacity-30 before:content-[attr(placeholder)] before:left-0 before:right-0 before:text-inherit",
-//         ),
-//         placeholder,
-//       },
-//     });
-//   });
-// };
-
-// export const withPlaceholder = createNodeHOC(Placeholder);
-
-// export const withPlaceholdersPrimitive = createNodesHOC(Placeholder);
-
-// export const withPlaceholders = (components: any) =>
-//   withPlaceholdersPrimitive(components, [
-//     // {
-//     //   key: ParagraphPlugin.key,
-//     //   hideOnBlur: true,
-//     //   placeholder: "Tell your story...",
-//     //   query: {
-//     //     filter: (entry) => {
-//     //       const [node, path] = entry;
-//     //       return node.type === "paragraph" && path[0] === 0;
-//     //     },
-//     //   },
-//     // },
-'use client';
-
-import React from 'react';
-
-import { cn } from '@udecode/cn';
-import { HEADING_KEYS } from '@udecode/plate-heading';
-import { ParagraphPlugin } from '@udecode/plate/react';
+import { cn } from "@udecode/cn";
+import { HEADING_KEYS } from "@udecode/plate-heading";
 import {
+  ParagraphPlugin,
   type PlaceholderProps,
   createNodeHOC,
   createNodesHOC,
   usePlaceholderState,
-} from '@udecode/plate/react';
-import { TITLE_KEYS } from '../editor/plugins/title-plugin';
+} from "@udecode/plate/react";
+import { TITLE_KEYS } from "../editor/plugins/title-plugin";
 
 export const Placeholder = (props: PlaceholderProps) => {
   const { children, nodeProps, placeholder } = props;
@@ -77,7 +25,7 @@ export const Placeholder = (props: PlaceholderProps) => {
         ...nodeProps,
         className: cn(
           enabled &&
-            'before:absolute before:cursor-text before:opacity-30 before:content-[attr(placeholder)]'
+          "before:absolute before:cursor-text before:opacity-30 before:content-[attr(placeholder)] before:left-0 before:right-0 before:text-inherit",
         ),
         placeholder,
       },
@@ -91,11 +39,21 @@ export const withPlaceholdersPrimitive = createNodesHOC(Placeholder);
 
 export const withPlaceholders = (components: any) =>
   withPlaceholdersPrimitive(components, [
+    // {
+    //   key: ParagraphPlugin.key,
+    //   hideOnBlur: true,
+    //   placeholder: "Tell your story...",
+    //   query: {
+    //     filter: (entry) => {
+    //       const [node, path] = entry;
+    //       return node.type === "paragraph" && path[0] === 0;
+    //     },
+    //   },
+    // },
     {
       key: ParagraphPlugin.key,
       hideOnBlur: true,
       placeholder: "Press `/` for commands",
-
       query: {
         maxLevel: 1,
       },
@@ -121,3 +79,4 @@ export const withPlaceholders = (components: any) =>
       placeholder: "Subheading",
     },
   ]);
+
