@@ -63,10 +63,7 @@ function ImagePopover({
       const url = await uploadFile(file);
       if (url) {
         editor.tf.setNodes({ url, width }, { at: element });
-        editor.tf.select(editor, {
-          edge: editor.selection ? undefined : "end",
-          focus: true,
-        });
+        editor.tf.select(editor.selection?.focus, { focus: true, edge: "end" });
       }
     } finally {
       setIsUploading(false);
@@ -146,10 +143,7 @@ export const ImageElement = withRef<typeof PlateElement>(
         const url = await uploadFile(file);
         if (url) {
           editor.tf.setNodes({ url, width }, { at: element });
-          editor.tf.select(editor, {
-            edge: editor.selection ? undefined : "end",
-            focus: true,
-          });
+          editor.tf.select(editor.selection?.focus, { focus: true, edge: "end" });
         }
       } finally {
         setIsUploading(false);
