@@ -10,6 +10,9 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { Draft } from "./draft";
 import { DraftView } from "./draft-view";
+import { GraphicHand2 } from "../icons/custom-icons";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
+import { DraftCreateButton } from "./draft-create-button";
 
 async function getCloudDrafts() {
   const response = await fetch("/api/drafts", {
@@ -95,7 +98,21 @@ export function DraftList({ address }: { address?: EvmAddress | null }) {
   }
 
   if (!drafts.length) {
-    return <div>No drafts available</div>;
+    return (
+      <Card className="m-0 md:m-10 bg-transparent group border-0 flex flex-col gap-4 items-center justify-center shadow-none drop-shadow-none">
+        <CardHeader>
+          <GraphicHand2 />
+        </CardHeader>
+        <CardContent>
+          <span className="font-[family-name:var(--title-font)] text-lg lg:text-xl text-center font-[letter-spacing:var(--title-letter-spacing)] font-[color:var(--title-color)] overflow-hidden line-clamp-2">
+            Nothing here yet, but the world awaits your words.
+          </span>
+        </CardContent>
+        <CardFooter>
+          <DraftCreateButton text="Start writing" />
+        </CardFooter>
+      </Card>
+    );
   }
 
   return (
