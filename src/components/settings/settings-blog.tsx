@@ -568,14 +568,6 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
             {/* Browser Navigation Bar */}
             <div className="w-full">
               <div className="flex flex-col rounded-t-lg overflow-hidden border-b border-border/50 shadow-sm">
-                {/* Browser Controls */}
-                <div className="bg-muted/70 px-3 py-2 flex items-center gap-1.5">
-                  <div className="flex gap-1.5">
-                    <div className="w-3 h-3 rounded-full bg-red-300"></div>
-                    <div className="w-3 h-3 rounded-full bg-yellow-300"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-300"></div>
-                  </div>
-                </div>
                 {/* URL Bar */}
                 <div className="bg-background px-3 py-1.5 flex items-center gap-2">
                   {/* Navigation Buttons */}
@@ -689,7 +681,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
               </AnimatePresence>
 
               {/* Posts Preview */}
-              <div className="w-[70%] space-y-3 mt-2">
+              <div className="w-[70%] space-y-3">
                 <div className="flex gap-3 w-full">
                   <div className="h-12 w-12 rounded-lg bg-muted flex-shrink-0"></div>
                   <div className="h-12 flex-grow rounded-lg bg-muted"></div>
