@@ -7,7 +7,7 @@ import { CodeLineElement } from "@/components/ui/code-line-element";
 import { CodeSyntaxLeaf } from "@/components/ui/code-syntax-leaf";
 import { ColumnElement } from "@/components/ui/column-element";
 import { ColumnGroupElement } from "@/components/ui/column-group-element";
-import { CommentLeaf } from "@/components/ui/comment-leaf";
+// import { CommentLeaf } from "@/components/ui/comment-leaf";
 import { DateElement } from "@/components/ui/date-element";
 import { HeadingElement } from "@/components/ui/heading-element";
 import { HrElement } from "@/components/ui/hr-element";
@@ -114,7 +114,7 @@ export const getElements = () => {
     [ItalicPlugin.key]: withProps(PlateLeaf, { as: "em" }),
     [StrikethroughPlugin.key]: withProps(PlateLeaf, { as: "s" }),
     [UnderlinePlugin.key]: withProps(PlateLeaf, { as: "u" }),
-    [CommentsPlugin.key]: CommentLeaf,
+    // [CommentsPlugin.key]: CommentLeaf,
     [TITLE_KEYS.title]: withProps(TitleElement, { variant: "title" }),
     [TITLE_KEYS.subtitle]: withProps(TitleElement, { variant: "subtitle" }),
   };

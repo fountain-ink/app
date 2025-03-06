@@ -294,7 +294,8 @@ export const PublishMenu = () => {
     setIsPublishing(true);
 
     try {
-      const contentHtml = await serializeHtml(staticEditor, {
+      /// FIXME
+      const contentHtml = await serializeHtml(staticEditor as any, {
         components: { ...staticComponents },
       });
 

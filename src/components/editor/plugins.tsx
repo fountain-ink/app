@@ -63,11 +63,11 @@ import { toast } from "sonner";
 import { ImageElement } from "../ui/image-element";
 import { ImagePreview } from "../ui/image-preview";
 import { RemoteCursorOverlay } from "../ui/remote-cursor-overlay";
-import { autoformatRules } from "./plugins/autoformat-rules";
 import { LeadingBlockPlugin } from "./plugins/leading-block-plugin";
 import { NormalizePlugin } from "./plugins/normalize-plugin";
 import { SubtitlePlugin, TITLE_KEYS, TitlePlugin } from "./plugins/title-plugin";
 import emojiMartData, { type EmojiMartData } from '@emoji-mart/data';
+import { autoformatRules } from "./plugins/autoformat-rules";
 
 
 const resetBlockTypesCommonRule = {
