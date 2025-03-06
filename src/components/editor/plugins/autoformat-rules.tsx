@@ -36,6 +36,11 @@ import {
 } from '@udecode/plate-indent-list';
 import { openNextToggles, TogglePlugin } from '@udecode/plate-toggle/react';
 import { ParagraphPlugin } from '@udecode/plate/react';
+import { TodoListPlugin } from '@udecode/plate-list/react';
+import { NumberedListPlugin } from '@udecode/plate-list/react';
+import { ListItemPlugin } from '@udecode/plate-list/react';
+import { BulletedListPlugin } from '@udecode/plate-list/react';
+import { toggleList, TTodoListItemElement } from '@udecode/plate-list';
 
 export const format = (editor: SlateEditor, customFormatting: any) => {
   if (editor.selection) {
@@ -53,6 +58,14 @@ export const format = (editor: SlateEditor, customFormatting: any) => {
       customFormatting();
     }
   }
+};
+
+export const formatList = (editor: SlateEditor, elementType: string) => {
+  format(editor, () =>
+    toggleList(editor, {
+      type: elementType,
+    }),
+  );
 };
 
 export const autoformatMarks: AutoformatRule[] = [
@@ -236,6 +249,42 @@ export const autoformatIndentLists: AutoformatRule[] = [
   },
 ];
 
+export const autoformatLists: AutoformatRule[] = [
+  {
+    format: (editor) => formatList(editor, BulletedListPlugin.key),
+    match: ["* ", "- "],
+    mode: "block",
+    // preFormat,
+    type: ListItemPlugin.key,
+  },
+  {
+    format: (editor) => formatList(editor, NumberedListPlugin.key),
+    match: ["^\\d+\\.$ ", "^\\d+\\)$ "],
+    matchByRegex: true,
+    mode: "block",
+    // preFormat,
+    type: ListItemPlugin.key,
+  },
+  {
+    match: "[] ",
+    mode: "block",
+    type: TodoListPlugin.key,
+  },
+  {
+    format: (editor) =>
+      editor.tf.setNodes<TTodoListItemElement>(
+        { checked: true, type: TodoListPlugin.key },
+        {
+          match: (n) => editor.api.isBlock(n),
+        },
+      ),
+    match: "[x] ",
+    mode: "block",
+    type: TodoListPlugin.key,
+  },
+];
+
+
 export const autoformatPlugin = AutoformatPlugin.configure({
   options: {
     enableUndoOnDelete: true,
@@ -262,5 +311,5 @@ export const autoformatRules = [
       ...autoformatLegalHtml,
       ...autoformatArrow,
       ...autoformatMath,
-      ...autoformatIndentLists,
+      ...autoformatLists,
 ];
