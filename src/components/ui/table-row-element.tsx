@@ -1,20 +1,26 @@
-"use client";
+'use client';
 
-import React from "react";
 
-import { cn, withRef } from "@udecode/cn";
+import React from 'react';
 
-import { PlateElement } from "./plate-element";
+import { cn } from '@udecode/cn';
+import { PlateElement, useSelected } from '@udecode/plate/react';
 
-export const TableRowElement = withRef<
-  typeof PlateElement,
-  {
-    hideBorder?: boolean;
-  }
->(({ children, hideBorder, ...props }, ref) => {
+export function TableRowElement({
+  children,
+  className,
+  ...props
+}: React.ComponentProps<typeof PlateElement>) {
+  const selected = useSelected();
+
   return (
-    <PlateElement ref={ref} as="tr" className={cn("h-full", hideBorder && "border-none")} {...props}>
+    <PlateElement
+      as="tr"
+      className={cn(className, 'h-full')}
+      data-selected={selected ? 'true' : undefined}
+      {...props}
+    >
       {children}
     </PlateElement>
   );
-});
+}

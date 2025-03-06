@@ -103,13 +103,14 @@
 //   isHeader: true,
 // });
 
+
 'use client';
 
 import React from 'react';
 
 import type { TTableCellElement } from '@udecode/plate-table';
 
-import { cn, withProps, withRef } from '@udecode/cn';
+import { cn, withProps } from '@udecode/cn';
 import { useBlockSelected } from '@udecode/plate-selection/react';
 import {
   TablePlugin,
@@ -118,6 +119,7 @@ import {
   useTableCellElementResizable,
 } from '@udecode/plate-table/react';
 import {
+  PlateElement,
   useEditorPlugin,
   useElementSelector,
   useReadOnly,
@@ -125,15 +127,17 @@ import {
 import { cva } from 'class-variance-authority';
 
 import { blockSelectionVariants } from './block-selection';
-import { PlateElement } from './plate-element';
 import { ResizeHandle } from './resizable';
 
-export const TableCellElement = withRef<
-  typeof PlateElement,
-  {
-    isHeader?: boolean;
-  }
->(({ children, className, isHeader, style, ...props }, ref) => {
+export function TableCellElement({
+  children,
+  className,
+  isHeader,
+  style,
+  ...props
+}: React.ComponentProps<typeof PlateElement> & {
+  isHeader?: boolean;
+}) {
   const { api } = useEditorPlugin(TablePlugin);
   const readOnly = useReadOnly();
   const element = props.element as TTableCellElement;
@@ -163,7 +167,6 @@ export const TableCellElement = withRef<
 
   return (
     <PlateElement
-      ref={ref}
       as={isHeader ? 'th' : 'td'}
       className={cn(
         className,
@@ -173,10 +176,10 @@ export const TableCellElement = withRef<
         'before:size-full',
         selected && 'before:z-10 before:bg-muted',
         "before:absolute before:box-border before:content-[''] before:select-none",
-        borders.bottom?.size && 'before:border-b before:border-b-border',
-        borders.right?.size && 'before:border-r before:border-r-border',
-        borders.left?.size && 'before:border-l before:border-l-border',
-        borders.top?.size && 'before:border-t before:border-t-border'
+        borders.bottom?.size && `before:border-b before:border-b-border`,
+        borders.right?.size && `before:border-r before:border-r-border`,
+        borders.left?.size && `before:border-l before:border-l-border`,
+        borders.top?.size && `before:border-t before:border-t-border`
       )}
       style={
         {
@@ -247,9 +250,7 @@ export const TableCellElement = withRef<
       )}
     </PlateElement>
   );
-});
-
-TableCellElement.displayName = 'TableCellElement';
+}
 
 export const TableCellHeaderElement = withProps(TableCellElement, {
   isHeader: true,

@@ -26,7 +26,7 @@ import {
 import { AIToolbarButton } from "./ai-toolbar-button";
 import { AlignDropdownMenu } from "./align-dropdown-menu";
 import { ColorDropdownMenu } from "./color-dropdown-menu";
-import { CommentToolbarButton } from "./comment-toolbar-button";
+// import { CommentToolbarButton } from "./comment-toolbar-button";
 import { IndentListToolbarButton } from "./indent-list-toolbar-button";
 import { IndentTodoToolbarButton } from "./indent-todo-toolbar-button";
 import { IndentToolbarButton } from "./indent-toolbar-button";
@@ -123,7 +123,7 @@ export function FixedToolbarButtons() {
       <div className="grow" />
 
       <ToolbarGroup>
-        <CommentToolbarButton />
+        {/* <CommentToolbarButton /> */}
         {/* <ModeDropdownMenu /> */}
       </ToolbarGroup>
     </div>

@@ -66,7 +66,7 @@ import { TITLE_KEYS } from "./plugins/title-plugin";
 import { ImageElement } from "../ui/image-element";
 
 export const getRichElements = () => {
-  return withPlaceholders(getElements());
+  return getElements();
 };
 
 export const getElements = () => {

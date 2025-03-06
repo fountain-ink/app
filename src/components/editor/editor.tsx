@@ -5,7 +5,6 @@ import { useSearchParams } from "next/navigation";
 import type { PropsWithChildren } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { CommentsPopover } from "../ui/comments-popover";
 import { Editor, EditorContainer } from "../ui/editor";
 import { FixedToolbar } from "../ui/fixed-toolbar";
 import { FixedToolbarButtons } from "../ui/fixed-toolbar-buttons";
@@ -13,7 +12,7 @@ import { FloatingToolbar } from "../ui/floating-toolbar";
 import { FloatingToolbarButtons } from "../ui/floating-toolbar-buttons";
 import { TocSidebar } from "../ui/toc-sidebar";
 import { AutoSave } from "./addons/editor-autosave";
-import { getRichElements } from "./elements";
+import { getElements, getRichElements } from "./elements";
 import { getEditorPlugins } from "./plugins";
 
 export default function PlateEditor(
@@ -66,8 +65,6 @@ export default function PlateEditor(
             <FloatingToolbarButtons />
           </FloatingToolbar>
 
-          <CommentsPopover />
-
           <div className="absolute right-0 top-0 h-full w-4 select-none" />
         </div>
       </Plate>
@@ -79,7 +76,7 @@ export const useMyEditor = () => {
   return usePlateEditor({
     plugins: [...getEditorPlugins("nopath")],
     override: {
-      components: getRichElements(),
+      components: getElements(),
     },
   });
 };

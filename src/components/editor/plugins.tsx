@@ -149,18 +149,13 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
           },
         },
       }) as any,
-      CommentsPlugin.configure({
-        options: {
-          users: {
-            1: {
-              id: "1",
-              name: username || "anonymous",
-              avatarUrl: "https://avatars.githubusercontent.com/u/19695832?s=96&v=4",
-            },
-          },
-          myUserId: "1",
-        },
-      }) as any,
+      // ExtendedCommentsPlugin.configure({
+      //   render: {
+      //     aboveNodes: BlockDiscussion as any,
+      //     afterEditable: AfterEditableComments as any,
+      //   },
+      // }),
+
     );
   }
 
@@ -201,7 +196,8 @@ export const plugins = [
   HeadingPlugin.configure({
     options: { levels: 4 },
     handlers: {
-      onKeyDown: ({ event, editor }: { event: any; editor: PlateEditor }) => {
+      onKeyDown: (ctx) => {
+        const { editor, event } = ctx;
         const anchor = editor.selection?.anchor?.path;
         if (!anchor) return;
 
@@ -494,9 +490,9 @@ export const plugins = [
   JuicePlugin,
   CodeSyntaxPlugin,
   MentionInputPlugin,
-  TableRowPlugin,
-  TableCellPlugin,
-  TableCellHeaderPlugin,
+  // TableRowPlugin,
+  // TableCellPlugin,
+  // TableCellHeaderPlugin,
   // ExcalidrawPlugin,
   ColumnItemPlugin,
 
