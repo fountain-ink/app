@@ -119,7 +119,7 @@ export const UserBlogPage = async ({ params }: { params: { user: string } }) => 
     filter: {
       authors: !isGroup && profile ? [profile.address] : undefined,
       metadata: { mainContentFocus: [MainContentFocus.Article] },
-      feeds: feedAddress ? [{ feed: feedAddress }] : []
+      feeds: feedAddress ? [{ feed: feedAddress }] : [{ globalFeed: true }]
     },
   }).unwrapOr(null);
   console.log("posts", posts);
