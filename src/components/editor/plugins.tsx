@@ -267,7 +267,17 @@ export const plugins = [
     options: { triggerPreviousCharPattern: /^$|^[\s"']$/ },
   }),
 
-  SlashPlugin,
+
+  SlashPlugin.extend({
+    options: {
+      trigger: "/",
+      // triggerQuery(editor) {
+      //   return !editor.api.some({
+      //     match: { type: editor.getType(CodeBlockPlugin) },
+      //   });
+      // },
+    },
+  }),
 
   TablePlugin.configure({
     options: {
@@ -436,7 +446,7 @@ export const plugins = [
     handlers: {
       onKeyDown: ({ event, editor }: { event: React.KeyboardEvent; editor: PlateEditor }) => {
         if (event.key !== 'Backspace') return;
-        
+
         const anchor = editor.selection?.anchor?.path;
         if (!anchor) return;
 
@@ -447,12 +457,12 @@ export const plugins = [
 
         if (node.type === ParagraphPlugin.key && editor.api.isEmpty(editor.selection, { block: true })) {
           event.preventDefault();
-          
+
           // Get the previous node's path before removing the current one
           const prevPath = PathApi.previous(path);
-          
+
           editor.tf.removeNodes({ at: path });
-          
+
           // Select the end of the previous node if it exists
           if (prevPath) {
             editor.tf.select(prevPath);

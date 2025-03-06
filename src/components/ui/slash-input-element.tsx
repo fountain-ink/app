@@ -249,7 +249,7 @@ export const SlashInputElement = withRef<typeof PlateElement>(({ className, ...p
 
   return (
     <PlateElement ref={ref} as="span" data-slate-value={element.value} {...props}>
-      <InlineCombobox element={element} trigger="/">
+      <InlineCombobox element={element} trigger="/" showTrigger={true}>
         <InlineComboboxInput />
 
         <InlineComboboxContent variant="slash">

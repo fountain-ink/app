@@ -144,7 +144,7 @@ const InlineCombobox = ({
     cursorState,
     ref: inputRef,
     onCancelInput: (cause) => {
-      if (cause !== "backspace") {
+      if (cause !== "backspace" && cause !== "escape") {
         editor.tf.insertText( trigger + value, {
           at: insertPoint?.current ?? undefined,
         });
