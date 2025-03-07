@@ -535,11 +535,11 @@ export const plugins = [
         //   hotkey: "Enter",
         //   predicate: (editor) => isCodeBlockEmpty(editor),
         // },
-        {
-          ...resetBlockTypesCodeBlockRule,
-          hotkey: "Backspace",
-          predicate: (editor) => editor.api.isAt({ start: true }),
-        },
+        // {
+        //   ...resetBlockTypesCodeBlockRule,
+        //   hotkey: "Backspace",
+        //   predicate: (editor) => editor.api.isAt({ start: true }),
+        // },
       ],
     },
   }),

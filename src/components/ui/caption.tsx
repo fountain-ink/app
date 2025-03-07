@@ -9,7 +9,7 @@ import { cva } from "class-variance-authority";
 
 import { Button } from "./button";
 
-const captionVariants = cva("w-full px-4 max-w-full", {
+const captionVariants = cva("w-full px-4 caret-transparent max-w-full", {
   defaultVariants: {
     align: "center",
   },
@@ -30,7 +30,7 @@ export const CaptionTextarea = withCn(
     "mt-2 w-full max-w-full resize-none border-none bg-inherit p-0 font-[inherit] text-inherit",
     "focus:outline-none focus:[&::placeholder]:opacity-0",
     "text-center print:placeholder:text-transparent",
-    "break-words caret-primary",
+    "break-words caret-primary [&_*]:caret-primary",
   ),
 );
 

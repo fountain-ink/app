@@ -154,7 +154,7 @@ export const ImageElement = withRef<typeof PlateElement>(
       <ImagePopover url={url} open={selected} popoverRef={popoverRef}>
         <PlateElement
           ref={ref}
-          className={cn(className, "my-9 flex flex-col items-center [&_*]:caret-transparent ")}
+          className={cn(className, "my-9 flex flex-col items-center  ")}
           {...props}
         >
           <motion.figure
@@ -219,7 +219,7 @@ export const ImageElement = withRef<typeof PlateElement>(
             )}
 
             <AnimatePresence mode="wait">
-              <div className="w-full flex justify-center [&_*]:caret-primary">
+              <div className="w-full flex justify-center">
                 <Caption align={align}>
                   <CaptionTextarea
                     readOnly={readonly}
