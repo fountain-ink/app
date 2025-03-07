@@ -255,7 +255,7 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--code-block-margin": "1rem",
       "--code-block-border": "1px solid hsl(var(--border))",
 
-      "--image-border-radius": "0.75rem",
+      "--image-border-radius": "0.50rem",
       "--image-margin-y": "2.75rem",
 
       "--date-font": "proxima-nova-wide",
@@ -387,7 +387,7 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--code-block-margin": "1.5rem",
       "--code-block-border": "1px solid hsl(var(--border))",
 
-      "--image-border-radius": "0.75rem",
+      "--image-border-radius": "0.50rem",
       "--image-margin-y": "2.5rem",
 
       "--date-font": "proxima-nova-wide",

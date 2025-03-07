@@ -10,6 +10,7 @@ import {
   ImagePlugin,
   PlaceholderPlugin,
   PlaceholderProvider,
+  useMediaState,
   usePlaceholderElementState,
   usePlaceholderPopoverState,
   VideoPlugin,
@@ -98,39 +99,13 @@ function MediaPopover({
     }
   };
 
-  // Determine accept attribute based on mediaType
-  let acceptValue = "*/*";
-  if (mediaType === ImagePlugin.key) {
-    acceptValue = "image/*";
-  } else if (mediaType === VideoPlugin.key) {
-    acceptValue = "video/*";
-  } else if (mediaType === AudioPlugin.key) {
-    acceptValue = "audio/*";
-  }
-
-  const changeButton = (
-    <Button variant="ghost" disabled={isUploading}>
-      <div className="relative flex gap-1 items-center justify-center">
-        <input
-          type="file"
-          accept={acceptValue}
-          onChange={handleFileSelect}
-          className="absolute inset-0 cursor-pointer opacity-0"
-          disabled={isUploading}
-        />
-        {isUploading ? <LoadingSpinner /> : <></>}
-        Change
-      </div>
-    </Button>
-  );
-
   return (
     <ElementPopover
       ref={popoverRef}
       open={open}
       defaultWidth={width}
       onWidthChange={handleWidth}
-      content={changeButton}
+      showCaption={false}
     >
       {children}
     </ElementPopover>
@@ -149,29 +124,22 @@ export const MediaPlaceholderElement = withHOC(
         updatedFiles,
         element,
       } = usePlaceholderElementState();
-
       const {
         setIsUploading,
         setProgresses,
         setUpdatedFiles,
       } = usePlaceholderPopoverState();
-
       const { api } = useEditorPlugin(PlaceholderPlugin);
-
       const currentMedia = MEDIA_CONFIG[mediaType];
-
       const file: File | undefined = updatedFiles?.[0];
       const progress = file ? progresses?.[file.name] : undefined;
-
       const { isUploading, uploadedFile, uploadFile, uploadingFile } = useUploadFile({ });
-
       const readonly = useReadOnly();
       const containerRef = useRef<HTMLDivElement>(null);
       const popoverRef = useRef<HTMLDivElement>(null);
-      const [selected, setSelected] = useState(false);
+      const {  selected } = useMediaState();
       const [width, setWidth] = useState<ElementWidth>((element.width as ElementWidth) || "column");
       const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-      const [isFocused, setIsFocused] = useState(false);
 
       const { openFilePicker } = useFilePicker({
         accept: currentMedia?.accept ?? [],
@@ -232,22 +200,6 @@ export const MediaPlaceholderElement = withHOC(
       }, [isUploading, uploadingFile, setProgresses, setIsUploading]);
 
       useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-          if (readonly) return;
-
-          const target = event.target as Node;
-          const isClickInside = containerRef.current?.contains(target);
-
-          setIsFocused(!!isClickInside);
-        };
-
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-          document.removeEventListener("mousedown", handleClickOutside);
-        };
-      }, [readonly]);
-
-      useEffect(() => {
         if (!file) {
           if (previewUrl) {
             URL.revokeObjectURL(previewUrl);
@@ -266,26 +218,6 @@ export const MediaPlaceholderElement = withHOC(
       }, [file]);
 
       useEffect(() => {
-        if (!readonly) {
-          const handleClickOutside = (event: MouseEvent) => {
-            if (
-              containerRef.current &&
-              !containerRef.current.contains(event.target as Node) &&
-              popoverRef.current &&
-              !popoverRef.current.contains(event.target as Node)
-            ) {
-              setSelected(false);
-            }
-          };
-
-          document.addEventListener('mousedown', handleClickOutside);
-          return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-          };
-        }
-      }, [readonly]);
-
-      useEffect(() => {
         if (element.width && element.width !== width) {
           setWidth(element.width as ElementWidth);
         }
@@ -295,43 +227,38 @@ export const MediaPlaceholderElement = withHOC(
         <MediaPopover file={file} open={selected} popoverRef={popoverRef} mediaType={mediaType}>
           <PlateElement
             ref={ref}
-            className={cn('my-4 [&_*]:caret-transparent select-none', className)}
+            className={cn(className, "my-9 flex flex-col items-center [&_*]:caret-transparent ")}
             editor={editor}
             {...props}
           >
             <motion.div 
               ref={containerRef}
               className={cn(
-                "relative flex aspect-video w-full flex-col items-center justify-center rounded-sm",
-                isFocused && "ring-2 ring-ring"
+                "relative flex aspect-video w-full flex-col items-center justify-center rounded-sm overflow-hidden",
+                selected && "ring-2 ring-ring"
               )}
-              onClick={() => {
-                setSelected(true);
-                setIsFocused(true);
-              }}
               layout={true}
               initial={width}
               animate={width}
               variants={widthVariants}
+              contentEditable={false}
               transition={{
                 type: "spring",
                 stiffness: 200,
                 damping: 30,
               }}
             >
-              <div className="placeholder-background rounded-sm absolute inset-0" />
+              <div className="placeholder-background absolute inset-0" />
               {progressing ? (
                 <>
                   {file && (
                     <>
                       {previewUrl && mediaType === ImagePlugin.key && (
-                        <div className="absolute inset-0">
                           <img 
                             src={previewUrl} 
                             alt="Upload preview" 
                             className="h-full w-full object-cover opacity-40 animate-pulse"
                           />
-                        </div>
                       )}
                       <div className="absolute inset-0 text-muted-foreground flex items-center justify-center">
                         <LoadingSpinner />
