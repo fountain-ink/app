@@ -352,9 +352,8 @@ export const PublishMenu = () => {
               ...(isCollectExpiryEnabled ? { endsAt: dateTime(collectExpiryDate) } : {}),
               ...(isChargeEnabled && price ? {
                 amount: {
-                  // For simplicity, we're using a placeholder currency address
-                  // In a real implementation, you would use the actual currency address
-                  currency: evmAddress("0x0000000000000000000000000000000000000000"),
+                  /// WGRASS
+                  currency: evmAddress("0xeee5a340Cdc9c179Db25dea45AcfD5FE8d4d3eB8"),
                   value: price,
                 },
               } : {}),
@@ -386,6 +385,7 @@ export const PublishMenu = () => {
           }
         } else {
           toast.error("Unexpected error occurred while processing transaction");
+          console.error("Unexpected error occurred while processing transaction", error);
         }
         setIsPublishing(false);
         return;
@@ -629,7 +629,7 @@ export const PublishMenu = () => {
                                 <SelectTrigger className="w-full">
                                   <SelectValue placeholder="Select a license" />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent position="popper" sideOffset={5} className="z-[60]" side="bottom">
                                   <SelectItem value="All rights reserved">All rights reserved</SelectItem>
                                   <SelectItem value="CC BY">Attribution (CC BY)</SelectItem>
                                   <SelectItem value="CC BY-SA">Attribution-ShareAlike (CC BY-SA)</SelectItem>
