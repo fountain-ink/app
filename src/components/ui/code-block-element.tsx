@@ -56,6 +56,7 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
       ref={popoverRef}
       open={isSelected}
       sideOffset={5}
+      showCaption={false}
       onWidthChange={handleWidth}
       content={popoverContent}
     >
@@ -90,9 +91,9 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
             </pre>
           </ScrollArea>
 
-          <Caption align="center" contentEditable={false}>
+          {/* <Caption align="center" contentEditable={false}>
             <CaptionTextarea readOnly={readOnly} placeholder="Write a caption..." />
-          </Caption>
+          </Caption> */}
         </motion.figure>
       </PlateElement>
     </ElementPopover>
