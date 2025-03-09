@@ -32,16 +32,11 @@ export const CodeBlockElement = withRef<typeof PlateElement>(
       editor.tf.setNodes({ width: newWidth }, { at: element },);
     };
 
-    useEffect(() =>{
-      console.log(element.lang)
-      console.log(isLangSupported(element.lang as string))
-      
-
-                    editor.tf.setNodes<TCodeBlockElement>(
-                      { lang: element.lang },
-                      { at: element }
-                    );
-    })
+    useEffect(() => {
+      if (!readOnly) {
+        editor.tf.replaceNodes([...element.children], { at: element, children: true });
+      }
+    }, [])
 
     const popoverContent = (
       <>
@@ -89,7 +84,7 @@ export const CodeBlockElement = withRef<typeof PlateElement>(
             '[&_.hljs-bullet]:text-[#735c0f]',
             '[&_.hljs-addition]:bg-[#f0fff4] [&_.hljs-addition]:text-[#22863a]',
             '[&_.hljs-deletion]:bg-[#ffeef0] [&_.hljs-deletion]:text-[#b31d28]',
-            
+
             'dark:[&_.hljs-comment]:text-[#8b949e] dark:[&_.hljs-code]:text-[#8b949e] dark:[&_.hljs-formula]:text-[#8b949e]',
             'dark:[&_.hljs-keyword]:text-[#ff7b72] dark:[&_.hljs-doctag]:text-[#ff7b72] dark:[&_.hljs-template-tag]:text-[#ff7b72] dark:[&_.hljs-template-variable]:text-[#ff7b72] dark:[&_.hljs-type]:text-[#ff7b72] dark:[&_.hljs-variable.language_]:text-[#ff7b72]',
             'dark:[&_.hljs-title]:text-[#d2a8ff] dark:[&_.hljs-title.class_]:text-[#d2a8ff] dark:[&_.hljs-title.class_.inherited__]:text-[#d2a8ff] dark:[&_.hljs-title.function_]:text-[#d2a8ff]',
@@ -127,8 +122,8 @@ export const CodeBlockElement = withRef<typeof PlateElement>(
                 isSelected && "ring-2 ring-ring",
               )}
             >
-              <pre className="bg-muted px-6 py-4 text-foreground/80 font-mono text-sm not-prose leading-[normal] [tab-size:2] min-w-full">
-                <code>{children}</code>
+              <pre className="bg-muted px-6 py-4 text-foreground/80 font-mono text-sm not-prose leading-[normal] [tab-size:2] min-w-full" spellCheck="false">
+                <code spellCheck="false">{children}</code>
               </pre>
             </ScrollArea>
 
@@ -147,7 +142,7 @@ export const CodeBlockElement = withRef<typeof PlateElement>(
               </div>
             )} */}
           </motion.figure>
-          
+
           <AnimatePresence mode="wait">
             <div className="w-full flex justify-center">
               <Caption align="center">
