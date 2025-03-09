@@ -31,7 +31,8 @@ const ScrollBar = React.forwardRef<
     ref={ref}
     orientation={orientation}
     tabIndex={-1}
-    contentEditable={false}
+    suppressContentEditableWarning
+    contentEditable="false"
     className={cn(
       "flex touch-none select-none transition-colors cursor-pointer caret-transparent hover:bg-muted/50",
       orientation === "vertical" && "h-[calc(100%-1rem)] w-2.5 border-l border-l-transparent p-[1px] my-2",
@@ -41,9 +42,9 @@ const ScrollBar = React.forwardRef<
     {...props}
   >
     <ScrollAreaPrimitive.ScrollAreaThumb 
+      contentEditable="false"
       className="relative flex-1 rounded-full bg-primary/80 hover:bg-primary/60 cursor-pointer" 
       tabIndex={-1}
-      contentEditable="false"
     />
   </ScrollAreaPrimitive.ScrollAreaScrollbar>
 ));
