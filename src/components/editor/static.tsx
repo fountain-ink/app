@@ -67,6 +67,7 @@ import Prism from "prismjs";
 import { TodoLiStatic, TodoMarkerStatic } from "../ui/static/indent-todo-marker-static";
 import { SubtitleElementStatic, TitleElementStatic } from "../ui/static/title-element-static";
 import { SubtitlePlugin, TitlePlugin } from "./plugins/title-plugin";
+import { all, createLowlight } from "lowlight";
 
 export const staticComponents = {
   [BaseAudioPlugin.key]: MediaAudioElementStatic,
@@ -109,6 +110,8 @@ export const staticComponents = {
   [HEADING_KEYS.h3]: withProps(HeadingElementStatic, { variant: "h3" }),
 };
 
+const lowlight = createLowlight(all);
+
 export const getStaticEditor = (value?: Value) =>
   createSlateEditor({
     plugins: [
@@ -137,7 +140,7 @@ export const getStaticEditor = (value?: Value) =>
       BaseCalloutPlugin,
       BaseCodeBlockPlugin.configure({
         options: {
-          prism: Prism,
+          lowlight
         },
       }),
       BaseIndentPlugin.extend({

@@ -109,8 +109,13 @@ export const TableElement = withHOC(
             </div>
           </div>
 
-          <Caption align="center" contentEditable={false}>
-            <CaptionTextarea readOnly={readOnly} placeholder="Write a caption..." />
+          <Caption align="center">
+            <CaptionTextarea  readOnly={readOnly} placeholder="Write a caption..." 
+            
+              onFocus={(e) => {
+                e.preventDefault();
+              }}
+            />
           </Caption>
         </motion.figure>
       </PlateElement>

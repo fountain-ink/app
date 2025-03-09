@@ -58,7 +58,7 @@ import { TableCellHeaderPlugin, TableCellPlugin, TablePlugin, TableRowPlugin } f
 import { TogglePlugin } from "@udecode/plate-toggle/react";
 import { TrailingBlockPlugin } from "@udecode/plate-trailing-block";
 import { YjsPlugin } from "@udecode/plate-yjs/react";
-import Prism from "prismjs";
+import { all, createLowlight } from 'lowlight';
 import { toast } from "sonner";
 import { ImageElement } from "../ui/image-element";
 import { ImagePreview } from "../ui/image-preview";
@@ -69,6 +69,7 @@ import { SubtitlePlugin, TITLE_KEYS, TitlePlugin } from "./plugins/title-plugin"
 import emojiMartData, { type EmojiMartData } from '@emoji-mart/data';
 import { autoformatRules } from "./plugins/autoformat-rules";
 
+const lowlight = createLowlight(all);
 
 const resetBlockTypesCommonRule = {
   defaultType: ParagraphPlugin.key,
@@ -253,7 +254,8 @@ export const plugins = [
     },
   }),
   BlockquotePlugin,
-  CodeBlockPlugin.configure({ options: { prism: Prism, syntaxPopularFirst: true, syntax: true } }),
+  CodeBlockPlugin.configure({ options: { lowlight,  } }),
+  CodePlugin,
   HorizontalRulePlugin,
   LinkPlugin.extend({
     render: { afterEditable: () => <LinkFloatingToolbar /> },
@@ -528,8 +530,13 @@ export const plugins = [
         {
           ...resetBlockTypesCommonRule,
           hotkey: "Backspace",
-          predicate: (editor) => editor.api.isAt({ start: true }),
+          predicate: (editor) => editor.api.isEmpty(editor.selection, { block: true }),
         },
+        // {
+        //   ...resetBlockTypesCommonRule,
+        //   hotkey: "Backspace",
+        //   predicate: (editor) => editor.api.isAt({ start: true }),
+        // },
         // {
         //   ...resetBlockTypesCodeBlockRule,
         //   hotkey: "Enter",
@@ -538,7 +545,7 @@ export const plugins = [
         // {
         //   ...resetBlockTypesCodeBlockRule,
         //   hotkey: "Backspace",
-        //   predicate: (editor) => editor.api.isAt({ start: true }),
+        //   predicate: (editor) => editor.api.isAt({ start: true, empty: true }),
         // },
       ],
     },
