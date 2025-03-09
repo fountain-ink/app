@@ -57,6 +57,7 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
       open={isSelected}
       sideOffset={5}
       showCaption={false}
+      defaultWidth={width}
       onWidthChange={handleWidth}
       content={popoverContent}
     >
