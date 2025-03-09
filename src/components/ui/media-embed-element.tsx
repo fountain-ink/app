@@ -2,7 +2,7 @@
 
 import React from "react";
 import LiteYouTubeEmbed from "react-lite-youtube-embed";
-import { Tweet } from "react-tweet";
+// import { Tweet } from "react-tweet";
 
 import { cn, withRef } from "@udecode/cn";
 import { withHOC } from "@udecode/plate/react";
@@ -96,7 +96,7 @@ export const MediaEmbedElement = withHOC(
                 )
               ) : null}
 
-              {isTweet && (
+              {/* {isTweet && (
                 <div
                   className={cn(
                     "[&_.react-tweet-theme]:my-0",
@@ -106,8 +106,8 @@ export const MediaEmbedElement = withHOC(
                   )}
                 >
                   <Tweet id={embed?.id!} />
-                </div>
-              )}
+                </div> */}
+              {/* )} */}
 
               <ResizeHandle
                 className={mediaResizeHandleVariants({ direction: "right" })}

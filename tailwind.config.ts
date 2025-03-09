@@ -4,6 +4,10 @@ const config = {
     content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
     prefix: "",
     theme: {
+        hljs: {
+            theme: 'night-owl',
+        },
+
         container: {
             center: true,
             padding: "2rem",
@@ -112,6 +116,11 @@ const config = {
             },
         },
     },
-    plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+    safelist: [{
+        pattern: /hljs+/,
+    }],
+
+    // plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography"), require('tailwind-highlightjs'),],
+    plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography") ],
 } satisfies Config;
 export default config;
