@@ -4,7 +4,6 @@ import { cn, withRef } from '@udecode/cn';
 import { NodeApi } from '@udecode/plate';
 import { formatCodeBlock, isLangSupported, TCodeBlockElement } from '@udecode/plate-code-block';
 import { PlateElement, useSelected, useReadOnly, useEditorRef } from '@udecode/plate/react';
-import { BracesIcon, CheckIcon, CopyIcon } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 
