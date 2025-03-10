@@ -1,7 +1,7 @@
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
-import { isEvmAddress } from "@/lib/utils/address";
+import { isEvmAddress } from "@/lib/utils/is-evm-address";
 
 async function findBlogByIdentifier(db: any, identifier: string) {
   if (isEvmAddress(identifier)) {
