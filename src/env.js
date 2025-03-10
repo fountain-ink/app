@@ -8,6 +8,9 @@ export const env = createEnv({
     SUPABASE_SERVICE_KEY: z.string(),
     STORAGE_ACCESS_KEY: z.string(),
     STORAGE_SECRET_KEY: z.string(),
+    LISTMONK_API_URL: z.string(),
+    LISTMONK_API_USERNAME: z.string(),
+    LISTMONK_API_TOKEN: z.string(),
   },
 
   client: {
@@ -27,6 +30,9 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     STORAGE_ACCESS_KEY: process.env.STORAGE_ACCESS_KEY,
     STORAGE_SECRET_KEY: process.env.STORAGE_SECRET_KEY,
+    LISTMONK_API_URL: process.env.LISTMONK_API_URL,
+    LISTMONK_API_USERNAME: process.env.LISTMONK_API_USERNAME,
+    LISTMONK_API_TOKEN: process.env.LISTMONK_API_TOKEN,
   },
 
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

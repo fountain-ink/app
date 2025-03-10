@@ -7,7 +7,6 @@ const config = {
         hljs: {
             theme: 'night-owl',
         },
-
         container: {
             center: true,
             padding: "2rem",
@@ -117,10 +116,9 @@ const config = {
         },
     },
     safelist: [{
-        pattern: /hljs+/,
-    }],
-
+            pattern: /hljs+/,
+        }],
     // plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography"), require('tailwind-highlightjs'),],
-    plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography") ],
+    plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;
 export default config;
