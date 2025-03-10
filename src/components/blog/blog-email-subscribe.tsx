@@ -15,7 +15,7 @@ interface BlogSubscribeProps {
   className?: string;
 }
 
-export function BlogSubscribe({ 
+export function BlogEmailSubscribe({ 
   blogData,
   variant = "outline", 
   size = "default",
@@ -84,7 +84,6 @@ export function BlogSubscribe({
         onClick={() => setIsModalOpen(true)}
         className={className}
       >
-        <MailIcon className="h-4 w-4 mr-2" />
         Subscribe
       </Button>
       
