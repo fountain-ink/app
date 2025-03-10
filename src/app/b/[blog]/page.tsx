@@ -6,27 +6,27 @@ import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchAccount, fetchPosts, fetchPostTags, fetchGroup, fetchGroupMembers } from '@lens-protocol/client/actions';
 import { notFound } from "next/navigation";
-import { getBlogData } from "@/lib/settings/get-blog-metadata";
+import { getBlogData } from "@/lib/settings/get-blog-data";
 import { MainContentFocus, Account } from "@lens-protocol/client";
 import { isEvmAddress } from "@/lib/utils/address";
 import { BlogHeader } from "@/components/user/blog-header";
 import { UserTheme } from "@/components/user/user-theme";
 
-export async function generateMetadata({ params }: { params: { user: string } }) {
+export async function generateMetadata({ params }: { params: { blog: string } }) {
   const lens = await getLensClient();
   let profile;
   let address;
   let groupMetadata = null;
 
-  if (isEvmAddress(params.user)) {
+  if (isEvmAddress(params.blog)) {
     const group = await fetchGroup(lens, {
-      group: params.user,
+      group: params.blog,
     }).unwrapOr(null);
 
     if (!group) {
       return {
-        title: `${params.user}'s blog`,
-        description: `${params.user} on Fountain`,
+        title: `${params.blog}'s blog`,
+        description: `${params.blog} on Fountain`,
       };
     }
 
@@ -34,13 +34,13 @@ export async function generateMetadata({ params }: { params: { user: string } })
     groupMetadata = group.metadata;
   } else {
     profile = await fetchAccount(lens, {
-      username: { localName: params.user },
+      username: { localName: params.blog },
     }).unwrapOr(null);
 
     if (!profile) {
       return {
-        title: `${params.user}'s blog`,
-        description: `@${params.user}'s blog on Fountain`,
+        title: `${params.blog}'s blog`,
+        description: `@${params.blog}'s blog on Fountain`,
       };
     }
 
@@ -48,11 +48,11 @@ export async function generateMetadata({ params }: { params: { user: string } })
   }
 
   const blog = await getBlogData(address);
-  const username = profile?.username?.localName || params.user;
+  const username = profile?.username?.localName || params.blog;
   const icon = blog?.icon || groupMetadata?.icon;
   const title = blog?.title || groupMetadata?.name || `${username}'s blog`;
   const description = blog?.about || groupMetadata?.description ||
-    (profile ? `@${username}'s blog on Fountain` : `${params.user} on Fountain`);
+    (profile ? `@${username}'s blog on Fountain` : `${params.blog} on Fountain`);
 
   return {
     title,
@@ -72,7 +72,7 @@ export async function generateMetadata({ params }: { params: { user: string } })
   };
 }
 
-export const UserBlogPage = async ({ params }: { params: { user: string } }) => {
+export const UserBlogPage = async ({ params }: { params: { blog: string } }) => {
   const lens = await getLensClient();
   const { username } = await getUserProfile();
   let profile;
@@ -80,12 +80,12 @@ export const UserBlogPage = async ({ params }: { params: { user: string } }) => 
   let isGroup = false;
   let groupMembers: Account[] = [];
   let feedAddress;
-  let blog;
+  let blogData;
   let group;
 
-  if (isEvmAddress(params.user)) {
+  if (isEvmAddress(params.blog)) {
     group = await fetchGroup(lens, {
-      group: params.user,
+      group: params.blog,
     }).unwrapOr(null);
 
     if (!group) {
@@ -95,24 +95,24 @@ export const UserBlogPage = async ({ params }: { params: { user: string } }) => 
     isGroup = true;
     profile = group.owner;
     feedAddress = group.feed;
-    blog = await getBlogData(group.address);
+    blogData = await getBlogData(group.address);
 
     const members = await fetchGroupMembers(lens, {
-      group: params.user,
+      group: params.blog,
     }).unwrapOr(null);
 
     if (members) {
       groupMembers = members.items.map(member => member.account);
     }
   } else {
-    const localName = params.user;
+    const localName = params.blog;
     profile = await fetchAccount(lens, { username: { localName } }).unwrapOr(null);
 
     if (!profile) {
       return notFound();
     }
 
-    blog = await getBlogData(profile.address);
+    blogData = await getBlogData(profile.address);
   }
 
   posts = await fetchPosts(lens, {
@@ -122,7 +122,7 @@ export const UserBlogPage = async ({ params }: { params: { user: string } }) => 
       feeds: feedAddress ? [{ feed: feedAddress }] : [{ globalFeed: true }]
     },
   }).unwrapOr(null);
-  console.log("posts", posts);
+  // console.log("posts", posts);
 
 
   const tags = await fetchPostTags(lens, {
@@ -131,18 +131,18 @@ export const UserBlogPage = async ({ params }: { params: { user: string } }) => 
     }
   }).unwrapOr(null);
 
-  const showAuthor = blog?.metadata?.showAuthor ?? true;
-  const showTags = blog?.metadata?.showTags ?? true;
-  const showTitle = blog?.metadata?.showTitle ?? true;
-  const blogTitle = blog?.title;
-  const isUserProfile = username === params.user && !isGroup;
+  const showAuthor = blogData?.metadata?.showAuthor ?? true;
+  const showTags = blogData?.metadata?.showTags ?? true;
+  const showTitle = blogData?.metadata?.showTitle ?? true;
+  const blogTitle = blogData?.title;
+  const isUserBlog = username === params.blog && !isGroup;
 
   return (
-    <UserTheme initialTheme={blog?.theme?.name}>
-      <BlogHeader title={blog?.title} icon={blog?.icon} username={params.user} />
+    <UserTheme initialTheme={blogData?.theme?.name}>
+      <BlogHeader title={blogData?.title} icon={blogData?.icon} username={params.blog} />
       <div className="flex flex-col mt-5 items-center justify-center w-full max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
         {showAuthor && (
-          <div className="p-4 ">
+          <div className="p-4">
             <AuthorView
               showUsername={false}
               accounts={isGroup && groupMembers.length > 0 ? groupMembers : (profile ? [profile] : [])}
@@ -159,10 +159,10 @@ export const UserBlogPage = async ({ params }: { params: { user: string } }) => 
           </div>
         )}
 
-        <Separator className="w-48 bg-primary mt-3" />
-        {showTags && <IndexNavigation username={params.user} isUserProfile={isUserProfile} />}
+        {/* <Separator className="w-48 bg-primary mt-3" /> */}
+        {showTags && <IndexNavigation username={params.blog} isUserProfile={isUserBlog} />}
         <div className="flex flex-col my-4 gap-4">
-          <UserContent posts={[...posts?.items ?? []]} contentType="articles" profile={profile} isUserProfile={isUserProfile} />
+          <UserContent posts={[...posts?.items ?? []]} contentType="articles" profile={profile} isUserProfile={isUserBlog} />
         </div>
       </div>
 

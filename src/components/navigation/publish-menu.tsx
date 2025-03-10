@@ -29,7 +29,7 @@ import { getStaticEditor, staticComponents } from "../editor/static";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
-import { BlogData } from "@/lib/settings/get-blog-metadata";
+import { BlogData } from "@/lib/settings/get-blog-data";
 
 export const PublishMenu = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { BlogData } from "@/lib/settings/get-blog-metadata";
+import { BlogData } from "@/lib/settings/get-blog-data";
 
 interface BlogState {
   blogs: BlogData[];

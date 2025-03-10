@@ -3,11 +3,11 @@ import { getAppToken } from "@/lib/auth/get-app-token";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { BlogData } from "@/lib/settings/get-blog-metadata";
+import { BlogData } from "@/lib/settings/get-blog-data";
 
 interface PageProps {
   params: {
-    address: string;
+    blog: string;
   };
 }
 
@@ -23,7 +23,7 @@ export default async function BlogPage({ params }: PageProps) {
   const { data: blog } = await db
     .from("blogs")
     .select()
-    .eq("address", params.address)
+    .eq("address", params.blog)
     .single();
   
   if (!blog) {

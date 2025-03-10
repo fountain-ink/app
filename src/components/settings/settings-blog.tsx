@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { uploadFile } from "@/lib/upload/upload-file";
 import { useCallback, useEffect, useState } from "react";
 import { TextareaAutosize } from "../ui/textarea";
-import { BlogData, BlogMetadata } from "@/lib/settings/get-blog-metadata";
+import { BlogData, BlogMetadata } from "@/lib/settings/get-blog-data";
 import { useBlogSettings } from "@/hooks/use-blog-settings";
 import { useWalletClient } from "wagmi";
 import Link from "next/link";

@@ -15,7 +15,7 @@ import { UserSite } from "@/components/user/user-site";
 import { UserTheme } from "@/components/user/user-theme";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
-import { getBlogData } from "@/lib/settings/get-blog-metadata";
+import { getBlogData } from "@/lib/settings/get-blog-data";
 import { fetchAccount, fetchAccountStats } from "@lens-protocol/client/actions";
 import { AnimatePresence } from "motion/react";
 import { notFound } from "next/navigation";
