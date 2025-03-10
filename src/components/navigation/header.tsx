@@ -15,7 +15,7 @@ import { UserMenu } from "../user/user-menu";
 import { PublishMenu } from "./publish-menu";
 import { getBlogData, BlogData } from "@/lib/settings/get-blog-data";
 import { toast } from "sonner";
-import { BlogEmailSubscribe } from "../blog/blog-email-subscribe";
+import { BlogEmailSubscribe } from "../newsletter/newsletter-subscribe-dialog";
 
 export const Header = ({ session }: { session: MeResult | null }) => {
   const pathname = usePathname();

@@ -66,7 +66,6 @@ export function UserBlogsList({ blogs }: UserBlogsListProps) {
 
   return (
     <div className="relative">
-      {/* Fade gradients that extend full height */}
       <div className={cn(
         "absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none transition-opacity duration-200",
         !canScrollLeft && "opacity-0"
@@ -77,7 +76,6 @@ export function UserBlogsList({ blogs }: UserBlogsListProps) {
         !canScrollRight && "opacity-0"
       )} />
       
-      {/* Scroll buttons positioned outside */}
       <Button
         variant="outline"
         size="icon"
@@ -102,11 +100,10 @@ export function UserBlogsList({ blogs }: UserBlogsListProps) {
         <ChevronRight className="h-4 w-4" />
       </Button>
       
-      {/* Content container */}
       <div className="relative overflow-hidden">
         <div 
           ref={scrollContainerRef}
-          className="flex space-x-4 px-4 pb-2 overflow-x-auto scrollbar-hide"
+          className="flex space-x-4 p-4 overflow-x-auto scrollbar-hide"
         >
           {blogs.map((blog) => (
             <div key={blog.address} className="w-[250px] flex-shrink-0">

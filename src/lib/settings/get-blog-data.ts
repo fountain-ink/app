@@ -1,5 +1,5 @@
 import { Database } from "../supabase/database";
-import { isEvmAddress } from "../utils/address";
+import { isEvmAddress } from "../utils/is-evm-address";
 import { createClient } from "../supabase/client";
 
 type Blog = Database["public"]["Tables"]["blogs"]["Row"];

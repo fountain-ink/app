@@ -118,7 +118,7 @@ export async function createList(name: string, description: string): Promise<Lis
 /**
  * Adds a subscriber to a list in Listmonk
  */
-export async function addSubscriber(email: string, listIds: number[]): Promise<ListmonkSubscriber | null> {
+export async function addSubscriber(email: string, listId: number): Promise<ListmonkSubscriber | null> {
   try {
     const response = await fetch(`${env.LISTMONK_API_URL}/subscribers`, {
       method: "POST",
@@ -128,10 +128,10 @@ export async function addSubscriber(email: string, listIds: number[]): Promise<L
       },
       body: JSON.stringify({
         email,
-        name: email.split("@")[0], // Use part before @ as name
+        name: email.split("@")[0], 
         status: "enabled",
-        lists: listIds,
-        preconfirm_subscription: true, // For single opt-in
+        lists: [listId],
+        preconfirm_subscription: true,
       }),
     });
 

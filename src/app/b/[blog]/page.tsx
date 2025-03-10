@@ -8,7 +8,7 @@ import { fetchAccount, fetchPosts, fetchPostTags, fetchGroup, fetchGroupMembers 
 import { notFound } from "next/navigation";
 import { getBlogData } from "@/lib/settings/get-blog-data";
 import { MainContentFocus, Account } from "@lens-protocol/client";
-import { isEvmAddress } from "@/lib/utils/address";
+import { isEvmAddress } from "@/lib/utils/is-evm-address";
 import { BlogHeader } from "@/components/user/blog-header";
 import { UserTheme } from "@/components/user/user-theme";
 

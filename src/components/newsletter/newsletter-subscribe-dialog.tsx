@@ -5,8 +5,9 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { MailCheck, MailIcon } from "lucide-react";
+import { MailCheck, AlertCircle } from "lucide-react";
 import { BlogData } from "@/lib/settings/get-blog-data";
+import { subscribeToNewsletter } from "@/lib/listmonk/newsletter";
 
 interface BlogSubscribeProps {
   blogData: BlogData;
@@ -27,6 +28,7 @@ export function BlogEmailSubscribe({
   const [isLoading, setIsLoading] = useState(false);
   const [showValidation, setShowValidation] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [needsListCreation, setNeedsListCreation] = useState(false);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -47,17 +49,9 @@ export function BlogEmailSubscribe({
     try {
       setIsLoading(true);
       
-      const response = await fetch(`/api/blogs/${blogData.address}/subscribe`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
+      const result = await subscribeToNewsletter(blogData.address, email);
+      
+      if (result?.success) {
         setIsSuccess(true);
         toast.success("Successfully subscribed to the blog!");
         setEmail("");
@@ -66,8 +60,10 @@ export function BlogEmailSubscribe({
           setIsSuccess(false);
           setIsModalOpen(false);
         }, 2000);
+      } else if (result?.needsListCreation) {
+        setNeedsListCreation(true);
       } else {
-        toast.error(data.error || "Failed to subscribe. Please try again.");
+        toast.error(result?.error || "Failed to subscribe. Please try again.");
       }
     } catch (error) {
       toast.error("An error occurred. Please try again.");
@@ -100,6 +96,14 @@ export function BlogEmailSubscribe({
             <div className="flex flex-col items-center justify-center py-6 space-y-4">
               <MailCheck className="h-12 w-12 text-primary" />
               <p className="text-center">Thank you for subscribing!</p>
+            </div>
+          ) : needsListCreation ? (
+            <div className="flex flex-col items-center justify-center py-6 space-y-4">
+              <AlertCircle className="h-12 w-12 text-amber-500" />
+              <p className="text-center">This blog doesn't have a newsletter set up yet.</p>
+              <p className="text-center text-sm text-muted-foreground">
+                The blog owner needs to set up a newsletter before you can subscribe.
+              </p>
             </div>
           ) : (
             <>
