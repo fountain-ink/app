@@ -17,6 +17,7 @@ export type Database = {
           feed: string | null
           handle: string | null
           icon: string | null
+          mail_list_id: number | null
           metadata: Json
           owner: string
           theme: Json | null
@@ -30,6 +31,7 @@ export type Database = {
           feed?: string | null
           handle?: string | null
           icon?: string | null
+          mail_list_id?: number | null
           metadata?: Json
           owner: string
           theme?: Json | null
@@ -43,6 +45,7 @@ export type Database = {
           feed?: string | null
           handle?: string | null
           icon?: string | null
+          mail_list_id?: number | null
           metadata?: Json
           owner?: string
           theme?: Json | null
