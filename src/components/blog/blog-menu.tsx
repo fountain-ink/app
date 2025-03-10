@@ -13,7 +13,7 @@ import { AnimatedMenuItem } from "../navigation/animated-item";
 import { ChevronRightIcon, PenToolIcon } from "lucide-react";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 import Link from "next/link";
-import { BlogData } from "@/lib/settings/get-blog-metadata";
+import { BlogData } from "@/lib/settings/get-blog-data";
 import Image from "next/image";
 
 interface BlogMenuProps {
