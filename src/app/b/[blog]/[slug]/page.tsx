@@ -7,14 +7,14 @@ import { getLensClient } from "@/lib/lens/client";
 interface PageProps {
   params: {
     blog: string;
-    handle: string;
+    slug: string;
   };
 }
 
 export default async function BlogHandlePage({ params }: PageProps) {
-  const { blog, handle } = params;
+  const { blog, slug } = params;
   
-  const blogAddress = await resolveBlogHandle(blog, handle);
+  const blogAddress = await resolveBlog(blog, slug);
   
   if (!blogAddress) {
     return notFound();
@@ -23,7 +23,7 @@ export default async function BlogHandlePage({ params }: PageProps) {
   redirect(`/b/${blogAddress}`);
 } 
 
-export async function resolveBlogHandle(username: string, handle?: string): Promise<string | null> {
+export async function resolveBlog(username: string, slug?: string): Promise<string | null> {
   try {
     const lens = await getLensClient();
     const profile = await fetchAccount(lens, { username: { localName: username } }).unwrapOr(null);
@@ -32,7 +32,7 @@ export async function resolveBlogHandle(username: string, handle?: string): Prom
       return null;
     }
     
-    if (!handle) {
+    if (!slug) {
       return profile.address;
     }
     
@@ -41,12 +41,12 @@ export async function resolveBlogHandle(username: string, handle?: string): Prom
       .from("blogs")
       .select("address")
       .eq("owner", profile.address)
-      .eq("handle", handle)
+      .eq("slug", slug)
       .single();
     
     return blog?.address || null;
   } catch (error) {
-    console.error("Error resolving blog handle:", error);
+    console.error("Error resolving blog:", error);
     return null;
   }
 } 

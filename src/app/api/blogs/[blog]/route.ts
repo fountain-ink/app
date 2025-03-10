@@ -62,6 +62,7 @@ export async function PUT(
       title: settings.title,
       about: settings.about,
       handle: settings.handle,
+      slug: settings.slug,
       metadata: {
         showAuthor: settings.metadata?.showAuthor ?? true,
         showTags: settings.metadata?.showTags ?? true,

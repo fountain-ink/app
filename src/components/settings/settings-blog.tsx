@@ -86,7 +86,8 @@ async function processImage(file: File): Promise<File> {
 interface FormState {
   title: string;
   about: string;
-  handle: string;
+  handle: string | null;
+  slug: string;
   metadata: {
     showAuthor: boolean;
     showTags: boolean;
@@ -100,6 +101,7 @@ interface FormState {
   errors: {
     title: string | null;
     handle: string | null;
+    slug: string | null;
   };
 }
 
@@ -115,7 +117,8 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
   const [formState, setFormState] = useState<FormState>({
     title: settings?.title || "",
     about: settings?.about || "",
-    handle: isUserBlog ? (userHandle || "") : (settings?.handle || ""),
+    handle: isUserBlog ? (userHandle || "") : null,
+    slug: settings?.slug || "",
     metadata: {
       showAuthor: settings?.metadata?.showAuthor ?? true,
       showTags: settings?.metadata?.showTags ?? true,
@@ -128,7 +131,8 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     isDirty: false,
     errors: {
       title: null,
-      handle: null
+      handle: null,
+      slug: null
     }
   });
   const [imageState, setImageState] = useState<ImageState>({
@@ -148,6 +152,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
       title: settings?.title || "",
       about: settings?.about || "",
       handle: isUserBlog ? (userHandle || "") : (settings?.handle || ""),
+      slug: settings?.slug || "",
       metadata: {
         showAuthor: settings?.metadata?.showAuthor ?? true,
         showTags: settings?.metadata?.showTags ?? true,
@@ -160,7 +165,8 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
       isDirty: false,
       errors: {
         title: null,
-        handle: null
+        handle: null,
+        slug: null
       }
     });
     setImageState({
@@ -214,21 +220,52 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     return null;
   }, [initialSettings.owner, initialSettings.address]);
 
+  const validateSlug = useCallback(async (slug: string): Promise<string | null> => {
+    if (!slug) {
+      return null;
+    }
+    if (!/^[a-zA-Z0-9-]+$/.test(slug)) {
+      return "Slug can only contain letters, numbers, and hyphens";
+    }
+    if (slug.length > 50) {
+      return "Slug must be less than 50 characters";
+    }
+
+    try {
+      const db = await createClient();
+      const { data: existingBlogs } = await db
+        .from("blogs")
+        .select("slug, address")
+        .eq("owner", initialSettings.owner)
+        .neq("address", initialSettings.address);
+
+      if (existingBlogs && existingBlogs.some(blog => blog.slug === slug)) {
+        return `You already have a blog with slug "${slug}"`;
+      }
+    } catch (error) {
+      console.error("Error validating slug:", error);
+    }
+
+    return null;
+  }, [initialSettings.owner, initialSettings.address]);
+
   const handleSave = async () => {
     setIsSaving(true);
 
     const titleError = formState.metadata.showTitle ? validateBlogTitle(formState.title) : null;
-    const handleError = await validateHandle(formState.handle);
+    const handleError = formState.handle ? await validateHandle(formState.handle) : null;
+    const slugError = await validateSlug(formState.slug);
 
     setFormState(prev => ({
       ...prev,
       errors: {
         title: titleError,
-        handle: handleError
+        handle: handleError,
+        slug: slugError
       }
     }));
 
-    if (titleError || handleError) {
+    if (titleError || handleError || slugError) {
       setIsSaving(false);
       return;
     }
@@ -246,7 +283,8 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     const success = await saveSettings({
       title: formState.title.trim(),
       about: formState.about,
-      handle: formState.handle.trim(),
+      handle: isUserBlog ? userHandle : null,
+      slug: formState.slug.trim(),
       metadata: formState.metadata,
       theme: formState.theme,
       icon: imageState.isDeleted ? null : iconUrl,
@@ -321,7 +359,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     }));
   };
 
-  const handleChange = (field: 'title' | 'about' | 'handle', value: string) => {
+  const handleChange = (field: 'title' | 'about' | 'handle' | 'slug', value: string) => {
     let fieldError: string | null = null;
 
     if (field === 'title') {
@@ -462,20 +500,20 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
           </div>
 
           <div className="">
-            <Label htmlFor="blog-handle">Slug</Label>
+            <Label htmlFor="blog-slug">Slug</Label>
             <p className="text-sm text-muted-foreground mb-2">
-              {isUserBlog ? `URL slug for your blog, i.e. /b/${userHandle}` : `URL slug for your blog, i.e. /b/${userHandle}/${formState.handle || 'your-handle'}`}
+              {isUserBlog ? `URL slug for your blog, i.e. /b/${userHandle}` : `URL slug for your blog, i.e. /b/${userHandle}/${formState.slug || 'your-slug'}`}
             </p>
             <Input
-              id="blog-handle"
-              value={formState.handle}
-              onChange={(e) => handleChange('handle', e.target.value.toLowerCase())}
-              placeholder="your-handle"
+              id="blog-slug"
+              value={isUserBlog ? userHandle : formState.slug}
+              onChange={(e) => handleChange('slug', e.target.value.toLowerCase())}
               disabled={isUserBlog}
               className={isUserBlog ? "opacity-50 cursor-not-allowed" : ""}
+              placeholder="your-slug"
             />
-            {formState.errors.handle && !isUserBlog && (
-              <p className="text-sm text-destructive mt-2">{formState.errors.handle}</p>
+            {formState.errors.slug && (
+              <p className="text-sm text-destructive mt-2">{formState.errors.slug}</p>
             )}
           </div>
         </div>
@@ -591,8 +629,8 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                       fountain.ink/b/
                       {isUserBlog 
                         ? userHandle 
-                        : formState.handle 
-                          ? `${userHandle}/${formState.handle}` 
+                        : formState.slug 
+                          ? `${userHandle}/${formState.slug}` 
                           : blogAddress
                       }
                     </span>

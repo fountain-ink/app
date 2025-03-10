@@ -20,6 +20,7 @@ export type Database = {
           mail_list_id: number | null
           metadata: Json
           owner: string
+          slug: string | null
           theme: Json | null
           title: string | null
           updated_at: string | null
@@ -34,6 +35,7 @@ export type Database = {
           mail_list_id?: number | null
           metadata?: Json
           owner: string
+          slug?: string | null
           theme?: Json | null
           title?: string | null
           updated_at?: string | null
@@ -48,6 +50,7 @@ export type Database = {
           mail_list_id?: number | null
           metadata?: Json
           owner?: string
+          slug?: string | null
           theme?: Json | null
           title?: string | null
           updated_at?: string | null
