@@ -23,7 +23,7 @@ export default async function BlogHandlePage({ params }: PageProps) {
   redirect(`/b/${blogAddress}`);
 }
 
-export async function resolveBlog(username: string, slug?: string): Promise<string | null> {
+async function resolveBlog(username: string, slug?: string): Promise<string | null> {
   try {
     const lens = await getLensClient();
     const profile = await fetchAccount(lens, { username: { localName: username } }).unwrapOr(null);
