@@ -27,7 +27,7 @@ export const DraftMenu = ({
     {
       icon: isSelected ? X : Check,
       label: isSelected ? "Deselect" : "Select",
-      onClick: isSelectionMode ? onSelect : onEnterSelectionMode ?? (() => {}),
+      onClick: isSelectionMode ? onSelect : (onEnterSelectionMode ?? (() => {})),
     },
     {
       icon: Link,

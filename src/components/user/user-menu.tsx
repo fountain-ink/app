@@ -81,10 +81,13 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
             Profile
           </AnimatedMenuItem>
 
-          <AnimatedMenuItem icon={UserRoundPenIcon} onClick={() => {
-            resetBlogStorage();
-            setShowProfileSelect(true);
-          }}>
+          <AnimatedMenuItem
+            icon={UserRoundPenIcon}
+            onClick={() => {
+              resetBlogStorage();
+              setShowProfileSelect(true);
+            }}
+          >
             Switch Profile
           </AnimatedMenuItem>
 

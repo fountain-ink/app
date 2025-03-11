@@ -13,7 +13,7 @@ import { BlogData, BlogMetadata } from "@/lib/settings/get-blog-data";
 import { useBlogSettings } from "@/hooks/use-blog-settings";
 import { useWalletClient } from "wagmi";
 import Link from "next/link";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, MailIcon } from "lucide-react";
 import { isValidTheme, ThemeType, themeNames, themeDescriptions, defaultThemeName } from "@/styles/themes";
 import { ThemeButtons } from "@/components/theme/theme-buttons";
 import { toast } from "sonner";
@@ -117,7 +117,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
   const [formState, setFormState] = useState<FormState>({
     title: settings?.title || "",
     about: settings?.about || "",
-    handle: isUserBlog ? (userHandle || "") : null,
+    handle: isUserBlog ? userHandle || "" : null,
     slug: settings?.slug || "",
     metadata: {
       showAuthor: settings?.metadata?.showAuthor ?? true,
@@ -125,20 +125,20 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
       showTitle: settings?.metadata?.showTitle ?? true,
     },
     theme: {
-      name: settings?.theme?.name as ThemeType || defaultThemeName,
+      name: (settings?.theme?.name as ThemeType) || defaultThemeName,
     },
     icon: settings?.icon || "",
     isDirty: false,
     errors: {
       title: null,
       handle: null,
-      slug: null
-    }
+      slug: null,
+    },
   });
   const [imageState, setImageState] = useState<ImageState>({
     file: null,
     previewUrl: undefined,
-    isDeleted: false
+    isDeleted: false,
   });
   const [isSaving, setIsSaving] = useState(false);
   const [feedAddress, setFeedAddress] = useState<string | null>(null);
@@ -151,7 +151,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     setFormState({
       title: settings?.title || "",
       about: settings?.about || "",
-      handle: isUserBlog ? (userHandle || "") : (settings?.handle || ""),
+      handle: isUserBlog ? userHandle || "" : settings?.handle || "",
       slug: settings?.slug || "",
       metadata: {
         showAuthor: settings?.metadata?.showAuthor ?? true,
@@ -159,27 +159,27 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
         showTitle: settings?.metadata?.showTitle ?? true,
       },
       theme: {
-        name: settings?.theme?.name as ThemeType || defaultThemeName,
+        name: (settings?.theme?.name as ThemeType) || defaultThemeName,
       },
       icon: settings?.icon || "",
       isDirty: false,
       errors: {
         title: null,
         handle: null,
-        slug: null
-      }
+        slug: null,
+      },
     });
     setImageState({
       file: null,
       previewUrl: undefined,
-      isDeleted: false
+      isDeleted: false,
     });
   }, [settings, isUserBlog, userHandle]);
 
   useEffect(() => {
     if (imageState.file) {
       const url = URL.createObjectURL(imageState.file);
-      setImageState(prev => ({ ...prev, previewUrl: url }));
+      setImageState((prev) => ({ ...prev, previewUrl: url }));
       return () => URL.revokeObjectURL(url);
     }
   }, [imageState.file]);
@@ -191,63 +191,69 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     return null;
   }, []);
 
-  const validateHandle = useCallback(async (handle: string): Promise<string | null> => {
-    if (!handle) {
-      return null;
-    }
-    if (!/^[a-zA-Z0-9-]+$/.test(handle)) {
-      return "Handle can only contain letters, numbers, and hyphens";
-    }
-    if (handle.length > 50) {
-      return "Handle must be less than 50 characters";
-    }
-
-    try {
-      const db = await createClient();
-      const { data: existingBlogs } = await db
-        .from("blogs")
-        .select("handle, address")
-        .eq("owner", initialSettings.owner)
-        .neq("address", initialSettings.address);
-
-      if (existingBlogs && existingBlogs.some(blog => blog.handle === handle)) {
-        return `You already have a blog with handle "${handle}"`;
+  const validateHandle = useCallback(
+    async (handle: string): Promise<string | null> => {
+      if (!handle) {
+        return null;
       }
-    } catch (error) {
-      console.error("Error validating handle:", error);
-    }
-
-    return null;
-  }, [initialSettings.owner, initialSettings.address]);
-
-  const validateSlug = useCallback(async (slug: string): Promise<string | null> => {
-    if (!slug) {
-      return null;
-    }
-    if (!/^[a-zA-Z0-9-]+$/.test(slug)) {
-      return "Slug can only contain letters, numbers, and hyphens";
-    }
-    if (slug.length > 50) {
-      return "Slug must be less than 50 characters";
-    }
-
-    try {
-      const db = await createClient();
-      const { data: existingBlogs } = await db
-        .from("blogs")
-        .select("slug, address")
-        .eq("owner", initialSettings.owner)
-        .neq("address", initialSettings.address);
-
-      if (existingBlogs && existingBlogs.some(blog => blog.slug === slug)) {
-        return `You already have a blog with slug "${slug}"`;
+      if (!/^[a-zA-Z0-9-]+$/.test(handle)) {
+        return "Handle can only contain letters, numbers, and hyphens";
       }
-    } catch (error) {
-      console.error("Error validating slug:", error);
-    }
+      if (handle.length > 50) {
+        return "Handle must be less than 50 characters";
+      }
 
-    return null;
-  }, [initialSettings.owner, initialSettings.address]);
+      try {
+        const db = await createClient();
+        const { data: existingBlogs } = await db
+          .from("blogs")
+          .select("handle, address")
+          .eq("owner", initialSettings.owner)
+          .neq("address", initialSettings.address);
+
+        if (existingBlogs && existingBlogs.some((blog) => blog.handle === handle)) {
+          return `You already have a blog with handle "${handle}"`;
+        }
+      } catch (error) {
+        console.error("Error validating handle:", error);
+      }
+
+      return null;
+    },
+    [initialSettings.owner, initialSettings.address],
+  );
+
+  const validateSlug = useCallback(
+    async (slug: string): Promise<string | null> => {
+      if (!slug) {
+        return null;
+      }
+      if (!/^[a-zA-Z0-9-]+$/.test(slug)) {
+        return "Slug can only contain letters, numbers, and hyphens";
+      }
+      if (slug.length > 50) {
+        return "Slug must be less than 50 characters";
+      }
+
+      try {
+        const db = await createClient();
+        const { data: existingBlogs } = await db
+          .from("blogs")
+          .select("slug, address")
+          .eq("owner", initialSettings.owner)
+          .neq("address", initialSettings.address);
+
+        if (existingBlogs && existingBlogs.some((blog) => blog.slug === slug)) {
+          return `You already have a blog with slug "${slug}"`;
+        }
+      } catch (error) {
+        console.error("Error validating slug:", error);
+      }
+
+      return null;
+    },
+    [initialSettings.owner, initialSettings.address],
+  );
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -256,13 +262,13 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     const handleError = formState.handle ? await validateHandle(formState.handle) : null;
     const slugError = await validateSlug(formState.slug);
 
-    setFormState(prev => ({
+    setFormState((prev) => ({
       ...prev,
       errors: {
         title: titleError,
         handle: handleError,
-        slug: slugError
-      }
+        slug: slugError,
+      },
     }));
 
     if (titleError || handleError || slugError) {
@@ -289,7 +295,6 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
       theme: formState.theme,
       icon: imageState.isDeleted ? null : iconUrl,
     });
-
 
     // if (!isUserBlog && success) {
     //   try {
@@ -344,36 +349,34 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     //   }
 
     setIsSaving(false);
-  }
-
-
+  };
 
   const handleMetadataChange = (field: keyof BlogMetadata, value: boolean) => {
-    setFormState(prev => ({
+    setFormState((prev) => ({
       ...prev,
       metadata: {
         ...prev.metadata,
-        [field]: value
+        [field]: value,
       },
-      isDirty: true
+      isDirty: true,
     }));
   };
 
-  const handleChange = (field: 'title' | 'about' | 'handle' | 'slug', value: string) => {
+  const handleChange = (field: "title" | "about" | "handle" | "slug", value: string) => {
     let fieldError: string | null = null;
 
-    if (field === 'title') {
+    if (field === "title") {
       fieldError = validateBlogTitle(value);
     }
 
-    setFormState(prev => ({
+    setFormState((prev) => ({
       ...prev,
       [field]: value,
       isDirty: true,
       errors: {
         ...prev.errors,
-        [field]: fieldError
-      }
+        [field]: fieldError,
+      },
     }));
   };
 
@@ -384,9 +387,9 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
         setImageState({
           file: processedFile,
           previewUrl: undefined,
-          isDeleted: false
+          isDeleted: false,
         });
-        setFormState(prev => ({ ...prev, isDirty: true }));
+        setFormState((prev) => ({ ...prev, isDirty: true }));
       } catch (error) {
         console.error("Failed to process image:", error);
       }
@@ -394,21 +397,21 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
       setImageState({
         file: null,
         previewUrl: undefined,
-        isDeleted: true
+        isDeleted: true,
       });
-      setFormState(prev => ({ ...prev, isDirty: true }));
+      setFormState((prev) => ({ ...prev, isDirty: true }));
     }
   };
 
   const handleThemeChange = (themeName: ThemeType) => {
-    console.log(themeName, formState)
-    setFormState(prev => ({
+    console.log(themeName, formState);
+    setFormState((prev) => ({
       ...prev,
       theme: {
         ...prev.theme,
-        name: themeName
+        name: themeName,
       },
-      isDirty: true
+      isDirty: true,
     }));
   };
 
@@ -428,9 +431,26 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
           <CardTitle>Blog Settings</CardTitle>
           <CardDescription>Configure your blog preferences.</CardDescription>
         </div>
+        <div className="flex items-center space-x-2">
+          <Link href="/settings/newsletter">
+            <Button variant="outline" size="sm">
+              <MailIcon className="h-4 w-4 mr-2" />
+              Newsletter Settings
+            </Button>
+          </Link>
+          <Link href={blogUrl} target="_blank">
+            <Button variant="outline" size="sm">
+              View Blog
+            </Button>
+          </Link>
+        </div>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-4">
+          <div className="">
+            <h3 className="text-lg font-medium">Blog Information</h3>
+            <p className="text-sm text-muted-foreground">Basic information about your blog.</p>
+          </div>
           <div className="">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="">
@@ -452,9 +472,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="blog-address">Blog Address</Label>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      On-chain address of the blog
-                    </p>
+                    <p className="text-sm text-muted-foreground mb-2">On-chain address of the blog</p>
                     <Input
                       id="blog-address"
                       value={blogAddress}
@@ -465,9 +483,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
 
                   <div>
                     <Label htmlFor="feed-address">Feed Address</Label>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      On-chain address of the blog feed
-                    </p>
+                    <p className="text-sm text-muted-foreground mb-2">On-chain address of the blog feed</p>
                     <Input
                       id="feed-address"
                       value={initialSettings.feed || "No feed address available"}
@@ -484,37 +500,33 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
         <div className="grid md:grid-cols-2 gap-4">
           <div className="">
             <Label htmlFor="blog-title">Title</Label>
-            <p className="text-sm text-muted-foreground mb-2">
-              Main header on your blog page
-            </p>
+            <p className="text-sm text-muted-foreground mb-2">Main header on your blog page</p>
             <Input
               id="blog-title"
               value={formState.title}
-              onChange={(e) => handleChange('title', e.target.value)}
+              onChange={(e) => handleChange("title", e.target.value)}
               placeholder="Enter your blog title"
               className={!formState.metadata.showTitle ? "opacity-50" : ""}
             />
-            {formState.errors.title && (
-              <p className="text-sm text-destructive mt-2">{formState.errors.title}</p>
-            )}
+            {formState.errors.title && <p className="text-sm text-destructive mt-2">{formState.errors.title}</p>}
           </div>
 
           <div className="">
             <Label htmlFor="blog-slug">Slug</Label>
             <p className="text-sm text-muted-foreground mb-2">
-              {isUserBlog ? `URL slug for your blog, i.e. /b/${userHandle}` : `URL slug for your blog, i.e. /b/${userHandle}/${formState.slug || 'your-slug'}`}
+              {isUserBlog
+                ? `URL slug for your blog, i.e. /b/${userHandle}`
+                : `URL slug for your blog, i.e. /b/${userHandle}/${formState.slug || "your-slug"}`}
             </p>
             <Input
               id="blog-slug"
               value={isUserBlog ? userHandle : formState.slug}
-              onChange={(e) => handleChange('slug', e.target.value.toLowerCase())}
+              onChange={(e) => handleChange("slug", e.target.value.toLowerCase())}
               disabled={isUserBlog}
               className={isUserBlog ? "opacity-50 cursor-not-allowed" : ""}
               placeholder="your-slug"
             />
-            {formState.errors.slug && (
-              <p className="text-sm text-destructive mt-2">{formState.errors.slug}</p>
-            )}
+            {formState.errors.slug && <p className="text-sm text-destructive mt-2">{formState.errors.slug}</p>}
           </div>
         </div>
 
@@ -523,15 +535,13 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
             About
             <p className="text-sm font-normal text-muted-foreground">(optional)</p>
           </Label>
-          <p className="text-sm text-muted-foreground mb-2">
-            Short description of your blog
-          </p>
+          <p className="text-sm text-muted-foreground mb-2">Short description of your blog</p>
           <TextareaAutosize
             id="blog-about"
             value={formState.about}
             variant="default"
             className="p-2"
-            onChange={(e) => handleChange('about', e.target.value)}
+            onChange={(e) => handleChange("about", e.target.value)}
             placeholder="A short description of your blog"
           />
         </div>
@@ -540,10 +550,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
           <div className="space-y-2">
             <h2 className="text-lg font-semibold">Theme</h2>
 
-            <ThemeButtons
-              currentTheme={formState.theme.name}
-              onChange={handleThemeChange}
-            />
+            <ThemeButtons currentTheme={formState.theme.name} onChange={handleThemeChange} />
           </div>
         </div>
 
@@ -551,9 +558,9 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
 
         <div className="grid md:grid-cols-2 gap-6">
           <div className="md:col-span-1 p-4 pt-0 space-y-4">
-            <div 
+            <div
               className="flex items-center justify-between gap-2 group p-2 rounded-md transition-all duration-300 hover:bg-muted/50"
-              onMouseEnter={() => setHighlightedElement('author')}
+              onMouseEnter={() => setHighlightedElement("author")}
               onMouseLeave={() => setHighlightedElement(null)}
             >
               <div className="space-y-0.5">
@@ -563,13 +570,13 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
               <Switch
                 id="show-author"
                 checked={formState.metadata.showAuthor}
-                onCheckedChange={(checked) => handleMetadataChange('showAuthor', checked)}
+                onCheckedChange={(checked) => handleMetadataChange("showAuthor", checked)}
               />
             </div>
 
-            <div 
+            <div
               className="flex items-center justify-between gap-2 group p-2 rounded-md transition-all duration-300 hover:bg-muted/50"
-              onMouseEnter={() => setHighlightedElement('title')}
+              onMouseEnter={() => setHighlightedElement("title")}
               onMouseLeave={() => setHighlightedElement(null)}
             >
               <div className="space-y-0.5">
@@ -579,14 +586,13 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
               <Switch
                 id="show-title"
                 checked={formState.metadata.showTitle}
-                onCheckedChange={(checked) => handleMetadataChange('showTitle', checked)}
+                onCheckedChange={(checked) => handleMetadataChange("showTitle", checked)}
               />
             </div>
 
-
-            <div 
+            <div
               className="flex items-center justify-between gap-2 group p-2 rounded-md transition-all duration-300 hover:bg-muted/50"
-              onMouseEnter={() => setHighlightedElement('tags')}
+              onMouseEnter={() => setHighlightedElement("tags")}
               onMouseLeave={() => setHighlightedElement(null)}
             >
               <div className="space-y-0.5">
@@ -596,7 +602,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
               <Switch
                 id="show-tags"
                 checked={formState.metadata.showTags}
-                onCheckedChange={(checked) => handleMetadataChange('showTags', checked)}
+                onCheckedChange={(checked) => handleMetadataChange("showTags", checked)}
               />
             </div>
           </div>
@@ -611,63 +617,88 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                   {/* Navigation Buttons */}
                   <div className="flex items-center gap-1">
                     <button className="text-muted-foreground hover:text-foreground transition-colors w-5 h-5 flex items-center justify-center rounded-full">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="m15 18-6-6 6-6"/>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="m15 18-6-6 6-6" />
                       </svg>
                     </button>
                     <button className="text-muted-foreground hover:text-foreground transition-colors w-5 h-5 flex items-center justify-center rounded-full">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="m9 18 6-6-6-6"/>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="m9 18 6-6-6-6" />
                       </svg>
                     </button>
                   </div>
-                  
+
                   <div className="bg-muted/50 rounded-md px-2 py-1 text-xs w-full flex items-center overflow-hidden">
                     {/* <span className="text-muted-foreground mr-1 flex-shrink-0">https://</span> */}
                     <span className="text-foreground truncate">
                       {/* {getBaseUrl().replace(/^https?:\/\//, '').replace(/\/$/, '')}/b/ */}
                       fountain.ink/b/
-                      {isUserBlog 
-                        ? userHandle 
-                        : formState.slug 
-                          ? `${userHandle}/${formState.slug}` 
-                          : blogAddress
-                      }
+                      {isUserBlog ? userHandle : formState.slug ? `${userHandle}/${formState.slug}` : blogAddress}
                     </span>
                   </div>
-                  
+
                   {/* Reload Button */}
                   <button className="text-muted-foreground hover:text-foreground transition-colors w-5 h-5 flex items-center justify-center rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
-                      <path d="M21 3v5h-5"/>
-                      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
-                      <path d="M8 16H3v5"/>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+                      <path d="M21 3v5h-5" />
+                      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+                      <path d="M8 16H3v5" />
                     </svg>
                   </button>
                 </div>
               </div>
             </div>
-            
+
             <div className="flex flex-col items-center scale-[0.8] origin-top p-4 pb-2">
               {/* Author Preview */}
               <AnimatePresence>
                 {formState.metadata.showAuthor && (
-                  <motion.div 
+                  <motion.div
                     className="flex items-center gap-2 mb-2 w-full justify-center rounded-md"
                     initial={{ opacity: 0, height: 0, marginBottom: 0 }}
-                    animate={{ opacity: 1, height: 'auto', marginBottom: 8 }}
+                    animate={{ opacity: 1, height: "auto", marginBottom: 8 }}
                     exit={{ opacity: 0, height: 0, marginBottom: 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <div 
+                    <div
                       className={`w-8 h-8 rounded-full transition-colors duration-300 ${
-                        highlightedElement === 'author' ? 'bg-primary/70' : 'bg-muted'
+                        highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
                       }`}
                     />
-                    <div 
+                    <div
                       className={`h-4 w-24 rounded-md transition-colors duration-300 ${
-                        highlightedElement === 'author' ? 'bg-primary/70' : 'bg-muted'
+                        highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
                       }`}
                     />
                   </motion.div>
@@ -677,9 +708,9 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
               {/* Title Preview */}
               <AnimatePresence>
                 {formState.metadata.showTitle && (
-                  <motion.div 
+                  <motion.div
                     className={`h-6 w-48 rounded-md mb-3 transition-colors duration-300 ${
-                      highlightedElement === 'title' ? 'bg-primary/70' : 'bg-muted'
+                      highlightedElement === "title" ? "bg-primary/70" : "bg-muted"
                     }`}
                     initial={{ opacity: 0, height: 0, marginBottom: 0 }}
                     animate={{ opacity: 1, height: 24, marginBottom: 12 }}
@@ -689,29 +720,28 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                 )}
               </AnimatePresence>
 
-              {/* Tags Preview */}
               <AnimatePresence>
                 {formState.metadata.showTags && (
-                  <motion.div 
+                  <motion.div
                     className="flex gap-2 mb-4 flex-wrap justify-center rounded-md"
                     initial={{ opacity: 0, height: 0, marginBottom: 0 }}
-                    animate={{ opacity: 1, height: 'auto', marginBottom: 16 }}
+                    animate={{ opacity: 1, height: "auto", marginBottom: 16 }}
                     exit={{ opacity: 0, height: 0, marginBottom: 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <div 
+                    <div
                       className={`h-5 w-16 rounded-full transition-colors duration-300 ${
-                        highlightedElement === 'tags' ? 'bg-primary/70' : 'bg-muted'
+                        highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
                       }`}
                     />
-                    <div 
+                    <div
                       className={`h-5 w-20 rounded-full transition-colors duration-300 ${
-                        highlightedElement === 'tags' ? 'bg-primary/70' : 'bg-muted'
+                        highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
                       }`}
                     />
-                    <div 
+                    <div
                       className={`h-5 w-14 rounded-full transition-colors duration-300 ${
-                        highlightedElement === 'tags' ? 'bg-primary/70' : 'bg-muted'
+                        highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
                       }`}
                     />
                   </motion.div>
@@ -740,7 +770,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
         <div className="flex justify-start">
           <Button
             onClick={handleSave}
-            disabled={!formState.isDirty || Object.values(formState.errors).some(error => error !== null) || isSaving}
+            disabled={!formState.isDirty || Object.values(formState.errors).some((error) => error !== null) || isSaving}
           >
             {isSaving ? "Saving..." : "Save Settings"}
           </Button>

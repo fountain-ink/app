@@ -36,17 +36,11 @@ export const CommentView = ({ comment }: CommentViewProps) => {
         </Button>
       </div>
 
-      <div className="text-sm">
-        {"content" in comment.metadata && comment.metadata.content}
-      </div>
+      <div className="text-sm">{"content" in comment.metadata && comment.metadata.content}</div>
 
       <div className="flex items-center gap-4">
         <PostReactions post={comment} />
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setShowReplyArea(!showReplyArea)}
-        >
+        <Button variant="ghost" size="sm" onClick={() => setShowReplyArea(!showReplyArea)}>
           Reply
         </Button>
       </div>

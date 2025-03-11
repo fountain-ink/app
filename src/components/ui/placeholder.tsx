@@ -25,7 +25,7 @@ export const Placeholder = (props: PlaceholderProps) => {
         ...nodeProps,
         className: cn(
           enabled &&
-          "before:absolute before:cursor-text before:opacity-30 before:content-[attr(placeholder)] before:left-0 before:right-0 before:text-inherit",
+            "before:absolute before:cursor-text before:opacity-30 before:content-[attr(placeholder)] before:left-0 before:right-0 before:text-inherit",
         ),
         placeholder,
       },
@@ -79,4 +79,3 @@ export const withPlaceholders = (components: any) =>
       placeholder: "Subheading",
     },
   ]);
-

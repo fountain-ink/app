@@ -61,7 +61,7 @@ const UserLayout = async ({
   }
 
   const isUserProfile = address === account.address;
-  
+
   const userBlogs = await getBlogsByOwner(account.address);
 
   return (
@@ -114,12 +114,10 @@ const UserLayout = async ({
               <UserBio profile={account} />
             </div>
           )}
-          
+
           {/* User's blogs list */}
-          {userBlogs.length > 0 && (
-            <UserBlogsList blogs={userBlogs} />
-          )}
-          
+          {userBlogs.length > 0 && <UserBlogsList blogs={userBlogs} />}
+
           <div className="p-4 pb-0 border-b border-border">
             <UserNavigation username={params.user} isUserProfile={isUserProfile} />
           </div>

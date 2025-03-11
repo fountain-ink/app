@@ -109,8 +109,8 @@
   /* padding-top: var(--blockquote-margin);
   padding-bottom: var(--blockquote-margin); */
   padding-left: var(--blockquote-padding);
-  margin-top: var(--blockquote-margin) ;
-  margin-bottom: var(--blockquote-margin) ;
+  margin-top: var(--blockquote-margin);
+  margin-bottom: var(--blockquote-margin);
   border-left: var(--blockquote-border-width) solid var(--blockquote-border-color);
   font-family: var(--blockquote-font);
   font-weight: var(--blockquote-weight);

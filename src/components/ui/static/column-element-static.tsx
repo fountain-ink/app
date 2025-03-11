@@ -1,22 +1,18 @@
-import React from 'react';
+import React from "react";
 
-import type { SlateElementProps } from '@udecode/plate';
-import type { TColumnElement } from '@udecode/plate-layout';
+import type { SlateElementProps } from "@udecode/plate";
+import type { TColumnElement } from "@udecode/plate-layout";
 
-import { cn } from '@udecode/cn';
-import { SlateElement } from '@udecode/plate';
+import { cn } from "@udecode/cn";
+import { SlateElement } from "@udecode/plate";
 
-export function ColumnElementStatic({
-  children,
-  className,
-  ...props
-}: SlateElementProps) {
+export function ColumnElementStatic({ children, className, ...props }: SlateElementProps) {
   const { width } = props.element as TColumnElement;
 
   return (
     <SlateElement
-      className={cn(className, 'border border-transparent p-1.5')}
-      style={{ width: width ?? '100%' }}
+      className={cn(className, "border border-transparent p-1.5")}
+      style={{ width: width ?? "100%" }}
       {...props}
     >
       {children}

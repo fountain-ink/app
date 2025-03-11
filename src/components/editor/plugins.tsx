@@ -58,7 +58,7 @@ import { TableCellHeaderPlugin, TableCellPlugin, TablePlugin, TableRowPlugin } f
 import { TogglePlugin } from "@udecode/plate-toggle/react";
 import { TrailingBlockPlugin } from "@udecode/plate-trailing-block";
 import { YjsPlugin } from "@udecode/plate-yjs/react";
-import { all, createLowlight } from 'lowlight';
+import { all, createLowlight } from "lowlight";
 import { toast } from "sonner";
 import { ImageElement } from "../ui/image-element";
 import { ImagePreview } from "../ui/image-preview";
@@ -66,7 +66,7 @@ import { RemoteCursorOverlay } from "../ui/remote-cursor-overlay";
 import { LeadingBlockPlugin } from "./plugins/leading-block-plugin";
 import { NormalizePlugin } from "./plugins/normalize-plugin";
 import { SubtitlePlugin, TITLE_KEYS, TitlePlugin } from "./plugins/title-plugin";
-import emojiMartData, { type EmojiMartData } from '@emoji-mart/data';
+import emojiMartData, { type EmojiMartData } from "@emoji-mart/data";
 import { autoformatRules } from "./plugins/autoformat-rules";
 
 const lowlight = createLowlight(all);
@@ -156,7 +156,6 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
       //     afterEditable: AfterEditableComments as any,
       //   },
       // }),
-
     );
   }
 
@@ -254,7 +253,7 @@ export const plugins = [
     },
   }),
   BlockquotePlugin,
-  CodeBlockPlugin.configure({ options: { lowlight,  } }),
+  CodeBlockPlugin.configure({ options: { lowlight } }),
   CodePlugin,
   HorizontalRulePlugin,
   LinkPlugin.extend({
@@ -268,7 +267,6 @@ export const plugins = [
   MentionPlugin.configure({
     options: { triggerPreviousCharPattern: /^$|^[\s"']$/ },
   }),
-
 
   SlashPlugin.extend({
     options: {
@@ -447,7 +445,7 @@ export const plugins = [
     },
     handlers: {
       onKeyDown: ({ event, editor }: { event: React.KeyboardEvent; editor: PlateEditor }) => {
-        if (event.key !== 'Backspace') return;
+        if (event.key !== "Backspace") return;
 
         const anchor = editor.selection?.anchor?.path;
         if (!anchor) return;
@@ -468,7 +466,7 @@ export const plugins = [
           // Select the end of the previous node if it exists
           if (prevPath) {
             editor.tf.select(prevPath);
-            editor.tf.collapse({ edge: 'end' });
+            editor.tf.collapse({ edge: "end" });
           }
         }
       },

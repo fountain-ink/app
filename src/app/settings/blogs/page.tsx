@@ -27,10 +27,7 @@ async function getBlogs() {
     const userAddress = claims.metadata.address;
 
     const db = await createClient();
-    const { data: userBlogs, error } = await db
-      .from("blogs")
-      .select("*")
-      .eq("owner", userAddress);
+    const { data: userBlogs, error } = await db.from("blogs").select("*").eq("owner", userAddress);
 
     if (error) {
       console.error("Error fetching user blogs:", error);
@@ -47,8 +44,8 @@ async function getBlogs() {
 export default async function BlogsSettingsPage() {
   const blogs = await getBlogs();
 
-  const personalBlog = blogs.find(blog => blog.owner === blog.address);
-  const otherBlogs = blogs.filter(blog => blog.owner !== blog.address);
+  const personalBlog = blogs.find((blog) => blog.owner === blog.address);
+  const otherBlogs = blogs.filter((blog) => blog.owner !== blog.address);
 
   return (
     <Card>
@@ -93,6 +90,5 @@ export default async function BlogsSettingsPage() {
         </div>
       </CardContent>
     </Card>
-
   );
-} 
+}

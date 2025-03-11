@@ -123,11 +123,7 @@ export function ProfileSelectMenu({ open, onOpenChange }: { open?: boolean; onOp
         </DialogContent>
       </Dialog>
 
-      <OnboardingModal 
-        open={showOnboarding} 
-        onOpenChange={handleOnboardingClose} 
-        onSuccess={fetchProfiles} 
-      />
+      <OnboardingModal open={showOnboarding} onOpenChange={handleOnboardingClose} onSuccess={fetchProfiles} />
     </>
   );
 }

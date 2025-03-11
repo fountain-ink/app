@@ -1,17 +1,12 @@
+import type { TCaptionElement } from "@udecode/plate-caption";
+import type { TVideoElement } from "@udecode/plate-media";
 
-import type { TCaptionElement } from '@udecode/plate-caption';
-import type { TVideoElement } from '@udecode/plate-media';
+import { cn } from "@udecode/cn";
+import { type SlateElementProps, NodeApi, SlateElement } from "@udecode/plate";
 
-import { cn } from '@udecode/cn';
-import { type SlateElementProps, NodeApi, SlateElement } from '@udecode/plate';
-
-export function MediaVideoElementStatic({
-  children,
-  className,
-  ...props
-}: SlateElementProps) {
+export function MediaVideoElementStatic({ children, className, ...props }: SlateElementProps) {
   const {
-    align = 'center',
+    align = "center",
     caption,
     url,
     width,
@@ -21,17 +16,10 @@ export function MediaVideoElementStatic({
     };
 
   return (
-    <SlateElement className={cn(className, 'py-2.5')} {...props}>
+    <SlateElement className={cn(className, "py-2.5")} {...props}>
       <div style={{ textAlign: align }}>
-        <figure
-          className="group relative m-0 inline-block cursor-default"
-          style={{ width }}
-        >
-          <video
-            className={cn('w-full max-w-full object-cover px-0', 'rounded-sm')}
-            src={url}
-            controls
-          >
+        <figure className="group relative m-0 inline-block cursor-default" style={{ width }}>
+          <video className={cn("w-full max-w-full object-cover px-0", "rounded-sm")} src={url} controls>
             <track kind="captions" />
           </video>
           {caption?.[0] && <figcaption>{NodeApi.string(caption[0])}</figcaption>}

@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   console.log(`[Blogs Sync] Starting sync process`);
-  
+
   try {
     const token = req.cookies.get("appToken")?.value;
     if (!token) {
@@ -24,9 +24,9 @@ export async function GET(req: NextRequest) {
     const userAddress = claims.metadata.address;
     const username = claims.metadata.username;
     console.log(`[Blogs Sync] User authenticated: ${userAddress}, ${username}`);
-    
+
     const db = await createClient();
-    
+
     console.log(`[Blogs Sync] Checking for personal blog: ${userAddress}`);
     const { data: personalBlog } = await db
       .from("blogs")
@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
       .eq("address", userAddress)
       .eq("owner", userAddress)
       .single();
-    
+
     if (!personalBlog) {
       console.log(`[Blogs Sync] Personal blog not found, creating one`);
       await db.from("blogs").insert({
@@ -48,14 +48,14 @@ export async function GET(req: NextRequest) {
     } else {
       console.log(`[Blogs Sync] Personal blog already exists for: ${userAddress}`);
     }
-    
+
     console.log("[Blogs Sync] Starting on-chain sync process");
     const client = await getLensClient();
     if (!client.isSessionClient()) {
       console.log("[Blogs Sync] Lens client not initialized");
       return NextResponse.json({ error: "Login to sync blogs" }, { status: 500 });
     }
-    
+
     const user = await client.getAuthenticatedUser();
     if (user.isErr()) {
       console.log("[Blogs Sync] Failed to get authenticated Lens user");
@@ -80,34 +80,40 @@ export async function GET(req: NextRequest) {
 
     const onChainBlogs = result.value.items;
     console.log(`[Blogs Sync] Found ${onChainBlogs.length} on-chain blogs`);
-    
+
     const { data: existingBlogs } = await db
       .from("blogs")
       .select("*")
-      .in("address", onChainBlogs.map(blog => blog.address));
-    
+      .in(
+        "address",
+        onChainBlogs.map((blog) => blog.address),
+      );
+
     console.log(`[Blogs Sync] Found ${existingBlogs?.length || 0} existing blogs in database`);
-    
+
     const existingBlogsMap = new Map();
-    existingBlogs?.forEach(blog => {
+    existingBlogs?.forEach((blog) => {
       existingBlogsMap.set(blog.address, blog);
     });
-    
-    const operations = onChainBlogs.map(blog => {
+
+    const operations = onChainBlogs.map((blog) => {
       const existingBlog = existingBlogsMap.get(blog.address);
-      
+
       if (!existingBlog) {
         console.log(`[Blogs Sync] Preparing to create blog: ${blog.address}`);
-        return db.from("blogs").insert({
-          address: blog.address,
-          title: blog.metadata?.name || "Untitled Blog",
-          feed: blog.feed || null,
-          about: blog.metadata?.description || null,
-          icon: blog.metadata?.icon || null,
-          owner: userAddress,
-        }).then(() => {
-          console.log(`[Blogs Sync] Blog created: ${blog.address}`);
-        });
+        return db
+          .from("blogs")
+          .insert({
+            address: blog.address,
+            title: blog.metadata?.name || "Untitled Blog",
+            feed: blog.feed || null,
+            about: blog.metadata?.description || null,
+            icon: blog.metadata?.icon || null,
+            owner: userAddress,
+          })
+          .then(() => {
+            console.log(`[Blogs Sync] Blog created: ${blog.address}`);
+          });
       } else {
         console.log(`[Blogs Sync] Blog exists in DB: ${blog.address}`);
         const updates = {
@@ -115,12 +121,13 @@ export async function GET(req: NextRequest) {
           feed: blog.feed,
           owner: blog.owner,
           about: existingBlog.about ?? blog.metadata?.description,
-          icon: existingBlog.icon ?? blog.metadata?.icon
+          icon: existingBlog.icon ?? blog.metadata?.icon,
         };
 
-        if (Object.values(updates).some(v => v !== undefined)) {
+        if (Object.values(updates).some((v) => v !== undefined)) {
           console.log(`[Blogs Sync] Preparing to update blog: ${blog.address}`);
-          return db.from("blogs")
+          return db
+            .from("blogs")
             .update(updates)
             .eq("address", blog.address)
             .then(() => {
@@ -132,32 +139,28 @@ export async function GET(req: NextRequest) {
         }
       }
     });
-    
+
     console.log(`[Blogs Sync] Executing ${operations.length} operations in parallel`);
     await Promise.all(operations);
     console.log("[Blogs Sync] All operations completed");
-    
+
     console.log(`[Blogs Sync] Fetching blogs for user: ${userAddress}`);
-    const { data: userBlogs, error } = await db
-      .from("blogs")
-      .select("*")
-      .eq("owner", userAddress);
-      
+    const { data: userBlogs, error } = await db.from("blogs").select("*").eq("owner", userAddress);
+
     if (error) {
       console.error("[Blogs Sync] Error fetching user blogs:", error);
       return NextResponse.json({ error: "Failed to fetch blogs" }, { status: 500 });
     }
-    
+
     console.log(`[Blogs Sync] Updated ${userBlogs?.length || 0} blogs in database`);
-    return NextResponse.json({ 
-      blogs: userBlogs || []
+    return NextResponse.json({
+      blogs: userBlogs || [],
     });
-    
   } catch (error) {
     console.error("[Blogs Sync] Unexpected error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to sync/fetch blogs" },
-      { status: 500 }
+      { status: 500 },
     );
   }
-} 
+}

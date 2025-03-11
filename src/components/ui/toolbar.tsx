@@ -47,7 +47,8 @@ export const toolbarButtonVariants = cva(
         icon: "h-10 w-10 [&_svg]:size-5 ",
       },
       variant: {
-        default: "text-muted-foreground hover:bg-accent hover:text-accent-foreground aria-checked:bg-accent aria-checked:text-accent-foreground",
+        default:
+          "text-muted-foreground hover:bg-accent hover:text-accent-foreground aria-checked:bg-accent aria-checked:text-accent-foreground",
         media:
           "no-focus-ring m-0 h-auto rounded-none bg-black/20 px-1.5 py-1 text-white hover:bg-white/5 focus:bg-white/5 [&:not(:last-child)]:border-r [&:not(:last-child)]:border-r-white/20 [&_svg]:size-[14px] [&_svg]:text-white",
         outline: "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground",

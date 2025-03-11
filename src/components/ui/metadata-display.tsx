@@ -31,4 +31,4 @@ export function EvmAddressDisplay({ address }: EvmAddressDisplayProps) {
       </Button>
     </div>
   );
-} 
+}

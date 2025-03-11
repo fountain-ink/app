@@ -24,7 +24,7 @@ export function AutoSave({ documentId }: { documentId: string }) {
       setIsVisible(true);
       setSaveSuccess(false);
       try {
-        console.log(content)
+        console.log(content);
         const now = new Date().toISOString();
         const existingDraft = getDocument(documentId);
         const { title, subtitle, coverUrl } = extractMetadata(editor.children as any);

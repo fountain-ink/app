@@ -57,17 +57,17 @@ export const ImagePreview = () => {
       >
         {!prevDisabled && !nextDisabled && (
           <div className="flex rounded-md bg-secondary/70">
-            <Button size={'icon'} variant={"ghost"} {...prevProps} disabled={prevDisabled}>
+            <Button size={"icon"} variant={"ghost"} {...prevProps} disabled={prevDisabled}>
               <ArrowLeftIcon className="size-5" />
             </Button>
-            <Button size={'icon'} variant={"ghost"} {...nextProps} disabled={nextDisabled}>
+            <Button size={"icon"} variant={"ghost"} {...nextProps} disabled={nextDisabled}>
               <ArrowRightIcon className="size-5" />
             </Button>
           </div>
         )}
 
         <div className="flex gap-2 rounded-md bg-secondary/70">
-          <Button size={'icon'} variant={'ghost'} {...zommOutProps} disabled={zoomOutDisabled} tooltip="Zoom out">
+          <Button size={"icon"} variant={"ghost"} {...zommOutProps} disabled={zoomOutDisabled} tooltip="Zoom out">
             <Minus className="size-4" />
           </Button>
           <div className="flex w-[46px] items-center justify-center space-x-1 text-neutral-400">
@@ -78,10 +78,10 @@ export const ImagePreview = () => {
             )}
             <div>%</div>
           </div>
-          <Button size={'icon'} variant={"ghost"} {...zoomInProps} disabled={zoomInDisabled} tooltip="Zoom in">
+          <Button size={"icon"} variant={"ghost"} {...zoomInProps} disabled={zoomInDisabled} tooltip="Zoom in">
             <Plus className="size-4" />
           </Button>
-          <Button size={'icon'} variant={"ghost"} {...closeProps} tooltip="Minimize">
+          <Button size={"icon"} variant={"ghost"} {...closeProps} tooltip="Minimize">
             <Minimize2 className="size-4" />
           </Button>
         </div>

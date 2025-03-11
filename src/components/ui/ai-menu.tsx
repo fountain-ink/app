@@ -9,7 +9,6 @@ import { BlockSelectionPlugin, useIsSelecting } from "@udecode/plate-selection/r
 import { useEditorPlugin, useHotkeys, usePluginOption } from "@udecode/plate/react";
 import { ArrowUpIcon } from "lucide-react";
 
-
 import { AIChatEditor } from "./ai-chat-editor";
 import { AIMenuItems } from "./ai-menu-items";
 import { Button } from "./button";

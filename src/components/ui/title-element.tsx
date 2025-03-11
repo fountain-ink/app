@@ -28,4 +28,4 @@ export const TitleElement = withRef<typeof TitleElementVariants>(
       </TitleElementVariants>
     );
   },
-); 
+);

@@ -1,12 +1,7 @@
 "use client";
 
 import { Path, PathApi, type TElement, nanoid } from "@udecode/plate";
-import {
-  ParagraphPlugin,
-  type PlateEditor,
-  useEditorRef,
-  useElement,
-} from "@udecode/plate/react";
+import { ParagraphPlugin, type PlateEditor, useEditorRef, useElement } from "@udecode/plate/react";
 import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
 import { Plus } from "lucide-react";
 import { Button } from "./button";
@@ -23,7 +18,7 @@ export const DraggableInsertHandle = () => {
         event.stopPropagation();
         event.preventDefault();
 
-        const at = editor.api.findPath( element);
+        const at = editor.api.findPath(element);
         triggerComboboxNextBlock(editor, "/", at, event.altKey);
       }}
       onMouseDown={() => {

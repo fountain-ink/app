@@ -39,7 +39,7 @@ export async function getListById(listId: number): Promise<ListmonkList | null> 
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": getAuthHeader(),
+        Authorization: getAuthHeader(),
       },
     });
 
@@ -57,32 +57,6 @@ export async function getListById(listId: number): Promise<ListmonkList | null> 
 }
 
 /**
- * Fetches all lists from Listmonk
- */
-export async function getAllLists(): Promise<ListmonkList[]> {
-  try {
-    const response = await fetch(`${env.LISTMONK_API_URL}/lists`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": getAuthHeader(),
-      },
-    });
-
-    if (!response.ok) {
-      console.error(`Failed to fetch lists: ${response.status} ${response.statusText}`);
-      return [];
-    }
-
-    const data = await response.json();
-    return data.data.results || [];
-  } catch (error) {
-    console.error("Error fetching lists:", error);
-    return [];
-  }
-}
-
-/**
  * Creates a new list in Listmonk
  */
 export async function createList(name: string, description: string): Promise<ListmonkList | null> {
@@ -91,7 +65,7 @@ export async function createList(name: string, description: string): Promise<Lis
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": getAuthHeader(),
+        Authorization: getAuthHeader(),
       },
       body: JSON.stringify({
         name,
@@ -124,11 +98,11 @@ export async function addSubscriber(email: string, listId: number): Promise<List
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": getAuthHeader(),
+        Authorization: getAuthHeader(),
       },
       body: JSON.stringify({
         email,
-        name: email.split("@")[0], 
+        name: email.split("@")[0],
         status: "enabled",
         lists: [listId],
         preconfirm_subscription: true,

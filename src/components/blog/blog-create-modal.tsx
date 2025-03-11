@@ -64,7 +64,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
       console.log("Blog feed metadata uploaded:", blogFeedUri);
 
       const createToast = toast.loading("Creating your blog...");
-      
+
       const result = await createGroup(sessionClient, {
         feed: {
           metadataUri: uri(blogFeedUri.uri),
@@ -86,7 +86,6 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
       toast.success("Blog created successfully!");
       onSuccess();
       onOpenChange(false);
-
     } catch (err) {
       console.error("Error during blog creation:", err);
       toast.error("Failed to create blog");
@@ -105,12 +104,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
           <div className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="name">Blog Name</Label>
-              <Input
-                id="name"
-                placeholder="Enter blog name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
+              <Input id="name" placeholder="Enter blog name" value={name} onChange={(e) => setName(e.target.value)} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="description">Description</Label>
@@ -132,7 +126,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
       </DialogContent>
     </Dialog>
   );
-} 
+}
 
 export function CreateBlogButton() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -149,11 +143,7 @@ export function CreateBlogButton() {
         Create Blog
       </Button>
 
-      <CreateBlogModal
-        open={isCreateModalOpen}
-        onOpenChange={setIsCreateModalOpen}
-        onSuccess={handleCreateSuccess}
-      />
+      <CreateBlogModal open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen} onSuccess={handleCreateSuccess} />
     </>
   );
-} 
+}

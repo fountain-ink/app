@@ -145,12 +145,12 @@ const InlineCombobox = ({
     ref: inputRef,
     onCancelInput: (cause) => {
       if (cause !== "backspace" && cause !== "escape") {
-        editor.tf.insertText( trigger + value, {
+        editor.tf.insertText(trigger + value, {
           at: insertPoint?.current ?? undefined,
         });
       }
       if (cause === "arrowLeft" || cause === "arrowRight") {
-        editor.tf.move( {
+        editor.tf.move({
           distance: 1,
           reverse: cause === "arrowLeft",
         });

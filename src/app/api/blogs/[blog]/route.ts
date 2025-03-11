@@ -5,24 +5,13 @@ import { isEvmAddress } from "@/lib/utils/is-evm-address";
 
 async function findBlogByIdentifier(db: any, identifier: string) {
   if (isEvmAddress(identifier)) {
-    return await db
-      .from("blogs")
-      .select("*")
-      .eq("address", identifier)
-      .single();
+    return await db.from("blogs").select("*").eq("address", identifier).single();
   } else {
-    return await db
-      .from("blogs")
-      .select("*")
-      .eq("handle", identifier)
-      .single();
+    return await db.from("blogs").select("*").eq("handle", identifier).single();
   }
 }
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: { blog: string } }
-) {
+export async function PUT(req: NextRequest, { params }: { params: { blog: string } }) {
   try {
     const token = req.cookies.get("appToken")?.value;
     if (!token) {
@@ -74,10 +63,7 @@ export async function PUT(
       owner: claims.metadata.address,
     };
 
-    const { error } = await db
-      .from("blogs")
-      .update(blogData)
-      .eq("address", blog.address);
+    const { error } = await db.from("blogs").update(blogData).eq("address", blog.address);
 
     if (error) {
       console.error("Error updating blog settings:", error);
@@ -94,10 +80,7 @@ export async function PUT(
   }
 }
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { blog: string } }
-) {
+export async function GET(req: NextRequest, { params }: { params: { blog: string } }) {
   try {
     // Always require authentication for this route
     const token = req.cookies.get("appToken")?.value;
@@ -109,11 +92,11 @@ export async function GET(
     if (!claims?.metadata?.address) {
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
-    
+
     const userAddress = claims.metadata.address;
 
     const db = await createClient();
-    
+
     // Find the blog by identifier (address or handle)
     const { data: blog, error } = await findBlogByIdentifier(db, params.blog);
 
@@ -142,4 +125,4 @@ export async function GET(
   }
 }
 
-export const dynamic = "force-dynamic"; 
+export const dynamic = "force-dynamic";

@@ -1,17 +1,12 @@
 "use client";
 
-import { cn } from '@udecode/cn';
-import {
-  type TocSideBarProps,
-  useTocSideBar,
-  useTocSideBarState,
-} from '@udecode/plate-heading/react';
-import { cva } from 'class-variance-authority';
+import { cn } from "@udecode/cn";
+import { type TocSideBarProps, useTocSideBar, useTocSideBarState } from "@udecode/plate-heading/react";
+import { cva } from "class-variance-authority";
 
-import { inter } from '@/styles/google-fonts';
-import { Button } from './button';
-import { popoverVariants } from './popover';
-
+import { inter } from "@/styles/google-fonts";
+import { Button } from "./button";
+import { popoverVariants } from "./popover";
 
 const tocSidebarButtonVariants = cva(
   "block h-auto w-full rounded-sm p-0 text-left hover:bg-transparent overflow-visible text-xs pointer-events-auto cursor-pointer",
@@ -74,7 +69,7 @@ export const TocSidebar = ({
               inter.className,
             )}
             aria-label="Table of contents"
-            {...navProps as any}
+            {...(navProps as any)}
           >
             <div
               id="toc_wrap"
@@ -86,22 +81,19 @@ export const TocSidebar = ({
                   if (item.depth === 1 || item.depth === 2) {
                     return null;
                   }
-                  const isActive = activeContentId
-                    ? activeContentId === item.id
-                    : index === 0;
+                  const isActive = activeContentId ? activeContentId === item.id : index === 0;
 
                   return (
                     <Button
-                      id={isActive ? 'toc_item_active' : 'toc_item'}
+                      id={isActive ? "toc_item_active" : "toc_item"}
                       key={`${item.id}-${index}`}
                       variant="ghost"
                       className={cn(
                         tocSidebarButtonVariants({
                           active: isActive,
                           depth: item.depth as any,
-                        })
+                        }),
                       )}
-
                       onClick={(e) => {
                         e.preventDefault();
                         const element = document.getElementById(item.id);
@@ -110,7 +102,7 @@ export const TocSidebar = ({
                           const offsetPosition = elementPosition + window.scrollY - 50;
                           window.scrollTo({
                             top: offsetPosition,
-                            behavior: 'smooth'
+                            behavior: "smooth",
                           });
                         }
                       }}

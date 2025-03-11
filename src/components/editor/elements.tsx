@@ -26,11 +26,11 @@ import { TocElement } from "@/components/ui/toc-element";
 import { ToggleElement } from "@/components/ui/toggle-element";
 import { withProps } from "@udecode/cn";
 import {
-    BoldPlugin,
-    CodePlugin,
-    ItalicPlugin,
-    StrikethroughPlugin,
-    UnderlinePlugin,
+  BoldPlugin,
+  CodePlugin,
+  ItalicPlugin,
+  StrikethroughPlugin,
+  UnderlinePlugin,
 } from "@udecode/plate-basic-marks/react";
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { CodeBlockPlugin, CodeLinePlugin, CodeSyntaxPlugin } from "@udecode/plate-code-block/react";
@@ -75,10 +75,10 @@ export const getElements = () => {
     [SlashInputPlugin.key]: SlashInputElement,
     [TogglePlugin.key]: ToggleElement,
     [BlockquotePlugin.key]: BlockquoteElement,
-  [CodeBlockPlugin.key]: CodeBlockElement,
-  [CodeLinePlugin.key]: CodeLineElement,
-  [CodePlugin.key]: CodeLeaf,
-  [CodeSyntaxPlugin.key]: CodeSyntaxLeaf,
+    [CodeBlockPlugin.key]: CodeBlockElement,
+    [CodeLinePlugin.key]: CodeLineElement,
+    [CodePlugin.key]: CodeLeaf,
+    [CodeSyntaxPlugin.key]: CodeSyntaxLeaf,
     [TocPlugin.key]: TocElement,
     [ColumnItemPlugin.key]: ColumnElement,
     [ColumnPlugin.key]: ColumnGroupElement,

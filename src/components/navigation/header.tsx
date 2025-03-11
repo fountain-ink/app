@@ -22,17 +22,17 @@ export const Header = ({ session }: { session: MeResult | null }) => {
   const hostname = typeof window !== "undefined" && window.location.hostname ? window.location.hostname : "";
   const isWritePage = pathname.startsWith("/write");
   const isSettingsPage = pathname.startsWith("/settings");
-  
+
   // Check if we're on a blog page
   const isBlogPage = pathname.startsWith("/b/") || pathname.startsWith("/p/");
-  
+
   // Extract blog address from the URL
-  const pathSegments = pathname.split('/').filter(Boolean);
+  const pathSegments = pathname.split("/").filter(Boolean);
   const blogAddress = isBlogPage && pathSegments.length >= 2 ? pathSegments[1] : null;
-  
+
   // State for blog data
   const [blogData, setBlogData] = useState<BlogData | null>(null);
-  
+
   // Fetch blog data when on a blog page
   useEffect(() => {
     const fetchBlogData = async () => {
@@ -46,14 +46,14 @@ export const Header = ({ session }: { session: MeResult | null }) => {
         }
       }
     };
-    
+
     if (isBlogPage && blogAddress) {
       fetchBlogData();
     } else {
       setBlogData(null);
     }
   }, [isBlogPage, blogAddress]);
-  
+
   const documentId = pathname.split("/").filter(Boolean).pop() ?? "";
   const yjsState = useYjsState((state) => state.getState(documentId) ?? { status: "disconnected" as ConnectionStatus });
 
@@ -81,13 +81,8 @@ export const Header = ({ session }: { session: MeResult | null }) => {
       </div>
       <div className="flex gap-4 pointer-events-auto">
         <FeedbackForm />
-        
-        {isBlogPage && blogData && (
-          <BlogEmailSubscribe 
-            blogData={blogData}
-            variant="default"
-          />
-        )}
+
+        {isBlogPage && blogData && <BlogEmailSubscribe blogData={blogData} variant="default" />}
         {isWritePage && <PublishMenu />}
         {isWritePage && <EditorOptionsDropdown />}
         {!isWritePage && <DraftCreateButton />}

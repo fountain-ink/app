@@ -110,8 +110,9 @@ export const TableElement = withHOC(
           </div>
 
           <Caption align="center">
-            <CaptionTextarea  readOnly={readOnly} placeholder="Write a caption..." 
-            
+            <CaptionTextarea
+              readOnly={readOnly}
+              placeholder="Write a caption..."
               onFocus={(e) => {
                 e.preventDefault();
               }}
@@ -125,7 +126,11 @@ export const TableElement = withHOC(
       return content;
     }
 
-    return <TableFloatingToolbar initialWidth={width} onWidthChange={handleWidth}>{content}</TableFloatingToolbar>;
+    return (
+      <TableFloatingToolbar initialWidth={width} onWidthChange={handleWidth}>
+        {content}
+      </TableFloatingToolbar>
+    );
   }),
 );
 
@@ -291,30 +296,54 @@ export const TableBordersDropdownMenuContent = withRef<typeof DropdownMenuPrimit
       {...props}
     >
       <DropdownMenuGroup>
-        <DropdownMenuCheckboxItem className="gap-2" checked={hasTopBorder} onCheckedChange={getOnSelectTableBorder("top")}>
+        <DropdownMenuCheckboxItem
+          className="gap-2"
+          checked={hasTopBorder}
+          onCheckedChange={getOnSelectTableBorder("top")}
+        >
           <BorderTop />
           <div>Top Border</div>
         </DropdownMenuCheckboxItem>
-        <DropdownMenuCheckboxItem className="gap-2" checked={hasRightBorder} onCheckedChange={getOnSelectTableBorder("right")}>
+        <DropdownMenuCheckboxItem
+          className="gap-2"
+          checked={hasRightBorder}
+          onCheckedChange={getOnSelectTableBorder("right")}
+        >
           <BorderRight />
           <div>Right Border</div>
         </DropdownMenuCheckboxItem>
-        <DropdownMenuCheckboxItem className="gap-2" checked={hasBottomBorder} onCheckedChange={getOnSelectTableBorder("bottom")}>
+        <DropdownMenuCheckboxItem
+          className="gap-2"
+          checked={hasBottomBorder}
+          onCheckedChange={getOnSelectTableBorder("bottom")}
+        >
           <BorderBottom />
           <div>Bottom Border</div>
         </DropdownMenuCheckboxItem>
-        <DropdownMenuCheckboxItem className="gap-2" checked={hasLeftBorder} onCheckedChange={getOnSelectTableBorder("left")}>
+        <DropdownMenuCheckboxItem
+          className="gap-2"
+          checked={hasLeftBorder}
+          onCheckedChange={getOnSelectTableBorder("left")}
+        >
           <BorderLeft />
           <div>Left Border</div>
         </DropdownMenuCheckboxItem>
       </DropdownMenuGroup>
 
       <DropdownMenuGroup>
-        <DropdownMenuCheckboxItem className="gap-2" checked={hasNoBorders} onCheckedChange={getOnSelectTableBorder("none")}>
+        <DropdownMenuCheckboxItem
+          className="gap-2"
+          checked={hasNoBorders}
+          onCheckedChange={getOnSelectTableBorder("none")}
+        >
           <BorderNone />
           <div>No Border</div>
         </DropdownMenuCheckboxItem>
-        <DropdownMenuCheckboxItem className="gap-2" checked={hasOuterBorders} onCheckedChange={getOnSelectTableBorder("outer")}>
+        <DropdownMenuCheckboxItem
+          className="gap-2"
+          checked={hasOuterBorders}
+          onCheckedChange={getOnSelectTableBorder("outer")}
+        >
           <BorderAll />
           <div>Outside Borders</div>
         </DropdownMenuCheckboxItem>

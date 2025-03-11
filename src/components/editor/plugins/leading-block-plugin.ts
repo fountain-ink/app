@@ -28,7 +28,7 @@ const withLeadingBlock: OverrideEditor<LeadingBlockConfig> = ({ editor, getOptio
       if (currentPath.length === 0) {
         const firstChild = editor.children[0];
 
-        if (!firstChild || (firstChild.type !== type)) {
+        if (!firstChild || firstChild.type !== type) {
           editor.tf.insertNodes(editor.api.create.block({ type }), { at: [0] });
           return;
         }

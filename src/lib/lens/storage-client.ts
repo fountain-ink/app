@@ -1,3 +1,3 @@
-import { StorageClient  } from "@lens-chain/storage-client";
+import { StorageClient } from "@lens-chain/storage-client";
 
 export const storageClient = StorageClient.create();

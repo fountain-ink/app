@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -16,11 +23,11 @@ interface BlogSubscribeProps {
   className?: string;
 }
 
-export function BlogEmailSubscribe({ 
+export function BlogEmailSubscribe({
   blogData,
-  variant = "outline", 
+  variant = "outline",
   size = "default",
-  className = ""
+  className = "",
 }: BlogSubscribeProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -48,9 +55,9 @@ export function BlogEmailSubscribe({
 
     try {
       setIsLoading(true);
-      
+
       const result = await subscribeToNewsletter(blogData.address, email);
-      
+
       if (result?.success) {
         setIsSuccess(true);
         toast.success("Successfully subscribed to the blog!");
@@ -74,15 +81,10 @@ export function BlogEmailSubscribe({
 
   return (
     <>
-      <Button
-        variant={variant}
-        size={size}
-        onClick={() => setIsModalOpen(true)}
-        className={className}
-      >
+      <Button variant={variant} size={size} onClick={() => setIsModalOpen(true)} className={className}>
         Subscribe
       </Button>
-      
+
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -91,7 +93,7 @@ export function BlogEmailSubscribe({
               Enter your email address to receive updates when new content is published.
             </DialogDescription>
           </DialogHeader>
-          
+
           {isSuccess ? (
             <div className="flex flex-col items-center justify-center py-6 space-y-4">
               <MailCheck className="h-12 w-12 text-primary" />
@@ -133,4 +135,4 @@ export function BlogEmailSubscribe({
       </Dialog>
     </>
   );
-} 
+}

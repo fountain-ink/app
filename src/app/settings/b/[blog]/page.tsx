@@ -20,12 +20,8 @@ export default async function BlogPage({ params }: PageProps) {
   }
 
   const db = await createClient();
-  const { data: blog } = await db
-    .from("blogs")
-    .select()
-    .eq("address", params.blog)
-    .single();
-  
+  const { data: blog } = await db.from("blogs").select().eq("address", params.blog).single();
+
   if (!blog) {
     return notFound();
   }
@@ -33,9 +29,6 @@ export default async function BlogPage({ params }: PageProps) {
   const isUserBlog = blog.address === claims.metadata.address;
 
   return (
-    <BlogSettings
-      initialSettings={blog as BlogData}
-      userHandle={claims.metadata.username} 
-      isUserBlog={isUserBlog}
-    />);
-} 
+    <BlogSettings initialSettings={blog as BlogData} userHandle={claims.metadata.username} isUserBlog={isUserBlog} />
+  );
+}

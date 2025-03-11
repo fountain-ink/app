@@ -1,7 +1,7 @@
-import React from 'react';
-import type { SlateElementProps } from '@udecode/plate';
-import { cn } from '@udecode/cn';
-import { SlateElement } from '@udecode/plate';
+import React from "react";
+import type { SlateElementProps } from "@udecode/plate";
+import { cn } from "@udecode/cn";
+import { SlateElement } from "@udecode/plate";
 import { cva } from "class-variance-authority";
 
 const titleVariants = cva("relative", {
@@ -21,7 +21,7 @@ export const TitleElementStatic = ({
 }: SlateElementProps & { variant?: "title" | "subtitle" }) => {
   return (
     <SlateElement
-      className={cn(className, titleVariants({ variant }), 'my-px px-0.5 py-[3px]')}
+      className={cn(className, titleVariants({ variant }), "my-px px-0.5 py-[3px]")}
       style={{
         ...props.style,
         backgroundColor: props.element.backgroundColor as any,
@@ -32,7 +32,7 @@ export const TitleElementStatic = ({
       {children}
     </SlateElement>
   );
-}; 
+};
 
 export const SubtitleElementStatic = ({
   children,
@@ -42,7 +42,7 @@ export const SubtitleElementStatic = ({
 }: SlateElementProps & { variant?: "title" | "subtitle" }) => {
   return (
     <SlateElement
-      className={cn(className, titleVariants({ variant }), 'my-px px-0.5 py-[3px]')}
+      className={cn(className, titleVariants({ variant }), "my-px px-0.5 py-[3px]")}
       style={{
         ...props.style,
         backgroundColor: props.element.backgroundColor as any,
@@ -53,4 +53,4 @@ export const SubtitleElementStatic = ({
       {children}
     </SlateElement>
   );
-}; 
+};

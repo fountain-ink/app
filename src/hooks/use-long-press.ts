@@ -331,8 +331,8 @@ export function useLongPress<
   return binder;
 }
 
-const getPointerEvent = () => (typeof window === "object" ? window?.PointerEvent ?? null : null);
-const getTouchEvent = () => (typeof window === "object" ? window?.TouchEvent ?? null : null);
+const getPointerEvent = () => (typeof window === "object" ? (window?.PointerEvent ?? null) : null);
+const getTouchEvent = () => (typeof window === "object" ? (window?.TouchEvent ?? null) : null);
 
 function isTouchEvent<Target extends Element>(event: SyntheticEvent<Target>): event is ReactTouchEvent<Target> {
   const { nativeEvent } = event;

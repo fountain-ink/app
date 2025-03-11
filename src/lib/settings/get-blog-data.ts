@@ -4,22 +4,22 @@ import { createClient } from "../supabase/client";
 
 type Blog = Database["public"]["Tables"]["blogs"]["Row"];
 
-export type BlogThemeData =  {
+export type BlogThemeData = {
   name?: string;
   customColor?: string;
   customBackground?: string;
-}
+};
 
 export type BlogMetadata = {
   showAuthor?: boolean;
   showTags?: boolean;
   showTitle?: boolean;
-}
+};
 
-export type BlogData = Omit<Blog, 'theme' | 'metadata'> & {
+export type BlogData = Omit<Blog, "theme" | "metadata"> & {
   theme: BlogThemeData;
   metadata: BlogMetadata;
-}
+};
 
 /**
  * Finds a blog by identifier (either address or handle)
@@ -28,22 +28,14 @@ export type BlogData = Omit<Blog, 'theme' | 'metadata'> & {
  */
 async function findBlogByIdentifier(identifier: string) {
   const db = createClient();
-  
+
   // Determine if the identifier is an EVM address or a handle
   if (isEvmAddress(identifier)) {
     // Query by address
-    return await db
-      .from("blogs")
-      .select("*")
-      .eq("address", identifier)
-      .single();
+    return await db.from("blogs").select("*").eq("address", identifier).single();
   } else {
     // Query by handle
-    return await db
-      .from("blogs")
-      .select("*")
-      .eq("handle", identifier)
-      .single();
+    return await db.from("blogs").select("*").eq("handle", identifier).single();
   }
 }
 
@@ -72,9 +64,8 @@ export const getBlogData = async (identifier: string) => {
       theme: blog?.theme as BlogThemeData,
       metadata: blog?.metadata as BlogMetadata,
     } as BlogData;
-
   } catch (error) {
     console.error("Error fetching blog data:", error);
     return null;
   }
-}
+};

@@ -5,7 +5,7 @@ export const proseClasses = [
 
   "prose-img:[radius:var(--image-border-radius)]",
   "prose-img:m-0",
-  
+
   "[&_.title]:[color:var(--title-color)]",
   "[&_.title]:[margin-top:var(--header-margin)] [&_.title]:[margin-bottom:var(--header-margin)]",
   "[&_.title]:text-6xl",
