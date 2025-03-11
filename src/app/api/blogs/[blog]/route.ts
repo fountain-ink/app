@@ -55,6 +55,8 @@ export async function PUT(req: NextRequest, { params }: { params: { blog: string
         showAuthor: settings.metadata?.showAuthor ?? true,
         showTags: settings.metadata?.showTags ?? true,
         showTitle: settings.metadata?.showTitle ?? true,
+        ...(blog.metadata || {}),
+        ...(settings.metadata || {}),
       },
       theme: settings.theme,
       icon: settings.icon,

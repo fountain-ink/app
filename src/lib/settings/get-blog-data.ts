@@ -14,11 +14,13 @@ export type BlogMetadata = {
   showAuthor?: boolean;
   showTags?: boolean;
   showTitle?: boolean;
+  newsletterEnabled?: boolean;
+  emailContentType?: string;
 };
 
 export type BlogData = Omit<Blog, "theme" | "metadata"> & {
-  theme: BlogThemeData;
-  metadata: BlogMetadata;
+  theme: BlogThemeData | null;
+  metadata: BlogMetadata | null;
 };
 
 /**
@@ -60,8 +62,8 @@ export const getBlogData = async (identifier: string) => {
 
     return {
       ...blog,
-      theme: blog?.theme as BlogThemeData,
-      metadata: blog?.metadata as BlogMetadata,
+      theme: blog?.theme as BlogThemeData | null,
+      metadata: blog?.metadata as BlogMetadata | null,
     } as BlogData;
   } catch (error) {
     console.error("Error fetching blog data:", error);
