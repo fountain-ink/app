@@ -1,5 +1,4 @@
 import { notFound, redirect } from "next/navigation";
-import { UserBlogPage } from "../page";
 import { createClient } from "@/lib/supabase/server";
 import { fetchAccount } from "@lens-protocol/client/actions";
 import { getLensClient } from "@/lib/lens/client";

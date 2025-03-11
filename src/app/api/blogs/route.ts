@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  console.log(`[Blogs Fetch] Fetching blogs from database`);
+  console.log("[Blogs Fetch] Fetching blogs from database");
 
   try {
     const token = req.cookies.get("appToken")?.value;

@@ -6,7 +6,7 @@ import { evmAddress } from "@lens-protocol/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  console.log(`[Blogs Sync] Starting sync process`);
+  console.log("[Blogs Sync] Starting sync process");
 
   try {
     const token = req.cookies.get("appToken")?.value;
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
       .single();
 
     if (!personalBlog) {
-      console.log(`[Blogs Sync] Personal blog not found, creating one`);
+      console.log("[Blogs Sync] Personal blog not found, creating one");
       await db.from("blogs").insert({
         address: userAddress,
         title: `${username}'s Blog`,
@@ -114,30 +114,28 @@ export async function GET(req: NextRequest) {
           .then(() => {
             console.log(`[Blogs Sync] Blog created: ${blog.address}`);
           });
-      } else {
-        console.log(`[Blogs Sync] Blog exists in DB: ${blog.address}`);
-        const updates = {
-          title: existingBlog.title ?? blog.metadata?.name,
-          feed: blog.feed,
-          owner: blog.owner,
-          about: existingBlog.about ?? blog.metadata?.description,
-          icon: existingBlog.icon ?? blog.metadata?.icon,
-        };
-
-        if (Object.values(updates).some((v) => v !== undefined)) {
-          console.log(`[Blogs Sync] Preparing to update blog: ${blog.address}`);
-          return db
-            .from("blogs")
-            .update(updates)
-            .eq("address", blog.address)
-            .then(() => {
-              console.log(`[Blogs Sync] Blog updated: ${blog.address}`);
-            });
-        } else {
-          console.log(`[Blogs Sync] No updates needed for: ${blog.address}`);
-          return Promise.resolve(); // No operation needed
-        }
       }
+      console.log(`[Blogs Sync] Blog exists in DB: ${blog.address}`);
+      const updates = {
+        title: existingBlog.title ?? blog.metadata?.name,
+        feed: blog.feed,
+        owner: blog.owner,
+        about: existingBlog.about ?? blog.metadata?.description,
+        icon: existingBlog.icon ?? blog.metadata?.icon,
+      };
+
+      if (Object.values(updates).some((v) => v !== undefined)) {
+        console.log(`[Blogs Sync] Preparing to update blog: ${blog.address}`);
+        return db
+          .from("blogs")
+          .update(updates)
+          .eq("address", blog.address)
+          .then(() => {
+            console.log(`[Blogs Sync] Blog updated: ${blog.address}`);
+          });
+      }
+      console.log(`[Blogs Sync] No updates needed for: ${blog.address}`);
+      return Promise.resolve(); // No operation needed
     });
 
     console.log(`[Blogs Sync] Executing ${operations.length} operations in parallel`);

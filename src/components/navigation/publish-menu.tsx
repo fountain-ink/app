@@ -178,8 +178,8 @@ export const PublishMenu = () => {
   const handleAddRecipient = () => {
     if (!recipientAddress || !recipientPercent) return;
 
-    const percent = parseInt(recipientPercent);
-    if (isNaN(percent) || percent <= 0 || percent > 100) {
+    const percent = Number.parseInt(recipientPercent);
+    if (Number.isNaN(percent) || percent <= 0 || percent > 100) {
       toast.error("Percentage must be between 1 and 100");
       return;
     }
@@ -349,7 +349,7 @@ export const PublishMenu = () => {
           ? [
               {
                 simpleCollect: {
-                  ...(isLimitedEdition && collectLimit ? { collectLimit: parseInt(collectLimit) } : {}),
+                  ...(isLimitedEdition && collectLimit ? { collectLimit: Number.parseInt(collectLimit) } : {}),
                   ...(isCollectExpiryEnabled ? { endsAt: dateTime(collectExpiryDate) } : {}),
                   ...(isChargeEnabled && price
                     ? {
@@ -742,8 +742,8 @@ export const PublishMenu = () => {
                                     className="w-16"
                                     value={referralPercent}
                                     onChange={(e) => {
-                                      const value = parseInt(e.target.value);
-                                      if (!isNaN(value) && value >= 1 && value <= 100) {
+                                      const value = Number.parseInt(e.target.value);
+                                      if (!Number.isNaN(value) && value >= 1 && value <= 100) {
                                         setReferralPercent(value);
                                         saveDraft({
                                           collectingSettings: {
@@ -926,8 +926,8 @@ export const PublishMenu = () => {
                                     className="w-16"
                                     value={collectExpiryDays}
                                     onChange={(e) => {
-                                      const value = parseInt(e.target.value);
-                                      if (!isNaN(value) && value >= 1) {
+                                      const value = Number.parseInt(e.target.value);
+                                      if (!Number.isNaN(value) && value >= 1) {
                                         setCollectExpiryDays(value);
                                         saveDraft({
                                           collectingSettings: {

@@ -50,7 +50,7 @@ export function SyncButton() {
               animate={isSyncing ? { rotate: 360 } : { rotate: 0 }}
               transition={
                 isSyncing
-                  ? { repeat: Infinity, duration: 1, ease: "anticipate", repeatType: "loop" }
+                  ? { repeat: Number.POSITIVE_INFINITY, duration: 1, ease: "anticipate", repeatType: "loop" }
                   : { type: "easeInOut", stiffness: 200, damping: 10 }
               }
             >

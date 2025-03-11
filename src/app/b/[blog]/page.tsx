@@ -74,7 +74,7 @@ export async function generateMetadata({ params }: { params: { blog: string } })
   };
 }
 
-export const UserBlogPage = async ({ params }: { params: { blog: string } }) => {
+const UserBlogPage = async ({ params }: { params: { blog: string } }) => {
   const lens = await getLensClient();
   const { username } = await getUserProfile();
   let profile;

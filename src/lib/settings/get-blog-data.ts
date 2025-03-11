@@ -33,10 +33,9 @@ async function findBlogByIdentifier(identifier: string) {
   if (isEvmAddress(identifier)) {
     // Query by address
     return await db.from("blogs").select("*").eq("address", identifier).single();
-  } else {
-    // Query by handle
-    return await db.from("blogs").select("*").eq("handle", identifier).single();
   }
+  // Query by handle
+  return await db.from("blogs").select("*").eq("handle", identifier).single();
 }
 
 /**

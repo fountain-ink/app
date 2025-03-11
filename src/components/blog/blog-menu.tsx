@@ -42,9 +42,8 @@ export function BlogMenu({ username }: BlogMenuProps) {
   const getBlogUrl = (blog: BlogData): string => {
     if (blog.address === blog.owner) {
       return `/b/${username}`;
-    } else {
-      return `/b/${blog.address}`;
     }
+    return `/b/${blog.address}`;
   };
 
   const shouldShowDropdown = () => {

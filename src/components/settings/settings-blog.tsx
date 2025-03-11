@@ -211,7 +211,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
           .eq("owner", initialSettings.owner)
           .neq("address", initialSettings.address);
 
-        if (existingBlogs && existingBlogs.some((blog) => blog.handle === handle)) {
+        if (existingBlogs?.some((blog) => blog.handle === handle)) {
           return `You already have a blog with handle "${handle}"`;
         }
       } catch (error) {
@@ -243,7 +243,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
           .eq("owner", initialSettings.owner)
           .neq("address", initialSettings.address);
 
-        if (existingBlogs && existingBlogs.some((blog) => blog.slug === slug)) {
+        if (existingBlogs?.some((blog) => blog.slug === slug)) {
           return `You already have a blog with slug "${slug}"`;
         }
       } catch (error) {
@@ -751,16 +751,16 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
               {/* Posts Preview */}
               <div className="w-[70%] space-y-3">
                 <div className="flex gap-3 w-full">
-                  <div className="h-12 w-12 rounded-lg bg-muted flex-shrink-0"></div>
-                  <div className="h-12 flex-grow rounded-lg bg-muted"></div>
+                  <div className="h-12 w-12 rounded-lg bg-muted flex-shrink-0" />
+                  <div className="h-12 flex-grow rounded-lg bg-muted" />
                 </div>
                 <div className="flex gap-3 w-full">
-                  <div className="h-12 w-12 rounded-lg bg-muted flex-shrink-0"></div>
-                  <div className="h-12 flex-grow rounded-lg bg-muted"></div>
+                  <div className="h-12 w-12 rounded-lg bg-muted flex-shrink-0" />
+                  <div className="h-12 flex-grow rounded-lg bg-muted" />
                 </div>
                 <div className="flex gap-3 w-full">
-                  <div className="h-12 w-12 rounded-lg bg-muted flex-shrink-0"></div>
-                  <div className="h-12 flex-grow rounded-lg bg-muted"></div>
+                  <div className="h-12 w-12 rounded-lg bg-muted flex-shrink-0" />
+                  <div className="h-12 flex-grow rounded-lg bg-muted" />
                 </div>
               </div>
             </div>
