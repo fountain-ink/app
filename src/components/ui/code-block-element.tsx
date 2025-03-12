@@ -145,7 +145,6 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
               </div>
             )} */}
         </motion.figure>
-
         <AnimatePresence mode="wait">
           <div className="w-full flex justify-center">
             <Caption align="center">
@@ -163,3 +162,4 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
     </ElementPopover>
   );
 });
+
