@@ -67,20 +67,28 @@ export const ThemeButtons = ({ onChange, disabled, currentTheme }: ThemeButtonsP
               <h1 style={titleStyle} className="capitalize">
                 {themeName}
               </h1>
-              <p style={textStyle}>
-                {themeDescriptions[themeName]}
-              </p>
+              <p style={textStyle}>{themeDescriptions[themeName]}</p>
             </div>
             <AnimatePresence>
               {isSelected && (
-                <motion.div 
+                <motion.div
                   className="absolute top-4 right-4 h-4 w-4 bg-primary text-primary-foreground rounded-full flex items-center justify-center"
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0, opacity: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <path d="M20 6L9 17l-5-5" />
                   </svg>
                 </motion.div>

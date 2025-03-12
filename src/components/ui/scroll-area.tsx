@@ -41,9 +41,8 @@ const ScrollBar = React.forwardRef<
     )}
     {...props}
   >
-    <ScrollAreaPrimitive.ScrollAreaThumb 
-      contentEditable="false"
-      className="relative flex-1 rounded-full bg-primary/80 hover:bg-primary/60 cursor-pointer" 
+    <ScrollAreaPrimitive.ScrollAreaThumb
+      className="relative flex-1 rounded-full bg-primary/80 hover:bg-primary/60 cursor-pointer"
       tabIndex={-1}
     />
   </ScrollAreaPrimitive.ScrollAreaScrollbar>

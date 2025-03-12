@@ -21,7 +21,7 @@ export const FloatingToolbar = withRef<
 >(({ children, state, ...props }, componentRef) => {
   const editor = useEditorRef();
   const editorId = useEditorId();
-  const focusedEditorId = useEventEditorValue('focus');
+  const focusedEditorId = useEventEditorValue("focus");
   const isFloatingLinkOpen = !!editor.getOption({ key: "a" }, "mode");
   const isAIChatOpen = editor.getOption({ key: "aiChat" }, "open");
 

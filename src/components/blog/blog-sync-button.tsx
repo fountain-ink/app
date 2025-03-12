@@ -6,12 +6,7 @@ import { useRouter } from "next/navigation";
 import { RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 
 export function SyncButton() {
@@ -22,20 +17,20 @@ export function SyncButton() {
   const handleSync = async () => {
     try {
       setIsSyncing(true);
-      
-      const response = await fetch('/api/blogs/sync');
-      
+
+      const response = await fetch("/api/blogs/sync");
+
       if (!response.ok) {
-        throw new Error('Failed to sync blogs');
+        throw new Error("Failed to sync blogs");
       }
-      
-      const blogsResponse = await fetch('/api/blogs');
+
+      const blogsResponse = await fetch("/api/blogs");
       if (blogsResponse.ok) {
         const data = await blogsResponse.json();
         setBlogs(data.blogs);
-        console.log('Blogs synced successfully');
+        console.log("Blogs synced successfully");
       }
-      
+
       router.refresh();
       toast.success("Blogs synced successfully");
     } catch (error) {
@@ -50,18 +45,13 @@ export function SyncButton() {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button 
-            variant="outline" 
-            size="icon"
-            className="bg-transparent"
-            onClick={handleSync}
-            disabled={isSyncing}
-          >
+          <Button variant="outline" size="icon" className="bg-transparent" onClick={handleSync} disabled={isSyncing}>
             <motion.div
               animate={isSyncing ? { rotate: 360 } : { rotate: 0 }}
-              transition={isSyncing 
-                ? { repeat: Infinity, duration: 1, ease: "anticipate", repeatType: "loop" } 
-                : { type: "easeInOut", stiffness: 200, damping: 10 }
+              transition={
+                isSyncing
+                  ? { repeat: Number.POSITIVE_INFINITY, duration: 1, ease: "anticipate", repeatType: "loop" }
+                  : { type: "easeInOut", stiffness: 200, damping: 10 }
               }
             >
               <RefreshCw className="h-3 w-3" />
@@ -74,4 +64,4 @@ export function SyncButton() {
       </Tooltip>
     </TooltipProvider>
   );
-} 
+}

@@ -140,7 +140,7 @@ export const getStaticEditor = (value?: Value) =>
       BaseCalloutPlugin,
       BaseCodeBlockPlugin.configure({
         options: {
-          lowlight
+          lowlight,
         },
       }),
       BaseIndentPlugin.extend({

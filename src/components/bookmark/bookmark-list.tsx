@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 
 import { useBookmarks } from "@/hooks/use-bookmarks";
 import { useEffect } from "react";
@@ -44,8 +44,8 @@ export const BookmarkList = () => {
       {bookmarks.map((post) => {
         if (post.__typename !== "Post") return null;
         return (
-          <PostView 
-            key={post.id} 
+          <PostView
+            key={post.id}
             item={post}
             authors={[post.author.address]}
             options={{
@@ -70,4 +70,4 @@ export const BookmarkList = () => {
       )}
     </div>
   );
-}; 
+};

@@ -1,7 +1,20 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Brush, DollarSign, LayoutGrid, Mail, PenTool, Settings, User2, Users, BookOpen, FileCog, FileSliders, ChartLine } from "lucide-react";
+import {
+  Brush,
+  DollarSign,
+  LayoutGrid,
+  Mail,
+  PenTool,
+  Settings,
+  User2,
+  Users,
+  BookOpen,
+  FileCog,
+  FileSliders,
+  ChartLine,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -9,6 +22,7 @@ const navItems = [
   { id: "profile", label: "Profile", icon: User2, enabled: true },
   { id: "blogs", label: "Blogs", icon: PenTool, enabled: true },
   { id: "app", label: "Application", icon: Settings, enabled: true },
+  { id: "newsletter", label: "Newsletter", icon: Mail, enabled: true },
   {
     id: "subscriptions",
     label: "Subscriptions",
@@ -17,7 +31,6 @@ const navItems = [
   },
   { id: "editor", label: "Editor", icon: FileSliders, enabled: false },
   { id: "stats", label: "Stats", icon: ChartLine, enabled: false },
-  { id: "newsletter", label: "Newsletter", icon: Mail, enabled: false },
   { id: "team", label: "Team", icon: Users, enabled: false },
   { id: "layouts", label: "Layouts", icon: LayoutGrid, enabled: false },
 ];

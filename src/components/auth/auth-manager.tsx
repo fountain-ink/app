@@ -120,7 +120,7 @@ export function AuthManager({ credentials }: { credentials: Credentials | null }
       // }
     } catch (error) {
       console.error("Auth setup failed (This should never happen):", error);
-      // window.location.reload(); 
+      // window.location.reload();
     } finally {
       isSettingUpAuth.current = false;
     }

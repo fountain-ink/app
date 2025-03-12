@@ -6,14 +6,14 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuPortal
+  DropdownMenuPortal,
 } from "@/components/ui/dropdown-menu";
 import { PenToolIcon as CustomPenToolIcon } from "../icons/pen-tool";
 import { AnimatedMenuItem } from "../navigation/animated-item";
 import { ChevronRightIcon, PenToolIcon } from "lucide-react";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 import Link from "next/link";
-import { BlogData } from "@/lib/settings/get-blog-metadata";
+import { BlogData } from "@/lib/settings/get-blog-data";
 import Image from "next/image";
 
 interface BlogMenuProps {
@@ -29,12 +29,12 @@ export function BlogMenu({ username }: BlogMenuProps) {
   useEffect(() => {
     setIsLoading(true);
     getBlogs()
-      .then(fetchedBlogs => {
+      .then((fetchedBlogs) => {
         setBlogs(fetchedBlogs || []);
         setIsLoading(false);
       })
-      .catch(error => {
-        console.error('Error fetching blogs:', error);
+      .catch((error) => {
+        console.error("Error fetching blogs:", error);
         setIsLoading(false);
       });
   }, [getBlogs]);
@@ -42,15 +42,14 @@ export function BlogMenu({ username }: BlogMenuProps) {
   const getBlogUrl = (blog: BlogData): string => {
     if (blog.address === blog.owner) {
       return `/b/${username}`;
-    } else {
-      return `/b/${blog.address}`;
     }
+    return `/b/${blog.address}`;
   };
 
   const shouldShowDropdown = () => {
     if (blogs.length === 0) return false;
     if (blogs.length === 1 && blogs[0] && blogs[0].address === blogs[0].owner) return false;
-    
+
     return true;
   };
 
@@ -69,30 +68,28 @@ export function BlogMenu({ username }: BlogMenuProps) {
           <DropdownMenuContent className="w-fit min-w-48 py-1" side="left" align="start">
             {blogs.map((blog) => (
               <Link href={getBlogUrl(blog)} key={blog.address} passHref>
-                <DropdownMenuItem
-                  className="flex justify-start h-8 gap-2 p-1 items-center text-base"
-                >
+                <DropdownMenuItem className="flex justify-start h-8 gap-2 p-1 items-center text-base">
                   <div className="rounded-sm h-full overflow-hidden relative flex-shrink-0 aspect-square">
-                    {blog.icon && (imageLoadStatus[blog.address] !== false) ? (
-                      <Image 
-                        src={blog.icon} 
-                        className="w-full h-full object-cover absolute inset-0" 
+                    {blog.icon && imageLoadStatus[blog.address] !== false ? (
+                      <Image
+                        src={blog.icon}
+                        className="w-full h-full object-cover absolute inset-0"
                         alt={`${blog.handle || blog.address.substring(0, 6)} icon`}
                         width={64}
                         height={64}
                         onLoad={(e) => {
                           const img = e.target as HTMLImageElement;
                           if (img.naturalWidth === 0) {
-                            setImageLoadStatus(prev => ({
+                            setImageLoadStatus((prev) => ({
                               ...prev,
-                              [blog.address]: false
+                              [blog.address]: false,
                             }));
                           }
                         }}
                         onError={() => {
-                          setImageLoadStatus(prev => ({
+                          setImageLoadStatus((prev) => ({
                             ...prev,
-                            [blog.address]: false
+                            [blog.address]: false,
                           }));
                         }}
                       />
@@ -114,4 +111,4 @@ export function BlogMenu({ username }: BlogMenuProps) {
       )}
     </DropdownMenu>
   );
-} 
+}

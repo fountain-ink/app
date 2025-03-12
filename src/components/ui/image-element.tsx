@@ -152,11 +152,7 @@ export const ImageElement = withRef<typeof PlateElement>(
 
     return (
       <ImagePopover url={url} open={selected} popoverRef={popoverRef}>
-        <PlateElement
-          ref={ref}
-          className={cn(className, "my-9 flex flex-col items-center  ")}
-          {...props}
-        >
+        <PlateElement ref={ref} className={cn(className, "my-9 flex flex-col items-center  ")} {...props}>
           <motion.figure
             ref={figureRef}
             className="group w-full flex flex-col items-center"
@@ -172,9 +168,7 @@ export const ImageElement = withRef<typeof PlateElement>(
             }}
           >
             {!url ? (
-              <div
-                className={cn("rounded-sm flex items-center justify-center w-full", selected && "ring-2 ring-ring")}
-              >
+              <div className={cn("rounded-sm flex items-center justify-center w-full", selected && "ring-2 ring-ring")}>
                 <div className="absolute">
                   {!readonly && (
                     <Button className="hover:bg-transparent" size="lg" variant="ghost" disabled={isUploading}>

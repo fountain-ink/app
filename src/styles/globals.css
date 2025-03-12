@@ -19,7 +19,6 @@
   }
 }
 
-
 p.first-paragraph {
   min-height: 4rem;
   overflow: hidden;
@@ -31,7 +30,9 @@ p.first-paragraph {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    ::-webkit-file-upload-button { cursor:pointer; }
+    ::-webkit-file-upload-button {
+      cursor: pointer;
+    }
   }
 
   :root {
@@ -167,7 +168,6 @@ p.first-paragraph {
   pointer-events: none;
 }
 
-
 .gradient-blur-bot {
   backdrop-filter: blur(30px);
   mask: linear-gradient(to bottom, transparent, black 80%, black 100%);
@@ -182,7 +182,7 @@ p.first-paragraph {
 
   /* Hide scrollbar for IE, Edge and Firefox */
   .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
 }

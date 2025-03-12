@@ -8,7 +8,7 @@ export const defaultThemeName = themeNames[0];
 
 export const themeDescriptions: Record<ThemeType, string> = {
   editorial: "Classic readable serif",
-  modern: "Clean minimalist sans-serif"
+  modern: "Clean minimalist sans-serif",
 };
 
 type SharedVariables = {

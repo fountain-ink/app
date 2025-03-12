@@ -2,10 +2,10 @@ import { settingsEvents } from "@/lib/settings/events";
 import { useState } from "react";
 import { Database } from "@/lib/supabase/database";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
-import { BlogData } from "@/lib/settings/get-blog-metadata";
+import { BlogData } from "@/lib/settings/get-blog-data";
 
 export function useBlogSettings(initialSettings: BlogData) {
-  const [settings, setSettings] = useState<BlogData>( initialSettings );
+  const [settings, setSettings] = useState<BlogData>(initialSettings);
   const [isLoading, setIsLoading] = useState(!initialSettings);
 
   const saveSettings = async (newSettings: Partial<BlogData>) => {
@@ -25,7 +25,7 @@ export function useBlogSettings(initialSettings: BlogData) {
         throw new Error(data.error || "Failed to save settings");
       }
 
-      setSettings(current => ({ ...current, ...newSettings }));
+      setSettings((current) => ({ ...current, ...newSettings }));
       settingsEvents.emit("saved");
       return true;
     } catch (error) {

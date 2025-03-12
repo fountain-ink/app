@@ -282,7 +282,6 @@ export const SlashInputElement = withRef<typeof PlateElement>(({ className, ...p
   );
 });
 
-
 // 'use client';
 
 // import React from 'react';
@@ -333,7 +332,6 @@ export const SlashInputElement = withRef<typeof PlateElement>(({ className, ...p
 //     TableIcon,
 //     TableOfContentsIcon,
 // } from 'lucide-react';
-
 
 // import { insertBlock, insertInlineElement, setBlockType } from '@/lib/transforms';
 // import { blockMenuItems } from './block-menu-items';

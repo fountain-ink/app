@@ -51,7 +51,7 @@ export function ProfileSelectButotn({ profile, onSuccess }: { profile: Account; 
 
       // Reset blog storage when switching profiles
       resetBlogStorage();
-      
+
       toast.success("Successfully logged in");
 
       if (onSuccess) {

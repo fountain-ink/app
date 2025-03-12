@@ -15,7 +15,7 @@ import { UserSite } from "@/components/user/user-site";
 import { UserTheme } from "@/components/user/user-theme";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
-import { getBlogData } from "@/lib/settings/get-blog-metadata";
+import { getBlogData } from "@/lib/settings/get-blog-data";
 import { fetchAccount, fetchAccountStats } from "@lens-protocol/client/actions";
 import { AnimatePresence } from "motion/react";
 import { notFound } from "next/navigation";
@@ -61,7 +61,7 @@ const UserLayout = async ({
   }
 
   const isUserProfile = address === account.address;
-  
+
   const userBlogs = await getBlogsByOwner(account.address);
 
   return (
@@ -114,12 +114,10 @@ const UserLayout = async ({
               <UserBio profile={account} />
             </div>
           )}
-          
+
           {/* User's blogs list */}
-          {userBlogs.length > 0 && (
-            <UserBlogsList blogs={userBlogs} />
-          )}
-          
+          {userBlogs.length > 0 && <UserBlogsList blogs={userBlogs} />}
+
           <div className="p-4 pb-0 border-b border-border">
             <UserNavigation username={params.user} isUserProfile={isUserProfile} />
           </div>

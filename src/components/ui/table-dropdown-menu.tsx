@@ -23,7 +23,7 @@ import {
 import { ToolbarButton } from "./toolbar";
 
 export function TableDropdownMenu(props: DropdownMenuProps) {
-  const tableSelected = useEditorSelector((editor) => editor.api.some( { match: { type: TablePlugin.key } }), []);
+  const tableSelected = useEditorSelector((editor) => editor.api.some({ match: { type: TablePlugin.key } }), []);
 
   const { editor, tf } = useEditorPlugin(TablePlugin);
 

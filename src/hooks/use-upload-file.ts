@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { uploadFile } from '@/lib/upload/upload-file';
+import { useState } from "react";
+import { uploadFile } from "@/lib/upload/upload-file";
 
 interface UseUploadFileProps {
   onUploadComplete?: (file: UploadedFile) => void;
@@ -13,18 +13,18 @@ interface UseUploadFileProps {
 }
 
 interface UploadedFile {
-  key: string;    // Unique identifier
-  url: string;    // Public URL of the uploaded file
-  name: string;   // Original filename
-  size: number;   // File size in bytes
-  type: string;   // MIME type
+  key: string; // Unique identifier
+  url: string; // Public URL of the uploaded file
+  name: string; // Original filename
+  size: number; // File size in bytes
+  type: string; // MIME type
 }
 
-export function useUploadFile({ 
-  onUploadComplete, 
+export function useUploadFile({
+  onUploadComplete,
   onUploadError,
   onUploadBegin,
-  onUploadProgress 
+  onUploadProgress,
 }: UseUploadFileProps = {}) {
   const [uploadedFile, setUploadedFile] = useState<UploadedFile>();
   const [uploadingFile, setUploadingFile] = useState<File>();
@@ -36,22 +36,22 @@ export function useUploadFile({
     onUploadBegin?.(file.name);
 
     try {
-      console.log('uploading file', file);
+      console.log("uploading file", file);
       const url = await uploadFile(file);
-      console.log('uploaded file', url);
+      console.log("uploaded file", url);
 
       const uploadedFile = {
-        key: url.split('/').pop() || '', // Use the IPFS hash as the key
+        key: url.split("/").pop() || "", // Use the IPFS hash as the key
         url,
         name: file.name,
         size: file.size,
         type: file.type,
       };
-      console.log('uploaded file', uploadedFile);
+      console.log("uploaded file", uploadedFile);
 
       setUploadedFile(uploadedFile);
       onUploadComplete?.(uploadedFile);
-      
+
       return uploadedFile;
     } catch (error) {
       onUploadError?.(error);
@@ -68,4 +68,4 @@ export function useUploadFile({
     uploadedFile,
     uploadingFile,
   };
-} 
+}

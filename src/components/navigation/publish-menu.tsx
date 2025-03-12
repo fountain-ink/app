@@ -29,7 +29,7 @@ import { getStaticEditor, staticComponents } from "../editor/static";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
-import { BlogData } from "@/lib/settings/get-blog-metadata";
+import { BlogData } from "@/lib/settings/get-blog-data";
 
 export const PublishMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -74,11 +74,11 @@ export const PublishMenu = () => {
   useEffect(() => {
     if (isOpen) {
       getBlogs()
-        .then(fetchedBlogs => {
+        .then((fetchedBlogs) => {
           setBlogs(fetchedBlogs || []);
         })
-        .catch(error => {
-          console.error('Error fetching blogs:', error);
+        .catch((error) => {
+          console.error("Error fetching blogs:", error);
         });
     }
   }, [isOpen, getBlogs]);
@@ -169,53 +169,53 @@ export const PublishMenu = () => {
 
   const isUserBlog = useCallback(() => {
     if (!selectedBlogAddress) return false;
-    
-    const selectedBlog = blogs.find(blog => blog.address === selectedBlogAddress);
+
+    const selectedBlog = blogs.find((blog) => blog.address === selectedBlogAddress);
     return selectedBlog ? selectedBlog.address === selectedBlog.owner : false;
   }, [selectedBlogAddress, blogs]);
 
   // Collecting settings handlers
   const handleAddRecipient = () => {
     if (!recipientAddress || !recipientPercent) return;
-    
-    const percent = parseInt(recipientPercent);
-    if (isNaN(percent) || percent <= 0 || percent > 100) {
+
+    const percent = Number.parseInt(recipientPercent);
+    if (Number.isNaN(percent) || percent <= 0 || percent > 100) {
       toast.error("Percentage must be between 1 and 100");
       return;
     }
-    
+
     // Check if total percentage exceeds 100%
     const totalPercent = recipients.reduce((sum, r) => sum + r.percent, 0) + percent;
     if (totalPercent > 100) {
       toast.error("Total percentage cannot exceed 100%");
       return;
     }
-    
+
     setRecipients([...recipients, { address: recipientAddress, percent }]);
     setRecipientAddress("");
     setRecipientPercent("");
-    
-    saveDraft({ 
+
+    saveDraft({
       collectingSettings: {
         ...getCollectingSettings(),
-        recipients: [...recipients, { address: recipientAddress, percent }]
-      }
+        recipients: [...recipients, { address: recipientAddress, percent }],
+      },
     });
   };
-  
+
   const handleRemoveRecipient = (index: number) => {
     const newRecipients = [...recipients];
     newRecipients.splice(index, 1);
     setRecipients(newRecipients);
-    
-    saveDraft({ 
+
+    saveDraft({
       collectingSettings: {
         ...getCollectingSettings(),
-        recipients: newRecipients
-      }
+        recipients: newRecipients,
+      },
     });
   };
-  
+
   const getCollectingSettings = () => {
     return {
       isCollectingEnabled,
@@ -231,10 +231,10 @@ export const PublishMenu = () => {
       collectLimit,
       isCollectExpiryEnabled,
       collectExpiryDays,
-      collectExpiryDate
+      collectExpiryDate,
     };
   };
-  
+
   // Load collecting settings from draft
   useEffect(() => {
     if (isOpen && documentId) {
@@ -325,7 +325,7 @@ export const PublishMenu = () => {
       const pendingToast = toast.loading("Publishing post...");
 
       let feedValue: string | undefined = undefined;
-      
+
       if (selectedBlogAddress && !isUserBlog()) {
         const blog = await fetchGroup(lens, {
           group: selectedBlogAddress,
@@ -337,39 +337,47 @@ export const PublishMenu = () => {
           setIsPublishing(false);
           return;
         }
-        
+
         feedValue = blog.value?.feed ?? undefined;
       }
 
-      console.log("feed is", feedValue)
+      console.log("feed is", feedValue);
       const result = await post(lens, {
         contentUri: uri,
         feed: feedValue,
-        actions: isCollectingEnabled ? [
-          {
-            simpleCollect: {
-              ...(isLimitedEdition && collectLimit ? { collectLimit: parseInt(collectLimit) } : {}),
-              ...(isCollectExpiryEnabled ? { endsAt: dateTime(collectExpiryDate) } : {}),
-              ...(isChargeEnabled && price ? {
-                amount: {
-                  /// WGRASS
-                  currency: evmAddress("0xeee5a340Cdc9c179Db25dea45AcfD5FE8d4d3eB8"),
-                  value: price,
+        actions: isCollectingEnabled
+          ? [
+              {
+                simpleCollect: {
+                  ...(isLimitedEdition && collectLimit ? { collectLimit: Number.parseInt(collectLimit) } : {}),
+                  ...(isCollectExpiryEnabled ? { endsAt: dateTime(collectExpiryDate) } : {}),
+                  ...(isChargeEnabled && price
+                    ? {
+                        amount: {
+                          /// WGRASS
+                          currency: evmAddress("0xeee5a340Cdc9c179Db25dea45AcfD5FE8d4d3eB8"),
+                          value: price,
+                        },
+                      }
+                    : {}),
+                  ...(isReferralRewardsEnabled ? { referralShare: referralPercent } : {}),
+                  ...(isRevenueSplitEnabled && recipients.length > 0
+                    ? {
+                        recipients: recipients.map((r) => ({
+                          address: evmAddress(r.address),
+                          percent: r.percent,
+                        })),
+                      }
+                    : {}),
                 },
-              } : {}),
-              ...(isReferralRewardsEnabled ? { referralShare: referralPercent } : {}),
-              ...(isRevenueSplitEnabled && recipients.length > 0 ? {
-                recipients: recipients.map(r => ({
-                  address: evmAddress(r.address),
-                  percent: r.percent,
-                })),
-              } : {}),
-            },
-          },
-        ] : undefined,
+              },
+            ]
+          : undefined,
       })
         .andThen(handleOperationWith(walletClient as any))
-        .andTee((v) => { console.log(v) })
+        .andTee((v) => {
+          console.log(v);
+        })
         .andThen(lens.waitForTransaction);
 
       if (result.isErr()) {
@@ -531,7 +539,11 @@ export const PublishMenu = () => {
                                   <div className="flex items-center gap-2">
                                     <div className="rounded-sm h-5 w-5 overflow-hidden relative flex-shrink-0">
                                       {blog.icon ? (
-                                        <img src={blog.icon} className="w-full h-full object-cover absolute inset-0" alt={`${blog.handle || blog.address.substring(0, 6)} icon`} />
+                                        <img
+                                          src={blog.icon}
+                                          className="w-full h-full object-cover absolute inset-0"
+                                          alt={`${blog.handle || blog.address.substring(0, 6)} icon`}
+                                        />
                                       ) : (
                                         <div className="placeholder-background absolute inset-0" />
                                       )}
@@ -594,17 +606,17 @@ export const PublishMenu = () => {
                             <h3 className="font-medium">Collecting</h3>
                             <p className="text-sm text-muted-foreground">Let users collect your post</p>
                           </div>
-                          <Switch 
-                            checked={isCollectingEnabled} 
+                          <Switch
+                            checked={isCollectingEnabled}
                             onCheckedChange={(checked) => {
                               setIsCollectingEnabled(checked);
-                              saveDraft({ 
+                              saveDraft({
                                 collectingSettings: {
                                   ...getCollectingSettings(),
-                                  isCollectingEnabled: checked
-                                }
+                                  isCollectingEnabled: checked,
+                                },
                               });
-                            }} 
+                            }}
                           />
                         </div>
                       </div>
@@ -614,15 +626,15 @@ export const PublishMenu = () => {
                           <div className="space-y-4 py-2 border-b">
                             <div className="space-y-2">
                               <Label>License</Label>
-                              <Select 
-                                value={collectingLicense} 
+                              <Select
+                                value={collectingLicense}
                                 onValueChange={(value) => {
                                   setCollectingLicense(value);
-                                  saveDraft({ 
+                                  saveDraft({
                                     collectingSettings: {
                                       ...getCollectingSettings(),
-                                      collectingLicense: value
-                                    }
+                                      collectingLicense: value,
+                                    },
                                   });
                                 }}
                               >
@@ -634,9 +646,13 @@ export const PublishMenu = () => {
                                   <SelectItem value="CC BY">Attribution (CC BY)</SelectItem>
                                   <SelectItem value="CC BY-SA">Attribution-ShareAlike (CC BY-SA)</SelectItem>
                                   <SelectItem value="CC BY-NC">Attribution-NonCommercial (CC BY-NC)</SelectItem>
-                                  <SelectItem value="CC BY-NC-SA">Attribution-NonCommercial-ShareAlike (CC BY-NC-SA)</SelectItem>
+                                  <SelectItem value="CC BY-NC-SA">
+                                    Attribution-NonCommercial-ShareAlike (CC BY-NC-SA)
+                                  </SelectItem>
                                   <SelectItem value="CC BY-ND">Attribution-NoDerivs (CC BY-ND)</SelectItem>
-                                  <SelectItem value="CC BY-NC-ND">Attribution-NonCommercial-NoDerivs (CC BY-NC-ND)</SelectItem>
+                                  <SelectItem value="CC BY-NC-ND">
+                                    Attribution-NonCommercial-NoDerivs (CC BY-NC-ND)
+                                  </SelectItem>
                                   <SelectItem value="CC0">Public Domain (CC0)</SelectItem>
                                 </SelectContent>
                               </Select>
@@ -650,19 +666,21 @@ export const PublishMenu = () => {
                             <div className="flex items-center justify-between">
                               <div>
                                 <h3 className="font-medium">Charge for collecting</h3>
-                                <p className="text-sm text-muted-foreground">Get paid in crypto when someone collects your post</p>
+                                <p className="text-sm text-muted-foreground">
+                                  Get paid in crypto when someone collects your post
+                                </p>
                               </div>
-                              <Switch 
-                                checked={isChargeEnabled} 
+                              <Switch
+                                checked={isChargeEnabled}
                                 onCheckedChange={(checked) => {
                                   setIsChargeEnabled(checked);
-                                  saveDraft({ 
+                                  saveDraft({
                                     collectingSettings: {
                                       ...getCollectingSettings(),
-                                      isChargeEnabled: checked
-                                    }
+                                      isChargeEnabled: checked,
+                                    },
                                   });
-                                }} 
+                                }}
                               />
                             </div>
 
@@ -671,19 +689,19 @@ export const PublishMenu = () => {
                                 <Label>Price</Label>
                                 <div className="flex items-center">
                                   <span className="mr-2">$</span>
-                                  <Input 
-                                    type="number" 
-                                    min="0" 
-                                    step="0.01" 
-                                    placeholder="0.00" 
+                                  <Input
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    placeholder="0.00"
                                     value={price}
                                     onChange={(e) => {
                                       setPrice(e.target.value);
-                                      saveDraft({ 
+                                      saveDraft({
                                         collectingSettings: {
                                           ...getCollectingSettings(),
-                                          price: e.target.value
-                                        }
+                                          price: e.target.value,
+                                        },
                                       });
                                     }}
                                   />
@@ -696,59 +714,61 @@ export const PublishMenu = () => {
                             <div className="flex items-center justify-between">
                               <div>
                                 <h3 className="font-medium">Referral rewards</h3>
-                                <p className="text-sm text-muted-foreground">Share a portion of you collect revenue with people who amplify your content</p>
+                                <p className="text-sm text-muted-foreground">
+                                  Share a portion of you collect revenue with people who amplify your content
+                                </p>
                               </div>
-                              <Switch 
-                                checked={isReferralRewardsEnabled} 
+                              <Switch
+                                checked={isReferralRewardsEnabled}
                                 onCheckedChange={(checked) => {
                                   setIsReferralRewardsEnabled(checked);
-                                  saveDraft({ 
+                                  saveDraft({
                                     collectingSettings: {
                                       ...getCollectingSettings(),
-                                      isReferralRewardsEnabled: checked
-                                    }
+                                      isReferralRewardsEnabled: checked,
+                                    },
                                   });
-                                }} 
+                                }}
                               />
                             </div>
 
                             {isReferralRewardsEnabled && (
                               <div className="space-y-2">
                                 <div className="flex items-center gap-2">
-                                  <Input 
-                                    type="number" 
-                                    min="1" 
-                                    max="100" 
-                                    className="w-16" 
+                                  <Input
+                                    type="number"
+                                    min="1"
+                                    max="100"
+                                    className="w-16"
                                     value={referralPercent}
                                     onChange={(e) => {
-                                      const value = parseInt(e.target.value);
-                                      if (!isNaN(value) && value >= 1 && value <= 100) {
+                                      const value = Number.parseInt(e.target.value);
+                                      if (!Number.isNaN(value) && value >= 1 && value <= 100) {
                                         setReferralPercent(value);
-                                        saveDraft({ 
+                                        saveDraft({
                                           collectingSettings: {
                                             ...getCollectingSettings(),
-                                            referralPercent: value
-                                          }
+                                            referralPercent: value,
+                                          },
                                         });
                                       }
                                     }}
                                   />
                                   <span>%</span>
                                 </div>
-                                <Slider 
-                                  value={[referralPercent]} 
-                                  min={1} 
-                                  max={100} 
+                                <Slider
+                                  value={[referralPercent]}
+                                  min={1}
+                                  max={100}
                                   step={1}
                                   onValueChange={(value) => {
                                     if (value[0] !== undefined) {
                                       setReferralPercent(value[0]);
-                                      saveDraft({ 
+                                      saveDraft({
                                         collectingSettings: {
                                           ...getCollectingSettings(),
-                                          referralPercent: value[0]
-                                        }
+                                          referralPercent: value[0],
+                                        },
                                       });
                                     }
                                   }}
@@ -763,17 +783,17 @@ export const PublishMenu = () => {
                                 <h3 className="font-medium">Revenue split</h3>
                                 <p className="text-sm text-muted-foreground">Share your collect revenue with others</p>
                               </div>
-                              <Switch 
-                                checked={isRevenueSplitEnabled} 
+                              <Switch
+                                checked={isRevenueSplitEnabled}
                                 onCheckedChange={(checked) => {
                                   setIsRevenueSplitEnabled(checked);
-                                  saveDraft({ 
+                                  saveDraft({
                                     collectingSettings: {
                                       ...getCollectingSettings(),
-                                      isRevenueSplitEnabled: checked
-                                    }
+                                      isRevenueSplitEnabled: checked,
+                                    },
                                   });
-                                }} 
+                                }}
                               />
                             </div>
 
@@ -788,8 +808,8 @@ export const PublishMenu = () => {
                                         </div>
                                         <div className="flex items-center gap-2">
                                           <span>{recipient.percent}%</span>
-                                          <Button 
-                                            variant="ghost" 
+                                          <Button
+                                            variant="ghost"
                                             size="sm"
                                             onClick={() => handleRemoveRecipient(index)}
                                           >
@@ -804,8 +824,8 @@ export const PublishMenu = () => {
                                 <div className="grid grid-cols-[1fr,auto] gap-2">
                                   <div>
                                     <Label>Recipient</Label>
-                                    <Input 
-                                      placeholder="@username or 0x address..." 
+                                    <Input
+                                      placeholder="@username or 0x address..."
                                       value={recipientAddress}
                                       onChange={(e) => setRecipientAddress(e.target.value)}
                                     />
@@ -813,11 +833,11 @@ export const PublishMenu = () => {
                                   <div>
                                     <Label>Percent</Label>
                                     <div className="flex items-center gap-2">
-                                      <Input 
-                                        type="number" 
-                                        min="1" 
-                                        max="100" 
-                                        className="w-16" 
+                                      <Input
+                                        type="number"
+                                        min="1"
+                                        max="100"
+                                        className="w-16"
                                         value={recipientPercent}
                                         onChange={(e) => setRecipientPercent(e.target.value)}
                                       />
@@ -825,12 +845,7 @@ export const PublishMenu = () => {
                                     </div>
                                   </div>
                                 </div>
-                                <Button 
-                                  variant="outline" 
-                                  size="sm" 
-                                  className="w-full"
-                                  onClick={handleAddRecipient}
-                                >
+                                <Button variant="outline" size="sm" className="w-full" onClick={handleAddRecipient}>
                                   <PlusIcon className="w-4 h-4 mr-2" />
                                   Add recipient
                                 </Button>
@@ -844,35 +859,35 @@ export const PublishMenu = () => {
                                 <h3 className="font-medium">Limited edition</h3>
                                 <p className="text-sm text-muted-foreground">Only allow a certain number of collects</p>
                               </div>
-                              <Switch 
-                                checked={isLimitedEdition} 
+                              <Switch
+                                checked={isLimitedEdition}
                                 onCheckedChange={(checked) => {
                                   setIsLimitedEdition(checked);
-                                  saveDraft({ 
+                                  saveDraft({
                                     collectingSettings: {
                                       ...getCollectingSettings(),
-                                      isLimitedEdition: checked
-                                    }
+                                      isLimitedEdition: checked,
+                                    },
                                   });
-                                }} 
+                                }}
                               />
                             </div>
 
                             {isLimitedEdition && (
                               <div className="space-y-2">
                                 <Label>Maximum collects</Label>
-                                <Input 
-                                  type="number" 
-                                  min="1" 
-                                  placeholder="100" 
+                                <Input
+                                  type="number"
+                                  min="1"
+                                  placeholder="100"
                                   value={collectLimit}
                                   onChange={(e) => {
                                     setCollectLimit(e.target.value);
-                                    saveDraft({ 
+                                    saveDraft({
                                       collectingSettings: {
                                         ...getCollectingSettings(),
-                                        collectLimit: e.target.value
-                                      }
+                                        collectLimit: e.target.value,
+                                      },
                                     });
                                   }}
                                 />
@@ -884,39 +899,41 @@ export const PublishMenu = () => {
                             <div className="flex items-center justify-between">
                               <div>
                                 <h3 className="font-medium">Collect expiry</h3>
-                                <p className="text-sm text-muted-foreground">Only allow collecting until a certain time</p>
+                                <p className="text-sm text-muted-foreground">
+                                  Only allow collecting until a certain time
+                                </p>
                               </div>
-                              <Switch 
-                                checked={isCollectExpiryEnabled} 
+                              <Switch
+                                checked={isCollectExpiryEnabled}
                                 onCheckedChange={(checked) => {
                                   setIsCollectExpiryEnabled(checked);
-                                  saveDraft({ 
+                                  saveDraft({
                                     collectingSettings: {
                                       ...getCollectingSettings(),
-                                      isCollectExpiryEnabled: checked
-                                    }
+                                      isCollectExpiryEnabled: checked,
+                                    },
                                   });
-                                }} 
+                                }}
                               />
                             </div>
 
                             {isCollectExpiryEnabled && (
                               <div className="space-y-2">
                                 <div className="flex items-center gap-2">
-                                  <Input 
-                                    type="number" 
-                                    min="1" 
-                                    className="w-16" 
+                                  <Input
+                                    type="number"
+                                    min="1"
+                                    className="w-16"
                                     value={collectExpiryDays}
                                     onChange={(e) => {
-                                      const value = parseInt(e.target.value);
-                                      if (!isNaN(value) && value >= 1) {
+                                      const value = Number.parseInt(e.target.value);
+                                      if (!Number.isNaN(value) && value >= 1) {
                                         setCollectExpiryDays(value);
-                                        saveDraft({ 
+                                        saveDraft({
                                           collectingSettings: {
                                             ...getCollectingSettings(),
-                                            collectExpiryDays: value
-                                          }
+                                            collectExpiryDays: value,
+                                          },
                                         });
                                       }
                                     }}
@@ -924,7 +941,8 @@ export const PublishMenu = () => {
                                   <span>days</span>
                                 </div>
                                 <p className="text-sm text-muted-foreground">
-                                  Expires on {new Date(collectExpiryDate).toLocaleDateString()} {new Date(collectExpiryDate).toLocaleTimeString()}
+                                  Expires on {new Date(collectExpiryDate).toLocaleDateString()}{" "}
+                                  {new Date(collectExpiryDate).toLocaleTimeString()}
                                 </p>
                               </div>
                             )}

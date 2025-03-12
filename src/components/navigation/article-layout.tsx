@@ -5,7 +5,7 @@ export const ArticleLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <SmoothScroll>
       <article className="article relative pt-20 w-full" data-plate-selectable>
-          {children}
+        {children}
       </article>
     </SmoothScroll>
   );

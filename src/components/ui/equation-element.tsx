@@ -4,12 +4,7 @@ import { cn, withRef } from "@udecode/cn";
 import type { TEquationElement } from "@udecode/plate-math";
 import { useEquationElement, useEquationInput } from "@udecode/plate-math/react";
 import { useMediaState } from "@udecode/plate-media/react";
-import {
-    createPrimitiveComponent,
-    useEditorRef,
-    useElement,
-    useSelected,
-} from "@udecode/plate/react";
+import { createPrimitiveComponent, useEditorRef, useElement, useSelected } from "@udecode/plate/react";
 import { RadicalIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useReadOnly } from "@udecode/plate/react";
@@ -64,9 +59,8 @@ export const EquationElement = withRef<typeof PlateElement>(({ children, classNa
 
   const handleWidth = (newWidth: ElementWidth) => {
     setWidth(newWidth);
-    editor.tf.setNodes({ width: newWidth }, {at: element});
+    editor.tf.setNodes({ width: newWidth }, { at: element });
   };
-
 
   return (
     <ElementPopover

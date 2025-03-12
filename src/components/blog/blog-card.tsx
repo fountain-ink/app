@@ -49,14 +49,10 @@ export function BlogCard({ title, description, address, isUserBlog, href, icon, 
           </div>
           <div className="space-y-1">
             <CardTitle className="text-base">{title}</CardTitle>
-            {description && (
-              <CardDescription className="line-clamp-1">
-                {description}
-              </CardDescription>
-            )}
+            {description && <CardDescription className="line-clamp-1">{description}</CardDescription>}
           </div>
         </CardHeader>
       </Card>
     </Link>
   );
-} 
+}
