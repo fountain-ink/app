@@ -70,3 +70,33 @@ export async function subscribeToNewsletter(blog: string, email: string): Promis
     return null;
   }
 }
+
+/**
+ * Imports subscribers from a CSV file to a blog's mailing list
+ * @param blog - The blog address or handle
+ * @param file - The CSV file to import
+ * @returns The response data or null if there was an error
+ */
+export async function importNewsletterSubscribers(blog: string, file: File): Promise<NewsletterResponse | null> {
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch(`/api/newsletter/${blog}/import`, {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Error importing subscribers:", data.error);
+      return data;
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error importing subscribers:", error);
+    return null;
+  }
+}

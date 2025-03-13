@@ -121,3 +121,40 @@ export async function addSubscriber(email: string, listId: number): Promise<List
     return null;
   }
 }
+
+/**
+ * Imports subscribers from a CSV file
+ */
+export async function importSubscribers(file: File, listIds: number[]): Promise<boolean> {
+  try {
+    const formData = new FormData();
+    const params = {
+      mode: "subscribe",
+      subscription_status: "confirmed",
+      delim: ",",
+      lists: listIds,
+      overwrite: true
+    };
+
+    formData.append('params', JSON.stringify(params));
+    formData.append('file', file);
+
+    const response = await fetch(`${env.LISTMONK_API_URL}/import/subscribers`, {
+      method: "POST",
+      headers: {
+        Authorization: getAuthHeader(),
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to import subscribers: ${response.status} ${response.statusText}`);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error importing subscribers:", error);
+    return false;
+  }
+}

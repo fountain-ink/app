@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { UploadIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { importNewsletterSubscribers } from "@/lib/listmonk/newsletter";
 
 interface ImportSubscribersModalProps {
   open: boolean;
@@ -78,16 +79,20 @@ export function ImportSubscribersModal({
     setIsUploading(true);
 
     try {
-      // This is just a placeholder for now - we'll implement the actual import later
-      toast.success("CSV import functionality will be implemented soon");
+      const result = await importNewsletterSubscribers(blogAddress, file);
 
-      // Reset state and close modal
+      if (!result || result.error) {
+        throw new Error(result?.error || "Failed to import subscribers");
+      }
+
+      toast.success("Successfully imported subscribers");
+
       setFile(null);
       onOpenChange(false);
       onSuccess?.();
     } catch (error) {
       console.error("Error importing subscribers:", error);
-      toast.error("Failed to import subscribers");
+      toast.error(error instanceof Error ? error.message : "Failed to import subscribers");
     } finally {
       setIsUploading(false);
     }
