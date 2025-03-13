@@ -14,6 +14,7 @@ import { enableSignless, fetchMeDetails, removeSignless } from "@lens-protocol/c
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { useWalletClient } from "wagmi";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface ApplicationSettingsProps {
   initialSettings?: UserSettings;
@@ -55,11 +56,11 @@ export function ApplicationSettings({ initialSettings = {}, initialEmail }: Appl
       const signlessToast = toast.loading(checked ? "Enabling signless mode..." : "Disabling signless mode...");
       const signlessResult = checked
         ? await enableSignless(client)
-            .andThen((tx) => handleOperationWith(walletClient as any)(tx))
-            .andThen(client.waitForTransaction)
+          .andThen((tx) => handleOperationWith(walletClient as any)(tx))
+          .andThen(client.waitForTransaction)
         : await removeSignless(client)
-            .andThen((tx) => handleOperationWith(walletClient as any)(tx))
-            .andThen(client.waitForTransaction);
+          .andThen((tx) => handleOperationWith(walletClient as any)(tx))
+          .andThen(client.waitForTransaction);
 
       if (signlessResult.isErr()) {
         toast.dismiss(signlessToast);
@@ -165,7 +166,7 @@ export function ApplicationSettings({ initialSettings = {}, initialEmail }: Appl
             placeholder="Your email"
             value={email}
             onChange={handleEmailChange}
-            className={!isEmailValid ? "border-destructive" : ""}
+            className={cn(!isEmailValid ? "border-destructive" : "", "max-w-sm")}
           />
           {!isEmailValid && <p className="text-sm text-destructive">Please enter a valid email address</p>}
         </div>

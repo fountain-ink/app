@@ -83,6 +83,7 @@ function ProfileSettingsForm({ profile, onSaved, onFormDataChange }: ProfileSett
           value={profileTitle}
           onChange={(e) => setProfileTitle(e.target.value)}
           placeholder="Your profile title"
+          className="max-w-xs"
         />
       </div>
 
@@ -94,28 +95,12 @@ function ProfileSettingsForm({ profile, onSaved, onFormDataChange }: ProfileSett
           variant={"default"}
           onChange={(e) => setProfileDescription(e.target.value)}
           placeholder="Your profile description"
+          className="max-w-lg"
           minRows={3}
         />
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="w-full md:flex-1 space-y-1">
-          <Label htmlFor="website">Website</Label>
-          <div className="flex">
-            <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-input bg-muted text-muted-foreground text-sm">
-              https://
-            </span>
-            <Input
-              id="website"
-              value={websiteUrl}
-              onChange={(e) => setWebsiteUrl(e.target.value.replace(/^https?:\/\//, ""))}
-              placeholder="example.com"
-              className="rounded-l-none"
-            />
-          </div>
-        </div>
-
-        <div className="w-full md:flex-1 space-y-1">
+        <div className="w-full md:flex-1 max-w-sm space-y-1">
           <Label htmlFor="location">Location</Label>
           <div className="flex">
             <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-input bg-muted text-muted-foreground text-sm">
@@ -130,7 +115,22 @@ function ProfileSettingsForm({ profile, onSaved, onFormDataChange }: ProfileSett
             />
           </div>
         </div>
-      </div>
+        <div className="w-full md:flex-1 space-y-1 max-w-sm">
+          <Label htmlFor="website">Website</Label>
+          <div className="flex">
+            <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-input bg-muted text-muted-foreground text-sm">
+              https://
+            </span>
+            <Input
+              id="website"
+              value={websiteUrl}
+              onChange={(e) => setWebsiteUrl(e.target.value.replace(/^https?:\/\//, ""))}
+              placeholder="example.com"
+              className="rounded-l-none "
+            />
+          </div>
+        </div>
+
     </div>
   );
 }
