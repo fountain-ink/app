@@ -24,7 +24,7 @@ import { getBlogsByOwner } from "@/lib/settings/get-blogs-by-owner";
 
 export async function generateMetadata({ params }: { params: { user: string } }) {
   const username = params.user;
-  const title = `@${username}`;
+  const title = `@${username} | Fountain`;
   return {
     title,
     description: `@${username}'s profile on Fountain`,
@@ -104,7 +104,7 @@ const UserLayout = async ({
                   }
                 />
               ) : (
-                <UserFollowButton profile={account} />
+                <UserFollowButton account={account} />
               )}
             </div>
           </div>
@@ -115,7 +115,6 @@ const UserLayout = async ({
             </div>
           )}
 
-          {/* User's blogs list */}
           {userBlogs.length > 0 && <UserBlogsList blogs={userBlogs} />}
 
           <div className="p-4 pb-0 border-b border-border">

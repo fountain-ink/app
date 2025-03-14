@@ -23,7 +23,7 @@ type UserCardProps = PropsWithChildren & {
 export const UserCard = ({ children, username, linkProfile = false }: UserCardProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [profile, setProfile] = useState<Account | null>(null);
+  const [account, setAccount] = useState<Account | null>(null);
   const [stats, setStats] = useState<any>(null);
 
   const loadCard = async () => {
@@ -43,7 +43,7 @@ export const UserCard = ({ children, username, linkProfile = false }: UserCardPr
       }
 
       const account = result.unwrapOr(null);
-      setProfile(account);
+      setAccount(account);
 
       if (account) {
         const statsResult = await fetchAccountStats(client, { account: account.address });
@@ -58,7 +58,7 @@ export const UserCard = ({ children, username, linkProfile = false }: UserCardPr
     }
   };
 
-  const isFollowingMe = profile?.operations?.isFollowingMe;
+  const isFollowingMe = account?.operations?.isFollowingMe;
 
   return (
     <HoverCard defaultOpen={false} onOpenChange={(open: boolean) => open && loadCard()} closeDelay={100}>
@@ -66,14 +66,14 @@ export const UserCard = ({ children, username, linkProfile = false }: UserCardPr
         {linkProfile && username ? <Link href={`/u/${username}`}>{children}</Link> : children}
       </HoverCardTrigger>
       <HoverCardContent className={`w-full min-w-64 max-w-64 overflow-hidden ${inter.className}`} side="top">
-        {loading && !profile && <LoadingSpinner />}
+        {loading && !account && <LoadingSpinner />}
         {error && <div>Error: {error.message}</div>}
-        {profile && (
+        {account && (
           <div className="flex flex-col gap-2">
             <div className="flex flex-row place-content-between items-center">
               <div className="flex flex-row items-center gap-2 text-sm">
                 <div className="w-8 h-8">
-                  <UserAvatar account={profile} className="w-12 h-12" />
+                  <UserAvatar account={account} className="w-12 h-12" />
                 </div>
               </div>
 
@@ -83,15 +83,15 @@ export const UserCard = ({ children, username, linkProfile = false }: UserCardPr
                     Follows you
                   </Badge>
                 )}
-                <UserFollowButton profile={profile} />
+                <UserFollowButton account={account} />
               </span>
             </div>
             <span className="flex flex-col pt-2">
-              <span className="font-bold text-xs">{profile.metadata?.name}</span>
-              <span className="font-light text-xs">@{profile.username?.localName}</span>
+              <span className="font-bold text-xs">{account.metadata?.name}</span>
+              <span className="font-light text-xs">@{account.username?.localName}</span>
             </span>
             <div className="text-xs mt-2 leading-4 line-clamp-5 break-words">
-              <TruncatedText text={profile.metadata?.bio || ""} maxLength={400} isMarkdown={true} />
+              <TruncatedText text={account.metadata?.bio || ""} maxLength={400} isMarkdown={true} />
             </div>
             <div className="text-xs">
               <UserFollowing stats={stats} />
