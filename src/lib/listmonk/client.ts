@@ -176,7 +176,7 @@ export async function getSubscribers(listId?: number, page: number = 1, perPage:
   try {
     const params = new URLSearchParams({
       page: page.toString(),
-      per_page: perPage.toString(),
+      per_page: 'all'
     });
 
     if (listId) {

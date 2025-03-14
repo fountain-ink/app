@@ -58,8 +58,7 @@ export async function GET(req: NextRequest, { params }: { params: { blog: string
       return NextResponse.json({ error: "Failed to fetch subscribers" }, { status: 500 });
     }
 
-    // Convert subscribers to CSV format
-    const headers = ["Email", "Name", "Status", "Created At"];
+    const headers = ["email", "name", "status", "created_at"];
     const rows = subscribers.data.results.map(sub => [
       sub.email,
       sub.name,
