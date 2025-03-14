@@ -203,3 +203,28 @@ export async function getSubscribers(listId?: number, page: number = 1, perPage:
     return null;
   }
 }
+
+/**
+ * Deletes a list from Listmonk
+ */
+export async function deleteList(listId: number): Promise<boolean> {
+  try {
+    const response = await fetch(`${env.LISTMONK_API_URL}/lists/${listId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: getAuthHeader(),
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to delete list: ${response.status} ${response.statusText}`);
+      return false;
+    }
+
+    const data = await response.json();
+    return data.data === true;
+  } catch (error) {
+    console.error("Error deleting list:", error);
+    return false;
+  }
+}

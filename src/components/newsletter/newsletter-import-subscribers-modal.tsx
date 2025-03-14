@@ -125,7 +125,7 @@ export function ImportSubscribersModal({
               isDragging ? "text-primary" : "text-muted-foreground"
             )} />
             <div className="text-center">
-              <p className="text-sm font-medium">
+              <p className="text-sm font-medium truncate max-w-[200px]">
                 {file ? file.name : "Drag and drop your CSV file here"}
               </p>
               <p className="text-xs text-muted-foreground mt-1">

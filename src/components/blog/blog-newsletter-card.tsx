@@ -5,11 +5,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { UsersIcon, UploadIcon, PenToolIcon, DownloadIcon } from "lucide-react";
+import { UsersIcon, UploadIcon, PenToolIcon, DownloadIcon, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 import { createMailingList, exportNewsletterSubscribers } from "@/lib/listmonk/newsletter";
 import { useRouter } from "next/navigation";
 import { ImportSubscribersModal } from "@/components/newsletter/newsletter-import-subscribers-modal";
+import { NewsletterDeleteDialog } from "@/components/newsletter/newsletter-delete-dialog";
 import { BlogDataWithSubscriberCount } from "@/app/settings/newsletter/page";
 import Image from "next/image";
 import Link from "next/link";
@@ -43,6 +44,7 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
     blog.mail_list_id !== null && blog.metadata?.newsletterEnabled !== false
   );
   const [importModalOpen, setImportModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [emailContentType, setEmailContentType] = useState("full_post");
   const [imageLoaded, setImageLoaded] = useState(true);
 
@@ -140,6 +142,11 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
     }
   };
 
+  const handleDeleteSuccess = () => {
+    setNewsletterEnabled(false);
+    router.refresh();
+  };
+
   return (
     <>
       <Card className="overflow-hidden">
@@ -215,7 +222,6 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
                   <Select
                     defaultValue={blog.metadata?.emailContentType || "full_post"}
                     onValueChange={handleEmailContentChange}
-
                   >
                     <SelectTrigger className="w-full max-w-xs bg-card">
                       <SelectValue placeholder="Select email content type" />
@@ -233,10 +239,18 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
                     <div>
                       <h4 className="text-sm font-medium">Manage subscribers</h4>
                       <p className="text-sm text-muted-foreground">
-                        Import or export your newsletter subscribers
+                        Import, export, or delete your newsletter subscribers
                       </p>
                     </div>
                     <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        className="gap-2 bg-card text-destructive hover:text-destructive hover:bg-destructive/10"
+                        onClick={() => setDeleteDialogOpen(true)}
+                      >
+                        <Trash2Icon className="h-4 w-4" />
+                        Delete
+                      </Button>
                       <Button
                         variant="outline"
                         className="gap-2 bg-card"
@@ -267,9 +281,15 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
         onOpenChange={setImportModalOpen}
         blogAddress={blog.address}
         onSuccess={() => {
-          // We might want to refresh subscriber count, but we'll avoid router.refresh()
-          // to prevent reordering blogs
+          router.refresh();
         }}
+      />
+
+      <NewsletterDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        blogAddress={blog.address}
+        onSuccess={handleDeleteSuccess}
       />
     </>
   );
