@@ -100,3 +100,41 @@ export async function importNewsletterSubscribers(blog: string, file: File): Pro
     return null;
   }
 }
+
+/**
+ * Exports subscribers from a blog's mailing list as a CSV file
+ * @param blog - The blog address or handle
+ */
+export async function exportNewsletterSubscribers(blog: string): Promise<void> {
+  try {
+    const response = await fetch(`/api/newsletter/${blog}/export`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.error || "Failed to export subscribers");
+    }
+
+    // Get the filename from the Content-Disposition header
+    const contentDisposition = response.headers.get('Content-Disposition');
+    const filenameMatch = contentDisposition?.match(/filename="(.+)"/) ?? null;
+    const filename = filenameMatch?.[1] ?? 'subscribers.csv';
+
+    // Create a blob from the CSV data
+    const blob = await response.blob();
+
+    // Create a download link and trigger the download
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  } catch (error) {
+    console.error("Error exporting subscribers:", error);
+    throw error;
+  }
+}

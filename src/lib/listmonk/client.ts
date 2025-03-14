@@ -23,6 +23,16 @@ export interface ListmonkSubscriber {
   updated_at: string;
 }
 
+export interface ListmonkSubscriberResponse {
+  data: {
+    results: ListmonkSubscriber[];
+    query: string;
+    total: number;
+    per_page: number;
+    page: number;
+  };
+}
+
 /**
  * Creates the Authorization header for Listmonk API requests
  */
@@ -156,5 +166,40 @@ export async function importSubscribers(file: File, listIds: number[]): Promise<
   } catch (error) {
     console.error("Error importing subscribers:", error);
     return false;
+  }
+}
+
+/**
+ * Fetches subscribers from a list
+ */
+export async function getSubscribers(listId?: number, page: number = 1, perPage: number = 100): Promise<ListmonkSubscriberResponse | null> {
+  try {
+    const params = new URLSearchParams({
+      page: page.toString(),
+      per_page: perPage.toString(),
+    });
+
+    if (listId) {
+      params.append('list_id', listId.toString());
+    }
+
+    const response = await fetch(`${env.LISTMONK_API_URL}/subscribers?${params.toString()}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: getAuthHeader(),
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to fetch subscribers: ${response.status} ${response.statusText}`);
+      return null;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching subscribers:", error);
+    return null;
   }
 }

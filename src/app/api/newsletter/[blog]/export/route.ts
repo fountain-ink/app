@@ -1,10 +1,10 @@
-import { getListById, importSubscribers } from "@/lib/listmonk/client";
+import { getListById, getSubscribers } from "@/lib/listmonk/client";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { findBlogByIdentifier } from "@/lib/utils/find-blog-by-id";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 
-export async function POST(req: NextRequest, { params }: { params: { blog: string } }) {
+export async function GET(req: NextRequest, { params }: { params: { blog: string } }) {
   try {
     const token = req.cookies.get("appToken")?.value;
     if (!token) {
@@ -17,17 +17,6 @@ export async function POST(req: NextRequest, { params }: { params: { blog: strin
     }
 
     const userAddress = claims.metadata.address;
-
-    const formData = await req.formData();
-    const file = formData.get('file') as File;
-
-    if (!file) {
-      return NextResponse.json({ error: "CSV file is required" }, { status: 400 });
-    }
-
-    if (!file.name.endsWith('.csv') && file.type !== 'text/csv') {
-      return NextResponse.json({ error: "Invalid file format. Please upload a CSV file" }, { status: 400 });
-    }
 
     const db = await createClient();
     const { data: blog, error } = await findBlogByIdentifier(db, params.blog);
@@ -63,24 +52,37 @@ export async function POST(req: NextRequest, { params }: { params: { blog: strin
       );
     }
 
-    const success = await importSubscribers(file, [blog.mail_list_id]);
+    const subscribers = await getSubscribers(blog.mail_list_id);
 
-    if (!success) {
-      return NextResponse.json({ error: "Failed to import subscribers" }, { status: 500 });
+    if (!subscribers) {
+      return NextResponse.json({ error: "Failed to fetch subscribers" }, { status: 500 });
     }
 
-    return NextResponse.json({
-      success: true,
-      message: "Successfully imported subscribers to the blog",
-      data: {
-        listId: list.id,
-        listName: list.name,
+    // Convert subscribers to CSV format
+    const headers = ["Email", "Name", "Status", "Created At"];
+    const rows = subscribers.data.results.map(sub => [
+      sub.email,
+      sub.name,
+      sub.status,
+      new Date(sub.created_at).toISOString().split('T')[0]
+    ]);
+
+    const csv = [
+      headers.join(','),
+      ...rows.map(row => row.join(','))
+    ].join('\n');
+
+    // Return CSV as a downloadable file
+    return new NextResponse(csv, {
+      headers: {
+        'Content-Type': 'text/csv',
+        'Content-Disposition': `attachment; filename="subscribers-${blog.address}-${new Date().toISOString().split('T')[0]}.csv"`,
       },
     });
   } catch (error) {
-    console.error("Error importing subscribers to blog:", error);
+    console.error("Error exporting subscribers:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to import subscribers to blog" },
+      { error: error instanceof Error ? error.message : "Failed to export subscribers" },
       { status: 500 },
     );
   }

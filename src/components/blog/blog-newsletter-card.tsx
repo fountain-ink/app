@@ -5,9 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { UsersIcon, UploadIcon, PenToolIcon } from "lucide-react";
+import { UsersIcon, UploadIcon, PenToolIcon, DownloadIcon } from "lucide-react";
 import { toast } from "sonner";
-import { createMailingList } from "@/lib/listmonk/newsletter";
+import { createMailingList, exportNewsletterSubscribers } from "@/lib/listmonk/newsletter";
 import { useRouter } from "next/navigation";
 import { ImportSubscribersModal } from "@/components/newsletter/newsletter-import-subscribers-modal";
 import { BlogDataWithSubscriberCount } from "@/app/settings/newsletter/page";
@@ -130,6 +130,16 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
     setImportModalOpen(true);
   };
 
+  const handleExport = async () => {
+    try {
+      await exportNewsletterSubscribers(blog.address);
+      toast.success("Successfully exported subscribers");
+    } catch (error) {
+      console.error("Error exporting subscribers:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to export subscribers");
+    }
+  };
+
   return (
     <>
       <Card className="overflow-hidden">
@@ -221,19 +231,29 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
                 <div className="">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="text-sm font-medium">Import subscribers</h4>
+                      <h4 className="text-sm font-medium">Manage subscribers</h4>
                       <p className="text-sm text-muted-foreground">
-                        Import a .csv list of your existing subscribers
+                        Import or export your newsletter subscribers
                       </p>
                     </div>
-                    <Button
-                      variant="outline"
-                      className="gap-2 bg-card"
-                      onClick={handleOpenImportModal}
-                    >
-                      <UploadIcon className="h-4 w-4" />
-                      Import
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        className="gap-2 bg-card"
+                        onClick={handleExport}
+                      >
+                        <DownloadIcon className="h-4 w-4" />
+                        Export
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="gap-2 bg-card"
+                        onClick={handleOpenImportModal}
+                      >
+                        <UploadIcon className="h-4 w-4" />
+                        Import
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
