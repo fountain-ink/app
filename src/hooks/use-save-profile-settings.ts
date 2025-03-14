@@ -110,17 +110,28 @@ export function useSaveProfileSettings() {
       const { uri: metadataUri } = await storageClient.uploadAsJson(metadata);
       console.log(metadataUri);
 
-      const result = await setAccountMetadata(lens, { metadataUri }).andThen(handleOperationWith(walletClient as any));
+      const confirmToastId = toast.loading("Confirming operation...");
+
+      const result = await setAccountMetadata(lens, { metadataUri })
+        .andThen(handleOperationWith(walletClient as any))
+        .andTee(() => {
+          toast.loading("Securing on-chain...", {
+            id: confirmToastId,
+          });
+        })
+        .andThen(lens.waitForTransaction);
 
       if (result.isErr()) {
+        toast.dismiss(confirmToastId);
         const error = result.error.message || "Failed to update settings";
         console.error("Failed to update profile metadata:", error);
         toast.error(`Error: ${error}`);
         return { success: false, error };
       }
 
-      toast.success("Settings updated!", {
-        description: "Changes may take a few seconds to apply.",
+      toast.success("Settings updated successfully!", {
+        id: confirmToastId,
+        description: "Your profile has been updated on-chain.",
       });
 
       return { success: true, error: null };

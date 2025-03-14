@@ -22,6 +22,7 @@ import { useWalletClient } from "wagmi";
 import { ImageCropperUploader } from "../images/image-uploader";
 import { Button } from "../ui/button";
 import { TextareaAutosize } from "../ui/textarea";
+import { useRouter } from "next/navigation";
 
 interface ProfileSettingsFormProps {
   profile: Account;
@@ -83,7 +84,7 @@ function ProfileSettingsForm({ profile, onSaved, onFormDataChange }: ProfileSett
           value={profileTitle}
           onChange={(e) => setProfileTitle(e.target.value)}
           placeholder="Your profile title"
-          className="max-w-xs"
+          className="max-w-[50%]"
         />
       </div>
 
@@ -95,11 +96,11 @@ function ProfileSettingsForm({ profile, onSaved, onFormDataChange }: ProfileSett
           variant={"default"}
           onChange={(e) => setProfileDescription(e.target.value)}
           placeholder="Your profile description"
-          className="max-w-lg"
           minRows={3}
         />
       </div>
 
+      <div className="flex flex-col md:flex-row gap-4">
         <div className="w-full md:flex-1 max-w-sm space-y-1">
           <Label htmlFor="location">Location</Label>
           <div className="flex">
@@ -130,7 +131,7 @@ function ProfileSettingsForm({ profile, onSaved, onFormDataChange }: ProfileSett
             />
           </div>
         </div>
-
+      </div>
     </div>
   );
 }
@@ -220,6 +221,7 @@ export function ProfileSettingsModal({ profile, trigger, open, onOpenChange }: P
   const [isUploading, setIsUploading] = useState(false);
   const { saveSettings, isSaving: isSavingProfileSettings } = useSaveProfileSettings();
   const [formData, setFormData] = useState<any>(null);
+  const router = useRouter();
 
   const handleSave = useCallback(async () => {
     if (!formData) return;
@@ -268,6 +270,7 @@ export function ProfileSettingsModal({ profile, trigger, open, onOpenChange }: P
     });
 
     onOpenChange?.(false);
+    router.refresh();
   }, [profile, formData, saveSettings, onOpenChange]);
 
   return (
