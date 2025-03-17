@@ -1,4 +1,7 @@
 import { env } from "@/env";
+import { createClient } from "../supabase/server";
+import { findBlogByIdentifier } from "../utils/find-blog-by-id";
+import { ListmonkCampaignResponse } from "@/srv/notifications/types";
 
 export interface ListmonkList {
   id: number;
@@ -226,5 +229,95 @@ export async function deleteList(listId: number): Promise<boolean> {
   } catch (error) {
     console.error("Error deleting list:", error);
     return false;
+  }
+}
+
+/**
+ * Creates a Listmonk campaign from a new post
+ */
+export async function createCampaignForPost(
+  listId: number,
+  blogHandle: string,
+  postId: string,
+  authorAddress: string,
+  postMetadata?: string
+) {
+  try {
+    const db = await createClient();
+    const { data: blog, error } = await findBlogByIdentifier(db, blogHandle);
+
+    if (error || !blog) {
+      console.error('Error fetching blog data:', error);
+      return null;
+    }
+
+    if (!listId) {
+      console.error('No mailing list ID provided');
+      return null;
+    }
+
+    let postTitle = 'New Post';
+    let postContent = 'Check out the new post!';
+    let postUrl = `https://fountain.ink/p/${postId}`;
+
+
+    const campaignBody = `
+      <h2>New Post from ${blog.display_name || blogHandle}</h2>
+      <p>${postTitle}</p>
+      <p>${postContent}</p>
+      <p><a href="${postUrl}">Read the full post</a></p>
+      <p>---</p>
+      <p>Unsubscribe from these emails by clicking <a href="{{UnsubscribeURL}}">here</a>.</p>
+    `;
+
+    const authHeader = `Basic ${Buffer.from(`${env.LISTMONK_API_USERNAME}:${env.LISTMONK_API_TOKEN}`).toString('base64')}`;
+    const response = await fetch(`${env.LISTMONK_API_URL}/campaigns`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': authHeader
+      },
+      body: JSON.stringify({
+        name: `New post from ${blog.display_name || blogHandle}`,
+        subject: `New post from ${blog.display_name || blogHandle}`,
+        lists: [listId],
+        from_email: `${blog.display_name || blogHandle} <noreply@fntn.app>`,
+        content_type: 'html',
+        type: 'regular',
+        body: campaignBody,
+        status: 'draft' // Set to 'scheduled' to send automatically
+      })
+    });
+
+    if (!response.ok) {
+      console.error('Failed to create campaign:', response.status, response.statusText);
+      return null;
+    }
+
+    const responseData = await response.json() as ListmonkCampaignResponse;
+
+    // Optionally start the campaign immediately
+    const campaignId = responseData.data.id;
+    const sendResponse = await fetch(`${env.LISTMONK_API_URL}/campaigns/${campaignId}/status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': authHeader
+      },
+      body: JSON.stringify({
+        status: 'running'
+      })
+    });
+
+    if (!sendResponse.ok) {
+      console.error('Failed to send campaign:', sendResponse.status, sendResponse.statusText);
+    } else {
+      console.log(`Campaign ${campaignId} started successfully`);
+    }
+
+    return responseData.data;
+  } catch (error) {
+    console.error('Error creating campaign:', error);
+    return null;
   }
 }
