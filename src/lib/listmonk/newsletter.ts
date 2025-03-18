@@ -9,6 +9,7 @@ export interface NewsletterResponse {
     listName?: string;
     subscriberId?: number;
     email?: string;
+    campaignId?: number;
   };
   needsListCreation?: boolean;
 }
@@ -136,5 +137,49 @@ export async function exportNewsletterSubscribers(blog: string): Promise<void> {
   } catch (error) {
     console.error("Error exporting subscribers:", error);
     throw error;
+  }
+}
+
+/**
+ * Creates a campaign for a blog post to send to subscribers
+ * @param blog - The blog address or handle
+ * @param postSlug - The slug of the post
+ * @param postMetadata - Metadata about the post (title, subtitle, content, coverUrl, username)
+ * @returns The response data or null if there was an error
+ */
+export async function createCampaignForPost(
+  blog: string,
+  postSlug: string,
+  postMetadata: {
+    title: string;
+    subtitle?: string;
+    content?: string;
+    coverUrl?: string;
+    username?: string;
+  }
+): Promise<NewsletterResponse | null> {
+  try {
+    const response = await fetch(`/api/newsletter/${blog}/campaign`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postSlug,
+        postMetadata: JSON.stringify(postMetadata)
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Error creating campaign for post:", data.error);
+      return data;
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error creating campaign for post:", error);
+    return null;
   }
 }

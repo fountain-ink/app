@@ -30,6 +30,8 @@ import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { BlogData } from "@/lib/settings/get-blog-data";
+import { createClient } from "@/lib/supabase/client";
+import { createCampaignForPost } from "@/lib/listmonk/newsletter";
 
 export const PublishMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -347,31 +349,31 @@ export const PublishMenu = () => {
         feed: feedValue,
         actions: isCollectingEnabled
           ? [
-              {
-                simpleCollect: {
-                  ...(isLimitedEdition && collectLimit ? { collectLimit: Number.parseInt(collectLimit) } : {}),
-                  ...(isCollectExpiryEnabled ? { endsAt: dateTime(collectExpiryDate) } : {}),
-                  ...(isChargeEnabled && price
-                    ? {
-                        amount: {
-                          /// WGRASS
-                          currency: evmAddress("0xeee5a340Cdc9c179Db25dea45AcfD5FE8d4d3eB8"),
-                          value: price,
-                        },
-                      }
-                    : {}),
-                  ...(isReferralRewardsEnabled ? { referralShare: referralPercent } : {}),
-                  ...(isRevenueSplitEnabled && recipients.length > 0
-                    ? {
-                        recipients: recipients.map((r) => ({
-                          address: evmAddress(r.address),
-                          percent: r.percent,
-                        })),
-                      }
-                    : {}),
-                },
+            {
+              simpleCollect: {
+                ...(isLimitedEdition && collectLimit ? { collectLimit: Number.parseInt(collectLimit) } : {}),
+                ...(isCollectExpiryEnabled ? { endsAt: dateTime(collectExpiryDate) } : {}),
+                ...(isChargeEnabled && price
+                  ? {
+                    amount: {
+                      /// WGRASS
+                      currency: evmAddress("0xeee5a340Cdc9c179Db25dea45AcfD5FE8d4d3eB8"),
+                      value: price,
+                    },
+                  }
+                  : {}),
+                ...(isReferralRewardsEnabled ? { referralShare: referralPercent } : {}),
+                ...(isRevenueSplitEnabled && recipients.length > 0
+                  ? {
+                    recipients: recipients.map((r) => ({
+                      address: evmAddress(r.address),
+                      percent: r.percent,
+                    })),
+                  }
+                  : {}),
               },
-            ]
+            },
+          ]
           : undefined,
       })
         .andThen(handleOperationWith(walletClient as any))
@@ -412,6 +414,41 @@ export const PublishMenu = () => {
       const postSlug = postValue.value?.__typename === "Post" ? postValue.value.slug : postValue.value?.id;
       const username =
         postValue.value?.__typename === "Post" ? postValue.value.author.username?.localName : postValue.value?.id;
+
+      if (selectedBlogAddress && postSlug && username) {
+        try {
+          const db = await createClient();
+          const { data: blog } = await db
+            .from("blogs")
+            .select("*")
+            .eq("address", selectedBlogAddress)
+            .single();
+
+          if (blog && blog.mail_list_id) {
+            const postData = {
+              title,
+              subtitle,
+              content: draft.contentMarkdown ?? '',
+              coverUrl,
+              username
+            };
+
+            try {
+              const result = await createCampaignForPost(selectedBlogAddress, postSlug, postData);
+
+              if (result && result.success) {
+                console.log("Created campaign for mailing list subscribers");
+              } else {
+                console.error("Failed to create campaign for mailing list");
+              }
+            } catch (error) {
+              console.error("Error creating campaign for mailing list:", error);
+            }
+          }
+        } catch (error) {
+          console.error("Error fetching blog data:", error);
+        }
+      }
 
       toast.dismiss(pendingToast);
       toast.success("Post published successfully!");

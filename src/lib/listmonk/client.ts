@@ -1,5 +1,5 @@
 import { env } from "@/env";
-import { createClient } from "../supabase/server";
+import { createClient } from "../supabase/client";
 import { findBlogByIdentifier } from "../utils/find-blog-by-id";
 import { ListmonkCampaignResponse } from "@/srv/notifications/types";
 
@@ -103,6 +103,95 @@ export async function createList(name: string, description: string): Promise<Lis
 }
 
 /**
+ * Finds a subscriber by email
+ */
+export async function findSubscriberByEmail(email: string): Promise<ListmonkSubscriber | null> {
+  try {
+    const params = new URLSearchParams({
+      query: `email='${email}'`,
+    });
+
+    const response = await fetch(`${env.LISTMONK_API_URL}/subscribers?${params.toString()}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: getAuthHeader(),
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to find subscriber: ${response.status} ${response.statusText}`);
+      return null;
+    }
+
+    const data = await response.json();
+    if (data.data.results.length > 0) {
+      return data.data.results[0];
+    }
+    return null;
+  } catch (error) {
+    console.error("Error finding subscriber by email:", error);
+    return null;
+  }
+}
+
+/**
+ * Adds an existing subscriber to a list
+ */
+export async function addSubscriberToList(subscriberId: number, listId: number): Promise<ListmonkSubscriber | null> {
+  try {
+    const response = await fetch(`${env.LISTMONK_API_URL}/subscribers/${subscriberId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: getAuthHeader(),
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to get subscriber: ${response.status} ${response.statusText}`);
+      return null;
+    }
+
+    const data = await response.json();
+    const subscriber = data.data;
+
+    const currentLists = subscriber.lists.map((list: any) => list.id);
+
+    if (!currentLists.includes(listId)) {
+      currentLists.push(listId);
+    }
+
+    const updateResponse = await fetch(`${env.LISTMONK_API_URL}/subscribers/${subscriberId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: getAuthHeader(),
+      },
+      body: JSON.stringify({
+        email: subscriber.email,
+        name: subscriber.name,
+        status: subscriber.status,
+        lists: currentLists,
+        attribs: subscriber.attribs || {},
+        preconfirm_subscription: true,
+      }),
+    });
+
+    if (!updateResponse.ok) {
+      console.error(`Failed to update subscriber: ${updateResponse.status} ${updateResponse.statusText}`);
+      return null;
+    }
+
+    const updateData = await updateResponse.json();
+    return updateData.data;
+  } catch (error) {
+    console.error("Error adding subscriber to list:", error);
+    return null;
+  }
+}
+
+/**
  * Adds a subscriber to a list in Listmonk
  */
 export async function addSubscriber(email: string, listId: number): Promise<ListmonkSubscriber | null> {
@@ -123,6 +212,17 @@ export async function addSubscriber(email: string, listId: number): Promise<List
     });
 
     if (!response.ok) {
+      // If we get a 409 Conflict, the subscriber already exists
+      if (response.status === 409) {
+        console.log(`Subscriber ${email} already exists. Attempting to add to list ${listId}`);
+
+        const existingSubscriber = await findSubscriberByEmail(email);
+
+        if (existingSubscriber) {
+          return await addSubscriberToList(existingSubscriber.id, listId);
+        }
+      }
+
       console.error(`Failed to add subscriber: ${response.status} ${response.statusText}`);
       return null;
     }
@@ -237,14 +337,14 @@ export async function deleteList(listId: number): Promise<boolean> {
  */
 export async function createCampaignForPost(
   listId: number,
-  blogHandle: string,
+  blogId: string,
   postId: string,
   authorAddress: string,
   postMetadata?: string
 ) {
   try {
     const db = await createClient();
-    const { data: blog, error } = await findBlogByIdentifier(db, blogHandle);
+    const { data: blog, error } = await findBlogByIdentifier(db, blogId);
 
     if (error || !blog) {
       console.error('Error fetching blog data:', error);
@@ -258,34 +358,107 @@ export async function createCampaignForPost(
 
     let postTitle = 'New Post';
     let postContent = 'Check out the new post!';
+    let postSubtitle = '';
     let postUrl = `https://fountain.ink/p/${postId}`;
+    let coverImageUrl = '';
+    let username = '';
 
+    if (postMetadata) {
+      try {
+        const metadata = JSON.parse(postMetadata);
+        postTitle = metadata.title || postTitle;
+        postSubtitle = metadata.subtitle || '';
+        postContent = metadata.content || postContent;
+        coverImageUrl = metadata.coverUrl || '';
+        username = metadata.username || '';
+
+        if (username) {
+          postUrl = `https://fountain.ink/p/${username}/${postId}`;
+        }
+
+        if (postContent.length > 300) {
+          postContent = postContent.substring(0, 300) + '...';
+        }
+      } catch (e) {
+        console.error('Error parsing post metadata:', e);
+      }
+    }
 
     const campaignBody = `
-      <h2>New Post from ${blog.display_name || blogHandle}</h2>
-      <p>${postTitle}</p>
-      <p>${postContent}</p>
-      <p><a href="${postUrl}">Read the full post</a></p>
-      <p>---</p>
-      <p>Unsubscribe from these emails by clicking <a href="{{UnsubscribeURL}}">here</a>.</p>
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>${postTitle}</title>
+        <style>
+          body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+          }
+          h1 { font-size: 24px; margin-bottom: 10px; }
+          h2 { font-size: 20px; margin-bottom: 10px; color: #555; font-weight: normal; }
+          .cover { max-width: 100%; height: auto; margin-bottom: 20px; }
+          .content { margin-bottom: 30px; }
+          .button {
+            display: inline-block;
+            background-color: #0070f3;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+          }
+          .footer { 
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 14px;
+            color: #666;
+          }
+        </style>
+      </head>
+      <body>
+        <div>
+          <h1>${postTitle}</h1>
+          ${postSubtitle ? `<h2>${postSubtitle}</h2>` : ''}
+          ${coverImageUrl ? `<img src="${coverImageUrl}" alt="Post cover image" class="cover" />` : ''}
+          
+          <div class="content">
+            ${postContent.replace(/\n/g, '<br>')}
+          </div>
+          
+          <a href="${postUrl}" class="button">Read the full post</a>
+          
+          <div class="footer">
+            <p>You're receiving this email because you subscribed to updates from ${blog.display_name || blogId} on Fountain.</p>
+            <p>To unsubscribe from these emails, click <a href="{{UnsubscribeURL}}">here</a>.</p>
+          </div>
+        </div>
+      </body>
+      </html>
     `;
 
-    const authHeader = `Basic ${Buffer.from(`${env.LISTMONK_API_USERNAME}:${env.LISTMONK_API_TOKEN}`).toString('base64')}`;
     const response = await fetch(`${env.LISTMONK_API_URL}/campaigns`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': authHeader
+        'Authorization': getAuthHeader()
       },
       body: JSON.stringify({
-        name: `New post from ${blog.display_name || blogHandle}`,
-        subject: `New post from ${blog.display_name || blogHandle}`,
+        name: `New post: ${postTitle}`,
+        subject: `${postTitle}`,
+        // subject: `${blog.display_name || blogId}: ${postTitle}`,
         lists: [listId],
-        from_email: `${blog.display_name || blogHandle} <noreply@fntn.app>`,
+        from_email: `${blog.display_name || blogId} <noreply@fountain.ink>`,
         content_type: 'html',
         type: 'regular',
         body: campaignBody,
-        status: 'draft' // Set to 'scheduled' to send automatically
+        status: 'draft' // or 'scheduled' to send automatically
       })
     });
 
@@ -296,13 +469,12 @@ export async function createCampaignForPost(
 
     const responseData = await response.json() as ListmonkCampaignResponse;
 
-    // Optionally start the campaign immediately
     const campaignId = responseData.data.id;
     const sendResponse = await fetch(`${env.LISTMONK_API_URL}/campaigns/${campaignId}/status`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': authHeader
+        'Authorization': getAuthHeader()
       },
       body: JSON.stringify({
         status: 'running'

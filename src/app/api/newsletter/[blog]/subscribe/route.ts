@@ -52,14 +52,20 @@ export async function POST(req: NextRequest, { params }: { params: { blog: strin
       return NextResponse.json({ error: "Failed to add subscriber" }, { status: 500 });
     }
 
+    const isExistingSubscriber = subscriber.created_at !== subscriber.updated_at;
+    const message = isExistingSubscriber
+      ? "Successfully added to the blog's mailing list"
+      : "Successfully subscribed to the blog";
+
     return NextResponse.json({
       success: true,
-      message: "Successfully subscribed to the blog",
+      message,
       data: {
         listId: list.id,
         listName: list.name,
         subscriberId: subscriber.id,
         email: subscriber.email,
+        isExistingSubscriber,
       },
     });
   } catch (error) {
