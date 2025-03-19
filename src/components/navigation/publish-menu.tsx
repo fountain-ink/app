@@ -97,12 +97,10 @@ export const PublishMenu = () => {
         .then((fetchedBlogs) => {
           setBlogs(fetchedBlogs || []);
 
-          // If no blog is selected yet, use the personal blog as default
           if (!selectedBlog && fetchedBlogs && fetchedBlogs.length > 0) {
             const personalBlog = fetchedBlogs.find(blog => blog.address === blog.owner);
             if (personalBlog) {
               setSelectedBlog(personalBlog);
-              // Save both formats for backward compatibility
               saveDraft({
                 blog: personalBlog,
               });
@@ -544,7 +542,7 @@ export const PublishMenu = () => {
             <div className="flex-1 min-h-0">
               <TabsContent value="article" className="h-full">
                 <div className="flex flex-col h-full">
-                  <ScrollArea className="flex-1 min-h-0 pr-[10%]">
+                  <ScrollArea className="flex-1 min-h-0 pr-2">
                     <div className="space-y-6 p-4 px-2">
                       <div className="space-y-2">
                         <div className="pb-2">
@@ -566,7 +564,7 @@ export const PublishMenu = () => {
                               </div>
                             )}
                           </div>
-                          <div className="space-y-2">
+                          <div className="space-y-2 max-w-sm">
                             <Label htmlFor="title">Title</Label>
                             <div className="space-y-1">
                               <Input
@@ -629,12 +627,12 @@ export const PublishMenu = () => {
                         )}
                       </div>
 
-                      <div className="space-y-2">
+                      <div className="space-y-2 max-w-full min-w-sm w-fit">
                         <Label>Tags</Label>
                         <TagInput
                           maxTags={5}
                           styleClasses={{
-                            input: "shadow-none h-6",
+                            input: "shadow-none w-[200px] h-6",
                             tag: {
                               body: "border border-secondary",
                             },
@@ -658,7 +656,7 @@ export const PublishMenu = () => {
               </TabsContent>
               <TabsContent value="collecting" className="h-full">
                 <div className="flex flex-col h-full">
-                  <ScrollArea className="flex-1 min-h-0 pr-[10%]">
+                  <ScrollArea className="flex-1 min-h-0 pr-2">
                     <div className="space-y-6 p-4 px-2">
                       <div className="space-y-2">
                         <p className="text-sm text-muted-foreground">
@@ -752,7 +750,7 @@ export const PublishMenu = () => {
                             </div>
 
                             {isChargeEnabled && (
-                              <div className="space-y-2">
+                              <div className="space-y-2 max-w-xs">
                                 <Label>Price</Label>
                                 <div className="flex items-center">
                                   <span className="mr-2">$</span>
@@ -865,7 +863,7 @@ export const PublishMenu = () => {
                             </div>
 
                             {isRevenueSplitEnabled && (
-                              <div className="space-y-4">
+                              <div className="space-y-4 max-w-md">
                                 {recipients.length > 0 && (
                                   <div className="space-y-2">
                                     {recipients.map((recipient, index) => (
@@ -941,7 +939,7 @@ export const PublishMenu = () => {
                             </div>
 
                             {isLimitedEdition && (
-                              <div className="space-y-2">
+                              <div className="space-y-2 max-w-[200px]">
                                 <Label>Maximum collects</Label>
                                 <Input
                                   type="number"
