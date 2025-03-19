@@ -33,6 +33,7 @@ import { BlogData } from "@/lib/settings/get-blog-data";
 import { createClient } from "@/lib/supabase/client";
 import { createCampaignForPost } from "@/lib/listmonk/newsletter";
 import { BlogSelectMenu } from "@/components/blog/blog-select-menu";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export const PublishMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,7 +54,8 @@ export const PublishMenu = () => {
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
   const [isPublishing, setIsPublishing] = useState(false);
   const [blogs, setBlogs] = useState<BlogData[]>([]);
-  const [selectedBlogAddress, setSelectedBlogAddress] = useState<string | null>(null);
+  const [selectedBlog, setSelectedBlog] = useState<BlogData | null>(null);
+  const [sendNewsletter, setSendNewsletter] = useState(true);
   const { getBlogs } = useBlogStorage();
 
   // Collecting settings
@@ -96,11 +98,14 @@ export const PublishMenu = () => {
           setBlogs(fetchedBlogs || []);
 
           // If no blog is selected yet, use the personal blog as default
-          if (!selectedBlogAddress && fetchedBlogs && fetchedBlogs.length > 0) {
+          if (!selectedBlog && fetchedBlogs && fetchedBlogs.length > 0) {
             const personalBlog = fetchedBlogs.find(blog => blog.address === blog.owner);
             if (personalBlog) {
-              setSelectedBlogAddress(personalBlog.address);
-              saveDraft({ blogAddress: personalBlog.address });
+              setSelectedBlog(personalBlog);
+              // Save both formats for backward compatibility
+              saveDraft({
+                blog: personalBlog,
+              });
             }
           }
         })
@@ -108,7 +113,7 @@ export const PublishMenu = () => {
           console.error("Error fetching blogs:", error);
         });
     }
-  }, [isOpen, getBlogs, selectedBlogAddress, saveDraft]);
+  }, [isOpen, getBlogs, selectedBlog, saveDraft]);
 
   useEffect(() => {
     if (isOpen && documentId) {
@@ -118,9 +123,17 @@ export const PublishMenu = () => {
         setSubtitle(draft.subtitle || "");
         setCoverUrl(draft.coverUrl || "");
         setTags((draft.tags || []).map((text: string) => ({ text, id: crypto.randomUUID() })));
+
+        // Load selected blog from draft if available
+        if (draft.blog && typeof draft.blog === 'object' && blogs.length > 0) {
+          const savedBlog = blogs.find(blog => blog.address === draft.blog?.address);
+          if (savedBlog) {
+            setSelectedBlog(savedBlog);
+          }
+        }
       }
     }
-  }, [isOpen, documentId, getDocument]);
+  }, [isOpen, documentId, getDocument, blogs, saveDraft]);
 
   useEffect(() => {
     const error = validateTitle(title);
@@ -175,16 +188,21 @@ export const PublishMenu = () => {
   );
 
   const handleBlogChange = (value: string) => {
-    setSelectedBlogAddress(value);
-    saveDraft({ blogAddress: value });
+    const blog = blogs.find(blog => blog.address === value);
+    if (blog) {
+      setSelectedBlog(blog);
+      // Save both formats for backward compatibility
+      saveDraft({
+        blog,
+        blogAddress: blog.address
+      });
+    }
   };
 
   const isUserBlog = useCallback(() => {
-    if (!selectedBlogAddress) return false;
-
-    const selectedBlog = blogs.find((blog) => blog.address === selectedBlogAddress);
-    return selectedBlog ? selectedBlog.address === selectedBlog.owner : false;
-  }, [selectedBlogAddress, blogs]);
+    if (!selectedBlog) return false;
+    return selectedBlog.address === selectedBlog.owner;
+  }, [selectedBlog]);
 
   // Collecting settings handlers
   const handleAddRecipient = () => {
@@ -338,9 +356,9 @@ export const PublishMenu = () => {
 
       let feedValue: string | undefined = undefined;
 
-      if (selectedBlogAddress && !isUserBlog()) {
+      if (selectedBlog && !isUserBlog()) {
         const blog = await fetchGroup(lens, {
-          group: selectedBlogAddress,
+          group: selectedBlog.address,
         });
 
         if (blog.isErr()) {
@@ -425,16 +443,16 @@ export const PublishMenu = () => {
       const username =
         postValue.value?.__typename === "Post" ? postValue.value.author.username?.localName : postValue.value?.id;
 
-      if (selectedBlogAddress && postSlug && username) {
+      if (selectedBlog && postSlug && username) {
         try {
           const db = await createClient();
           const { data: blog } = await db
             .from("blogs")
             .select("*")
-            .eq("address", selectedBlogAddress)
+            .eq("address", selectedBlog.address)
             .single();
 
-          if (blog && blog.mail_list_id) {
+          if (blog && blog.mail_list_id && sendNewsletter) {
             const postData = {
               title,
               subtitle,
@@ -444,7 +462,7 @@ export const PublishMenu = () => {
             };
 
             try {
-              const result = await createCampaignForPost(selectedBlogAddress, postSlug, postData);
+              const result = await createCampaignForPost(selectedBlog.address, postSlug, postData);
 
               if (result && result.success) {
                 console.log("Created campaign for mailing list subscribers");
@@ -573,14 +591,42 @@ export const PublishMenu = () => {
                         </div>
                       </div>
 
-                      <div className="space-y-2">
+                      <div className="">
                         <Label>Publish in</Label>
                         <BlogSelectMenu
-                          selectedBlogAddress={selectedBlogAddress}
+                          selectedBlogAddress={selectedBlog?.address || null}
                           onBlogChange={handleBlogChange}
                           placeholder="Select a blog to publish to"
-                          className="max-w-sm"
+                          className="max-w-sm mt-1"
                         />
+                        {selectedBlog?.mail_list_id && (
+                          <div className="flex flex-col space-y-1 mt-4 ml-4">
+                            <div className="flex items-center space-x-2">
+                              <Checkbox
+                                id="sendNewsletter"
+                                checked={sendNewsletter}
+                                onCheckedChange={(checked) => {
+                                  const value = checked as boolean;
+                                  setSendNewsletter(value);
+                                  saveDraft({
+                                    publishingSettings: {
+                                      sendNewsletter: value,
+                                    },
+                                  });
+                                }}
+                              />
+                              <label
+                                htmlFor="sendNewsletter"
+                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                              >
+                                Send out newsletter to subscribers
+                              </label>
+                            </div>
+                            <p className="text-xs text-muted-foreground pl-6">
+                              Subscribers will receive this post in their inbox.
+                            </p>
+                          </div>
+                        )}
                       </div>
 
                       <div className="space-y-2">

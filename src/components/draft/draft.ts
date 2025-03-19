@@ -1,5 +1,6 @@
 import type { Database } from "@/lib/supabase/database";
 import type { Json } from "@/lib/supabase/database";
+import { BlogData } from "@/lib/settings/get-blog-data";
 
 export type Draft = Database["public"]["Tables"]["drafts"]["Row"] & {
   collectingSettings?: {
@@ -19,4 +20,5 @@ export type Draft = Database["public"]["Tables"]["drafts"]["Row"] & {
     collectExpiryDate: string;
   };
   blogAddress?: string;
+  blog?: BlogData;
 };
