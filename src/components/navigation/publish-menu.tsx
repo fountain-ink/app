@@ -32,6 +32,7 @@ import { Slider } from "@/components/ui/slider";
 import { BlogData } from "@/lib/settings/get-blog-data";
 import { createClient } from "@/lib/supabase/client";
 import { createCampaignForPost } from "@/lib/listmonk/newsletter";
+import { BlogSelectMenu } from "@/components/blog/blog-select-menu";
 
 export const PublishMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -73,17 +74,41 @@ export const PublishMenu = () => {
   const [collectExpiryDays, setCollectExpiryDays] = useState(1);
   const [collectExpiryDate, setCollectExpiryDate] = useState("");
 
+  const saveDraft = useCallback(
+    (updates: Partial<any>) => {
+      if (!documentId) return;
+
+      const draft = getDocument(documentId);
+      if (draft) {
+        saveDocument(documentId, {
+          ...draft,
+          ...updates,
+        });
+      }
+    },
+    [documentId, getDocument, saveDocument],
+  );
+
   useEffect(() => {
     if (isOpen) {
       getBlogs()
         .then((fetchedBlogs) => {
           setBlogs(fetchedBlogs || []);
+
+          // If no blog is selected yet, use the personal blog as default
+          if (!selectedBlogAddress && fetchedBlogs && fetchedBlogs.length > 0) {
+            const personalBlog = fetchedBlogs.find(blog => blog.address === blog.owner);
+            if (personalBlog) {
+              setSelectedBlogAddress(personalBlog.address);
+              saveDraft({ blogAddress: personalBlog.address });
+            }
+          }
         })
         .catch((error) => {
           console.error("Error fetching blogs:", error);
         });
     }
-  }, [isOpen, getBlogs]);
+  }, [isOpen, getBlogs, selectedBlogAddress, saveDraft]);
 
   useEffect(() => {
     if (isOpen && documentId) {
@@ -120,21 +145,6 @@ export const PublishMenu = () => {
     }
     return null;
   };
-
-  const saveDraft = useCallback(
-    (updates: Partial<any>) => {
-      if (!documentId) return;
-
-      const draft = getDocument(documentId);
-      if (draft) {
-        saveDocument(documentId, {
-          ...draft,
-          ...updates,
-        });
-      }
-    },
-    [documentId, getDocument, saveDocument],
-  );
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
@@ -565,38 +575,12 @@ export const PublishMenu = () => {
 
                       <div className="space-y-2">
                         <Label>Publish in</Label>
-                        <Select value={selectedBlogAddress || undefined} onValueChange={handleBlogChange}>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select a blog to publish to (optional)" />
-                          </SelectTrigger>
-                          <SelectContent position="popper" sideOffset={5} className="z-[60]" side="bottom">
-                            {blogs.length > 0 ? (
-                              blogs.map((blog) => (
-                                <SelectItem key={blog.address} value={blog.address} className="flex items-center gap-2">
-                                  <div className="flex items-center gap-2">
-                                    <div className="rounded-sm h-5 w-5 overflow-hidden relative flex-shrink-0">
-                                      {blog.icon ? (
-                                        <img
-                                          src={blog.icon}
-                                          className="w-full h-full object-cover absolute inset-0"
-                                          alt={`${blog.handle || blog.address.substring(0, 6)} icon`}
-                                        />
-                                      ) : (
-                                        <div className="placeholder-background absolute inset-0" />
-                                      )}
-                                    </div>
-                                    <span>
-                                      {blog.handle || blog.address.substring(0, 9)}
-                                      {blog.address === blog.owner && " (Personal Blog)"}
-                                    </span>
-                                  </div>
-                                </SelectItem>
-                              ))
-                            ) : (
-                              <div className="py-2 px-2 text-sm text-muted-foreground">No blogs found</div>
-                            )}
-                          </SelectContent>
-                        </Select>
+                        <BlogSelectMenu
+                          selectedBlogAddress={selectedBlogAddress}
+                          onBlogChange={handleBlogChange}
+                          placeholder="Select a blog to publish to"
+                          className="max-w-sm"
+                        />
                       </div>
 
                       <div className="space-y-2">

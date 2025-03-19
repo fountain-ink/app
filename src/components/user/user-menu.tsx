@@ -25,7 +25,7 @@ import { UserAvatar } from "./user-avatar";
 import { AnimatedMenuItem } from "../navigation/animated-item";
 import { getLensClient } from "@/lib/lens/client";
 import { useState } from "react";
-import { BlogMenu } from "../blog/blog-menu";
+import { BlogDropdownMenu } from "../blog/blog-dropdown-menu";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 
 export const UserMenu = ({ session }: { session: MeResult | null }) => {
@@ -75,7 +75,7 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent align="end" className="w-48">
-          {username && <BlogMenu username={username} />}
+          {username && <BlogDropdownMenu username={username} />}
 
           <AnimatedMenuItem href={`/u/${username}`} icon={UserIcon}>
             Profile

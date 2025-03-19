@@ -20,7 +20,7 @@ interface BlogMenuProps {
   username: string;
 }
 
-export function BlogMenu({ username }: BlogMenuProps) {
+export function BlogDropdownMenu({ username }: BlogMenuProps) {
   const [blogs, setBlogs] = useState<BlogData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [imageLoadStatus, setImageLoadStatus] = useState<Record<string, boolean>>({});
@@ -100,7 +100,7 @@ export function BlogMenu({ username }: BlogMenuProps) {
                     )}
                   </div>
                   <span>
-                    {blog.handle || blog.address.substring(0, 9)}
+                    {blog.handle || blog.title || blog.address.substring(0, 9)}
                     {blog.address === blog.owner && " (Personal)"}
                   </span>
                 </DropdownMenuItem>
