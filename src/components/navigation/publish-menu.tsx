@@ -15,7 +15,7 @@ import { currentSession, fetchGroup, fetchPost, post } from "@lens-protocol/clie
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { MetadataAttributeType, article } from "@lens-protocol/metadata";
 import { useQueryClient } from "@tanstack/react-query";
-import { serializeHtml } from "@udecode/plate-core";
+// import { serializeHtml } from "@udecode/plate-core";
 import type { Tag } from "emblor";
 import { dateTime, evmAddress, uri } from "@lens-protocol/client";
 import { Value } from "@udecode/plate";
@@ -450,7 +450,7 @@ export const PublishMenu = () => {
             .eq("address", selectedBlog.address)
             .single();
 
-          if (blog && blog.mail_list_id && sendNewsletter) {
+          if (blog?.mail_list_id && sendNewsletter) {
             const postData = {
               title,
               subtitle,
@@ -462,7 +462,7 @@ export const PublishMenu = () => {
             try {
               const result = await createCampaignForPost(selectedBlog.address, postSlug, postData);
 
-              if (result && result.success) {
+              if (result?.success) {
                 console.log("Created campaign for mailing list subscribers");
               } else {
                 console.error("Failed to create campaign for mailing list");
@@ -577,7 +577,7 @@ export const PublishMenu = () => {
                               {titleError && <span className="text-sm text-destructive">{titleError}</span>}
                             </div>
                           </div>
-                          <div className="space-y-2">
+                          <div className="space-y-2 max-w-md">
                             <Label htmlFor="subtitle">Summary</Label>
                             <Input
                               id="subtitle"

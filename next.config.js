@@ -13,7 +13,16 @@ const config = {
   // },
 
   images: {
-    domains: ["images.unsplash.com", "api.grove.storage"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "api.grove.storage",
+      },
+    ],
   },
 
   async redirects() {
@@ -21,13 +30,18 @@ const config = {
       {
         source: '/settings',
         destination: '/settings/profile',
-        permanent: true, // This sets the status code to 308 for a permanent redirect
+        permanent: true,
       },
     ];
   },
 
   webpack: (config) => {
-    config.resolve.fallback = { fs: false, net: false, tls: false, punycode: false };
+    config.resolve.fallback = {
+      fs: false,
+      net: false,
+      tls: false,
+      punycode: false,
+    };
 
     return config;
   },

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { LucideIcon } from "lucide-react";
 
 interface ConfirmButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -96,7 +96,7 @@ export function ConfirmButton({
         className="flex items-center gap-2 relative z-10"
         transition={{ duration: 0.15, ease: "easeOut" }}
       >
-        <AnimatePresence mode="wait">
+        <AnimatePresence initial={false}>
           {isHolding ? (
             <motion.div
               key="progress"

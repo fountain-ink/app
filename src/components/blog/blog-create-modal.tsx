@@ -48,8 +48,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
       });
 
       const blogFeedMetadata = feed({
-        title: name,
-        name: name,
+        name,
         description,
       });
 

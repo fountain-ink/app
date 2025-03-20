@@ -275,7 +275,7 @@ export async function importSubscribers(file: File, listIds: number[]): Promise<
 /**
  * Fetches subscribers from a list
  */
-export async function getSubscribers(listId?: number, page: number = 1, perPage: number = 100): Promise<ListmonkSubscriberResponse | null> {
+export async function getSubscribers(listId?: number, page = 1, perPage = 100): Promise<ListmonkSubscriberResponse | null> {
   try {
     const params = new URLSearchParams({
       page: page.toString(),
@@ -377,7 +377,7 @@ export async function createCampaignForPost(
         }
 
         if (postContent.length > 300) {
-          postContent = postContent.substring(0, 300) + '...';
+          postContent = `${postContent.substring(0, 300)}...`;
         }
       } catch (e) {
         console.error('Error parsing post metadata:', e);

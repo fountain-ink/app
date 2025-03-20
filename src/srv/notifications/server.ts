@@ -59,10 +59,9 @@ app.post('/notifications', (req: express.Request, res: express.Response) => {
         if (response.status === 200) {
           console.log('SNS Subscription confirmed');
           return res.sendStatus(200);
-        } else {
+        }
           console.error('SNS Subscription confirmation failed');
           return res.sendStatus(500);
-        }
       }
 
       if (payload.Type === SNSMessageType.Notification) {

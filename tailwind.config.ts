@@ -115,9 +115,6 @@ const config = {
             },
         },
     },
-    safelist: [{
-            pattern: /hljs+/,
-        }],
     // plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography"), require('tailwind-highlightjs'),],
     plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;
