@@ -58,7 +58,7 @@ export function BlogDropdownMenu({ username }: BlogMenuProps) {
       <DropdownMenuTrigger disabled={!shouldShowDropdown() || isLoading}>
         <AnimatedMenuItem href={!shouldShowDropdown() ? `/b/${username}` : undefined} icon={CustomPenToolIcon}>
           <div className="flex justify-between items-center text-base w-[134px]">
-            Blog
+            {shouldShowDropdown() ? "Blogs" : "Blog"}
             {shouldShowDropdown() && <ChevronRightIcon className="ml-auto h-4 w-4" />}
           </div>
         </AnimatedMenuItem>
@@ -99,7 +99,7 @@ export function BlogDropdownMenu({ username }: BlogMenuProps) {
                       </div>
                     )}
                   </div>
-                  <span>
+                  <span className="truncate max-w-[300px]">
                     {blog.handle || blog.title || blog.address.substring(0, 9)}
                     {blog.address === blog.owner && " (Personal)"}
                   </span>
