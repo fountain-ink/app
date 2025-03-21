@@ -16,6 +16,8 @@ import { useWalletClient } from "wagmi";
 import { getLensClient } from "@/lib/lens/client";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { syncBlogsQuietly } from "./blog-sync-button";
+import { useBlogStorage } from "@/hooks/use-blog-storage";
 
 interface CreateGroupModalProps {
   open: boolean;
@@ -130,8 +132,15 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
 export function CreateBlogButton() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const router = useRouter();
+  const { setBlogs } = useBlogStorage();
 
-  const handleCreateSuccess = () => {
+  const handleCreateSuccess = async () => {
+    console.log("Syncing blogs after creating a new blog");
+    const blogs = await syncBlogsQuietly();
+    if (blogs) {
+      setBlogs(blogs);
+    }
+
     router.refresh();
   };
 
