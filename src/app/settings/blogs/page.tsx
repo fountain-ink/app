@@ -10,9 +10,10 @@ interface BlogSettings {
   address: string;
   title: string;
   about?: string;
-  icon?: string;
-  handle?: string;
+  icon?: string | null;
+  handle?: string | null;
   owner: string;
+  slug?: string | null;
 }
 
 async function getBlogs() {
@@ -63,13 +64,17 @@ export default async function BlogsSettingsPage() {
         <div className="space-y-4">
           {personalBlog && (
             <BlogCard
-              title={personalBlog.title || "Personal Blog"}
-              description={personalBlog.about || "Your personal blog settings"}
-              address={personalBlog.address}
+              blog={{
+                title: personalBlog.title || "Personal Blog",
+                description: personalBlog.about || "Your personal blog settings",
+                address: personalBlog.address,
+                icon: personalBlog.icon,
+                handle: personalBlog.handle || undefined,
+                isUserBlog: true,
+                slug: personalBlog.slug || undefined
+              }}
               href={`/settings/b/${personalBlog.address}`}
-              icon={personalBlog.icon || undefined}
-              handle={personalBlog.handle || undefined}
-              isUserBlog
+              showExternalLink={true}
             />
           )}
 
@@ -79,11 +84,16 @@ export default async function BlogsSettingsPage() {
             otherBlogs.map((blog) => (
               <BlogCard
                 key={blog.address}
-                title={blog.title || "Untitled Blog"}
-                description={blog.about || undefined}
-                address={blog.address}
+                blog={{
+                  title: blog.title || "Untitled Blog",
+                  description: blog.about || undefined,
+                  address: blog.address,
+                  icon: blog.icon,
+                  handle: blog.handle || undefined,
+                  slug: blog.slug || undefined
+                }}
                 href={`/settings/b/${blog.address}`}
-                icon={blog.icon || undefined}
+                showExternalLink={true}
               />
             ))
           )}

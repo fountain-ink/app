@@ -199,10 +199,10 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="description">Description (Optional)</Label>
+              <Label htmlFor="description">About <span className="text-xs text-muted-foreground">(Optional)</span></Label>
               <Textarea
                 id="description"
-                placeholder="Enter blog description"
+                placeholder="Short description of your blog"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={4}

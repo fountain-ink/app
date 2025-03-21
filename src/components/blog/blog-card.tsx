@@ -2,29 +2,44 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ExternalLinkIcon, PenIcon, PenToolIcon, User, User2Icon } from "lucide-react";
+import { ExternalLinkIcon, PenToolIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import Image from "next/image";
-import { BookOpenIcon } from "lucide-react";
 import { useState } from "react";
 
-interface BlogCardProps {
+interface Blog {
   title: string;
   description?: string;
-  address?: string;
+  address: string;
   isUserBlog?: boolean;
-  href: string;
   icon?: string | null;
   handle?: string;
+  slug?: string;
+  owner?: string;
 }
 
-export function BlogCard({ title, description, address, isUserBlog, href, icon, handle }: BlogCardProps) {
+interface BlogCardProps {
+  blog: Blog;
+  href?: string;
+  showExternalLink?: boolean;
+}
+
+export function BlogCard({ blog, href, showExternalLink = true }: BlogCardProps) {
   const [imageLoaded, setImageLoaded] = useState(true);
+  const { title, description, address, isUserBlog, icon, handle, slug } = blog;
+
+  const blogUrl = isUserBlog
+    ? `/b/${handle}`
+    : handle && slug
+      ? `/b/${handle}/${slug}`
+      : `/b/${address}`;
+
+  const linkHref = href || blogUrl;
 
   return (
-    <Link href={href} className="block">
-      <Card className="h-full transition-all hover:bg-accent/50">
+    <Card className="transition-all hover:bg-accent/50 relative">
+      <Link href={linkHref} className="block">
         <CardHeader className="flex flex-row items-center p-4 gap-4 space-y-0">
           <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-sm bg-muted">
             {icon && imageLoaded ? (
@@ -48,11 +63,31 @@ export function BlogCard({ title, description, address, isUserBlog, href, icon, 
             )}
           </div>
           <div className="space-y-1">
-            <CardTitle className="text-base">{title}</CardTitle>
+            <CardTitle className="text-base line-clamp-1">{title}</CardTitle>
             {description && <CardDescription className="line-clamp-1">{description}</CardDescription>}
           </div>
         </CardHeader>
-      </Card>
-    </Link>
+      </Link>
+
+      {showExternalLink && (
+        <div className="absolute top-3 right-3">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link href={blogUrl} target="_blank" className="block">
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <ExternalLinkIcon className="h-4 w-4" />
+                    <span className="sr-only">Open blog in new tab</span>
+                  </Button>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Open blog in new tab</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      )}
+    </Card>
   );
 }

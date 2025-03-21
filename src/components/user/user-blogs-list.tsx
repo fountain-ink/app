@@ -108,12 +108,16 @@ export function UserBlogsList({ blogs }: UserBlogsListProps) {
           {blogs.map((blog) => (
             <div key={blog.address} className="w-[250px] flex-shrink-0">
               <BlogCard
-                title={blog.title || "Untitled Blog"}
-                description={blog.about || undefined}
-                address={blog.address}
-                href={`/b/${blog.address}`}
-                icon={blog.icon || undefined}
-                handle={blog.handle || undefined}
+                blog={{
+                  title: blog.title || "Untitled Blog",
+                  description: blog.about || undefined,
+                  address: blog.address,
+                  icon: blog.icon,
+                  handle: blog.handle || undefined,
+                  slug: blog.slug || undefined,
+                  isUserBlog: blog.owner === blog.address
+                }}
+                showExternalLink={false}
               />
             </div>
           ))}
