@@ -2,12 +2,117 @@ import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { isEvmAddress } from "@/lib/utils/is-evm-address";
+import { getLensClient } from "@/lib/lens/client";
+import { fetchGroup } from "@lens-protocol/client/actions";
 
 async function findBlogByIdentifier(db: any, identifier: string) {
   if (isEvmAddress(identifier)) {
     return await db.from("blogs").select("*").eq("address", identifier).single();
   }
   return await db.from("blogs").select("*").eq("handle", identifier).single();
+}
+
+export async function POST(req: NextRequest, { params }: { params: { blog: string } }) {
+  console.log(`[Blog Create] Creating blog record for: ${params.blog}`);
+
+  try {
+    // Verify authentication
+    const token = req.cookies.get("appToken")?.value;
+    if (!token) {
+      console.log("[Blog Create] No auth token found");
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const claims = getTokenClaims(token);
+    if (!claims?.metadata?.address) {
+      console.log("[Blog Create] Invalid token claims");
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    }
+
+    const userAddress = claims.metadata.address;
+    console.log(`[Blog Create] User authenticated: ${userAddress}`);
+
+    const { settings } = await req.json();
+    if (!settings) {
+      console.log("[Blog Create] No settings provided");
+      return NextResponse.json({ error: "No settings provided" }, { status: 400 });
+    }
+
+    // Verify the blog address is valid
+    if (!isEvmAddress(params.blog)) {
+      console.log(`[Blog Create] Invalid address format: ${params.blog}`);
+      return NextResponse.json({ error: "Invalid blog address format" }, { status: 400 });
+    }
+
+    // Fetch group from Lens to verify ownership
+    const lensClient = await getLensClient();
+    const groupResult = await fetchGroup(lensClient, { group: params.blog });
+
+    if (groupResult.isErr()) {
+      console.error("[Blog Create] Error fetching group from Lens:", groupResult.error);
+      return NextResponse.json({ error: "Failed to verify blog ownership" }, { status: 500 });
+    }
+
+    const group = groupResult.value;
+
+    if (!group) {
+      console.log(`[Blog Create] Group not found for address: ${params.blog}`);
+      return NextResponse.json({ error: "Blog group not found on Lens" }, { status: 404 });
+    }
+
+    if (!group.owner) {
+      console.log(`[Blog Create] Group owner not found for address: ${params.blog}`);
+      return NextResponse.json({ error: "Blog group owner not found on Lens" }, { status: 404 });
+    }
+
+    if (group.owner !== userAddress) {
+      console.log(`[Blog Create] Auth mismatch: group owner ${group.owner} != authenticated user ${userAddress}`);
+      return NextResponse.json({ error: "Unauthorized - you are not the owner of this blog" }, { status: 403 });
+    }
+
+    const db = await createClient();
+
+    const { data: existingBlog } = await db.from("blogs").select("*").eq("address", params.blog).single();
+
+    if (existingBlog) {
+      console.log(`[Blog Create] Blog with address ${params.blog} already exists`);
+      return NextResponse.json({ error: "Blog already exists" }, { status: 409 });
+    }
+
+    const blogData = {
+      address: params.blog,
+      title: settings.title,
+      about: settings.about || "",
+      handle: settings.handle || "",
+      slug: settings.slug || "",
+      metadata: {
+        showAuthor: true,
+        showTags: true,
+        showTitle: true,
+        ...(settings.metadata || {}),
+      },
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      owner: userAddress,
+    };
+
+    // Insert new blog record
+    const { error } = await db.from("blogs").insert(blogData);
+
+    if (error) {
+      console.error("[Blog Create] Error creating blog:", error);
+      return NextResponse.json({ error: "Failed to create blog" }, { status: 500 });
+    }
+
+    console.log(`[Blog Create] Successfully created blog with address ${params.blog}`);
+    return NextResponse.json({ success: true, address: params.blog });
+  } catch (error) {
+    console.error("[Blog Create] Unexpected error:", error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Failed to create blog" },
+      { status: 500 },
+    );
+  }
 }
 
 export async function PUT(req: NextRequest, { params }: { params: { blog: string } }) {
