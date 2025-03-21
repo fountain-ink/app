@@ -1,16 +1,38 @@
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { getBaseUrl } from "@/lib/get-base-url";
-import { Post } from "@lens-protocol/client";
+import { Post, postId } from "@lens-protocol/client";
+import { deletePost } from "@lens-protocol/client/actions";
+import { handleOperationWith } from "@lens-protocol/client/viem";
 import { getCookie } from "cookies-next";
 import { Bookmark, Link, MoreHorizontal, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { useWalletClient } from "wagmi";
 import { ActionButton, type DropdownItem } from "./post-action-button";
 import { usePostActions } from "@/hooks/use-post-actions";
+import { getLensClient } from "@/lib/lens/client";
+import { useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { ConfirmButton } from "@/components/ui/confirm-button";
 
 export const PostMenu = ({ post }: { post: Post }) => {
   const { handleBookmark } = usePostActions(post);
+  const { data: walletClient } = useWalletClient();
+  const router = useRouter();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(`${getBaseUrl()}/p/${post.id}`);
+    toast.success("Link copied to clipboard");
   };
 
   const appToken = getCookie("appToken");
@@ -18,9 +40,60 @@ export const PostMenu = ({ post }: { post: Post }) => {
 
   const isUserPost = post.author.address === claims?.sub;
 
-  const handleDelete = () => {
-    // Implement delete functionality
-    console.log("Delete post:", post.id);
+  const openDeleteDialog = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDelete = async () => {
+    if (!post.operations?.canDelete) {
+      toast.error("Unable to determine if you can delete this post");
+      return;
+    }
+
+    switch (post.operations.canDelete.__typename) {
+      case "PostOperationValidationPassed":
+        break;
+      case "PostOperationValidationFailed":
+        toast.error(`Cannot delete: ${post.operations.canDelete.reason}`);
+        return;
+      case "PostOperationValidationUnknown":
+        toast.error("Cannot delete: Unknown validation rules");
+        return;
+      default:
+        toast.error("Cannot determine if deletion is allowed");
+        return;
+    }
+
+    try {
+      setIsDeleting(true);
+      const lens = await getLensClient();
+
+      if (!lens.isSessionClient()) {
+        toast.error("You need to be logged in to delete a post");
+        return;
+      }
+
+      const result = await deletePost(lens, {
+        post: postId(post.id),
+      })
+        .andThen(handleOperationWith(walletClient as any))
+        .andThen(lens.waitForTransaction);
+
+      if (result.isErr()) {
+        console.error("Error deleting post:", result.error);
+        toast.error(`Error deleting post: ${result.error.message}`);
+        return;
+      }
+
+      toast.success("Post deleted successfully");
+      setIsDeleteDialogOpen(false);
+      router.refresh();
+    } catch (error) {
+      console.error("Failed to delete post:", error);
+      toast.error("Failed to delete post");
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const dropdownItems: DropdownItem[] = [
@@ -31,35 +104,63 @@ export const PostMenu = ({ post }: { post: Post }) => {
     },
     ...(isUserPost
       ? [
-          {
-            icon: Trash2,
-            label: "Delete post",
-            onClick: handleDelete,
-          },
-        ]
+        {
+          icon: Trash2,
+          label: "Delete post",
+          onClick: openDeleteDialog,
+        },
+      ]
       : []),
   ];
 
   return (
-    <div className="flex flex-row gap-3 items-center justify-center">
-      <ActionButton
-        icon={Bookmark}
-        label="Bookmark"
-        strokeColor="hsl(var(--primary))"
-        fillColor="hsl(var(--primary) / 0.8)"
-        onClick={handleBookmark}
-        isActive={post.operations?.hasBookmarked}
-        shouldIncrementOnClick={true}
-        initialCount={post.stats.bookmarks}
-      />
-      <ActionButton
-        icon={MoreHorizontal}
-        label="More"
-        strokeColor="hsl(var(--muted-foreground))"
-        fillColor="hsl(var(--muted-foreground))"
-        dropdownItems={dropdownItems}
-        showChevron={false}
-      />
-    </div>
+    <>
+      <div className="flex flex-row gap-3 items-center justify-center">
+        <ActionButton
+          icon={Bookmark}
+          label="Bookmark"
+          strokeColor="hsl(var(--primary))"
+          fillColor="hsl(var(--primary) / 0.8)"
+          onClick={handleBookmark}
+          isActive={post.operations?.hasBookmarked}
+          shouldIncrementOnClick={true}
+          initialCount={post.stats.bookmarks}
+        />
+        <ActionButton
+          icon={MoreHorizontal}
+          label="More"
+          strokeColor="hsl(var(--muted-foreground))"
+          fillColor="hsl(var(--muted-foreground))"
+          dropdownItems={dropdownItems}
+          showChevron={false}
+        />
+      </div>
+
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Post</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this post? This action <b>cannot be undone</b>.
+              <br /><br />
+              <span className="text-muted-foreground">Hold the delete button to confirm.</span>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <ConfirmButton
+              variant="destructive"
+              onConfirm={handleDelete}
+              disabled={isDeleting}
+              duration={2000}
+              icon={Trash2}
+              className="gap-2"
+            >
+              {isDeleting ? "Deleting..." : "Delete"}
+            </ConfirmButton>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };

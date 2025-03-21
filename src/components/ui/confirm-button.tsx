@@ -96,51 +96,53 @@ export function ConfirmButton({
         className="flex items-center gap-2 relative z-10"
         transition={{ duration: 0.15, ease: "easeOut" }}
       >
-        <AnimatePresence initial={false}>
-          {isHolding ? (
-            <motion.div
-              key="progress"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="relative h-6 w-6 flex items-center justify-center"
-            >
-              <svg
-                className="absolute inset-0"
-                viewBox="0 0 50 50"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+        <div className="relative h-6 w-6 flex-shrink-0">
+          <AnimatePresence initial={false} mode="wait">
+            {isHolding ? (
+              <motion.div
+                key="progress"
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="absolute inset-0 flex items-center justify-center"
               >
-                <motion.circle
-                  cx="25"
-                  cy="25"
-                  r="20"
-                  stroke="currentColor"
-                  strokeWidth="5"
+                <svg
+                  className="absolute inset-0"
+                  viewBox="0 0 50 50"
                   fill="none"
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: progress / 100 }}
-                  transition={{ duration: 0, ease: "linear" }}
-                />
-              </svg>
-              <div className="relative z-10 text-xs font-semibold">
-                {timeLeft}
-              </div>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="icon"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="h-6 w-6 flex items-center justify-center"
-            >
-              <Icon className="h-5 w-5" />
-            </motion.div>
-          )}
-        </AnimatePresence>
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <motion.circle
+                    cx="25"
+                    cy="25"
+                    r="20"
+                    stroke="currentColor"
+                    strokeWidth="5"
+                    fill="none"
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: progress / 100 }}
+                    transition={{ duration: 0, ease: "linear" }}
+                  />
+                </svg>
+                <div className="relative z-10 text-xs font-semibold">
+                  {timeLeft}
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="icon"
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="absolute inset-0 flex items-center justify-center"
+              >
+                <Icon className="h-5 w-5" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
         <motion.span layout="position">
           {children}
         </motion.span>
