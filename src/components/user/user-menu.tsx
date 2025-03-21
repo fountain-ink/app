@@ -13,7 +13,7 @@ import { useTheme } from "next-themes";
 import { usePathname, useRouter } from "next/navigation";
 import { useAccount, useDisconnect } from "wagmi";
 import { ConnectWalletButton } from "../auth/auth-wallet-button";
-import { ProfileSelectMenu } from "../auth/profile-select-menu";
+import { SelectAccountMenu } from "../auth/account-select-menu";
 import { LogoutIcon } from "../icons/logout";
 import { MoonIcon } from "../icons/moon";
 import { SettingsGearIcon } from "../icons/settings";
@@ -55,7 +55,7 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
   }
 
   if (!session || showProfileSelect) {
-    return <ProfileSelectMenu open={showProfileSelect} onOpenChange={setShowProfileSelect} />;
+    return <SelectAccountMenu open={showProfileSelect} onOpenChange={setShowProfileSelect} />;
   }
 
   const username = session.loggedInAs.account.username?.localName;

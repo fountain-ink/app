@@ -9,6 +9,28 @@ import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 
+export async function syncBlogsQuietly() {
+  try {
+    const response = await fetch("/api/blogs/sync");
+
+    if (!response.ok) {
+      console.error("Failed to sync blogs");
+      return false;
+    }
+
+    const blogsResponse = await fetch("/api/blogs");
+    if (blogsResponse.ok) {
+      const data = await blogsResponse.json();
+      console.log("Blogs synced successfully");
+      return data.blogs;
+    }
+    return false;
+  } catch (error) {
+    console.error("Error syncing blogs:", error);
+    return false;
+  }
+}
+
 export function SyncButton() {
   const [isSyncing, setIsSyncing] = useState(false);
   const router = useRouter();

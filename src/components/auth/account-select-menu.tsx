@@ -10,15 +10,18 @@ import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { ScrollArea } from "../ui/scroll-area";
 import { OnboardingModal } from "./onboarding-modal";
-import { ProfileSelectButotn } from "./profile-select-button";
+import { SelectAccountButton } from "./account-select-button";
+import { syncBlogsQuietly } from "../blog/blog-sync-button";
+import { useBlogStorage } from "@/hooks/use-blog-storage";
 
-export function ProfileSelectMenu({ open, onOpenChange }: { open?: boolean; onOpenChange?: (open: boolean) => void }) {
+export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOpenChange?: (open: boolean) => void }) {
   const { address } = useAccount();
   const [profiles, setProfiles] = useState<Account[]>([]);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showProfileSelect, setShowProfileSelect] = useState(true);
+  const setBlogs = useBlogStorage((state) => state.setBlogs);
 
   const fetchProfiles = async () => {
     if (!address) return;
@@ -65,6 +68,16 @@ export function ProfileSelectMenu({ open, onOpenChange }: { open?: boolean; onOp
     }
   };
 
+  const handleOnboardingSuccess = async () => {
+    await fetchProfiles();
+
+    console.log("Syncing blogs after successful onboarding");
+    const blogs = await syncBlogsQuietly();
+    if (blogs) {
+      setBlogs(blogs);
+    }
+  };
+
   // Hide select menu when onboarding is open
   const isOpen = showOnboarding ? false : (open ?? showProfileSelect);
   const handleOpenChange = onOpenChange ?? setShowProfileSelect;
@@ -104,7 +117,7 @@ export function ProfileSelectMenu({ open, onOpenChange }: { open?: boolean; onOp
               <ScrollArea className="w-full pr-4 max-h-[300px]">
                 <div className="w-full flex flex-col gap-1">
                   {profiles.map((entry) => (
-                    <ProfileSelectButotn key={entry.address} profile={entry} />
+                    <SelectAccountButton key={entry.address} profile={entry} />
                   ))}
                 </div>
               </ScrollArea>
@@ -123,7 +136,7 @@ export function ProfileSelectMenu({ open, onOpenChange }: { open?: boolean; onOp
         </DialogContent>
       </Dialog>
 
-      <OnboardingModal open={showOnboarding} onOpenChange={handleOnboardingClose} onSuccess={fetchProfiles} />
+      <OnboardingModal open={showOnboarding} onOpenChange={handleOnboardingClose} onSuccess={handleOnboardingSuccess} />
     </>
   );
 }

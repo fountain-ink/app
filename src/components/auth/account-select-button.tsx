@@ -9,12 +9,14 @@ import { Button } from "../ui/button";
 import { UserAvatar } from "../user/user-avatar";
 import { setupUserAuth } from "./auth-manager";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
+import { syncBlogsQuietly } from "../blog/blog-sync-button";
 
-export function ProfileSelectButotn({ profile, onSuccess }: { profile: Account; onSuccess?: () => void }) {
+export function SelectAccountButton({ profile, onSuccess }: { profile: Account; onSuccess?: () => void }) {
   const { address } = useAccount();
   const accountOwnerAuth = useAccountOwnerClient();
   const router = useRouter();
   const resetBlogStorage = useBlogStorage((state) => state.resetState);
+  const setBlogs = useBlogStorage((state) => state.setBlogs);
 
   if (!address) {
     return null;
@@ -31,14 +33,14 @@ export function ProfileSelectButotn({ profile, onSuccess }: { profile: Account; 
       const credentials = await client.getCredentials();
 
       if (credentials.isErr()) {
-        toast.error("Failed to get credentials");
+        console.error("Failed to get credentials");
         throw new Error("Failed to get credentials");
       }
 
       const refreshToken = credentials.value?.refreshToken;
 
       if (!refreshToken) {
-        toast.error("Failed to get refresh token");
+        console.error("Failed to get refresh token");
         throw new Error("Failed to get refresh token");
       }
 
@@ -46,13 +48,19 @@ export function ProfileSelectButotn({ profile, onSuccess }: { profile: Account; 
         await setupUserAuth(refreshToken);
       } catch (error) {
         console.error("Error setting up user auth:", error);
-        return toast.error("Failed to complete authentication");
+        return;
       }
 
       // Reset blog storage when switching profiles
       resetBlogStorage();
 
-      toast.success("Successfully logged in");
+      console.log("Successfully logged in");
+
+      // Sync blogs after successful login
+      const blogs = await syncBlogsQuietly();
+      if (blogs) {
+        setBlogs(blogs);
+      }
 
       if (onSuccess) {
         onSuccess();
@@ -61,7 +69,6 @@ export function ProfileSelectButotn({ profile, onSuccess }: { profile: Account; 
       }
     } catch (err) {
       console.error("Error logging in:", err);
-      toast.error("Failed to login");
     }
   };
 
