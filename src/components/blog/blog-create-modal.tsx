@@ -30,7 +30,12 @@ const generateSlug = (title: string): string => {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
-    .substring(0, 50); 
+    .substring(0, 50);
+};
+
+const isValidSlug = (slug: string): boolean => {
+  const slugRegex = /^[a-z0-9-]{1,50}$/;
+  return slugRegex.test(slug);
 };
 
 export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupModalProps) {
@@ -39,6 +44,8 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const { data: walletClient } = useWalletClient();
+
+  const slugIsValid = slug === "" || isValidSlug(slug);
 
   useEffect(() => {
     setSlug(generateSlug(title));
@@ -54,17 +61,22 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
 
     if (!title || !slug) return;
 
+    if (!isValidSlug(slug)) {
+      toast.error("Invalid slug format");
+      return;
+    }
+
     try {
       setLoading(true);
 
       const blogMetadata = group({
-        name: slug, 
-        description: description || "",
+        name: slug,
+        description: description || undefined,
       });
 
       const blogFeedMetadata = feed({
-        name: slug, 
-        description: description || "",
+        name: slug,
+        description: description || undefined,
       });
 
       const uploadToast = toast.loading("Uploading blog metadata...");
@@ -158,28 +170,33 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-96 flex flex-col">
+      <DialogContent className="flex flex-col">
         <DialogHeader>
           <DialogTitle>Create New Blog</DialogTitle>
         </DialogHeader>
         <div className="flex-1 flex flex-col">
           <div className="space-y-6">
-            <div className="space-y-2">
+            <div className="space-y-2 max-w-xs">
               <Label htmlFor="title">Title</Label>
               <Input id="title" placeholder="Enter blog title" value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 max-w-xs">
               <Label htmlFor="slug">Slug</Label>
               <p className="text-xs text-muted-foreground">
-                Used in the blog URL. Must be 1-50 characters, lowercase alphanumeric characters and hyphens only.
+                Used in the blog URL. Auto-generated from title but can be edited.
               </p>
               <Input
                 id="slug"
                 placeholder="blog-slug"
                 value={slug}
-                readOnly
-                className="bg-muted cursor-not-allowed"
+                onChange={(e) => setSlug(e.target.value)}
+                className={slugIsValid ? "" : "border-red-500"}
               />
+              {!slugIsValid && (
+                <p className="text-xs text-red-500 mt-1">
+                  Slug must be 1-50 characters and contain only lowercase letters, numbers, and hyphens.
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="description">Description (Optional)</Label>
@@ -193,7 +210,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
             </div>
           </div>
           <div className="mt-auto pt-6 flex justify-end">
-            <Button onClick={handleCreateGroup} disabled={loading || !title || !slug}>
+            <Button onClick={handleCreateGroup} disabled={loading || !title || !slug || !slugIsValid}>
               {loading ? "Creating..." : "Create Blog"}
             </Button>
           </div>
