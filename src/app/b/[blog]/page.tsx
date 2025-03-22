@@ -128,7 +128,7 @@ const UserBlogPage = async ({ params }: { params: { blog: string } }) => {
 
   const tags = await fetchPostTags(lens, {
     filter: {
-      feeds: feedAddress ? [feedAddress] : [],
+      feeds: feedAddress ? [{ feed: feedAddress }] : undefined,
     },
   }).unwrapOr(null);
 
