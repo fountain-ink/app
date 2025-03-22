@@ -65,7 +65,7 @@ export function BlogDropdownMenu({ username }: BlogMenuProps) {
       </DropdownMenuTrigger>
       {shouldShowDropdown() && (
         <DropdownMenuPortal>
-          <DropdownMenuContent className="w-fit min-w-48 py-1" side="left" align="start">
+          <DropdownMenuContent className="w-fit min-w-48 py-1 -mt-1 mr-1" side="left" align="start">
             {blogs.map((blog) => (
               <Link href={getBlogUrl(blog)} key={blog.address} passHref>
                 <DropdownMenuItem className="flex justify-start h-8 gap-2 p-1 items-center text-base">
