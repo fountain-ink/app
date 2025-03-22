@@ -169,7 +169,7 @@ export const ActionButton = ({
               />
             )}
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="center">
+          <DropdownMenuContent align="center" side="top">
             {dropdownItems?.map((item) => (
               <DropdownMenuItem key={item.label} onClick={item.onClick} className="gap-1 rounded-sm mx-0 w-full">
                 <item.icon className="w-4 h-4" /> {item.label}
