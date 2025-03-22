@@ -1,7 +1,7 @@
 import { uploadFile } from "@/lib/upload/upload-file";
 import { cn, withRef } from "@udecode/cn";
 import { TImageElement } from "@udecode/plate-media";
-import { Image, PlaceholderPlugin, useImage, useMediaState } from "@udecode/plate-media/react";
+import { PlaceholderPlugin, useImage, useMediaState } from "@udecode/plate-media/react";
 import { useEditorPlugin, useEditorRef, useElement, useReadOnly, useRemoveNodeButton } from "@udecode/plate/react";
 import { UploadIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -12,6 +12,7 @@ import { Button } from "./button";
 import { Caption, CaptionTextarea } from "./caption";
 import { ElementPopover, type ElementWidth, widthVariants } from "./element-popover";
 import { PlateElement } from "./plate-element";
+import Image from "next/image";
 
 const ImagePlaceholder = ({ file }: { file?: File }) => {
   const [objectUrl, setObjectUrl] = useState<string | null>(null);
@@ -195,21 +196,25 @@ export const ImageElement = withRef<typeof PlateElement>(
                 <ImagePlaceholder file={currentUploadingFile} />
               </div>
             ) : (
-              <Image
-                className={cn(
-                  "block w-full max-w-full cursor-pointer object-cover px-0",
-                  "rounded-sm",
-                  selected && "ring-2 ring-ring",
-                )}
-                alt=""
-                {...nodeProps}
-                {...imageProps}
-                onLoad={() => {
-                  setIsImageLoaded(true);
-                  currentUploadingFile &&
-                    api.placeholder.removeUploadingFile(props.element.fromPlaceholderId as string);
-                }}
-              />
+              <div className="relative w-full aspect-video">
+                <Image
+                  className={cn(
+                    "block object-cover px-0",
+                    "rounded-sm",
+                    selected && "ring-2 ring-ring",
+                  )}
+                  alt=""
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  {...nodeProps}
+                  {...imageProps}
+                  onLoad={() => {
+                    setIsImageLoaded(true);
+                    currentUploadingFile &&
+                      api.placeholder.removeUploadingFile(props.element.fromPlaceholderId as string);
+                  }}
+                />
+              </div>
             )}
 
             <AnimatePresence mode="wait">
