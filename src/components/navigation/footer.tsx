@@ -66,11 +66,11 @@ export const Footer = ({ post }: { post: AnyPost }) => {
           label: "Bluesky",
           onClick: () => handlePlatformShare("bluesky"),
         },
-        {
-          icon: Share2Icon,
-          label: "Lens",
-          onClick: () => handlePlatformShare("lens"),
-        },
+        // {
+        //   icon: Share2Icon,
+        //   label: "Lens",
+        //   onClick: () => handlePlatformShare("lens"),
+        // },
         // {
         //   icon: Repeat2Icon,
         //   label: "Repost",

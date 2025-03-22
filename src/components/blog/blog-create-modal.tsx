@@ -180,10 +180,10 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
               <Label htmlFor="title">Title</Label>
               <Input id="title" placeholder="Enter blog title" value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
-            <div className="space-y-2 max-w-xs">
+            <div className="max-w-xs">
               <Label htmlFor="slug">Slug</Label>
-              <p className="text-xs text-muted-foreground">
-                Used in the blog URL. Auto-generated from title but can be edited.
+              <p className="text-xs text-muted-foreground mb-2">
+                Used in the blog URL.
               </p>
               <Input
                 id="slug"
@@ -209,7 +209,8 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
               />
             </div>
           </div>
-          <div className="mt-auto pt-6 flex justify-end">
+          <div className="mt-auto pt-6 flex justify-end gap-2">
+            <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
             <Button onClick={handleCreateGroup} disabled={loading || !title || !slug || !slugIsValid}>
               {loading ? "Creating..." : "Create Blog"}
             </Button>
