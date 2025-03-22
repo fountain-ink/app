@@ -63,9 +63,9 @@ export default function Template({ children }: { children: React.ReactNode }) {
               <LinkIcon size={16} />
               Copy Link
             </Button>
-            <div className="flex gap-4 justify-start mt-2">
-              <Button onClick={handleClose} variant="outline">
-                Close
+            <div className="flex gap-4 justify-end mt-2">
+              <Button onClick={handleClose} variant="default">
+                View Post
               </Button>
             </div>
           </div>
