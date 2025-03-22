@@ -47,10 +47,10 @@ export default function Template({ children }: { children: React.ReactNode }) {
           </DialogHeader>
 
           <div className="flex flex-col gap-3 mt-6">
-            <Button variant="outline" onClick={() => handlePlatformShare("lens")} className="w-full justify-start">
+            {/* <Button variant="outline" onClick={() => handlePlatformShare("lens")} className="w-full justify-start">
               <Share2Icon size={16} />
               Share to Lens
-            </Button>
+            </Button> */}
             <Button variant="outline" onClick={() => handlePlatformShare("bluesky")} className="w-full justify-start">
               <TbBrandBluesky />
               Share to Bluesky
