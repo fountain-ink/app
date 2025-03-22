@@ -71,16 +71,16 @@ export const Footer = ({ post }: { post: AnyPost }) => {
           label: "Lens",
           onClick: () => handlePlatformShare("lens"),
         },
-        {
-          icon: Repeat2Icon,
-          label: "Repost",
-          onClick: () => {},
-        },
-        {
-          icon: PenLineIcon,
-          label: "Quote",
-          onClick: () => {},
-        },
+        // {
+        //   icon: Repeat2Icon,
+        //   label: "Repost",
+        //   onClick: () => { },
+        // },
+        // {
+        //   icon: PenLineIcon,
+        //   label: "Quote",
+        //   onClick: () => { },
+        // },
       ],
     },
     {
@@ -129,7 +129,7 @@ export const Footer = ({ post }: { post: AnyPost }) => {
     <TooltipProvider delayDuration={300}>
       <motion.div
         style={{
-          opacity: 1.2 - scrollProgress,
+          opacity: 1.0 - scrollProgress,
         }}
         animate={{
           y: shouldAnimate ? (shouldShow ? 0 : 100) : translateY,
@@ -139,7 +139,7 @@ export const Footer = ({ post }: { post: AnyPost }) => {
           stiffness: 300,
           damping: 20,
         }}
-        className="fixed bottom-6 inset-x-0 mx-auto z-[40] pl-2 pr-4 py-0.5 rounded-full backdrop-blur-xl bg-background/70 border border-border
+        className="fixed bottom-6 inset-x-0 mx-auto z-[40] pl-2 pr-4 py-0.5 rounded-full bg-background border border-border
            shadow-lg w-full max-w-[90vw] sm:max-w-[50vw] md:max-w-sm origin-bottom"
       >
         <nav className="flex items-center justify-between">

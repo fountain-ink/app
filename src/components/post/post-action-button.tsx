@@ -6,6 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  useOpenState,
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AnimatePresence, motion } from "motion/react";
@@ -68,6 +69,9 @@ export const ActionButton = ({
     isPressedLocally: isActive,
   });
 
+  // Add open state for dropdown
+  const { open, onOpenChange } = useOpenState();
+
   // Keep local state in sync with prop for URL-based states (comment/collect)
   useEffect(() => {
     setState((prev) => ({ ...prev, isPressedLocally: isActive }));
@@ -78,6 +82,21 @@ export const ActionButton = ({
   useEffect(() => {
     previousCount.current = state.count;
   }, [state.count]);
+
+  useEffect(() => {
+    if (!dropdownItems) return;
+
+    const handleScroll = () => {
+      if (open) {
+        onOpenChange(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, true);
+    return () => {
+      window.removeEventListener('scroll', handleScroll, true);
+    };
+  }, [dropdownItems, open, onOpenChange]);
 
   const handleClick = async () => {
     if (onClick) {
@@ -125,7 +144,7 @@ export const ActionButton = ({
       onClick={() => !dropdownItems && handleClick()}
     >
       {dropdownItems ? (
-        <DropdownMenu>
+        <DropdownMenu modal={false} open={open} onOpenChange={onOpenChange}>
           <DropdownMenuTrigger className="flex items-center gap-0.5">
             <div className="relative">
               <ButtonHoverEffect isHovered={state.isHovered} strokeColor={strokeColor} />
