@@ -100,7 +100,6 @@ interface FormState {
   isDirty: boolean;
   errors: {
     title: string | null;
-    handle: string | null;
     slug: string | null;
   };
 }
@@ -117,7 +116,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
   const [formState, setFormState] = useState<FormState>({
     title: settings?.title || "",
     about: settings?.about || "",
-    handle: isUserBlog ? userHandle || "" : null,
+    handle: userHandle || null,
     slug: settings?.slug || "",
     metadata: {
       showAuthor: settings?.metadata?.showAuthor ?? true,
@@ -131,7 +130,6 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     isDirty: false,
     errors: {
       title: null,
-      handle: null,
       slug: null,
     },
   });
@@ -165,7 +163,6 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
       isDirty: false,
       errors: {
         title: null,
-        handle: null,
         slug: null,
       },
     });
@@ -190,38 +187,6 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     }
     return null;
   }, []);
-
-  const validateHandle = useCallback(
-    async (handle: string): Promise<string | null> => {
-      if (!handle) {
-        return null;
-      }
-      if (!/^[a-zA-Z0-9-]+$/.test(handle)) {
-        return "Handle can only contain letters, numbers, and hyphens";
-      }
-      if (handle.length > 50) {
-        return "Handle must be less than 50 characters";
-      }
-
-      try {
-        const db = await createClient();
-        const { data: existingBlogs } = await db
-          .from("blogs")
-          .select("handle, address")
-          .eq("owner", initialSettings.owner)
-          .neq("address", initialSettings.address);
-
-        if (existingBlogs?.some((blog) => blog.handle === handle)) {
-          return `You already have a blog with handle "${handle}"`;
-        }
-      } catch (error) {
-        console.error("Error validating handle:", error);
-      }
-
-      return null;
-    },
-    [initialSettings.owner, initialSettings.address],
-  );
 
   const validateSlug = useCallback(
     async (slug: string): Promise<string | null> => {
@@ -259,19 +224,17 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     setIsSaving(true);
 
     const titleError = formState.metadata.showTitle ? validateBlogTitle(formState.title) : null;
-    const handleError = formState.handle ? await validateHandle(formState.handle) : null;
     const slugError = await validateSlug(formState.slug);
 
     setFormState((prev) => ({
       ...prev,
       errors: {
         title: titleError,
-        handle: handleError,
         slug: slugError,
       },
     }));
 
-    if (titleError || handleError || slugError) {
+    if (titleError || slugError) {
       setIsSaving(false);
       return;
     }
@@ -289,7 +252,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     const success = await saveSettings({
       title: formState.title.trim(),
       about: formState.about,
-      handle: isUserBlog ? userHandle : null,
+      handle: userHandle || null,
       slug: formState.slug.trim(),
       metadata: formState.metadata,
       theme: formState.theme,

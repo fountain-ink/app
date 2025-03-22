@@ -29,6 +29,10 @@ export default async function BlogPage({ params }: PageProps) {
   const isUserBlog = blog.address === claims.metadata.address;
 
   return (
-    <BlogSettings initialSettings={blog as BlogData} userHandle={claims.metadata.username} isUserBlog={isUserBlog} />
+    <BlogSettings 
+      initialSettings={blog as BlogData}
+      userHandle={claims.metadata.username}
+      isUserBlog={isUserBlog}
+    />
   );
 }

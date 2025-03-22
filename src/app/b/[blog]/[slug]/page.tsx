@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { fetchAccount } from "@lens-protocol/client/actions";
 import { getLensClient } from "@/lib/lens/client";
+import UserBlogPage from "../page";
 
 interface PageProps {
   params: {
@@ -19,27 +20,16 @@ export default async function BlogHandlePage({ params }: PageProps) {
     return notFound();
   }
 
-  redirect(`/b/${blogAddress}`);
+  return <UserBlogPage params={{ blog: blogAddress }} />;
 }
 
-async function resolveBlog(username: string, slug?: string): Promise<string | null> {
+async function resolveBlog(username: string, slug: string): Promise<string | null> {
   try {
-    const lens = await getLensClient();
-    const profile = await fetchAccount(lens, { username: { localName: username } }).unwrapOr(null);
-
-    if (!profile) {
-      return null;
-    }
-
-    if (!slug) {
-      return profile.address;
-    }
-
     const db = await createClient();
     const { data: blog } = await db
       .from("blogs")
       .select("address")
-      .eq("owner", profile.address)
+      .eq("handle", username)
       .eq("slug", slug)
       .single();
 
