@@ -37,7 +37,7 @@ export const TocSidebar = ({
   const { navProps } = useTocSideBar(state);
 
   return (
-    <div className={cn("sticky left-0 top-0 z-[5]", className)}>
+    <div className={cn("fixed left-0 top-0 z-[5]", className)}>
       <div className={cn("group absolute left-0 top-0 z-10 max-h-fit")}>
         <div className="relative z-10 mr-2.5 flex flex-col justify-center pb-3 pr-2">
           <div className={cn("flex flex-col gap-3 pb-3 pl-5")}>
