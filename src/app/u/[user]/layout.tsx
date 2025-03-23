@@ -12,7 +12,7 @@ import { UserLocation } from "@/components/user/user-location";
 import { UserName } from "@/components/user/user-name";
 import { UserNavigation } from "@/components/user/user-navigation";
 import { UserSite } from "@/components/user/user-site";
-import { UserTheme } from "@/components/user/user-theme";
+import { BlogTheme } from "@/components/blog/blog-theme";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { getBlogData } from "@/lib/settings/get-blog-data";
@@ -65,7 +65,7 @@ const UserLayout = async ({
   const userBlogs = await getBlogsByOwner(account.address);
 
   return (
-    <UserTheme initialTheme={themeName}>
+    <BlogTheme initialTheme={themeName}>
       <div className="flex flex-col items-center">
         <div className="w-screen md:max-w-3xl">
           <UserCover account={account} />
@@ -125,7 +125,7 @@ const UserLayout = async ({
           </AnimatePresence>
         </div>
       </div>
-    </UserTheme>
+    </BlogTheme>
   );
 };
 

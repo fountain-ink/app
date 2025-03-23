@@ -1,8 +1,8 @@
 import { ArticleLayout } from "@/components/navigation/article-layout";
 import { Footer } from "@/components/navigation/footer";
 import { GradientBlur } from "@/components/navigation/gradient-blur";
-import { BlogHeader } from "@/components/user/blog-header";
-import { UserTheme } from "@/components/user/user-theme";
+import { BlogHeader } from "@/components/blog/blog-header";
+import { BlogTheme } from "@/components/blog/blog-theme";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { getBlogData } from "@/lib/settings/get-blog-data";
@@ -70,14 +70,14 @@ const UserPostLayout = async ({
   const icon = settings?.icon;
 
   return (
-    <UserTheme initialTheme={themeName}>
+    <BlogTheme initialTheme={themeName}>
       <BlogHeader title={title} icon={icon} username={blogAddress} />
       <ArticleLayout>
         <GradientBlur />
         {children}
         <Footer post={post} account={loggedInAccount} />
       </ArticleLayout>
-    </UserTheme>
+    </BlogTheme>
   );
 };
 

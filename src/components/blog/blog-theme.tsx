@@ -4,12 +4,12 @@ import { defaultThemeName, isValidTheme, ThemeType } from "@/styles/themes";
 import { useEffect } from "react";
 import { useTheme } from "../theme/theme-context";
 
-interface UserThemeProps {
+interface BlogThemeProps {
   children: React.ReactNode;
   initialTheme?: string;
 }
 
-export const UserTheme = ({ children, initialTheme }: UserThemeProps) => {
+export const BlogTheme = ({ children, initialTheme }: BlogThemeProps) => {
   const { setTheme } = useTheme();
 
   useEffect(() => {
@@ -19,7 +19,6 @@ export const UserTheme = ({ children, initialTheme }: UserThemeProps) => {
     }
 
     return () => {
-      // Revert to the default theme when unmounting
       setTheme(defaultThemeName);
     };
   }, [initialTheme, setTheme]);
