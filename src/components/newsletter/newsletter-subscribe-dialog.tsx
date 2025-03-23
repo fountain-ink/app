@@ -79,6 +79,8 @@ export function BlogEmailSubscribe({
     }
   };
 
+  if (!blogData || !blogData.mail_list_id) return null;
+
   return (
     <>
       <Button variant={variant} size={size} onClick={() => setIsModalOpen(true)} className={className}>
