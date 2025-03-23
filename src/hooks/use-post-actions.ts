@@ -2,18 +2,26 @@ import { getLensClient } from "@/lib/lens/client";
 import { Post, PostReactionType } from "@lens-protocol/client";
 import { addReaction, bookmarkPost, undoBookmarkPost, undoReaction } from "@lens-protocol/client/actions";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export const usePostActions = (post: Post) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isCommentOpen = searchParams.has("comment");
   const isCollectOpen = searchParams.has("collect");
+  const [isCommentSheetOpen, setIsCommentSheetOpen] = useState(isCommentOpen);
+
+  useEffect(() => {
+    setIsCommentSheetOpen(isCommentOpen);
+  }, [isCommentOpen]);
 
   const handleComment = async (redirectToPost?: boolean) => {
     if (redirectToPost) {
       window.location.href = `/p/${post.author.username?.localName}/${post.slug}?comment=${post.slug}`;
       return;
     }
+
+    setIsCommentSheetOpen(!isCommentSheetOpen);
 
     const params = new URLSearchParams(searchParams);
     if (isCommentOpen) {
@@ -91,5 +99,7 @@ export const usePostActions = (post: Post) => {
     handleLike,
     isCommentOpen,
     isCollectOpen,
+    isCommentSheetOpen,
+    setIsCommentSheetOpen,
   };
 };

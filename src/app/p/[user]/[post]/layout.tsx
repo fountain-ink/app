@@ -3,6 +3,7 @@ import { Footer } from "@/components/navigation/footer";
 import { GradientBlur } from "@/components/navigation/gradient-blur";
 import { BlogHeader } from "@/components/user/blog-header";
 import { UserTheme } from "@/components/user/user-theme";
+import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { getBlogData } from "@/lib/settings/get-blog-data";
 import { fetchAccount, fetchPost } from "@lens-protocol/client/actions";
@@ -49,6 +50,9 @@ const UserPostLayout = async ({
     post: params.post,
   }).unwrapOr(null);
 
+  const { profile } = await getUserProfile();
+  const loggedInAccount = profile?.loggedInAs.account;
+
   if (!account) {
     console.error("Failed to fetch user profile");
     return notFound();
@@ -71,7 +75,7 @@ const UserPostLayout = async ({
       <ArticleLayout>
         <GradientBlur />
         {children}
-        <Footer post={post} />
+        <Footer post={post} account={loggedInAccount} />
       </ArticleLayout>
     </UserTheme>
   );

@@ -12,10 +12,21 @@ import { GraphicHand2 } from "../icons/custom-icons";
 import { CommentReplyArea } from "./comment-reply-area";
 import { CommentView } from "./comment-view";
 
-export const CommentSheet = ({ post, account }: { post: Post; account?: Account }) => {
+export const CommentSheet = ({
+  post,
+  account,
+  forcedOpen,
+  onOpenChange
+}: {
+  post: Post;
+  account?: Account;
+  forcedOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const isOpen = searchParams.has("comment");
+  const isUrlOpen = searchParams.has("comment");
+  const isOpen = forcedOpen !== undefined ? forcedOpen : isUrlOpen;
   const commentId = searchParams.get("comment");
   const containerRef = useRef<HTMLDivElement>(null);
   const { comments, loading, hasMore, fetchComments, refresh, nextCursor, setComments } = useComments(post.id);
@@ -75,6 +86,10 @@ export const CommentSheet = ({ post, account }: { post: Post; account?: Account 
   }, [handleScroll]);
 
   const handleOpenChange = (open: boolean) => {
+    if (onOpenChange) {
+      onOpenChange(open);
+    }
+
     const params = new URLSearchParams(searchParams);
     if (!open) {
       params.delete("comment");
@@ -106,7 +121,7 @@ export const CommentSheet = ({ post, account }: { post: Post; account?: Account 
               )}
 
               {comments.length === 0 && !loading ? (
-                <div className="text-muted-foreground flex flex-col items-center gap-4">
+                <div className="text-muted-foreground flex flex-col items-center mt-12 gap-4">
                   <div className="w-[70%] mx-auto">
                     <GraphicHand2 />
                   </div>

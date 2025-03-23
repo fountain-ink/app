@@ -4,7 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { usePostActions } from "@/hooks/use-post-actions";
 import { useScroll } from "@/hooks/use-scroll";
 import { handlePlatformShare } from "@/lib/get-share-url";
-import { AnyPost } from "@lens-protocol/client";
+import { Account, AnyPost } from "@lens-protocol/client";
 import { motion } from "motion/react";
 import {
   Bookmark,
@@ -19,8 +19,9 @@ import {
 import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
 import { useWalletClient } from "wagmi";
 import { ActionButton } from "../post/post-action-button";
+import { CommentSheet } from "../comment/comment-sheet";
 
-export const Footer = ({ post }: { post: AnyPost }) => {
+export const Footer = ({ post, account }: { post: AnyPost; account?: Account }) => {
   const { scrollProgress, shouldShow, shouldAnimate } = useScroll();
   const translateY = scrollProgress * 100;
   const walletClient = useWalletClient();
@@ -29,8 +30,20 @@ export const Footer = ({ post }: { post: AnyPost }) => {
     return null;
   }
 
-  const { handleComment, handleCollect, handleBookmark, handleLike, isCommentOpen, isCollectOpen } =
-    usePostActions(post);
+  const {
+    handleComment,
+    handleCollect,
+    handleBookmark,
+    handleLike,
+    isCommentOpen,
+    isCollectOpen,
+    isCommentSheetOpen,
+    setIsCommentSheetOpen
+  } = usePostActions(post);
+
+  const handleCommentSheetOpenChange = (open: boolean) => {
+    setIsCommentSheetOpen(open);
+  };
 
   const likes = post.stats.upvotes;
   const collects = post.stats.collects;
@@ -126,39 +139,47 @@ export const Footer = ({ post }: { post: AnyPost }) => {
   ];
 
   return (
-    <TooltipProvider delayDuration={300}>
-      <motion.div
-        style={{
-          opacity: 1.0 - scrollProgress,
-        }}
-        animate={{
-          y: shouldAnimate ? (shouldShow ? 0 : 100) : translateY,
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 300,
-          damping: 20,
-        }}
-        className="fixed bottom-6 inset-x-0 mx-auto z-[40] pl-2 pr-4 py-0.5 rounded-full bg-background border border-border
-           shadow-lg w-full max-w-[90vw] sm:max-w-[50vw] md:max-w-sm origin-bottom"
-      >
-        <nav className="flex items-center justify-between">
-          {actionButtons.map((button) => (
-            <ActionButton
-              key={button.label}
-              icon={button.icon}
-              label={button.label}
-              initialCount={button.initialCount}
-              strokeColor={button.strokeColor}
-              fillColor={button.fillColor}
-              dropdownItems={button.dropdownItems}
-              onClick={button.onClick}
-              isActive={button.isActive}
-              shouldIncrementOnClick={button.shouldIncrementOnClick}
-            />
-          ))}
-        </nav>
-      </motion.div>
-    </TooltipProvider>
+    <>
+      <CommentSheet
+        post={post}
+        account={account}
+        forcedOpen={isCommentSheetOpen}
+        onOpenChange={handleCommentSheetOpenChange}
+      />
+      <TooltipProvider delayDuration={300}>
+        <motion.div
+          style={{
+            opacity: 1.0 - scrollProgress,
+          }}
+          animate={{
+            y: shouldAnimate ? (shouldShow ? 0 : 100) : translateY,
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 20,
+          }}
+          className="fixed bottom-6 inset-x-0 mx-auto z-[40] pl-2 pr-4 py-0.5 rounded-full bg-background border border-border
+             shadow-lg w-full max-w-[90vw] sm:max-w-[50vw] md:max-w-sm origin-bottom"
+        >
+          <nav className="flex items-center justify-between">
+            {actionButtons.map((button) => (
+              <ActionButton
+                key={button.label}
+                icon={button.icon}
+                label={button.label}
+                initialCount={button.initialCount}
+                strokeColor={button.strokeColor}
+                fillColor={button.fillColor}
+                dropdownItems={button.dropdownItems}
+                onClick={button.onClick}
+                isActive={button.isActive}
+                shouldIncrementOnClick={button.shouldIncrementOnClick}
+              />
+            ))}
+          </nav>
+        </motion.div>
+      </TooltipProvider>
+    </>
   );
 };
