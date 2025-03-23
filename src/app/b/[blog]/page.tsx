@@ -76,7 +76,7 @@ export async function generateMetadata({ params }: { params: { blog: string } })
 
 const UserBlogPage = async ({ params, searchParams }: { params: { blog: string }; searchParams?: { tag?: string } }) => {
   const lens = await getLensClient();
-  const { username } = await getUserProfile();
+  const { username, address: userAddress } = await getUserProfile();
   let profile;
   let posts;
   let isGroup = false;
@@ -144,6 +144,7 @@ const UserBlogPage = async ({ params, searchParams }: { params: { blog: string }
   const showTitle = blogData?.metadata?.showTitle ?? true;
   const blogTitle = blogData?.title;
   const isUserBlog = username === params.blog && !isGroup;
+  const isUserMemeber = groupMembers.some(member => member.address === userAddress);
 
   return (
     <BlogTheme initialTheme={blogData?.theme?.name}>
@@ -181,7 +182,7 @@ const UserBlogPage = async ({ params, searchParams }: { params: { blog: string }
             posts={[...(posts?.items ?? [])]}
             contentType="articles"
             profile={profile}
-            isUserProfile={isUserBlog}
+            isUserProfile={isUserBlog || isUserMemeber}
           />
         </div>
       </div>
