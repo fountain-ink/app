@@ -48,13 +48,13 @@ export const turnIntoItems = [
     icon: <Heading1Icon />,
     keywords: ["title", "h1"],
     label: "Heading",
-    value: HEADING_KEYS.h3,
+    value: HEADING_KEYS.h1,
   },
   {
     icon: <Heading2Icon />,
     keywords: ["subtitle", "h2"],
     label: "Subheading",
-    value: HEADING_KEYS.h4,
+    value: HEADING_KEYS.h2,
   },
   {
     icon: <SquareIcon />,
