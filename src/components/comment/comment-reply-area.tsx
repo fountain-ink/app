@@ -57,15 +57,12 @@ export const CommentReplyArea = ({
         return;
       }
 
-      // Create metadata for the comment
       const metadata = textOnly({
         content: content.trim(),
       });
 
-      // Upload metadata to IPFS
       const { uri } = await storageClient.uploadAsJson(metadata);
 
-      // Create the comment post
       const result = await post(lens, {
         contentUri: uri,
         commentOn: {
@@ -84,10 +81,8 @@ export const CommentReplyArea = ({
 
       toast.dismiss(pendingToast);
 
-      // Clear the input
       setContent("");
 
-      // Call the onSubmit callback if provided
       if (onSubmit) {
         await onSubmit(content.trim());
       }
@@ -129,6 +124,12 @@ export const CommentReplyArea = ({
             disabled={disabled || isSubmitting}
             rows={1}
             className="resize-none flex-grow min-h-8 border-none shadow-none p-0"
+            onKeyDown={(e) => {
+              if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                handleSubmit();
+              }
+            }}
           />
         </div>
 
