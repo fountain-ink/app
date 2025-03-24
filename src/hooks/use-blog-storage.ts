@@ -38,14 +38,12 @@ export const useBlogStorage = create<BlogStorage>()(
         const state = get();
         const { blogs, lastSynced, isFetching } = state.blogState;
 
-        // If we have blogs and they're fresh (synced within the last 5 minutes), return them
-        const isFresh = lastSynced && Date.now() - lastSynced < 5 * 60 * 1000;
+        const isFresh = lastSynced && Date.now() - lastSynced < 15 * 60 * 1000;
         if (blogs.length > 0 && isFresh && !isFetching) {
           console.log("Using cached blogs, no fetch needed");
           return blogs;
         }
 
-        // If already fetching, wait for it to complete
         if (isFetching) {
           console.log("Already fetching blogs, waiting...");
           return new Promise((resolve) => {
@@ -69,7 +67,6 @@ export const useBlogStorage = create<BlogStorage>()(
           });
         }
 
-        // Start fetching
         set((state) => ({
           blogState: { ...state.blogState, isFetching: true },
         }));
