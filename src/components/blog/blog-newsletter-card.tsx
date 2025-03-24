@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { UsersIcon, UploadIcon, PenToolIcon, DownloadIcon, Trash2Icon } from "lucide-react";
+import { UsersIcon, UploadIcon, PenToolIcon, DownloadIcon, Trash2Icon, LoaderCircleIcon } from "lucide-react";
 import { toast } from "sonner";
 import { createMailingList, exportNewsletterSubscribers } from "@/lib/listmonk/newsletter";
 import { useRouter } from "next/navigation";
@@ -202,7 +202,7 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
                 id={`newsletter-${blog.address}`}
                 checked={newsletterEnabled}
                 onCheckedChange={toggleNewsletter}
-                disabled={isLoading}
+                className={isLoading ? "cursor-wait" : ""}
               />
             </div>
           </div>
