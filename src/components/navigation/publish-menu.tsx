@@ -441,63 +441,71 @@ export const PublishMenu = () => {
       const username =
         postValue.value?.__typename === "Post" ? postValue.value.author.username?.localName : postValue.value?.id;
 
-      if (selectedBlog && postSlug && username) {
-        try {
-          const db = await createClient();
-          const { data: blog } = await db
-            .from("blogs")
-            .select("*")
-            .eq("address", selectedBlog.address)
-            .single();
-
-          if (blog?.mail_list_id && sendNewsletter) {
-            const postData = {
-              title,
-              subtitle,
-              content: draft.contentMarkdown ?? '',
-              coverUrl,
-              username
-            };
-
-            try {
-              const result = await createCampaignForPost(selectedBlog.address, postSlug, postData);
-
-              if (result?.success) {
-                console.log("Created campaign for mailing list subscribers");
-              } else {
-                console.error("Failed to create campaign for mailing list");
-              }
-            } catch (error) {
-              console.error("Error creating campaign for mailing list:", error);
-            }
-          }
-        } catch (error) {
-          console.error("Error fetching blog data:", error);
-        }
-      }
-
       toast.dismiss(pendingToast);
       toast.success("Post published successfully!");
-      router.push(`/p/${username}/${postSlug}?success=true`);
-      router.refresh();
 
-      if (documentId) {
-        try {
-          const res = await fetch(`/api/drafts?id=${documentId}`, {
-            method: "DELETE",
-          });
+      if (postSlug && username) {
+        router.push(`/p/${username}/${postSlug}?success=true`);
+        router.refresh();
+      }
 
-          if (res.ok) {
-            queryClient.invalidateQueries({
-              queryKey: ["drafts"],
-              refetchType: "active",
-            });
-          } else {
-            console.error("Failed to delete cloud draft after publication");
+      if (selectedBlog && postSlug && username && documentId) {
+        (async () => {
+          try {
+            if (selectedBlog.mail_list_id && sendNewsletter) {
+              try {
+                const db = await createClient();
+                const { data: blog } = await db
+                  .from("blogs")
+                  .select("*")
+                  .eq("address", selectedBlog.address)
+                  .single();
+
+                if (blog?.mail_list_id) {
+                  const postData = {
+                    title,
+                    subtitle,
+                    content: draft.contentMarkdown ?? '',
+                    coverUrl,
+                    username
+                  };
+
+                  try {
+                    const result = await createCampaignForPost(selectedBlog.address, postSlug, postData);
+                    if (result?.success) {
+                      console.log("Created campaign for mailing list subscribers");
+                    } else {
+                      console.error("Failed to create campaign for mailing list");
+                    }
+                  } catch (error) {
+                    console.error("Error creating campaign for mailing list:", error);
+                  }
+                }
+              } catch (error) {
+                console.error("Error fetching blog data:", error);
+              }
+            }
+
+            try {
+              const res = await fetch(`/api/drafts?id=${documentId}`, {
+                method: "DELETE",
+              });
+
+              if (res.ok) {
+                queryClient.invalidateQueries({
+                  queryKey: ["drafts"],
+                  refetchType: "active",
+                });
+              } else {
+                console.error("Failed to delete cloud draft after publication");
+              }
+            } catch (error) {
+              console.error("Error deleting cloud draft:", error);
+            }
+          } catch (error) {
+            console.error("Error in post-publish operations:", error);
           }
-        } catch (error) {
-          console.error("Error deleting cloud draft:", error);
-        }
+        })();
       }
     } catch (error) {
       console.error("Error creating post:", error);
