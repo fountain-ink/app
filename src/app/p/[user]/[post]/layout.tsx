@@ -29,10 +29,12 @@ export async function generateMetadata({ params }: { params: { user: string; pos
 
   const blog = await getBlogData(post.feed.group?.address || profile.address);
   const icon = blog?.icon;
+  const title = "title" in post.metadata ? post.metadata.title : undefined;
+  const description = blog?.about;
 
   return {
-    title: `${params.post} - ${username}'s blog`,
-    description: `@${username}'s blog post on Fountain`,
+    title: `${title ? `${title} - ` : ""}${blog?.title}`,
+    description,
     icons: icon ? [{ rel: "icon", url: icon }] : undefined,
   };
 }
