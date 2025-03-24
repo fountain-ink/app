@@ -31,7 +31,7 @@ export const PostMenu = ({ post }: { post: Post }) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(`${getBaseUrl()}/p/${post.id}`);
+    navigator.clipboard.writeText(`${getBaseUrl()}p/${post.author.username?.localName}/${post.slug}`);
     toast.success("Link copied to clipboard");
   };
 
