@@ -30,6 +30,7 @@ export async function POST(req: NextRequest, { params }: { params: { blog: strin
     }
 
     const userAddress = claims.metadata.address;
+    const handle = claims.metadata.username;
     console.log(`[Blog Create] User authenticated: ${userAddress}`);
 
     const { settings } = await req.json();
@@ -83,7 +84,7 @@ export async function POST(req: NextRequest, { params }: { params: { blog: strin
       address: params.blog,
       title: settings.title,
       about: settings.about || "",
-      handle: settings.handle || "",
+      handle: handle || "",
       slug: settings.slug || "",
       metadata: {
         showAuthor: true,

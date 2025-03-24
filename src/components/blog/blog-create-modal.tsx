@@ -110,7 +110,6 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
 
       console.log("Blog created:", result.value);
 
-      // Fetch the newly created group by transaction hash
       const txHash = result.value;
       const groupResult = await fetchGroup(sessionClient, { txHash });
 
