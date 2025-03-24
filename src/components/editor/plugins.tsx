@@ -194,7 +194,7 @@ export const plugins = [
   TitlePlugin,
   SubtitlePlugin,
   HeadingPlugin.configure({
-    options: { levels: 4 },
+    options: { levels: 2 },
     handlers: {
       onKeyDown: (ctx) => {
         const { editor, event } = ctx;

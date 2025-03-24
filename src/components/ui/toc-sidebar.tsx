@@ -17,9 +17,9 @@ const tocSidebarButtonVariants = cva(
         true: "text-accent-foreground hover:text-accent-foreground",
       },
       depth: {
-        3: "pl-0",
-        4: "pl-3",
-        5: "pl-6",
+        1: "pl-0",
+        2: "pl-3",
+        3: "pl-6",
       },
     },
   },
@@ -42,13 +42,13 @@ export const TocSidebar = ({
         <div className="relative z-10 mr-2.5 flex flex-col justify-center pb-3 pr-2">
           <div className={cn("flex flex-col gap-3 pb-3 pl-5")}>
             {headingList.slice(0, maxShowCount).map((item) => {
-              if (item.depth === 1 || item.depth === 2) {
-                return null;
-              }
               return (
                 <div key={item.id}>
                   <div
-                    className={cn("h-0.5 rounded-xs bg-primary/20", activeContentId === item.id && "bg-primary")}
+                    className={cn(
+                      "h-0.5 rounded-xs bg-primary/20",
+                      // activeContentId === item.id && "bg-primary",
+                    )}
                     style={{
                       marginRight: `${4 * (item.depth - 1)}px`,
                       width: `${16 - 4 * (item.depth - 1)}px`,
@@ -78,9 +78,6 @@ export const TocSidebar = ({
               <div className="font-semibold text-sm select-none">Table of contents</div>
               <div className={cn("relative z-10 p-2", !open && "hidden")}>
                 {headingList.map((item, index) => {
-                  if (item.depth === 1 || item.depth === 2) {
-                    return null;
-                  }
                   const isActive = activeContentId ? activeContentId === item.id : index === 0;
 
                   return (
@@ -90,7 +87,7 @@ export const TocSidebar = ({
                       variant="ghost"
                       className={cn(
                         tocSidebarButtonVariants({
-                          active: isActive,
+                          active: false,
                           depth: item.depth as any,
                         }),
                       )}
