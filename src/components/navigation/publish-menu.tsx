@@ -385,7 +385,7 @@ export const PublishMenu = () => {
               address: evmAddress(r.address),
               percent: r.percent,
             }))
-            : [], 
+            : [],
         }
         : undefined;
 
@@ -539,12 +539,12 @@ export const PublishMenu = () => {
           </div>
 
           <Tabs value={tab} onValueChange={setTab} className="flex-1 flex flex-col min-h-0">
-            <TabsList className="grid w-fit grid-cols-2 max-w-full flex-shrink-0">
-              <TabsTrigger value="article" className="flex items-center gap-2">
+            <TabsList className="grid w-fit flex rounded-sm">
+              <TabsTrigger value="article" className="flex items-center gap-2 rounded-sm">
                 <PenIcon className="w-4 h-4" />
-                Article Details
+                Post Details
               </TabsTrigger>
-              <TabsTrigger value="collecting" className="flex items-center gap-2">
+              <TabsTrigger value="collecting" className="w-fit flex items-center gap-2 rounded-sm">
                 <ShoppingBag className="w-4 h-4" />
                 Collecting
               </TabsTrigger>
@@ -553,7 +553,7 @@ export const PublishMenu = () => {
               <TabsContent value="article" className="h-full">
                 <div className="flex flex-col h-full">
                   <ScrollArea className="flex-1 min-h-0 pr-2">
-                    <div className="space-y-6 p-4 px-2">
+                    <div className="space-y-6 p-4 pr-4">
                       <div className="space-y-2">
                         <div className="pb-2">
                           <h3 className="font-medium">Preview</h3>
@@ -667,19 +667,15 @@ export const PublishMenu = () => {
               <TabsContent value="collecting" className="h-full">
                 <div className="flex flex-col h-full">
                   <ScrollArea className="flex-1 min-h-0 pr-2">
-                    <div className="space-y-6 p-4 px-2">
-                      <div className="space-y-2">
-                        <p className="text-sm text-muted-foreground">
-                          Collecting to let readers mint your post as an NFT. You can also set a license for the piece,
-                          and decide if you want to charge for the collect.
-                        </p>
-                      </div>
-
-                      <div className="space-y-4 py-2 ">
-                        <div className="flex items-center justify-between">
+                    <div className="space-y-6 p-4">
+                      <div>
+                        <div className="flex items-center justify-between pb-2">
                           <div>
                             <h3 className="font-medium">Collecting</h3>
-                            <p className="text-sm text-muted-foreground">Let users collect your post</p>
+                            <p className="text-sm text-muted-foreground">
+                              Let readers collect your post. You can set a license for the piece,
+                              and decide if you want to charge for the collect.
+                            </p>
                           </div>
                           <Switch
                             checked={isCollectingEnabled}
@@ -694,342 +690,352 @@ export const PublishMenu = () => {
                             }}
                           />
                         </div>
-                      </div>
 
-                      {!isCollectingEnabled && (
-                        <div className="space-y-4 py-2">
-                          <ShoppingBagSvg  />
-                        </div>
-                      )}
-
-                      {isCollectingEnabled && (
-                        <>
-                          <div className="space-y-4 py2 border-b">
-                            <div className="space-y-2">
-                              <Label>License</Label>
-                              <Select
-                                value={collectingLicense}
-                                onValueChange={(value) => {
-                                  setCollectingLicense(value);
-                                  saveDraft({
-                                    collectingSettings: {
-                                      ...getCollectingSettings(),
-                                      collectingLicense: value,
-                                    },
-                                  });
-                                }}
-                              >
-                                <SelectTrigger className="w-full">
-                                  <SelectValue placeholder="Select a license" />
-                                </SelectTrigger>
-                                <SelectContent position="popper" sideOffset={5} className="z-[60]" side="bottom">
-                                  <SelectItem value="All rights reserved">All rights reserved</SelectItem>
-                                  <SelectItem value="CC BY">Attribution (CC BY)</SelectItem>
-                                  <SelectItem value="CC BY-SA">Attribution-ShareAlike (CC BY-SA)</SelectItem>
-                                  <SelectItem value="CC BY-NC">Attribution-NonCommercial (CC BY-NC)</SelectItem>
-                                  <SelectItem value="CC BY-NC-SA">
-                                    Attribution-NonCommercial-ShareAlike (CC BY-NC-SA)
-                                  </SelectItem>
-                                  <SelectItem value="CC BY-ND">Attribution-NoDerivs (CC BY-ND)</SelectItem>
-                                  <SelectItem value="CC BY-NC-ND">
-                                    Attribution-NonCommercial-NoDerivs (CC BY-NC-ND)
-                                  </SelectItem>
-                                  <SelectItem value="CC0">Public Domain (CC0)</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <p className="text-sm text-muted-foreground">
-                                You can grant the collector a license to use the post. By default you retain all rights.
-                              </p>
-                            </div>
+                        {!isCollectingEnabled && (
+                          <div className="flex justify-center items-center py-6">
+                            <ShoppingBagSvg />
                           </div>
+                        )}
 
-                          <div className="space-y-4 py-2 ">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <h3 className="font-medium">Charge for collecting</h3>
-                                <p className="text-sm text-muted-foreground">
-                                  Get paid in crypto when someone collects your post
-                                </p>
-                              </div>
-                              <Switch
-                                checked={isChargeEnabled}
-                                onCheckedChange={(checked) => {
-                                  setIsChargeEnabled(checked);
-                                  saveDraft({
-                                    collectingSettings: {
-                                      ...getCollectingSettings(),
-                                      isChargeEnabled: checked,
-                                    },
-                                  });
-                                }}
-                              />
-                            </div>
-
-                            {isChargeEnabled && (
-                              <div className="space-y-2 max-w-xs">
-                                <Label>Price</Label>
-                                <div className="flex items-center">
-                                  <span className="mr-2">$</span>
-                                  <Input
-                                    type="number"
-                                    min="0"
-                                    step="0.01"
-                                    placeholder="0.00"
-                                    value={price}
-                                    onChange={(e) => {
-                                      setPrice(e.target.value);
-                                      saveDraft({
-                                        collectingSettings: {
-                                          ...getCollectingSettings(),
-                                          price: e.target.value,
-                                        },
-                                      });
-                                    }}
-                                  />
-                                </div>
-                              </div>
-                            )}
-                          </div>
-
-                          <div className="space-y-4 py-2 ">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <h3 className="font-medium">Referral rewards</h3>
-                                <p className="text-sm text-muted-foreground">
-                                  Share a portion of you collect revenue with people who amplify your content
-                                </p>
-                              </div>
-                              <Switch
-                                checked={isReferralRewardsEnabled}
-                                onCheckedChange={(checked) => {
-                                  setIsReferralRewardsEnabled(checked);
-                                  saveDraft({
-                                    collectingSettings: {
-                                      ...getCollectingSettings(),
-                                      isReferralRewardsEnabled: checked,
-                                    },
-                                  });
-                                }}
-                              />
-                            </div>
-
-                            {isReferralRewardsEnabled && (
+                        {isCollectingEnabled && (
+                          <div className="space-y-4 pt-4">
+                            <div className="border rounded-sm p-4 space-y-4 bg-background/50 hover:bg-background/80 transition-colors shadow-sm">
                               <div className="space-y-2">
-                                <div className="flex items-center gap-2">
-                                  <Input
-                                    type="number"
-                                    min="1"
-                                    max="100"
-                                    className="w-16"
-                                    value={referralPercent}
-                                    onChange={(e) => {
-                                      const value = Number.parseInt(e.target.value);
-                                      if (!Number.isNaN(value) && value >= 1 && value <= 100) {
-                                        setReferralPercent(value);
-                                        saveDraft({
-                                          collectingSettings: {
-                                            ...getCollectingSettings(),
-                                            referralPercent: value,
-                                          },
-                                        });
-                                      }
-                                    }}
-                                  />
-                                  <span>%</span>
-                                </div>
-                                <Slider
-                                  value={[referralPercent]}
-                                  min={1}
-                                  max={100}
-                                  step={1}
+                                <Label>License</Label>
+                                <p className="text-sm text-muted-foreground">
+                                  You can grant the collector a license to use the post. By default you retain all rights.
+                                </p>
+                                <Select
+                                  value={collectingLicense}
                                   onValueChange={(value) => {
-                                    if (value[0] !== undefined) {
-                                      setReferralPercent(value[0]);
-                                      saveDraft({
-                                        collectingSettings: {
-                                          ...getCollectingSettings(),
-                                          referralPercent: value[0],
-                                        },
-                                      });
-                                    }
-                                  }}
-                                />
-                              </div>
-                            )}
-                          </div>
-
-                          <div className="space-y-4 py-2 ">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <h3 className="font-medium">Revenue split</h3>
-                                <p className="text-sm text-muted-foreground">Share your collect revenue with others</p>
-                              </div>
-                              <Switch
-                                checked={isRevenueSplitEnabled}
-                                onCheckedChange={(checked) => {
-                                  setIsRevenueSplitEnabled(checked);
-                                  saveDraft({
-                                    collectingSettings: {
-                                      ...getCollectingSettings(),
-                                      isRevenueSplitEnabled: checked,
-                                    },
-                                  });
-                                }}
-                              />
-                            </div>
-
-                            {isRevenueSplitEnabled && (
-                              <div className="space-y-4 max-w-md">
-                                {recipients.length > 0 && (
-                                  <div className="space-y-2">
-                                    {recipients.map((recipient, index) => (
-                                      <div key={index} className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                          <span className="text-sm truncate max-w-[200px]">{recipient.address}</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                          <span>{recipient.percent}%</span>
-                                          <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() => handleRemoveRecipient(index)}
-                                          >
-                                            Remove
-                                          </Button>
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                )}
-
-                                <div className="grid grid-cols-[1fr,auto] gap-2">
-                                  <div>
-                                    <Label>Recipient</Label>
-                                    <Input
-                                      placeholder="@username or 0x address..."
-                                      value={recipientAddress}
-                                      onChange={(e) => setRecipientAddress(e.target.value)}
-                                    />
-                                  </div>
-                                  <div>
-                                    <Label>Percent</Label>
-                                    <div className="flex items-center gap-2">
-                                      <Input
-                                        type="number"
-                                        min="1"
-                                        max="100"
-                                        className="w-16"
-                                        value={recipientPercent}
-                                        onChange={(e) => setRecipientPercent(e.target.value)}
-                                      />
-                                      <span>%</span>
-                                    </div>
-                                  </div>
-                                </div>
-                                <Button variant="outline" size="sm" className="w-full" onClick={handleAddRecipient}>
-                                  <PlusIcon className="w-4 h-4 mr-2" />
-                                  Add recipient
-                                </Button>
-                              </div>
-                            )}
-                          </div>
-
-                          <div className="space-y-4 py-2 ">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <h3 className="font-medium">Limited edition</h3>
-                                <p className="text-sm text-muted-foreground">Only allow a certain number of collects</p>
-                              </div>
-                              <Switch
-                                checked={isLimitedEdition}
-                                onCheckedChange={(checked) => {
-                                  setIsLimitedEdition(checked);
-                                  saveDraft({
-                                    collectingSettings: {
-                                      ...getCollectingSettings(),
-                                      isLimitedEdition: checked,
-                                    },
-                                  });
-                                }}
-                              />
-                            </div>
-
-                            {isLimitedEdition && (
-                              <div className="space-y-2 max-w-[200px]">
-                                <Label>Maximum collects</Label>
-                                <Input
-                                  type="number"
-                                  min="1"
-                                  placeholder="100"
-                                  value={collectLimit}
-                                  onChange={(e) => {
-                                    setCollectLimit(e.target.value);
+                                    setCollectingLicense(value);
                                     saveDraft({
                                       collectingSettings: {
                                         ...getCollectingSettings(),
-                                        collectLimit: e.target.value,
+                                        collectingLicense: value,
+                                      },
+                                    });
+                                  }}
+                                >
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select a license" />
+                                  </SelectTrigger>
+                                  <SelectContent position="popper" sideOffset={5} className="z-[60]" side="bottom">
+                                    <SelectItem value="All rights reserved">All rights reserved</SelectItem>
+                                    <SelectItem value="CC BY">Attribution (CC BY)</SelectItem>
+                                    <SelectItem value="CC BY-SA">Attribution-ShareAlike (CC BY-SA)</SelectItem>
+                                    <SelectItem value="CC BY-NC">Attribution-NonCommercial (CC BY-NC)</SelectItem>
+                                    <SelectItem value="CC BY-NC-SA">
+                                      Attribution-NonCommercial-ShareAlike (CC BY-NC-SA)
+                                    </SelectItem>
+                                    <SelectItem value="CC BY-ND">Attribution-NoDerivs (CC BY-ND)</SelectItem>
+                                    <SelectItem value="CC BY-NC-ND">
+                                      Attribution-NonCommercial-NoDerivs (CC BY-NC-ND)
+                                    </SelectItem>
+                                    <SelectItem value="CC0">Public Domain (CC0)</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </div>
+
+                            <div className="border rounded-sm p-4 space-y-4 bg-background/50 hover:bg-background/80 transition-colors shadow-sm">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <h3 className="font-medium">Charge for collecting</h3>
+                                  <p className="text-sm text-muted-foreground">
+                                    Get paid in crypto when someone collects your post
+                                  </p>
+                                </div>
+                                <Switch
+                                  checked={isChargeEnabled}
+                                  onCheckedChange={(checked) => {
+                                    setIsChargeEnabled(checked);
+                                    saveDraft({
+                                      collectingSettings: {
+                                        ...getCollectingSettings(),
+                                        isChargeEnabled: checked,
                                       },
                                     });
                                   }}
                                 />
                               </div>
-                            )}
-                          </div>
 
-                          <div className="space-y-4 py-2">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <h3 className="font-medium">Collect expiry</h3>
-                                <p className="text-sm text-muted-foreground">
-                                  Only allow collecting until a certain time
-                                </p>
-                              </div>
-                              <Switch
-                                checked={isCollectExpiryEnabled}
-                                onCheckedChange={(checked) => {
-                                  setIsCollectExpiryEnabled(checked);
-                                  saveDraft({
-                                    collectingSettings: {
-                                      ...getCollectingSettings(),
-                                      isCollectExpiryEnabled: checked,
-                                    },
-                                  });
-                                }}
-                              />
+                              {isChargeEnabled && (
+                                <div className="space-y-2 max-w-xs pt-2">
+                                  <Label>Price</Label>
+                                  <div className="flex items-center">
+                                    <div className="relative w-full">
+                                      <Input
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                        placeholder="0.00"
+                                        value={price}
+                                        className="pl-7 no-spinners"
+                                        onChange={(e) => {
+                                          setPrice(e.target.value);
+                                          saveDraft({
+                                            collectingSettings: {
+                                              ...getCollectingSettings(),
+                                              price: e.target.value,
+                                            },
+                                          });
+                                        }}
+                                      />
+                                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">$</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
                             </div>
 
-                            {isCollectExpiryEnabled && (
-                              <div className="space-y-2">
-                                <div className="flex items-center gap-2">
-                                  <Input
-                                    type="number"
-                                    min="1"
-                                    className="w-16"
-                                    value={collectExpiryDays}
-                                    onChange={(e) => {
-                                      const value = Number.parseInt(e.target.value);
-                                      if (!Number.isNaN(value) && value >= 1) {
-                                        setCollectExpiryDays(value);
+                            <div className="border rounded-sm p-4 space-y-4 bg-background/50 hover:bg-background/80 transition-colors shadow-sm">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <h3 className="font-medium">Referral rewards</h3>
+                                  <p className="text-sm text-muted-foreground">
+                                    Share a portion of you collect revenue with people who amplify your content
+                                  </p>
+                                </div>
+                                <Switch
+                                  checked={isReferralRewardsEnabled}
+                                  onCheckedChange={(checked) => {
+                                    setIsReferralRewardsEnabled(checked);
+                                    saveDraft({
+                                      collectingSettings: {
+                                        ...getCollectingSettings(),
+                                        isReferralRewardsEnabled: checked,
+                                      },
+                                    });
+                                  }}
+                                />
+                              </div>
+
+                              {isReferralRewardsEnabled && (
+                                <div className="space-y-2 pt-2">
+                                  <div className="flex items-center gap-2">
+                                    <div className="relative w-16">
+                                      <Input
+                                        type="number"
+                                        min="1"
+                                        max="100"
+                                        className="pr-6 no-spinners"
+                                        value={referralPercent}
+                                        onChange={(e) => {
+                                          const value = Number.parseInt(e.target.value);
+                                          if (!Number.isNaN(value) && value >= 1 && value <= 100) {
+                                            setReferralPercent(value);
+                                            saveDraft({
+                                              collectingSettings: {
+                                                ...getCollectingSettings(),
+                                                referralPercent: value,
+                                              },
+                                            });
+                                          }
+                                        }}
+                                      />
+                                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">%</span>
+                                    </div>
+                                  </div>
+                                  <Slider
+                                    value={[referralPercent]}
+                                    min={1}
+                                    max={100}
+                                    step={1}
+                                    onValueChange={(value) => {
+                                      if (value[0] !== undefined) {
+                                        setReferralPercent(value[0]);
                                         saveDraft({
                                           collectingSettings: {
                                             ...getCollectingSettings(),
-                                            collectExpiryDays: value,
+                                            referralPercent: value[0],
                                           },
                                         });
                                       }
                                     }}
                                   />
-                                  <span>days</span>
                                 </div>
-                                <p className="text-sm text-muted-foreground">
-                                  Expires on {new Date(collectExpiryDate).toLocaleDateString()}{" "}
-                                  {new Date(collectExpiryDate).toLocaleTimeString()}
-                                </p>
+                              )}
+                            </div>
+
+                            <div className="border rounded-sm p-4 space-y-4 bg-background/50 hover:bg-background/80 transition-colors shadow-sm">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <h3 className="font-medium">Revenue split</h3>
+                                  <p className="text-sm text-muted-foreground">Share your collect revenue with others</p>
+                                </div>
+                                <Switch
+                                  checked={isRevenueSplitEnabled}
+                                  onCheckedChange={(checked) => {
+                                    setIsRevenueSplitEnabled(checked);
+                                    saveDraft({
+                                      collectingSettings: {
+                                        ...getCollectingSettings(),
+                                        isRevenueSplitEnabled: checked,
+                                      },
+                                    });
+                                  }}
+                                />
                               </div>
-                            )}
+
+                              {isRevenueSplitEnabled && (
+                                <div className="space-y-4 max-w-md pt-2">
+                                  {recipients.length > 0 && (
+                                    <div className="space-y-2">
+                                      {recipients.map((recipient, index) => (
+                                        <div key={index} className="flex items-center justify-between">
+                                          <div className="flex items-center gap-2">
+                                            <span className="text-sm truncate max-w-[200px]">{recipient.address}</span>
+                                          </div>
+                                          <div className="flex items-center gap-2">
+                                            <span>{recipient.percent}%</span>
+                                            <Button
+                                              variant="ghost"
+                                              size="sm"
+                                              onClick={() => handleRemoveRecipient(index)}
+                                            >
+                                              Remove
+                                            </Button>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+
+                                  <div className="grid grid-cols-[1fr,auto] gap-2">
+                                    <div>
+                                      <Label>Recipient</Label>
+                                      <Input
+                                        placeholder="@username or 0x address..."
+                                        value={recipientAddress}
+                                        onChange={(e) => setRecipientAddress(e.target.value)}
+                                      />
+                                    </div>
+                                    <div>
+                                      <Label>Percent</Label>
+                                      <div className="flex items-center gap-2">
+                                        <div className="relative w-16">
+                                          <Input
+                                            type="number"
+                                            min="1"
+                                            max="100"
+                                            className="pr-6 no-spinners"
+                                            value={recipientPercent}
+                                            onChange={(e) => setRecipientPercent(e.target.value)}
+                                          />
+                                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">%</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <Button variant="outline" size="sm" className="w-full" onClick={handleAddRecipient}>
+                                    <PlusIcon className="w-4 h-4 mr-2" />
+                                    Add recipient
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="border rounded-sm p-4 space-y-4 bg-background/50 hover:bg-background/80 transition-colors shadow-sm">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <h3 className="font-medium">Limited edition</h3>
+                                  <p className="text-sm text-muted-foreground">Only allow a certain number of collects</p>
+                                </div>
+                                <Switch
+                                  checked={isLimitedEdition}
+                                  onCheckedChange={(checked) => {
+                                    setIsLimitedEdition(checked);
+                                    saveDraft({
+                                      collectingSettings: {
+                                        ...getCollectingSettings(),
+                                        isLimitedEdition: checked,
+                                      },
+                                    });
+                                  }}
+                                />
+                              </div>
+
+                              {isLimitedEdition && (
+                                <div className="space-y-2 max-w-[200px] pt-2">
+                                  <Label>Maximum collects</Label>
+                                  <Input
+                                    type="number"
+                                    min="1"
+                                    className="no-spinners"
+                                    placeholder="100"
+                                    value={collectLimit}
+                                    onChange={(e) => {
+                                      setCollectLimit(e.target.value);
+                                      saveDraft({
+                                        collectingSettings: {
+                                          ...getCollectingSettings(),
+                                          collectLimit: e.target.value,
+                                        },
+                                      });
+                                    }}
+                                  />
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="border rounded-sm p-4 space-y-4 bg-background/50 hover:bg-background/80 transition-colors shadow-sm">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <h3 className="font-medium">Collect expiry</h3>
+                                  <p className="text-sm text-muted-foreground">
+                                    Only allow collecting until a certain time
+                                  </p>
+                                </div>
+                                <Switch
+                                  checked={isCollectExpiryEnabled}
+                                  onCheckedChange={(checked) => {
+                                    setIsCollectExpiryEnabled(checked);
+                                    saveDraft({
+                                      collectingSettings: {
+                                        ...getCollectingSettings(),
+                                        isCollectExpiryEnabled: checked,
+                                      },
+                                    });
+                                  }}
+                                />
+                              </div>
+
+                              {isCollectExpiryEnabled && (
+                                <div className="space-y-2 pt-2">
+                                  <div className="flex items-center gap-2">
+                                    <div className="relative w-16">
+                                      <Input
+                                        type="number"
+                                        min="1"
+                                        className="no-spinners"
+                                        value={collectExpiryDays}
+                                        onChange={(e) => {
+                                          const value = Number.parseInt(e.target.value);
+                                          if (!Number.isNaN(value) && value >= 1) {
+                                            setCollectExpiryDays(value);
+                                            saveDraft({
+                                              collectingSettings: {
+                                                ...getCollectingSettings(),
+                                                collectExpiryDays: value,
+                                              },
+                                            });
+                                          }
+                                        }}
+                                      />
+                                    </div>
+                                    <span>days</span>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground">
+                                    Expires on {new Date(collectExpiryDate).toLocaleDateString()}{" "}
+                                    {new Date(collectExpiryDate).toLocaleTimeString()}
+                                  </p>
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        </>
-                      )}
+                        )}
+                      </div>
                     </div>
                   </ScrollArea>
                   <div className="flex items-center p-2">
