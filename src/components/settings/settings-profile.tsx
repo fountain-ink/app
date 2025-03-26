@@ -180,13 +180,14 @@ export function ProfileSettingsCard({ profile }: { profile?: Account | null }) {
       });
     }
 
+    console.log(attributes);
     await saveSettings({
       profile,
       name: profileTitle || undefined,
       bio: profileDescription || undefined,
       picture,
       coverPicture: coverPictureUri,
-      attributes,
+      attributes: attributes.length > 0 ? attributes : undefined,
     });
   }, [profile, formData, saveSettings]);
 

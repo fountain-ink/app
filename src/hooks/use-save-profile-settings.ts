@@ -33,7 +33,7 @@ export function useSaveProfileSettings() {
     bio,
     picture,
     coverPicture,
-    attributes = [],
+    attributes,
   }: ProfileSettingsParams) => {
     setIsSaving(true);
     const currentMetadata = profile.metadata;
@@ -57,34 +57,36 @@ export function useSaveProfileSettings() {
     }
 
     try {
-      const mapAttributeType = (type: string) => {
-        const typeMap: Record<string, string> = {
-          BOOLEAN: "Boolean",
-          DATE: "Date",
-          NUMBER: "Number",
-          STRING: "String",
-          JSON: "JSON",
-        };
-        return typeMap[type.toUpperCase()] || type;
-      };
+      // const mapAttributeType = (type: string) => {
+      //   const typeMap: Record<string, string> = {
+      //     BOOLEAN: "Boolean",
+      //     DATE: "Date",
+      //     NUMBER: "Number",
+      //     STRING: "String",
+      //     JSON: "JSON",
+      //   };
+      //   return typeMap[type.toUpperCase()] || type;
+      // };
 
-      // Validate attributes
-      for (const attr of attributes) {
-        if (attr.type === "String" && (!attr.value || attr.value.trim().length === 0)) {
-          const error = `Invalid value for attribute "${attr.key}": String must not be empty`;
-          toast.error(`Error: ${error}`);
-          return { success: false, error };
-        }
-      }
+      // // Validate attributes
+      // for (const attr of attributes) {
+      //   if (attr.type === "String" && (!attr.value || attr.value.trim().length === 0)) {
+      //     const error = `Invalid value for attribute "${attr.key}": String must not be empty`;
+      //     toast.error(`Error: ${error}`);
+      //     return { success: false, error };
+      //   }
+      // }
 
       // Convert existing attributes to correct format
-      const existingAttributes = (currentMetadata?.attributes || []).map((attr) => ({
-        ...attr,
-        type: mapAttributeType(attr.type),
-      }));
+      // const existingAttributes = (currentMetadata?.attributes || []).map((attr) => ({
+      //   ...attr,
+      //   type: mapAttributeType(attr.type),
+      // }));
+
+      const existingAttributes = currentMetadata?.attributes || [];
 
       // Merge attributes
-      const updatedAttributes = attributes.reduce(
+      const updatedAttributes = attributes?.reduce(
         (acc, attr) => {
           const index = acc.findIndex((a: any) => a.key === attr.key);
           if (index !== -1) {
@@ -97,13 +99,12 @@ export function useSaveProfileSettings() {
         [...existingAttributes],
       );
 
-      // console.log("NMAE", name, currentMetadata?.name, bio, currentMetadata?.bio, picture, currentMetadata?.picture, coverPicture, currentMetadata?.coverPicture);
       const metadata = account({
         name: name ?? currentMetadata?.name ?? undefined,
         bio: bio ?? currentMetadata?.bio ?? undefined,
         picture: picture ?? currentMetadata?.picture ?? undefined,
         coverPicture: coverPicture ?? currentMetadata?.coverPicture ?? undefined,
-        attributes: attributes ?? currentMetadata?.attributes ?? undefined,
+        attributes: updatedAttributes.length > 0 ? updatedAttributes : undefined,
       });
       console.log(metadata);
 

@@ -370,6 +370,24 @@ export const PublishMenu = () => {
       }
 
       console.log("feed is", feedValue);
+
+      const payToCollectConfig = isChargeEnabled && price
+        ? {
+          amount: {
+            /// WGRASS
+            currency: evmAddress("0xeee5a340Cdc9c179Db25dea45AcfD5FE8d4d3eB8"),
+            value: price,
+          },
+          ...(isReferralRewardsEnabled ? { referralShare: referralPercent } : {}),
+          recipients: isRevenueSplitEnabled && recipients.length > 0
+            ? recipients.map((r) => ({
+              address: evmAddress(r.address),
+              percent: r.percent,
+            }))
+            : [], 
+        }
+        : undefined;
+
       const result = await post(lens, {
         contentUri: uri,
         feed: feedValue,
@@ -379,24 +397,7 @@ export const PublishMenu = () => {
               simpleCollect: {
                 ...(isLimitedEdition && collectLimit ? { collectLimit: Number.parseInt(collectLimit) } : {}),
                 ...(isCollectExpiryEnabled ? { endsAt: dateTime(collectExpiryDate) } : {}),
-                ...(isChargeEnabled && price
-                  ? {
-                    amount: {
-                      /// WGRASS
-                      currency: evmAddress("0xeee5a340Cdc9c179Db25dea45AcfD5FE8d4d3eB8"),
-                      value: price,
-                    },
-                  }
-                  : {}),
-                ...(isReferralRewardsEnabled ? { referralShare: referralPercent } : {}),
-                ...(isRevenueSplitEnabled && recipients.length > 0
-                  ? {
-                    recipients: recipients.map((r) => ({
-                      address: evmAddress(r.address),
-                      percent: r.percent,
-                    })),
-                  }
-                  : {}),
+                ...(payToCollectConfig ? { payToCollect: payToCollectConfig } : {}),
               },
             },
           ]

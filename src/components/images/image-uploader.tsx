@@ -131,9 +131,8 @@ export const ImageCropperUploader = ({
   return (
     <span>
       <div
-        className={`relative ${
-          aspectRatio === 1 ? "w-40 h-40 rounded-full" : "w-full h-44 rounded-lg"
-        } overflow-hidden cursor-pointer ring-2 ring-background `}
+        className={`relative ${aspectRatio === 1 ? "w-40 h-40 rounded-full" : "w-full h-44 rounded-lg"
+          } overflow-hidden cursor-pointer ring-2 ring-background `}
         onClick={handleImageClick}
         onKeyDown={handleImageClick}
       >
@@ -194,7 +193,7 @@ export const ImageCropperUploader = ({
               />
             </div>
           </div>
-          <div className="flex justify-between gap-2 p-4 border-t">
+          <div className="flex justify-between gap-2 p-4 border-t border-border">
             <Button variant={"outline"} onClick={() => setShowCropModal(false)}>
               Cancel
             </Button>
