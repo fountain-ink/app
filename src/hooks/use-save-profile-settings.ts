@@ -19,10 +19,6 @@ type ProfileSettingsParams = {
   attributes?: any[];
 };
 
-type SaveSettingsResult = {
-  success: boolean;
-  error: string | null;
-};
 export function useSaveProfileSettings() {
   const [isSaving, setIsSaving] = useState(false);
   const { data: walletClient } = useWalletClient();

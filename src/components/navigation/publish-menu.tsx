@@ -20,7 +20,8 @@ import type { Tag } from "emblor";
 import { dateTime, evmAddress, uri } from "@lens-protocol/client";
 import { Value } from "@udecode/plate";
 import { TagInput } from "emblor";
-import { PenIcon, ShoppingBag, PlusIcon } from "lucide-react";
+import { PenIcon, PlusIcon, ShoppingBag } from "lucide-react";
+import { ShoppingBag as ShoppingBagSvg } from "../icons/custom-icons";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -674,7 +675,7 @@ export const PublishMenu = () => {
                         </p>
                       </div>
 
-                      <div className="space-y-4 py-2 border-b">
+                      <div className="space-y-4 py-2 ">
                         <div className="flex items-center justify-between">
                           <div>
                             <h3 className="font-medium">Collecting</h3>
@@ -695,9 +696,15 @@ export const PublishMenu = () => {
                         </div>
                       </div>
 
+                      {!isCollectingEnabled && (
+                        <div className="space-y-4 py-2">
+                          <ShoppingBagSvg  />
+                        </div>
+                      )}
+
                       {isCollectingEnabled && (
                         <>
-                          <div className="space-y-4 py-2 border-b">
+                          <div className="space-y-4 py2 border-b">
                             <div className="space-y-2">
                               <Label>License</Label>
                               <Select
@@ -736,7 +743,7 @@ export const PublishMenu = () => {
                             </div>
                           </div>
 
-                          <div className="space-y-4 py-2 border-b">
+                          <div className="space-y-4 py-2 ">
                             <div className="flex items-center justify-between">
                               <div>
                                 <h3 className="font-medium">Charge for collecting</h3>
@@ -784,7 +791,7 @@ export const PublishMenu = () => {
                             )}
                           </div>
 
-                          <div className="space-y-4 py-2 border-b">
+                          <div className="space-y-4 py-2 ">
                             <div className="flex items-center justify-between">
                               <div>
                                 <h3 className="font-medium">Referral rewards</h3>
@@ -851,7 +858,7 @@ export const PublishMenu = () => {
                             )}
                           </div>
 
-                          <div className="space-y-4 py-2 border-b">
+                          <div className="space-y-4 py-2 ">
                             <div className="flex items-center justify-between">
                               <div>
                                 <h3 className="font-medium">Revenue split</h3>
@@ -927,7 +934,7 @@ export const PublishMenu = () => {
                             )}
                           </div>
 
-                          <div className="space-y-4 py-2 border-b">
+                          <div className="space-y-4 py-2 ">
                             <div className="flex items-center justify-between">
                               <div>
                                 <h3 className="font-medium">Limited edition</h3>
