@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { BlogData } from "@/lib/settings/get-blog-data";
@@ -16,25 +16,23 @@ interface BlogSelectMenuProps {
   className?: string;
 }
 
-export function BlogSelectMenu({
+function BlogSelectMenuComponent({
   onBlogChange,
   selectedBlogAddress,
   placeholder = "Select a blog",
   includePersonalBlog = true,
   className,
 }: BlogSelectMenuProps) {
-  const [blogs, setBlogs] = useState<BlogData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [imageLoadStatus, setImageLoadStatus] = useState<Record<string, boolean>>({});
-  const { getBlogs } = useBlogStorage();
+  const { blogState, getBlogs } = useBlogStorage();
 
   useEffect(() => {
-    setIsLoading(true);
-    getBlogs()
-      .then((fetchedBlogs) => {
-        setBlogs(fetchedBlogs || []);
+    const fetchBlogsOnce = async () => {
+      setIsLoading(true);
+      try {
+        const fetchedBlogs = await getBlogs();
 
-        // If no blog is selected, set default to user's personal blog
         if (!selectedBlogAddress && fetchedBlogs && fetchedBlogs.length > 0) {
           const personalBlog = fetchedBlogs.find(blog => blog.address === blog.owner);
           if (personalBlog && onBlogChange) {
@@ -42,17 +40,20 @@ export function BlogSelectMenu({
           }
         }
 
-        setIsLoading(false);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching blogs:", error);
+      } finally {
         setIsLoading(false);
-      });
-  }, [getBlogs, selectedBlogAddress, onBlogChange]);
+      }
+    };
+
+    fetchBlogsOnce();
+
+  }, []);
 
   const filteredBlogs = includePersonalBlog
-    ? blogs
-    : blogs.filter(blog => !(blog.address === blog.owner));
+    ? blogState.blogs
+    : blogState.blogs.filter(blog => !(blog.address === blog.owner));
 
   const handleBlogChange = (value: string) => {
     if (onBlogChange) {
@@ -117,4 +118,6 @@ export function BlogSelectMenu({
       </SelectContent>
     </Select>
   );
-} 
+}
+
+export const BlogSelectMenu = memo(BlogSelectMenuComponent); 
