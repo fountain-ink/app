@@ -12,7 +12,7 @@ import { FeedbackForm } from "../misc/feedback-form";
 import { SettingsBadge } from "../settings/settings-badge";
 import { ConnectionBadge } from "../ui/connection-badge";
 import { UserMenu } from "../user/user-menu";
-import { PublishMenu } from "./publish-menu";
+import { PublishMenu } from "../publish/publish-dialog";
 import { getBlogData, BlogData } from "@/lib/settings/get-blog-data";
 import { toast } from "sonner";
 import { BlogEmailSubscribe } from "../newsletter/newsletter-subscribe-dialog";
@@ -83,7 +83,7 @@ export const Header = ({ session }: { session: MeResult | null }) => {
         <FeedbackForm />
 
         {isBlogPage && blogData && <BlogEmailSubscribe blogData={blogData} variant="default" />}
-        {isWritePage && <PublishMenu />}
+        {isWritePage && <PublishMenu documentId={documentId} />}
         {isWritePage && <EditorOptionsDropdown />}
         {!isWritePage && <DraftCreateButton />}
         <UserMenu session={session} />

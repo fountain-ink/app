@@ -3,22 +3,29 @@ import type { Json } from "@/lib/supabase/database";
 import { BlogData } from "@/lib/settings/get-blog-data";
 
 export type Draft = Database["public"]["Tables"]["drafts"]["Row"] & {
-  collectingSettings?: {
-    isCollectingEnabled: boolean;
-    collectingLicense: string;
-    isChargeEnabled: boolean;
-    price: string;
-    currency: string;
-    isReferralRewardsEnabled: boolean;
-    referralPercent: number;
-    isRevenueSplitEnabled: boolean;
-    recipients: { address: string; percent: number }[];
-    isLimitedEdition: boolean;
-    collectLimit: string;
-    isCollectExpiryEnabled: boolean;
-    collectExpiryDays: number;
-    collectExpiryDate: string;
-  };
+  collectingSettings?: CollectingSettings;
+  publishingSettings?: PublishingSettings;
   blogAddress?: string;
   blog?: BlogData;
 };
+
+export interface PublishingSettings {
+  sendNewsletter: boolean;
+}
+
+export interface CollectingSettings {
+  isCollectingEnabled: boolean;
+  collectingLicense: string;
+  isChargeEnabled: boolean;
+  price: string;
+  currency: string;
+  isReferralRewardsEnabled: boolean;
+  referralPercent: number;
+  isRevenueSplitEnabled: boolean;
+  recipients: { address: string; percentage: number }[];
+  isLimitedEdition: boolean;
+  collectLimit: string;
+  isCollectExpiryEnabled: boolean;
+  collectExpiryDays: number;
+  collectExpiryDate: string;
+}
