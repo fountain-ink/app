@@ -17,15 +17,14 @@ export interface CollectingSettings {
   isCollectingEnabled: boolean;
   collectingLicense: string;
   isChargeEnabled: boolean;
-  price: string;
+  price: number;
   currency: string;
   isReferralRewardsEnabled: boolean;
   referralPercent: number;
   isRevenueSplitEnabled: boolean;
-  recipients: { address: string; percentage: number; username?: string; picture?: string }[];
+  recipients: { address: string; percentage: number; username?: string | null; picture?: string | null }[];
   isLimitedEdition: boolean;
-  collectLimit: string;
+  collectLimit: number;
   isCollectExpiryEnabled: boolean;
   collectExpiryDays: number;
-  collectExpiryDate: string;
 }

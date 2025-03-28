@@ -9,9 +9,9 @@ import { useState } from "react";
 import { useWalletClient } from "wagmi";
 import { PenIcon, ShoppingBag } from "lucide-react";
 import { ArticleDetailsTab } from "./publish-details-tab";
-import { CollectingTab } from "./publish-collecting-tab";
 import { publishPost } from "../../lib/publish/publish-post";
 import { usePublishDraft } from "../../hooks/use-publish-draft";
+import CollectingTab from "./publish-collecting-tab";
 
 interface PublishMenuProps {
   documentId: string;

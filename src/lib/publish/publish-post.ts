@@ -105,8 +105,8 @@ export async function publishPost(
           ? [
             {
               simpleCollect: {
-                ...(collectingSettings.isLimitedEdition && collectingSettings.collectLimit ? { collectLimit: Number.parseInt(collectingSettings.collectLimit) } : {}),
-                ...(collectingSettings.isCollectExpiryEnabled ? { endsAt: dateTime(collectingSettings.collectExpiryDate) } : {}),
+                ...(collectingSettings.isLimitedEdition && collectingSettings.collectLimit ? { collectLimit: collectingSettings.collectLimit } : {}),
+                ...(collectingSettings.isCollectExpiryEnabled ? { endsAt: dateTime(new Date(new Date().getTime() + collectingSettings.collectExpiryDays * 24 * 60 * 60 * 1000).toISOString()) } : {}),
                 ...(payToCollectConfig ? { payToCollect: payToCollectConfig } : {}),
               },
             },
