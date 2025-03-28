@@ -63,3 +63,7 @@ export function formatRelativeTime(date: string | Date): string {
 
   return "just now";
 }
+
+export function isValidEthereumAddress(address: string): boolean {
+  return /^0x[a-fA-F0-9]{40}$/.test(address);
+}

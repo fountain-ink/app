@@ -17,7 +17,8 @@ export function EvmAddress({ address, truncate = false, showCopy = false, classN
     ? `${address.slice(0, 6)}...${address.slice(-4)}`
     : address;
 
-  const handleCopy = () => {
+  const handleCopy = (e: React.MouseEvent) => {
+    e.stopPropagation();
     navigator.clipboard.writeText(address);
     setCopied(true);
 
@@ -30,19 +31,22 @@ export function EvmAddress({ address, truncate = false, showCopy = false, classN
     <span className={cn("inline-flex items-center text-sm text-muted-foreground", className)}>
       <span>{displayAddress}</span>
       {showCopy && (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="p-0 h-auto ml-1 overflow-visible min-w-0 min-h-0"
-          onClick={handleCopy}
-        >
-          {copied ? (
-            <CheckIcon className="h-3.5 w-3.5" />
-          ) : (
-            <CopyIcon className="h-3.5 w-3.5" />
-          )}
-          <span className="sr-only">Copy address</span>
-        </Button>
+        <span className="inline-flex ml-1">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="p-1 h-auto w-auto overflow-visible rounded-full hover:bg-muted"
+            onClick={handleCopy}
+          >
+            {copied ? (
+              <CheckIcon className="h-3.5 w-3.5 text-green-500" />
+            ) : (
+              <CopyIcon className="h-3.5 w-3.5" />
+            )}
+            <span className="sr-only">Copy address</span>
+          </Button>
+        </span>
       )}
     </span>
   );

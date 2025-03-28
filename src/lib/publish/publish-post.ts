@@ -19,7 +19,6 @@ export async function publishPost(
   router: ReturnType<typeof useRouter>,
   queryClient: ReturnType<typeof useQueryClient>
 ): Promise<boolean> {
-  console.log(draft, walletClient, router, queryClient);
   try {
     const anyDraft = draft as any;
     const documentId = typeof draft.id === 'string' ? draft.id : String(draft.id || "");
