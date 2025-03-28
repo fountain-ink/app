@@ -22,7 +22,7 @@ export interface CollectingSettings {
   isReferralRewardsEnabled: boolean;
   referralPercent: number;
   isRevenueSplitEnabled: boolean;
-  recipients: { address: string; percentage: number }[];
+  recipients: { address: string; percentage: number; username?: string; picture?: string }[];
   isLimitedEdition: boolean;
   collectLimit: string;
   isCollectExpiryEnabled: boolean;
