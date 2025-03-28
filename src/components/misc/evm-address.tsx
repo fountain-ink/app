@@ -24,7 +24,7 @@ export function EvmAddress({ address, truncate = false, showCopy = false, classN
 
     setTimeout(() => {
       setCopied(false);
-    }, 2000);
+    }, 1000);
   };
 
   return (
@@ -40,7 +40,7 @@ export function EvmAddress({ address, truncate = false, showCopy = false, classN
             onClick={handleCopy}
           >
             {copied ? (
-              <CheckIcon className="h-3.5 w-3.5 text-green-500" />
+              <CheckIcon className="h-3.5 w-3.5" />
             ) : (
               <CopyIcon className="h-3.5 w-3.5" />
             )}

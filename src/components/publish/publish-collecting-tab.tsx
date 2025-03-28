@@ -20,7 +20,8 @@ import {
   TicketPercentIcon,
   ChartPie,
   CircleFadingPlus,
-  ClockFadingIcon
+  ClockFadingIcon,
+  User2Icon
 } from "lucide-react";
 import { FC, useEffect, useState, useRef } from "react";
 import { ShoppingBag as ShoppingBagSvg } from "../icons/custom-icons";
@@ -59,13 +60,6 @@ const defaultSettings: CollectingSettings = {
   collectExpiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
 };
 
-const RecipientUsername = ({ username }: { username: string }) => {
-  return (
-    <span className="inline-flex items-center">
-      <UserLazyUsername username={username} />
-    </span>
-  );
-};
 
 export const CollectingTab: FC<CollectingTabProps> = ({
   isPublishing,
@@ -391,7 +385,7 @@ export const CollectingTab: FC<CollectingTabProps> = ({
                               <h4 className="font-medium">Referral rewards</h4>
                             </div>
                             <p className="text-sm text-muted-foreground">
-                              Share a portion of your collect revenue with people who amplify your content
+                              Share a portion of your collect revenue with people who repost your content
                             </p>
                           </div>
                           <Switch
@@ -403,8 +397,7 @@ export const CollectingTab: FC<CollectingTabProps> = ({
                         {settings.isReferralRewardsEnabled && (
                           <div className="space-y-4 pt-2">
                             <div className="space-y-2">
-                              <div className="flex justify-between items-center">
-                                <Label>Percentage</Label>
+                              <div className="flex items-center gap-4 pt-4">
                                 <div className="relative w-16">
                                   <Input
                                     type="number"
@@ -421,15 +414,16 @@ export const CollectingTab: FC<CollectingTabProps> = ({
                                   />
                                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">%</span>
                                 </div>
+                                <div className="flex-1">
+                                  <Slider
+                                    value={[referralPercent] as [number]}
+                                    min={1}
+                                    max={100}
+                                    step={0.01}
+                                    onValueChange={([value]) => updateSetting('referralPercent', Math.round(value || 25))}
+                                  />
+                                </div>
                               </div>
-                              <Slider
-                                value={[referralPercent] as [number]}
-                                min={1}
-                                max={100}
-                                step={1}
-                                onValueChange={([value]) => updateSetting('referralPercent', value || 25)}
-                                className="mt-2"
-                              />
                             </div>
                           </div>
                         )}
@@ -469,29 +463,8 @@ export const CollectingTab: FC<CollectingTabProps> = ({
 
                                 {settings.recipients.map((recipient, index) => (
                                   <div key={index} className="flex items-center justify-between">
-                                    <div className="flex items-center gap-2">
-                                      {recipient.picture ? (
-                                        <img
-                                          src={recipient.picture}
-                                          alt={recipient.username || "recipient"}
-                                          className="w-6 h-6 rounded-full"
-                                        />
-                                      ) : (
-                                        <span className="w-6 h-6 bg-primary/40 rounded-full" />
-                                      )}
-                                      <span className="text-sm flex items-center gap-1 truncate max-w-[400px]">
-                                        {recipient.username ? (
-                                          <>
-                                            <RecipientUsername username={recipient.username} />
-                                            <EvmAddress address={recipient.address} truncate showCopy />
-                                          </>
-                                        ) : (
-                                          <EvmAddress address={recipient.address} showCopy />
-                                        )}
-                                      </span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                      {/* Always show editable percentage input */}
+                                    <div className="flex items-center gap-3">
+                                      {/* Percentage input now on the left */}
                                       <div className="relative w-16">
                                         <Input
                                           type="number"
@@ -510,14 +483,36 @@ export const CollectingTab: FC<CollectingTabProps> = ({
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">%</span>
                                       </div>
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => handleRemoveRecipient(index)}
-                                      >
-                                        <XIcon className="w-4 h-4" />
-                                      </Button>
+
+                                      {recipient.picture ? (
+                                        <img
+                                          src={recipient.picture}
+                                          alt={recipient.username || "recipient"}
+                                          className="w-8 h-8 rounded-full border border-border"
+                                        />
+                                      ) : (
+                                        <div className="flex h-8 w-8 border border-border rounded-full items-center justify-center">
+                                          <User2Icon size={16} className="text-muted-foreground" />
+                                        </div>
+                                      )}
+                                      <span className="text-sm flex items-center gap-1 truncate max-w-[400px]">
+                                        {recipient.username ? (
+                                          <>
+                                            <UserLazyUsername username={recipient.username} />
+                                            <EvmAddress address={recipient.address} truncate showCopy />
+                                          </>
+                                        ) : (
+                                          <EvmAddress address={recipient.address} showCopy />
+                                        )}
+                                      </span>
                                     </div>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => handleRemoveRecipient(index)}
+                                    >
+                                      <XIcon className="w-4 h-4" />
+                                    </Button>
                                   </div>
                                 ))}
                               </div>
@@ -525,9 +520,22 @@ export const CollectingTab: FC<CollectingTabProps> = ({
 
                             {showAddRecipient ? (
                               <div className="space-y-4 animate-in slide-in-from-top-2 fade-in duration-200">
-                                <div className="grid grid-cols-[1fr,auto] gap-2">
+                                <div className="grid grid-cols-[auto,1fr] gap-3">
+                                  <div className="relative w-16">
+                                    <Label className="mb-2 block">Percent</Label>
+                                    <Input
+                                      type="number"
+                                      min="1"
+                                      max="100"
+                                      className="pr-6 no-spinners"
+                                      value={newRecipientPercentage}
+                                      onChange={(e) => setNewRecipientPercentage(Number(e.target.value))}
+                                      disabled={distributeEvenlyEnabled}
+                                    />
+                                    <span className="absolute right-3 top-[calc(50%_+_0.5rem)] -translate-y-1/2 text-muted-foreground">%</span>
+                                  </div>
                                   <div>
-                                    <Label>Recipient</Label>
+                                    <Label className="mb-2 block">Recipient</Label>
                                     <div className="relative">
                                       <Input
                                         ref={inputRef}
@@ -571,23 +579,6 @@ export const CollectingTab: FC<CollectingTabProps> = ({
                                           />
                                         </div>
                                       )}
-                                    </div>
-                                  </div>
-                                  <div>
-                                    <Label>Percent</Label>
-                                    <div className="flex items-center gap-2">
-                                      <div className="relative w-16">
-                                        <Input
-                                          type="number"
-                                          min="1"
-                                          max="100"
-                                          className="pr-6 no-spinners"
-                                          value={newRecipientPercentage}
-                                          onChange={(e) => setNewRecipientPercentage(Number(e.target.value))}
-                                          disabled={distributeEvenlyEnabled}
-                                        />
-                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">%</span>
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
