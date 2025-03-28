@@ -4,7 +4,24 @@ import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { PlusIcon, Edit2Icon, CheckIcon, SearchIcon, XIcon } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  PlusIcon,
+  CheckIcon,
+  SearchIcon,
+  XIcon,
+  FileTextIcon,
+  CreditCardIcon,
+  Share2Icon,
+  MegaphoneIcon,
+  CalendarClockIcon,
+  TimerIcon,
+  DatabaseIcon,
+  TicketPercentIcon,
+  ChartPie,
+  CircleFadingPlus,
+  ClockFadingIcon
+} from "lucide-react";
 import { FC, useEffect, useState, useRef } from "react";
 import { ShoppingBag as ShoppingBagSvg } from "../icons/custom-icons";
 import { usePublishDraft } from "../../hooks/use-publish-draft";
@@ -64,6 +81,7 @@ export const CollectingTab: FC<CollectingTabProps> = ({
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<MentionableUser | null>(null);
   const [showAddRecipient, setShowAddRecipient] = useState(false);
+  const [distributeEvenlyEnabled, setDistributeEvenlyEnabled] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const referralPercent = typeof settings.referralPercent === 'number' ? settings.referralPercent : 25;
@@ -234,7 +252,6 @@ export const CollectingTab: FC<CollectingTabProps> = ({
   };
 
   const distributeEvenly = () => {
-    if (settings.recipients.length < 2) return;
 
     const evenPercentage = Math.floor(100 / settings.recipients.length);
     // Calculate remainder to ensure total is always 100%
@@ -257,6 +274,12 @@ export const CollectingTab: FC<CollectingTabProps> = ({
       recipients: updatedRecipients
     }));
   };
+
+  useEffect(() => {
+    if (distributeEvenlyEnabled && settings.recipients.length >= 1) {
+      distributeEvenly();
+    }
+  }, [distributeEvenlyEnabled, settings.recipients.length]);
 
   const handleSubmitButtonClick = () => {
     handleAddRecipient();
@@ -290,35 +313,43 @@ export const CollectingTab: FC<CollectingTabProps> = ({
             {settings.isCollectingEnabled && (
               <div className="space-y-4 pt-4">
                 <div className="border rounded-sm p-4 space-y-4 bg-background/50 hover:bg-background/80 transition-colors shadow-sm">
-                  <div className="space-y-2">
-                    <Label>License</Label>
-                    <p className="text-sm text-muted-foreground">
-                      You can grant the collector a license to use the post. By default you retain all rights.
-                    </p>
-                    <Select
-                      value={settings.collectingLicense}
-                      onValueChange={(value) => updateSetting('collectingLicense', value)}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select a license" />
-                      </SelectTrigger>
-                      <SelectContent position="popper" sideOffset={5} className="z-[60]" side="bottom">
-                        <SelectItem value="CC BY 4.0">Creative Commons (CC BY 4.0)</SelectItem>
-                        <SelectItem value="CC BY-SA 4.0">CC BY-SA 4.0</SelectItem>
-                        <SelectItem value="CC BY-NC 4.0">CC BY-NC 4.0</SelectItem>
-                        <SelectItem value="CC BY-ND 4.0">CC BY-ND 4.0</SelectItem>
-                        <SelectItem value="CC BY-NC-SA 4.0">CC BY-NC-SA 4.0</SelectItem>
-                        <SelectItem value="CC BY-NC-ND 4.0">CC BY-NC-ND 4.0</SelectItem>
-                        <SelectItem value="CC0 1.0">CC0 1.0 (Public Domain)</SelectItem>
-                      </SelectContent>
-                    </Select>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <FileTextIcon className="h-4 w-4 text-muted-foreground" />
+                        <h3 className="font-medium">License</h3>
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        You can grant the collector a license to use the post. By default you retain all rights.
+                      </p>
+                    </div>
                   </div>
+                  <Select
+                    value={settings.collectingLicense}
+                    onValueChange={(value) => updateSetting('collectingLicense', value)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a license" />
+                    </SelectTrigger>
+                    <SelectContent position="popper" sideOffset={5} className="z-[60]" side="bottom">
+                      <SelectItem value="CC BY 4.0">Creative Commons (CC BY 4.0)</SelectItem>
+                      <SelectItem value="CC BY-SA 4.0">CC BY-SA 4.0</SelectItem>
+                      <SelectItem value="CC BY-NC 4.0">CC BY-NC 4.0</SelectItem>
+                      <SelectItem value="CC BY-ND 4.0">CC BY-ND 4.0</SelectItem>
+                      <SelectItem value="CC BY-NC-SA 4.0">CC BY-NC-SA 4.0</SelectItem>
+                      <SelectItem value="CC BY-NC-ND 4.0">CC BY-NC-ND 4.0</SelectItem>
+                      <SelectItem value="CC0 1.0">CC0 1.0 (Public Domain)</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="border rounded-sm p-4 space-y-4 bg-background/50 hover:bg-background/80 transition-colors shadow-sm">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-medium">Charge for collecting</h3>
+                      <div className="flex items-center gap-2">
+                        <CreditCardIcon className="h-4 w-4 text-muted-foreground" />
+                        <h3 className="font-medium">Charge for collecting</h3>
+                      </div>
                       <p className="text-sm text-muted-foreground">
                         Get paid in crypto when someone collects your post
                       </p>
@@ -330,257 +361,270 @@ export const CollectingTab: FC<CollectingTabProps> = ({
                   </div>
 
                   {settings.isChargeEnabled && (
-                    <div className="space-y-2 max-w-xs pt-2">
-                      <Label>Price</Label>
-                      <div className="flex items-center">
-                        <div className="relative w-full">
-                          <Input
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            placeholder="0.00"
-                            value={Number(settings.price)}
-                            className="pl-7 no-spinners"
-                            onChange={(e) => {
-                              const value = parseFloat(e.target.value) || 0;
-                              updateSetting('price', value.toString());
-                            }}
-                          />
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">$</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="border rounded-sm p-4 space-y-4 bg-background/50 hover:bg-background/80 transition-colors shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">Referral rewards</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Share a portion of you collect revenue with people who amplify your content
-                      </p>
-                    </div>
-                    <Switch
-                      checked={settings.isReferralRewardsEnabled}
-                      onCheckedChange={(checked) => updateSetting('isReferralRewardsEnabled', checked)}
-                    />
-                  </div>
-
-                  {settings.isReferralRewardsEnabled && (
-                    <div className="space-y-4 pt-2">
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <Label>Percentage</Label>
-                          <div className="relative w-16">
+                    <div className="space-y-6 pt-2">
+                      <div className="space-y-2 max-w-xs">
+                        <Label>Price</Label>
+                        <div className="flex items-center">
+                          <div className="relative w-full">
                             <Input
                               type="number"
-                              min="1"
-                              max="100"
-                              className="pr-6 no-spinners"
-                              value={referralPercent}
+                              min="0"
+                              step="0.01"
+                              placeholder="0.00"
+                              value={Number(settings.price)}
+                              className="pl-7 no-spinners"
                               onChange={(e) => {
-                                const value = Number(e.target.value);
-                                if (!isNaN(value) && value >= 1 && value <= 100) {
-                                  updateSetting('referralPercent', value);
-                                }
+                                const value = parseFloat(e.target.value) || 0;
+                                updateSetting('price', value.toString());
                               }}
                             />
-                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">%</span>
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">$</span>
                           </div>
                         </div>
-                        <Slider
-                          value={[referralPercent] as [number]}
-                          min={1}
-                          max={100}
-                          step={1}
-                          onValueChange={([value]) => updateSetting('referralPercent', value || 25)}
-                          className="mt-2"
-                        />
                       </div>
-                    </div>
-                  )}
-                </div>
 
-                <div className="border rounded-sm p-4 space-y-4 bg-background/50 hover:bg-background/80 transition-colors shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">Revenue split</h3>
-                      <p className="text-sm text-muted-foreground">Share your collect revenue with others</p>
-                    </div>
-                    <Switch
-                      checked={settings.isRevenueSplitEnabled}
-                      onCheckedChange={(checked) => updateSetting('isRevenueSplitEnabled', checked)}
-                    />
-                  </div>
-
-                  {settings.isRevenueSplitEnabled && (
-                    <div className="space-y-4 pt-2">
-                      {settings.recipients.length > 0 && (
-                        <div className="space-y-2">
-                          {settings.recipients.length >= 2 && (
-                            <div className="flex justify-end mb-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={distributeEvenly}
-                              >
-                                Distribute Evenly
-                              </Button>
+                      <div className="border-t pt-4 mt-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <MegaphoneIcon className="h-4 w-4 text-muted-foreground" />
+                              <h4 className="font-medium">Referral rewards</h4>
                             </div>
-                          )}
+                            <p className="text-sm text-muted-foreground">
+                              Share a portion of your collect revenue with people who amplify your content
+                            </p>
+                          </div>
+                          <Switch
+                            checked={settings.isReferralRewardsEnabled}
+                            onCheckedChange={(checked) => updateSetting('isReferralRewardsEnabled', checked)}
+                          />
+                        </div>
 
-                          {settings.recipients.map((recipient, index) => (
-                            <div key={index} className="flex items-center justify-between">
-                              <div className="flex items-center gap-2">
-                                {recipient.picture ? (
-                                  <img
-                                    src={recipient.picture}
-                                    alt={recipient.username || "recipient"}
-                                    className="w-6 h-6 rounded-full"
-                                  />
-                                ) : (
-                                  <span className="w-6 h-6 bg-primary/40 rounded-full" />
-                                )}
-                                <span className="text-sm flex items-center gap-1 truncate max-w-[400px]">
-                                  {recipient.username ? (
-                                    <>
-                                      <RecipientUsername username={recipient.username} />
-                                      <EvmAddress address={recipient.address} truncate showCopy />
-                                    </>
-                                  ) : (
-                                    <EvmAddress address={recipient.address} showCopy />
-                                  )}
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                {/* Always show editable percentage input */}
+                        {settings.isReferralRewardsEnabled && (
+                          <div className="space-y-4 pt-2">
+                            <div className="space-y-2">
+                              <div className="flex justify-between items-center">
+                                <Label>Percentage</Label>
                                 <div className="relative w-16">
                                   <Input
                                     type="number"
                                     min="1"
                                     max="100"
                                     className="pr-6 no-spinners"
-                                    value={recipient.percentage}
+                                    value={referralPercent}
                                     onChange={(e) => {
                                       const value = Number(e.target.value);
                                       if (!isNaN(value) && value >= 1 && value <= 100) {
-                                        updateRecipientPercentage(index, value);
+                                        updateSetting('referralPercent', value);
                                       }
                                     }}
                                   />
                                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">%</span>
                                 </div>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => handleRemoveRecipient(index)}
-                                >
-                                  <XIcon className="w-4 h-4" />
-                                </Button>
                               </div>
+                              <Slider
+                                value={[referralPercent] as [number]}
+                                min={1}
+                                max={100}
+                                step={1}
+                                onValueChange={([value]) => updateSetting('referralPercent', value || 25)}
+                                className="mt-2"
+                              />
                             </div>
-                          ))}
-                        </div>
-                      )}
+                          </div>
+                        )}
+                      </div>
 
-                      {showAddRecipient ? (
-                        <div className="space-y-4 animate-in slide-in-from-top-2 fade-in duration-200">
-                          <div className="grid grid-cols-[1fr,auto] gap-2">
-                            <div>
-                              <Label>Recipient</Label>
-                              <div className="relative">
-                                <Input
-                                  ref={inputRef}
-                                  placeholder="@username or 0x address..."
-                                  value={selectedUser ? `@${selectedUser.username}` : newRecipientAddress}
-                                  onChange={handleInputChange}
-                                  onFocus={handleInputFocus}
-                                  onKeyDown={handleKeyDown}
-                                  className={`
-                                    ${selectedUser?.picture ? "pl-10" : ""} 
-                                    ${selectedUser ? "pr-24" : ""} 
-                                    ${isSearchOpen && !selectedUser ? "pr-10 border-primary ring-1 ring-primary/30 shadow-sm" : ""}
-                                    transition-all duration-200
-                                  `}
-                                  autoFocus
-                                />
-                                {isSearchOpen && !selectedUser && (
-                                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                                    <SearchIcon className="h-4 w-4 text-primary animate-pulse" />
-                                  </div>
-                                )}
-                                {selectedUser && (
-                                  <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center bg-background/80 pl-1">
-                                    <EvmAddress address={selectedUser.key} truncate className="text-xs" />
-                                  </div>
-                                )}
-                                {selectedUser && selectedUser.picture && (
-                                  <div className="absolute left-2 top-1/2 -translate-y-1/2">
-                                    <img
-                                      src={selectedUser.picture}
-                                      alt={selectedUser.username}
-                                      className="w-6 h-6 rounded-full"
-                                    />
-                                  </div>
-                                )}
-                                {isSearchOpen && newRecipientAddress.length > 0 && (
-                                  <div className="absolute left-0 right-0 top-full mt-1 bg-popover border border-border rounded-md shadow-md z-50">
-                                    <UserSearchList
-                                      query={searchQuery}
-                                      onSelect={handleUserSelect}
-                                    />
-                                  </div>
-                                )}
-                              </div>
+                      <div className="border-t pt-4 mt-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <ChartPie className="h-4 w-4 text-muted-foreground" />
+                              <h4 className="font-medium">Revenue split</h4>
                             </div>
-                            <div>
-                              <Label>Percent</Label>
-                              <div className="flex items-center gap-2">
-                                <div className="relative w-16">
-                                  <Input
-                                    type="number"
-                                    min="1"
-                                    max="100"
-                                    className="pr-6 no-spinners"
-                                    value={newRecipientPercentage}
-                                    onChange={(e) => setNewRecipientPercentage(Number(e.target.value))}
-                                  />
-                                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">%</span>
+                            <p className="text-sm text-muted-foreground">Share your collect revenue with others</p>
+                          </div>
+                          <Switch
+                            checked={settings.isRevenueSplitEnabled}
+                            onCheckedChange={(checked) => updateSetting('isRevenueSplitEnabled', checked)}
+                          />
+                        </div>
+
+                        {settings.isRevenueSplitEnabled && (
+                          <div className="space-y-4 pt-2">
+                            {settings.recipients.length > 0 && (
+                              <div className="space-y-2">
+                                {settings.recipients.length >= 1 && (
+                                  <div className="flex items-center gap-2 mb-3">
+                                    <Checkbox
+                                      id="distribute-evenly"
+                                      checked={distributeEvenlyEnabled}
+                                      onCheckedChange={(checked) => setDistributeEvenlyEnabled(checked as boolean)}
+                                    />
+                                    <Label htmlFor="distribute-evenly" className="cursor-pointer text-sm">
+                                      Distribute evenly
+                                    </Label>
+                                  </div>
+                                )}
+
+                                {settings.recipients.map((recipient, index) => (
+                                  <div key={index} className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                      {recipient.picture ? (
+                                        <img
+                                          src={recipient.picture}
+                                          alt={recipient.username || "recipient"}
+                                          className="w-6 h-6 rounded-full"
+                                        />
+                                      ) : (
+                                        <span className="w-6 h-6 bg-primary/40 rounded-full" />
+                                      )}
+                                      <span className="text-sm flex items-center gap-1 truncate max-w-[400px]">
+                                        {recipient.username ? (
+                                          <>
+                                            <RecipientUsername username={recipient.username} />
+                                            <EvmAddress address={recipient.address} truncate showCopy />
+                                          </>
+                                        ) : (
+                                          <EvmAddress address={recipient.address} showCopy />
+                                        )}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      {/* Always show editable percentage input */}
+                                      <div className="relative w-16">
+                                        <Input
+                                          type="number"
+                                          min="1"
+                                          max="100"
+                                          className="pr-6 no-spinners"
+                                          value={recipient.percentage}
+                                          onChange={(e) => {
+                                            const value = Number(e.target.value);
+                                            if (!isNaN(value) && value >= 1 && value <= 100) {
+                                              setDistributeEvenlyEnabled(false);
+                                              updateRecipientPercentage(index, value);
+                                            }
+                                          }}
+                                          disabled={distributeEvenlyEnabled}
+                                        />
+                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">%</span>
+                                      </div>
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => handleRemoveRecipient(index)}
+                                      >
+                                        <XIcon className="w-4 h-4" />
+                                      </Button>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {showAddRecipient ? (
+                              <div className="space-y-4 animate-in slide-in-from-top-2 fade-in duration-200">
+                                <div className="grid grid-cols-[1fr,auto] gap-2">
+                                  <div>
+                                    <Label>Recipient</Label>
+                                    <div className="relative">
+                                      <Input
+                                        ref={inputRef}
+                                        placeholder="@username or 0x address..."
+                                        value={selectedUser ? `@${selectedUser.username}` : newRecipientAddress}
+                                        onChange={handleInputChange}
+                                        onFocus={handleInputFocus}
+                                        onKeyDown={handleKeyDown}
+                                        className={`
+                                          ${selectedUser?.picture ? "pl-10" : ""} 
+                                          ${selectedUser ? "pr-24" : ""} 
+                                          ${isSearchOpen && !selectedUser ? "pr-10 border-primary ring-1 ring-primary/30 shadow-sm" : ""}
+                                          transition-all duration-200
+                                        `}
+                                        autoFocus
+                                      />
+                                      {isSearchOpen && !selectedUser && (
+                                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                                          <SearchIcon className="h-4 w-4 text-primary animate-pulse" />
+                                        </div>
+                                      )}
+                                      {selectedUser && (
+                                        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center bg-background/80 pl-1">
+                                          <EvmAddress address={selectedUser.key} truncate className="text-xs" />
+                                        </div>
+                                      )}
+                                      {selectedUser && selectedUser.picture && (
+                                        <div className="absolute left-2 top-1/2 -translate-y-1/2">
+                                          <img
+                                            src={selectedUser.picture}
+                                            alt={selectedUser.username}
+                                            className="w-6 h-6 rounded-full"
+                                          />
+                                        </div>
+                                      )}
+                                      {isSearchOpen && newRecipientAddress.length > 0 && (
+                                        <div className="absolute left-0 right-0 top-full mt-1 bg-popover border border-border rounded-md shadow-md z-50">
+                                          <UserSearchList
+                                            query={searchQuery}
+                                            onSelect={handleUserSelect}
+                                          />
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <Label>Percent</Label>
+                                    <div className="flex items-center gap-2">
+                                      <div className="relative w-16">
+                                        <Input
+                                          type="number"
+                                          min="1"
+                                          max="100"
+                                          className="pr-6 no-spinners"
+                                          value={newRecipientPercentage}
+                                          onChange={(e) => setNewRecipientPercentage(Number(e.target.value))}
+                                          disabled={distributeEvenlyEnabled}
+                                        />
+                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">%</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="flex justify-between">
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setShowAddRecipient(false)}
+                                  >
+                                    Cancel
+                                  </Button>
+                                  <Button
+                                    variant="default"
+                                    size="sm"
+                                    onClick={handleSubmitButtonClick}
+                                    disabled={!newRecipientAddress || newRecipientPercentage <= 0 || newRecipientPercentage > 100}
+                                  >
+                                    Submit
+                                  </Button>
                                 </div>
                               </div>
-                            </div>
+                            ) : (
+                              <div className="flex">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="animate-in slide-in-from-bottom-2 fade-in duration-200"
+                                  onClick={() => setShowAddRecipient(true)}
+                                >
+                                  <PlusIcon className="w-4 h-4" />
+                                  Add recipient
+                                </Button>
+                              </div>
+                            )}
                           </div>
-                          <div className="flex justify-between">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => setShowAddRecipient(false)}
-                            >
-                              Cancel
-                            </Button>
-                            <Button
-                              variant="default"
-                              size="sm"
-                              onClick={handleSubmitButtonClick}
-                              disabled={!newRecipientAddress || newRecipientPercentage <= 0 || newRecipientPercentage > 100}
-                            >
-                              <CheckIcon className="w-4 h-4 mr-2" />
-                              Submit
-                            </Button>
-                          </div>
-                        </div>
-                      ) : (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="w-full animate-in slide-in-from-bottom-2 fade-in duration-200"
-                          onClick={() => setShowAddRecipient(true)}
-                        >
-                          <PlusIcon className="w-4 h-4 mr-2" />
-                          Add recipient
-                        </Button>
-                      )}
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -588,7 +632,10 @@ export const CollectingTab: FC<CollectingTabProps> = ({
                 <div className="border rounded-sm p-4 space-y-4 bg-background/50 hover:bg-background/80 transition-colors shadow-sm">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-medium">Limited edition</h3>
+                      <div className="flex items-center gap-2">
+                        <CircleFadingPlus className="h-4 w-4 text-muted-foreground" />
+                        <h3 className="font-medium">Limited edition</h3>
+                      </div>
                       <p className="text-sm text-muted-foreground">Only allow a certain number of collects</p>
                     </div>
                     <Switch
@@ -620,7 +667,10 @@ export const CollectingTab: FC<CollectingTabProps> = ({
                 <div className="border rounded-sm p-4 space-y-4 bg-background/50 hover:bg-background/80 transition-colors shadow-sm">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-medium">Collect expiry</h3>
+                      <div className="flex items-center gap-2">
+                        <ClockFadingIcon className="h-4 w-4 text-muted-foreground" />
+                        <h3 className="font-medium">Collect expiry</h3>
+                      </div>
                       <p className="text-sm text-muted-foreground">
                         Only allow collecting until a certain time
                       </p>
