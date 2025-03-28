@@ -21,12 +21,13 @@ import {
   ChartPie,
   CircleFadingPlus,
   ClockFadingIcon,
-  User2Icon
+  User2Icon,
+  AlertCircleIcon
 } from "lucide-react";
 import { FC, useEffect, useState, useRef } from "react";
 import { ShoppingBag as ShoppingBagSvg } from "../icons/custom-icons";
 import { usePublishDraft } from "../../hooks/use-publish-draft";
-import { CollectingSettings } from "../draft/draft";
+import { CollectingSettings as BaseCollectingSettings } from "../draft/draft";
 import { Slider } from "@/components/ui/slider";
 import { MentionableUser } from "../user/user-search";
 import { toast } from "sonner";
@@ -36,6 +37,19 @@ import { UserSearchList } from "../user/user-search-list";
 import { EvmAddress } from "../misc/evm-address";
 import { UserLazyUsername } from "../user/user-lazy-username";
 import { isValidEthereumAddress } from "@/lib/utils";
+
+interface RecipientEntry {
+  address: string;
+  percentage: number;
+  username?: string;
+  picture?: string;
+  emptyDisplay?: boolean;
+}
+
+// Extend the base CollectingSettings to include our extended recipient type
+interface CollectingSettings extends Omit<BaseCollectingSettings, 'recipients'> {
+  recipients: RecipientEntry[];
+}
 
 interface CollectingTabProps {
   isPublishing: boolean;
@@ -69,6 +83,21 @@ export const CollectingTab: FC<CollectingTabProps> = ({
   const { getDraft, updateDraft } = usePublishDraft(documentId);
   const [settings, setSettings] = useState<CollectingSettings>(getDraft()?.collectingSettings || defaultSettings);
 
+  const [errors, setErrors] = useState<{
+    price?: string;
+    referralPercent?: string;
+    recipientPercentage?: string;
+    collectLimit?: string;
+    collectExpiryDays?: string;
+    revenueSplitTotal?: string;
+  }>({});
+
+  const [priceInput, setPriceInput] = useState(settings.price);
+  const [collectLimitInput, setCollectLimitInput] = useState(settings.collectLimit);
+  const [collectExpiryDaysInput, setCollectExpiryDaysInput] = useState(
+    settings.collectExpiryDays ? settings.collectExpiryDays.toString() : ''
+  );
+
   const [newRecipientAddress, setNewRecipientAddress] = useState("");
   const [newRecipientPercentage, setNewRecipientPercentage] = useState(50);
   const [searchQuery, setSearchQuery] = useState("");
@@ -79,6 +108,7 @@ export const CollectingTab: FC<CollectingTabProps> = ({
 
   const inputRef = useRef<HTMLInputElement>(null);
   const referralPercent = typeof settings.referralPercent === 'number' ? settings.referralPercent : 25;
+  const [isFormValid, setIsFormValid] = useState(true);
 
   useEffect(() => {
     const draft = getDraft();
@@ -88,7 +118,19 @@ export const CollectingTab: FC<CollectingTabProps> = ({
       setSettings({
         ...draft.collectingSettings
       });
+
+      setPriceInput(draft.collectingSettings.price);
+      setCollectLimitInput(draft.collectingSettings.collectLimit);
+      setCollectExpiryDaysInput(
+        draft.collectingSettings.collectExpiryDays
+          ? draft.collectingSettings.collectExpiryDays.toString()
+          : ''
+      );
     }
+
+    setTimeout(() => {
+      validateAllFields();
+    }, 0);
   }, [getDraft]);
 
   useEffect(() => {
@@ -97,14 +139,61 @@ export const CollectingTab: FC<CollectingTabProps> = ({
     }
   }, [settings, updateDraft, documentId]);
 
+  useEffect(() => {
+    if (settings.isRevenueSplitEnabled && settings.recipients.length > 0) {
+      validateRevenueSplit();
+    } else {
+      setErrors(prev => ({ ...prev, revenueSplitTotal: undefined }));
+    }
+  }, [settings.recipients, settings.isRevenueSplitEnabled]);
+
+  useEffect(() => {
+    validateAllFields();
+  }, [
+    settings.isCollectingEnabled,
+    settings.isChargeEnabled,
+    settings.isReferralRewardsEnabled,
+    settings.isRevenueSplitEnabled,
+    settings.isLimitedEdition,
+    settings.isCollectExpiryEnabled
+  ]);
+
+  useEffect(() => {
+    if (settings.isCollectingEnabled) {
+      validateAllFields();
+    }
+  }, [
+    priceInput,
+    collectLimitInput,
+    collectExpiryDaysInput,
+    settings.referralPercent,
+    settings.recipients.length
+  ]);
+
+  useEffect(() => {
+    if (settings.isCollectingEnabled && settings.isChargeEnabled && settings.isRevenueSplitEnabled) {
+      validateRevenueSplit();
+      validateAllFields();
+    }
+  }, [settings.recipients]);
+
   const expiryDate = new Date();
   expiryDate.setDate(expiryDate.getDate() + (settings.collectExpiryDays || 7));
 
   const updateSetting = <K extends keyof CollectingSettings>(key: K, value: CollectingSettings[K]) => {
-    setSettings(prev => ({
-      ...prev,
-      [key]: value
-    }));
+    if (key === 'price' || key === 'collectLimit' || key === 'collectExpiryDays') {
+      if (value === '' || (typeof value === 'string' && !isNaN(parseFloat(value)))) {
+        setSettings(prev => ({
+          ...prev,
+          [key]: value
+        }));
+      }
+    } else {
+      setSettings(prev => ({
+        ...prev,
+        [key]: value
+      }));
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -181,6 +270,18 @@ export const CollectingTab: FC<CollectingTabProps> = ({
       return;
     }
 
+    const isDuplicate = settings.recipients.some(recipient =>
+      recipient.address.toLowerCase() === address.toLowerCase()
+    );
+
+    if (isDuplicate) {
+      toast.error("This recipient has already been added");
+      return;
+    }
+
+    const currentTotal = calculateTotalPercentage();
+    const willExceedTotal = currentTotal + newRecipientPercentage > 100;
+
     const newRecipient: {
       address: string;
       percentage: number;
@@ -204,13 +305,20 @@ export const CollectingTab: FC<CollectingTabProps> = ({
       recipients: [...prev.recipients, newRecipient]
     }));
 
+    if (willExceedTotal) {
+      const newTotal = currentTotal + newRecipientPercentage;
+      setErrors(prev => ({
+        ...prev,
+        revenueSplitTotal: `Total exceeds 100%. Current total: ${newTotal}%`
+      }));
+    }
+
     setNewRecipientAddress("");
     setNewRecipientPercentage(50);
     setSelectedUser(null);
     setIsSearchOpen(false);
     setShowAddRecipient(false);
 
-    // Focus back on the input after adding
     setTimeout(() => {
       inputRef.current?.focus();
     }, 10);
@@ -225,6 +333,23 @@ export const CollectingTab: FC<CollectingTabProps> = ({
         recipients: newRecipients
       };
     });
+
+    setTimeout(() => {
+      if (settings.isRevenueSplitEnabled) {
+        const remainingRecipients = [...settings.recipients];
+        remainingRecipients.splice(index, 1);
+
+        if (remainingRecipients.length > 1) {
+          const addresses = remainingRecipients.map(r => r.address.toLowerCase());
+          const uniqueAddresses = new Set(addresses);
+
+          if (uniqueAddresses.size === addresses.length) {
+            setErrors(prev => ({ ...prev, revenueSplitTotal: undefined }));
+          }
+        }
+      }
+      validateAllFields();
+    }, 0);
   };
 
   const updateRecipientPercentage = (index: number, percentage: number) => {
@@ -232,6 +357,12 @@ export const CollectingTab: FC<CollectingTabProps> = ({
 
     const recipient = settings.recipients[index];
     if (!recipient) return;
+
+    const currentTotal = calculateTotalPercentage();
+    const newTotal = currentTotal - recipient.percentage + percentage;
+    const willExceedTotal = newTotal > 100;
+
+    setErrors(prev => ({ ...prev, recipientPercentage: undefined }));
 
     const updatedRecipients = [...settings.recipients];
     updatedRecipients[index] = {
@@ -243,16 +374,25 @@ export const CollectingTab: FC<CollectingTabProps> = ({
       ...prev,
       recipients: updatedRecipients
     }));
+
+    if (willExceedTotal) {
+      setErrors(prev => ({
+        ...prev,
+        revenueSplitTotal: `Total exceeds 100%. Current total: ${newTotal}%`
+      }));
+      setIsFormValid(false);
+    } else {
+      setTimeout(() => {
+        validateAllFields();
+      }, 0);
+    }
   };
 
   const distributeEvenly = () => {
-
     const evenPercentage = Math.floor(100 / settings.recipients.length);
-    // Calculate remainder to ensure total is always 100%
     const remainder = 100 - (evenPercentage * settings.recipients.length);
 
     const updatedRecipients = settings.recipients.map((recipient, index) => {
-      // Add the remainder to the first recipient to make sure total is 100%
       const adjustedPercentage = index === 0 ?
         evenPercentage + remainder :
         evenPercentage;
@@ -267,6 +407,10 @@ export const CollectingTab: FC<CollectingTabProps> = ({
       ...prev,
       recipients: updatedRecipients
     }));
+
+    setTimeout(() => {
+      validateAllFields();
+    }, 0);
   };
 
   useEffect(() => {
@@ -277,6 +421,276 @@ export const CollectingTab: FC<CollectingTabProps> = ({
 
   const handleSubmitButtonClick = () => {
     handleAddRecipient();
+  };
+
+  const calculateTotalPercentage = () => {
+    return settings.recipients.reduce((sum, recipient) => sum + recipient.percentage, 0);
+  };
+
+  const validateRevenueSplit = () => {
+    if (!settings.isRevenueSplitEnabled || settings.recipients.length === 0) {
+      setErrors(prev => ({ ...prev, revenueSplitTotal: undefined }));
+      return true;
+    }
+
+    const addresses = settings.recipients.map(r => r.address.toLowerCase());
+    const uniqueAddresses = new Set(addresses);
+    if (uniqueAddresses.size !== addresses.length) {
+      setErrors(prev => ({ ...prev, revenueSplitTotal: 'Duplicate recipient addresses found' }));
+      setIsFormValid(false);
+      return false;
+    }
+
+    const hasZeroPercentage = settings.recipients.some(r => r.percentage === 0);
+    if (hasZeroPercentage) {
+      setErrors(prev => ({ ...prev, revenueSplitTotal: 'All recipients must have a percentage greater than 0' }));
+      setIsFormValid(false);
+      return false;
+    }
+
+    const total = calculateTotalPercentage();
+    if (total !== 100) {
+      setErrors(prev => ({ ...prev, revenueSplitTotal: `Total must be 100%. Current total: ${total}%` }));
+      setIsFormValid(false);
+      return false;
+    }
+
+    setErrors(prev => ({ ...prev, revenueSplitTotal: undefined }));
+    return true;
+  };
+
+  const validateRequiredFields = () => {
+    let isValid = true;
+    const newErrors = { ...errors };
+
+    Object.keys(newErrors).forEach(key => {
+      newErrors[key as keyof typeof newErrors] = undefined;
+    });
+
+    if (!settings.isCollectingEnabled) {
+      setErrors(newErrors);
+      setIsFormValid(true);
+      return true;
+    }
+
+    if (settings.isChargeEnabled) {
+      const priceValue = parseFloat(priceInput);
+      if (priceInput === '' || isNaN(priceValue) || priceValue <= 0) {
+        newErrors.price = 'Price must be greater than 0';
+        isValid = false;
+      }
+
+      if (settings.isReferralRewardsEnabled) {
+        if (referralPercent <= 0 || referralPercent > 100) {
+          newErrors.referralPercent = 'Referral percentage must be between 1 and 100';
+          isValid = false;
+        }
+      }
+
+      if (settings.isRevenueSplitEnabled) {
+        if (settings.recipients.length === 0) {
+          newErrors.revenueSplitTotal = 'At least one recipient is required';
+          isValid = false;
+        } else {
+          const addresses = settings.recipients.map(r => r.address.toLowerCase());
+          const uniqueAddresses = new Set(addresses);
+          if (uniqueAddresses.size !== addresses.length) {
+            newErrors.revenueSplitTotal = 'Duplicate recipient addresses found';
+            isValid = false;
+          } else {
+            const hasZeroPercentage = settings.recipients.some(r => r.percentage === 0);
+            if (hasZeroPercentage) {
+              newErrors.revenueSplitTotal = 'All recipients must have a percentage greater than 0';
+              isValid = false;
+            } else {
+              const total = calculateTotalPercentage();
+              if (total !== 100) {
+                newErrors.revenueSplitTotal = `Total must be 100%. Current total: ${total}%`;
+                isValid = false;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    if (settings.isLimitedEdition) {
+      const limitValue = Number(collectLimitInput);
+      if (collectLimitInput === '' || isNaN(limitValue) || limitValue < 1) {
+        newErrors.collectLimit = 'Maximum collects must be at least 1';
+        isValid = false;
+      }
+    }
+
+    if (settings.isCollectExpiryEnabled) {
+      const daysValue = Number(collectExpiryDaysInput);
+      if (collectExpiryDaysInput === '' || isNaN(daysValue) || daysValue < 1) {
+        newErrors.collectExpiryDays = 'Expiry days must be at least 1';
+        isValid = false;
+      }
+    }
+
+    setErrors(newErrors);
+    setIsFormValid(isValid);
+    return isValid;
+  };
+
+  const validateAllFields = () => {
+    return validateRequiredFields();
+  };
+
+  const handlePublishWithValidation = () => {
+    if (validateRequiredFields()) {
+      handlePublish();
+    }
+  };
+
+  const validatePrice = (value: string) => {
+    if (value === '') {
+      setErrors(prev => ({ ...prev, price: settings.isChargeEnabled ? 'Price is required' : undefined }));
+      const isValid = !settings.isChargeEnabled;
+      setIsFormValid(prevValid => isValid && prevValid);
+      return !settings.isChargeEnabled;
+    }
+
+    const numValue = parseFloat(value);
+    if (isNaN(numValue)) {
+      setErrors(prev => ({ ...prev, price: 'Invalid number' }));
+      setIsFormValid(false);
+      return false;
+    }
+
+    if (numValue <= 0) {
+      setErrors(prev => ({ ...prev, price: 'Price must be greater than 0' }));
+      setIsFormValid(false);
+      return false;
+    }
+
+    setErrors(prev => ({ ...prev, price: undefined }));
+    return true;
+  };
+
+  const validateReferralPercentage = (value: string | number) => {
+    if (value === '' || value === 0) {
+      setErrors(prev => ({
+        ...prev, referralPercent: settings.isReferralRewardsEnabled ?
+          'Referral percentage is required' : undefined
+      }));
+      const isValid = !settings.isReferralRewardsEnabled;
+      setIsFormValid(prevValid => isValid && prevValid);
+      return !settings.isReferralRewardsEnabled;
+    }
+
+    const numValue = typeof value === 'string' ? parseFloat(value) : value;
+    if (isNaN(numValue)) {
+      setErrors(prev => ({ ...prev, referralPercent: 'Invalid number' }));
+      setIsFormValid(false);
+      return false;
+    }
+
+    if (numValue < 1) {
+      setErrors(prev => ({ ...prev, referralPercent: 'Percentage must be at least 1' }));
+      setIsFormValid(false);
+      return false;
+    }
+
+    if (numValue > 100) {
+      setErrors(prev => ({ ...prev, referralPercent: 'Percentage cannot exceed 100' }));
+      setIsFormValid(false);
+      return false;
+    }
+
+    setErrors(prev => ({ ...prev, referralPercent: undefined }));
+    return true;
+  };
+
+  const validateCollectLimit = (value: string) => {
+    if (value === '') {
+      setErrors(prev => ({
+        ...prev, collectLimit: settings.isLimitedEdition ?
+          'Maximum collects is required' : undefined
+      }));
+      const isValid = !settings.isLimitedEdition;
+      setIsFormValid(prevValid => isValid && prevValid);
+      return !settings.isLimitedEdition;
+    }
+
+    const numValue = parseInt(value);
+    if (isNaN(numValue)) {
+      setErrors(prev => ({ ...prev, collectLimit: 'Invalid number' }));
+      setIsFormValid(false);
+      return false;
+    }
+
+    if (numValue < 1) {
+      setErrors(prev => ({ ...prev, collectLimit: 'Value must be at least 1' }));
+      setIsFormValid(false);
+      return false;
+    }
+
+    setErrors(prev => ({ ...prev, collectLimit: undefined }));
+    return true;
+  };
+
+  const validateCollectExpiryDays = (value: string) => {
+    if (value === '') {
+      setErrors(prev => ({
+        ...prev, collectExpiryDays: settings.isCollectExpiryEnabled ?
+          'Expiry days is required' : undefined
+      }));
+      const isValid = !settings.isCollectExpiryEnabled;
+      setIsFormValid(prevValid => isValid && prevValid);
+      return !settings.isCollectExpiryEnabled;
+    }
+
+    const numValue = parseInt(value);
+    if (isNaN(numValue)) {
+      setErrors(prev => ({ ...prev, collectExpiryDays: 'Invalid number' }));
+      setIsFormValid(false);
+      return false;
+    }
+
+    if (numValue < 1) {
+      setErrors(prev => ({ ...prev, collectExpiryDays: 'Value must be at least 1' }));
+      setIsFormValid(false);
+      return false;
+    }
+
+    const MAX_DAYS = 365 * 100;
+    if (numValue > MAX_DAYS) {
+      setErrors(prev => ({ ...prev, collectExpiryDays: `Value cannot exceed ${MAX_DAYS}` }));
+      setIsFormValid(false);
+      return false;
+    }
+
+    setErrors(prev => ({ ...prev, collectExpiryDays: undefined }));
+    return true;
+  };
+
+  const validateRecipientPercentage = (value: string | number) => {
+    if (value === '' || value === 0) {
+      setErrors(prev => ({ ...prev, recipientPercentage: undefined }));
+      return true;
+    }
+
+    const numValue = typeof value === 'string' ? parseFloat(value) : value;
+    if (isNaN(numValue)) {
+      setErrors(prev => ({ ...prev, recipientPercentage: 'Invalid number' }));
+      return false;
+    }
+
+    if (numValue < 1) {
+      setErrors(prev => ({ ...prev, recipientPercentage: 'Percentage must be at least 1' }));
+      return false;
+    }
+
+    if (numValue > 100) {
+      setErrors(prev => ({ ...prev, recipientPercentage: 'Percentage cannot exceed 100' }));
+      return false;
+    }
+
+    setErrors(prev => ({ ...prev, recipientPercentage: undefined }));
+    return true;
   };
 
   return (
@@ -362,19 +776,39 @@ export const CollectingTab: FC<CollectingTabProps> = ({
                           <div className="relative w-full">
                             <Input
                               type="number"
-                              min="0"
                               step="0.01"
                               placeholder="0.00"
-                              value={Number(settings.price)}
-                              className="pl-7 no-spinners"
+                              value={priceInput}
+                              className={`pl-7 no-spinners ${errors.price ? 'border-destructive' : ''}`}
                               onChange={(e) => {
-                                const value = parseFloat(e.target.value) || 0;
-                                updateSetting('price', value.toString());
+                                const value = e.target.value;
+                                setPriceInput(value);
+
+                                if (value === '') {
+                                  setErrors(prev => ({ ...prev, price: undefined }));
+                                  updateSetting('price', '');
+                                } else {
+                                  if (validatePrice(value)) {
+                                    const numValue = parseFloat(value);
+                                    updateSetting('price', numValue.toString());
+                                  }
+                                }
+                              }}
+                              onBlur={() => {
+                                if (settings.isChargeEnabled && (priceInput === '' || parseFloat(priceInput) <= 0)) {
+                                  validatePrice(priceInput);
+                                }
                               }}
                             />
                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">$</span>
                           </div>
                         </div>
+                        {errors.price && (
+                          <p className="text-xs text-destructive flex items-center gap-1 mt-1">
+                            <AlertCircleIcon className="h-3 w-3" />
+                            {errors.price}
+                          </p>
+                        )}
                       </div>
 
                       <div className="border-t pt-4 mt-4">
@@ -401,14 +835,26 @@ export const CollectingTab: FC<CollectingTabProps> = ({
                                 <div className="relative w-16">
                                   <Input
                                     type="number"
-                                    min="1"
-                                    max="100"
-                                    className="pr-6 no-spinners"
-                                    value={referralPercent}
+                                    placeholder="25"
+                                    className={`pr-6 no-spinners ${errors.referralPercent ? 'border-destructive' : ''}`}
+                                    value={referralPercent === 0 ? '' : referralPercent}
                                     onChange={(e) => {
-                                      const value = Number(e.target.value);
-                                      if (!isNaN(value) && value >= 1 && value <= 100) {
-                                        updateSetting('referralPercent', value);
+                                      const value = e.target.value;
+
+                                      if (value === '') {
+                                        updateSetting('referralPercent', 0);
+                                        setErrors(prev => ({ ...prev, referralPercent: undefined }));
+                                      } else {
+                                        const numValue = Number(value);
+                                        if (!isNaN(numValue)) {
+                                          updateSetting('referralPercent', numValue);
+                                          validateReferralPercentage(numValue);
+                                        }
+                                      }
+                                    }}
+                                    onBlur={() => {
+                                      if (settings.isReferralRewardsEnabled) {
+                                        validateReferralPercentage(referralPercent);
                                       }
                                     }}
                                   />
@@ -420,10 +866,20 @@ export const CollectingTab: FC<CollectingTabProps> = ({
                                     min={1}
                                     max={100}
                                     step={0.01}
-                                    onValueChange={([value]) => updateSetting('referralPercent', Math.round(value || 25))}
+                                    onValueChange={([value]) => {
+                                      const roundedValue = Math.round(value || 25);
+                                      updateSetting('referralPercent', roundedValue);
+                                      validateReferralPercentage(roundedValue);
+                                    }}
                                   />
                                 </div>
                               </div>
+                              {errors.referralPercent && (
+                                <p className="text-xs text-destructive flex items-center gap-1 mt-1">
+                                  <AlertCircleIcon className="h-3 w-3" />
+                                  {errors.referralPercent}
+                                </p>
+                              )}
                             </div>
                           </div>
                         )}
@@ -464,19 +920,35 @@ export const CollectingTab: FC<CollectingTabProps> = ({
                                 {settings.recipients.map((recipient, index) => (
                                   <div key={index} className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
-                                      {/* Percentage input now on the left */}
                                       <div className="relative w-16">
                                         <Input
                                           type="number"
-                                          min="1"
-                                          max="100"
-                                          className="pr-6 no-spinners"
-                                          value={recipient.percentage}
+                                          placeholder="1"
+                                          className={`pr-6 no-spinners ${errors.recipientPercentage ? 'border-destructive' : ''
+                                            }`}
+                                          value={recipient.percentage === 0 ? '' : recipient.percentage}
                                           onChange={(e) => {
-                                            const value = Number(e.target.value);
-                                            if (!isNaN(value) && value >= 1 && value <= 100) {
+                                            const value = e.target.value;
+
+                                            if (value === '') {
+                                              const tempRecipient = { ...recipient, percentage: 0 };
+                                              const updatedRecipients = [...settings.recipients];
+                                              updatedRecipients[index] = tempRecipient;
+
+                                              setSettings(prev => ({
+                                                ...prev,
+                                                recipients: updatedRecipients
+                                              }));
+
+                                              validateRevenueSplit();
+                                              return;
+                                            }
+
+                                            const numValue = Number(value);
+                                            if (!isNaN(numValue)) {
                                               setDistributeEvenlyEnabled(false);
-                                              updateRecipientPercentage(index, value);
+                                              updateRecipientPercentage(index, numValue);
+                                              validateRecipientPercentage(numValue);
                                             }
                                           }}
                                           disabled={distributeEvenlyEnabled}
@@ -515,6 +987,13 @@ export const CollectingTab: FC<CollectingTabProps> = ({
                                     </Button>
                                   </div>
                                 ))}
+
+                                {errors.revenueSplitTotal && (
+                                  <p className="text-xs text-destructive flex items-center gap-1 mt-2 animate-in slide-in-from-top-1">
+                                    <AlertCircleIcon className="h-3 w-3" />
+                                    {errors.revenueSplitTotal}
+                                  </p>
+                                )}
                               </div>
                             )}
 
@@ -525,14 +1004,33 @@ export const CollectingTab: FC<CollectingTabProps> = ({
                                     <Label className="mb-2 block">Percent</Label>
                                     <Input
                                       type="number"
-                                      min="1"
-                                      max="100"
-                                      className="pr-6 no-spinners"
-                                      value={newRecipientPercentage}
-                                      onChange={(e) => setNewRecipientPercentage(Number(e.target.value))}
+                                      placeholder="50"
+                                      className={`pr-6 no-spinners ${errors.recipientPercentage ? 'border-destructive' : ''
+                                        }`}
+                                      value={newRecipientPercentage === 0 ? '' : newRecipientPercentage}
+                                      onChange={(e) => {
+                                        const value = e.target.value;
+
+                                        if (value === '') {
+                                          setNewRecipientPercentage(0);
+                                          setErrors(prev => ({ ...prev, recipientPercentage: undefined }));
+                                        } else {
+                                          const numValue = Number(value);
+                                          if (!isNaN(numValue)) {
+                                            setNewRecipientPercentage(numValue);
+                                            validateRecipientPercentage(numValue);
+                                          }
+                                        }
+                                      }}
                                       disabled={distributeEvenlyEnabled}
                                     />
                                     <span className="absolute right-3 top-[calc(50%_+_0.5rem)] -translate-y-1/2 text-muted-foreground">%</span>
+                                    {errors.recipientPercentage && (
+                                      <p className="text-xs text-destructive flex items-center gap-1 mt-1">
+                                        <AlertCircleIcon className="h-3 w-3" />
+                                        {errors.recipientPercentage}
+                                      </p>
+                                    )}
                                   </div>
                                   <div>
                                     <Label className="mb-2 block">Recipient</Label>
@@ -594,7 +1092,12 @@ export const CollectingTab: FC<CollectingTabProps> = ({
                                     variant="default"
                                     size="sm"
                                     onClick={handleSubmitButtonClick}
-                                    disabled={!newRecipientAddress || newRecipientPercentage <= 0 || newRecipientPercentage > 100}
+                                    disabled={
+                                      !newRecipientAddress ||
+                                      newRecipientPercentage < 0 ||
+                                      newRecipientPercentage > 100 ||
+                                      !!errors.recipientPercentage
+                                    }
                                   >
                                     Submit
                                   </Button>
@@ -640,17 +1143,35 @@ export const CollectingTab: FC<CollectingTabProps> = ({
                       <Label>Maximum collects</Label>
                       <Input
                         type="number"
-                        min="1"
-                        className="no-spinners"
                         placeholder="100"
-                        value={Number(settings.collectLimit)}
+                        className={`no-spinners ${errors.collectLimit ? 'border-destructive' : ''}`}
+                        value={collectLimitInput}
                         onChange={(e) => {
-                          const value = Number(e.target.value);
-                          if (!isNaN(value) && value >= 1) {
-                            updateSetting('collectLimit', value.toString());
+                          const value = e.target.value;
+                          setCollectLimitInput(value);
+
+                          if (value === '') {
+                            setErrors(prev => ({ ...prev, collectLimit: undefined }));
+                            updateSetting('collectLimit', '');
+                          } else {
+                            if (validateCollectLimit(value)) {
+                              const numValue = Number(value);
+                              updateSetting('collectLimit', numValue.toString());
+                            }
+                          }
+                        }}
+                        onBlur={() => {
+                          if (settings.isLimitedEdition) {
+                            validateCollectLimit(collectLimitInput);
                           }
                         }}
                       />
+                      {errors.collectLimit && (
+                        <p className="text-xs text-destructive flex items-center gap-1 mt-1">
+                          <AlertCircleIcon className="h-3 w-3" />
+                          {errors.collectLimit}
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>
@@ -678,25 +1199,44 @@ export const CollectingTab: FC<CollectingTabProps> = ({
                         <div className="relative w-full max-w-[120px]">
                           <Input
                             type="number"
-                            min="1"
-                            className="pr-12 no-spinners"
-                            value={settings.collectExpiryDays}
+                            placeholder="7"
+                            className={`pr-12 no-spinners ${errors.collectExpiryDays ? 'border-destructive' : ''}`}
+                            value={collectExpiryDaysInput}
                             onChange={(e) => {
-                              const value = Number.parseInt(e.target.value);
-                              if (!Number.isNaN(value) && value >= 1) {
-                                const date = new Date();
-                                date.setDate(date.getDate() + value);
-                                setSettings(prev => ({
-                                  ...prev,
-                                  collectExpiryDays: value,
-                                  collectExpiryDate: date.toISOString()
-                                }));
+                              const value = e.target.value;
+                              setCollectExpiryDaysInput(value);
+
+                              if (value === '') {
+                                setErrors(prev => ({ ...prev, collectExpiryDays: undefined }));
+                                updateSetting('collectExpiryDays', 7);
+                              } else {
+                                if (validateCollectExpiryDays(value)) {
+                                  const numValue = Number.parseInt(value);
+                                  const date = new Date();
+                                  date.setDate(date.getDate() + numValue);
+                                  setSettings(prev => ({
+                                    ...prev,
+                                    collectExpiryDays: numValue,
+                                    collectExpiryDate: date.toISOString()
+                                  }));
+                                }
+                              }
+                            }}
+                            onBlur={() => {
+                              if (settings.isCollectExpiryEnabled) {
+                                validateCollectExpiryDays(collectExpiryDaysInput);
                               }
                             }}
                           />
                           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">days</span>
                         </div>
                       </div>
+                      {errors.collectExpiryDays && (
+                        <p className="text-xs text-destructive flex items-center gap-1 mt-1">
+                          <AlertCircleIcon className="h-3 w-3" />
+                          {errors.collectExpiryDays}
+                        </p>
+                      )}
                       <p className="text-sm text-muted-foreground">
                         Expires on {expiryDate.toLocaleDateString()}
                       </p>
@@ -709,7 +1249,10 @@ export const CollectingTab: FC<CollectingTabProps> = ({
         </div>
       </ScrollArea>
       <div className="flex items-center p-2">
-        <Button onClick={handlePublish} disabled={isPublishing}>
+        <Button
+          onClick={handlePublishWithValidation}
+          disabled={isPublishing || !isFormValid}
+        >
           {isPublishing ? "Publishing..." : "Publish"}
         </Button>
       </div>
