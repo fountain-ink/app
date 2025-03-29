@@ -10,14 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription
-} from "@/components/ui/form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 
 import {
   PlusIcon,
@@ -30,7 +23,7 @@ import {
   CircleFadingPlus,
   ClockFadingIcon,
   User2Icon,
-  AlertCircleIcon
+  AlertCircleIcon,
 } from "lucide-react";
 import { ShoppingBag as ShoppingBagSvg } from "../icons/custom-icons";
 
@@ -43,136 +36,146 @@ import { EvmAddress } from "../misc/evm-address";
 import { UserLazyUsername } from "../user/user-lazy-username";
 import { CombinedFormValues } from "./publish-dialog";
 
-export const collectingFormSchema = z.object({
-  isCollectingEnabled: z.boolean().default(false),
-  collectingLicense: z.string().min(1, { message: "License is required" }).default("CC BY-NC 4.0"),
+export const collectingFormSchema = z
+  .object({
+    isCollectingEnabled: z.boolean().default(false),
+    collectingLicense: z.string().min(1, { message: "License is required" }).default("CC BY-NC 4.0"),
 
-  isChargeEnabled: z.boolean().default(false),
-  price: z.string().default("0")
-    .refine(val => {
-      if (val === "") return true;
-      const num = Number(val);
-      return !isNaN(num) && num >= 0;
-    }, { message: "Please enter a valid non-negative number" })
-    .transform(val => val === "" ? "0" : val),
-  currency: z.string().min(1, { message: "Currency is required" }).default("GHO"),
+    isChargeEnabled: z.boolean().default(false),
+    price: z
+      .string()
+      .default("0")
+      .refine(
+        (val) => {
+          if (val === "") return true;
+          const num = Number(val);
+          return !Number.isNaN(num) && num >= 0;
+        },
+        { message: "Please enter a valid non-negative number" },
+      )
+      .transform((val) => (val === "" ? "0" : val)),
+    currency: z.string().min(1, { message: "Currency is required" }).default("GHO"),
 
-  isReferralRewardsEnabled: z.boolean().default(false),
-  referralPercent: z.number()
-    .default(25),
+    isReferralRewardsEnabled: z.boolean().default(false),
+    referralPercent: z.number().default(25),
 
-  isRevenueSplitEnabled: z.boolean().default(false),
-  recipients: z.array(
-    z.object({
-      address: z.string().min(1, { message: "Address is required" })
-        .refine(addr => isValidEthereumAddress(addr), {
-          message: "Must be a valid Ethereum address"
+    isRevenueSplitEnabled: z.boolean().default(false),
+    recipients: z
+      .array(
+        z.object({
+          address: z
+            .string()
+            .min(1, { message: "Address is required" })
+            .refine((addr) => isValidEthereumAddress(addr), {
+              message: "Must be a valid Ethereum address",
+            }),
+          percentage: z
+            .number()
+            .min(0.01, { message: "Minimum percentage is 0.01%" })
+            .max(100, { message: "Maximum percentage is 100%" }),
+          username: z.string().optional().nullable(),
+          picture: z.string().optional().nullable(),
         }),
-      percentage: z.number()
-        .min(0.01, { message: "Minimum percentage is 0.01%" })
-        .max(100, { message: "Maximum percentage is 100%" }),
-      username: z.string().optional().nullable(),
-      picture: z.string().optional().nullable(),
-    })
-  ).default([])
-  ,
+      )
+      .default([]),
 
-  isLimitedEdition: z.boolean().default(false),
-  collectLimit: z.preprocess(
-    val => (val === "" || val == null) ? undefined : Number(val),
-    z.number().int().positive("Collect limit must be a positive number").optional()
-  ),
+    isLimitedEdition: z.boolean().default(false),
+    collectLimit: z.preprocess(
+      (val) => (val === "" || val == null ? undefined : Number(val)),
+      z.number().int().positive("Collect limit must be a positive number").optional(),
+    ),
 
-  isCollectExpiryEnabled: z.boolean().default(false),
-  collectExpiryDays: z.preprocess(
-    val => (val === "" || val == null) ? undefined : Number(val),
-    z.number().positive("Expiry days must be a positive number").optional()
-  )
-}).superRefine((data, ctx) => {
-  if (!data.isCollectingEnabled) {
-    return;
-  }
-
-  if (data.isChargeEnabled) {
-    const priceNum = Number(data.price);
-    if (isNaN(priceNum) || priceNum <= 0) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Price must be greater than 0",
-        path: ["price"],
-      });
+    isCollectExpiryEnabled: z.boolean().default(false),
+    collectExpiryDays: z.preprocess(
+      (val) => (val === "" || val == null ? undefined : Number(val)),
+      z.number().positive("Expiry days must be a positive number").optional(),
+    ),
+  })
+  .superRefine((data, ctx) => {
+    if (!data.isCollectingEnabled) {
+      return;
     }
 
-    if (data.isReferralRewardsEnabled) {
-      if (data.referralPercent < 1 || data.referralPercent > 100) {
+    if (data.isChargeEnabled) {
+      const priceNum = Number(data.price);
+      if (Number.isNaN(priceNum) || priceNum <= 0) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Referral percent must be between 1% and 100%",
-          path: ["referralPercent"],
+          message: "Price must be greater than 0",
+          path: ["price"],
+        });
+      }
+
+      if (data.isReferralRewardsEnabled) {
+        if (data.referralPercent < 1 || data.referralPercent > 100) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Referral percent must be between 1% and 100%",
+            path: ["referralPercent"],
+          });
+        }
+      }
+
+      if (data.isRevenueSplitEnabled) {
+        if (data.recipients.length === 0) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "At least one recipient is required",
+            path: ["recipients"],
+          });
+        } else {
+          const addresses = data.recipients.map((r) => r.address.toLowerCase());
+          const uniqueAddresses = new Set(addresses);
+          if (uniqueAddresses.size !== addresses.length) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "Recipient addresses must be unique",
+              path: ["recipients"],
+            });
+          }
+
+          const totalPercentage = data.recipients.reduce((sum, r) => sum + r.percentage, 0);
+          if (Math.abs(totalPercentage - 100) >= 0.1) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `Total percentage must equal 100% (current: ${totalPercentage.toFixed(2)}%)`,
+              path: ["recipients"],
+            });
+          }
+        }
+      }
+    }
+
+    if (data.isLimitedEdition) {
+      if (data.collectLimit === undefined || data.collectLimit < 1) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Collect limit must be at least 1",
+          path: ["collectLimit"],
         });
       }
     }
 
-    if (data.isRevenueSplitEnabled) {
-      if (data.recipients.length === 0) {
+    if (data.isCollectExpiryEnabled) {
+      if (data.collectExpiryDays === undefined || data.collectExpiryDays < 1) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "At least one recipient is required",
-          path: ["recipients"],
+          message: "Expiry days must be at least 1",
+          path: ["collectExpiryDays"],
         });
-      } else {
-        const addresses = data.recipients.map(r => r.address.toLowerCase());
-        const uniqueAddresses = new Set(addresses);
-        if (uniqueAddresses.size !== addresses.length) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "Recipient addresses must be unique",
-            path: ["recipients"],
-          });
-        }
-
-        const totalPercentage = data.recipients.reduce((sum, r) => sum + r.percentage, 0);
-        if (Math.abs(totalPercentage - 100) >= 0.1) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: `Total percentage must equal 100% (current: ${totalPercentage.toFixed(2)}%)`,
-            path: ["recipients"],
-          });
-        }
+      } else if (data.collectExpiryDays > 36500) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Maximum expiry is 36500 days (100 years)",
+          path: ["collectExpiryDays"],
+        });
       }
     }
-  }
-
-  if (data.isLimitedEdition) {
-    if (data.collectLimit === undefined || data.collectLimit < 1) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Collect limit must be at least 1",
-        path: ["collectLimit"],
-      });
-    }
-  }
-
-  if (data.isCollectExpiryEnabled) {
-    if (data.collectExpiryDays === undefined || data.collectExpiryDays < 1) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Expiry days must be at least 1",
-        path: ["collectExpiryDays"],
-      });
-    } else if (data.collectExpiryDays > 36500) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Maximum expiry is 36500 days (100 years)",
-        path: ["collectExpiryDays"],
-      });
-    }
-  }
-});
+  });
 
 export type CollectingFormValues = z.infer<typeof collectingFormSchema>;
 
-type RecipientEntry = z.infer<typeof collectingFormSchema>['recipients'][number];
+type RecipientEntry = z.infer<typeof collectingFormSchema>["recipients"][number];
 
 interface CollectingTabProps {
   form: UseFormReturn<CombinedFormValues>;
@@ -189,7 +192,15 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
   const [showAddRecipient, setShowAddRecipient] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { control, watch, setValue, getValues, trigger, clearErrors, formState: { errors } } = form;
+  const {
+    control,
+    watch,
+    setValue,
+    getValues,
+    trigger,
+    clearErrors,
+    formState: { errors },
+  } = form;
 
   const values = watch("collecting");
 
@@ -228,7 +239,7 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
     if (!address || newRecipientPercentage <= 0 || newRecipientPercentage > 100) return;
 
     const currentRecipients = getValues("collecting.recipients") || [];
-    const isDuplicate = currentRecipients.some(r => r.address.toLowerCase() === address.toLowerCase());
+    const isDuplicate = currentRecipients.some((r) => r.address.toLowerCase() === address.toLowerCase());
     if (isDuplicate) {
       toast.error("Recipient already added");
       return;
@@ -249,7 +260,7 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
       updatedRecipients = [...currentRecipients, newRecipient];
       const count = updatedRecipients.length;
       const evenPercentage = Math.floor((100 / count) * 100) / 100;
-      const remainder = roundPercentage(100 - (evenPercentage * (count - 1)));
+      const remainder = roundPercentage(100 - evenPercentage * (count - 1));
       updatedRecipients = updatedRecipients.map((r, i) => ({ ...r, percentage: i === 0 ? remainder : evenPercentage }));
     } else {
       updatedRecipients = [...currentRecipients, newRecipient];
@@ -270,14 +281,14 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
   };
 
   const handleRemoveRecipient = (index: number) => {
-    let currentRecipients = getValues("collecting.recipients") || [];
+    const currentRecipients = getValues("collecting.recipients") || [];
     let updatedRecipients = [...currentRecipients];
     updatedRecipients.splice(index, 1);
 
     if (distributeEvenlyEnabled && updatedRecipients.length > 0) {
       const count = updatedRecipients.length;
       const evenPercentage = Math.floor((100 / count) * 100) / 100;
-      const remainder = roundPercentage(100 - (evenPercentage * (count - 1)));
+      const remainder = roundPercentage(100 - evenPercentage * (count - 1));
       updatedRecipients = updatedRecipients.map((r, i) => ({ ...r, percentage: i === 0 ? remainder : evenPercentage }));
     }
 
@@ -289,8 +300,8 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
     if (percentage < 0 || percentage > 100) return;
     if (distributeEvenlyEnabled) setDistributeEvenlyEnabled(false);
 
-    let currentRecipients = getValues("collecting.recipients") || [];
-    let updatedRecipients = [...currentRecipients];
+    const currentRecipients = getValues("collecting.recipients") || [];
+    const updatedRecipients = [...currentRecipients];
     if (!updatedRecipients[index]) return;
 
     const roundedPercentage = roundPercentage(percentage);
@@ -301,13 +312,16 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
   };
 
   const distributeEvenly = () => {
-    let currentRecipients = getValues("collecting.recipients") || [];
+    const currentRecipients = getValues("collecting.recipients") || [];
     if (currentRecipients.length === 0) return;
 
     const count = currentRecipients.length;
     const evenPercentage = Math.floor((100 / count) * 100) / 100;
-    const remainder = roundPercentage(100 - (evenPercentage * (count - 1)));
-    const updatedRecipients = currentRecipients.map((r, i) => ({ ...r, percentage: i === 0 ? remainder : evenPercentage }));
+    const remainder = roundPercentage(100 - evenPercentage * (count - 1));
+    const updatedRecipients = currentRecipients.map((r, i) => ({
+      ...r,
+      percentage: i === 0 ? remainder : evenPercentage,
+    }));
 
     setValue("collecting.recipients", updatedRecipients, { shouldValidate: true, shouldDirty: true });
     validateRecipientsTotal(updatedRecipients);
@@ -326,12 +340,10 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
     if (value.startsWith("@") && value.length > 1) {
       setSearchQuery(value.substring(1));
       setIsSearchOpen(true);
-    }
-    else if (value.length > 0 && !isValidEthereumAddress(value)) {
+    } else if (value.length > 0 && !isValidEthereumAddress(value)) {
       setSearchQuery(value);
       setIsSearchOpen(true);
-    }
-    else {
+    } else {
       setSearchQuery("");
       if (isSearchOpen) {
         setIsSearchOpen(false);
@@ -341,7 +353,7 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       if (isSearchOpen && !isValidEthereumAddress(newRecipientAddress)) {
         e.preventDefault();
         return;
@@ -353,15 +365,17 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
       }
     }
 
-    if (e.key === 'Escape' && isSearchOpen) {
+    if (e.key === "Escape" && isSearchOpen) {
       e.preventDefault();
       setIsSearchOpen(false);
     }
   };
 
   const handleInputFocus = () => {
-    if (newRecipientAddress.length > 0 &&
-      (newRecipientAddress.startsWith("@") || !isValidEthereumAddress(newRecipientAddress))) {
+    if (
+      newRecipientAddress.length > 0 &&
+      (newRecipientAddress.startsWith("@") || !isValidEthereumAddress(newRecipientAddress))
+    ) {
       setIsSearchOpen(true);
       const query = newRecipientAddress.startsWith("@") ? newRecipientAddress.substring(1) : newRecipientAddress;
       setSearchQuery(query);
@@ -381,13 +395,12 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
     <div className="h-full flex flex-col">
       <form className="space-y-6 p-1">
         <div className="border rounded-lg p-4 space-y-4 bg-background/30">
-
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-medium">Collecting</h3>
               <p className="text-sm text-muted-foreground">
-                Let readers collect your post. You can set a license for the piece,
-                and decide if you want to charge for the collect.
+                Let readers collect your post. You can set a license for the piece, and decide if you want to charge for
+                the collect.
               </p>
             </div>
             <FormField
@@ -396,10 +409,7 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
+                    <Switch checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
                 </FormItem>
               )}
@@ -408,7 +418,6 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
 
           {isCollectingEnabled && (
             <div className="space-y-4">
-
               <div className="space-y-4 border-t pt-6 border-border/50">
                 <div className="flex items-center justify-between">
                   <div>
@@ -416,9 +425,7 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
                       <CreditCardIcon className="h-4 w-4 text-muted-foreground" />
                       <h3 className="font-medium">Charge for collecting</h3>
                     </div>
-                    <p className="text-sm text-muted-foreground">
-                      Get paid in crypto when someone collects your post
-                    </p>
+                    <p className="text-sm text-muted-foreground">Get paid in crypto when someone collects your post</p>
                   </div>
                   <FormField
                     control={control}
@@ -431,7 +438,12 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
                             onCheckedChange={(checked) => {
                               field.onChange(checked);
                               if (!checked) {
-                                clearErrors(["collecting.price", "collecting.currency", "collecting.referralPercent", "collecting.recipients"]);
+                                clearErrors([
+                                  "collecting.price",
+                                  "collecting.currency",
+                                  "collecting.referralPercent",
+                                  "collecting.recipients",
+                                ]);
                               } else {
                                 trigger("collecting");
                               }
@@ -449,7 +461,9 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
                       control={control}
                       name="collecting.price"
                       render={({ field, fieldState }) => (
-                        <FormItem className={`space-y-2 ${(getCollectingError('price') || getCollectingError('currency')) ? 'bg-destructive/5 rounded-sm p-2 -m-2' : ''}`}>
+                        <FormItem
+                          className={`space-y-2 ${getCollectingError("price") || getCollectingError("currency") ? "bg-destructive/5 rounded-sm p-2 -m-2" : ""}`}
+                        >
                           <FormLabel>Price</FormLabel>
                           <div className="flex items-center">
                             <div className="relative w-full">
@@ -462,14 +476,16 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
                                   {...field}
                                   onChange={(e) => {
                                     const value = e.target.value;
-                                    if (value === '' || /^[0-9]*\.?[0-9]*$/.test(value)) {
+                                    if (value === "" || /^[0-9]*\.?[0-9]*$/.test(value)) {
                                       field.onChange(value);
                                     }
                                   }}
-                                  value={field.value ?? ''}
+                                  value={field.value ?? ""}
                                 />
                               </FormControl>
-                              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">$</span>
+                              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                                $
+                              </span>
                             </div>
                           </div>
                           <FormMessage />
@@ -477,7 +493,9 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
                       )}
                     />
 
-                    <div className={`border-t pt-4 mt-4 space-y-4 border-border ${isReferralRewardsEnabled && getCollectingError('referralPercent') ? 'bg-destructive/5 rounded-sm p-2 -m-2' : ''}`}>
+                    <div
+                      className={`border-t pt-4 mt-4 space-y-4 border-border ${isReferralRewardsEnabled && getCollectingError("referralPercent") ? "bg-destructive/5 rounded-sm p-2 -m-2" : ""}`}
+                    >
                       <div className="flex items-center justify-between">
                         <div>
                           <div className="flex items-center gap-2">
@@ -533,7 +551,9 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
                                         value={field.value === 0 ? "" : field.value}
                                       />
                                     </FormControl>
-                                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">%</span>
+                                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                                      %
+                                    </span>
                                   </div>
                                   <div className="flex-1">
                                     <FormControl>
@@ -556,8 +576,9 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
                         </div>
                       )}
 
-
-                      <div className={`space-y-4 border-t pt-6 border-border ${isRevenueSplitEnabled && getCollectingError('recipients') ? 'bg-destructive/5 rounded-sm p-2 -m-2' : ''}`}>
+                      <div
+                        className={`space-y-4 border-t pt-6 border-border ${isRevenueSplitEnabled && getCollectingError("recipients") ? "bg-destructive/5 rounded-sm p-2 -m-2" : ""}`}
+                      >
                         <div className="flex items-center justify-between">
                           <div>
                             <div className="flex items-center gap-2">
@@ -597,10 +618,21 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
                                     <div className="space-y-2">
                                       <div className="flex items-center justify-between mb-3">
                                         <div className="flex items-center gap-2">
-                                          <Checkbox id="distribute-evenly" checked={distributeEvenlyEnabled} onCheckedChange={(checked) => setDistributeEvenlyEnabled(checked as boolean)} />
-                                          <Label htmlFor="distribute-evenly" className="cursor-pointer text-sm"> Distribute evenly </Label>
+                                          <Checkbox
+                                            id="distribute-evenly"
+                                            checked={distributeEvenlyEnabled}
+                                            onCheckedChange={(checked) =>
+                                              setDistributeEvenlyEnabled(checked as boolean)
+                                            }
+                                          />
+                                          <Label htmlFor="distribute-evenly" className="cursor-pointer text-sm">
+                                            {" "}
+                                            Distribute evenly{" "}
+                                          </Label>
                                         </div>
-                                        <span className={`text-sm font-medium ${Math.abs(recipients.reduce((s, r) => s + r.percentage, 0) - 100) >= 0.1 ? 'text-destructive' : 'text-muted-foreground'}`}>
+                                        <span
+                                          className={`text-sm font-medium ${Math.abs(recipients.reduce((s, r) => s + r.percentage, 0) - 100) >= 0.1 ? "text-destructive" : "text-muted-foreground"}`}
+                                        >
                                           Total: {recipients.reduce((s, r) => s + r.percentage, 0).toFixed(2)}%
                                         </span>
                                       </div>
@@ -609,15 +641,52 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
                                         <div key={index} className="flex items-center justify-between">
                                           <div className="flex items-center gap-3 flex-1 min-w-0">
                                             <div className="relative min-w-16 w-20">
-                                              <Input type="number" min="0.01" max="100" placeholder="1" className="pr-6 no-spinners" value={recipient.percentage === 0 ? "" : recipient.percentage} onChange={(e) => updateRecipientPercentage(index, Number(e.target.value))} disabled={distributeEvenlyEnabled} />
-                                              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">%</span>
+                                              <Input
+                                                type="number"
+                                                min="0.01"
+                                                max="100"
+                                                placeholder="1"
+                                                className="pr-6 no-spinners"
+                                                value={recipient.percentage === 0 ? "" : recipient.percentage}
+                                                onChange={(e) =>
+                                                  updateRecipientPercentage(index, Number(e.target.value))
+                                                }
+                                                disabled={distributeEvenlyEnabled}
+                                              />
+                                              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                                                %
+                                              </span>
                                             </div>
-                                            {recipient.picture ? (<img src={recipient.picture} alt={recipient.username || "recipient"} className="w-8 h-8 rounded-full border border-border" />) : (<div className="flex h-8 w-8 border border-border rounded-full items-center justify-center"><User2Icon size={16} className="text-muted-foreground" /></div>)}
+                                            {recipient.picture ? (
+                                              <img
+                                                src={recipient.picture}
+                                                alt={recipient.username || "recipient"}
+                                                className="w-8 h-8 rounded-full border border-border"
+                                              />
+                                            ) : (
+                                              <div className="flex h-8 w-8 border border-border rounded-full items-center justify-center">
+                                                <User2Icon size={16} className="text-muted-foreground" />
+                                              </div>
+                                            )}
                                             <span className="text-sm flex items-center gap-1 truncate flex-1 min-w-0">
-                                              {recipient.username ? (<><UserLazyUsername username={recipient.username} /> <EvmAddress address={recipient.address} truncate showCopy /></>) : (<EvmAddress address={recipient.address} showCopy />)}
+                                              {recipient.username ? (
+                                                <>
+                                                  <UserLazyUsername username={recipient.username} />{" "}
+                                                  <EvmAddress address={recipient.address} truncate showCopy />
+                                                </>
+                                              ) : (
+                                                <EvmAddress address={recipient.address} showCopy />
+                                              )}
                                             </span>
                                           </div>
-                                          <Button variant="ghost" size="sm" onClick={() => handleRemoveRecipient(index)}> <XIcon className="w-4 h-4" /> </Button>
+                                          <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => handleRemoveRecipient(index)}
+                                          >
+                                            {" "}
+                                            <XIcon className="w-4 h-4" />{" "}
+                                          </Button>
                                         </div>
                                       ))}
                                     </div>
@@ -628,28 +697,110 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
                                       <div className="flex flex-wrap gap-3 items-end">
                                         <div className="relative min-w-16 w-20">
                                           <Label className="mb-2 block">Percent</Label>
-                                          <Input type="number" min="0.01" max="100" placeholder="50" className="pr-6 no-spinners" value={newRecipientPercentage === 0 ? "" : newRecipientPercentage} onChange={(e) => setNewRecipientPercentage(e.target.value === '' ? 0 : Number(e.target.value))} disabled={distributeEvenlyEnabled} />
-                                          <span className="absolute right-3 top-[calc(50%_+_0.5rem)] -translate-y-1/2 text-muted-foreground">%</span>
+                                          <Input
+                                            type="number"
+                                            min="0.01"
+                                            max="100"
+                                            placeholder="50"
+                                            className="pr-6 no-spinners"
+                                            value={newRecipientPercentage === 0 ? "" : newRecipientPercentage}
+                                            onChange={(e) =>
+                                              setNewRecipientPercentage(
+                                                e.target.value === "" ? 0 : Number(e.target.value),
+                                              )
+                                            }
+                                            disabled={distributeEvenlyEnabled}
+                                          />
+                                          <span className="absolute right-3 top-[calc(50%_+_0.5rem)] -translate-y-1/2 text-muted-foreground">
+                                            %
+                                          </span>
                                         </div>
                                         <div className="flex-1 min-w-[200px]">
                                           <Label className="mb-2 block">Recipient</Label>
                                           <div className="relative">
-                                            <Input ref={inputRef} placeholder="@username or 0x address..." value={selectedUser ? `@${selectedUser.username}` : newRecipientAddress} onChange={handleInputChange} onFocus={handleInputFocus} onKeyDown={handleKeyDown} className={`${selectedUser?.picture ? "pl-10" : ""} ${selectedUser ? "pr-24" : ""} ${isSearchOpen && !selectedUser ? "pr-10 border-primary ring-1 ring-primary/30 shadow-sm" : ""} transition-all duration-200`} autoFocus />
-                                            {isSearchOpen && !selectedUser && (<div className="absolute right-3 top-1/2 -translate-y-1/2"><SearchIcon className="h-4 w-4 text-primary animate-pulse" /></div>)}
-                                            {selectedUser && (<div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center bg-background/80 pl-1"><EvmAddress address={selectedUser.key} truncate className="text-xs" /></div>)}
-                                            {selectedUser && selectedUser.picture && (<div className="absolute left-2 top-1/2 -translate-y-1/2"><img src={selectedUser.picture} alt={selectedUser.username} className="w-6 h-6 rounded-full" /></div>)}
-                                            {isSearchOpen && newRecipientAddress.length > 0 && (<div className="absolute left-0 right-0 top-full mt-1 bg-popover border border-border rounded-md shadow-md z-50"><UserSearchList query={searchQuery} onSelect={handleUserSelect} /></div>)}
+                                            <Input
+                                              ref={inputRef}
+                                              placeholder="@username or 0x address..."
+                                              value={selectedUser ? `@${selectedUser.username}` : newRecipientAddress}
+                                              onChange={handleInputChange}
+                                              onFocus={handleInputFocus}
+                                              onKeyDown={handleKeyDown}
+                                              className={`${selectedUser?.picture ? "pl-10" : ""} ${selectedUser ? "pr-24" : ""} ${isSearchOpen && !selectedUser ? "pr-10 border-primary ring-1 ring-primary/30 shadow-sm" : ""} transition-all duration-200`}
+                                              autoFocus
+                                            />
+                                            {isSearchOpen && !selectedUser && (
+                                              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                                                <SearchIcon className="h-4 w-4 text-primary animate-pulse" />
+                                              </div>
+                                            )}
+                                            {selectedUser && (
+                                              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center bg-background/80 pl-1">
+                                                <EvmAddress address={selectedUser.key} truncate className="text-xs" />
+                                              </div>
+                                            )}
+                                            {selectedUser?.picture && (
+                                              <div className="absolute left-2 top-1/2 -translate-y-1/2">
+                                                <img
+                                                  src={selectedUser.picture}
+                                                  alt={selectedUser.username}
+                                                  className="w-6 h-6 rounded-full"
+                                                />
+                                              </div>
+                                            )}
+                                            {isSearchOpen && newRecipientAddress.length > 0 && (
+                                              <div className="absolute left-0 right-0 top-full mt-1 bg-popover border border-border rounded-md shadow-md z-50">
+                                                <UserSearchList query={searchQuery} onSelect={handleUserSelect} />
+                                              </div>
+                                            )}
                                           </div>
                                         </div>
                                       </div>
                                       <div className="flex justify-between">
-                                        <Button variant="outline" size="sm" onClick={() => { setShowAddRecipient(false); trigger("collecting.recipients").catch(console.error); }}> Cancel </Button>
-                                        <Button variant="default" size="sm" onClick={() => handleAddRecipient()} disabled={!newRecipientAddress || !isValidEthereumAddress(newRecipientAddress) || newRecipientPercentage <= 0 || newRecipientPercentage > 100 || ((getValues("collecting.recipients") || []).reduce((sum, r) => sum + r.percentage, 0) + newRecipientPercentage > 100 && !distributeEvenlyEnabled)}> Submit </Button>
+                                        <Button
+                                          variant="outline"
+                                          size="sm"
+                                          onClick={() => {
+                                            setShowAddRecipient(false);
+                                            trigger("collecting.recipients").catch(console.error);
+                                          }}
+                                        >
+                                          {" "}
+                                          Cancel{" "}
+                                        </Button>
+                                        <Button
+                                          variant="default"
+                                          size="sm"
+                                          onClick={() => handleAddRecipient()}
+                                          disabled={
+                                            !newRecipientAddress ||
+                                            !isValidEthereumAddress(newRecipientAddress) ||
+                                            newRecipientPercentage <= 0 ||
+                                            newRecipientPercentage > 100 ||
+                                            ((getValues("collecting.recipients") || []).reduce(
+                                              (sum, r) => sum + r.percentage,
+                                              0,
+                                            ) +
+                                              newRecipientPercentage >
+                                              100 &&
+                                              !distributeEvenlyEnabled)
+                                          }
+                                        >
+                                          {" "}
+                                          Submit{" "}
+                                        </Button>
                                       </div>
                                     </div>
                                   ) : (
                                     <div className="flex pt-2">
-                                      <Button variant="outline" size="sm" className="animate-in slide-in-from-bottom-2 fade-in duration-200" onClick={() => setShowAddRecipient(true)}> <PlusIcon className="w-4 h-4" /> Add recipient </Button>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="animate-in slide-in-from-bottom-2 fade-in duration-200"
+                                        onClick={() => setShowAddRecipient(true)}
+                                      >
+                                        {" "}
+                                        <PlusIcon className="w-4 h-4" /> Add recipient{" "}
+                                      </Button>
                                     </div>
                                   )}
 
@@ -665,14 +816,14 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
                           </div>
                         )}
                       </div>
-
                     </div>
                   </div>
                 )}
               </div>
 
-
-              <div className={`space-y-4 border-t pt-6 border-border/50 ${isLimitedEdition && getCollectingError('collectLimit') ? 'bg-destructive/5 rounded-sm p-2 -m-2' : ''}`}>
+              <div
+                className={`space-y-4 border-t pt-6 border-border/50 ${isLimitedEdition && getCollectingError("collectLimit") ? "bg-destructive/5 rounded-sm p-2 -m-2" : ""}`}
+              >
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="flex items-center gap-2">
@@ -687,10 +838,7 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
+                          <Switch checked={field.value} onCheckedChange={field.onChange} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -712,7 +860,7 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
                             {...field}
                             onChange={(e) => {
                               const value = e.target.value;
-                              if (value === '' || /^[0-9]+$/.test(value)) {
+                              if (value === "" || /^[0-9]+$/.test(value)) {
                                 field.onChange(value);
                               }
                             }}
@@ -726,16 +874,16 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
                 )}
               </div>
 
-              <div className={`space-y-4 border-t pt-6 border-border/50 ${isCollectExpiryEnabled && getCollectingError('collectExpiryDays') ? 'bg-destructive/5 rounded-sm p-2 -m-2' : ''}`}>
+              <div
+                className={`space-y-4 border-t pt-6 border-border/50 ${isCollectExpiryEnabled && getCollectingError("collectExpiryDays") ? "bg-destructive/5 rounded-sm p-2 -m-2" : ""}`}
+              >
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="flex items-center gap-2">
                       <ClockFadingIcon className="h-4 w-4 text-muted-foreground" />
                       <h3 className="font-medium">Collect expiry</h3>
                     </div>
-                    <p className="text-sm text-muted-foreground">
-                      Only allow collecting until a certain time
-                    </p>
+                    <p className="text-sm text-muted-foreground">Only allow collecting until a certain time</p>
                   </div>
                   <FormField
                     control={control}
@@ -743,10 +891,7 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
+                          <Switch checked={field.value} onCheckedChange={field.onChange} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -769,14 +914,16 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
                                 {...field}
                                 onChange={(e) => {
                                   const value = e.target.value;
-                                  if (value === '' || /^[0-9]+$/.test(value)) {
+                                  if (value === "" || /^[0-9]+$/.test(value)) {
                                     field.onChange(value);
                                   }
                                 }}
                                 value={field.value ?? ""}
                               />
                             </FormControl>
-                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">days</span>
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                              days
+                            </span>
                           </div>
                         </div>
                         <FormMessage />
@@ -804,11 +951,10 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Select
-                          value={field.value}
-                          onValueChange={field.onChange}
-                        >
-                          <SelectTrigger className={`w-full ${getCollectingError('collectingLicense') ? "border-destructive" : ""}`}>
+                        <Select value={field.value} onValueChange={field.onChange}>
+                          <SelectTrigger
+                            className={`w-full ${getCollectingError("collectingLicense") ? "border-destructive" : ""}`}
+                          >
                             <SelectValue placeholder="Select a license" />
                           </SelectTrigger>
                           <SelectContent position="popper" sideOffset={5} className="z-[60]" side="bottom">
@@ -827,7 +973,6 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
                   )}
                 />
               </div>
-
             </div>
           )}
         </div>
@@ -842,4 +987,4 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
   );
 };
 
-export default CollectingTab; 
+export default CollectingTab;

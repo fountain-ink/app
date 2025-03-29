@@ -74,7 +74,10 @@ export async function generateMetadata({ params }: { params: { blog: string } })
   };
 }
 
-const UserBlogPage = async ({ params, searchParams }: { params: { blog: string }; searchParams?: { tag?: string } }) => {
+const UserBlogPage = async ({
+  params,
+  searchParams,
+}: { params: { blog: string }; searchParams?: { tag?: string } }) => {
   const lens = await getLensClient();
   const { username, address: userAddress } = await getUserProfile();
   let profile;
@@ -134,17 +137,18 @@ const UserBlogPage = async ({ params, searchParams }: { params: { blog: string }
     },
   }).unwrapOr(null);
 
-  const formattedTags = tags?.items.map(tag => ({
-    tag: tag.value,
-    count: tag.total
-  })) || [];
+  const formattedTags =
+    tags?.items.map((tag) => ({
+      tag: tag.value,
+      count: tag.total,
+    })) || [];
 
   const showAuthor = blogData?.metadata?.showAuthor ?? true;
   const showTags = blogData?.metadata?.showTags ?? true;
   const showTitle = blogData?.metadata?.showTitle ?? true;
   const blogTitle = blogData?.title;
   const isUserBlog = username === params.blog && !isGroup;
-  const isUserMemeber = groupMembers.some(member => member.address === userAddress);
+  const isUserMemeber = groupMembers.some((member) => member.address === userAddress);
 
   return (
     <BlogTheme initialTheme={blogData?.theme?.name}>
@@ -170,12 +174,8 @@ const UserBlogPage = async ({ params, searchParams }: { params: { blog: string }
 
         {/* <Separator className="w-48 bg-primary mt-3" /> */}
 
-        {showTags && feedAddress && (
-          <>
-            {formattedTags.length > 0 && (
-              <BlogTagNavigation tags={formattedTags} username={params.blog} />
-            )}
-          </>
+        {showTags && feedAddress && formattedTags.length > 0 && (
+          <BlogTagNavigation tags={formattedTags} username={params.blog} />
         )}
         <div className="flex flex-col my-4 gap-4">
           <UserContent

@@ -20,12 +20,7 @@ export function NewsletterSettings({ blogs }: NewsletterSettingsProps) {
           {blogs.length === 0 ? (
             <p className="text-sm text-muted-foreground">No blogs found. Create a blog first to set up newsletters.</p>
           ) : (
-            blogs.map((blog: BlogDataWithSubscriberCount) => (
-              <BlogNewsletterCard
-                key={blog.address}
-                blog={blog}
-              />
-            ))
+            blogs.map((blog: BlogDataWithSubscriberCount) => <BlogNewsletterCard key={blog.address} blog={blog} />)
           )}
         </div>
       </CardContent>

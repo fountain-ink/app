@@ -19,13 +19,13 @@ export async function POST(req: NextRequest, { params }: { params: { blog: strin
     const userAddress = claims.metadata.address;
 
     const formData = await req.formData();
-    const file = formData.get('file') as File;
+    const file = formData.get("file") as File;
 
     if (!file) {
       return NextResponse.json({ error: "CSV file is required" }, { status: 400 });
     }
 
-    if (!file.name.endsWith('.csv') && file.type !== 'text/csv') {
+    if (!file.name.endsWith(".csv") && file.type !== "text/csv") {
       return NextResponse.json({ error: "Invalid file format. Please upload a CSV file" }, { status: 400 });
     }
 
@@ -86,4 +86,4 @@ export async function POST(req: NextRequest, { params }: { params: { blog: strin
   }
 }
 
-export const dynamic = "force-dynamic"; 
+export const dynamic = "force-dynamic";

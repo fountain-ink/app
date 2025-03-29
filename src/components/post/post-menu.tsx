@@ -104,12 +104,12 @@ export const PostMenu = ({ post }: { post: Post }) => {
     },
     ...(isUserPost
       ? [
-        {
-          icon: Trash2,
-          label: "Delete post",
-          onClick: openDeleteDialog,
-        },
-      ]
+          {
+            icon: Trash2,
+            label: "Delete post",
+            onClick: openDeleteDialog,
+          },
+        ]
       : []),
   ];
 
@@ -142,7 +142,8 @@ export const PostMenu = ({ post }: { post: Post }) => {
             <AlertDialogTitle>Delete Post</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to delete this post? This action <b>cannot be undone</b>.
-              <br /><br />
+              <br />
+              <br />
               <span className="text-muted-foreground">Hold the delete button to confirm.</span>
             </AlertDialogDescription>
           </AlertDialogHeader>

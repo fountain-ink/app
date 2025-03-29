@@ -115,7 +115,7 @@ export function UserBlogsList({ blogs }: UserBlogsListProps) {
                   icon: blog.icon,
                   handle: blog.handle || undefined,
                   slug: blog.slug || undefined,
-                  isUserBlog: blog.owner === blog.address
+                  isUserBlog: blog.owner === blog.address,
                 }}
                 showExternalLink={false}
               />

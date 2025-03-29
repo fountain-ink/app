@@ -6,7 +6,7 @@ import { useCallback } from "react";
 
 export const BlogTagNavigation = ({
   tags,
-  username
+  username,
 }: {
   tags: Array<{ tag: string; count: number }>;
   username: string;
@@ -27,7 +27,7 @@ export const BlogTagNavigation = ({
       }
       return params.toString();
     },
-    [searchParams]
+    [searchParams],
   );
 
   const handleTagClick = (tag: string) => {
@@ -37,17 +37,11 @@ export const BlogTagNavigation = ({
 
   if (!tags || tags.length === 0) return null;
 
-  const sortedTags = [...tags]
-    .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag))
-    .slice(0, 15);
+  const sortedTags = [...tags].sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag)).slice(0, 15);
 
   return (
     <div className="flex flex-row gap-2 flex-wrap font-[family-name:--title-font] justify-center">
-      <Button
-        variant={!currentTag ? "ghost2" : "ghost"}
-        onClick={() => handleTagClick("")}
-        className="text-sm"
-      >
+      <Button variant={!currentTag ? "ghost2" : "ghost"} onClick={() => handleTagClick("")} className="text-sm">
         All
       </Button>
 
@@ -63,4 +57,4 @@ export const BlogTagNavigation = ({
       ))}
     </div>
   );
-}; 
+};

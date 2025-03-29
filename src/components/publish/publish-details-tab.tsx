@@ -8,26 +8,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { BlogSelectMenu } from "@/components/blog/blog-select-menu";
 import { FC, useCallback, useEffect, useState, useRef, useMemo } from "react";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { CombinedFormValues } from "./publish-dialog";
 
 export const detailsFormSchema = z.object({
-  title: z.string()
-    .min(1, "Title is required")
-    .max(100, "Title should be less than 100 characters"),
+  title: z.string().min(1, "Title is required").max(100, "Title should be less than 100 characters"),
   subtitle: z.string().optional(),
   coverUrl: z.string().optional(),
-  tags: z.array(z.string())
-    .max(5, "You can add up to 5 tags")
-    .default([]),
+  tags: z.array(z.string()).max(5, "You can add up to 5 tags").default([]),
   selectedBlogAddress: z.string().min(1, "Please select a blog to publish to"),
   sendNewsletter: z.boolean().default(true),
 });
@@ -39,14 +27,14 @@ interface ArticleDetailsTabProps {
   documentId?: string;
 }
 
-export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, }) => {
+export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
   const { blogState } = useBlogStorage();
   const [tags, setTags] = useState<Tag[]>([]);
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const formTags = form.getValues("details.tags") || [];
-    if (JSON.stringify(tags.map(t => t.text)) !== JSON.stringify(formTags)) {
+    if (JSON.stringify(tags.map((t) => t.text)) !== JSON.stringify(formTags)) {
       setTags(formTags.map((text: string) => ({ text, id: crypto.randomUUID() })));
     }
   }, [form.watch("details.tags")]);
@@ -55,16 +43,20 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, }) => {
     (newTags: Tag[] | ((prev: Tag[]) => Tag[])) => {
       const resolvedTags = typeof newTags === "function" ? newTags(tags) : newTags;
       setTags(resolvedTags);
-      form.setValue("details.tags", resolvedTags.map(t => t.text), { shouldValidate: true, shouldDirty: true });
+      form.setValue(
+        "details.tags",
+        resolvedTags.map((t) => t.text),
+        { shouldValidate: true, shouldDirty: true },
+      );
     },
-    [form, tags]
+    [form, tags],
   );
 
   const selectedBlogAddress = form.watch("details.selectedBlogAddress");
 
-  const selectedBlog = useMemo(() =>
-    blogState.blogs.find(blog => blog?.address === selectedBlogAddress) || null,
-    [blogState.blogs, selectedBlogAddress]
+  const selectedBlog = useMemo(
+    () => blogState.blogs.find((blog) => blog?.address === selectedBlogAddress) || null,
+    [blogState.blogs, selectedBlogAddress],
   );
 
   return (
@@ -116,12 +108,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, }) => {
               <FormItem className="max-w-sm">
                 <FormLabel htmlFor="subtitle">Summary</FormLabel>
                 <FormControl>
-                  <Input
-                    id="subtitle"
-                    placeholder="Enter summary (optional)"
-                    {...field}
-                    value={field.value ?? ''}
-                  />
+                  <Input id="subtitle" placeholder="Enter summary (optional)" {...field} value={field.value ?? ""} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -141,7 +128,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, }) => {
                 selectedBlogAddress={field.value}
                 onBlogChange={(value) => {
                   field.onChange(value);
-                  const newSelectedBlog = blogState.blogs.find(b => b?.address === value);
+                  const newSelectedBlog = blogState.blogs.find((b) => b?.address === value);
                   if (!newSelectedBlog?.mail_list_id) {
                     form.setValue("details.sendNewsletter", false);
                   } else {
@@ -165,11 +152,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, }) => {
             <FormItem className="flex flex-col space-y-1 mt-4 ml-4">
               <div className="flex items-center space-x-2">
                 <FormControl>
-                  <Checkbox
-                    id="sendNewsletter"
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
+                  <Checkbox id="sendNewsletter" checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
                 <label
                   htmlFor="sendNewsletter"
@@ -178,9 +161,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, }) => {
                   Send out newsletter to subscribers
                 </label>
               </div>
-              <FormDescription className="pl-6">
-                Subscribers will receive this post in their inbox.
-              </FormDescription>
+              <FormDescription className="pl-6">Subscribers will receive this post in their inbox.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -218,4 +199,4 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, }) => {
       />
     </div>
   );
-}; 
+};

@@ -41,13 +41,7 @@ export async function POST(req: NextRequest, { params }: { params: { blog: strin
       return NextResponse.json({ error: "Post slug is required" }, { status: 400 });
     }
 
-    const campaign = await createCampaignForPost(
-      blog.mail_list_id,
-      params.blog,
-      postSlug,
-      userAddress,
-      postMetadata
-    );
+    const campaign = await createCampaignForPost(blog.mail_list_id, params.blog, postSlug, userAddress, postMetadata);
 
     if (!campaign) {
       return NextResponse.json({ error: "Failed to create campaign" }, { status: 500 });
@@ -56,15 +50,15 @@ export async function POST(req: NextRequest, { params }: { params: { blog: strin
     return NextResponse.json({
       success: true,
       message: "Campaign created and started successfully",
-      data: { campaignId: campaign.id }
+      data: { campaignId: campaign.id },
     });
   } catch (error) {
     console.error("Error creating campaign for post:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to create campaign for post" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
-export const dynamic = "force-dynamic"; 
+export const dynamic = "force-dynamic";

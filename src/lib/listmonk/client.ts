@@ -246,11 +246,11 @@ export async function importSubscribers(file: File, listIds: number[]): Promise<
       subscription_status: "confirmed",
       delim: ",",
       lists: listIds,
-      overwrite: true
+      overwrite: true,
     };
 
-    formData.append('params', JSON.stringify(params));
-    formData.append('file', file);
+    formData.append("params", JSON.stringify(params));
+    formData.append("file", file);
 
     const response = await fetch(`${env.LISTMONK_API_URL}/import/subscribers`, {
       method: "POST",
@@ -275,15 +275,19 @@ export async function importSubscribers(file: File, listIds: number[]): Promise<
 /**
  * Fetches subscribers from a list
  */
-export async function getSubscribers(listId?: number, page = 1, perPage = 100): Promise<ListmonkSubscriberResponse | null> {
+export async function getSubscribers(
+  listId?: number,
+  page = 1,
+  perPage = 100,
+): Promise<ListmonkSubscriberResponse | null> {
   try {
     const params = new URLSearchParams({
       page: page.toString(),
-      per_page: 'all'
+      per_page: "all",
     });
 
     if (listId) {
-      params.append('list_id', listId.toString());
+      params.append("list_id", listId.toString());
     }
 
     const response = await fetch(`${env.LISTMONK_API_URL}/subscribers?${params.toString()}`, {
@@ -340,37 +344,37 @@ export async function createCampaignForPost(
   blogId: string,
   postId: string,
   authorAddress: string,
-  postMetadata?: string
+  postMetadata?: string,
 ) {
   try {
     const db = await createClient();
     const { data: blog, error } = await findBlogByIdentifier(db, blogId);
 
     if (error || !blog) {
-      console.error('Error fetching blog data:', error);
+      console.error("Error fetching blog data:", error);
       return null;
     }
 
     if (!listId) {
-      console.error('No mailing list ID provided');
+      console.error("No mailing list ID provided");
       return null;
     }
 
-    let postTitle = 'New Post';
-    let postContent = 'Check out the new post!';
-    let postSubtitle = '';
+    let postTitle = "New Post";
+    let postContent = "Check out the new post!";
+    let postSubtitle = "";
     let postUrl = `https://fountain.ink/p/${postId}`;
-    let coverImageUrl = '';
-    let username = '';
+    let coverImageUrl = "";
+    let username = "";
 
     if (postMetadata) {
       try {
         const metadata = JSON.parse(postMetadata);
         postTitle = metadata.title || postTitle;
-        postSubtitle = metadata.subtitle || '';
+        postSubtitle = metadata.subtitle || "";
         postContent = metadata.content || postContent;
-        coverImageUrl = metadata.coverUrl || '';
-        username = metadata.username || '';
+        coverImageUrl = metadata.coverUrl || "";
+        username = metadata.username || "";
 
         if (username) {
           postUrl = `https://fountain.ink/p/${username}/${postId}`;
@@ -380,7 +384,7 @@ export async function createCampaignForPost(
           postContent = `${postContent.substring(0, 300)}...`;
         }
       } catch (e) {
-        console.error('Error parsing post metadata:', e);
+        console.error("Error parsing post metadata:", e);
       }
     }
 
@@ -425,11 +429,11 @@ export async function createCampaignForPost(
       <body>
         <div>
           <h1>${postTitle}</h1>
-          ${postSubtitle ? `<h2>${postSubtitle}</h2>` : ''}
-          ${coverImageUrl ? `<img src="${coverImageUrl}" alt="Post cover image" class="cover" />` : ''}
+          ${postSubtitle ? `<h2>${postSubtitle}</h2>` : ""}
+          ${coverImageUrl ? `<img src="${coverImageUrl}" alt="Post cover image" class="cover" />` : ""}
           
           <div class="content">
-            ${postContent.replace(/\n/g, '<br>')}
+            ${postContent.replace(/\n/g, "<br>")}
           </div>
           
           <a href="${postUrl}" class="button">Read the full post</a>
@@ -444,10 +448,10 @@ export async function createCampaignForPost(
     `;
 
     const response = await fetch(`${env.LISTMONK_API_URL}/campaigns`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': getAuthHeader()
+        "Content-Type": "application/json",
+        Authorization: getAuthHeader(),
       },
       body: JSON.stringify({
         name: `New post: ${postTitle}`,
@@ -455,41 +459,41 @@ export async function createCampaignForPost(
         // subject: `${blog.display_name || blogId}: ${postTitle}`,
         lists: [listId],
         from_email: `${blog.display_name || blogId} <noreply@fountain.ink>`,
-        content_type: 'html',
-        type: 'regular',
+        content_type: "html",
+        type: "regular",
         body: campaignBody,
-        status: 'draft' // or 'scheduled' to send automatically
-      })
+        status: "draft", // or 'scheduled' to send automatically
+      }),
     });
 
     if (!response.ok) {
-      console.error('Failed to create campaign:', response.status, response.statusText);
+      console.error("Failed to create campaign:", response.status, response.statusText);
       return null;
     }
 
-    const responseData = await response.json() as ListmonkCampaignResponse;
+    const responseData = (await response.json()) as ListmonkCampaignResponse;
 
     const campaignId = responseData.data.id;
     const sendResponse = await fetch(`${env.LISTMONK_API_URL}/campaigns/${campaignId}/status`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': getAuthHeader()
+        "Content-Type": "application/json",
+        Authorization: getAuthHeader(),
       },
       body: JSON.stringify({
-        status: 'running'
-      })
+        status: "running",
+      }),
     });
 
     if (!sendResponse.ok) {
-      console.error('Failed to send campaign:', sendResponse.status, sendResponse.statusText);
+      console.error("Failed to send campaign:", sendResponse.status, sendResponse.statusText);
     } else {
       console.log(`Campaign ${campaignId} started successfully`);
     }
 
     return responseData.data;
   } catch (error) {
-    console.error('Error creating campaign:', error);
+    console.error("Error creating campaign:", error);
     return null;
   }
 }

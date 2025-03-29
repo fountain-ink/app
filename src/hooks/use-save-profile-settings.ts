@@ -23,14 +23,7 @@ export function useSaveProfileSettings() {
   const [isSaving, setIsSaving] = useState(false);
   const { data: walletClient } = useWalletClient();
 
-  const saveSettings = async ({
-    profile,
-    name,
-    bio,
-    picture,
-    coverPicture,
-    attributes,
-  }: ProfileSettingsParams) => {
+  const saveSettings = async ({ profile, name, bio, picture, coverPicture, attributes }: ProfileSettingsParams) => {
     setIsSaving(true);
     const currentMetadata = profile.metadata;
     const handle = profile.username?.localName;

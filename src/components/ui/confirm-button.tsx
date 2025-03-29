@@ -7,7 +7,22 @@ import { LucideIcon } from "lucide-react";
 interface ConfirmButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   onConfirm: () => void;
   duration?: number;
-  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "ghost2" | "ghost3" | "ghostText" | "brand" | "muted" | "blockAction" | "menuAction" | "navAction" | "blockActionSecondary" | "none";
+  variant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "ghost2"
+    | "ghost3"
+    | "ghostText"
+    | "brand"
+    | "muted"
+    | "blockAction"
+    | "menuAction"
+    | "navAction"
+    | "blockActionSecondary"
+    | "none";
   icon: LucideIcon;
   children?: React.ReactNode;
 }
@@ -28,34 +43,37 @@ export function ConfirmButton({
   const timeoutRef = React.useRef<number>();
   const startTimeRef = React.useRef<number>();
 
-  const startHolding = React.useCallback((e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault();
-    if (disabled) return;
+  const startHolding = React.useCallback(
+    (e: React.MouseEvent | React.TouchEvent) => {
+      e.preventDefault();
+      if (disabled) return;
 
-    setIsHolding(true);
-    startTimeRef.current = Date.now();
+      setIsHolding(true);
+      startTimeRef.current = Date.now();
 
-    const animate = () => {
-      if (!startTimeRef.current) return;
+      const animate = () => {
+        if (!startTimeRef.current) return;
 
-      const elapsed = Date.now() - startTimeRef.current;
-      const newProgress = Math.min((elapsed / duration) * 100, 100);
-      const secondsLeft = Math.ceil((duration - elapsed) / 1000);
+        const elapsed = Date.now() - startTimeRef.current;
+        const newProgress = Math.min((elapsed / duration) * 100, 100);
+        const secondsLeft = Math.ceil((duration - elapsed) / 1000);
 
-      setProgress(newProgress);
-      setTimeLeft(secondsLeft);
+        setProgress(newProgress);
+        setTimeLeft(secondsLeft);
 
-      if (newProgress < 100) {
-        timeoutRef.current = window.requestAnimationFrame(animate);
-      } else {
-        setIsHolding(false);
-        setProgress(0);
-        onConfirm();
-      }
-    };
+        if (newProgress < 100) {
+          timeoutRef.current = window.requestAnimationFrame(animate);
+        } else {
+          setIsHolding(false);
+          setProgress(0);
+          onConfirm();
+        }
+      };
 
-    timeoutRef.current = window.requestAnimationFrame(animate);
-  }, [duration, disabled, onConfirm]);
+      timeoutRef.current = window.requestAnimationFrame(animate);
+    },
+    [duration, disabled, onConfirm],
+  );
 
   const stopHolding = React.useCallback(() => {
     if (timeoutRef.current) {
@@ -78,11 +96,7 @@ export function ConfirmButton({
   return (
     <Button
       variant={variant}
-      className={cn(
-        "relative select-none overflow-hidden",
-        isHolding && "cursor-grabbing",
-        className
-      )}
+      className={cn("relative select-none overflow-hidden", isHolding && "cursor-grabbing", className)}
       onMouseDown={startHolding}
       onMouseUp={stopHolding}
       onMouseLeave={stopHolding}
@@ -107,12 +121,7 @@ export function ConfirmButton({
                 transition={{ duration: 0.2 }}
                 className="absolute inset-0 flex items-center justify-center"
               >
-                <svg
-                  className="absolute inset-0"
-                  viewBox="0 0 50 50"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+                <svg className="absolute inset-0" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <motion.circle
                     cx="25"
                     cy="25"
@@ -125,9 +134,7 @@ export function ConfirmButton({
                     transition={{ duration: 0, ease: "linear" }}
                   />
                 </svg>
-                <div className="relative z-10 text-xs font-semibold">
-                  {timeLeft}
-                </div>
+                <div className="relative z-10 text-xs font-semibold">{timeLeft}</div>
               </motion.div>
             ) : (
               <motion.div
@@ -143,9 +150,7 @@ export function ConfirmButton({
             )}
           </AnimatePresence>
         </div>
-        <motion.span layout="position">
-          {children}
-        </motion.span>
+        <motion.span layout="position">{children}</motion.span>
       </motion.div>
     </Button>
   );

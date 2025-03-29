@@ -1,7 +1,7 @@
 export enum SNSMessageType {
-  SubscriptionConfirmation = 'SubscriptionConfirmation',
-  Notification = 'Notification',
-  UnsubscribeConfirmation = 'UnsubscribeConfirmation',
+  SubscriptionConfirmation = "SubscriptionConfirmation",
+  Notification = "Notification",
+  UnsubscribeConfirmation = "UnsubscribeConfirmation",
 }
 
 export interface SNSBaseMessage {
@@ -85,4 +85,4 @@ export interface BlogRecord {
   display_name?: string;
   mail_list_id?: number;
   lens_group_address?: string;
-} 
+}

@@ -34,12 +34,11 @@ function BlogSelectMenuComponent({
         const fetchedBlogs = await getBlogs();
 
         if (!selectedBlogAddress && fetchedBlogs && fetchedBlogs.length > 0) {
-          const personalBlog = fetchedBlogs.find(blog => blog.address === blog.owner);
+          const personalBlog = fetchedBlogs.find((blog) => blog.address === blog.owner);
           if (personalBlog && onBlogChange) {
             onBlogChange(personalBlog.address);
           }
         }
-
       } catch (error) {
         console.error("Error fetching blogs:", error);
       } finally {
@@ -48,12 +47,11 @@ function BlogSelectMenuComponent({
     };
 
     fetchBlogsOnce();
-
   }, []);
 
   const filteredBlogs = includePersonalBlog
     ? blogState.blogs
-    : blogState.blogs.filter(blog => !(blog.address === blog.owner));
+    : blogState.blogs.filter((blog) => !(blog.address === blog.owner));
 
   const handleBlogChange = (value: string) => {
     if (onBlogChange) {
@@ -61,11 +59,16 @@ function BlogSelectMenuComponent({
     }
   };
 
-  const noBlogsAvailable = filteredBlogs.length === 0 ||
+  const noBlogsAvailable =
+    filteredBlogs.length === 0 ||
     (!includePersonalBlog && filteredBlogs.length === 1 && filteredBlogs[0]?.address === filteredBlogs[0]?.owner);
 
   return (
-    <Select value={selectedBlogAddress || undefined} onValueChange={handleBlogChange} disabled={isLoading || noBlogsAvailable}>
+    <Select
+      value={selectedBlogAddress || undefined}
+      onValueChange={handleBlogChange}
+      disabled={isLoading || noBlogsAvailable}
+    >
       <SelectTrigger className={className}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
@@ -120,4 +123,4 @@ function BlogSelectMenuComponent({
   );
 }
 
-export const BlogSelectMenu = memo(BlogSelectMenuComponent); 
+export const BlogSelectMenu = memo(BlogSelectMenuComponent);

@@ -13,9 +13,7 @@ interface EvmAddressProps {
 export function EvmAddress({ address, truncate = false, showCopy = false, className }: EvmAddressProps) {
   const [copied, setCopied] = useState(false);
 
-  const displayAddress = truncate
-    ? `${address.slice(0, 6)}...${address.slice(-4)}`
-    : address;
+  const displayAddress = truncate ? `${address.slice(0, 6)}...${address.slice(-4)}` : address;
 
   const handleCopy = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -39,15 +37,11 @@ export function EvmAddress({ address, truncate = false, showCopy = false, classN
             className="p-1 h-auto w-auto overflow-visible rounded-full hover:bg-muted"
             onClick={handleCopy}
           >
-            {copied ? (
-              <CheckIcon className="h-3.5 w-3.5" />
-            ) : (
-              <CopyIcon className="h-3.5 w-3.5" />
-            )}
+            {copied ? <CheckIcon className="h-3.5 w-3.5" /> : <CopyIcon className="h-3.5 w-3.5" />}
             <span className="sr-only">Copy address</span>
           </Button>
         </span>
       )}
     </span>
   );
-} 
+}

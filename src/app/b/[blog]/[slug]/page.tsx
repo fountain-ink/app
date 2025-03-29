@@ -26,12 +26,7 @@ export default async function BlogHandlePage({ params }: PageProps) {
 async function resolveBlog(username: string, slug: string): Promise<string | null> {
   try {
     const db = await createClient();
-    const { data: blog } = await db
-      .from("blogs")
-      .select("address")
-      .eq("handle", username)
-      .eq("slug", slug)
-      .single();
+    const { data: blog } = await db.from("blogs").select("address").eq("handle", username).eq("slug", slug).single();
 
     return blog?.address || null;
   } catch (error) {

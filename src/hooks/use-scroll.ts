@@ -15,12 +15,10 @@ export const useScroll = (options?: UseScrollOptions) => {
   useEffect(() => {
     if (options?.containerRef?.current) {
       setContainer(options.containerRef.current);
-    }
-    else if (options?.containerSelector) {
+    } else if (options?.containerSelector) {
       const element = document.querySelector(options.containerSelector) as HTMLElement;
       setContainer(element || window);
-    }
-    else {
+    } else {
       setContainer(window);
     }
   }, [options?.containerRef, options?.containerSelector]);
@@ -33,9 +31,7 @@ export const useScroll = (options?: UseScrollOptions) => {
         clearTimeout(scrollTimeout.current);
       }
 
-      const currentScrollY = container === window
-        ? window.scrollY
-        : (container as HTMLElement).scrollTop;
+      const currentScrollY = container === window ? window.scrollY : (container as HTMLElement).scrollTop;
 
       const direction = currentScrollY > lastScrollY.current ? "down" : "up";
       const delta = Math.abs(currentScrollY - lastScrollY.current);

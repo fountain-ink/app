@@ -29,11 +29,7 @@ export function BlogCard({ blog, href, showExternalLink = true }: BlogCardProps)
   const [imageLoaded, setImageLoaded] = useState(true);
   const { title, description, address, isUserBlog, icon, handle, slug } = blog;
 
-  const blogUrl = isUserBlog
-    ? `/b/${handle}`
-    : handle && slug
-      ? `/b/${handle}/${slug}`
-      : `/b/${address}`;
+  const blogUrl = isUserBlog ? `/b/${handle}` : handle && slug ? `/b/${handle}/${slug}` : `/b/${address}`;
 
   const linkHref = href || blogUrl;
 

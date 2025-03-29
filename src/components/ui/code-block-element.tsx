@@ -162,4 +162,3 @@ export const CodeBlockElement = withRef<typeof PlateElement>(({ children, classN
     </ElementPopover>
   );
 });
-

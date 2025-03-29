@@ -125,7 +125,7 @@ export const CommentReplyArea = ({
             rows={1}
             className="resize-none flex-grow min-h-8 border-none shadow-none p-0"
             onKeyDown={(e) => {
-              if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+              if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
                 e.preventDefault();
                 handleSubmit();
               }

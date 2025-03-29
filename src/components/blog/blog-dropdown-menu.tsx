@@ -46,9 +46,7 @@ export function BlogDropdownMenu({ username }: BlogMenuProps) {
   if (!hasMultipleBlogs) {
     return (
       <AnimatedMenuItem href={`/b/${username}`} icon={CustomPenToolIcon}>
-        <div className="flex items-center text-base w-[134px]">
-          Blog
-        </div>
+        <div className="flex items-center text-base w-[134px]">Blog</div>
       </AnimatedMenuItem>
     );
   }

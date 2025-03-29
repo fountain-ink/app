@@ -19,12 +19,7 @@ interface NewsletterDeleteDialogProps {
   onSuccess?: () => void;
 }
 
-export function NewsletterDeleteDialog({
-  open,
-  onOpenChange,
-  blogAddress,
-  onSuccess,
-}: NewsletterDeleteDialogProps) {
+export function NewsletterDeleteDialog({ open, onOpenChange, blogAddress, onSuccess }: NewsletterDeleteDialogProps) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
@@ -56,8 +51,10 @@ export function NewsletterDeleteDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Newsletter</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete this newsletter? This will <b>permanently</b> delete all subscriber data. This action <b>cannot be undone</b>.
-            <br /><br />
+            Are you sure you want to delete this newsletter? This will <b>permanently</b> delete all subscriber data.
+            This action <b>cannot be undone</b>.
+            <br />
+            <br />
             <span className="text-muted-foreground">Hold the delete button to confirm.</span>
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -77,4 +74,4 @@ export function NewsletterDeleteDialog({
       </AlertDialogContent>
     </AlertDialog>
   );
-} 
+}

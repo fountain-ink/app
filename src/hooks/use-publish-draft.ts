@@ -26,7 +26,7 @@ export const usePublishDraft = (documentId?: string) => {
 
       saveDocument(documentId, updatedDraft);
     },
-    [documentId]
+    [documentId],
   );
 
   return {
@@ -34,4 +34,4 @@ export const usePublishDraft = (documentId?: string) => {
     updateDraft,
     documentId,
   };
-}; 
+};

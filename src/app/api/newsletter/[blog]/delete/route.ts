@@ -47,7 +47,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { blog: str
         metadata: {
           ...(blog.metadata || {}),
           newsletterEnabled: false,
-        }
+        },
       })
       .eq("address", blog.address);
 
@@ -66,4 +66,4 @@ export async function DELETE(req: NextRequest, { params }: { params: { blog: str
   }
 }
 
-export const dynamic = "force-dynamic"; 
+export const dynamic = "force-dynamic";

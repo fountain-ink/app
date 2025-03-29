@@ -92,9 +92,9 @@ export const ActionButton = ({
       }
     };
 
-    window.addEventListener('scroll', handleScroll, true);
+    window.addEventListener("scroll", handleScroll, true);
     return () => {
-      window.removeEventListener('scroll', handleScroll, true);
+      window.removeEventListener("scroll", handleScroll, true);
     };
   }, [dropdownItems, open, onOpenChange]);
 

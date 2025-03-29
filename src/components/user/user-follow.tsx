@@ -63,7 +63,9 @@ export const UserFollowButton = ({ account, className }: { account: Account; cla
 
       const newFollowingState = !following;
       setFollowing(newFollowingState);
-      toast.success(`${newFollowingState ? "Followed" : "Unfollowed"} ${account.username?.localName || "account"} successfully`);
+      toast.success(
+        `${newFollowingState ? "Followed" : "Unfollowed"} ${account.username?.localName || "account"} successfully`,
+      );
 
       router.refresh();
     } catch (error) {
@@ -89,8 +91,12 @@ export const UserFollowButton = ({ account, className }: { account: Account; cla
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               {following ? "Unfollowing" : "Following"}
             </>
+          ) : following ? (
+            "Following"
+          ) : account.operations?.isFollowingMe ? (
+            "Follow back"
           ) : (
-            following ? "Following" : account.operations?.isFollowingMe ? "Follow back" : "Follow"
+            "Follow"
           )}
         </Button>
       </div>

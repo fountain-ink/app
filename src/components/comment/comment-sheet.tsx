@@ -16,7 +16,7 @@ export const CommentSheet = ({
   post,
   account,
   forcedOpen,
-  onOpenChange
+  onOpenChange,
 }: {
   post: Post;
   account?: Account;

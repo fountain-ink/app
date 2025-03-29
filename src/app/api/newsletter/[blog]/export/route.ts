@@ -59,23 +59,20 @@ export async function GET(req: NextRequest, { params }: { params: { blog: string
     }
 
     const headers = ["email", "name", "status", "created_at"];
-    const rows = subscribers.data.results.map(sub => [
+    const rows = subscribers.data.results.map((sub) => [
       sub.email,
       sub.name,
       sub.status,
-      new Date(sub.created_at).toISOString().split('T')[0]
+      new Date(sub.created_at).toISOString().split("T")[0],
     ]);
 
-    const csv = [
-      headers.join(','),
-      ...rows.map(row => row.join(','))
-    ].join('\n');
+    const csv = [headers.join(","), ...rows.map((row) => row.join(","))].join("\n");
 
     // Return CSV as a downloadable file
     return new NextResponse(csv, {
       headers: {
-        'Content-Type': 'text/csv',
-        'Content-Disposition': `attachment; filename="subscribers-${blog.address}-${new Date().toISOString().split('T')[0]}.csv"`,
+        "Content-Type": "text/csv",
+        "Content-Disposition": `attachment; filename="subscribers-${blog.address}-${new Date().toISOString().split("T")[0]}.csv"`,
       },
     });
   } catch (error) {
@@ -87,4 +84,4 @@ export async function GET(req: NextRequest, { params }: { params: { blog: string
   }
 }
 
-export const dynamic = "force-dynamic"; 
+export const dynamic = "force-dynamic";

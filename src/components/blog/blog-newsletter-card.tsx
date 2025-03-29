@@ -14,13 +14,7 @@ import { NewsletterDeleteDialog } from "@/components/newsletter/newsletter-delet
 import { BlogDataWithSubscriberCount } from "@/app/settings/newsletter/page";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
 interface BlogNewsletterCardProps {
@@ -41,7 +35,7 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [newsletterEnabled, setNewsletterEnabled] = useState(
-    blog.mail_list_id !== null && blog.metadata?.newsletterEnabled !== false
+    blog.mail_list_id !== null && blog.metadata?.newsletterEnabled !== false,
   );
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -86,8 +80,7 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
       }
 
       setNewsletterEnabled(enabled);
-      toast.success(`Newsletter ${enabled ? 'enabled' : 'disabled'} successfully`);
-
+      toast.success(`Newsletter ${enabled ? "enabled" : "disabled"} successfully`);
     } catch (error) {
       console.error("Error toggling newsletter:", error);
       toast.error(error instanceof Error ? error.message : "An error occurred");
@@ -178,16 +171,17 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
                 <CardTitle className="text-lg">{blog.title || "Untitled Blog"}</CardTitle>
                 <CardDescription className="mt-1 flex items-center gap-2">
                   <Link href={getBlogUrl(blog)} className="hover:underline">
-                    <span>{getBlogUrl(blog).slice(0, 13)}{getBlogUrl(blog).length > 13 ? "..." : ""}</span>
+                    <span>
+                      {getBlogUrl(blog).slice(0, 13)}
+                      {getBlogUrl(blog).length > 13 ? "..." : ""}
+                    </span>
                   </Link>
                   {newsletterEnabled && (
                     <>
                       <span className="text-muted-foreground">•</span>
                       <span className="flex items-center gap-1">
                         <UsersIcon className="h-3.5 w-3.5 text-muted-foreground" />
-                        {blog.subscriber_count !== undefined
-                          ? `${blog.subscriber_count} subscribers`
-                          : "0 subscribers"}
+                        {blog.subscriber_count !== undefined ? `${blog.subscriber_count} subscribers` : "0 subscribers"}
                       </span>
                     </>
                   )}
@@ -251,19 +245,11 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
                         <Trash2Icon className="h-4 w-4" />
                         Delete
                       </Button>
-                      <Button
-                        variant="outline"
-                        className="gap-2 bg-card"
-                        onClick={handleExport}
-                      >
+                      <Button variant="outline" className="gap-2 bg-card" onClick={handleExport}>
                         <DownloadIcon className="h-4 w-4" />
                         Export
                       </Button>
-                      <Button
-                        variant="outline"
-                        className="gap-2 bg-card"
-                        onClick={handleOpenImportModal}
-                      >
+                      <Button variant="outline" className="gap-2 bg-card" onClick={handleOpenImportModal}>
                         <UploadIcon className="h-4 w-4" />
                         Import
                       </Button>
@@ -293,4 +279,4 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
       />
     </>
   );
-} 
+}

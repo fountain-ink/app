@@ -56,11 +56,11 @@ export function ApplicationSettings({ initialSettings = {}, initialEmail }: Appl
       const signlessToast = toast.loading(checked ? "Enabling signless mode..." : "Disabling signless mode...");
       const signlessResult = checked
         ? await enableSignless(client)
-          .andThen((tx) => handleOperationWith(walletClient as any)(tx))
-          .andThen(client.waitForTransaction)
+            .andThen((tx) => handleOperationWith(walletClient as any)(tx))
+            .andThen(client.waitForTransaction)
         : await removeSignless(client)
-          .andThen((tx) => handleOperationWith(walletClient as any)(tx))
-          .andThen(client.waitForTransaction);
+            .andThen((tx) => handleOperationWith(walletClient as any)(tx))
+            .andThen(client.waitForTransaction);
 
       if (signlessResult.isErr()) {
         toast.dismiss(signlessToast);

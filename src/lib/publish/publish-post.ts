@@ -15,13 +15,13 @@ import type { CollectingSettings, Draft } from "@/components/draft/draft";
 
 export async function publishPost(
   draft: Draft,
-  walletClient: UseWalletClientReturnType['data'],
+  walletClient: UseWalletClientReturnType["data"],
   router: ReturnType<typeof useRouter>,
-  queryClient: ReturnType<typeof useQueryClient>
+  queryClient: ReturnType<typeof useQueryClient>,
 ): Promise<boolean> {
   try {
     const anyDraft = draft as any;
-    const documentId = typeof draft.id === 'string' ? draft.id : String(draft.id || "");
+    const documentId = typeof draft.id === "string" ? draft.id : String(draft.id || "");
     const collectingSettings = draft.collectingSettings;
     const sendNewsletter = anyDraft.publishingSettings?.sendNewsletter;
 
@@ -80,34 +80,47 @@ export async function publishPost(
 
       console.log("feed is", feedValue);
 
-
-      const payToCollectConfig = collectingSettings?.isChargeEnabled && collectingSettings.price
-        ? {
-          amount: {
-            /// WGRASS
-            currency: evmAddress("0xeee5a340Cdc9c179Db25dea45AcfD5FE8d4d3eB8"),
-            value: collectingSettings.price,
-          },
-          ...(collectingSettings.isReferralRewardsEnabled ? { referralShare: collectingSettings.referralPercent } : {}),
-          recipients: collectingSettings.isRevenueSplitEnabled && collectingSettings.recipients.length > 0
-            ? collectingSettings.recipients.map((r) => ({
-              address: evmAddress(r.address),
-              percent: r.percentage,
-            }))
-            : [],
-        }
-        : undefined;
+      const payToCollectConfig =
+        collectingSettings?.isChargeEnabled && collectingSettings.price
+          ? {
+              amount: {
+                /// WGRASS
+                currency: evmAddress("0xeee5a340Cdc9c179Db25dea45AcfD5FE8d4d3eB8"),
+                value: collectingSettings.price,
+              },
+              ...(collectingSettings.isReferralRewardsEnabled
+                ? { referralShare: collectingSettings.referralPercent }
+                : {}),
+              recipients:
+                collectingSettings.isRevenueSplitEnabled && collectingSettings.recipients.length > 0
+                  ? collectingSettings.recipients.map((r) => ({
+                      address: evmAddress(r.address),
+                      percent: r.percentage,
+                    }))
+                  : [],
+            }
+          : undefined;
 
       const actions = collectingSettings?.isCollectingEnabled
         ? [
-          {
-            simpleCollect: {
-              ...(collectingSettings.isLimitedEdition ? { collectLimit: Number(collectingSettings.collectLimit) } : undefined),
-              ...(collectingSettings.isCollectExpiryEnabled ? { endsAt: dateTime(new Date(new Date().getTime() + collectingSettings.collectExpiryDays * 24 * 60 * 60 * 1000).toISOString()) } : undefined),
-              ...(payToCollectConfig ? { payToCollect: payToCollectConfig } : undefined),
+            {
+              simpleCollect: {
+                ...(collectingSettings.isLimitedEdition
+                  ? { collectLimit: Number(collectingSettings.collectLimit) }
+                  : undefined),
+                ...(collectingSettings.isCollectExpiryEnabled
+                  ? {
+                      endsAt: dateTime(
+                        new Date(
+                          new Date().getTime() + collectingSettings.collectExpiryDays * 24 * 60 * 60 * 1000,
+                        ).toISOString(),
+                      ),
+                    }
+                  : undefined),
+                ...(payToCollectConfig ? { payToCollect: payToCollectConfig } : undefined),
+              },
             },
-          },
-        ]
+          ]
         : undefined;
 
       console.log("actions", actions);
@@ -167,19 +180,15 @@ export async function publishPost(
           if (draft.blog.mail_list_id) {
             try {
               const db = await createClient();
-              const { data: blog } = await db
-                .from("blogs")
-                .select("*")
-                .eq("address", draft.blog.address)
-                .single();
+              const { data: blog } = await db.from("blogs").select("*").eq("address", draft.blog.address).single();
 
               if (blog?.mail_list_id) {
                 const newsletterPostData = {
                   title: draft.title || "",
                   subtitle: draft.subtitle || "",
-                  content: draft.contentMarkdown || '',
+                  content: draft.contentMarkdown || "",
                   coverUrl: draft.coverUrl || "",
-                  username
+                  username,
                 };
 
                 try {
@@ -231,4 +240,4 @@ export async function publishPost(
     toast.error("An error occurred while publishing. See console for details");
     return false;
   }
-} 
+}

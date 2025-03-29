@@ -81,7 +81,7 @@ export async function subscribeToNewsletter(blog: string, email: string): Promis
 export async function importNewsletterSubscribers(blog: string, file: File): Promise<NewsletterResponse | null> {
   try {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append("file", file);
 
     const response = await fetch(`/api/newsletter/${blog}/import`, {
       method: "POST",
@@ -118,16 +118,16 @@ export async function exportNewsletterSubscribers(blog: string): Promise<void> {
     }
 
     // Get the filename from the Content-Disposition header
-    const contentDisposition = response.headers.get('Content-Disposition');
+    const contentDisposition = response.headers.get("Content-Disposition");
     const filenameMatch = contentDisposition?.match(/filename="(.+)"/) ?? null;
-    const filename = filenameMatch?.[1] ?? 'subscribers.csv';
+    const filename = filenameMatch?.[1] ?? "subscribers.csv";
 
     // Create a blob from the CSV data
     const blob = await response.blob();
 
     // Create a download link and trigger the download
     const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
@@ -156,7 +156,7 @@ export async function createCampaignForPost(
     content?: string;
     coverUrl?: string;
     username?: string;
-  }
+  },
 ): Promise<NewsletterResponse | null> {
   try {
     const response = await fetch(`/api/newsletter/${blog}/campaign`, {
@@ -166,7 +166,7 @@ export async function createCampaignForPost(
       },
       body: JSON.stringify({
         postSlug,
-        postMetadata: JSON.stringify(postMetadata)
+        postMetadata: JSON.stringify(postMetadata),
       }),
     });
 

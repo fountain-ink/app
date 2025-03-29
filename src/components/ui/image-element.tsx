@@ -198,11 +198,7 @@ export const ImageElement = withRef<typeof PlateElement>(
             ) : (
               <div className="relative w-full aspect-video">
                 <Image
-                  className={cn(
-                    "block object-cover px-0",
-                    "rounded-sm",
-                    selected && "ring-2 ring-ring",
-                  )}
+                  className={cn("block object-cover px-0", "rounded-sm", selected && "ring-2 ring-ring")}
                   alt=""
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

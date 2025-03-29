@@ -28,8 +28,8 @@ interface CreateGroupModalProps {
 const generateSlug = (title: string): string => {
   return title
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
     .substring(0, 50);
 };
 
@@ -124,16 +124,16 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
           try {
             const updateToast = toast.loading("Saving blog settings...");
             const response = await fetch(`/api/blogs/${blog.address}`, {
-              method: 'POST',
+              method: "POST",
               headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
               },
               body: JSON.stringify({
                 settings: {
                   title: title,
                   slug: slug,
                   about: description || "",
-                }
+                },
               }),
             });
 
@@ -142,7 +142,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
             if (!response.ok) {
               const errorData = await response.json();
               console.error("Error saving blog settings:", errorData);
-              toast.error(`Error saving blog settings: ${errorData.error || 'Unknown error'}`);
+              toast.error(`Error saving blog settings: ${errorData.error || "Unknown error"}`);
             } else {
               console.log("Blog settings saved successfully");
             }
@@ -177,13 +177,16 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
           <div className="space-y-6">
             <div className="space-y-2 max-w-xs">
               <Label htmlFor="title">Title</Label>
-              <Input id="title" placeholder="Enter blog title" value={title} onChange={(e) => setTitle(e.target.value)} />
+              <Input
+                id="title"
+                placeholder="Enter blog title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
             </div>
             <div className="max-w-xs">
               <Label htmlFor="slug">Slug</Label>
-              <p className="text-xs text-muted-foreground mb-2">
-                Used in the blog URL.
-              </p>
+              <p className="text-xs text-muted-foreground mb-2">Used in the blog URL.</p>
               <Input
                 id="slug"
                 placeholder="blog-slug"
@@ -198,7 +201,9 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="description">About <span className="text-xs text-muted-foreground">(Optional)</span></Label>
+              <Label htmlFor="description">
+                About <span className="text-xs text-muted-foreground">(Optional)</span>
+              </Label>
               <Textarea
                 id="description"
                 placeholder="Short description of your blog"
@@ -209,7 +214,9 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
             </div>
           </div>
           <div className="mt-auto pt-6 flex justify-end gap-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
             <Button onClick={handleCreateGroup} disabled={loading || !title || !slug || !slugIsValid}>
               {loading ? "Creating..." : "Create Blog"}
             </Button>

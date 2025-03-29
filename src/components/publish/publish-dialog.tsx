@@ -45,21 +45,39 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
 
   const form = useForm<CombinedFormValues>({
     resolver: zodResolver(combinedSchema),
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: async () => {
       const draft = getDraft();
 
       const defaultCollecting: CollectingFormValues = {
-        isCollectingEnabled: false, collectingLicense: "CC BY-NC 4.0", isChargeEnabled: false, price: "0", currency: "GHO", isReferralRewardsEnabled: false, referralPercent: 25, isRevenueSplitEnabled: false, recipients: [], isLimitedEdition: false, collectLimit: undefined, isCollectExpiryEnabled: false, collectExpiryDays: undefined
+        isCollectingEnabled: false,
+        collectingLicense: "CC BY-NC 4.0",
+        isChargeEnabled: false,
+        price: "0",
+        currency: "GHO",
+        isReferralRewardsEnabled: false,
+        referralPercent: 25,
+        isRevenueSplitEnabled: false,
+        recipients: [],
+        isLimitedEdition: false,
+        collectLimit: undefined,
+        isCollectExpiryEnabled: false,
+        collectExpiryDays: undefined,
       };
       const defaultDetails: DetailsFormValues = {
-        title: '', subtitle: '', coverUrl: '', tags: [], selectedBlogAddress: '', sendNewsletter: true
+        title: "",
+        subtitle: "",
+        coverUrl: "",
+        tags: [],
+        selectedBlogAddress: "",
+        sendNewsletter: true,
       };
 
-      if (!draft) return {
-        details: defaultDetails,
-        collecting: defaultCollecting
-      };
+      if (!draft)
+        return {
+          details: defaultDetails,
+          collecting: defaultCollecting,
+        };
 
       let { title, subtitle, coverUrl } = draft;
       if (!title || !subtitle || !coverUrl) {
@@ -76,7 +94,8 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
           ...collectingSettings,
           ...draft.collectingSettings,
           collectLimit: draft.collectingSettings.collectLimit === 0 ? undefined : draft.collectingSettings.collectLimit,
-          collectExpiryDays: draft.collectingSettings.collectExpiryDays === 0 ? undefined : draft.collectingSettings.collectExpiryDays,
+          collectExpiryDays:
+            draft.collectingSettings.collectExpiryDays === 0 ? undefined : draft.collectingSettings.collectExpiryDays,
           recipients: draft.collectingSettings.recipients ?? [],
         };
       }
@@ -90,9 +109,9 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
           selectedBlogAddress: draft.blog?.address || "",
           sendNewsletter: draft.publishingSettings?.sendNewsletter ?? true,
         },
-        collecting: collectingSettings
+        collecting: collectingSettings,
       };
-    }
+    },
   });
 
   const { handleSubmit, formState, watch, trigger, getValues } = form;
@@ -111,14 +130,15 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
       if (!isLoading && values.details && values.collecting) {
         const currentDraft = getDraft();
         if (currentDraft) {
-          const validTags = (values.details.tags ?? []).filter((tag): tag is string => typeof tag === 'string');
-          const updatedBlog = currentDraft.blog && values.details.selectedBlogAddress
-            ? { ...currentDraft.blog, address: values.details.selectedBlogAddress }
-            : currentDraft.blog;
-          const validRecipients = (values.collecting.recipients ?? [])
-            .filter((r): r is { address: string; percentage: number; username?: string | null; picture?: string | null } =>
-              r !== undefined && typeof r.address === 'string' && typeof r.percentage === 'number'
-            );
+          const validTags = (values.details.tags ?? []).filter((tag): tag is string => typeof tag === "string");
+          const updatedBlog =
+            currentDraft.blog && values.details.selectedBlogAddress
+              ? { ...currentDraft.blog, address: values.details.selectedBlogAddress }
+              : currentDraft.blog;
+          const validRecipients = (values.collecting.recipients ?? []).filter(
+            (r): r is { address: string; percentage: number; username?: string | null; picture?: string | null } =>
+              r !== undefined && typeof r.address === "string" && typeof r.percentage === "number",
+          );
           const updatedDraftData: Partial<Draft> = {
             title: values.details.title,
             subtitle: values.details.subtitle ?? null,
@@ -143,7 +163,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
               collectLimit: values.collecting.collectLimit ?? 0,
               collectExpiryDays: values.collecting.collectExpiryDays ?? 0,
               recipients: validRecipients,
-            }
+            },
           };
           updateDraft({ ...currentDraft, ...updatedDraftData });
         }
@@ -172,7 +192,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
         price: data.collecting.price ?? "0",
         collectLimit: data.collecting.collectLimit ?? 0,
         collectExpiryDays: data.collecting.collectExpiryDays ?? 0,
-        recipients: data.collecting.recipients ?? []
+        recipients: data.collecting.recipients ?? [],
       },
     };
 
@@ -208,10 +228,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
 
   return (
     <>
-      <Button
-        onClick={() => setOpen(true)}
-        className="transition-all duration-300"
-      >
+      <Button onClick={() => setOpen(true)} className="transition-all duration-300">
         Publish
       </Button>
 
@@ -227,48 +244,51 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
                   value="details"
                   className={cn(
                     "flex items-center gap-2 rounded-sm",
-                    hasDetailsErrors && "text-destructive focus:text-destructive data-[state=active]:text-destructive"
+                    hasDetailsErrors && "text-destructive focus:text-destructive data-[state=active]:text-destructive",
                   )}
                 >
-                  {hasDetailsErrors
-                    ? <AlertCircleIcon className="w-4 h-4" />
-                    : <PenIcon className="w-4 h-4" />
-                  }
+                  {hasDetailsErrors ? <AlertCircleIcon className="w-4 h-4" /> : <PenIcon className="w-4 h-4" />}
                   Article Details
                 </TabsTrigger>
                 <TabsTrigger
                   value="collecting"
                   className={cn(
                     "flex items-center gap-2 rounded-sm",
-                    hasCollectingErrors && "text-destructive focus:text-destructive data-[state=active]:text-destructive"
+                    hasCollectingErrors &&
+                      "text-destructive focus:text-destructive data-[state=active]:text-destructive",
                   )}
                 >
-                  {hasCollectingErrors
-                    ? <AlertCircleIcon className="w-4 h-4" />
-                    : <ShoppingBagIcon className="w-4 h-4" />
-                  }
+                  {hasCollectingErrors ? (
+                    <AlertCircleIcon className="w-4 h-4" />
+                  ) : (
+                    <ShoppingBagIcon className="w-4 h-4" />
+                  )}
                   Collecting
                 </TabsTrigger>
               </TabsList>
               <ScrollArea className="flex-1 min-h-0 pr-2">
-                <TabsContent value="details" className="h-full m-0 data-[state=inactive]:hidden focus-visible:ring-0 focus-visible:ring-offset-0" tabIndex={-1}>
+                <TabsContent
+                  value="details"
+                  className="h-full m-0 data-[state=inactive]:hidden focus-visible:ring-0 focus-visible:ring-offset-0"
+                  tabIndex={-1}
+                >
                   <ArticleDetailsTab form={form} documentId={documentId} />
                 </TabsContent>
-                <TabsContent value="collecting" className="h-full m-0 data-[state=inactive]:hidden focus-visible:ring-0 focus-visible:ring-offset-0" tabIndex={-1}>
+                <TabsContent
+                  value="collecting"
+                  className="h-full m-0 data-[state=inactive]:hidden focus-visible:ring-0 focus-visible:ring-offset-0"
+                  tabIndex={-1}
+                >
                   <CollectingTab form={form} documentId={documentId} />
                 </TabsContent>
               </ScrollArea>
             </Tabs>
             <div className="flex items-center justify-start gap-2">
-
-              <Button
-                onClick={handlePublishClick}
-                disabled={!isValid || isPublishing}
-              >
+              <Button onClick={handlePublishClick} disabled={!isValid || isPublishing}>
                 {isPublishing ? "Publishing..." : "Publish"}
               </Button>
 
-              {(!isValid && (isSubmitted || hasDetailsErrors || hasCollectingErrors)) && (
+              {!isValid && (isSubmitted || hasDetailsErrors || hasCollectingErrors) && (
                 <p className="text-sm text-destructive flex items-center gap-1">
                   <AlertCircleIcon className="h-4 w-4 shrink-0" />
                   Please fix the errors before publishing.

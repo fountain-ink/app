@@ -38,7 +38,7 @@ export const Footer = ({ post, account }: { post: AnyPost; account?: Account }) 
     isCommentOpen,
     isCollectOpen,
     isCommentSheetOpen,
-    setIsCommentSheetOpen
+    setIsCommentSheetOpen,
   } = usePostActions(post);
 
   const handleCommentSheetOpenChange = (open: boolean) => {
