@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { MentionableUser } from "./user-search";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchAccounts } from "@lens-protocol/client/actions";
+import { User2Icon } from "lucide-react";
+import { Account } from "@lens-protocol/client";
+import { storageClient } from "@/lib/lens/storage-client";
 
 export function UserSearchList({
   query,
@@ -27,12 +30,12 @@ export function UserSearchList({
         const items = account?.items || [];
 
         if (items.length > 0) {
-          const mentionables = items.slice(0, 10).map((item: any) => ({
+          const mentionables = items.slice(0, 10).map((item: Account) => ({
             key: item.address,
             name: item.metadata?.name || "",
             text: item.username?.localName || "",
             username: item.username?.localName || "",
-            picture: item.metadata?.picture,
+            picture: item.metadata?.picture ? storageClient.resolve(item.metadata?.picture) : undefined,
           }));
           setProfiles(mentionables);
         } else {
@@ -73,7 +76,10 @@ export function UserSearchList({
               {user.picture ? (
                 <img src={user.picture} alt={user.username} className="w-8 h-8 rounded-full" />
               ) : (
-                <div className="w-8 h-8 bg-primary/40 rounded-full" />
+
+                <div className="flex h-8 w-8 border border-border rounded-full items-center justify-center">
+                  <User2Icon size={16} className="text-muted-foreground" />
+                </div>
               )}
               <div className="flex flex-col">
                 <span className="text-sm font-semibold">{user.name}</span>

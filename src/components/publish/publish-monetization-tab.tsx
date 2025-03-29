@@ -636,11 +636,6 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
                                             Distribute evenly{" "}
                                           </Label>
                                         </div>
-                                        <span
-                                          className={`text-sm font-medium ${Math.abs(recipients.reduce((s, r) => s + r.percentage, 0) - 100) >= 0.1 ? "text-destructive" : "text-muted-foreground"}`}
-                                        >
-                                          Total: {recipients.reduce((s, r) => s + r.percentage, 0).toFixed(2)}%
-                                        </span>
                                       </div>
 
                                       {recipients.map((recipient, index) => (
