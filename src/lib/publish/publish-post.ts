@@ -98,20 +98,24 @@ export async function publishPost(
         }
         : undefined;
 
+      const actions = collectingSettings?.isCollectingEnabled
+        ? [
+          {
+            simpleCollect: {
+              ...(collectingSettings.isLimitedEdition ? { collectLimit: Number(collectingSettings.collectLimit) } : undefined),
+              ...(collectingSettings.isCollectExpiryEnabled ? { endsAt: dateTime(new Date(new Date().getTime() + collectingSettings.collectExpiryDays * 24 * 60 * 60 * 1000).toISOString()) } : undefined),
+              ...(payToCollectConfig ? { payToCollect: payToCollectConfig } : undefined),
+            },
+          },
+        ]
+        : undefined;
+
+      console.log("actions", actions);
+
       const result = await post(lens, {
         contentUri: uri,
         feed: feedValue,
-        actions: collectingSettings?.isCollectingEnabled
-          ? [
-            {
-              simpleCollect: {
-                ...(collectingSettings.isLimitedEdition && collectingSettings.collectLimit ? { collectLimit: collectingSettings.collectLimit } : {}),
-                ...(collectingSettings.isCollectExpiryEnabled ? { endsAt: dateTime(new Date(new Date().getTime() + collectingSettings.collectExpiryDays * 24 * 60 * 60 * 1000).toISOString()) } : {}),
-                ...(payToCollectConfig ? { payToCollect: payToCollectConfig } : {}),
-              },
-            },
-          ]
-          : undefined,
+        actions: actions,
       })
         .andThen(handleOperationWith(walletClient as any))
         .andTee((v) => {

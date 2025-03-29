@@ -6,6 +6,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -102,13 +103,16 @@ export const collectingFormSchema = z.object({
     ),
 
   isLimitedEdition: z.boolean().default(false),
-  collectLimit: z.number().int()
-    .min(1, { message: "Minimum collect limit is 1" }),
+  collectLimit: z.preprocess(
+    val => (val === "" || val == null) ? undefined : Number(val),
+    z.number().int().positive("Collect limit must be a positive number").optional()
+  ),
 
   isCollectExpiryEnabled: z.boolean().default(false),
-  collectExpiryDays: z.number()
-    .min(1, { message: "Minimum expiry is 1 day" })
-    .max(36500, { message: "Maximum expiry is 36500 days (100 years)" })
+  collectExpiryDays: z.preprocess(
+    val => (val === "" || val == null) ? undefined : Number(val),
+    z.number().positive("Expiry days must be a positive number").optional()
+  )
 }).superRefine((data, ctx) => {
 
   if (data.isChargeEnabled) {
@@ -117,7 +121,7 @@ export const collectingFormSchema = z.object({
     if (priceNum <= 0) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Price must be greater than 0 when charging is enabled",
+        message: "Price must be greater than 0",
         path: ["price"],
       });
     }
@@ -133,7 +137,7 @@ export const collectingFormSchema = z.object({
     if (data.isReferralRewardsEnabled && (data.referralPercent < 1 || data.referralPercent > 100)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Referral percent must be between 1% and 100% when referral rewards are enabled",
+        message: "Referral percent must be between 1% and 100%",
         path: ["referralPercent"],
       });
     }
@@ -142,7 +146,7 @@ export const collectingFormSchema = z.object({
       if (data.recipients.length === 0) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "At least one recipient is required when revenue split is enabled",
+          message: "At least one recipient is required",
           path: ["recipients"],
         });
       } else {
@@ -159,19 +163,27 @@ export const collectingFormSchema = z.object({
     }
   }
 
-  if (data.isLimitedEdition && data.collectLimit < 1) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: "Collect limit must be at least 1 when limited edition is enabled",
-      path: ["collectLimit"],
-    });
+  if (data.isLimitedEdition) {
+    if (data.collectLimit === undefined || data.collectLimit < 1) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Collect limit must be at least 1",
+        path: ["collectLimit"],
+      });
+    }
   }
 
   if (data.isCollectExpiryEnabled) {
-    if (data.collectExpiryDays < 1) {
+    if (data.collectExpiryDays === undefined || data.collectExpiryDays < 1) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Expiry days must be at least 1 when collect expiry is enabled",
+        message: "Expiry days must be at least 1",
+        path: ["collectExpiryDays"],
+      });
+    } else if (data.collectExpiryDays > 36500) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Maximum expiry is 36500 days (100 years)",
         path: ["collectExpiryDays"],
       });
     }
@@ -206,7 +218,6 @@ export const CollectingTab = ({
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<MentionableUser | null>(null);
   const [showAddRecipient, setShowAddRecipient] = useState(false);
-  const [formErrors, setFormErrors] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<CollectingFormValues>({
@@ -234,84 +245,40 @@ export const CollectingTab = ({
     watch,
     setValue,
     getValues,
-    formState: { errors, isValid, isDirty }
+    formState: { errors, isValid }
   } = form;
 
-  useEffect(() => {
-    console.log("isValid", isValid);
-    console.log("errors", errors);
-    console.log("isDirty", isDirty);
-  }, [isValid, errors, isDirty]);
+  const values = watch();
 
-  const isCollectingEnabled = watch("isCollectingEnabled");
-  const isChargeEnabled = watch("isChargeEnabled");
-  const isReferralRewardsEnabled = watch("isReferralRewardsEnabled");
-  const isRevenueSplitEnabled = watch("isRevenueSplitEnabled");
-  const isLimitedEdition = watch("isLimitedEdition");
-  const isCollectExpiryEnabled = watch("isCollectExpiryEnabled");
-  const recipients = watch("recipients");
-
-  useEffect(() => {
-    if (isDirty) {
-      const timer = setTimeout(() => {
-        form.trigger().catch(console.error);
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [
-    isCollectingEnabled,
-    isChargeEnabled,
-    isReferralRewardsEnabled,
-    isRevenueSplitEnabled,
-    isLimitedEdition,
-    isCollectExpiryEnabled,
-    form,
-    isDirty
-  ]);
-
-  useEffect(() => {
-    if (Object.keys(errors).length > 0) {
-      const errorMessages: string[] = [];
-
-      Object.entries(errors).forEach(([field, error]) => {
-        if (error?.message) {
-          // Format field name for better readability
-          const formattedField = field
-            .replace(/([A-Z])/g, ' $1')
-            .replace(/^./, str => str.toUpperCase());
-
-          errorMessages.push(`${formattedField}: ${error.message}`);
-        }
-      });
-
-      setFormErrors(errorMessages);
-    } else {
-      setFormErrors([]);
-    }
-  }, [errors]);
+  const isCollectingEnabled = values.isCollectingEnabled;
+  const isChargeEnabled = values.isChargeEnabled;
+  const isReferralRewardsEnabled = values.isReferralRewardsEnabled;
+  const isRevenueSplitEnabled = values.isRevenueSplitEnabled;
+  const isLimitedEdition = values.isLimitedEdition;
+  const isCollectExpiryEnabled = values.isCollectExpiryEnabled;
+  const recipients = values.recipients;
 
   useEffect(() => {
     if (documentId) {
-      const formValues = getValues();
       const collectingSettings: CollectingSettings = {
-        isCollectingEnabled: formValues.isCollectingEnabled,
-        collectingLicense: formValues.collectingLicense,
-        isChargeEnabled: formValues.isChargeEnabled,
-        price: formValues.price,
-        currency: formValues.currency,
-        isReferralRewardsEnabled: formValues.isReferralRewardsEnabled,
-        referralPercent: formValues.referralPercent,
-        isRevenueSplitEnabled: formValues.isRevenueSplitEnabled,
-        recipients: formValues.recipients,
-        isLimitedEdition: formValues.isLimitedEdition,
-        collectLimit: formValues.collectLimit,
-        isCollectExpiryEnabled: formValues.isCollectExpiryEnabled,
-        collectExpiryDays: formValues.collectExpiryDays,
+        isCollectingEnabled: values.isCollectingEnabled,
+        collectingLicense: values.collectingLicense,
+        isChargeEnabled: values.isChargeEnabled,
+        price: values.price,
+        currency: values.currency,
+        isReferralRewardsEnabled: values.isReferralRewardsEnabled,
+        referralPercent: values.referralPercent,
+        isRevenueSplitEnabled: values.isRevenueSplitEnabled,
+        recipients: values.recipients,
+        isLimitedEdition: values.isLimitedEdition,
+        collectLimit: values.collectLimit ?? 0,
+        isCollectExpiryEnabled: values.isCollectExpiryEnabled,
+        collectExpiryDays: values.collectExpiryDays ?? 0,
       };
 
       updateDraft({ collectingSettings });
     }
-  }, [getValues, updateDraft, documentId, watch]);
+  }, [updateDraft, documentId, JSON.stringify(values)]);
 
   const roundPercentage = (value: number): number => {
     return Math.round(value * 100) / 100;
@@ -340,20 +307,13 @@ export const CollectingTab = ({
       return;
     }
 
-    if (!isValidEthereumAddress(address) && !userToAdd) {
-      form.setError("recipients", {
-        message: "Please enter a valid Ethereum address"
-      });
-      return;
-    }
-
     const isDuplicate = recipients.some(recipient =>
       recipient.address.toLowerCase() === address.toLowerCase()
     );
 
     if (isDuplicate) {
-      form.setError("recipients", {
-        message: "This recipient has already been added"
+      toast.error("Recipient already added", {
+        description: "This address or user is already in the split list."
       });
       return;
     }
@@ -472,24 +432,6 @@ export const CollectingTab = ({
     }
   }, [distributeEvenlyEnabled, recipients.length]);
 
-  useEffect(() => {
-    if (isRevenueSplitEnabled && recipients.length > 0) {
-      const timer = setTimeout(() => {
-        const totalPercentage = recipients.reduce((sum, r) => sum + r.percentage, 0);
-
-        const isValid = Math.abs(totalPercentage - 100) < 0.1;
-
-        form.trigger("recipients").catch(console.error);
-
-        if (!isValid && totalPercentage > 0) {
-          console.log(`Total percentage (${totalPercentage.toFixed(2)}%) needs to be 100%`);
-        }
-      }, 300);
-
-      return () => clearTimeout(timer);
-    }
-  }, [isRevenueSplitEnabled, recipients, form]);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setNewRecipientAddress(value);
@@ -553,86 +495,29 @@ export const CollectingTab = ({
   };
 
   const onPublish = React.useCallback(async () => {
-    const formValues = getValues();
-    setFormErrors([]);
-
-    let fieldsToValidate: string[] = ["isCollectingEnabled"];
-
-    if (formValues.isCollectingEnabled) {
-      fieldsToValidate.push("collectingLicense");
-
-      if (formValues.isChargeEnabled) {
-        fieldsToValidate.push("price", "currency");
-
-        const priceValue = formValues.price;
-        const priceNum = typeof priceValue === "string" ?
-          (priceValue === "" ? 0 : Number(priceValue)) : priceValue;
-
-        if (priceNum <= 0) {
-          form.setError("price", {
-            type: "manual",
-            message: "Price must be greater than 0 when charging is enabled"
-          });
-          return;
-        }
-
-        if (formValues.isReferralRewardsEnabled) {
-          fieldsToValidate.push("referralPercent");
-        }
-
-        if (formValues.isRevenueSplitEnabled) {
-          fieldsToValidate.push("recipients");
-        }
-      }
-
-      if (formValues.isLimitedEdition) {
-        fieldsToValidate.push("collectLimit");
-      }
-
-      if (formValues.isCollectExpiryEnabled) {
-        fieldsToValidate.push("collectExpiryDays", "collectExpiryDate");
-      }
-    }
-
-    const isValid = await form.trigger(fieldsToValidate as any);
-
     if (!isValid) {
       toast.error("Please fix the form errors before publishing", {
-        description: "There are validation errors that need to be resolved."
+        description: "Review the highlighted sections and correct any issues."
       });
-
+      console.log("Form Errors:", errors);
       return;
     }
 
     handlePublish();
-  }, [handlePublish, getValues, form]);
+  }, [handlePublish, getValues, form, isValid, errors, updateDraft]);
 
-  const hasReferralErrors = (): boolean => {
-    return !!errors.referralPercent;
-  };
-
-  const hasPriceErrors = (): boolean => {
-    return !!errors.price || !!errors.currency;
-  };
-
-  const hasLimitEditionErrors = (): boolean => {
-    return !!errors.collectLimit;
-  };
-
-  const hasCollectExpiryErrors = (): boolean => {
-    return !!errors.collectExpiryDays;
-  };
-
-  const getSectionClass = (hasErrors: boolean): string => {
-    return `border rounded-sm p-4 space-y-4 bg-background/50 hover:bg-background/80 transition-colors shadow-sm 
-            ${hasErrors ? 'border-destructive/50 bg-destructive/5' : ''}`;
+  const getSectionClass = (fieldNames: (keyof CollectingFormValues)[], isEnabled: boolean): string => {
+    const hasErrors = fieldNames.some(fieldName => !!errors[fieldName]);
+    const errorStyle = isEnabled && hasErrors;
+    return `border rounded-sm p-4 space-y-4 bg-background/50 hover:bg-background/80 transition-colors shadow-sm
+            ${errorStyle ? 'border-destructive/50 bg-destructive/5' : ''}`;
   };
 
   return (
     <div className="flex flex-col h-full">
       <Form {...form}>
         <div className="h-full flex flex-col">
-          <div className="flex-1 overflow-y-auto">
+          <ScrollArea className="flex-1 min-h-0 pr-4">
             <form className="space-y-6 p-2">
               {/* Main collecting toggle */}
               <div className="flex items-center justify-between pb-2">
@@ -668,9 +553,9 @@ export const CollectingTab = ({
 
               {/* Collecting enabled state with form sections */}
               {isCollectingEnabled && (
-                <div className="space-y-4 pt-4">
+                <div className="space-y-4">
                   {/* License Section */}
-                  <div className={getSectionClass(!!errors.collectingLicense)}>
+                  <div className={getSectionClass(['collectingLicense'], true)}>
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="flex items-center gap-2">
@@ -706,14 +591,14 @@ export const CollectingTab = ({
                               </SelectContent>
                             </Select>
                           </FormControl>
-                          <FormMessage />
+                          {isCollectingEnabled && <FormMessage />}
                         </FormItem>
                       )}
                     />
                   </div>
 
                   {/* Charge for collecting Section */}
-                  <div className={getSectionClass(hasPriceErrors())}>
+                  <div className={getSectionClass(['price', 'currency', 'referralPercent', 'recipients'], isChargeEnabled)}>
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="flex items-center gap-2">
@@ -768,13 +653,13 @@ export const CollectingTab = ({
                                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">$</span>
                                 </div>
                               </div>
-                              <FormMessage />
+                              {isChargeEnabled && <FormMessage />}
                             </FormItem>
                           )}
                         />
 
                         {/* Referral Rewards Section */}
-                        <div className={`border-t pt-4 mt-4 ${hasReferralErrors() ? 'border-destructive/50' : ''}`}>
+                        <div className={`border-t pt-4 mt-4 border-border`}>
                           <div className="flex items-center justify-between">
                             <div>
                               <div className="flex items-center gap-2">
@@ -838,7 +723,7 @@ export const CollectingTab = ({
                                         </FormControl>
                                       </div>
                                     </div>
-                                    <FormMessage />
+                                    {isReferralRewardsEnabled && <FormMessage />}
                                   </FormItem>
                                 )}
                               />
@@ -983,11 +868,11 @@ export const CollectingTab = ({
                                                 onFocus={handleInputFocus}
                                                 onKeyDown={handleKeyDown}
                                                 className={`
-                                                  ${selectedUser?.picture ? "pl-10" : ""} 
-                                                  ${selectedUser ? "pr-24" : ""} 
-                                                  ${isSearchOpen && !selectedUser ? "pr-10 border-primary ring-1 ring-primary/30 shadow-sm" : ""}
-                                                  transition-all duration-200
-                                                `}
+                                                    ${selectedUser?.picture ? "pl-10" : ""} 
+                                                    ${selectedUser ? "pr-24" : ""} 
+                                                    ${isSearchOpen && !selectedUser ? "pr-10 border-primary ring-1 ring-primary/30 shadow-sm" : ""}
+                                                    transition-all duration-200
+                                                  `}
                                                 autoFocus
                                               />
                                               {isSearchOpen && !selectedUser && (
@@ -1024,7 +909,10 @@ export const CollectingTab = ({
                                           <Button
                                             variant="outline"
                                             size="sm"
-                                            onClick={() => setShowAddRecipient(false)}
+                                            onClick={() => {
+                                              setShowAddRecipient(false);
+                                              form.trigger("recipients").catch(console.error);
+                                            }}
                                           >
                                             Cancel
                                           </Button>
@@ -1035,7 +923,8 @@ export const CollectingTab = ({
                                             disabled={
                                               !newRecipientAddress ||
                                               newRecipientPercentage < 0 ||
-                                              newRecipientPercentage > 100
+                                              newRecipientPercentage > 100 ||
+                                              (recipients.reduce((sum, r) => sum + r.percentage, 0) + newRecipientPercentage > 100 && !distributeEvenlyEnabled)
                                             }
                                           >
                                             Submit
@@ -1057,7 +946,7 @@ export const CollectingTab = ({
                                     )}
 
                                     {/* Show form error message when there's an issue with recipients */}
-                                    {fieldState.error && (
+                                    {isRevenueSplitEnabled && fieldState.error && (
                                       <div className="text-sm font-medium text-destructive mt-2 flex items-center gap-1">
                                         <AlertCircleIcon className="h-4 w-4" />
                                         {fieldState.error.message}
@@ -1074,7 +963,7 @@ export const CollectingTab = ({
                   </div>
 
                   {/* Limited Edition Section */}
-                  <div className={getSectionClass(hasLimitEditionErrors())}>
+                  <div className={getSectionClass(['collectLimit'], isLimitedEdition)}>
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="flex items-center gap-2">
@@ -1111,14 +1000,16 @@ export const CollectingTab = ({
                                 type="number"
                                 placeholder="100"
                                 className={`no-spinners ${fieldState.error ? "border-destructive" : ""}`}
-                                value={field.value === 0 ? "" : field.value}
+                                value={field.value ?? ""}
                                 onChange={(e) => {
                                   const value = e.target.value;
-                                  field.onChange(value === "" ? 0 : Number(value));
+                                  if (value === '' || /^[0-9]+$/.test(value)) {
+                                    field.onChange(value);
+                                  }
                                 }}
                               />
                             </FormControl>
-                            <FormMessage />
+                            {isLimitedEdition && <FormMessage />}
                           </FormItem>
                         )}
                       />
@@ -1126,7 +1017,7 @@ export const CollectingTab = ({
                   </div>
 
                   {/* Collect Expiry Section */}
-                  <div className={getSectionClass(hasCollectExpiryErrors())}>
+                  <div className={getSectionClass(['collectExpiryDays'], isCollectExpiryEnabled)}>
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="flex items-center gap-2">
@@ -1166,14 +1057,11 @@ export const CollectingTab = ({
                                     type="number"
                                     placeholder="7"
                                     className={`pr-12 no-spinners ${fieldState.error ? "border-destructive" : ""}`}
-                                    value={field.value === 0 ? "" : field.value}
+                                    value={field.value ?? ""}
                                     onChange={(e) => {
                                       const value = e.target.value;
-                                      const numValue = value === "" ? 0 : Number(value);
-                                      field.onChange(numValue);
-
-                                      if (numValue !== undefined) {
-                                        setValue("collectExpiryDays", numValue);
+                                      if (value === '' || /^[0-9]+$/.test(value)) {
+                                        field.onChange(value);
                                       }
                                     }}
                                   />
@@ -1181,7 +1069,7 @@ export const CollectingTab = ({
                                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">days</span>
                               </div>
                             </div>
-                            <FormMessage />
+                            {isCollectExpiryEnabled && <FormMessage />}
                           </FormItem>
                         )}
                       />
@@ -1190,7 +1078,7 @@ export const CollectingTab = ({
                 </div>
               )}
             </form>
-          </div>
+          </ScrollArea>
 
           {/* Submit button */}
           <div className="flex items-center gap-2 p-2 mt-auto">
