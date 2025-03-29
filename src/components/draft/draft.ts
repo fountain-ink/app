@@ -17,7 +17,7 @@ export interface CollectingSettings {
   isCollectingEnabled: boolean;
   collectingLicense: string;
   isChargeEnabled: boolean;
-  price: number;
+  price: string;
   currency: string;
   isReferralRewardsEnabled: boolean;
   referralPercent: number;
