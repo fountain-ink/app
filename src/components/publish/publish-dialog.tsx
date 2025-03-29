@@ -7,7 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useWalletClient } from "wagmi";
-import { PenIcon, ShoppingBag as ShoppingBagIcon, AlertCircleIcon } from "lucide-react";
+import { PenIcon, ShoppingBag as ShoppingBagIcon, AlertCircleIcon, CircleDollarSignIcon } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Form } from "@/components/ui/form";
 import { ArticleDetailsTab, detailsFormSchema, DetailsFormValues } from "./publish-details-tab";
-import { CollectingTab, collectingFormSchema, CollectingFormValues } from "./publish-collecting-tab";
+import { MonetizationTab, collectingFormSchema, CollectingFormValues } from "./publish-monetization-tab";
 import { publishPost } from "../../lib/publish/publish-post";
 import { usePublishDraft } from "../../hooks/use-publish-draft";
 import { extractMetadata } from "@/lib/extract-metadata";
@@ -251,7 +251,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
                   Article Details
                 </TabsTrigger>
                 <TabsTrigger
-                  value="collecting"
+                  value="monetization"
                   className={cn(
                     "flex items-center gap-2 rounded-sm",
                     hasCollectingErrors &&
@@ -261,9 +261,9 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
                   {hasCollectingErrors ? (
                     <AlertCircleIcon className="w-4 h-4" />
                   ) : (
-                    <ShoppingBagIcon className="w-4 h-4" />
+                    <CircleDollarSignIcon className="w-4 h-4" />
                   )}
-                  Collecting
+                  Monetization
                 </TabsTrigger>
               </TabsList>
               <ScrollArea className="flex-1 min-h-0 pr-2">
@@ -275,11 +275,11 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
                   <ArticleDetailsTab form={form} documentId={documentId} />
                 </TabsContent>
                 <TabsContent
-                  value="collecting"
+                  value="monetization"
                   className="h-full m-0 data-[state=inactive]:hidden focus-visible:ring-0 focus-visible:ring-offset-0"
                   tabIndex={-1}
                 >
-                  <CollectingTab form={form} documentId={documentId} />
+                  <MonetizationTab form={form} documentId={documentId} />
                 </TabsContent>
               </ScrollArea>
             </Tabs>

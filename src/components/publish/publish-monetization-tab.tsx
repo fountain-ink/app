@@ -24,6 +24,9 @@ import {
   ClockFadingIcon,
   User2Icon,
   AlertCircleIcon,
+  Coins,
+  HandCoins,
+  ShoppingBagIcon,
 } from "lucide-react";
 import { ShoppingBag as ShoppingBagSvg } from "../icons/custom-icons";
 
@@ -182,7 +185,7 @@ interface CollectingTabProps {
   documentId?: string;
 }
 
-export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Element => {
+export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
   const [distributeEvenlyEnabled, setDistributeEvenlyEnabled] = useState(false);
   const [newRecipientAddress, setNewRecipientAddress] = useState("");
   const [newRecipientPercentage, setNewRecipientPercentage] = useState(50);
@@ -393,11 +396,14 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
 
   return (
     <div className="h-full flex flex-col">
-      <form className="space-y-6 p-1">
+      <form className="space-y-4 pl-0 p-2 pr-3">
         <div className="border rounded-lg p-4 space-y-4 bg-background/30">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-medium">Collecting</h3>
+              <div className="flex items-center gap-2">
+                <ShoppingBagIcon className="h-4 w-4 text-muted-foreground" />
+                <h3 className="font-medium">Collecting</h3>
+              </div>
               <p className="text-sm text-muted-foreground">
                 Let readers collect your post. You can set a license for the piece, and decide if you want to charge for
                 the collect.
@@ -977,6 +983,21 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
           )}
         </div>
 
+        <div className="border rounded-lg p-4 space-y-4 bg-background/30">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <HandCoins className="h-4 w-4 text-muted-foreground" />
+                <h3 className="font-medium">Tipping</h3>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Tipping is enabled on all posts by default, any user can tip you for the post.
+              </p>
+            </div>
+            <Switch checked={true} disabled={true} />
+          </div>
+        </div>
+
         {!isCollectingEnabled && (
           <div className="flex justify-center items-center py-6 text-muted-foreground">
             <ShoppingBagSvg />
@@ -987,4 +1008,4 @@ export const CollectingTab = ({ form, documentId }: CollectingTabProps): JSX.Ele
   );
 };
 
-export default CollectingTab;
+export default MonetizationTab;

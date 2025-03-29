@@ -60,7 +60,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
   );
 
   return (
-    <div className="space-y-6 p-1 pr-3">
+    <div className="space-y-6 p-2 pr-3">
       <div className="space-y-2">
         <div className="pb-2">
           <h3 className="font-medium">Preview</h3>
