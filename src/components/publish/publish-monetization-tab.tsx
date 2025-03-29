@@ -396,7 +396,7 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
 
   return (
     <div className="h-full flex flex-col">
-      <form className="space-y-4 pl-0 p-2 pr-3">
+      <form className="space-y-4 pl-0 p-2 pr-4">
         <div className="border rounded-lg p-4 space-y-4 bg-background/30">
           <div className="flex items-center justify-between">
             <div>

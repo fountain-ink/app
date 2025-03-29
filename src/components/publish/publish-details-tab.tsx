@@ -10,6 +10,7 @@ import { FC, useCallback, useEffect, useState, useRef, useMemo } from "react";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { CombinedFormValues } from "./publish-dialog";
+import { ImageIcon, PenIcon, PenToolIcon, RssIcon } from "lucide-react";
 
 export const detailsFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title should be less than 100 characters"),
@@ -60,15 +61,18 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
   );
 
   return (
-    <div className="space-y-6 p-2 pr-3">
+    <div className="space-y-6 p-2 pl-0 pr-4">
       <div className="space-y-2">
-        <div className="pb-2">
-          <h3 className="font-medium">Preview</h3>
-          <p className="text-sm text-muted-foreground">
-            You can change how the post will be shown on social media and your blog index.
-          </p>
-        </div>
         <div className="border border-border flex shrink flex-col gap-4 rounded-sm p-4">
+          <div className="pb-2">
+            <div className="flex items-center gap-2">
+              <ImageIcon className="w-4 h-4 text-muted-foreground" />
+              <h3 className="font-medium">Preview</h3>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              You can change how the post will be shown on social media and your blog index.
+            </p>
+          </div>
           <div className="space-y-2 max-w-lg">
             <Label>Image</Label>
             {form.watch("details.coverUrl") ? (
@@ -105,7 +109,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
             control={form.control}
             name="details.subtitle"
             render={({ field }) => (
-              <FormItem className="max-w-sm">
+              <FormItem className="max-w-lg">
                 <FormLabel htmlFor="subtitle">Summary</FormLabel>
                 <FormControl>
                   <Input id="subtitle" placeholder="Enter summary (optional)" {...field} value={field.value ?? ""} />
@@ -114,89 +118,103 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
               </FormItem>
             )}
           />
+
+          <FormField
+            control={form.control}
+            name="details.tags"
+            render={({ field, fieldState }) => (
+              <FormItem className="space-y-2 max-w-full min-w-sm w-fit">
+                <FormLabel>Tags</FormLabel>
+                <FormControl>
+                  <TagInput
+                    maxTags={5}
+                    styleClasses={{
+                      input: "shadow-none w-[200px] h-6",
+                      tag: {
+                        body: "border border-secondary",
+                      },
+                    }}
+                    placeholder="Add a tag"
+                    tags={tags}
+                    setTags={handleSetTags}
+                    activeTagIndex={activeTagIndex}
+                    setActiveTagIndex={setActiveTagIndex}
+                    variant="outline"
+                    className={fieldState.error ? "border-destructive ring-1 ring-destructive" : ""}
+                  />
+                </FormControl>
+                <FormDescription>Add up to 5 tags that will be used to categorize the post.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
+
       </div>
 
-      <FormField
-        control={form.control}
-        name="details.selectedBlogAddress"
-        render={({ field, fieldState }) => (
-          <FormItem>
-            <FormLabel>Publish in</FormLabel>
-            <FormControl>
-              <BlogSelectMenu
-                selectedBlogAddress={field.value}
-                onBlogChange={(value) => {
-                  field.onChange(value);
-                  const newSelectedBlog = blogState.blogs.find((b) => b?.address === value);
-                  if (!newSelectedBlog?.mail_list_id) {
-                    form.setValue("details.sendNewsletter", false);
-                  } else {
-                    form.setValue("details.sendNewsletter", true);
-                  }
-                }}
-                placeholder="Select a blog to publish to"
-                className={`max-w-sm mt-1 ${fieldState.error ? "border-destructive ring-1 ring-destructive" : ""}`}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      <div className="border border-border flex shrink flex-col gap-2 rounded-sm p-4">
 
-      {selectedBlog?.mail_list_id && (
+        <div>
+          <div className="flex items-center gap-2">
+            <RssIcon className="w-4 h-4 text-muted-foreground" />
+            <h3 className="font-medium">Delivery</h3>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Choose where the post will be published.
+          </p>
+        </div>
         <FormField
           control={form.control}
-          name="details.sendNewsletter"
-          render={({ field }) => (
-            <FormItem className="flex flex-col space-y-1 mt-4 ml-4">
-              <div className="flex items-center space-x-2">
-                <FormControl>
-                  <Checkbox id="sendNewsletter" checked={field.value} onCheckedChange={field.onChange} />
-                </FormControl>
-                <label
-                  htmlFor="sendNewsletter"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Send out newsletter to subscribers
-                </label>
-              </div>
-              <FormDescription className="pl-6">Subscribers will receive this post in their inbox.</FormDescription>
+          name="details.selectedBlogAddress"
+          render={({ field, fieldState }) => (
+            <FormItem>
+              <FormLabel>Publish in</FormLabel>
+              <FormControl>
+                <BlogSelectMenu
+                  selectedBlogAddress={field.value}
+                  onBlogChange={(value) => {
+                    field.onChange(value);
+                    const newSelectedBlog = blogState.blogs.find((b) => b?.address === value);
+                    if (!newSelectedBlog?.mail_list_id) {
+                      form.setValue("details.sendNewsletter", false);
+                    } else {
+                      form.setValue("details.sendNewsletter", true);
+                    }
+                  }}
+                  placeholder="Select a blog to publish to"
+                  className={`max-w-sm mt-1 ${fieldState.error ? "border-destructive ring-1 ring-destructive" : ""}`}
+                />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-      )}
 
-      <FormField
-        control={form.control}
-        name="details.tags"
-        render={({ field, fieldState }) => (
-          <FormItem className="space-y-2 max-w-full min-w-sm w-fit">
-            <FormLabel>Tags</FormLabel>
-            <FormControl>
-              <TagInput
-                maxTags={5}
-                styleClasses={{
-                  input: "shadow-none w-[200px] h-6",
-                  tag: {
-                    body: "border border-secondary",
-                  },
-                }}
-                placeholder="Add a tag"
-                tags={tags}
-                setTags={handleSetTags}
-                activeTagIndex={activeTagIndex}
-                setActiveTagIndex={setActiveTagIndex}
-                variant="outline"
-                className={fieldState.error ? "border-destructive ring-1 ring-destructive" : ""}
-              />
-            </FormControl>
-            <FormDescription>Add up to 5 tags that will be used to categorize the post.</FormDescription>
-            <FormMessage />
-          </FormItem>
+        {selectedBlog?.mail_list_id && (
+          <FormField
+            control={form.control}
+            name="details.sendNewsletter"
+            render={({ field }) => (
+              <FormItem className="flex flex-col space-y-1 mt-4 ml-4">
+                <div className="flex items-center space-x-2">
+                  <FormControl>
+                    <Checkbox id="sendNewsletter" checked={field.value} onCheckedChange={field.onChange} />
+                  </FormControl>
+                  <label
+                    htmlFor="sendNewsletter"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    Send out newsletter to subscribers
+                  </label>
+                </div>
+                <FormDescription className="pl-6">Subscribers will receive this post in their inbox.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         )}
-      />
+
+      </div>
     </div>
   );
 };
