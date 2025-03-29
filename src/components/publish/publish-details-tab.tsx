@@ -11,6 +11,7 @@ import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { CombinedFormValues } from "./publish-dialog";
 import { ImageIcon, PenIcon, PenToolIcon, RssIcon } from "lucide-react";
+import Link from "next/link";
 
 export const detailsFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title should be less than 100 characters"),
@@ -190,29 +191,42 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
           )}
         />
 
-        {selectedBlog?.mail_list_id && (
-          <FormField
-            control={form.control}
-            name="details.sendNewsletter"
-            render={({ field }) => (
-              <FormItem className="flex flex-col space-y-1 mt-4 ml-4">
-                <div className="flex items-center space-x-2">
-                  <FormControl>
-                    <Checkbox id="sendNewsletter" checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                  <label
-                    htmlFor="sendNewsletter"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Send out newsletter to subscribers
-                  </label>
-                </div>
-                <FormDescription className="pl-6">Subscribers will receive this post in their inbox.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
+        <FormField
+          control={form.control}
+          name="details.sendNewsletter"
+          render={({ field }) => (
+            <FormItem className="flex flex-col space-y-1 mt-4">
+              <div className="flex items-center space-x-2">
+                <FormControl>
+                  <Checkbox
+                    id="sendNewsletter"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    disabled={!selectedBlog?.mail_list_id}
+                  />
+                </FormControl>
+                <label
+                  htmlFor="sendNewsletter"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Send out newsletter to subscribers
+                </label>
+              </div>
+              <FormDescription className="pl-6">
+                {selectedBlog?.mail_list_id
+                  ? "Subscribers will receive this post in their inbox."
+                  : <>
+                    <span >This blog doesn't have a newsletter.</span>
+                    <Link href={`/settings/newsletter`} className="text-muted-foreground pl-1 hover:text-primary underline">
+                      Newsletter settings
+                    </Link>
+                    .
+                  </>}
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
       </div>
     </div>
