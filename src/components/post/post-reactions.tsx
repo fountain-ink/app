@@ -2,14 +2,16 @@ import { usePostActions } from "@/hooks/use-post-actions";
 import { Post } from "@lens-protocol/client";
 import { Heart, MessageCircle, ShoppingBag } from "lucide-react";
 import { ActionButton } from "./post-action-button";
+import { PostCollect } from "./post-collect-dialog";
 
 export const PostReactions = ({ post }: { post: Post }) => {
-  const { handleLike, handleComment, handleCollect } = usePostActions(post);
-
-  const handleCollectRedirect = async () => {
-    window.location.href = `/p/${post.author.username?.localName}/${post.slug}?collect=1`;
-    return undefined;
-  };
+  const {
+    handleLike,
+    handleComment,
+    handleCollect,
+    isCollectSheetOpen,
+    handleCollectSheetOpenChange,
+  } = usePostActions(post);
 
   return (
     <div className="flex flex-row gap-3 items-center justify-center">
@@ -29,8 +31,7 @@ export const PostReactions = ({ post }: { post: Post }) => {
         initialCount={post.stats.collects}
         strokeColor="rgb(254,178,4)"
         fillColor="rgba(254, 178, 4, 0.3)"
-        onClick={handleCollectRedirect}
-        // isActive={post.stats.isCollectedByMe}
+        onClick={handleCollect}
         shouldIncrementOnClick={false}
       />
       <ActionButton
@@ -43,6 +44,7 @@ export const PostReactions = ({ post }: { post: Post }) => {
         isActive={post.operations?.hasUpvoted}
         shouldIncrementOnClick={true}
       />
+      <PostCollect post={post} isOpen={isCollectSheetOpen} onOpenChange={handleCollectSheetOpenChange} />
     </div>
   );
 };

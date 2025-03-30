@@ -10,10 +10,15 @@ export const usePostActions = (post: Post) => {
   const isCommentOpen = searchParams.has("comment");
   const isCollectOpen = searchParams.has("collect");
   const [isCommentSheetOpen, setIsCommentSheetOpen] = useState(isCommentOpen);
+  const [isCollectSheetOpen, setIsCollectSheetOpen] = useState(isCollectOpen);
 
   useEffect(() => {
     setIsCommentSheetOpen(isCommentOpen);
   }, [isCommentOpen]);
+
+  useEffect(() => {
+    setIsCollectSheetOpen(isCollectOpen);
+  }, [isCollectOpen]);
 
   const handleComment = async (redirectToPost?: boolean) => {
     if (redirectToPost) {
@@ -34,6 +39,7 @@ export const usePostActions = (post: Post) => {
   };
 
   const handleCollect = async () => {
+    setIsCollectSheetOpen(!isCollectSheetOpen);
     const params = new URLSearchParams(searchParams);
     if (isCollectOpen) {
       params.delete("collect");
@@ -42,6 +48,19 @@ export const usePostActions = (post: Post) => {
     }
     router.push(`?${params.toString()}`, { scroll: false });
     return undefined;
+  };
+
+  const handleCollectSheetOpenChange = (open: boolean) => {
+    setIsCollectSheetOpen(open);
+    const params = new URLSearchParams(searchParams);
+    if (!open) {
+      params.delete("collect");
+    } else {
+      if (!params.has("collect")) {
+        params.append("collect", post.slug);
+      }
+    }
+    router.replace(`?${params.toString()}`, { scroll: false });
   };
 
   const handleBookmark = async () => {
@@ -101,5 +120,7 @@ export const usePostActions = (post: Post) => {
     isCollectOpen,
     isCommentSheetOpen,
     setIsCommentSheetOpen,
+    isCollectSheetOpen,
+    handleCollectSheetOpenChange,
   };
 };

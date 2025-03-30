@@ -1,7 +1,6 @@
 import { EditorReadTime } from "@/components/editor/addons/editor-read-time";
 import Editor from "@/components/editor/editor";
 import ErrorPage from "@/components/misc/error-page";
-import { PostCollect } from "@/components/post/post-collect";
 import { AuthorView } from "@/components/user/user-author-view";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
@@ -37,7 +36,6 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
           <AuthorView showUsername={false} accounts={[post.author]} />
         </div>
         <Editor showToc value={contentJson} readOnly={true} />
-        <PostCollect post={post} />
       </div>
     );
   }
@@ -49,7 +47,6 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
           // biome-ignore lint/security/noDangerouslySetInnerHtml: intended use
           dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(contentHtml) }}
         />
-        <PostCollect post={post} />
       </div>
     );
   }

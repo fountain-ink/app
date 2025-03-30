@@ -20,6 +20,8 @@ import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
 import { useWalletClient } from "wagmi";
 import { ActionButton } from "../post/post-action-button";
 import { CommentSheet } from "../comment/comment-sheet";
+import { PostCollect } from "../post/post-collect-dialog";
+import { TipPopover } from "../tip/tip-popover";
 
 export const Footer = ({ post, account }: { post: AnyPost; account?: Account }) => {
   const { scrollProgress, shouldShow, shouldAnimate } = useScroll();
@@ -39,6 +41,8 @@ export const Footer = ({ post, account }: { post: AnyPost; account?: Account }) 
     isCollectOpen,
     isCommentSheetOpen,
     setIsCommentSheetOpen,
+    isCollectSheetOpen,
+    handleCollectSheetOpenChange,
   } = usePostActions(post);
 
   const handleCommentSheetOpenChange = (open: boolean) => {
@@ -113,7 +117,9 @@ export const Footer = ({ post, account }: { post: AnyPost; account?: Account }) 
       strokeColor: "rgb(254,178,4)",
       fillColor: "rgba(254, 178, 4, 0.3)",
       shouldIncrementOnClick: false,
-      onClick: handleCollect,
+      renderPopover: (trigger: React.ReactElement) => (
+        <TipPopover onCollectClick={handleCollect}>{trigger}</TipPopover>
+      ),
       isActive: isCollectOpen,
     },
     {
@@ -146,6 +152,7 @@ export const Footer = ({ post, account }: { post: AnyPost; account?: Account }) 
         forcedOpen={isCommentSheetOpen}
         onOpenChange={handleCommentSheetOpenChange}
       />
+      <PostCollect post={post} isOpen={isCollectSheetOpen} onOpenChange={handleCollectSheetOpenChange} />
       <TooltipProvider delayDuration={300}>
         <motion.div
           style={{
@@ -175,6 +182,7 @@ export const Footer = ({ post, account }: { post: AnyPost; account?: Account }) 
                 onClick={button.onClick}
                 isActive={button.isActive}
                 shouldIncrementOnClick={button.shouldIncrementOnClick}
+                renderPopover={button.renderPopover}
               />
             ))}
           </nav>

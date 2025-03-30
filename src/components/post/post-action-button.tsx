@@ -35,6 +35,7 @@ export type ActionButtonProps = {
   shouldIncrementOnClick?: boolean;
   fillOnHover?: boolean;
   fillOnClick?: boolean;
+  renderPopover?: (trigger: React.ReactElement) => React.ReactElement;
 };
 
 const formatNumber = (num: number): string => {
@@ -62,6 +63,7 @@ export const ActionButton = ({
   shouldIncrementOnClick = true,
   fillOnHover = true,
   fillOnClick = true,
+  renderPopover,
 }: ActionButtonProps) => {
   const [state, setState] = useState({
     count: initialCount,
@@ -111,7 +113,6 @@ export const ActionButton = ({
       try {
         await onClick();
       } catch (error) {
-        // Revert the optimistic update on error
         if (!dropdownItems) {
           setState((prev) => ({
             ...prev,
@@ -138,36 +139,48 @@ export const ActionButton = ({
     },
   };
 
+  const TriggerButton = (
+    <div className="relative">
+      <ButtonHoverEffect isHovered={state.isHovered} strokeColor={strokeColor} />
+      <Button
+        variant="ghost3"
+        onMouseEnter={() => handleHover(true)}
+        onMouseLeave={() => handleHover(false)}
+        style={{
+          backgroundColor: state.isPressedLocally ? `${strokeColor}10` : undefined,
+        }}
+        onClick={!renderPopover && !dropdownItems ? handleClick : undefined}
+        className="flex items-center transition-all duration-200 text-foreground rounded-full p-0 w-10 h-10
+                  focus:outline-none group-hover:bg-transparent relative"
+      >
+        <Icon {...iconProps} />
+      </Button>
+    </div>
+  );
+
   const ButtonContent = (
     <div
       className={`group flex items-center cursor-pointer ${className}`}
-      onClick={() => !dropdownItems && handleClick()}
     >
-      {dropdownItems ? (
+      {renderPopover ? (
+        renderPopover(TriggerButton)
+      ) : dropdownItems ? (
         <DropdownMenu modal={false} open={open} onOpenChange={onOpenChange}>
-          <DropdownMenuTrigger className="flex items-center gap-0.5">
-            <div className="relative">
-              <ButtonHoverEffect isHovered={state.isHovered} strokeColor={strokeColor} />
-              <Button
-                variant="ghost3"
-                onMouseEnter={() => handleHover(true)}
-                onMouseLeave={() => handleHover(false)}
-                style={{
-                  backgroundColor: state.isPressedLocally ? `${strokeColor}10` : undefined,
-                }}
-                className="flex items-center transition-all duration-200 text-foreground rounded-full p-0 w-10 h-10
-                          focus:outline-none group-hover:bg-transparent relative"
-              >
-                <Icon {...iconProps} />
-              </Button>
+          <DropdownMenuTrigger
+            // No longer using asChild, the trigger is the div containing button and chevron
+            className="flex items-center gap-0.5 outline-none"
+          >
+            {/* Wrap TriggerButton and potential Chevron in a single element */}
+            <div className="flex items-center gap-0.5">
+              {TriggerButton}
+              {showChevron && (
+                <AnimatedChevron
+                  isOpen={state.isPressedLocally}
+                  color={state.isPressedLocally || state.isHovered ? strokeColor : undefined}
+                  direction="up"
+                />
+              )}
             </div>
-            {showChevron && (
-              <AnimatedChevron
-                isOpen={state.isPressedLocally}
-                color={state.isPressedLocally || state.isHovered ? strokeColor : undefined}
-                direction="up"
-              />
-            )}
           </DropdownMenuTrigger>
           <DropdownMenuContent align="center" side="top">
             {dropdownItems?.map((item) => (
@@ -178,21 +191,7 @@ export const ActionButton = ({
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
-        <div className="relative">
-          <ButtonHoverEffect isHovered={state.isHovered} strokeColor={strokeColor} />
-          <Button
-            variant="ghost3"
-            onMouseEnter={() => handleHover(true)}
-            onMouseLeave={() => handleHover(false)}
-            style={{
-              backgroundColor: state.isPressedLocally ? `${strokeColor}10` : undefined,
-            }}
-            className="flex items-center transition-all duration-200 text-foreground rounded-full p-0 w-10 h-10
-                      focus:outline-none group-hover:bg-transparent relative"
-          >
-            <Icon {...iconProps} />
-          </Button>
-        </div>
+        TriggerButton
       )}
       {!dropdownItems && (
         <div className="relative h-5 flex items-center text-xs text-foreground -ml-1">
@@ -211,7 +210,7 @@ export const ActionButton = ({
     </div>
   );
 
-  return dropdownItems ? (
+  return renderPopover || dropdownItems ? (
     ButtonContent
   ) : (
     <TooltipProvider delayDuration={300}>

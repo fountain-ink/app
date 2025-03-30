@@ -1,23 +1,16 @@
 "use client";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { useRouter, useSearchParams } from "next/navigation";
 import { Post } from "@lens-protocol/client";
 
-export const PostCollect = ({ post }: { post: Post }) => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const isOpen = searchParams.has("collect");
+interface PostCollectProps {
+  post: Post;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+}
 
-  const handleOpenChange = (open: boolean) => {
-    const params = new URLSearchParams(searchParams);
-    if (!open) {
-      params.delete("collect");
-      router.push(`?${params.toString()}`, { scroll: false });
-    }
-  };
-
+export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) => {
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+    <Dialog modal={true} open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
