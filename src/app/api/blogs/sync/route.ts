@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Login to sync blogs" }, { status: 500 });
     }
 
-    const user = await client.getAuthenticatedUser();
+    const user = client.getAuthenticatedUser();
     if (user.isErr()) {
       console.log("[Blogs Sync] Failed to get authenticated Lens user");
       return NextResponse.json({ error: "Failed to get authenticated user" }, { status: 500 });
@@ -65,11 +65,11 @@ export async function GET(req: NextRequest) {
 
     const result = await fetchGroups(client, {
       filter: {
-        member: evmAddress(user.value.address),
-        // managedBy: {
-        //   includeOwners: true,
-        //   address: evmAddress(user.value.address),
-        // },
+        // member: evmAddress(user.value.address),
+        managedBy: {
+          includeOwners: true,
+          address: evmAddress(user.value.address),
+        },
       },
     });
 

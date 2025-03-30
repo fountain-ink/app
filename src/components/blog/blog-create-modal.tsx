@@ -66,9 +66,10 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
       return;
     }
 
-    try {
-      setLoading(true);
+    setLoading(true);
+    let blogAddress = null;
 
+    try {
       const blogMetadata = group({
         name: slug,
         description: description || undefined,
@@ -86,11 +87,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
       ]);
       toast.dismiss(uploadToast);
 
-      console.log("Blog metadata uploaded:", blogUri);
-      console.log("Blog feed metadata uploaded:", blogFeedUri);
-
       const createToast = toast.loading("Creating your blog...");
-
       const result = await createGroup(sessionClient, {
         feed: {
           metadataUri: uri(blogFeedUri.uri),
@@ -103,65 +100,55 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
       toast.dismiss(createToast);
 
       if (result.isErr()) {
-        console.error("Error creating blog:", result.error);
-        toast.error(`Error creating blog: ${result.error}`);
-        return;
+        throw new Error(`Error creating blog: ${result.error}`);
       }
-
-      console.log("Blog created:", result.value);
 
       const txHash = result.value;
       const groupResult = await fetchGroup(sessionClient, { txHash });
 
       if (groupResult.isErr()) {
-        console.error("Error fetching blog after creation:", groupResult.error);
-        toast.error(`Error fetching blog after creation: ${groupResult.error}`);
-      } else {
-        const blog = groupResult.value;
-        console.log("Fetched blog:", blog);
+        throw new Error(`Error fetching blog after creation: ${groupResult.error}`);
+      }
 
-        if (blog) {
-          try {
-            const updateToast = toast.loading("Saving blog settings...");
-            const response = await fetch(`/api/blogs/${blog.address}`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                settings: {
-                  title: title,
-                  slug: slug,
-                  about: description || "",
-                },
-              }),
-            });
+      const blog = groupResult.value;
+      if (!blog) {
+        throw new Error("Blog data is null after creation");
+      }
 
-            toast.dismiss(updateToast);
+      blogAddress = blog.address;
 
-            if (!response.ok) {
-              const errorData = await response.json();
-              console.error("Error saving blog settings:", errorData);
-              toast.error(`Error saving blog settings: ${errorData.error || "Unknown error"}`);
-            } else {
-              console.log("Blog settings saved successfully");
-            }
-          } catch (error) {
-            console.error("Error saving blog settings:", error);
-            toast.error(`Error saving blog settings: ${error}`);
-          }
-        } else {
-          console.error("Blog data is null after creation");
-          toast.error("Failed to get blog details after creation");
-        }
+      const updateToast = toast.loading("Saving blog settings...");
+      const response = await fetch(`/api/blogs/${blog.address}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          settings: {
+            title: title,
+            slug: slug,
+            about: description || "",
+          },
+        }),
+      });
+
+      toast.dismiss(updateToast);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Error saving blog settings: ${errorData.error || "Unknown error"}`);
       }
 
       toast.success("Blog created successfully!");
       onSuccess();
       onOpenChange(false);
-    } catch (err) {
-      console.error("Error during blog creation:", err);
-      toast.error("Failed to create blog");
+    } catch (error) {
+      console.error("Error during blog creation:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to create blog");
+
+      if (blogAddress) {
+        toast.info("Blog was created but some settings may not have been saved properly");
+      }
     } finally {
       setLoading(false);
     }
