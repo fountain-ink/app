@@ -75,7 +75,7 @@ export async function publishPost(
           return false;
         }
 
-        feedValue = blog.value?.feed ?? undefined;
+        feedValue = blog.value?.feed?.address ?? undefined;
       }
 
       console.log("feed is", feedValue);

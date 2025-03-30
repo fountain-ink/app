@@ -106,7 +106,7 @@ export async function GET(req: NextRequest) {
           .insert({
             address: blog.address,
             title: blog.metadata?.name || "Untitled Blog",
-            feed: blog.feed || null,
+            feed: blog.feed?.address || null,
             about: blog.metadata?.description || null,
             icon: blog.metadata?.icon || null,
             owner: userAddress,
@@ -118,7 +118,7 @@ export async function GET(req: NextRequest) {
       console.log(`[Blogs Sync] Blog exists in DB: ${blog.address}`);
       const updates = {
         title: existingBlog.title ?? blog.metadata?.name,
-        feed: blog.feed,
+        feed: blog.feed?.address || null,
         owner: blog.owner,
         about: existingBlog.about ?? blog.metadata?.description,
         icon: existingBlog.icon ?? blog.metadata?.icon,
