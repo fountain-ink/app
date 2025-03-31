@@ -1,6 +1,8 @@
 "use client";
 import { Dialog, DialogContent, DialogTitle, DialogHeader, DialogClose } from "@/components/ui/dialog";
-import { Account, Post, PostsQuery, SimpleCollectAction } from "@lens-protocol/client";
+import { Account, Post, PostsQuery, SimpleCollectAction, postId } from "@lens-protocol/client";
+import { executePostAction } from "@lens-protocol/client/actions";
+import { handleOperationWith } from "@lens-protocol/client/viem";
 import { UserAvatar } from "@/components/user/user-avatar";
 import { UserName } from "@/components/user/user-name";
 import { UserUsername } from "@/components/user/user-handle";
@@ -8,6 +10,10 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Info, Calendar, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useWalletClient } from "wagmi";
+import { useState } from "react";
+import { getLensClient } from "@/lib/lens/client";
+import { toast } from "sonner";
 
 interface CollectAmount {
   value: string;
@@ -56,6 +62,9 @@ interface PostCollectProps {
 }
 
 export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) => {
+  const { data: walletClient } = useWalletClient();
+  const [isCollecting, setIsCollecting] = useState(false);
+
   const collectAction = post.actions.find(
     (action) => action.__typename === "SimpleCollectAction"
   ) as SimpleCollectAction | undefined;
@@ -81,6 +90,48 @@ export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) =>
     : null;
 
   const endsAt = collectAction?.endsAt ? new Date(collectAction.endsAt) : null;
+
+  const handleCollect = async () => {
+    if (!walletClient || !canCollect) return;
+
+    try {
+      setIsCollecting(true);
+      const lens = await getLensClient();
+
+      if (!lens.isSessionClient()) {
+        toast.error("You need to be logged in to collect this post");
+        setIsCollecting(false);
+        return;
+      }
+
+      const result = await executePostAction(lens, {
+        post: postId(post.id),
+        action: {
+          simpleCollect: {
+            selected: true,
+          },
+        },
+      }).andThen(handleOperationWith(walletClient as any));
+
+      if (result.isErr()) {
+        console.error(result.error);
+        toast.error("Failed to collect post");
+        setIsCollecting(false);
+        return;
+      }
+
+      toast.success("Post collected successfully");
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Error collecting post:", error);
+      toast.error("An error occurred while collecting the post", {
+        description: error as string,
+      });
+    } finally {
+      setIsCollecting(false);
+    }
+  };
+
   return (
     <Dialog modal={true} open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md gap-4">
@@ -164,12 +215,12 @@ export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) =>
 
         {formattedAmount && (
           <Button
-            disabled={!canCollect || !amount}
-            onClick={() => { console.log("Collect clicked") }}
+            disabled={!canCollect || !amount || isCollecting}
+            onClick={handleCollect}
             className="w-full"
             size="lg"
           >
-            {canCollect ? `Collect for ${formattedAmount}` : "Cannot collect"}
+            {isCollecting ? "Collecting..." : canCollect ? `Collect for ${formattedAmount}` : "Cannot collect"}
           </Button>
         )}
         {!amount && <p className="text-sm text-center text-muted-foreground">Collect details not available.</p>}
