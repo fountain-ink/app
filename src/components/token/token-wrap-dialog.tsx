@@ -13,7 +13,6 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-// Wrapped GHO token address
 const WRAPPED_GHO_TOKEN_ADDRESS = "0xeee5a340Cdc9c179Db25dea45AcfD5FE8d4d3eB8";
 
 interface TokenWrapProps {
@@ -28,19 +27,16 @@ export const TokenWrapDialog = ({ isOpen, onOpenChange, accountAddress }: TokenW
   const [amount, setAmount] = useState<string>("");
   const [mode, setMode] = useState<"wrap" | "unwrap">("wrap");
 
-  // Get GHO balance (native token, no token address needed)
   const { data: ghoBalance, isLoading: isGhoBalanceLoading } = useBalance({
     address: accountAddress as `0x${string}`,
   });
 
-  // Get wrapped GHO balance
   const { data: wrappedGhoBalance, isLoading: isWrappedGhoBalanceLoading } = useBalance({
     address: accountAddress as `0x${string}`,
     token: WRAPPED_GHO_TOKEN_ADDRESS as `0x${string}`,
   });
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Allow only numbers and decimals
     const value = e.target.value;
     if (value === "" || /^\d*\.?\d*$/.test(value)) {
       setAmount(value);
@@ -68,7 +64,6 @@ export const TokenWrapDialog = ({ isOpen, onOpenChange, accountAddress }: TokenW
         return;
       }
 
-      // Convert amount to bigDecimal
       const decimalAmount = bigDecimal(parseFloat(amount));
 
       const result = await wrapTokens(lens, {
@@ -111,7 +106,6 @@ export const TokenWrapDialog = ({ isOpen, onOpenChange, accountAddress }: TokenW
         return;
       }
 
-      // Convert amount to bigDecimal
       const decimalAmount = bigDecimal(parseFloat(amount));
 
       const result = await unwrapTokens(lens, {
@@ -165,11 +159,6 @@ export const TokenWrapDialog = ({ isOpen, onOpenChange, accountAddress }: TokenW
 
         <div className="flex flex-col gap-4">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">
-              {mode === "wrap"
-                ? "Convert your GHO tokens to wrapped GHO"
-                : "Convert your wrapped GHO back to GHO"}
-            </span>
             <Button
               variant="outline"
               size="sm"
@@ -216,21 +205,6 @@ export const TokenWrapDialog = ({ isOpen, onOpenChange, accountAddress }: TokenW
               placeholder="0.00"
               className="w-full"
             />
-          </div>
-
-          <div className="text-sm text-muted-foreground">
-            <div className="flex items-center gap-1 mb-1">
-              <Info size={14} />
-              <span>Information</span>
-            </div>
-            <p>
-              {mode === "wrap"
-                ? "Wrapping your GHO allows it to be used within the Lens Protocol ecosystem."
-                : "Unwrapping converts your tokens back to regular GHO."}
-            </p>
-            <p className="mt-2">
-              This transaction requires approval from your wallet and may incur gas fees.
-            </p>
           </div>
 
           <Button
