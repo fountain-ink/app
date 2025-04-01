@@ -60,7 +60,6 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
     }
 
     if (!title || !slug) return;
-
     if (!isValidSlug(slug)) {
       toast.error("Invalid slug format");
       return;
