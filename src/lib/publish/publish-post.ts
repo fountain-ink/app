@@ -31,8 +31,9 @@ export async function publishPost(
       return false;
     }
 
+    const account = await lens.getAuthenticatedUser();
     const session = await currentSession(lens).unwrapOr(null);
-    if (!session) {
+    if (!session || account.isErr()) {
       toast.error("Please log in to publish");
       return false;
     }
@@ -83,44 +84,49 @@ export async function publishPost(
       const payToCollectConfig =
         collectingSettings?.isChargeEnabled && collectingSettings.price
           ? {
-              amount: {
-                /// WGRASS
-                currency: evmAddress("0xeee5a340Cdc9c179Db25dea45AcfD5FE8d4d3eB8"),
-                value: collectingSettings.price,
-              },
-              ...(collectingSettings.isReferralRewardsEnabled
-                ? { referralShare: collectingSettings.referralPercent }
-                : {}),
-              recipients:
-                collectingSettings.isRevenueSplitEnabled && collectingSettings.recipients.length > 0
-                  ? collectingSettings.recipients.map((r) => ({
-                      address: evmAddress(r.address),
-                      percent: r.percentage,
-                    }))
-                  : [],
-            }
+            amount: {
+              /// WGRASS
+              currency: evmAddress("0xeee5a340Cdc9c179Db25dea45AcfD5FE8d4d3eB8"),
+              value: collectingSettings.price,
+            },
+            ...(collectingSettings.isReferralRewardsEnabled
+              ? { referralShare: collectingSettings.referralPercent }
+              : {}),
+            recipients:
+              collectingSettings.isRevenueSplitEnabled && collectingSettings.recipients.length > 0
+                ? collectingSettings.recipients.map((r) => ({
+                  address: evmAddress(r.address),
+                  percent: r.percentage,
+                }))
+                : [
+                  {
+                    address: evmAddress(account.value?.address),
+                    percent: 100,
+                  },
+                ],
+          }
           : undefined;
 
       const actions = collectingSettings?.isCollectingEnabled
         ? [
-            {
-              simpleCollect: {
-                ...(collectingSettings.isLimitedEdition
-                  ? { collectLimit: Number(collectingSettings.collectLimit) }
-                  : undefined),
-                ...(collectingSettings.isCollectExpiryEnabled
-                  ? {
-                      endsAt: dateTime(
-                        new Date(
-                          new Date().getTime() + collectingSettings.collectExpiryDays * 24 * 60 * 60 * 1000,
-                        ).toISOString(),
-                      ),
-                    }
-                  : undefined),
-                ...(payToCollectConfig ? { payToCollect: payToCollectConfig } : undefined),
-              },
+          {
+            simpleCollect: {
+              ...(collectingSettings.isLimitedEdition
+                ? { collectLimit: Number(collectingSettings.collectLimit) }
+                : undefined),
+              ...(collectingSettings.isCollectExpiryEnabled
+                ? {
+                  endsAt: dateTime(
+                    new Date(
+                      new Date().getTime() + collectingSettings.collectExpiryDays * 24 * 60 * 60 * 1000,
+                    ).toISOString(),
+                  ),
+                }
+                : undefined),
+              ...(payToCollectConfig ? { payToCollect: payToCollectConfig } : undefined),
             },
-          ]
+          },
+        ]
         : undefined;
 
       console.log("actions", actions);
