@@ -52,6 +52,7 @@ export const Footer = ({ post, account }: { post: AnyPost; account?: Account }) 
 
   const likes = post.stats.upvotes;
   const collects = post.stats.collects;
+  const tips = post.stats.tips;
   const comments = post.stats.comments;
   const reposts = post.stats.reposts;
   const bookmarks = post.stats.bookmarks;
@@ -114,7 +115,7 @@ export const Footer = ({ post, account }: { post: AnyPost; account?: Account }) 
     {
       icon: CoinIcon,
       label: "Collect",
-      initialCount: collects,
+      initialCount: collects + tips,
       strokeColor: "rgb(254,178,4)",
       fillColor: "rgba(254, 178, 4, 0.3)",
       shouldIncrementOnClick: false,
