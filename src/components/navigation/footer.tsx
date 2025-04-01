@@ -22,6 +22,7 @@ import { ActionButton } from "../post/post-action-button";
 import { CommentSheet } from "../comment/comment-sheet";
 import { PostCollect } from "../post/post-collect-dialog";
 import { TipPopover } from "../tip/tip-popover";
+import { CoinIcon } from "../icons/custom-icons";
 
 export const Footer = ({ post, account }: { post: AnyPost; account?: Account }) => {
   const { scrollProgress, shouldShow, shouldAnimate } = useScroll();
@@ -111,7 +112,7 @@ export const Footer = ({ post, account }: { post: AnyPost; account?: Account }) 
       onClick: handleBookmark,
     },
     {
-      icon: ShoppingBag,
+      icon: CoinIcon,
       label: "Collect",
       initialCount: collects,
       strokeColor: "rgb(254,178,4)",

@@ -22,7 +22,7 @@ export type DropdownItem = {
 };
 
 export type ActionButtonProps = {
-  icon: LucideIcon;
+  icon: LucideIcon | React.FC<any>;
   label: string;
   initialCount?: number;
   strokeColor: string;
