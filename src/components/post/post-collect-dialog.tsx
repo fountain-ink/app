@@ -24,10 +24,7 @@ interface CollectAmount {
 }
 
 const formatAmount = (amount: CollectAmount): string => {
-  const value = parseFloat(amount.value) / Math.pow(10, amount.asset.decimals);
-  // Format with minimum number of decimal places (remove trailing zeros)
-  const formattedValue = value % 1 === 0 ? value.toFixed(0) : value.toFixed(2).replace(/\.?0+$/, '');
-  return `${formattedValue} ${amount.asset.symbol}`;
+  return `${amount.value} ${amount.asset.symbol}`;
 };
 
 const getTimeRemaining = (endDate: Date): string => {
@@ -38,7 +35,6 @@ const getTimeRemaining = (endDate: Date): string => {
     return "ended";
   }
 
-  // Convert to seconds, minutes, hours, days
   const seconds = Math.floor(timeRemaining / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
