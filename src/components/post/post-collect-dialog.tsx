@@ -24,7 +24,12 @@ interface CollectAmount {
 }
 
 const formatAmount = (amount: CollectAmount): string => {
-  return `${amount.value} ${amount.asset.symbol}`;
+  const value = parseFloat(amount.value);
+  let formattedValue = value.toFixed(2);
+  if (formattedValue.includes('.')) {
+    formattedValue = formattedValue.replace(/\.?0+$/, '');
+  }
+  return `${formattedValue} ${amount.asset.symbol}`;
 };
 
 const getTimeRemaining = (endDate: Date): string => {
@@ -170,7 +175,7 @@ export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) =>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <p className="text-muted-foreground">Sold</p>
-            <p>{currentSupply}/{totalSupply} {totalValue && `(${totalValue} total)`}</p>
+            <p>{currentSupply}{totalSupply ? `/${totalSupply}` : ''} {totalValue && `(${totalValue} total)`}</p>
           </div>
           <div>
             <p className="text-muted-foreground flex items-center gap-1">License <Info size={12} /></p>
