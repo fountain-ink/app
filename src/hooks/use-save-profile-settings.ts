@@ -93,7 +93,7 @@ export function useSaveProfileSettings() {
         bio: bio ?? currentMetadata?.bio ?? undefined,
         picture: picture ?? currentMetadata?.picture ?? undefined,
         coverPicture: coverPicture ?? currentMetadata?.coverPicture ?? undefined,
-        attributes: updatedAttributes.length > 0 ? updatedAttributes : undefined,
+        attributes: updatedAttributes && updatedAttributes?.length > 0 ? updatedAttributes : undefined,
       });
       console.log(metadata);
 

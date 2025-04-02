@@ -131,8 +131,8 @@ export const ImageCropperUploader = ({
   return (
     <span>
       <div
-        className={`relative ${
-          aspectRatio === 1 ? "w-40 h-40 rounded-full" : "w-full h-44 rounded-lg"
+        className={`relative w-full h-full ${
+          aspectRatio === 1 ? "rounded-full" : "rounded-lg"
         } overflow-hidden cursor-pointer ring-2 ring-background `}
         onClick={handleImageClick}
         onKeyDown={handleImageClick}

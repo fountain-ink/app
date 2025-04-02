@@ -60,13 +60,15 @@ function ProfileSettingsForm({ profile, onSaved, onFormDataChange }: ProfileSett
       <div className="space-y-1">
         <Label>Avatar and Cover</Label>
         <div className="relative pb-8">
-          <ImageCropperUploader
-            label="Cover Picture"
-            initialImage={currentMetadata?.coverPicture || ""}
-            aspectRatio={3}
-            onImageChange={setCoverPicture}
-          />
-          <div className="absolute bottom-0 left-8 z-10">
+          <div className="w-full h-44">
+            <ImageCropperUploader
+              label="Cover Picture"
+              initialImage={currentMetadata?.coverPicture || ""}
+              aspectRatio={3}
+              onImageChange={setCoverPicture}
+            />
+          </div>
+          <div className="absolute w-40 h-40 bottom-0 left-8 z-10">
             <ImageCropperUploader
               label="Avatar"
               initialImage={currentMetadata?.picture}
