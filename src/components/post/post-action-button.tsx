@@ -32,6 +32,7 @@ export type ActionButtonProps = {
   showChevron?: boolean;
   onClick?: () => Promise<any> | undefined;
   isActive?: boolean;
+  isDisabled?: boolean;
   shouldIncrementOnClick?: boolean;
   fillOnHover?: boolean;
   fillOnClick?: boolean;
@@ -60,6 +61,7 @@ export const ActionButton = ({
   showChevron = false,
   onClick,
   isActive = false,
+  isDisabled = false,
   shouldIncrementOnClick = true,
   fillOnHover = true,
   fillOnClick = true,
@@ -101,7 +103,7 @@ export const ActionButton = ({
   }, [dropdownItems, open, onOpenChange]);
 
   const handleClick = async () => {
-    if (onClick) {
+    if (onClick && !isDisabled) {
       if (!dropdownItems) {
         setState((prev) => ({
           ...prev,
@@ -126,7 +128,9 @@ export const ActionButton = ({
   };
 
   const handleHover = (isHovered: boolean) => {
-    setState((prev) => ({ ...prev, isHovered }));
+    if (!isDisabled) {
+      setState((prev) => ({ ...prev, isHovered }));
+    }
   };
 
   const iconProps = {
@@ -134,8 +138,9 @@ export const ActionButton = ({
     strokeWidth: 1.5,
     className: "transition-all duration-200 group-hover:scale-110 group-active:scale-95",
     style: {
-      color: (state.isPressedLocally && fillOnClick) || (state.isHovered && fillOnHover) ? strokeColor : undefined,
-      fill: state.isPressedLocally && fillOnClick ? fillColor : undefined,
+      color: isDisabled ? "hsl(var(--muted-foreground))" : ((state.isPressedLocally && fillOnClick) || (state.isHovered && fillOnHover) ? strokeColor : undefined),
+      fill: isDisabled ? undefined : (state.isPressedLocally && fillOnClick ? fillColor : undefined),
+      opacity: isDisabled ? 0.5 : 1,
     },
   };
 
@@ -160,7 +165,7 @@ export const ActionButton = ({
 
   const ButtonContent = (
     <div
-      className={`group flex items-center cursor-pointer ${className}`}
+      className={`group flex items-center ${isDisabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'} ${className}`}
     >
       {renderPopover ? (
         renderPopover(TriggerButton)

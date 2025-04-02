@@ -59,6 +59,9 @@ export const Footer = ({ post, account }: { post: AnyPost; account?: Account }) 
   const quotes = post.stats.quotes;
   const isReposted = post.operations?.hasReposted;
   const isQuoted = post.operations?.hasQuoted;
+  const canComment = post.operations?.canComment;
+  const canRepost = post.operations?.canRepost;
+  const canQuote = post.operations?.canQuote;
 
   const actionButtons = [
     {
@@ -133,6 +136,7 @@ export const Footer = ({ post, account }: { post: AnyPost; account?: Account }) 
       onClick: () => handleComment(false),
       shouldIncrementOnClick: false,
       isActive: isCommentOpen,
+      isDisabled: !canComment,
     },
     {
       icon: Heart,
