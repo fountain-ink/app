@@ -158,6 +158,7 @@ const UserBlogPage = async ({
           <div className="p-4">
             <AuthorView
               showUsername={false}
+              
               accounts={isGroup && groupMembers.length > 0 ? groupMembers : profile ? [profile] : []}
             />
           </div>
@@ -174,9 +175,9 @@ const UserBlogPage = async ({
 
         {/* <Separator className="w-48 bg-primary mt-3" /> */}
 
-        {showTags && feedAddress && formattedTags.length > 0 && (
+        {/* {showTags && feedAddress && formattedTags.length > 0 && (
           <BlogTagNavigation tags={formattedTags} username={params.blog} />
-        )}
+        )} */}
         <div className="flex flex-col my-4 gap-4">
           <UserContent
             posts={[...(posts?.items ?? [])]}
