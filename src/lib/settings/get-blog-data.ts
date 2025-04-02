@@ -28,16 +28,16 @@ export type BlogData = Omit<Blog, "theme" | "metadata"> & {
  * @param identifier The blog identifier - either an EVM address or a handle
  * @returns The blog data or null if not found
  */
-async function findBlogByIdentifier(identifier: string) {
+async function findBlogByIdentifier(identifier: string, slug?: string) {
   const db = createClient();
 
-  // Determine if the identifier is an EVM address or a handle
   if (isEvmAddress(identifier)) {
-    // Query by address
     return await db.from("blogs").select("*").eq("address", identifier).single();
   }
-  // Query by handle
-  return await db.from("blogs").select("*").eq("handle", identifier).single();
+  if (slug) {
+    return await db.from("blogs").select("*").eq("handle", identifier).eq("slug", slug).single();
+  }
+  return await db.from("blogs").select("*").eq("handle", identifier).is("slug", null).single();
 }
 
 /**
@@ -45,9 +45,9 @@ async function findBlogByIdentifier(identifier: string) {
  * @param identifier The blog identifier - either an EVM address or a handle
  * @returns The blog data or null if not found
  */
-export const getBlogData = async (identifier: string) => {
+export const getBlogData = async (identifier: string, slug?: string) => {
   try {
-    const { data, error } = await findBlogByIdentifier(identifier);
+    const { data, error } = await findBlogByIdentifier(identifier, slug);
 
     if (error) {
       console.error("Error fetching blog data:", error);

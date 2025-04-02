@@ -1,17 +1,8 @@
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { fetchAccount } from "@lens-protocol/client/actions";
-import { getLensClient } from "@/lib/lens/client";
 import UserBlogPage from "../page";
 
-interface PageProps {
-  params: {
-    blog: string;
-    slug: string;
-  };
-}
-
-export default async function BlogHandlePage({ params }: PageProps) {
+export default async function BlogHandlePage({ params }: { params: { blog: string; slug: string } }) {
   const { blog, slug } = params;
 
   const blogAddress = await resolveBlog(blog, slug);

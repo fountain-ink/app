@@ -19,26 +19,20 @@ import { BlogEmailSubscribe } from "../newsletter/newsletter-subscribe-dialog";
 
 export const Header = ({ session }: { session: MeResult | null }) => {
   const pathname = usePathname();
+  const [blogData, setBlogData] = useState<BlogData | null>(null);
   const hostname = typeof window !== "undefined" && window.location.hostname ? window.location.hostname : "";
   const isWritePage = pathname.startsWith("/write");
   const isSettingsPage = pathname.startsWith("/settings");
-
-  // Check if we're on a blog page
   const isBlogPage = pathname.startsWith("/b/") || pathname.startsWith("/p/");
-
-  // Extract blog address from the URL
   const pathSegments = pathname.split("/").filter(Boolean);
-  const blogAddress = isBlogPage && pathSegments.length >= 2 ? pathSegments[1] : null;
+  const blogId = isBlogPage && pathSegments.length >= 2 ? pathSegments[1] : null;
+  const blogSlug = isBlogPage && pathSegments.length >= 3 ? pathSegments[2] : null;
 
-  // State for blog data
-  const [blogData, setBlogData] = useState<BlogData | null>(null);
-
-  // Fetch blog data when on a blog page
   useEffect(() => {
     const fetchBlogData = async () => {
-      if (blogAddress) {
+      if (blogId) {
         try {
-          const data = await getBlogData(blogAddress);
+          const data = await getBlogData(blogId, blogSlug ?? undefined);
           setBlogData(data);
         } catch (error) {
           console.error("Error fetching blog data:", error);
@@ -47,12 +41,12 @@ export const Header = ({ session }: { session: MeResult | null }) => {
       }
     };
 
-    if (isBlogPage && blogAddress) {
+    if (isBlogPage && blogId) {
       fetchBlogData();
     } else {
       setBlogData(null);
     }
-  }, [isBlogPage, blogAddress]);
+  }, [isBlogPage, blogId, blogSlug]);
 
   const documentId = pathname.split("/").filter(Boolean).pop() ?? "";
   const yjsState = useYjsState((state) => state.getState(documentId) ?? { status: "disconnected" as ConnectionStatus });
