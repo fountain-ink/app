@@ -10,12 +10,10 @@ import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-// Removed Checkbox import, moved to profile setup component
 import { setupUserAuth } from "./auth-manager";
-import { ChevronLeft, X } from "lucide-react"; // Added X icon
+import { ChevronLeft } from "lucide-react"; 
 import { GraphicHand2 } from "../icons/custom-icons";
-import { OnboardingProfileSetup, ProfileSetupData } from "./onboarding-profile-setup"; // Import updated component and type
-// Removed useSaveProfileSettings import
+import { OnboardingProfileSetup, ProfileSetupData } from "./onboarding-profile-setup"; 
 import { uploadFile } from "@/lib/upload/upload-file";
 import { createAccountWithUsername, fetchAccount } from "@lens-protocol/client/actions";
 
@@ -30,15 +28,12 @@ type OnboardingStep = "username" | "profileSetup";
 export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingModalProps) {
   const { address } = useAccount();
   const [username, setUsername] = useState("");
-  const [loading, setLoading] = useState(false); // Combined loading state for the whole process
+  const [loading, setLoading] = useState(false); 
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>("username");
-  // Removed createdAccount, lensClient, isSavingProfile states
 
   const onboardingClient = useOnboardingClient();
   const { data: walletClient } = useWalletClient();
-  // Removed useSaveProfileSettings hook
 
-  // Handles advancing from username step to profile setup step
   const handleUsernameSubmit = () => {
     if (!username || !address) return;
     setOnboardingStep("profileSetup");
@@ -48,7 +43,6 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
     setOnboardingStep("username");
   }
 
-  // Handles the final submission: upload data, create account, setup auth
   const handleFinalSubmit = async (profileData: ProfileSetupData) => {
     if (!username || !address) {
       toast.error("Username is missing.");
@@ -56,12 +50,12 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
     };
 
     setLoading(true);
-    let pictureMetadata: string | undefined; // Correct type for metadata builder
+    let pictureUrl: string | undefined; 
     let metadataUri: string | undefined;
     let client: AnyClient | null = null;
 
     try {
-      client = await onboardingClient(); // Get client instance
+      client = await onboardingClient(); 
       if (!client) {
         throw new Error("Failed to get onboarding client");
       }
@@ -70,24 +64,22 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
       if (profileData.profilePicture && !profileData.skipped) {
         const uploadToast = toast.loading("Uploading profile picture...");
         try {
-          const pictureUrl = await uploadFile(profileData.profilePicture);
-          // Use the image helper from @lens-protocol/metadata
-          pictureMetadata = pictureUrl;
+          pictureUrl = await uploadFile(profileData.profilePicture);
           toast.dismiss(uploadToast);
         } catch (uploadError) {
           toast.dismiss(uploadToast);
           console.error("Error uploading profile picture:", uploadError);
           toast.error("Failed to upload profile picture. Please try again.");
           setLoading(false);
-          return; // Stop the process if upload fails
+          return; 
         }
       }
 
       // 2. Construct Metadata
       const metadata = accountMetadataBuilder({
-        name: profileData.skipped ? username : (profileData.name || username), // Use display name if provided, fallback to username
+        name: profileData.skipped ? username : (profileData.name || username), 
         bio: profileData.skipped ? undefined : profileData.bio,
-        picture: pictureMetadata,
+        picture: pictureUrl,
       });
 
       // 3. Upload Metadata JSON
@@ -102,7 +94,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
         console.error("Error uploading metadata:", metaUploadError);
         toast.error("Failed to upload profile metadata. Please try again.");
         setLoading(false);
-        return; // Stop if metadata upload fails
+        return; 
       }
 
 
@@ -123,8 +115,6 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
         console.error("Error creating account:", result.error);
         toast.error(`Error creating account: ${result.error}`);
         setLoading(false);
-        // Don't close modal, allow retry? Or reset? Let's reset to username step.
-        // setOnboardingStep("username"); // Or maybe just let them close manually
         return;
       }
 
@@ -138,7 +128,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
       if (!accountResult) {
         toast.error("Failed to fetch account after creation. Please reload and log in.");
         setLoading(false);
-        onOpenChange(false); // Close modal as we can't proceed
+        onOpenChange(false); 
         return;
       }
       console.log("Account created:", accountResult);
@@ -152,7 +142,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
         toast.error(`Failed to switch account: ${switchResult.error.message}. Please reload and log in.`);
         console.error("Switch error:", switchResult.error.message);
         setLoading(false);
-        onOpenChange(false); // Close modal
+        onOpenChange(false); 
         return;
       }
       console.log("Switched account:", switchResult.value);
@@ -190,12 +180,11 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
         return;
       }
 
-      // Success
       toast.success("Account created successfully!");
 
       onSuccess();
       onOpenChange(false);
-      window.location.reload(); // Reload the page after successful onboarding
+      window.location.reload(); 
 
     } catch (err: any) {
       console.error("Error during final account creation:", err);
@@ -203,7 +192,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
       // Reset to username step on general failure?
       // setOnboardingStep("username");
     } finally {
-      setLoading(false); // Ensure loading is always turned off
+      setLoading(false); 
     }
   };
 
