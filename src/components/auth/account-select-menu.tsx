@@ -1,7 +1,7 @@
 import { getLensClient } from "@/lib/lens/client";
 import { Account, evmAddress } from "@lens-protocol/client";
 import { fetchAccountsAvailable } from "@lens-protocol/client/actions";
-import { Plus, PlusIcon } from "lucide-react";
+import { Loader2, Plus, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { UserIcon } from "../icons/user";
@@ -22,6 +22,7 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
   const [loading, setLoading] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showProfileSelect, setShowProfileSelect] = useState(true);
+  const [isOnboardingLoading, setIsOnboardingLoading] = useState(false);
   const setBlogs = useBlogStorage((state) => state.setBlogs);
   const onboardingClient = useOnboardingClient();
 
@@ -59,12 +60,19 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
   }, [address]);
 
   const handleShowOnboarding = async () => {
-    const client = await onboardingClient();
-    if (!client) {
-      throw new Error("Failed to get onboarding client");
+    setIsOnboardingLoading(true);
+    try {
+      const client = await onboardingClient();
+      if (!client) {
+        throw new Error("Failed to get onboarding client");
+      }
+      setShowProfileSelect(false);
+      setShowOnboarding(true);
+    } catch (err) {
+      console.error("Error initializing onboarding:", err);
+    } finally {
+      setIsOnboardingLoading(false);
     }
-    setShowProfileSelect(false);
-    setShowOnboarding(true);
   };
 
   const handleOnboardingClose = (open: boolean) => {
@@ -130,12 +138,18 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
             )}
 
             <div className="w-full flex justify-end gap-2">
-              {/* <Button variant="outline" onClick={() => handleOpenChange(false)}>
-                Close
-              </Button> */}
-              <Button className="w-full mt-4 gap-2" variant="default" onClick={handleShowOnboarding}>
-                <Plus className="w-4 h-4" />
-                New Profile
+              <Button
+                className="w-full mt-4 gap-2"
+                variant="default"
+                onClick={handleShowOnboarding}
+                disabled={isOnboardingLoading}
+              >
+                {isOnboardingLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Plus className="w-4 h-4" />
+                )}
+                {isOnboardingLoading ? "Signing in with Ethereum..." : "New Profile"}
               </Button>
             </div>
           </div>

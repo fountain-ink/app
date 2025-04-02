@@ -1,4 +1,3 @@
-import { useOnboardingClient } from "@/hooks/use-lens-clients";
 import { storageClient } from "@/lib/lens/storage-client";
 import { Account, AnyClient } from "@lens-protocol/client";
 import { handleOperationWith } from "@lens-protocol/client/viem";
@@ -336,11 +335,10 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
                 <GraphicHand2 />
               </div>
               <p className="text-xs text-muted-foreground">
-                Welcome to Fountain! Let's start by choosing your username. Make it a good one - this can't be changed
-                later.
+                Welcome to Fountain! Let's start by choosing your username. Make it a good one - this can't be changed later.
               </p>
               <div className="space-y-6">
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <Label htmlFor="username">Username</Label>
                   <div className="relative">
                     <Input
@@ -352,9 +350,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
                       className={
                         validationStatus === "invalid"
                           ? "pr-10 border-red-500 focus-visible:ring-red-500"
-                          : validationStatus === "valid"
-                            ? "pr-10 border-green-500 focus-visible:ring-green-500"
-                            : "pr-10"
+                          : "pr-10"
                       }
                     />
                     {validationStatus === "checking" && (
@@ -364,7 +360,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
                     )}
                     {validationStatus === "valid" && (
                       <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                        <CheckCircle2 className="h-4 w-4 text-green-500" />
+                        <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
                       </div>
                     )}
                     {validationStatus === "invalid" && (
@@ -373,18 +369,20 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
                       </div>
                     )}
                   </div>
-                  {validationStatus === "invalid" && validationMessage && (
-                    <p className="text-xs text-red-500 mt-1">{validationMessage}</p>
-                  )}
-                  {validationStatus === "valid" && (
-                    <p className="text-xs text-green-500 mt-1">{validationMessage}</p>
-                  )}
+                  <div className="h-5 mt-1">
+                    {validationStatus === "invalid" && validationMessage && (
+                      <p className="text-xs text-red-500">{validationMessage}</p>
+                    )}
+                    {validationStatus === "valid" && validationMessage && (
+                      <p className="text-xs text-muted-foreground">{validationMessage}</p>
+                    )}
+                  </div>
                 </div>
               </div>
-              <div className="mt-4">
+              <div className="">
                 <Button
                   onClick={handleUsernameSubmit}
-                  disabled={loading || !username || validationStatus === "checking" || validationStatus === "invalid"}
+                  disabled={loading || !username || validationStatus !== "valid"}
                   className="w-full"
                 >
                   {loading ? "Processing..." : "Continue"}
