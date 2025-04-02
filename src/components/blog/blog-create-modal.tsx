@@ -18,6 +18,7 @@ import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { syncBlogsQuietly } from "./blog-sync-button";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
+import { useAuthenticatedUser } from "@lens-protocol/react";
 
 interface CreateGroupModalProps {
   open: boolean;
@@ -44,6 +45,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const { data: walletClient } = useWalletClient();
+  const { data: user } = useAuthenticatedUser();
 
   const slugIsValid = slug === "" || isValidSlug(slug);
 
@@ -62,6 +64,11 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
     if (!title || !slug) return;
     if (!isValidSlug(slug)) {
       toast.error("Invalid slug format");
+      return;
+    }
+
+    if (!user || !user.address) {
+      toast.error("Please login to create a blog");
       return;
     }
 
@@ -86,12 +93,16 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
       ]);
       toast.dismiss(uploadToast);
 
+      console.log(user.address)
       const createToast = toast.loading("Creating your blog...");
       const result = await createGroup(sessionClient, {
         feed: {
           metadataUri: uri(blogFeedUri.uri),
+          repliesRestricted: false,
         },
         metadataUri: uri(blogUri.uri),
+        owner: user?.address,
+        admins: [user?.address],
       })
         .andThen(handleOperationWith(walletClient as any))
         .andThen(sessionClient.waitForTransaction);

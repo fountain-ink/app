@@ -16,7 +16,7 @@ interface BlogSelectMenuProps {
   className?: string;
 }
 
-function BlogSelectMenuComponent({
+export function BlogSelectMenu({
   onBlogChange,
   selectedBlogAddress,
   placeholder = "Select a blog",
@@ -108,7 +108,7 @@ function BlogSelectMenuComponent({
                   )}
                 </div>
                 <span className="flex items-center gap-1">
-                  {blog.handle || blog.title || blog.address.substring(0, 9)}
+                  {blog.title || blog.address.substring(0, 9)}
                   {blog.address === blog.owner && " (Personal Blog)"}
                   {blog.mail_list_id && <MailIcon className="h-3.5 w-3.5 ml-1 opacity-70" />}
                 </span>
@@ -122,5 +122,3 @@ function BlogSelectMenuComponent({
     </Select>
   );
 }
-
-export const BlogSelectMenu = memo(BlogSelectMenuComponent);
