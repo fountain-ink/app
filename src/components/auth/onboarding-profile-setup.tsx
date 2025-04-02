@@ -6,13 +6,11 @@ import { TextareaAutosize } from "../ui/textarea";
 import { ImageCropperUploader } from "../images/image-uploader";
 import { DialogHeader, DialogTitle } from "../ui/dialog";
 import { X, ChevronLeft } from 'lucide-react';
-import { Checkbox } from "../ui/checkbox";
 
 export interface ProfileSetupData {
   profilePicture?: File | null;
   name?: string;
   bio?: string;
-  enableSignless: boolean;
   skipped: boolean;
 }
 
@@ -28,14 +26,12 @@ export function OnboardingProfileSetup({ username, onSubmit, onClose, onBack, is
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [name, setName] = useState(username || "");
   const [bio, setBio] = useState("");
-  const [enableSignlessMode, setEnableSignlessMode] = useState(true);
 
   const handleSubmit = async (skipped: boolean) => {
     await onSubmit({
       profilePicture: skipped ? undefined : profilePicture,
       name: skipped ? undefined : (name || undefined),
       bio: skipped ? undefined : (bio || undefined),
-      enableSignless: enableSignlessMode,
       skipped,
     });
   };
@@ -94,19 +90,6 @@ export function OnboardingProfileSetup({ username, onSubmit, onClose, onBack, is
           minRows={3}
           disabled={isLoading}
         />
-      </div>
-
-      <div className="flex items-center space-x-2 pt-2">
-        <Checkbox
-          id="signless"
-          checked={enableSignlessMode}
-          onCheckedChange={(checked) => setEnableSignlessMode(checked as boolean)}
-          disabled={isLoading}
-        />
-        <div className="grid gap-0.5 leading-none">
-          <Label htmlFor="signless">Enable signless</Label>
-          <p className="text-xs text-muted-foreground">Sign simple actions for me (recommended)</p>
-        </div>
       </div>
 
       <div className="mt-auto pt-4 w-full flex flex-col gap-2">

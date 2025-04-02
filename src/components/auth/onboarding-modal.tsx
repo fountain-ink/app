@@ -1,6 +1,6 @@
 import { useOnboardingClient } from "@/hooks/use-lens-clients";
 import { storageClient } from "@/lib/lens/storage-client";
-import { Account } from "@lens-protocol/client";
+import { Account, AnyClient } from "@lens-protocol/client";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { account as accountMetadataBuilder, image, MetadataAttribute } from "@lens-protocol/metadata"; // Updated imports
 import { useState } from "react";
@@ -17,7 +17,7 @@ import { GraphicHand2 } from "../icons/custom-icons";
 import { OnboardingProfileSetup, ProfileSetupData } from "./onboarding-profile-setup"; // Import updated component and type
 // Removed useSaveProfileSettings import
 import { uploadFile } from "@/lib/upload/upload-file";
-import { createAccountWithUsername, enableSignless, fetchAccount } from "@lens-protocol/client/actions";
+import { createAccountWithUsername, fetchAccount } from "@lens-protocol/client/actions";
 
 interface OnboardingModalProps {
   open: boolean;
@@ -33,7 +33,6 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
   const [loading, setLoading] = useState(false); // Combined loading state for the whole process
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>("username");
   // Removed createdAccount, lensClient, isSavingProfile states
-  // Removed enableSignlessMode state, moved to profile setup component
 
   const onboardingClient = useOnboardingClient();
   const { data: walletClient } = useWalletClient();
@@ -49,7 +48,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
     setOnboardingStep("username");
   }
 
-  // Handles the final submission: upload data, create account, setup auth, enable signless
+  // Handles the final submission: upload data, create account, setup auth
   const handleFinalSubmit = async (profileData: ProfileSetupData) => {
     if (!username || !address) {
       toast.error("Username is missing.");
@@ -59,7 +58,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
     setLoading(true);
     let pictureMetadata: string | undefined; // Correct type for metadata builder
     let metadataUri: string | undefined;
-    let client: any; // Define client variable here
+    let client: AnyClient | null = null;
 
     try {
       client = await onboardingClient(); // Get client instance
@@ -191,26 +190,9 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
         return;
       }
 
-      // 8. Enable Signless Mode (if selected in step 2)
-      if (profileData.enableSignless) {
-        const signlessToast = toast.loading("Enabling signless mode...");
-        const signlessResult = await enableSignless(client)
-          .andThen(handleOperationWith(walletClient as any))
-          .andThen(client.waitForTransaction);
-
-        if (signlessResult.isErr()) {
-          toast.dismiss(signlessToast);
-          console.error("Failed to enable signless mode:", signlessResult.error);
-          toast.warning("Account created, but failed to enable signless mode. You can enable it later in settings.");
-          // Continue even if signless fails
-        } else {
-          toast.dismiss(signlessToast);
-          console.log("Signless mode enabled:", signlessResult.value);
-        }
-      }
-
-      // 9. Success
+      // Success
       toast.success("Account created successfully!");
+
       onSuccess();
       onOpenChange(false);
       window.location.reload(); // Reload the page after successful onboarding
