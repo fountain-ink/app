@@ -12,6 +12,8 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { setupUserAuth } from "./auth-manager";
+import { ChevronLeft } from "lucide-react";
+import { GraphicHand, GraphicHand2 } from "../icons/custom-icons";
 
 interface OnboardingModalProps {
   open: boolean;
@@ -152,11 +154,27 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-96  flex flex-col">
+      <DialogContent className="w-[400px] flex flex-col">
         <DialogHeader>
-          <DialogTitle>Create profile</DialogTitle>
+          <div className="flex items-center">
+            <Button
+              variant="ghost"
+              className="h-8 w-8 p-0 mr-2"
+              onClick={() => onOpenChange(false)}
+            >
+              <ChevronLeft className="size-4" />
+            </Button>
+            <DialogTitle className="h-8 text-base flex items-center">Choose a username</DialogTitle>
+          </div>
         </DialogHeader>
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex gap-4 flex-col">
+          <div className="flex h-28 mt-4 items-center justify-center">
+            <GraphicHand2 />
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Welcome to Fountain! Let's start by choosing your username. Make it a good one - this can't be changed
+            later.
+          </p>
           <div className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="username">Username</Label>
@@ -179,12 +197,9 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
               </div>
             </div>
           </div>
-          <div className="mt-auto pt-6 flex justify-end gap-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
-              Back
-            </Button>
-            <Button onClick={handleOnboarding} disabled={loading || !username}>
-              {loading ? "Creating..." : "Create profile"}
+          <div className="mt-auto pt-6 w-full gap-2">
+            <Button onClick={handleOnboarding} disabled={loading || !username} className="w-full">
+              {loading ? "Creating..." : "Continue"}
             </Button>
           </div>
         </div>

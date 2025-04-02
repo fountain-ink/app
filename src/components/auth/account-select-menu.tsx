@@ -104,7 +104,7 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
 
         <DialogContent className="max-w-96">
           <DialogHeader>
-            <DialogTitle>Select profile</DialogTitle>
+            <DialogTitle className="h-8 text-base flex items-center">Select profile</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col gap-4 items-center justify-center">
             {profiles?.length === 0 && (
@@ -124,11 +124,11 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
             )}
 
             <div className="w-full flex justify-end gap-2">
-              <Button variant="outline" onClick={() => handleOpenChange(false)}>
+              {/* <Button variant="outline" onClick={() => handleOpenChange(false)}>
                 Close
-              </Button>
-              <Button className="flex gap-2" variant="default" onClick={handleShowOnboarding}>
-                {/* <Plus className="w-4 h-4" /> */}
+              </Button> */}
+              <Button className="w-full mt-4 gap-2" variant="default" onClick={handleShowOnboarding}>
+                <Plus className="w-4 h-4" />
                 New Profile
               </Button>
             </div>
