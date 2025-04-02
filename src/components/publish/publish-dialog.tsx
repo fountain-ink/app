@@ -22,6 +22,7 @@ import { extractMetadata } from "@/lib/extract-metadata";
 import { Draft } from "../draft/draft";
 import { cn } from "@/lib/utils";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
+import { useAuthenticatedUser } from "@lens-protocol/react";
 
 const isUserBlog = (blogAddress: string | undefined, blogs: any[]): boolean => {
   if (!blogAddress) return false;
@@ -46,6 +47,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
   const [isPublishing, setIsPublishing] = useState(false);
   const [activeTab, setActiveTab] = useState("details");
   const { blogState } = useBlogStorage();
+  const { data: user, loading: userLoading } = useAuthenticatedUser();
 
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -224,6 +226,14 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
   const handlePublishClick = () => {
     handleSubmit(onSubmit)();
   };
+
+  if (!user) {
+    return (
+      <Button className="transition-all duration-300" onClick={() => toast.error("Please login to publish.")}>
+        Publish
+      </Button>
+    );
+  }
 
   if (isLoading) {
     return (
