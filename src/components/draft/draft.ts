@@ -6,7 +6,6 @@ export type Draft = Database["public"]["Tables"]["drafts"]["Row"] & {
   collectingSettings?: CollectingSettings;
   publishingSettings?: PublishingSettings;
   blogAddress?: string;
-  blog?: BlogData;
 };
 
 export interface PublishingSettings {

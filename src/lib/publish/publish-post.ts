@@ -20,7 +20,7 @@ export async function publishPost(
   queryClient: ReturnType<typeof useQueryClient>,
 ): Promise<boolean> {
   try {
-    const anyDraft = draft as any;
+    const anyDraft = draft;
     const documentId = typeof draft.id === "string" ? draft.id : String(draft.id || "");
     const collectingSettings = draft.collectingSettings;
     const sendNewsletter = anyDraft.publishingSettings?.sendNewsletter;
@@ -65,9 +65,9 @@ export async function publishPost(
       console.log(metadata, uri);
 
       let feedValue: string | undefined = undefined;
-      if (draft.blog && draft.blog.address !== draft.blog.owner) {
+      if (draft.blogAddress) {
         const blog = await fetchGroup(lens, {
-          group: draft.blog.address,
+          group: draft.blogAddress,
         });
 
         if (blog.isErr()) {
@@ -181,32 +181,30 @@ export async function publishPost(
         router.refresh();
       }
 
-      if (draft.blog && postSlug && username && documentId && sendNewsletter) {
+      if (draft.blogAddress && postSlug && username && documentId && sendNewsletter) {
         try {
-          if (draft.blog.mail_list_id) {
+          const db = await createClient();
+          const { data: blog } = await db.from("blogs").select("*").eq("address", draft.blogAddress).single();
+
+          if (blog?.mail_list_id) {
             try {
-              const db = await createClient();
-              const { data: blog } = await db.from("blogs").select("*").eq("address", draft.blog.address).single();
+              const newsletterPostData = {
+                title: draft.title || "",
+                subtitle: draft.subtitle || "",
+                content: draft.contentMarkdown || "",
+                coverUrl: draft.coverUrl || "",
+                username,
+              };
 
-              if (blog?.mail_list_id) {
-                const newsletterPostData = {
-                  title: draft.title || "",
-                  subtitle: draft.subtitle || "",
-                  content: draft.contentMarkdown || "",
-                  coverUrl: draft.coverUrl || "",
-                  username,
-                };
-
-                try {
-                  const result = await createCampaignForPost(draft.blog.address, postSlug, newsletterPostData);
-                  if (result?.success) {
-                    console.log("Created campaign for mailing list subscribers");
-                  } else {
-                    console.error("Failed to create campaign for mailing list");
-                  }
-                } catch (error) {
-                  console.error("Error creating campaign for mailing list:", error);
+              try {
+                const result = await createCampaignForPost(draft.blogAddress, postSlug, newsletterPostData);
+                if (result?.success) {
+                  console.log("Created campaign for mailing list subscribers");
+                } else {
+                  console.error("Failed to create campaign for mailing list");
                 }
+              } catch (error) {
+                console.error("Error creating campaign for mailing list:", error);
               }
             } catch (error) {
               console.error("Error fetching blog data:", error);

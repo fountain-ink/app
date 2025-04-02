@@ -21,6 +21,13 @@ import { usePublishDraft } from "../../hooks/use-publish-draft";
 import { extractMetadata } from "@/lib/extract-metadata";
 import { Draft } from "../draft/draft";
 import { cn } from "@/lib/utils";
+import { useBlogStorage } from "@/hooks/use-blog-storage";
+
+const isUserBlog = (blogAddress: string | undefined, blogs: any[]): boolean => {
+  if (!blogAddress) return false;
+  const blog = blogs.find(b => b.address === blogAddress);
+  return blog ? blog.address === blog.owner : false;
+};
 
 const combinedSchema = z.object({
   details: detailsFormSchema,
@@ -38,6 +45,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
   const { getDraft, updateDraft } = usePublishDraft(documentId);
   const [isPublishing, setIsPublishing] = useState(false);
   const [activeTab, setActiveTab] = useState("details");
+  const { blogState } = useBlogStorage();
 
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -106,7 +114,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
           subtitle: subtitle || "",
           coverUrl: coverUrl || "",
           tags: draft.tags || [],
-          selectedBlogAddress: draft.blog?.address || "",
+          selectedBlogAddress: draft.blogAddress || "",
           sendNewsletter: draft.publishingSettings?.sendNewsletter ?? true,
         },
         collecting: collectingSettings,
@@ -131,10 +139,10 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
         const currentDraft = getDraft();
         if (currentDraft) {
           const validTags = (values.details.tags ?? []).filter((tag): tag is string => typeof tag === "string");
-          const updatedBlog =
-            currentDraft.blog && values.details.selectedBlogAddress
-              ? { ...currentDraft.blog, address: values.details.selectedBlogAddress }
-              : currentDraft.blog;
+
+          const selectedBlogAddress = values.details.selectedBlogAddress;
+          const shouldSaveBlogAddress = selectedBlogAddress && !isUserBlog(selectedBlogAddress, blogState.blogs);
+
           const validRecipients = (values.collecting.recipients ?? []).filter(
             (r): r is { address: string; percentage: number; username?: string | null; picture?: string | null } =>
               r !== undefined && typeof r.address === "string" && typeof r.percentage === "number",
@@ -144,7 +152,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
             subtitle: values.details.subtitle ?? null,
             coverUrl: values.details.coverUrl ?? null,
             tags: validTags,
-            blog: updatedBlog,
+            blogAddress: shouldSaveBlogAddress ? selectedBlogAddress : undefined,
             publishingSettings: {
               ...(currentDraft.publishingSettings || {}),
               sendNewsletter: values.details.sendNewsletter ?? true,
@@ -170,11 +178,14 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
       }
     });
     return () => subscription.unsubscribe();
-  }, [watch, isLoading, getDraft, updateDraft]);
+  }, [watch, isLoading, getDraft, updateDraft, blogState]);
 
   const onSubmit = async (data: CombinedFormValues) => {
     const draft = getDraft();
     if (!draft) return;
+
+    const selectedBlogAddress = data.details.selectedBlogAddress;
+    const shouldSaveBlogAddress = selectedBlogAddress && !isUserBlog(selectedBlogAddress, blogState.blogs);
 
     const finalDraft: Draft = {
       ...draft,
@@ -182,7 +193,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
       subtitle: data.details.subtitle ?? null,
       coverUrl: data.details.coverUrl ?? null,
       tags: data.details.tags,
-      blog: draft.blog ? { ...draft.blog, address: data.details.selectedBlogAddress } : undefined,
+      blogAddress: shouldSaveBlogAddress ? selectedBlogAddress : undefined,
       publishingSettings: {
         ...(draft.publishingSettings || {}),
         sendNewsletter: data.details.sendNewsletter,
@@ -197,10 +208,6 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
     };
 
     console.log("Publishing with data:", finalDraft);
-
-    if (!finalDraft.blog && data.details.selectedBlogAddress) {
-      console.warn("Blog object missing, only address is available. Publish function might need adjustment.");
-    }
 
     try {
       setIsPublishing(true);
@@ -255,7 +262,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
                   className={cn(
                     "flex items-center gap-2 rounded-sm",
                     hasCollectingErrors &&
-                      "text-destructive focus:text-destructive data-[state=active]:text-destructive",
+                    "text-destructive focus:text-destructive data-[state=active]:text-destructive",
                   )}
                 >
                   {hasCollectingErrors ? (
