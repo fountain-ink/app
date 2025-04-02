@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { TextareaAutosize } from "@/components/ui/textarea";
 import { getLensClient } from "@/lib/lens/client";
 import { storageClient } from "@/lib/lens/storage-client";
-import { Account } from "@lens-protocol/client";
-import { currentSession, post } from "@lens-protocol/client/actions";
+import { Account, PostFeedInfo } from "@lens-protocol/client";
+import { currentSession, fetchPost, post } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { textOnly } from "@lens-protocol/metadata";
 import { ImageIcon } from "lucide-react";
@@ -57,6 +57,18 @@ export const CommentReplyArea = ({
         return;
       }
 
+      const rootPost = await fetchPost(lens, {
+        post: postId,
+      }).unwrapOr(null);
+
+      if (!rootPost) {
+        toast.error("Failed to fetch post");
+        return;
+      }
+
+      const feed = "feed" in rootPost ? rootPost.feed as PostFeedInfo : undefined;
+
+
       const metadata = textOnly({
         content: content.trim(),
       });
@@ -68,6 +80,7 @@ export const CommentReplyArea = ({
         commentOn: {
           post: postId,
         },
+        feed: feed?.address,
       })
         .andThen(handleOperationWith(walletClient as any))
         .andThen(lens.waitForTransaction);
