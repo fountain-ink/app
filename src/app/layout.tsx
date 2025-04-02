@@ -1,6 +1,7 @@
 import { AuthManager } from "@/components/auth/auth-manager";
 import { Web3Providers } from "@/components/misc/web3-providers";
 import { Header } from "@/components/navigation/header";
+import { GlobalFooter } from "@/components/navigation/global-footer";
 import { ThemeProvider } from "@/components/theme/theme-context";
 import { Toaster } from "@/components/ui/sonner";
 import { getSession } from "@/lib/auth/get-session";
@@ -34,7 +35,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
       <body
         data-plate-selectable
         className={cn(
-          "overflow-x-hidden scroll-smooth text-clip bg-background text-foreground min-h-dvh",
+          "overflow-x-hidden scroll-smooth text-clip bg-background text-foreground min-h-dvh flex flex-col",
           "[&_.slate-selection-area]:border [&_.slate-selection-area]:border-primary [&_.slate-selection-area]:bg-primary/10 ",
         )}
       >
@@ -44,7 +45,10 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
               <AuthManager credentials={credentials} />
               <Toaster position="top-center" offset={16} />
               <Header session={session} />
-              {children}
+              <main className="flex-1">
+                {children}
+              </main>
+              <GlobalFooter />
             </ThemeProvider>
           </DarkModeProvider>
         </Web3Providers>
