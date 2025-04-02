@@ -168,7 +168,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex flex-col">
         <DialogHeader>
-          <DialogTitle>Create New Blog</DialogTitle>
+          <DialogTitle className="flex h-8 items-center text-base">Create New Blog</DialogTitle>
         </DialogHeader>
         <div className="flex-1 flex flex-col">
           <div className="space-y-6">

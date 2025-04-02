@@ -13,6 +13,7 @@ import { OnboardingModal } from "./onboarding-modal";
 import { SelectAccountButton } from "./account-select-button";
 import { syncBlogsQuietly } from "../blog/blog-sync-button";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
+import { useOnboardingClient } from "@/hooks/use-lens-clients";
 
 export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOpenChange?: (open: boolean) => void }) {
   const { address } = useAccount();
@@ -22,6 +23,7 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showProfileSelect, setShowProfileSelect] = useState(true);
   const setBlogs = useBlogStorage((state) => state.setBlogs);
+  const onboardingClient = useOnboardingClient();
 
   const fetchProfiles = async () => {
     if (!address) return;
@@ -56,7 +58,11 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
     fetchProfiles();
   }, [address]);
 
-  const handleShowOnboarding = () => {
+  const handleShowOnboarding = async () => {
+    const client = await onboardingClient();
+    if (!client) {
+      throw new Error("Failed to get onboarding client");
+    }
     setShowProfileSelect(false);
     setShowOnboarding(true);
   };
