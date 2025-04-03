@@ -20,7 +20,7 @@ interface TipPopoverProps {
 
 export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) => {
   const [tipDialogOpen, setTipDialogOpen] = useState(false);
-  const [selectedTipAmount, setSelectedTipAmount] = useState<string | null>(null);
+  const [selectedTipAmount, setSelectedTipAmount] = useState<string | null>("2");
   const [isCustomTipInput, setIsCustomTipInput] = useState(false);
   const [customTipAmount, setCustomTipAmount] = useState<string>("");
 
@@ -57,7 +57,6 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
 
   const handleCustomAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    // Allow only numeric values with up to 2 decimal places
     if (value === "" || /^\d*\.?\d{0,2}$/.test(value)) {
       setCustomTipAmount(value);
     }
@@ -70,23 +69,27 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
         <PopoverTrigger asChild>{children}</PopoverTrigger>
         <PopoverContent side="top" sideOffset={10} className="max-w-md bg-background p-4">
           <div className="flex flex-col items-center gap-3">
-            <Button
-              variant="default"
-              className="w-full flex items-center gap-2"
-              disabled={!canCollect}
-              onClick={() => {
-                onCollectClick();
-              }}
-            >
-              <ShoppingBag className="h-4 w-4" />
-              Collect Post
-            </Button>
+            {canCollect && (
+              <>
+                <Button
+                  variant="default"
+                  className="w-full flex items-center gap-2"
+                  disabled={!canCollect}
+                  onClick={() => {
+                    onCollectClick();
+                  }}
+                >
+                  <ShoppingBag className="h-4 w-4" />
+                  Collect Post
+                </Button>
 
-            <div className="flex items-center w-full gap-2">
-              <div className="h-px flex-1 bg-border"></div>
-              <p className="text-sm text-muted-foreground">Or tip the author</p>
-              <div className="h-px flex-1 bg-border"></div>
-            </div>
+                <div className="flex items-center w-full gap-2">
+                  <div className="h-px flex-1 bg-border"></div>
+                  <p className="text-sm text-muted-foreground">Or tip the author</p>
+                  <div className="h-px flex-1 bg-border"></div>
+                </div>
+              </>
+            )}
 
             {isCustomTipInput ? (
               <div className="w-full flex items-center gap-2">
@@ -152,7 +155,7 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
               disabled={!(selectedTipAmount || (isCustomTipInput && customTipAmount && parseFloat(customTipAmount) > 0))}
               onClick={handleSendTip}
             >
-              Send Tip
+              {canCollect ? "Send Tip" : "Tip the author"}
             </Button>
           </div>
         </PopoverContent>
