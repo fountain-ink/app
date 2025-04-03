@@ -71,7 +71,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
               <h3 className="font-medium">Preview</h3>
             </div>
             <p className="text-sm text-muted-foreground">
-              You can change how the post will be shown on social media and your blog index.
+              You can change how the post will be shown on social media and your blog index. This will not affect post's original title or subtitle.
             </p>
           </div>
           <div className="space-y-2 max-w-lg">
