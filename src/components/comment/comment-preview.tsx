@@ -21,7 +21,7 @@ export const CommentPreview = ({
 
   useEffect(() => {
     refresh(0, false);
-  }, [refresh, post.id]);
+  }, []);
 
   const openCommentSheet = () => {
     const params = new URLSearchParams(searchParams);
