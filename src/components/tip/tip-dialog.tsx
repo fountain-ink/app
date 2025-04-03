@@ -1,6 +1,6 @@
 "use client";
 import { Dialog, DialogContent, DialogTitle, DialogHeader } from "@/components/ui/dialog";
-import { Post, postId, evmAddress } from "@lens-protocol/client";
+import { Post, postId, evmAddress, testnet } from "@lens-protocol/client";
 import { executePostAction } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { UserAvatar } from "@/components/user/user-avatar";
@@ -8,13 +8,16 @@ import { UserName } from "@/components/user/user-name";
 import { UserUsername } from "@/components/user/user-handle";
 import { Button } from "@/components/ui/button";
 import { CoinsIcon } from "lucide-react";
-import { useWalletClient, useBalance } from "wagmi";
+import { useWalletClient, useBalance, useReadContract, useReadContracts } from "wagmi";
 import { useState } from "react";
 import { getLensClient } from "@/lib/lens/client";
 import { toast } from "sonner";
 import { useAccount, useAuthenticatedUser } from "@lens-protocol/react";
+import { chains } from "@lens-chain/sdk/viem";
+import { erc20Abi } from "viem";
 
-const DEFAULT_CURRENCY = "0xeee5a340Cdc9c179Db25dea45AcfD5FE8d4d3eB8"; // WGHO Token
+/// 0x6bDc36E20D267Ff0dd6097799f82e78907105e2F WGHO
+const DEFAULT_CURRENCY = "0xeee5a340Cdc9c179Db25dea45AcfD5FE8d4d3eB8"; // WGRASS Token
 
 interface TipDialogProps {
   post: Post;
@@ -40,13 +43,34 @@ export const TipDialog = ({
   const [isTipping, setIsTipping] = useState(false);
   const { data: authenticatedUser } = useAuthenticatedUser();
 
-  const { data: tokenBalance, isLoading: isBalanceLoading } = useBalance({
-    token: currencyAddress as `0x${string}`,
-    address: authenticatedUser?.address,
-  });
+  const {data, isLoading: isBalanceLoading} = useReadContracts({ 
+    allowFailure: false, 
+    contracts: [ 
+      { 
+      address: currencyAddress as `0x${string}`, 
+      abi: erc20Abi, 
+      functionName: 'balanceOf', 
+      args: [authenticatedUser?.address as `0x${string}`], 
+    }, 
+    { 
+      address: currencyAddress as `0x${string}`, 
+      abi: erc20Abi, 
+      functionName: 'decimals', 
+    }, 
+    { 
+      address: currencyAddress as `0x${string}`, 
+      abi: erc20Abi, 
+      functionName: 'symbol', 
+    }, 
+  ] 
+  })
+  const tokenBalance = data?.[0]; 
+  const tokenDecimals = data?.[1];
+  const tokenSymbol = data?.[2];
+  console.log(tokenBalance, tokenDecimals, tokenSymbol, isBalanceLoading, authenticatedUser?.address, currencyAddress);
 
   const hasEnoughBalance = tokenBalance ?
-    parseFloat(tokenBalance.formatted) >= parseFloat(tipAmount) :
+    parseFloat(tokenBalance.toString()) >= parseFloat(tipAmount) :
     false;
 
   const formattedTipAmount = formatDisplayAmount(tipAmount);
@@ -90,7 +114,7 @@ export const TipDialog = ({
       }
 
       toast.success("Tip sent successfully!", {
-        description: `Sent ${formattedTipAmount} ${tokenBalance?.symbol || "tokens"} to the author of this post`,
+        description: `Sent ${formattedTipAmount} ${tokenSymbol || "tokens"} to the author of this post`,
       });
       onOpenChange(false);
     } catch (error) {
@@ -128,7 +152,7 @@ export const TipDialog = ({
         <div className="flex flex-col items-center justify-center gap-4 bg-muted/30 rounded-xl p-6">
           <CoinsIcon className="h-12 w-12 text-primary" />
           <h3 className="text-xl font-medium">
-            Tip ${formattedTipAmount} {tokenBalance?.symbol || "tokens"}
+            Tip ${formattedTipAmount} {tokenSymbol || "tokens"}
           </h3>
           <p className="text-center text-muted-foreground">
             You are about to send a tip to the author of this post.
@@ -142,7 +166,7 @@ export const TipDialog = ({
               {isBalanceLoading
                 ? "Loading..."
                 : tokenBalance
-                  ? `${tokenBalance.formatted} ${tokenBalance.symbol}`
+                  ? `${tokenBalance.toString()} ${tokenSymbol}`
                   : "Unknown"
               }
             </span>
@@ -163,7 +187,7 @@ export const TipDialog = ({
           {isTipping
             ? "Processing..."
             : hasEnoughBalance
-              ? `Send $${formattedTipAmount} ${tokenBalance?.symbol || "tokens"}`
+              ? `Send $${formattedTipAmount} ${tokenSymbol || "tokens"}`
               : "Insufficient balance"
           }
         </Button>

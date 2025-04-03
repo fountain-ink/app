@@ -19,6 +19,8 @@ export function TokenWrapClientPage({ accountAddress, wghoAddress }: TokenWrapCl
   const [transferAmount, setTransferAmount] = useState<string>("");
   const { address: walletAddress, isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
+  console.log("accountAddress", accountAddress);
+  console.log("walletAddress", walletAddress);
 
   const {
     data: walletGhoBalance,
