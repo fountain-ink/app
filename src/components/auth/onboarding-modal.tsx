@@ -360,7 +360,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
                     )}
                     {validationStatus === "valid" && (
                       <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                        <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                        <CheckCircle2 className="h-4 w-4 text-green-500" />
                       </div>
                     )}
                     {validationStatus === "invalid" && (
@@ -374,7 +374,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
                       <p className="text-xs text-red-500">{validationMessage}</p>
                     )}
                     {validationStatus === "valid" && validationMessage && (
-                      <p className="text-xs text-muted-foreground">{validationMessage}</p>
+                      <p className="text-xs text-green-500">{validationMessage}</p>
                     )}
                   </div>
                 </div>
