@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 
 export const ConnectWalletButton = () => {
   return (
-    <ConnectKitButton.Custom>
+    <ConnectKitButton.Custom >
       {({ isConnected, show }) => {
         if (!isConnected) {
           return (

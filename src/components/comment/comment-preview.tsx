@@ -30,10 +30,7 @@ export const CommentPreview = ({
   };
 
   const visibleComments = comments.slice(0, 3);
-
   const totalComments = post.stats.comments;
-  console.log(comments);
-  console.log(visibleComments);
 
   return (
     <div className="flex flex-col gap-4">
