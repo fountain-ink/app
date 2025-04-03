@@ -156,7 +156,7 @@ export const PostActionsBar = ({ post, account }: { post: AnyPost; account?: Acc
     <>
       <PostCollect post={post} isOpen={isCollectSheetOpen} onOpenChange={handleCollectSheetOpenChange} />
       <TooltipProvider delayDuration={300}>
-        <div className="flex items-center justify-center gap-4 sm:gap-0 sm:justify-between w-full py-8 px-8 sm:px-16">
+        <div className="flex items-center justify-center gap-4 sm:gap-0 sm:justify-between w-full ">
           <div className="flex items-center gap-4">
             {leftButtons.map((button) => (
               <ActionButton

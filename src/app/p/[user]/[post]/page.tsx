@@ -3,9 +3,10 @@ import Editor from "@/components/editor/editor";
 import ErrorPage from "@/components/misc/error-page";
 import { PostActionsBar } from "@/components/post/post-actions-bar";
 import { AuthorView } from "@/components/user/user-author-view";
+import { UserPostCard } from "@/components/user/user-post-card";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
-import { fetchPost } from "@lens-protocol/client/actions";
+import { fetchAccountStats, fetchPost } from "@lens-protocol/client/actions";
 import DOMPurify from "isomorphic-dompurify";
 
 const post = async ({ params }: { params: { user: string; post: string } }) => {
@@ -13,6 +14,7 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
   const id = params.post;
   const post = await fetchPost(lens, { post: id }).unwrapOr(null);
   const { profile } = await getUserProfile();
+  const authorStats = await fetchAccountStats(lens, { account: post?.author.address }).unwrapOr(null);
 
   if (!post) return <ErrorPage error="Couldn't find post to show" />;
 
@@ -37,8 +39,9 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
           <AuthorView showUsername={false} accounts={[post.author]} />
         </div>
         <Editor showToc value={contentJson} readOnly={true} />
-        <div className="max-w-[60ch] mx-auto flex">
+        <div className="max-w-[60ch] mx-auto py-8 px-8 sm:px-16 flex flex-col gap-8">
           <PostActionsBar post={post} />
+          <UserPostCard account={post.author} stats={authorStats} />
         </div>
       </div>
     );
