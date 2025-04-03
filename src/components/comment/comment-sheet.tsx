@@ -11,6 +11,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { GraphicHand2 } from "../icons/custom-icons";
 import { CommentReplyArea } from "./comment-reply-area";
 import { CommentView } from "./comment-view";
+import { Button } from "@/components/ui/button";
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import { ChevronLeftIcon } from "lucide-react";
 
 export const CommentSheet = ({
   post,
@@ -84,6 +87,12 @@ export const CommentSheet = ({
     }
   }, [handleScroll]);
 
+  const handleGoBack = () => {
+    const params = new URLSearchParams(searchParams);
+    params.set("comment", post.slug);
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
+
   const handleOpenChange = (open: boolean) => {
     if (onOpenChange) {
       onOpenChange(open);
@@ -100,51 +109,54 @@ export const CommentSheet = ({
     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
       <SheetContent side="right" className="w-full sm:min-w-[450px] p-0">
         <div className="h-full flex flex-col">
-          <div className="flex-none p-6 py-3">
-            <span className="text-base h-8 flex items-center block">
+          <div className="flex-none p-6 py-3 flex items-center gap-2 border-b">
+            {isViewingNested && (
+              <Button variant="ghost" size="icon" onClick={handleGoBack} className="h-8 w-8">
+                <ChevronLeftIcon className="h-4 w-4" />
+              </Button>
+            )}
+            <span className="text-base h-8 flex items-center block font-medium">
               {isViewingNested ? "Replies" : "Comments"} {post.stats.comments > 0 && `(${post.stats.comments})`}
             </span>
           </div>
 
-          <ScrollArea className="flex-1 h-full mr-1">
-            <div ref={containerRef} className="overflow-visible">
-              {!isViewingNested && (
-                <div className="m-4 mt-0">
-                  <CommentReplyArea
-                    postId={post.id}
-                    account={account}
-                    onSubmit={handleCreateComment}
-                    onCancel={() => handleOpenChange(false)}
-                  />
-                </div>
-              )}
+          <ScrollArea className="flex-1 h-full" ref={containerRef} onScroll={handleScroll}>
+            {!isViewingNested && (
+              <div className="m-4 mt-4">
+                <CommentReplyArea
+                  postId={post.id}
+                  account={account}
+                  onSubmit={handleCreateComment}
+                  onCancel={() => handleOpenChange(false)}
+                />
+              </div>
+            )}
 
-              {comments.length === 0 && !loading ? (
-                <div className="text-muted-foreground flex flex-col items-center mt-12 gap-4">
-                  <div className="w-[70%] mx-auto">
-                    <GraphicHand2 />
-                  </div>
-                  <span>Be the first one to comment</span>
+            {comments.length === 0 && !loading ? (
+              <div className="text-muted-foreground flex flex-col items-center mt-12 gap-4">
+                <div className="w-[70%] mx-auto">
+                  <GraphicHand2 />
                 </div>
-              ) : (
-                <div className="flex flex-col gap-4 m-6 overflow-visible">
-                  {comments.map((comment) => {
-                    if (comment.__typename !== "Post") return null;
-                    return (
-                      <CommentView
-                        key={comment.id}
-                        comment={comment}
-                        nestingLevel={1}
-                        maxNestingLevel={4}
-                        onMaxNestingReached={handleMaxNestingReached}
-                        autoShowReplies={isViewingNested}
-                      />
-                    );
-                  })}
-                  {loading && <div className="text-center py-4 text-muted-foreground">Loading...</div>}
-                </div>
-              )}
-            </div>
+                <span>Be the first one to comment</span>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4 m-6 overflow-visible">
+                {comments.map((comment) => {
+                  if (comment.__typename !== "Post") return null;
+                  return (
+                    <CommentView
+                      key={comment.id}
+                      comment={comment}
+                      nestingLevel={1}
+                      maxNestingLevel={4}
+                      onMaxNestingReached={handleMaxNestingReached}
+                      autoShowReplies={isViewingNested}
+                    />
+                  );
+                })}
+                {loading && <div className="text-center py-4 text-muted-foreground">Loading...</div>}
+              </div>
+            )}
           </ScrollArea>
         </div>
       </SheetContent>
