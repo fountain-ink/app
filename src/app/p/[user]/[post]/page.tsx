@@ -1,6 +1,7 @@
 import { EditorReadTime } from "@/components/editor/addons/editor-read-time";
 import Editor from "@/components/editor/editor";
 import ErrorPage from "@/components/misc/error-page";
+import { PostActionsBar } from "@/components/post/post-actions-bar";
 import { AuthorView } from "@/components/user/user-author-view";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
@@ -36,6 +37,9 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
           <AuthorView showUsername={false} accounts={[post.author]} />
         </div>
         <Editor showToc value={contentJson} readOnly={true} />
+        <div className="max-w-[60ch] mx-auto flex">
+          <PostActionsBar post={post} />
+        </div>
       </div>
     );
   }

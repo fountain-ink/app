@@ -18,16 +18,15 @@ import {
 } from "lucide-react";
 import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
 import { useWalletClient } from "wagmi";
-import { ActionButton } from "../post/post-action-button";
+import { ActionButton } from "./post-action-button";
 import { CommentSheet } from "../comment/comment-sheet";
-import { PostCollect } from "../post/post-collect-dialog";
+import { PostCollect } from "./post-collect-dialog";
 import { TipPopover } from "../tip/tip-popover";
 import { CoinIcon } from "../icons/custom-icons";
 
-export const Footer = ({ post, account }: { post: AnyPost; account?: Account }) => {
+export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: Account }) => {
   const { scrollProgress, shouldShow, shouldAnimate } = useScroll();
   const translateY = scrollProgress * 100;
-  const walletClient = useWalletClient();
 
   if (post.__typename !== "Post") {
     return null;

@@ -1,5 +1,5 @@
 import { ArticleLayout } from "@/components/navigation/article-layout";
-import { Footer } from "@/components/navigation/footer";
+import { FloatingActionBar } from "@/components/post/post-floating-actions-bar";
 import { GradientBlur } from "@/components/navigation/gradient-blur";
 import { BlogHeader } from "@/components/blog/blog-header";
 import { BlogTheme } from "@/components/blog/blog-theme";
@@ -77,7 +77,7 @@ const UserPostLayout = async ({
       <ArticleLayout>
         <GradientBlur />
         {children}
-        <Footer post={post} account={loggedInAccount} />
+        <FloatingActionBar post={post} account={loggedInAccount} />
       </ArticleLayout>
     </BlogTheme>
   );

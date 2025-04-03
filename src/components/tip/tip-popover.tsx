@@ -62,6 +62,7 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
       setCustomTipAmount(value);
     }
   };
+  const canCollect = post.operations?.canSimpleCollect.__typename === "SimpleCollectValidationPassed";
 
   return (
     <>
@@ -72,6 +73,7 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
             <Button
               variant="default"
               className="w-full flex items-center gap-2"
+              disabled={!canCollect}
               onClick={() => {
                 onCollectClick();
               }}
