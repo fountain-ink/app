@@ -137,7 +137,7 @@ export const CommentSheet = ({
                 <div className="w-[70%] mx-auto">
                   <GraphicHand2 />
                 </div>
-                <span>Be the first one to comment</span>
+                <span>Be the first one to comment.</span>
               </div>
             ) : (
               <div className="flex flex-col gap-4 m-6 overflow-visible">

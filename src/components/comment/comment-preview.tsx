@@ -48,7 +48,10 @@ export const CommentPreview = ({
 
       {!loading && totalComments === 0 && (
         <div className="text-muted-foreground flex flex-col items-center my-4 gap-4 px-4">
-          <span>Be the first one to comment</span>
+          <span>Be the first one to comment.</span>
+          <Button variant="default" onClick={openCommentSheet}>
+            Write a comment
+          </Button>
         </div>
       )}
 
