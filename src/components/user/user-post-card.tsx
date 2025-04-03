@@ -8,7 +8,7 @@ import { UserFollowButton } from "@/components/user/user-follow";
 import { UserBio } from "@/components/user/user-bio";
 import { Button } from "@/components/ui/button";
 import { ProfileSettingsModal } from "@/components/settings/settings-profile";
-import { useAuthenticatedUser } from "@lens-protocol/react";
+import { evmAddress, useAuthenticatedUser } from "@lens-protocol/react";
 
 interface UserPostCardProps {
   account: Account;
@@ -18,7 +18,11 @@ interface UserPostCardProps {
 export function UserPostCard({ account, stats }: UserPostCardProps) {
   const { data: currentUserProfile } = useAuthenticatedUser();
 
-  const isUserProfile = !!currentUserProfile && currentUserProfile.address === account.address;
+  const isUserProfile =
+    currentUserProfile?.address &&
+    currentUserProfile.address.toLowerCase() === evmAddress(account.address).toLowerCase();
+
+  console.log(currentUserProfile?.address, account.address);
 
   return (
     <div className="flex items-start gap-4 p-4 border border-border rounded-lg bg-card text-card-foreground">
@@ -40,7 +44,7 @@ export function UserPostCard({ account, stats }: UserPostCardProps) {
               <ProfileSettingsModal
                 profile={account}
                 trigger={
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" className="w-fit">
                     Edit profile
                   </Button>
                 }
