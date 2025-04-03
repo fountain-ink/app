@@ -43,6 +43,7 @@ export const CommentReactions = ({
         strokeColor="hsl(var(--primary))"
         fillColor="hsl(var(--primary) / 0.8)"
         onClick={handleShowReplies}
+        isDisabled={!hasReplies}
         shouldIncrementOnClick={false}
         fillOnHover={false}
         fillOnClick={false}
