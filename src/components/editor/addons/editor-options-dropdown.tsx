@@ -25,10 +25,16 @@ export const EditorOptionsDropdown = () => {
   const onPreview = () => {
     const currentUrl = window.location.pathname;
     const newUrl = isPreview ? currentUrl : `${currentUrl}?preview`;
-    window.history.pushState({}, "", newUrl);
+
+    if (isPreview) {
+      window.history.pushState({}, "", newUrl);
+    } else {
+      window.open(newUrl, '_blank');
+    }
+
     onOpenChange(false);
   };
-  const onEditTheme = () => {};
+  const onEditTheme = () => { };
 
   return (
     <DropdownMenu open={open} onOpenChange={onOpenChange}>
