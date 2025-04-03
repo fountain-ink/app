@@ -13,7 +13,6 @@ export const useComments = (postId: string) => {
 
   const fetchComments = useCallback(
     async (cursor?: string) => {
-      // Only check hasMore for pagination, not for initial or refresh fetches
       if (loading || (cursor && !hasMore)) return;
 
       setLoading(true);

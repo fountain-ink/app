@@ -1,3 +1,4 @@
+import { CommentPreview } from "@/components/comment/comment-preview";
 import { EditorReadTime } from "@/components/editor/addons/editor-read-time";
 import Editor from "@/components/editor/editor";
 import ErrorPage from "@/components/misc/error-page";
@@ -42,6 +43,7 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
         <div className="max-w-[60ch] mx-auto py-8 px-8 sm:px-16 flex flex-col gap-10">
           <PostActionsBar post={post} />
           <UserPostCard account={post.author} stats={authorStats} />
+          <CommentPreview post={post} />
         </div>
       </div>
     );
