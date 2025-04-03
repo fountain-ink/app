@@ -11,7 +11,8 @@ import { createConfig, http, WagmiProvider } from "wagmi";
 
 const wagmiConfig = createConfig(
   getDefaultConfig({
-    chains: [chains.mainnet, chains.testnet],
+    chains: [chains.testnet],
+    // chains: [chains.mainnet],
     transports: {
       // [chains.mainnet.id]: http(),
       [chains.testnet.id]: http(),
