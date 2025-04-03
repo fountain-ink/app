@@ -13,7 +13,7 @@ import { BlogData, BlogMetadata } from "@/lib/settings/get-blog-data";
 import { useBlogSettings } from "@/hooks/use-blog-settings";
 import { useWalletClient } from "wagmi";
 import Link from "next/link";
-import { ArrowLeftIcon, MailIcon } from "lucide-react";
+import { ArrowLeftIcon, ExternalLink, MailIcon } from "lucide-react";
 import { isValidTheme, ThemeType, themeNames, themeDescriptions, defaultThemeName } from "@/styles/themes";
 import { ThemeButtons } from "@/components/theme/theme-buttons";
 import { toast } from "sonner";
@@ -380,12 +380,12 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
         <div>
           <div className="mb-2">
             <Link
               href="/settings/blogs/"
-              className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-muted-foreground hover:text-accent-foreground h-9 px-3 py-2 pl-0"
+              className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-muted-foreground hover:text-accent-foreground h-9 px-3 py-0 pb-2 pl-0"
             >
               <ArrowLeftIcon className="w-4 h-4 mr-2" />
               Back
@@ -398,22 +398,18 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
           <Link href="/settings/newsletter">
             <Button variant="outline" size="sm">
               <MailIcon className="h-4 w-4 mr-2" />
-              Newsletter Settings
+              Newsletter
             </Button>
           </Link>
           <Link href={blogUrl} target="_blank">
             <Button variant="outline" size="sm">
-              View Blog
+              <ExternalLink className="h-4 w-4" />
             </Button>
           </Link>
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-4">
-          <div className="">
-            <h3 className="text-lg font-medium">Blog Information</h3>
-            <p className="text-sm text-muted-foreground">Basic information about your blog.</p>
-          </div>
           <div className="">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="">
@@ -655,14 +651,12 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                     transition={{ duration: 0.3 }}
                   >
                     <div
-                      className={`w-8 h-8 rounded-full transition-colors duration-300 ${
-                        highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
-                      }`}
+                      className={`w-8 h-8 rounded-full transition-colors duration-300 ${highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
+                        }`}
                     />
                     <div
-                      className={`h-4 w-24 rounded-md transition-colors duration-300 ${
-                        highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
-                      }`}
+                      className={`h-4 w-24 rounded-md transition-colors duration-300 ${highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
+                        }`}
                     />
                   </motion.div>
                 )}
@@ -672,9 +666,8 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
               <AnimatePresence>
                 {formState.metadata.showTitle && (
                   <motion.div
-                    className={`h-6 w-48 rounded-md mb-3 transition-colors duration-300 ${
-                      highlightedElement === "title" ? "bg-primary/70" : "bg-muted"
-                    }`}
+                    className={`h-6 w-48 rounded-md mb-3 transition-colors duration-300 ${highlightedElement === "title" ? "bg-primary/70" : "bg-muted"
+                      }`}
                     initial={{ opacity: 0, height: 0, marginBottom: 0 }}
                     animate={{ opacity: 1, height: 24, marginBottom: 12 }}
                     exit={{ opacity: 0, height: 0, marginBottom: 0 }}
@@ -693,19 +686,16 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                     transition={{ duration: 0.3 }}
                   >
                     <div
-                      className={`h-5 w-16 rounded-full transition-colors duration-300 ${
-                        highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
-                      }`}
+                      className={`h-5 w-16 rounded-full transition-colors duration-300 ${highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
+                        }`}
                     />
                     <div
-                      className={`h-5 w-20 rounded-full transition-colors duration-300 ${
-                        highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
-                      }`}
+                      className={`h-5 w-20 rounded-full transition-colors duration-300 ${highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
+                        }`}
                     />
                     <div
-                      className={`h-5 w-14 rounded-full transition-colors duration-300 ${
-                        highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
-                      }`}
+                      className={`h-5 w-14 rounded-full transition-colors duration-300 ${highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
+                        }`}
                     />
                   </motion.div>
                 )}
