@@ -101,7 +101,7 @@ export const CommentSheet = ({
       <SheetContent side="right" className="w-full sm:min-w-[450px] p-0">
         <div className="h-full flex flex-col">
           <div className="flex-none p-6 py-3">
-            <span className="text-sm block">
+            <span className="text-base h-8 flex items-center block">
               {isViewingNested ? "Replies" : "Comments"} {post.stats.comments > 0 && `(${post.stats.comments})`}
             </span>
           </div>
