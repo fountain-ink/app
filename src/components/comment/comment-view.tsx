@@ -11,7 +11,6 @@ import { UserUsername } from "../user/user-handle";
 import { UserName } from "../user/user-name";
 import { CommentReactions } from "./comment-reactions";
 import { CommentReplyArea } from "./comment-reply-area";
-import { getLensClient } from "@/lib/lens/client";
 
 interface CommentViewProps {
   comment: AnyPost;
@@ -94,7 +93,13 @@ export const CommentView = ({
           <Button
             variant="ghostText"
             className="text-sm text-muted-foreground hover:text-foreground p-0 h-auto"
-            onClick={() => setShowReplyArea(!showReplyArea)}
+            onClick={() => {
+              if (isAtMaxNesting && onMaxNestingReached) {
+                onMaxNestingReached(comment);
+              } else {
+                setShowReplyArea(!showReplyArea);
+              }
+            }}
           >
             Reply
           </Button>
