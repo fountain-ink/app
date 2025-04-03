@@ -74,9 +74,9 @@ export const CommentView = ({
             <span className="text-xs text-muted-foreground">{formatRelativeTime(comment.timestamp)}</span>
           </div>
         </div>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
+        {/* <Button variant="ghost" size="icon" className="h-8 w-8">
           <MoreHorizontal className="h-4 w-4" />
-        </Button>
+        </Button> */}
       </div>
 
       <div className="text-sm mt-2">{"content" in comment.metadata && comment.metadata.content}</div>
