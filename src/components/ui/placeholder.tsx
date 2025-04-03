@@ -10,6 +10,7 @@ import {
   createNodeHOC,
   createNodesHOC,
   usePlaceholderState,
+  useReadOnly,
 } from "@udecode/plate/react";
 import { TITLE_KEYS } from "../editor/plugins/title-plugin";
 
@@ -17,6 +18,11 @@ export const Placeholder = (props: PlaceholderProps) => {
   const { children, nodeProps, placeholder } = props;
 
   const { enabled } = usePlaceholderState(props);
+  const isReadOnly = useReadOnly();
+
+  if (isReadOnly) {
+    return props.children;
+  }
 
   return React.Children.map(children, (child) => {
     return React.cloneElement(child, {
