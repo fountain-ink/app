@@ -68,7 +68,7 @@ export const CommentPreview = ({
 
       {totalComments > 0 && (
         <Button variant="outline" onClick={openCommentSheet} className="mt-2">
-          {totalComments > 3 ? `View all ${totalComments} comments` : "View comments"}
+          {totalComments > 3 ? `View all ${totalComments} comments` : "View all comments"}
         </Button>
       )}
     </div>
