@@ -222,9 +222,9 @@ export const ActionButton = ({
       <Tooltip>
         <TooltipTrigger asChild>{ButtonContent}</TooltipTrigger>
         <TooltipContent>
-          <div className="flex flex-col items-center">
+          <div className="flex items-center">
             <span>{label}</span>
-            {state.count > 0 && <span className="text-xs text-foreground">{state.count.toLocaleString()}</span>}
+            {/* {state.count > 0 && <span className="text-xs text-foreground">{state.count.toLocaleString()}</span>} */}
           </div>
         </TooltipContent>
       </Tooltip>
