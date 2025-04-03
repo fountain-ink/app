@@ -59,7 +59,7 @@ export const CommentPreview = ({
               key={comment.id}
               comment={comment}
               nestingLevel={1}
-              maxNestingLevel={1}
+              maxNestingLevel={2}
               onMaxNestingReached={openCommentSheet}
             />
           ))}
