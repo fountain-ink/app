@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const WRAPPED_GHO_TOKEN_ADDRESS = "0xeee5a340Cdc9c179Db25dea45AcfD5FE8d4d3eB8";
+const WRAPPED_GHO_TOKEN_ADDRESS = "0x6bDc36E20D267Ff0dd6097799f82e78907105e2F";
 
 interface TokenWrapProps {
   isOpen: boolean;
