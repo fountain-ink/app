@@ -3,13 +3,13 @@
 import { useAccountOwnerClient } from "@/hooks/use-lens-clients";
 import { Account } from "@lens-protocol/client";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { Button } from "../ui/button";
 import { UserAvatar } from "../user/user-avatar";
 import { setupUserAuth } from "./auth-manager";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { syncBlogsQuietly } from "../blog/blog-sync-button";
+import { toast } from "sonner";
 
 export function SelectAccountButton({ profile, onSuccess }: { profile: Account; onSuccess?: () => void }) {
   const { address } = useAccount();
@@ -51,10 +51,12 @@ export function SelectAccountButton({ profile, onSuccess }: { profile: Account; 
         return;
       }
 
-      // Reset blog storage when switching profiles
-      resetBlogStorage();
+      // redirect to /u/username
+      router.push(`/u/${profile.username?.localName}`);
 
-      console.log("Successfully logged in");
+      toast.success("Logged in successfully!");
+      console.log("Logged in successfully!");
+      resetBlogStorage();
 
       // Sync blogs after successful login
       const blogs = await syncBlogsQuietly();
