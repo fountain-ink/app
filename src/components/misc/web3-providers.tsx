@@ -2,6 +2,7 @@
 
 import { env } from "@/env";
 import { getPublicClient } from "@/lib/lens/client";
+import { walletConnectTheme } from "@/styles/walletconnect";
 import { chains } from "@lens-chain/sdk/viem";
 import { LensProvider } from "@lens-protocol/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -32,7 +33,7 @@ export const Web3Providers = ({ children }: { children: JSX.Element }) => {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <ConnectKitProvider>
+        <ConnectKitProvider customTheme={walletConnectTheme}>
           <PlateController>
             <LensProvider client={publicClient}>{children}</LensProvider>
           </PlateController>
