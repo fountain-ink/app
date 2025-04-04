@@ -17,6 +17,7 @@ import { uploadFile } from "@/lib/upload/upload-file";
 import { canCreateUsername, createAccountWithUsername, fetchAccount } from "@lens-protocol/client/actions";
 import { never } from "@lens-protocol/client";
 import { getLensClient } from "@/lib/lens/client";
+import { useRouter } from "next/navigation";
 
 interface OnboardingModalProps {
   open: boolean;
@@ -35,6 +36,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
   const [validationStatus, setValidationStatus] = useState<ValidationStatus>("idle");
   const [validationMessage, setValidationMessage] = useState<string>("");
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const router = useRouter();
 
   const { data: walletClient } = useWalletClient();
 
@@ -283,6 +285,8 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
       }
 
       toast.success("Account created successfully!");
+
+      router.push(`/u/${username}`);
 
       onSuccess();
       onOpenChange(false);
