@@ -8,7 +8,7 @@
 
 ## Stack
 
-The Fountain app is entirely self-hostable and built using the following tools:
+The Fountain app is entirely self-hostable and is built using the following tools:
 
 - [Lens Protocol](https://lens.xyz/docs/protocol) - Decentralized social protocol
 - [Grove](https://lens.xyz/docs/storage) - Decentralized storage 
