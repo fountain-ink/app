@@ -257,13 +257,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
     handleSubmit(onSubmit)();
   };
 
-  if (!user) {
-    return (
-      <Button className="transition-all duration-300" onClick={() => toast.error("Please login to publish.")}>
-        Publish
-      </Button>
-    );
-  }
+  if (!user) { return null; }
 
   if (isLoading) {
     return (

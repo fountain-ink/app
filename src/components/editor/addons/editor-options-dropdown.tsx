@@ -11,10 +11,12 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, useOpenState } 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { useAuthenticatedUser } from "@lens-protocol/react";
 
 export const EditorOptionsDropdown = () => {
   const { open, onOpenChange } = useOpenState();
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const { data: user } = useAuthenticatedUser();
 
   const onShare = () => {
     setIsShareModalOpen(true);
@@ -35,6 +37,8 @@ export const EditorOptionsDropdown = () => {
     onOpenChange(false);
   };
   const onEditTheme = () => {};
+
+  if (!user) { return null; }
 
   return (
     <DropdownMenu open={open} onOpenChange={onOpenChange}>
