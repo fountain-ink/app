@@ -196,12 +196,14 @@ export const ImageElement = withRef<typeof PlateElement>(
                 <ImagePlaceholder file={currentUploadingFile} />
               </div>
             ) : (
-              <div className="relative w-full">
+              <div className="relative w-full aspect-auto">
                 <Image
-                  className={cn("block object-cover px-0", "rounded-sm", selected && "ring-2 ring-ring")}
+                  className={cn("block w-full h-auto max-h-full", "rounded-sm", selected && "ring-2 ring-ring")}
                   alt=""
-                  fill
+                  width={1200}
+                  height={800}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  style={{ height: 'auto', objectFit: 'contain' }}
                   {...nodeProps}
                   {...imageProps}
                   onLoad={() => {
