@@ -92,9 +92,9 @@ export function OnboardingProfileSetup({
         <Button onClick={() => handleSubmit(false)} disabled={isLoading} className="w-full">
           {isLoading ? "Creating Account..." : "Save"}
         </Button>
-        <Button variant="ghost" onClick={() => handleSubmit(true)} disabled={isLoading} className="w-full">
+        {/* <Button variant="ghost" onClick={() => handleSubmit(true)} disabled={isLoading} className="w-full">
           Skip for now
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

@@ -89,10 +89,17 @@ export const ImageCropperUploader = ({
   } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const resetFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   const handleImageDelete = () => {
     setImage("");
     setLocalImage(null);
     onImageChange(null);
+    resetFileInput();
   };
 
   const handleFileSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -124,16 +131,24 @@ export const ImageCropperUploader = ({
       onImageChange(croppedImageFile);
       setShowCropModal(false);
       setTempImageUrl(null);
+      resetFileInput();
     } catch (error) {
       console.error("Error cropping image:", error);
+      resetFileInput();
     }
   };
+
+  const handleCropCancel = () => {
+    setShowCropModal(false);
+    setTempImageUrl(null);
+    resetFileInput();
+  };
+
   return (
     <span>
       <div
-        className={`relative w-full h-full ${
-          aspectRatio === 1 ? "rounded-full" : "rounded-lg"
-        } overflow-hidden cursor-pointer ring-2 ring-background `}
+        className={`relative w-full h-full ${aspectRatio === 1 ? "rounded-full" : "rounded-lg"
+          } overflow-hidden cursor-pointer ring-2 ring-background `}
         onClick={handleImageClick}
         onKeyDown={handleImageClick}
       >
@@ -164,7 +179,7 @@ export const ImageCropperUploader = ({
         )}
       </div>
       <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileSelection} className="hidden" />
-      <Dialog open={showCropModal} onOpenChange={(open) => !open && setShowCropModal(false)}>
+      <Dialog open={showCropModal} onOpenChange={(open) => !open && handleCropCancel()}>
         <DialogContent className="max-w-[800px] h-[600px] p-0">
           <div className="relative h-[450px] w-full rounded-t-md overflow-hidden">
             {tempImageUrl && (
@@ -195,7 +210,7 @@ export const ImageCropperUploader = ({
             </div>
           </div>
           <div className="flex justify-between gap-2 p-4 border-t border-border">
-            <Button variant={"outline"} onClick={() => setShowCropModal(false)}>
+            <Button variant={"outline"} onClick={handleCropCancel}>
               Cancel
             </Button>
             <Button variant={"default"} onClick={handleCropConfirm}>
@@ -220,10 +235,17 @@ export function ImageUploader({ label, onImageChange, initialImage, className }:
   const [localImage, setLocalImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const resetFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   const handleImageDelete = () => {
     setImage("");
     setLocalImage(null);
     onImageChange(null);
+    resetFileInput();
   };
 
   const handleFileSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -232,6 +254,8 @@ export function ImageUploader({ label, onImageChange, initialImage, className }:
       const localUrl = URL.createObjectURL(file);
       setLocalImage(localUrl);
       onImageChange(file);
+    } else {
+      resetFileInput();
     }
   };
 
@@ -271,7 +295,16 @@ export function ImageUploader({ label, onImageChange, initialImage, className }:
           </div>
         )}
       </div>
-      <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileSelection} className="hidden" />
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleFileSelection}
+        onClick={(event) => {
+          (event.target as HTMLInputElement).value = '';
+        }}
+        className="hidden"
+      />
     </span>
   );
 }
