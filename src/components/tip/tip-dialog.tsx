@@ -42,31 +42,35 @@ export const TipDialog = ({
   const [isTipping, setIsTipping] = useState(false);
   const { data: authenticatedUser } = useAuthenticatedUser();
 
-  const { data, isLoading: isBalanceLoading } = useReadContracts({
-    allowFailure: false,
-    contracts: [
-      {
-        address: currencyAddress as `0x${string}`,
-        abi: erc20Abi,
-        functionName: "balanceOf",
-        args: [authenticatedUser?.address as `0x${string}`],
-      },
-      {
-        address: currencyAddress as `0x${string}`,
-        abi: erc20Abi,
-        functionName: "decimals",
-      },
-      {
-        address: currencyAddress as `0x${string}`,
-        abi: erc20Abi,
-        functionName: "symbol",
-      },
-    ],
+  // const { data, isLoading: isBalanceLoading } = useReadContracts({
+  //   allowFailure: false,
+  //   contracts: [
+  //     {
+  //       address: currencyAddress as `0x${string}`,
+  //       abi: erc20Abi,
+  //       functionName: "balanceOf",
+  //       args: [authenticatedUser?.address as `0x${string}`],
+  //     },
+  //     {
+  //       address: currencyAddress as `0x${string}`,
+  //       abi: erc20Abi,
+  //       functionName: "decimals",
+  //     },
+  //     {
+  //       address: currencyAddress as `0x${string}`,
+  //       abi: erc20Abi,
+  //       functionName: "symbol",
+  //     },
+  //   ],
+  // });
+
+  const { data: ghoBalance, isLoading: isGhoBalanceLoading } = useBalance({
+    address: authenticatedUser?.address as `0x${string}`,
+    token: currencyAddress as `0x${string}`,
   });
-  const tokenBalance = data?.[0];
-  const tokenDecimals = data?.[1];
-  const tokenSymbol = data?.[2];
-  console.log(tokenBalance, tokenDecimals, tokenSymbol, isBalanceLoading, authenticatedUser?.address, currencyAddress);
+  const tokenBalance = ghoBalance?.formatted;
+  const tokenDecimals = ghoBalance?.decimals;
+  const tokenSymbol = ghoBalance?.symbol;
 
   const hasEnoughBalance = tokenBalance
     ? Number.parseFloat(tokenBalance.toString()) >= Number.parseFloat(tipAmount)
@@ -160,7 +164,7 @@ export const TipDialog = ({
           <div className="flex justify-between items-center">
             <span className="text-sm text-muted-foreground">Your balance</span>
             <span className="font-medium">
-              {isBalanceLoading ? "Loading..." : tokenBalance ? `${tokenBalance.toString()} ${tokenSymbol}` : "Unknown"}
+              {isGhoBalanceLoading ? "Loading..." : tokenBalance ? `${tokenBalance.toString()} ${tokenSymbol}` : "Unknown"}
             </span>
           </div>
           {!hasEnoughBalance && tokenBalance && (
