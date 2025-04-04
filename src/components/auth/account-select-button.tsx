@@ -11,7 +11,7 @@ import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { syncBlogsQuietly } from "../blog/blog-sync-button";
 import { toast } from "sonner";
 
-export function SelectAccountButton({ profile, onSuccess }: { profile: Account; onSuccess?: () => void }) {
+export function SelectAccountButton({ profile, onSuccess }: { profile: Account; onSuccess?: () => Promise<void> }) {
   const { address } = useAccount();
   const accountOwnerAuth = useAccountOwnerClient();
   const router = useRouter();
@@ -56,14 +56,8 @@ export function SelectAccountButton({ profile, onSuccess }: { profile: Account; 
       console.log("Logged in successfully!");
 
       resetBlogStorage();
+      await onSuccess?.();
 
-
-      const blogs = await syncBlogsQuietly();
-      if (blogs) {
-        setBlogs(blogs);
-      }
-
-      onSuccess?.();
       router.push(`/u/${profile.username?.localName}`);
       window.location.reload();
     } catch (err) {

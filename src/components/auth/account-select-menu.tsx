@@ -92,6 +92,14 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
     }
   };
 
+  const handleSelectProfileSuccess = async () => {
+    console.log("Syncing blogs after successful profile selection");
+    const blogs = await syncBlogsQuietly();
+    if (blogs) {
+      setBlogs(blogs);
+    }
+  };
+
   // Hide select menu when onboarding is open
   const isOpen = showOnboarding ? false : (open ?? showProfileSelect);
   const handleOpenChange = onOpenChange ?? setShowProfileSelect;
@@ -131,7 +139,7 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
               <ScrollArea className="w-full pr-4 max-h-[300px]">
                 <div className="w-full flex flex-col gap-1">
                   {profiles.map((entry) => (
-                    <SelectAccountButton key={entry.address} profile={entry} />
+                    <SelectAccountButton key={entry.address} profile={entry} onSuccess={handleSelectProfileSuccess} />
                   ))}
                 </div>
               </ScrollArea>

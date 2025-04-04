@@ -22,7 +22,7 @@ import { useRouter } from "next/navigation";
 interface OnboardingModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSuccess: () => void;
+  onSuccess: () => Promise<void>;
 }
 
 type OnboardingStep = "username" | "profileSetup";
@@ -97,26 +97,21 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
     }
   }, []);
 
-  // Handle username changes with proper debouncing
   const handleUsernameChange = useCallback(
     (value: string) => {
       setUsername(value);
 
-      // Reset validation status immediately when input changes
       if (validationStatus !== "idle" && validationStatus !== "checking") {
         setValidationStatus("idle");
         setValidationMessage("");
       }
 
-      // Clear any existing timer
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
         debounceTimerRef.current = null;
       }
 
-      // Only validate if username has sufficient length
       if (value && value.length > 2) {
-        // Set a new timer
         debounceTimerRef.current = setTimeout(() => {
           validateUsername(value);
         }, 500);
@@ -125,7 +120,6 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
     [validateUsername, validationStatus],
   );
 
-  // Cleanup timer on unmount
   useEffect(() => {
     return () => {
       if (debounceTimerRef.current) {
@@ -286,7 +280,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
 
       toast.success("Account created successfully!");
 
-      onSuccess();
+      await onSuccess();
       onOpenChange(false);
 
       router.push(`/u/${username}`);
