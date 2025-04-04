@@ -1,22 +1,16 @@
 <p align="center">
-<img alt="Fountain Banner" src="https://github.com/user-attachments/assets/aff1445f-25db-4f2b-9cc0-be1a9312df55" />
+<img alt="Fountain Banner" width="700px" src="https://github.com/user-attachments/assets/f6fe2688-6f64-4db6-aa01-a6dad326742b" />
+<h3 align="center">A batteries-included, self-hostable web3 alternative to Medium, Substack, and Mirror. </h3>
+<h4 align="center">Own your content and audience through decentralized publishing</h4>
+
+
 </p>
 
-A batteries-included, self-hostable web3 alternative to Medium, Substack, and Mirror. Own your content and audience through decentralized publishing.
+## Stack
 
-## Features
+The Fountain app is entirely self-hostable and built using the following tools:
 
-- **Own your content and audience** - Built on blockchain technology, no one can take it away
-- **Automatic copyright** - All posts are timestamped and written to blockchain with your chosen license
-- **Direct monetization** - Get rewarded directly by readers who enjoy your work
-- **Seamless collaboration** - Write with friends by simply sharing a link
-- **Decentralized** - Built on [Lens Protocol](https://lens.xyz) with zero vendor lock-in
-
-## Tech Stack
-
-The Fountain app is entirely self-hostable with the following tech stack:
-
-- [Lens Protocol](https://lens.xyz/docs/protocol) - Decentralized social media protocol
+- [Lens Protocol](https://lens.xyz/docs/protocol) - Decentralized social protocol
 - [Grove](https://lens.xyz/docs/storage) - Decentralized storage 
 - [Next.js](https://nextjs.org/) - React framework for the frontend
 - [Plate.js](https://platejs.org/) - Customizable editor framework
