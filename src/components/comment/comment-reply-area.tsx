@@ -145,7 +145,7 @@ export const CommentReplyArea = ({
           />
         </div>
 
-        <div className="flex justify-between items-center">
+        <div className="flex justify-end items-center">
           {/* <Button variant="ghost" size="icon" disabled>
             <ImageIcon className="h-5 w-5" />
           </Button> */}
