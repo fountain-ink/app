@@ -1,5 +1,16 @@
+import { storageClient } from "@/lib/lens/storage-client";
 import { Account } from "@lens-protocol/client";
-import { resolveImageUrl } from "./user-avatar";
+
+export const resolveImageUrl = (uri: string | undefined): string => {
+  if (!uri) return "";
+  if (uri.startsWith("ipfs://")) {
+    return `https://fountain.4everland.link/ipfs/${uri.slice(7)}`;
+  }
+  if (uri.startsWith("lens://")) {
+    return storageClient.resolve(uri);
+  }
+  return uri;
+};
 
 export const UserCover = ({ account, className }: { account?: Account; className?: string }) => {
   const cover = resolveImageUrl(account?.metadata?.coverPicture);
