@@ -1,7 +1,8 @@
 "use client"
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FountainLogo } from '../icons/custom-icons';
+import { FountainLogo, HeyIcon } from '../icons/custom-icons';
+import { TbBrandX, TbX } from 'react-icons/tb';
 
 export const GlobalFooter = () => {
   const pathname = usePathname();
@@ -27,11 +28,17 @@ export const GlobalFooter = () => {
           <Link href="/tos" className="hover:text-primary transition-colors">
             Terms
           </Link>
-          <Link href="https://github.com/fountain-ink" className="hover:text-primary transition-colors">
-            Source
-          </Link>
           <Link href="mailto:info@fountain.ink" className="hover:text-primary transition-colors">
             Contact
+          </Link>
+          <Link href="https://github.com/fountain-ink" className="hover:text-primary transition-colors">
+            GitHub
+          </Link>
+          <Link href="https://twitter.com/fountaindotink" className="hover:text-primary transition-colors">
+            <TbBrandX className="w-5 h-5" />
+          </Link>
+          <Link href="https://hey.xyz/u/fountain" className="hover:text-primary transition-colors">
+            <HeyIcon />
           </Link>
         </div>
       </div>
