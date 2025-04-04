@@ -4,8 +4,8 @@ import { clientCookieStorage, cookieStorage } from "./storage";
 const isServer = typeof window === "undefined";
 
 const publicClient = PublicClient.create({
-  environment: testnet,
-  // environment: mainnet,
+  // environment: testnet,
+  environment: mainnet,
   origin: "https://fountain.ink",
   storage: isServer ? cookieStorage : clientCookieStorage,
 });
@@ -36,7 +36,7 @@ export const getOnboardingClient = async (address: string, signMessage: (message
 
   const authenticated = await publicClient.login({
     onboardingUser: {
-      app: "0xC4149776CD7AA7E7035720Bfe884060BA1CE4A1c",
+      app: "0xFDa2276FCC1Ad91F45c98cB88248a492a0d285e2",
       wallet: address,
     },
     signMessage,
@@ -60,7 +60,7 @@ export const getAccountOwnerClient = async (
   const authenticated = await publicClient.login({
     accountOwner: {
       account: accountAddress,
-      app: "0xC4149776CD7AA7E7035720Bfe884060BA1CE4A1c",
+      app: "0xFDa2276FCC1Ad91F45c98cB88248a492a0d285e2",
       owner: ownerAddress,
     },
     signMessage,

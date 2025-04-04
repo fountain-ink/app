@@ -12,11 +12,11 @@ import { createConfig, http, WagmiProvider } from "wagmi";
 
 const wagmiConfig = createConfig(
   getDefaultConfig({
-    chains: [chains.testnet],
-    // chains: [chains.mainnet],
+    // chains: [chains.testnet],
+    chains: [chains.mainnet],
     transports: {
-      // [chains.mainnet.id]: http(),
-      [chains.testnet.id]: http(),
+      [chains.mainnet.id]: http(),
+      // [chains.testnet.id]: http(),
     },
     walletConnectProjectId: env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
     appName: "Fountain",
