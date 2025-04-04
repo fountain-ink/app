@@ -28,6 +28,7 @@ export function AutoSave({ documentId }: { documentId: string }) {
         const now = new Date().toISOString();
         const existingDraft = getDocument(documentId);
         const { title, subtitle, coverUrl } = extractMetadata(editor.children as any);
+        // console.log(title, subtitle, coverUrl);
         const contentMarkdown = api.markdown.serialize();
         // const staticEditor = getStaticEditor(content);
         // const contentHtml = await serializeHtml(staticEditor, {
@@ -39,7 +40,7 @@ export function AutoSave({ documentId }: { documentId: string }) {
           id: Date.now(),
           documentId,
           author: "local",
-          contentJson: content,
+          contentJson: content as any,
           contentMarkdown,
           updatedAt: now,
           createdAt: existingDraft?.createdAt || now,
@@ -50,7 +51,7 @@ export function AutoSave({ documentId }: { documentId: string }) {
           yDoc: null,
           tags: existingDraft?.tags || [],
           coverUrl,
-        } as Draft;
+        };
 
         saveDocument(documentId, draft);
         setSaveSuccess(true);
@@ -66,7 +67,7 @@ export function AutoSave({ documentId }: { documentId: string }) {
     [documentId, saveDocument, getDocument],
   );
 
-  const debouncedSave = useDebouncedCallback(saveContent, 3000);
+  const debouncedSave = useDebouncedCallback(saveContent, 500);
 
   useEffect(() => {
     if (!editor) return;

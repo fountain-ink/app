@@ -58,6 +58,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
     mode: "onChange",
     defaultValues: async () => {
       const draft = getDraft();
+      console.log("Draft for defaultValues:", draft);
 
       const defaultCollecting: CollectingFormValues = {
         isCollectingEnabled: false,
@@ -83,22 +84,14 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
         sendNewsletter: true,
       };
 
-      if (!draft)
+      if (!draft) {
         return {
           details: defaultDetails,
           collecting: defaultCollecting,
         };
-
-      let { title, subtitle, coverUrl } = draft;
-      if (!title || !subtitle || !coverUrl) {
-        const extracted = extractMetadata(draft.contentJson as any);
-        title = title || extracted.title;
-        subtitle = subtitle || extracted.subtitle;
-        coverUrl = coverUrl || extracted.coverUrl || "";
       }
 
       let collectingSettings = { ...defaultCollecting };
-
       if (draft.collectingSettings) {
         collectingSettings = {
           ...collectingSettings,
@@ -112,9 +105,9 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
 
       return {
         details: {
-          title: title || "",
-          subtitle: subtitle || "",
-          coverUrl: coverUrl || "",
+          title: draft.title || "",
+          subtitle: draft.subtitle || "",
+          coverUrl: draft.coverUrl || "",
           tags: draft.tags || [],
           selectedBlogAddress: draft.blogAddress || "",
           sendNewsletter: draft.publishingSettings?.sendNewsletter ?? true,
@@ -124,7 +117,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
     },
   });
 
-  const { handleSubmit, formState, watch, trigger, getValues } = form;
+  const { handleSubmit, formState, watch, trigger, getValues, setValue } = form;
   const { errors, isValid, isSubmitted, isLoading } = formState;
   const hasDetailsErrors = Object.keys(errors.details ?? {}).length > 0;
   const hasCollectingErrors = Object.keys(errors.collecting ?? {}).length > 0;
@@ -134,6 +127,43 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
       trigger();
     }
   }, [isLoading, trigger]);
+
+  useEffect(() => {
+    if (open && !isLoading) {
+      const draft = getDraft();
+      if (draft) {
+        const currentDetails = getValues("details");
+        let needsExtraction = false;
+
+        if (!currentDetails.title) needsExtraction = true;
+        if (!currentDetails.subtitle) needsExtraction = true;
+        if (!currentDetails.coverUrl) needsExtraction = true;
+
+        if (needsExtraction && draft.contentJson) {
+          console.log("Extracting metadata...");
+          const extracted = extractMetadata(draft.contentJson as any);
+          let updated = false;
+
+          if (!getValues("details.title") && extracted.title) {
+            setValue("details.title", extracted.title, { shouldValidate: true, shouldDirty: false, shouldTouch: false });
+            updated = true;
+          }
+          if (!getValues("details.subtitle") && extracted.subtitle) {
+            setValue("details.subtitle", extracted.subtitle, { shouldValidate: true, shouldDirty: false, shouldTouch: false });
+            updated = true;
+          }
+          if (!getValues("details.coverUrl") && extracted.coverUrl) {
+            setValue("details.coverUrl", extracted.coverUrl, { shouldValidate: true, shouldDirty: false, shouldTouch: false });
+            updated = true;
+          }
+          if (updated) {
+            console.log("Applied extracted metadata to form.");
+            trigger("details");
+          }
+        }
+      }
+    }
+  }, [open, isLoading, getDraft, getValues, setValue, trigger]);
 
   useEffect(() => {
     const subscription = watch((values, { name, type }) => {
@@ -272,7 +302,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
                   className={cn(
                     "flex items-center gap-2 rounded-sm",
                     hasCollectingErrors &&
-                      "text-destructive focus:text-destructive data-[state=active]:text-destructive",
+                    "text-destructive focus:text-destructive data-[state=active]:text-destructive",
                   )}
                 >
                   {hasCollectingErrors ? (
