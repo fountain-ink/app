@@ -57,19 +57,15 @@ export function SelectAccountButton({ profile, onSuccess }: { profile: Account; 
 
       resetBlogStorage();
 
-      router.push(`/u/${profile.username?.localName}`);
-      window.location.reload();
 
       const blogs = await syncBlogsQuietly();
       if (blogs) {
         setBlogs(blogs);
       }
 
-      if (onSuccess) {
-        onSuccess();
-      } else {
-        router.refresh();
-      }
+      onSuccess?.();
+      router.push(`/u/${profile.username?.localName}`);
+      window.location.reload();
     } catch (err) {
       console.error("Error logging in:", err);
     }
