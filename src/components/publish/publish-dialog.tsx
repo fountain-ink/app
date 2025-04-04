@@ -58,7 +58,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
     mode: "onChange",
     defaultValues: async () => {
       const draft = getDraft();
-      console.log("Draft for defaultValues:", draft);
+      // console.log("Draft for defaultValues:", draft);
 
       const defaultCollecting: CollectingFormValues = {
         isCollectingEnabled: false,

@@ -1,9 +1,9 @@
 "use client";
 
-import React, { type CSSProperties, useState } from "react";
+import React, { type CSSProperties, useEffect, useState } from "react";
 
 import { type CursorOverlayData, useRemoteCursorOverlayPositions } from "@slate-yjs/react";
-import { useEditorContainerRef } from "@udecode/plate/react";
+import { useEditorContainerRef, useEditorRef } from "@udecode/plate/react";
 
 export function addAlpha(hexColor: string, opacity: number): string {
   const normalized = Math.round(Math.min(Math.max(opacity, 0), 1) * 255);
@@ -85,9 +85,15 @@ function RemoteSelection({ caretPosition, data, selectionRects }: CursorOverlayD
 
 export function RemoteCursorOverlay() {
   const containerRef: any = useEditorContainerRef();
+  const editor = useEditorRef();
   const [cursors] = useRemoteCursorOverlayPositions<CursorData>({
     containerRef,
   });
+
+  useEffect(() => {
+    editor.tf.select()
+    editor.tf.focus({ edge: "endEditor" });
+  }, []);
 
   return (
     <>

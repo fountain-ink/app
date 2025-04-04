@@ -10,25 +10,85 @@ import { Server } from "@hocuspocus/server";
 import { slateNodesToInsertDelta, yTextToSlateElement } from "@slate-yjs/core";
 import * as Y from "yjs";
 import { TITLE_KEYS } from "@/components/editor/plugins/title-plugin";
-import { defualtGuestContent } from "@/components/draft/draft-create-button";
+import { ParagraphPlugin } from "@udecode/plate/react";
 
-const initialValue = [
+export const defualtGuestContent: any = [
   {
     type: TITLE_KEYS.title,
-    children: [{ text: "" }],
+    children: [
+      {
+        text: "",
+      },
+    ],
   },
   {
     type: TITLE_KEYS.subtitle,
-    children: [{ text: "" }],
+    children: [
+      {
+        text: "",
+      },
+    ],
   },
   {
     type: "img",
-    children: [{ text: "" }],
     width: "wide",
+    children: [
+      {
+        text: "",
+      },
+    ],
   },
   {
-    type: "p",
-    children: [{ text: "" }],
+    type: ParagraphPlugin.key,
+    children: [
+      {
+        text: "Welcome to Fountain! When you want to publish your article, login to continue. Enjoy!",
+      },
+    ],
+  },
+  {
+    type: ParagraphPlugin.key,
+    children: [
+      {
+        text: "",
+      },
+    ],
+  },
+];
+
+export const defaultContent: any = [
+  {
+    type: TITLE_KEYS.title,
+    children: [
+      {
+        text: "",
+      },
+    ],
+  },
+  {
+    type: TITLE_KEYS.subtitle,
+    children: [
+      {
+        text: "",
+      },
+    ],
+  },
+  {
+    type: "img",
+    width: "wide",
+    children: [
+      {
+        text: "",
+      },
+    ],
+  },
+  {
+    type: ParagraphPlugin.key,
+    children: [
+      {
+        text: "",
+      },
+    ],
   },
 ];
 
@@ -51,7 +111,7 @@ const server = Server.configure({
         }
 
         if (!response || !response.yDoc) {
-          const insertDelta = isGuest ? slateNodesToInsertDelta(defualtGuestContent) : slateNodesToInsertDelta(initialValue);
+          const insertDelta = isGuest ? slateNodesToInsertDelta(defualtGuestContent) : slateNodesToInsertDelta(defaultContent);
           const sharedRoot = document.get("content", Y.XmlText);
           sharedRoot.delete(0, sharedRoot.length);
           sharedRoot.applyDelta(insertDelta);
