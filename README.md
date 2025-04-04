@@ -1,8 +1,6 @@
 <p align="center">
-  <img src="https://github.com/fountain-ink/app/raw/main/public/logo.png" height="150" alt="Fountain Logo">
+<img alt="Fountain Banner" src="https://github.com/user-attachments/assets/aff1445f-25db-4f2b-9cc0-be1a9312df55" />
 </p>
-
-# Fountain
 
 A batteries-included, self-hostable web3 alternative to Medium, Substack, and Mirror. Own your content and audience through decentralized publishing.
 
@@ -28,13 +26,15 @@ The Fountain app is entirely self-hostable with the following tech stack:
 
 > **Note:** The Fountain app is still in early development, self-hosting documentation is coming soon.
 
+## Coming Soon
+
+- Docs portal (Q2)
+- Deployment SDKs (Q2)
+
 ## Getting Started
 
-### Prerequisites
-
-- [Bun](https://bun.sh/) (v1.2.5 or higher)
-
 ### Installation
+- Using [Bun](https://bun.sh/) (v1.2.5 or higher)
 
 ```bash
 # Clone the repository
@@ -67,11 +67,6 @@ bun run build
 # Start the production server
 bun run start
 ```
-
-## Coming Soon
-
-- Docs portal (Q1)
-- Deployment SDKs (Q2)
 
 ## License
 
