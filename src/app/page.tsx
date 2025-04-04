@@ -102,7 +102,7 @@ export default function HomePage() {
               it a less grueling and more fun experience to write, read and share.
             </p>
 
-            <div className="flex justify-center pt-10 items-center">
+            <div className="flex justify-center py-10 pb-20 items-center">
               <DraftCreateButton text="Start Writing" />
             </div>
           </div>
