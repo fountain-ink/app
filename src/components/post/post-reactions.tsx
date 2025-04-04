@@ -8,6 +8,8 @@ export const PostReactions = ({ post }: { post: Post }) => {
   const { handleLike, handleComment, handleCollect, isCollectSheetOpen, handleCollectSheetOpenChange } =
     usePostActions(post);
 
+
+  const canCollect = post.operations?.canSimpleCollect.__typename === "SimpleCollectValidationPassed";
   return (
     <div className="flex flex-row gap-3 items-center justify-center">
       <ActionButton
@@ -20,15 +22,17 @@ export const PostReactions = ({ post }: { post: Post }) => {
         isActive={post.operations?.hasCommented.optimistic}
         shouldIncrementOnClick={false}
       />
-      <ActionButton
-        icon={ShoppingBag}
-        label="Collect"
-        initialCount={post.stats.collects}
-        strokeColor="rgb(254,178,4)"
-        fillColor="rgba(254, 178, 4, 0.3)"
-        onClick={handleCollect}
-        shouldIncrementOnClick={false}
-      />
+      {canCollect && (
+        <ActionButton
+          icon={ShoppingBag}
+          label="Collect"
+          initialCount={post.stats.collects}
+          strokeColor="rgb(254,178,4)"
+          fillColor="rgba(254, 178, 4, 0.3)"
+          onClick={handleCollect}
+          shouldIncrementOnClick={false}
+        />
+      )}
       <ActionButton
         icon={Heart}
         label="Like"
