@@ -22,6 +22,7 @@ export const useBookmarks = () => {
 
         const result = await fetchPostBookmarks(client, {
           ...(cursor ? { cursor } : {}),
+
         });
 
         if (result.isErr()) {

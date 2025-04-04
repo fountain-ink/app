@@ -14,7 +14,7 @@ export const BookmarkList = () => {
 
   useEffect(() => {
     fetchBookmarks();
-  }, [fetchBookmarks]);
+  }, []);
 
   if (loading && bookmarks.length === 0) {
     return (
