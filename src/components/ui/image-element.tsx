@@ -196,7 +196,7 @@ export const ImageElement = withRef<typeof PlateElement>(
                 <ImagePlaceholder file={currentUploadingFile} />
               </div>
             ) : (
-              <div className="relative w-full aspect-video">
+              <div className="relative w-full">
                 <Image
                   className={cn("block object-cover px-0", "rounded-sm", selected && "ring-2 ring-ring")}
                   alt=""
