@@ -8,11 +8,23 @@ import { NextResponse } from "next/server";
 async function migrateGuestData(guestAddress: string, newAddress: string) {
   const db = await createServiceClient();
 
-  await db.from("drafts").update({ author: newAddress }).eq("address", guestAddress);
+  const { error: draftsError } = await db.from("drafts").update({ author: newAddress }).eq("author", guestAddress);
+  if (draftsError) {
+    console.error("Error migrating drafts:", draftsError);
+    throw new Error("Failed to migrate drafts");
+  }
 
-  await db.from("feedback").update({ author: newAddress }).eq("address", guestAddress);
+  const { error: feedbackError } = await db.from("feedback").update({ author: newAddress }).eq("author", guestAddress);
+  if (feedbackError) {
+    console.error("Error migrating feedback:", feedbackError);
+    throw new Error("Failed to migrate feedback");
+  }
 
-  await db.from("users").update({ isAnonymous: false, address: newAddress }).eq("address", guestAddress);
+  const { error: userError } = await db.from("users").update({ isAnonymous: false, address: newAddress }).eq("address", guestAddress);
+  if (userError) {
+    console.error("Error migrating user:", userError);
+    throw new Error("Failed to migrate user");
+  }
 }
 
 export async function POST(req: Request) {
