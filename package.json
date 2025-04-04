@@ -24,7 +24,7 @@
     "@hocuspocus/provider": "^2.13.2",
     "@hookform/resolvers": "^3.10.0",
     "@irys/arweave": "^0.0.3",
-    "@lens-chain/sdk": "^1.0.1",
+    "@lens-chain/sdk": "^1.0.2",
     "@lens-chain/storage-client": "^0.0.0-next-20250227110209",
     "@lens-protocol/client": "canary",
     "@lens-protocol/metadata": "^2.0.0",
