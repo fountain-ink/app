@@ -199,7 +199,8 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
                     id="sendNewsletter"
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                    disabled={!selectedBlog?.mail_list_id}
+                    disabled={true}
+                  // disabled={!selectedBlog?.mail_list_id}
                   />
                 </FormControl>
                 <label
@@ -210,7 +211,8 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
                 </label>
               </div>
               <FormDescription className="pl-6">
-                {selectedBlog?.mail_list_id ? (
+                Newsletter delivery is coming soon.
+                {/* {selectedBlog?.mail_list_id ? (
                   "Subscribers will receive this post in their inbox."
                 ) : (
                   <>
@@ -223,7 +225,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
                     </Link>
                     .
                   </>
-                )}
+                )} */}
               </FormDescription>
               <FormMessage />
             </FormItem>

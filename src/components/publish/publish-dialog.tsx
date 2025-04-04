@@ -81,7 +81,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
         coverUrl: "",
         tags: [],
         selectedBlogAddress: "",
-        sendNewsletter: true,
+        sendNewsletter: false,
       };
 
       if (!draft) {
@@ -110,7 +110,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
           coverUrl: draft.coverUrl || "",
           tags: draft.tags || [],
           selectedBlogAddress: draft.blogAddress || "",
-          sendNewsletter: draft.publishingSettings?.sendNewsletter ?? true,
+          sendNewsletter: draft.publishingSettings?.sendNewsletter ?? false,
         },
         collecting: collectingSettings,
       };
@@ -187,7 +187,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
             blogAddress: shouldSaveBlogAddress ? selectedBlogAddress : undefined,
             publishingSettings: {
               ...(currentDraft.publishingSettings || {}),
-              sendNewsletter: values.details.sendNewsletter ?? true,
+              sendNewsletter: values.details.sendNewsletter ?? false,
             },
             collectingSettings: {
               isCollectingEnabled: values.collecting.isCollectingEnabled ?? false,
