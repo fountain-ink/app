@@ -84,7 +84,6 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
           <AnimatedMenuItem
             icon={UserRoundPenIcon}
             onClick={() => {
-              resetBlogStorage();
               setShowProfileSelect(true);
             }}
           >

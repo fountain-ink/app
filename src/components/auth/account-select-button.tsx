@@ -51,12 +51,15 @@ export function SelectAccountButton({ profile, onSuccess }: { profile: Account; 
         return;
       }
 
-      router.push(`/u/${profile.username?.localName}`);
 
       toast.success("Logged in successfully!");
       console.log("Logged in successfully!");
 
       resetBlogStorage();
+
+      router.push(`/u/${profile.username?.localName}`);
+      window.location.reload();
+
       const blogs = await syncBlogsQuietly();
       if (blogs) {
         setBlogs(blogs);
