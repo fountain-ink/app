@@ -9,7 +9,7 @@ interface ConnectWalletButtonProps {
 
 export const ConnectWalletButton = ({ text = "Login", className }: ConnectWalletButtonProps) => {
   return (
-    <ConnectKitButton.Custom >
+    <ConnectKitButton.Custom>
       {({ isConnected, show }) => {
         if (!isConnected) {
           return (

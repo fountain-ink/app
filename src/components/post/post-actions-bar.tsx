@@ -4,13 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { usePostActions } from "@/hooks/use-post-actions";
 import { handlePlatformShare } from "@/lib/get-share-url";
 import { Account, AnyPost } from "@lens-protocol/client";
-import {
-  Bookmark,
-  Heart,
-  LucideIcon,
-  MessageCircle,
-  Share2,
-} from "lucide-react";
+import { Bookmark, Heart, LucideIcon, MessageCircle, Share2 } from "lucide-react";
 import { IconType } from "react-icons";
 import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
 import { ActionButton } from "./post-action-button";
@@ -28,13 +22,13 @@ type ActionButtonConfig = {
   fillColor: string;
   isActive?: boolean;
   shouldIncrementOnClick: boolean;
-  onClick?: () => Promise<any> | undefined; 
+  onClick?: () => Promise<any> | undefined;
   renderPopover?: (
     trigger: ReactElement<any, string | JSXElementConstructor<any>>,
   ) => ReactElement<any, string | JSXElementConstructor<any>>;
   isDisabled?: boolean;
   dropdownItems?: {
-    icon: LucideIcon | IconType | React.FC<any>; 
+    icon: LucideIcon | IconType | React.FC<any>;
     label: string;
     onClick: () => void;
   }[];
@@ -86,14 +80,16 @@ export const PostActionsBar = ({ post, account }: { post: AnyPost; account?: Acc
   };
 
   const collectButton: ActionButtonConfig = {
-    icon: CoinIcon, 
+    icon: CoinIcon,
     label: "Collect",
     initialCount: collects + tips,
     strokeColor: "rgb(254,178,4)",
     fillColor: "rgba(254, 178, 4, 0.3)",
     shouldIncrementOnClick: false,
     renderPopover: (trigger: React.ReactElement) => (
-      <TipPopover onCollectClick={handleCollect} post={post}>{trigger}</TipPopover>
+      <TipPopover onCollectClick={handleCollect} post={post}>
+        {trigger}
+      </TipPopover>
     ),
     isActive: isCollectOpen,
   };
@@ -195,4 +191,4 @@ export const PostActionsBar = ({ post, account }: { post: AnyPost; account?: Acc
       </TooltipProvider>
     </>
   );
-}; 
+};

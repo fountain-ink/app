@@ -1,8 +1,8 @@
-"use client"
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { FountainLogo, HeyIcon } from '../icons/custom-icons';
-import { TbBrandX, TbX } from 'react-icons/tb';
+"use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { FountainLogo, HeyIcon } from "../icons/custom-icons";
+import { TbBrandX, TbX } from "react-icons/tb";
 
 export const GlobalFooter = () => {
   const pathname = usePathname();
@@ -44,4 +44,4 @@ export const GlobalFooter = () => {
       </div>
     </footer>
   );
-}; 
+};

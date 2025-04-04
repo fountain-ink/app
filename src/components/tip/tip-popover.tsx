@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, DollarSign, ArrowLeft } from "lucide-react";
 import { useState } from "react";
@@ -37,7 +33,7 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
   const handleSendTip = () => {
     let finalAmount = "0";
 
-    if (isCustomTipInput && customTipAmount && parseFloat(customTipAmount) > 0) {
+    if (isCustomTipInput && customTipAmount && Number.parseFloat(customTipAmount) > 0) {
       finalAmount = customTipAmount;
     } else if (selectedTipAmount) {
       finalAmount = selectedTipAmount;
@@ -84,21 +80,16 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
                 </Button>
 
                 <div className="flex items-center w-full gap-2">
-                  <div className="h-px flex-1 bg-border"></div>
+                  <div className="h-px flex-1 bg-border" />
                   <p className="text-sm text-muted-foreground">Or tip the author</p>
-                  <div className="h-px flex-1 bg-border"></div>
+                  <div className="h-px flex-1 bg-border" />
                 </div>
               </>
             )}
 
             {isCustomTipInput ? (
               <div className="w-full flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-10 w-10"
-                  onClick={handleBackToOptions}
-                >
+                <Button variant="ghost" size="icon" className="h-10 w-10" onClick={handleBackToOptions}>
                   <ArrowLeft className="h-4 w-4" />
                 </Button>
                 <div className="relative flex-1">
@@ -137,7 +128,8 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
                   onClick={() => handleTipButtonClick("10")}
                   className="w-full"
                 >
-                  <DollarSign className="h-3 w-3 -mr-1" />10
+                  <DollarSign className="h-3 w-3 -mr-1" />
+                  10
                 </Button>
                 <Button
                   variant={isCustomTipInput ? "default" : "outline"}
@@ -152,7 +144,9 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
             <Button
               variant="default"
               className="w-full"
-              disabled={!(selectedTipAmount || (isCustomTipInput && customTipAmount && parseFloat(customTipAmount) > 0))}
+              disabled={
+                !(selectedTipAmount || (isCustomTipInput && customTipAmount && Number.parseFloat(customTipAmount) > 0))
+              }
               onClick={handleSendTip}
             >
               {canCollect ? "Send Tip" : "Tip the author"}
@@ -169,4 +163,4 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
       />
     </>
   );
-}; 
+};

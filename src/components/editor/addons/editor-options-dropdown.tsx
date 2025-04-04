@@ -29,12 +29,12 @@ export const EditorOptionsDropdown = () => {
     if (isPreview) {
       window.history.pushState({}, "", newUrl);
     } else {
-      window.open(newUrl, '_blank');
+      window.open(newUrl, "_blank");
     }
 
     onOpenChange(false);
   };
-  const onEditTheme = () => { };
+  const onEditTheme = () => {};
 
   return (
     <DropdownMenu open={open} onOpenChange={onOpenChange}>

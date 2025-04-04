@@ -45,9 +45,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
               <AuthManager credentials={credentials} />
               <Toaster position="top-center" offset={16} />
               <Header session={session} />
-              <main className="flex-1">
-                {children}
-              </main>
+              <main className="flex-1">{children}</main>
               <GlobalFooter />
             </ThemeProvider>
           </DarkModeProvider>

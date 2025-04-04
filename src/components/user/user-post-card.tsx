@@ -63,4 +63,4 @@ export function UserPostCard({ account, stats }: UserPostCardProps) {
       </div>
     </div>
   );
-} 
+}

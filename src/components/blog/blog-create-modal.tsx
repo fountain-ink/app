@@ -93,7 +93,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
       ]);
       toast.dismiss(uploadToast);
 
-      console.log(user.address)
+      console.log(user.address);
       const createToast = toast.loading("Creating your blog...");
       const result = await createGroup(sessionClient, {
         feed: {

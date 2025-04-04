@@ -28,7 +28,7 @@ interface TipDialogProps {
 }
 
 const formatDisplayAmount = (amount: string): string => {
-  const numAmount = parseFloat(amount);
+  const numAmount = Number.parseFloat(amount);
   return numAmount % 1 === 0 ? numAmount.toString() : numAmount.toFixed(2);
 };
 
@@ -37,41 +37,41 @@ export const TipDialog = ({
   isOpen,
   onOpenChange,
   tipAmount,
-  currencyAddress = DEFAULT_CURRENCY
+  currencyAddress = DEFAULT_CURRENCY,
 }: TipDialogProps) => {
   const { data: walletClient } = useWalletClient();
   const [isTipping, setIsTipping] = useState(false);
   const { data: authenticatedUser } = useAuthenticatedUser();
 
-  const {data, isLoading: isBalanceLoading} = useReadContracts({ 
-    allowFailure: false, 
-    contracts: [ 
-      { 
-      address: currencyAddress as `0x${string}`, 
-      abi: erc20Abi, 
-      functionName: 'balanceOf', 
-      args: [authenticatedUser?.address as `0x${string}`], 
-    }, 
-    { 
-      address: currencyAddress as `0x${string}`, 
-      abi: erc20Abi, 
-      functionName: 'decimals', 
-    }, 
-    { 
-      address: currencyAddress as `0x${string}`, 
-      abi: erc20Abi, 
-      functionName: 'symbol', 
-    }, 
-  ] 
-  })
-  const tokenBalance = data?.[0]; 
+  const { data, isLoading: isBalanceLoading } = useReadContracts({
+    allowFailure: false,
+    contracts: [
+      {
+        address: currencyAddress as `0x${string}`,
+        abi: erc20Abi,
+        functionName: "balanceOf",
+        args: [authenticatedUser?.address as `0x${string}`],
+      },
+      {
+        address: currencyAddress as `0x${string}`,
+        abi: erc20Abi,
+        functionName: "decimals",
+      },
+      {
+        address: currencyAddress as `0x${string}`,
+        abi: erc20Abi,
+        functionName: "symbol",
+      },
+    ],
+  });
+  const tokenBalance = data?.[0];
   const tokenDecimals = data?.[1];
   const tokenSymbol = data?.[2];
   console.log(tokenBalance, tokenDecimals, tokenSymbol, isBalanceLoading, authenticatedUser?.address, currencyAddress);
 
-  const hasEnoughBalance = tokenBalance ?
-    parseFloat(tokenBalance.toString()) >= parseFloat(tipAmount) :
-    false;
+  const hasEnoughBalance = tokenBalance
+    ? Number.parseFloat(tokenBalance.toString()) >= Number.parseFloat(tipAmount)
+    : false;
 
   const formattedTipAmount = formatDisplayAmount(tipAmount);
 
@@ -154,44 +154,29 @@ export const TipDialog = ({
           <h3 className="text-xl font-medium">
             Tip ${formattedTipAmount} {tokenSymbol || "tokens"}
           </h3>
-          <p className="text-center text-muted-foreground">
-            You are about to send a tip to the author of this post.
-          </p>
+          <p className="text-center text-muted-foreground">You are about to send a tip to the author of this post.</p>
         </div>
 
         <div className="flex flex-col gap-2 mt-2">
           <div className="flex justify-between items-center">
             <span className="text-sm text-muted-foreground">Your balance</span>
             <span className="font-medium">
-              {isBalanceLoading
-                ? "Loading..."
-                : tokenBalance
-                  ? `${tokenBalance.toString()} ${tokenSymbol}`
-                  : "Unknown"
-              }
+              {isBalanceLoading ? "Loading..." : tokenBalance ? `${tokenBalance.toString()} ${tokenSymbol}` : "Unknown"}
             </span>
           </div>
           {!hasEnoughBalance && tokenBalance && (
-            <p className="text-sm text-destructive">
-              Insufficient balance to complete this tip
-            </p>
+            <p className="text-sm text-destructive">Insufficient balance to complete this tip</p>
           )}
         </div>
 
-        <Button
-          disabled={!hasEnoughBalance || isTipping}
-          onClick={handleTip}
-          className="w-full"
-          size="lg"
-        >
+        <Button disabled={!hasEnoughBalance || isTipping} onClick={handleTip} className="w-full" size="lg">
           {isTipping
             ? "Processing..."
             : hasEnoughBalance
               ? `Send $${formattedTipAmount} ${tokenSymbol || "tokens"}`
-              : "Insufficient balance"
-          }
+              : "Insufficient balance"}
         </Button>
       </DialogContent>
     </Dialog>
   );
-}; 
+};

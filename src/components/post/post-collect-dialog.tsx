@@ -24,10 +24,10 @@ interface CollectAmount {
 }
 
 const formatAmount = (amount: CollectAmount): string => {
-  const value = parseFloat(amount.value);
+  const value = Number.parseFloat(amount.value);
   let formattedValue = value.toFixed(2);
-  if (formattedValue.includes('.')) {
-    formattedValue = formattedValue.replace(/\.?0+$/, '');
+  if (formattedValue.includes(".")) {
+    formattedValue = formattedValue.replace(/\.?0+$/, "");
   }
   return `${formattedValue} ${amount.asset.symbol}`;
 };
@@ -46,14 +46,15 @@ const getTimeRemaining = (endDate: Date): string => {
   const days = Math.floor(hours / 24);
 
   if (days > 0) {
-    return `${days} day${days > 1 ? 's' : ''}`;
-  } else if (hours > 0) {
-    return `${hours} hour${hours > 1 ? 's' : ''}`;
-  } else if (minutes > 0) {
-    return `${minutes} minute${minutes > 1 ? 's' : ''}`;
-  } else {
-    return `${seconds} second${seconds > 1 ? 's' : ''}`;
+    return `${days} day${days > 1 ? "s" : ""}`;
   }
+  if (hours > 0) {
+    return `${hours} hour${hours > 1 ? "s" : ""}`;
+  }
+  if (minutes > 0) {
+    return `${minutes} minute${minutes > 1 ? "s" : ""}`;
+  }
+  return `${seconds} second${seconds > 1 ? "s" : ""}`;
 };
 
 interface PostCollectProps {
@@ -66,9 +67,9 @@ export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) =>
   const { data: walletClient } = useWalletClient();
   const [isCollecting, setIsCollecting] = useState(false);
 
-  const collectAction = post.actions.find(
-    (action) => action.__typename === "SimpleCollectAction"
-  ) as SimpleCollectAction | undefined;
+  const collectAction = post.actions.find((action) => action.__typename === "SimpleCollectAction") as
+    | SimpleCollectAction
+    | undefined;
 
   if (!collectAction) {
     return null;
@@ -81,13 +82,13 @@ export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) =>
   const amount = collectAction?.payToCollect?.amount;
   const formattedAmount = amount ? formatAmount(amount) : null;
   const totalSupply = collectAction?.collectLimit;
-  const currentSupply = post.stats.collects
+  const currentSupply = post.stats.collects;
   const title = "title" in post.metadata ? post.metadata.title : collectibleMetadata?.name;
   const totalValue = amount
     ? formatAmount({
-      value: (currentSupply * parseFloat(amount.value)).toString(),
-      asset: amount.asset
-    })
+        value: (currentSupply * Number.parseFloat(amount.value)).toString(),
+        asset: amount.asset,
+      })
     : null;
 
   const endsAt = collectAction?.endsAt ? new Date(collectAction.endsAt) : null;
@@ -136,7 +137,6 @@ export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) =>
   return (
     <Dialog modal={true} open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md gap-4">
-
         <DialogHeader className="p-0 space-y-0">
           <DialogTitle className="absolute -left-[9999px]">Collect Post</DialogTitle>
           <div className="flex justify-between items-center mb-4">
@@ -156,9 +156,7 @@ export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) =>
           </div>
         </div>
 
-        {title && (
-          <h3 className="text-lg font-medium">{title}</h3>
-        )}
+        {title && <h3 className="text-lg font-medium">{title}</h3>}
 
         {imageUrl && (
           <div className="relative aspect-square w-full overflow-hidden rounded-lg">
@@ -175,10 +173,15 @@ export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) =>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <p className="text-muted-foreground">Sold</p>
-            <p>{currentSupply}{totalSupply ? `/${totalSupply}` : ''} {totalValue && `(${totalValue} total)`}</p>
+            <p>
+              {currentSupply}
+              {totalSupply ? `/${totalSupply}` : ""} {totalValue && `(${totalValue} total)`}
+            </p>
           </div>
           <div>
-            <p className="text-muted-foreground flex items-center gap-1">License <Info size={12} /></p>
+            <p className="text-muted-foreground flex items-center gap-1">
+              License <Info size={12} />
+            </p>
             <p>Commercial rights for collector</p>
           </div>
         </div>
@@ -226,6 +229,6 @@ export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) =>
         )}
         {!amount && <p className="text-sm text-center text-muted-foreground">Collect details not available.</p>}
       </DialogContent>
-    </Dialog >
+    </Dialog>
   );
 };

@@ -76,7 +76,6 @@ export function UserSearchList({
               {user.picture ? (
                 <img src={user.picture} alt={user.username} className="w-8 h-8 rounded-full" />
               ) : (
-
                 <div className="flex h-8 w-8 border border-border rounded-full items-center justify-center">
                   <User2Icon size={16} className="text-muted-foreground" />
                 </div>

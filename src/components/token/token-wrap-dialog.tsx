@@ -49,7 +49,7 @@ export const TokenWrapDialog = ({ isOpen, onOpenChange, accountAddress }: TokenW
   };
 
   const handleWrapTokens = async () => {
-    if (!walletClient || !amount || parseFloat(amount) <= 0) {
+    if (!walletClient || !amount || Number.parseFloat(amount) <= 0) {
       toast.error("Please enter a valid amount");
       return;
     }
@@ -64,7 +64,7 @@ export const TokenWrapDialog = ({ isOpen, onOpenChange, accountAddress }: TokenW
         return;
       }
 
-      const decimalAmount = bigDecimal(parseFloat(amount));
+      const decimalAmount = bigDecimal(Number.parseFloat(amount));
 
       const result = await wrapTokens(lens, {
         amount: decimalAmount,
@@ -91,7 +91,7 @@ export const TokenWrapDialog = ({ isOpen, onOpenChange, accountAddress }: TokenW
   };
 
   const handleUnwrapTokens = async () => {
-    if (!walletClient || !amount || parseFloat(amount) <= 0) {
+    if (!walletClient || !amount || Number.parseFloat(amount) <= 0) {
       toast.error("Please enter a valid amount");
       return;
     }
@@ -106,7 +106,7 @@ export const TokenWrapDialog = ({ isOpen, onOpenChange, accountAddress }: TokenW
         return;
       }
 
-      const decimalAmount = bigDecimal(parseFloat(amount));
+      const decimalAmount = bigDecimal(Number.parseFloat(amount));
 
       const result = await unwrapTokens(lens, {
         amount: decimalAmount,
@@ -159,12 +159,7 @@ export const TokenWrapDialog = ({ isOpen, onOpenChange, accountAddress }: TokenW
 
         <div className="flex flex-col gap-4">
           <div className="flex justify-between items-center">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={toggleMode}
-              className="flex items-center gap-1"
-            >
+            <Button variant="outline" size="sm" onClick={toggleMode} className="flex items-center gap-1">
               <ArrowDownUp size={16} />
               {mode === "wrap" ? "Switch to Unwrap" : "Switch to Wrap"}
             </Button>
@@ -173,8 +168,8 @@ export const TokenWrapDialog = ({ isOpen, onOpenChange, accountAddress }: TokenW
           <div className="bg-blue-500/10 text-blue-700 dark:text-blue-300 p-3 rounded-lg text-sm flex items-start gap-2">
             <AlertCircle className="h-5 w-5 flex-shrink-0 mt-0.5" />
             <div>
-              This will {mode === "wrap" ? "wrap" : "unwrap"} tokens directly on your Lens account
-              ({accountAddress.slice(0, 6)}...{accountAddress.slice(-4)}).
+              This will {mode === "wrap" ? "wrap" : "unwrap"} tokens directly on your Lens account (
+              {accountAddress.slice(0, 6)}...{accountAddress.slice(-4)}).
             </div>
           </div>
 
@@ -184,9 +179,18 @@ export const TokenWrapDialog = ({ isOpen, onOpenChange, accountAddress }: TokenW
                 Amount to {mode}
               </Label>
               <div className="text-xs text-muted-foreground">
-                Lens Account Balance: {mode === "wrap"
-                  ? (isGhoBalanceLoading ? "Loading..." : ghoBalance ? `${ghoBalance.formatted} GHO` : "0 GHO")
-                  : (isWrappedGhoBalanceLoading ? "Loading..." : wrappedGhoBalance ? `${wrappedGhoBalance.formatted} wGHO` : "0 wGHO")}
+                Lens Account Balance:{" "}
+                {mode === "wrap"
+                  ? isGhoBalanceLoading
+                    ? "Loading..."
+                    : ghoBalance
+                      ? `${ghoBalance.formatted} GHO`
+                      : "0 GHO"
+                  : isWrappedGhoBalanceLoading
+                    ? "Loading..."
+                    : wrappedGhoBalance
+                      ? `${wrappedGhoBalance.formatted} wGHO`
+                      : "0 wGHO"}
                 <Button
                   variant="ghost"
                   size="xs"
@@ -208,7 +212,7 @@ export const TokenWrapDialog = ({ isOpen, onOpenChange, accountAddress }: TokenW
           </div>
 
           <Button
-            disabled={!amount || parseFloat(amount) <= 0 || isProcessing}
+            disabled={!amount || Number.parseFloat(amount) <= 0 || isProcessing}
             onClick={handleSubmit}
             className="w-full"
             size="lg"
@@ -221,4 +225,4 @@ export const TokenWrapDialog = ({ isOpen, onOpenChange, accountAddress }: TokenW
       </DialogContent>
     </Dialog>
   );
-}; 
+};

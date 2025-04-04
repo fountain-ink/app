@@ -22,33 +22,21 @@ export function TokenWrapClientPage({ accountAddress, wghoAddress }: TokenWrapCl
   console.log("accountAddress", accountAddress);
   console.log("walletAddress", walletAddress);
 
-  const {
-    data: walletGhoBalance,
-    isLoading: isWalletGhoBalanceLoading
-  } = useBalance({
-    address: walletAddress || '0x0000000000000000000000000000000000000000',
+  const { data: walletGhoBalance, isLoading: isWalletGhoBalanceLoading } = useBalance({
+    address: walletAddress || "0x0000000000000000000000000000000000000000",
   });
 
-  const {
-    data: walletWrappedGhoBalance,
-    isLoading: isWalletWrappedGhoBalanceLoading
-  } = useBalance({
-    address: walletAddress || '0x0000000000000000000000000000000000000000',
+  const { data: walletWrappedGhoBalance, isLoading: isWalletWrappedGhoBalanceLoading } = useBalance({
+    address: walletAddress || "0x0000000000000000000000000000000000000000",
     token: wghoAddress as `0x${string}`,
   });
 
-  const {
-    data: accountGhoBalance,
-    isLoading: isAccountGhoBalanceLoading
-  } = useBalance({
-    address: accountAddress as `0x${string}` || '0x0000000000000000000000000000000000000000',
+  const { data: accountGhoBalance, isLoading: isAccountGhoBalanceLoading } = useBalance({
+    address: (accountAddress as `0x${string}`) || "0x0000000000000000000000000000000000000000",
   });
 
-  const {
-    data: accountWrappedGhoBalance,
-    isLoading: isAccountWrappedGhoBalanceLoading
-  } = useBalance({
-    address: accountAddress as `0x${string}` || '0x0000000000000000000000000000000000000000',
+  const { data: accountWrappedGhoBalance, isLoading: isAccountWrappedGhoBalanceLoading } = useBalance({
+    address: (accountAddress as `0x${string}`) || "0x0000000000000000000000000000000000000000",
     token: wghoAddress as `0x${string}`,
   });
 
@@ -66,7 +54,7 @@ export function TokenWrapClientPage({ accountAddress, wghoAddress }: TokenWrapCl
       // Create transfer transaction
       await walletClient.sendTransaction({
         to: accountAddress as `0x${string}`,
-        value: BigInt(parseFloat(transferAmount || "0") * 10 ** 18),
+        value: BigInt(Number.parseFloat(transferAmount || "0") * 10 ** 18),
       });
 
       toast.success(`Successfully sent ${transferAmount} GHO to your Lens account`);
@@ -103,17 +91,25 @@ export function TokenWrapClientPage({ accountAddress, wghoAddress }: TokenWrapCl
                   <div className="bg-background p-4 rounded-md border border-border">
                     <div className="text-sm text-muted-foreground mb-1">Native GHO</div>
                     <div className="font-medium">
-                      {!showWalletData ? "0" :
-                        isWalletGhoBalanceLoading ? "Loading..." :
-                          walletGhoBalance ? walletGhoBalance.formatted : "0"}
+                      {!showWalletData
+                        ? "0"
+                        : isWalletGhoBalanceLoading
+                          ? "Loading..."
+                          : walletGhoBalance
+                            ? walletGhoBalance.formatted
+                            : "0"}
                     </div>
                   </div>
                   <div className="bg-background p-4 rounded-md border border-border">
                     <div className="text-sm text-muted-foreground mb-1">Wrapped GHO</div>
                     <div className="font-medium">
-                      {!showWalletData ? "0" :
-                        isWalletWrappedGhoBalanceLoading ? "Loading..." :
-                          walletWrappedGhoBalance ? walletWrappedGhoBalance.formatted : "0"}
+                      {!showWalletData
+                        ? "0"
+                        : isWalletWrappedGhoBalanceLoading
+                          ? "Loading..."
+                          : walletWrappedGhoBalance
+                            ? walletWrappedGhoBalance.formatted
+                            : "0"}
                     </div>
                   </div>
                 </div>
@@ -137,10 +133,14 @@ export function TokenWrapClientPage({ accountAddress, wghoAddress }: TokenWrapCl
                     <Button
                       size="sm"
                       onClick={handleTransferToAccount}
-                      disabled={isTransferring || !transferAmount || parseFloat(transferAmount) <= 0}
+                      disabled={isTransferring || !transferAmount || Number.parseFloat(transferAmount) <= 0}
                       className="flex items-center gap-1"
                     >
-                      {isTransferring ? <RefreshCw className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4" />}
+                      {isTransferring ? (
+                        <RefreshCw className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <ArrowRight className="h-4 w-4" />
+                      )}
                       Send
                     </Button>
                   </div>
@@ -160,26 +160,30 @@ export function TokenWrapClientPage({ accountAddress, wghoAddress }: TokenWrapCl
                   <div className="bg-background p-4 rounded-md border border-border">
                     <div className="text-sm text-muted-foreground mb-1">Native GHO</div>
                     <div className="font-medium">
-                      {!showAccountData ? "0" :
-                        isAccountGhoBalanceLoading ? "Loading..." :
-                          accountGhoBalance ? accountGhoBalance.formatted : "0"}
+                      {!showAccountData
+                        ? "0"
+                        : isAccountGhoBalanceLoading
+                          ? "Loading..."
+                          : accountGhoBalance
+                            ? accountGhoBalance.formatted
+                            : "0"}
                     </div>
                   </div>
                   <div className="bg-background p-4 rounded-md border border-border">
                     <div className="text-sm text-muted-foreground mb-1">Wrapped GHO</div>
                     <div className="font-medium">
-                      {!showAccountData ? "0" :
-                        isAccountWrappedGhoBalanceLoading ? "Loading..." :
-                          accountWrappedGhoBalance ? accountWrappedGhoBalance.formatted : "0"}
+                      {!showAccountData
+                        ? "0"
+                        : isAccountWrappedGhoBalanceLoading
+                          ? "Loading..."
+                          : accountWrappedGhoBalance
+                            ? accountWrappedGhoBalance.formatted
+                            : "0"}
                     </div>
                   </div>
                 </div>
 
-                <Button
-                  onClick={() => setIsDialogOpen(true)}
-                  className="w-full mt-4"
-                  size="lg"
-                >
+                <Button onClick={() => setIsDialogOpen(true)} className="w-full mt-4" size="lg">
                   Wrap/Unwrap GHO
                 </Button>
               </div>
@@ -187,8 +191,8 @@ export function TokenWrapClientPage({ accountAddress, wghoAddress }: TokenWrapCl
               <div className="bg-muted/30 rounded-lg p-6">
                 <h2 className="text-lg font-semibold mb-3">About Token Wrapping</h2>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Wrapping your tokens allows them to be used within the ecosystem.
-                  When you wrap a token, it gets converted to an ERC-20 compatible version of itself.
+                  Wrapping your tokens allows them to be used within the ecosystem. When you wrap a token, it gets
+                  converted to an ERC-20 compatible version of itself.
                 </p>
                 <p className="text-sm text-muted-foreground">
                   You can unwrap tokens at any time to convert them back to their original form.
@@ -197,7 +201,9 @@ export function TokenWrapClientPage({ accountAddress, wghoAddress }: TokenWrapCl
             </div>
           ) : (
             <div className="bg-muted/30 rounded-lg p-8 text-center space-y-4">
-              <p className="mb-4">No Lens account found. Please create or connect a Lens account to wrap/unwrap tokens.</p>
+              <p className="mb-4">
+                No Lens account found. Please create or connect a Lens account to wrap/unwrap tokens.
+              </p>
             </div>
           )
         ) : (
@@ -211,12 +217,8 @@ export function TokenWrapClientPage({ accountAddress, wghoAddress }: TokenWrapCl
       </div>
 
       {accountAddress && (
-        <TokenWrapDialog
-          isOpen={isDialogOpen}
-          onOpenChange={setIsDialogOpen}
-          accountAddress={accountAddress}
-        />
+        <TokenWrapDialog isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} accountAddress={accountAddress} />
       )}
     </div>
   );
-} 
+}

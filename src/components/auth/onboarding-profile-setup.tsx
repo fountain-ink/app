@@ -5,7 +5,7 @@ import { Label } from "../ui/label";
 import { TextareaAutosize } from "../ui/textarea";
 import { ImageCropperUploader } from "../images/image-uploader";
 import { DialogHeader, DialogTitle } from "../ui/dialog";
-import { X, ChevronLeft } from 'lucide-react';
+import { X, ChevronLeft } from "lucide-react";
 
 export interface ProfileSetupData {
   profilePicture?: File | null;
@@ -22,7 +22,13 @@ interface OnboardingProfileSetupProps {
   isLoading: boolean;
 }
 
-export function OnboardingProfileSetup({ username, onSubmit, onClose, onBack, isLoading }: OnboardingProfileSetupProps) {
+export function OnboardingProfileSetup({
+  username,
+  onSubmit,
+  onClose,
+  onBack,
+  isLoading,
+}: OnboardingProfileSetupProps) {
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [name, setName] = useState(username || "");
   const [bio, setBio] = useState("");
@@ -30,8 +36,8 @@ export function OnboardingProfileSetup({ username, onSubmit, onClose, onBack, is
   const handleSubmit = async (skipped: boolean) => {
     await onSubmit({
       profilePicture: skipped ? undefined : profilePicture,
-      name: skipped ? undefined : (name || undefined),
-      bio: skipped ? undefined : (bio || undefined),
+      name: skipped ? undefined : name || undefined,
+      bio: skipped ? undefined : bio || undefined,
       skipped,
     });
   };
@@ -40,16 +46,11 @@ export function OnboardingProfileSetup({ username, onSubmit, onClose, onBack, is
     <div className="flex flex-col gap-2">
       <DialogHeader>
         <DialogTitle className="text-base h-8 flex gap-2 items-center">
-          <Button
-            variant="ghost"
-            onClick={onBack}
-            aria-label="Close"
-            size="sm"
-            disabled={isLoading}
-          >
+          <Button variant="ghost" onClick={onBack} aria-label="Close" size="sm" disabled={isLoading}>
             <ChevronLeft className="size-4" />
           </Button>
-          Create your profile</DialogTitle>
+          Create your profile
+        </DialogTitle>
       </DialogHeader>
 
       <p className="text-xs pt-4 pb-2 text-muted-foreground">
@@ -59,12 +60,7 @@ export function OnboardingProfileSetup({ username, onSubmit, onClose, onBack, is
       <div className="space-y-2 flex flex-col items-start">
         <Label className="self-start">Profile picture</Label>
         <div className="w-32 h-32">
-          <ImageCropperUploader
-            label=""
-            initialImage={""}
-            aspectRatio={1}
-            onImageChange={setProfilePicture}
-          />
+          <ImageCropperUploader label="" initialImage={""} aspectRatio={1} onImageChange={setProfilePicture} />
         </div>
       </div>
 

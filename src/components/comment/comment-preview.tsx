@@ -34,9 +34,7 @@ export const CommentPreview = ({
 
   return (
     <div className="flex flex-col gap-4">
-      <span className="text-lg font-medium px-1">
-        Comments {totalComments > 0 && `(${totalComments})`}
-      </span>
+      <span className="text-lg font-medium px-1">Comments {totalComments > 0 && `(${totalComments})`}</span>
 
       {loading && visibleComments.length === 0 && (
         <div className="text-center py-4 text-muted-foreground">Loading comments...</div>
@@ -76,4 +74,4 @@ export const CommentPreview = ({
       )}
     </div>
   );
-}; 
+};

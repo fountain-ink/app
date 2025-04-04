@@ -26,7 +26,7 @@ import { useAuthenticatedUser } from "@lens-protocol/react";
 
 const isUserBlog = (blogAddress: string | undefined, blogs: any[]): boolean => {
   if (!blogAddress) return false;
-  const blog = blogs.find(b => b.address === blogAddress);
+  const blog = blogs.find((b) => b.address === blogAddress);
   return blog ? blog.address === blog.owner : false;
 };
 
@@ -272,7 +272,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
                   className={cn(
                     "flex items-center gap-2 rounded-sm",
                     hasCollectingErrors &&
-                    "text-destructive focus:text-destructive data-[state=active]:text-destructive",
+                      "text-destructive focus:text-destructive data-[state=active]:text-destructive",
                   )}
                 >
                   {hasCollectingErrors ? (

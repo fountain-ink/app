@@ -138,8 +138,12 @@ export const ActionButton = ({
     strokeWidth: 1.5,
     className: "transition-all duration-200 group-hover:scale-110 group-active:scale-95",
     style: {
-      color: isDisabled ? "hsl(var(--muted-foreground))" : ((state.isPressedLocally && fillOnClick) || (state.isHovered && fillOnHover) ? strokeColor : undefined),
-      fill: isDisabled ? undefined : (state.isPressedLocally && fillOnClick ? fillColor : undefined),
+      color: isDisabled
+        ? "hsl(var(--muted-foreground))"
+        : (state.isPressedLocally && fillOnClick) || (state.isHovered && fillOnHover)
+          ? strokeColor
+          : undefined,
+      fill: isDisabled ? undefined : state.isPressedLocally && fillOnClick ? fillColor : undefined,
       opacity: isDisabled ? 0.5 : 1,
     },
   };
@@ -165,7 +169,7 @@ export const ActionButton = ({
 
   const ButtonContent = (
     <div
-      className={`group flex items-center ${isDisabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'} ${className}`}
+      className={`group flex items-center ${isDisabled ? "cursor-not-allowed opacity-70" : "cursor-pointer"} ${className}`}
     >
       {renderPopover ? (
         renderPopover(TriggerButton)

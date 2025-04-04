@@ -158,7 +158,6 @@ const UserBlogPage = async ({
           <div className="p-4">
             <AuthorView
               showUsername={false}
-              
               accounts={isGroup && groupMembers.length > 0 ? groupMembers : profile ? [profile] : []}
             />
           </div>

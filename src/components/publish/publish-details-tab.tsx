@@ -71,7 +71,8 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
               <h3 className="font-medium">Preview</h3>
             </div>
             <p className="text-sm text-muted-foreground">
-              You can change how the post will be shown on social media and your blog index. This will not affect post's original title or subtitle.
+              You can change how the post will be shown on social media and your blog index. This will not affect post's
+              original title or subtitle.
             </p>
           </div>
           <div className="space-y-2 max-w-lg">
@@ -150,19 +151,15 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
             )}
           />
         </div>
-
       </div>
 
       <div className="border border-border flex shrink flex-col gap-2 rounded-sm p-4">
-
         <div>
           <div className="flex items-center gap-2">
             <RssIcon className="w-4 h-4 text-muted-foreground" />
             <h3 className="font-medium">Delivery</h3>
           </div>
-          <p className="text-sm text-muted-foreground">
-            Choose where the post will be published.
-          </p>
+          <p className="text-sm text-muted-foreground">Choose where the post will be published.</p>
         </div>
         <FormField
           control={form.control}
@@ -213,21 +210,25 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
                 </label>
               </div>
               <FormDescription className="pl-6">
-                {selectedBlog?.mail_list_id
-                  ? "Subscribers will receive this post in their inbox."
-                  : <>
-                    <span >This blog doesn't have a newsletter.</span>
-                    <Link href={`/settings/newsletter`} className="text-muted-foreground pl-1 hover:text-primary underline">
+                {selectedBlog?.mail_list_id ? (
+                  "Subscribers will receive this post in their inbox."
+                ) : (
+                  <>
+                    <span>This blog doesn't have a newsletter.</span>
+                    <Link
+                      href={"/settings/newsletter"}
+                      className="text-muted-foreground pl-1 hover:text-primary underline"
+                    >
                       Newsletter settings
                     </Link>
                     .
-                  </>}
+                  </>
+                )}
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-
       </div>
     </div>
   );

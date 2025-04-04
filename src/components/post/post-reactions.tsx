@@ -5,13 +5,8 @@ import { ActionButton } from "./post-action-button";
 import { PostCollect } from "./post-collect-dialog";
 
 export const PostReactions = ({ post }: { post: Post }) => {
-  const {
-    handleLike,
-    handleComment,
-    handleCollect,
-    isCollectSheetOpen,
-    handleCollectSheetOpenChange,
-  } = usePostActions(post);
+  const { handleLike, handleComment, handleCollect, isCollectSheetOpen, handleCollectSheetOpenChange } =
+    usePostActions(post);
 
   return (
     <div className="flex flex-row gap-3 items-center justify-center">

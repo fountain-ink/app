@@ -96,29 +96,32 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
   }, []);
 
   // Handle username changes with proper debouncing
-  const handleUsernameChange = useCallback((value: string) => {
-    setUsername(value);
+  const handleUsernameChange = useCallback(
+    (value: string) => {
+      setUsername(value);
 
-    // Reset validation status immediately when input changes
-    if (validationStatus !== "idle" && validationStatus !== "checking") {
-      setValidationStatus("idle");
-      setValidationMessage("");
-    }
+      // Reset validation status immediately when input changes
+      if (validationStatus !== "idle" && validationStatus !== "checking") {
+        setValidationStatus("idle");
+        setValidationMessage("");
+      }
 
-    // Clear any existing timer
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-      debounceTimerRef.current = null;
-    }
+      // Clear any existing timer
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = null;
+      }
 
-    // Only validate if username has sufficient length
-    if (value && value.length > 2) {
-      // Set a new timer
-      debounceTimerRef.current = setTimeout(() => {
-        validateUsername(value);
-      }, 500);
-    }
-  }, [validateUsername, validationStatus]);
+      // Only validate if username has sufficient length
+      if (value && value.length > 2) {
+        // Set a new timer
+        debounceTimerRef.current = setTimeout(() => {
+          validateUsername(value);
+        }, 500);
+      }
+    },
+    [validateUsername, validationStatus],
+  );
 
   // Cleanup timer on unmount
   useEffect(() => {
@@ -150,13 +153,13 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
 
   const handleGoBackToUsername = () => {
     setOnboardingStep("username");
-  }
+  };
 
   const handleFinalSubmit = async (profileData: ProfileSetupData) => {
     if (!username || !address) {
       toast.error("Username is missing.");
       return;
-    };
+    }
 
     setLoading(true);
     let pictureUrl: string | undefined;
@@ -186,7 +189,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
 
       // 2. Construct Metadata
       const metadata = accountMetadataBuilder({
-        name: profileData.skipped ? username : (profileData.name || username),
+        name: profileData.skipped ? username : profileData.name || username,
         bio: profileData.skipped ? undefined : profileData.bio,
         picture: pictureUrl,
       });
@@ -228,13 +231,12 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
         .andThen((account) => {
           if (!account) return never("Account not found");
           console.log("Account created:", account);
-          if (client && client.isSessionClient()) {
+          if (client?.isSessionClient()) {
             return client.switchAccount({
               account: account.address,
             });
-          } else {
-            return never("Client is not a session client");
           }
+          return never("Client is not a session client");
         });
 
       toast.dismiss(createToast);
@@ -285,7 +287,6 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
       onSuccess();
       onOpenChange(false);
       window.location.reload();
-
     } catch (err: any) {
       console.error("Error during final account creation:", err);
       toast.error(`Failed to create account: ${err.message || "An unknown error occurred."}`);
@@ -328,14 +329,16 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
                 >
                   <ChevronLeft className="size-4" />
                 </Button>
-                Choose a username</DialogTitle>
+                Choose a username
+              </DialogTitle>
             </DialogHeader>
             <div className="flex-1 flex gap-4 flex-col">
               <div className="flex h-28 mt-4 items-center justify-center">
                 <GraphicHand2 />
               </div>
               <p className="text-xs text-muted-foreground">
-                Welcome to Fountain! Let's start by choosing your username. Make it a good one - this can't be changed later.
+                Welcome to Fountain! Let's start by choosing your username. Make it a good one - this can't be changed
+                later.
               </p>
               <div className="space-y-6">
                 <div className="space-y-1">
@@ -348,9 +351,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
                       onChange={(e) => handleUsernameChange(e.target.value)}
                       disabled={loading}
                       className={
-                        validationStatus === "invalid"
-                          ? "pr-10 border-red-500 focus-visible:ring-red-500"
-                          : "pr-10"
+                        validationStatus === "invalid" ? "pr-10 border-red-500 focus-visible:ring-red-500" : "pr-10"
                       }
                     />
                     {validationStatus === "checking" && (

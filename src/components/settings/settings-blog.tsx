@@ -651,12 +651,14 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                     transition={{ duration: 0.3 }}
                   >
                     <div
-                      className={`w-8 h-8 rounded-full transition-colors duration-300 ${highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
-                        }`}
+                      className={`w-8 h-8 rounded-full transition-colors duration-300 ${
+                        highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
+                      }`}
                     />
                     <div
-                      className={`h-4 w-24 rounded-md transition-colors duration-300 ${highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
-                        }`}
+                      className={`h-4 w-24 rounded-md transition-colors duration-300 ${
+                        highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
+                      }`}
                     />
                   </motion.div>
                 )}
@@ -666,8 +668,9 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
               <AnimatePresence>
                 {formState.metadata.showTitle && (
                   <motion.div
-                    className={`h-6 w-48 rounded-md mb-3 transition-colors duration-300 ${highlightedElement === "title" ? "bg-primary/70" : "bg-muted"
-                      }`}
+                    className={`h-6 w-48 rounded-md mb-3 transition-colors duration-300 ${
+                      highlightedElement === "title" ? "bg-primary/70" : "bg-muted"
+                    }`}
                     initial={{ opacity: 0, height: 0, marginBottom: 0 }}
                     animate={{ opacity: 1, height: 24, marginBottom: 12 }}
                     exit={{ opacity: 0, height: 0, marginBottom: 0 }}
@@ -686,16 +689,19 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                     transition={{ duration: 0.3 }}
                   >
                     <div
-                      className={`h-5 w-16 rounded-full transition-colors duration-300 ${highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
-                        }`}
+                      className={`h-5 w-16 rounded-full transition-colors duration-300 ${
+                        highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
+                      }`}
                     />
                     <div
-                      className={`h-5 w-20 rounded-full transition-colors duration-300 ${highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
-                        }`}
+                      className={`h-5 w-20 rounded-full transition-colors duration-300 ${
+                        highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
+                      }`}
                     />
                     <div
-                      className={`h-5 w-14 rounded-full transition-colors duration-300 ${highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
-                        }`}
+                      className={`h-5 w-14 rounded-full transition-colors duration-300 ${
+                        highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
+                      }`}
                     />
                   </motion.div>
                 )}

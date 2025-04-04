@@ -122,7 +122,9 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
       fillColor: "rgba(254, 178, 4, 0.3)",
       shouldIncrementOnClick: false,
       renderPopover: (trigger: React.ReactElement) => (
-        <TipPopover onCollectClick={handleCollect} post={post}>{trigger}</TipPopover>
+        <TipPopover onCollectClick={handleCollect} post={post}>
+          {trigger}
+        </TipPopover>
       ),
       isActive: isCollectOpen,
     },

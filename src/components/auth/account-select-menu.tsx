@@ -144,11 +144,7 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
                 onClick={handleShowOnboarding}
                 disabled={isOnboardingLoading}
               >
-                {isOnboardingLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Plus className="w-4 h-4" />
-                )}
+                {isOnboardingLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
                 {isOnboardingLoading ? "Signing in with Ethereum..." : "New Profile"}
               </Button>
             </div>

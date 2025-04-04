@@ -66,8 +66,7 @@ export const CommentReplyArea = ({
         return;
       }
 
-      const feed = "feed" in rootPost ? rootPost.feed as PostFeedInfo : undefined;
-
+      const feed = "feed" in rootPost ? (rootPost.feed as PostFeedInfo) : undefined;
 
       const metadata = textOnly({
         content: content.trim(),
