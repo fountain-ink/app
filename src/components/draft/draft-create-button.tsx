@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoadingSpinner } from "../misc/loading-spinner";
 import { TITLE_KEYS } from "@/components/editor/plugins/title-plugin";
+import { toast } from "sonner";
 
 export const defaultContent: any = [
   {
@@ -43,10 +44,8 @@ export const DraftCreateButton = ({ text = "Write" }: { text?: string }) => {
     setIsCreating(true);
     const documentId = getRandomUid();
 
-    // Optimistically navigate
     router.push(`/write/${documentId}`);
 
-    // Create draft in background
     fetch("/api/drafts", {
       method: "POST",
       headers: {
@@ -55,7 +54,7 @@ export const DraftCreateButton = ({ text = "Write" }: { text?: string }) => {
       body: JSON.stringify({ documentId }),
     }).catch((error) => {
       console.error("Failed to create draft:", error);
-      // Could add error handling/toast here
+      toast.error("Failed to create draft");
     });
   };
 

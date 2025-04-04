@@ -204,7 +204,7 @@ export function TokenWrapClientPage({ accountAddress, wghoAddress }: TokenWrapCl
           <div className="bg-muted/30 rounded-lg p-8 text-center space-y-4">
             <p className="mb-4">Connect your wallet to wrap/unwrap tokens</p>
             <div className="flex justify-center">
-              <ConnectWalletButton />
+              <ConnectWalletButton text="Connect Wallet" />
             </div>
           </div>
         )}

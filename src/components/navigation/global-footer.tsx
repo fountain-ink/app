@@ -18,14 +18,14 @@ export const GlobalFooter = () => {
             <FountainLogo />
           </div> */}
           <span className="text-muted-foreground">© 2025 Fountain Labs</span>
-          <Link href="/about" className="hover:text-primary transition-colors">
+          {/* <Link href="/about" className="hover:text-primary transition-colors">
             About
-          </Link>
+          </Link> */}
           <Link href="/policy" className="hover:text-primary transition-colors">
             Policy
           </Link>
           <Link href="/tos" className="hover:text-primary transition-colors">
-            ToS
+            Terms
           </Link>
           <Link href="https://github.com/fountain-ink" className="hover:text-primary transition-colors">
             Source

@@ -51,7 +51,7 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
   };
 
   if (!isWalletConnected) {
-    return <ConnectWalletButton />;
+    return <ConnectWalletButton text="Login" />;
   }
 
   if (!session || showProfileSelect) {
