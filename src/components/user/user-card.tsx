@@ -65,16 +65,14 @@ export const UserCard = ({ children, username, linkProfile = false }: UserCardPr
       <HoverCardTrigger asChild>
         {linkProfile && username ? <Link href={`/u/${username}`}>{children}</Link> : children}
       </HoverCardTrigger>
-      <HoverCardContent className={`w-full min-w-64 max-w-64 overflow-hidden ${inter.className}`} side="top">
+      <HoverCardContent className={`w-full min-w-64 max-w-fit overflow-hidden ${inter.className}`} side="top">
         {loading && !account && <LoadingSpinner />}
         {error && <div>Error: {error.message}</div>}
         {account && (
           <div className="flex flex-col gap-2">
             <div className="flex flex-row place-content-between items-center">
               <div className="flex flex-row items-center gap-2 text-sm">
-                <div className="w-8 h-8">
-                  <UserAvatar account={account} className="w-12 h-12" />
-                </div>
+                <UserAvatar account={account} className="w-12 h-12" />
               </div>
 
               <span className="flex flex-row gap-2 items-center justify-center">
