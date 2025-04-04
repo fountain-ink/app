@@ -42,7 +42,7 @@ export const defualtGuestContent: any = [
     type: ParagraphPlugin.key,
     children: [
       {
-        text: "Welcome to Fountain! When you want to publish your article, login to continue. Enjoy!",
+        text: "Welcome to Fountain! When you want to save the draft or publish your article, login to continue. Enjoy!",
       },
     ],
   },
