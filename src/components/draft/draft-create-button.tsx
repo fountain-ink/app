@@ -7,6 +7,44 @@ import { useState } from "react";
 import { LoadingSpinner } from "../misc/loading-spinner";
 import { TITLE_KEYS } from "@/components/editor/plugins/title-plugin";
 import { toast } from "sonner";
+import { ParagraphPlugin } from "@udecode/plate-core/react";
+
+export const defualtGuestContent: any = [
+  {
+    type: TITLE_KEYS.title,
+    children: [
+      {
+        text: "",
+      },
+    ],
+  },
+  {
+    type: TITLE_KEYS.subtitle,
+    children: [
+      {
+        text: "",
+      },
+    ],
+  },
+  {
+    type: "img",
+    width: "wide",
+    children: [
+      {
+        text: "",
+      },
+    ],
+  },
+  {
+    id: "guest-paragraph",
+    type: ParagraphPlugin.key,
+    children: [
+      {
+        text: "Welcome to Fountain! When you want to publish your article, login to continue. Enjoy!",
+      },
+    ],
+  },
+];
 
 export const defaultContent: any = [
   {

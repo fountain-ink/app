@@ -1,4 +1,4 @@
-import { defaultContent } from "@/components/draft/draft-create-button";
+import { defaultContent, defualtGuestContent } from "@/components/draft/draft-create-button";
 import { env } from "@/env";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
@@ -121,7 +121,7 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const documentId = body.documentId || getRandomUid();
-    const contentJson = defaultContent;
+    const contentJson = !claims.metadata.isAnonymous ? defaultContent : defualtGuestContent;
 
     const { data, error } = await db
       .from("drafts")

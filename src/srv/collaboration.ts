@@ -10,6 +10,7 @@ import { Server } from "@hocuspocus/server";
 import { slateNodesToInsertDelta, yTextToSlateElement } from "@slate-yjs/core";
 import * as Y from "yjs";
 import { TITLE_KEYS } from "@/components/editor/plugins/title-plugin";
+import { defualtGuestContent } from "@/components/draft/draft-create-button";
 
 const initialValue = [
   {
@@ -39,15 +40,18 @@ const server = Server.configure({
   extensions: [
     new Logger(),
     new Database({
-      fetch: async ({ documentName, document }) => {
+      fetch: async ({ documentName, document, context, instance, requestHeaders, requestParameters }) => {
         const { data: response, error } = await db.from("drafts").select().eq("documentId", documentName).single();
+        // console.log(response, context, instance, requestHeaders, requestParameters);
+        const author = response?.author;
+        const isGuest = author?.startsWith("guest-");
 
         if (error) {
           console.error(`Error fetching document: ${error.message}`);
         }
 
         if (!response || !response.yDoc) {
-          const insertDelta = slateNodesToInsertDelta(initialValue);
+          const insertDelta = isGuest ? slateNodesToInsertDelta(defualtGuestContent) : slateNodesToInsertDelta(initialValue);
           const sharedRoot = document.get("content", Y.XmlText);
           sharedRoot.delete(0, sharedRoot.length);
           sharedRoot.applyDelta(insertDelta);
