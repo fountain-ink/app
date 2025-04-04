@@ -308,7 +308,7 @@ const LensLight = () => {
 
 export const HeyIcon = () => {
   return (
-    <svg width="20" height="20" viewBox="0 0 270 270" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="18" height="18" viewBox="0 0 270 270" fill="none" xmlns="http://www.w3.org/2000/svg">
       <title>Hey</title>
       <g transform="scale(0.85)" transform-origin="135 135">
         <path

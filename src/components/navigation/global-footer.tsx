@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FountainLogo, HeyIcon } from "../icons/custom-icons";
-import { TbBrandX, TbX } from "react-icons/tb";
+import { TbBrandTelegram, TbBrandX, TbX } from "react-icons/tb";
 
 export const GlobalFooter = () => {
   const pathname = usePathname();
@@ -35,10 +35,15 @@ export const GlobalFooter = () => {
             GitHub
           </Link>
           <Link href="https://twitter.com/fountaindotink" className="hover:text-primary transition-colors">
-            <TbBrandX className="w-5 h-5" />
+            <TbBrandX className="w-4 h-4" />
           </Link>
           <Link href="https://hey.xyz/u/fountain" className="hover:text-primary transition-colors">
-            <HeyIcon />
+            <div className="w-4 h-4">
+              <HeyIcon />
+            </div>
+          </Link>
+          <Link href="https://t.me/fountaindotink" className="hover:text-primary transition-colors">
+            <TbBrandTelegram className="w-4 h-4" />
           </Link>
         </div>
       </div>
