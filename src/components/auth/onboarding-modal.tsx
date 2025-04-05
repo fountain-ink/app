@@ -163,26 +163,10 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
     let client: AnyClient | null = null;
 
     try {
-      client = await getPublicClient();
-      if (!client) {
+      client = await getLensClient();
+      if (!client || !client.isSessionClient()) {
         throw new Error("Failed to get public client");
       }
-
-      const sessionClient = await client.login({
-        onboardingUser: {
-          app: "0xFDa2276FCC1Ad91F45c98cB88248a492a0d285e2",
-          wallet: walletAddress,
-        },
-        signMessage: async (message: string) => {
-          return await signMessageAsync({ message });
-        },
-      });
-
-      if (sessionClient.isErr()) {
-        throw new Error("Failed to get session client: " + sessionClient.error.message);
-      }
-
-      client = sessionClient.value;
 
       // 1. Upload Profile Picture (if provided and not skipped)
       if (profileData.profilePicture && !profileData.skipped) {

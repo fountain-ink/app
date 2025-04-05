@@ -19,7 +19,7 @@ export function SelectAccountButton({ account, onSuccess }: { account: Account; 
   const router = useRouter();
   const resetBlogStorage = useBlogStorage((state) => state.resetState);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const { signMessageAsync, error, isError, isPending } = useSignMessage();
+  const { signMessageAsync, error, isError, isPending, variables } = useSignMessage();
 
   useEffect(() => {
     if (isError) {
@@ -41,12 +41,21 @@ export function SelectAccountButton({ account, onSuccess }: { account: Account; 
         throw new Error("No wallet address found");
       }
 
-      const authenticated = await client.login({
-        accountOwner: {
+      const isOwner = account.owner === walletAddress;
+      const ownerRequest = {
+        accountOwner: { account: account.address, owner: walletAddress, app: "0xFDa2276FCC1Ad91F45c98cB88248a492a0d285e2" },
+      };
+      const managerRequest = {
+        accountManager: {
           account: account.address,
+          manager: walletAddress,
           app: "0xFDa2276FCC1Ad91F45c98cB88248a492a0d285e2",
-          owner: walletAddress,
         },
+      };
+      const challengeRequest = isOwner ? ownerRequest : managerRequest;
+
+      const authenticated = await client.login({
+        ...challengeRequest,
         signMessage: async (message: string) => {
           return await signMessageAsync({ message });
         },

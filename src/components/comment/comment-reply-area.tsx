@@ -8,7 +8,6 @@ import { Account, PostFeedInfo } from "@lens-protocol/client";
 import { currentSession, fetchPost, post } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { textOnly } from "@lens-protocol/metadata";
-import { ImageIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useWalletClient } from "wagmi";
