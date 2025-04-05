@@ -72,28 +72,28 @@ export function useSaveProfileSettings() {
       //   type: mapAttributeType(attr.type),
       // }));
 
-      const existingAttributes = currentMetadata?.attributes || [];
+      // const existingAttributes = currentMetadata?.attributes || [];
 
-      // Merge attributes
-      const updatedAttributes = attributes?.reduce(
-        (acc, attr) => {
-          const index = acc.findIndex((a: any) => a.key === attr.key);
-          if (index !== -1) {
-            acc[index] = attr;
-          } else {
-            acc.push(attr);
-          }
-          return acc;
-        },
-        [...existingAttributes],
-      );
+      // // Merge attributes
+      // const updatedAttributes = attributes?.reduce(
+      //   (acc, attr) => {
+      //     const index = acc.findIndex((a: any) => a.key === attr.key);
+      //     if (index !== -1) {
+      //       acc[index] = attr;
+      //     } else {
+      //       acc.push(attr);
+      //     }
+      //     return acc;
+      //   },
+      //   [...existingAttributes],
+      // );
 
       const metadata = account({
         name: name ?? currentMetadata?.name ?? undefined,
         bio: bio ?? currentMetadata?.bio ?? undefined,
         picture: picture ?? currentMetadata?.picture ?? undefined,
         coverPicture: coverPicture ?? currentMetadata?.coverPicture ?? undefined,
-        attributes: updatedAttributes && updatedAttributes?.length > 0 ? updatedAttributes : undefined,
+        attributes: attributes && attributes?.length > 0 ? attributes : undefined,
       });
       console.log(metadata);
 

@@ -170,7 +170,7 @@ export function ProfileSettingsCard({ profile }: { profile?: Account | null }) {
     if (location) {
       attributes.push({
         key: "location",
-        value: location,
+        value: location ?? "",
         type: "String",
       });
     }
