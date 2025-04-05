@@ -4,18 +4,7 @@ import { Account } from "@lens-protocol/client";
 import { User2Icon } from "lucide-react";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { storageClient } from "@/lib/lens/storage-client";
-
-export const resolveImageUrl = (uri: string | undefined): string => {
-  if (!uri) return "";
-  if (uri.startsWith("ipfs://")) {
-    return `https://fountain.4everland.link/ipfs/${uri.slice(7)}`;
-  }
-  if (uri.startsWith("lens://")) {
-    return storageClient.resolve(uri);
-  }
-  return uri;
-};
+import { resolveImageUrl } from "@/lib/utils/resolve-image-url";
 
 export const UserAvatar = ({
   account,
