@@ -100,6 +100,15 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
           metadataUri: uri(blogFeedUri.uri),
           repliesRestricted: false,
         },
+        rules: {
+          required: [
+            {
+              membershipApprovalRule: {
+                enable: true,
+              },
+            },
+          ],
+        },
         metadataUri: uri(blogUri.uri),
         owner: user?.address,
         admins: [user?.address],
