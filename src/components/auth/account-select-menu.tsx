@@ -1,9 +1,9 @@
-import { getLensClient } from "@/lib/lens/client";
+import { getLensClient, getPublicClient } from "@/lib/lens/client";
 import { Account, evmAddress } from "@lens-protocol/client";
 import { fetchAccountsAvailable } from "@lens-protocol/client/actions";
 import { Loader2, Plus, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useSignMessage } from "wagmi";
 import { UserIcon } from "../icons/user";
 import { AnimatedMenuItem } from "../navigation/animated-item";
 import { Button } from "../ui/button";
@@ -13,7 +13,6 @@ import { OnboardingModal } from "./onboarding-modal";
 import { SelectAccountButton } from "./account-select-button";
 import { syncBlogsQuietly } from "../blog/blog-sync-button";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
-import { useOnboardingClient } from "@/hooks/use-lens-clients";
 
 export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOpenChange?: (open: boolean) => void }) {
   const { address } = useAccount();
@@ -24,7 +23,8 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
   const [showProfileSelect, setShowProfileSelect] = useState(true);
   const [isOnboardingLoading, setIsOnboardingLoading] = useState(false);
   const setBlogs = useBlogStorage((state) => state.setBlogs);
-  const onboardingClient = useOnboardingClient();
+  const { signMessageAsync } = useSignMessage();
+  const { address: walletAddress } = useAccount();
 
   const fetchAccounts = async () => {
     if (!address) return;
@@ -62,10 +62,24 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
   const handleShowOnboarding = async () => {
     setIsOnboardingLoading(true);
     try {
-      const client = await onboardingClient();
+      const client = await getPublicClient();
       if (!client) {
-        throw new Error("Failed to get onboarding client");
+        throw new Error("Failed to get public client");
       }
+      const sessionClient = await client.login({
+        onboardingUser: {
+          app: "0xFDa2276FCC1Ad91F45c98cB88248a492a0d285e2",
+          wallet: walletAddress,
+        },
+        signMessage: async (message: string) => {
+          return await signMessageAsync({ message });
+        },
+      });
+
+      if (sessionClient.isErr()) {
+        throw new Error("Failed to get session client: " + sessionClient.error.message);
+      }
+
       setShowProfileSelect(false);
       setShowOnboarding(true);
     } catch (err) {
@@ -83,6 +97,10 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
   };
 
   const handleOnboardingSuccess = async () => {
+    setShowOnboarding(false);
+    handleOpenChange(false);
+
+    console.log("Fetching accounts after successful onboarding");
     await fetchAccounts();
 
     console.log("Syncing blogs after successful onboarding");

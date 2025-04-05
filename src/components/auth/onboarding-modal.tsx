@@ -4,7 +4,7 @@ import { handleOperationWith } from "@lens-protocol/client/viem";
 import { account as accountMetadataBuilder, image, MetadataAttribute } from "@lens-protocol/metadata"; // Updated imports
 import { useState, useEffect, useCallback, useRef } from "react";
 import { toast } from "sonner";
-import { useAccount, useWalletClient } from "wagmi";
+import { useAccount, useSignMessage, useWalletClient } from "wagmi";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
@@ -16,7 +16,7 @@ import { OnboardingProfileSetup, ProfileSetupData } from "./onboarding-profile-s
 import { uploadFile } from "@/lib/upload/upload-file";
 import { canCreateUsername, createAccountWithUsername, fetchAccount } from "@lens-protocol/client/actions";
 import { never } from "@lens-protocol/client";
-import { getLensClient } from "@/lib/lens/client";
+import { getLensClient, getPublicClient } from "@/lib/lens/client";
 import { useRouter } from "next/navigation";
 
 interface OnboardingModalProps {
@@ -29,7 +29,7 @@ type OnboardingStep = "username" | "profileSetup";
 type ValidationStatus = "idle" | "checking" | "valid" | "invalid";
 
 export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingModalProps) {
-  const { address } = useAccount();
+  const { address: walletAddress } = useAccount();
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>("username");
@@ -37,7 +37,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
   const [validationMessage, setValidationMessage] = useState<string>("");
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const router = useRouter();
-
+  const { signMessageAsync } = useSignMessage();
   const { data: walletClient } = useWalletClient();
 
   const validateUsername = useCallback(async (name: string) => {
@@ -52,7 +52,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
     try {
       const client = await getLensClient();
       if (!client || !client.isSessionClient()) {
-        throw new Error("Failed to get onboarding client");
+        throw new Error("Failed to get public client");
       }
 
       const result = await canCreateUsername(client, {
@@ -129,7 +129,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
   }, []);
 
   const handleUsernameSubmit = async () => {
-    if (!username || !address) return;
+    if (!username || !walletAddress) return;
 
     // If validation hasn't been done yet or is in progress, validate now
     if (validationStatus === "idle" || validationStatus === "checking") {
@@ -152,7 +152,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
   };
 
   const handleFinalSubmit = async (profileData: ProfileSetupData) => {
-    if (!username || !address) {
+    if (!username || !walletAddress) {
       toast.error("Username is missing.");
       return;
     }
@@ -163,10 +163,26 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
     let client: AnyClient | null = null;
 
     try {
-      client = await getLensClient();
-      if (!client || !client.isSessionClient()) {
-        throw new Error("Failed to get onboarding client");
+      client = await getPublicClient();
+      if (!client) {
+        throw new Error("Failed to get public client");
       }
+
+      const sessionClient = await client.login({
+        onboardingUser: {
+          app: "0xFDa2276FCC1Ad91F45c98cB88248a492a0d285e2",
+          wallet: walletAddress,
+        },
+        signMessage: async (message: string) => {
+          return await signMessageAsync({ message });
+        },
+      });
+
+      if (sessionClient.isErr()) {
+        throw new Error("Failed to get session client: " + sessionClient.error.message);
+      }
+
+      client = sessionClient.value;
 
       // 1. Upload Profile Picture (if provided and not skipped)
       if (profileData.profilePicture && !profileData.skipped) {
@@ -222,7 +238,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
         .andThen(client.waitForTransaction)
         .andThen((txHash) => {
           console.log("Transaction hash:", txHash);
-          return fetchAccount(client as AnyClient, { txHash });
+          return fetchAccount(client!, { txHash });
         })
         .andThen((account) => {
           if (!account) return never("Account not found");
@@ -246,8 +262,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
 
       // 7. Setup Authentication
       const authToast = toast.loading("Setting up authentication...");
-      const sessionClient = result.value;
-      const credentials = await sessionClient.getCredentials();
+      const credentials = await client.getCredentials();
 
       if (credentials.isErr()) {
         toast.dismiss(authToast);
