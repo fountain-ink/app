@@ -136,7 +136,7 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
             )}
 
             {profiles?.length > 0 && (
-              <ScrollArea className="w-full pr-4 max-h-[300px]">
+              <ScrollArea className="w-full px-2 max-h-[300px]">
                 <div className="w-full flex flex-col gap-1">
                   {profiles.map((entry) => (
                     <SelectAccountButton key={entry.address} profile={entry} onSuccess={handleSelectProfileSuccess} />
@@ -147,7 +147,7 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
 
             <div className="w-full flex justify-end gap-2">
               <Button
-                className="w-full mt-4 gap-2"
+                className="w-full gap-2"
                 variant="default"
                 onClick={handleShowOnboarding}
                 disabled={isOnboardingLoading}
