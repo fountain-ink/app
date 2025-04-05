@@ -17,7 +17,7 @@ import { useOnboardingClient } from "@/hooks/use-lens-clients";
 
 export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOpenChange?: (open: boolean) => void }) {
   const { address } = useAccount();
-  const [profiles, setProfiles] = useState<Account[]>([]);
+  const [accounts, setAccounts] = useState<Account[]>([]);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -26,7 +26,7 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
   const setBlogs = useBlogStorage((state) => state.setBlogs);
   const onboardingClient = useOnboardingClient();
 
-  const fetchProfiles = async () => {
+  const fetchAccounts = async () => {
     if (!address) return;
 
     try {
@@ -46,7 +46,7 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
         throw result.error;
       }
 
-      setProfiles(result.value.items.map((item: any) => item.account));
+      setAccounts(result.value.items.map((item: any) => item.account));
     } catch (err) {
       console.error("Error fetching profiles:", err);
       setError(err as Error);
@@ -56,7 +56,7 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
   };
 
   useEffect(() => {
-    fetchProfiles();
+    fetchAccounts();
   }, [address]);
 
   const handleShowOnboarding = async () => {
@@ -83,7 +83,7 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
   };
 
   const handleOnboardingSuccess = async () => {
-    await fetchProfiles();
+    await fetchAccounts();
 
     console.log("Syncing blogs after successful onboarding");
     const blogs = await syncBlogsQuietly();
@@ -92,15 +92,14 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
     }
   };
 
-  const handleSelectProfileSuccess = async () => {
-    console.log("Syncing blogs after successful profile selection");
+  const handleSelectAccountSuccess = async () => {
+    console.log("Syncing blogs after successful account selection");
     const blogs = await syncBlogsQuietly();
     if (blogs) {
       setBlogs(blogs);
     }
   };
 
-  // Hide select menu when onboarding is open
   const isOpen = showOnboarding ? false : (open ?? showProfileSelect);
   const handleOpenChange = onOpenChange ?? setShowProfileSelect;
 
@@ -129,17 +128,17 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
             <DialogTitle className="h-8 text-base flex items-center">Select profile</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col gap-4 items-center justify-center">
-            {profiles?.length === 0 && (
+            {accounts?.length === 0 && (
               <div className="text-center">
                 <p className="mb-4">No profiles found</p>
               </div>
             )}
 
-            {profiles?.length > 0 && (
+            {accounts?.length > 0 && (
               <ScrollArea className="w-full px-2 max-h-[300px]">
                 <div className="w-full flex flex-col gap-1">
-                  {profiles.map((entry) => (
-                    <SelectAccountButton key={entry.address} profile={entry} onSuccess={handleSelectProfileSuccess} />
+                  {accounts.map((account) => (
+                    <SelectAccountButton key={account.address} account={account} onSuccess={handleSelectAccountSuccess} />
                   ))}
                 </div>
               </ScrollArea>

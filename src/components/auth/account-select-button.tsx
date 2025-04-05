@@ -1,40 +1,62 @@
 "use client";
 
-import { useAccountOwnerClient } from "@/hooks/use-lens-clients";
 import { Account } from "@lens-protocol/client";
 import { useRouter } from "next/navigation";
-import { useAccount } from "wagmi";
+import { useAccount, useSignMessage } from "wagmi";
 import { Button } from "../ui/button";
 import { UserAvatar } from "../user/user-avatar";
 import { setupUserAuth } from "./auth-manager";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { syncBlogsQuietly } from "../blog/blog-sync-button";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
+import { getLensClient, getPublicClient } from "@/lib/lens/client";
+import { signMessageWith } from "@lens-protocol/client/viem";
 
-export function SelectAccountButton({ profile, onSuccess }: { profile: Account; onSuccess?: () => Promise<void> }) {
-  const { address } = useAccount();
-  const accountOwnerAuth = useAccountOwnerClient();
+export function SelectAccountButton({ account, onSuccess }: { account: Account; onSuccess?: () => Promise<void> }) {
+  const { address: walletAddress } = useAccount();
   const router = useRouter();
   const resetBlogStorage = useBlogStorage((state) => state.resetState);
-  const setBlogs = useBlogStorage((state) => state.setBlogs);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const { signMessageAsync, error, isError, isPending } = useSignMessage();
 
-  if (!address) {
-    return null;
-  }
+  useEffect(() => {
+    if (isError) {
+      toast.error(error?.message);
+      console.error(error);
+    }
+  }, [isError, error]);
 
   const login = async () => {
     setIsLoggingIn(true);
     try {
-      const client = await accountOwnerAuth(profile.address);
+      const client = await getPublicClient();
 
       if (!client) {
-        throw new Error("Failed to authenticate with the account");
+        throw new Error("No Lens client found");
       }
 
-      const credentials = await client.getCredentials();
+      if (!walletAddress) {
+        throw new Error("No wallet address found");
+      }
+
+      const authenticated = await client.login({
+        accountOwner: {
+          account: account.address,
+          app: "0xFDa2276FCC1Ad91F45c98cB88248a492a0d285e2",
+          owner: walletAddress,
+        },
+        signMessage: async (message: string) => {
+          return await signMessageAsync({ message });
+        },
+      });
+
+      if (authenticated.isErr()) {
+        throw new Error("Failed to get authenticated client: " + authenticated.error.message);
+      }
+
+      const credentials = await authenticated.value.getCredentials();
 
       if (credentials.isErr()) {
         console.error("Failed to get credentials", credentials.error);
@@ -61,7 +83,7 @@ export function SelectAccountButton({ profile, onSuccess }: { profile: Account; 
       resetBlogStorage();
       await onSuccess?.();
 
-      router.push(`/u/${profile.username?.localName}`);
+      router.push(`/u/${account.username?.localName}`);
       window.location.reload();
     } catch (err) {
       console.error("Error logging in:", err);
@@ -79,8 +101,8 @@ export function SelectAccountButton({ profile, onSuccess }: { profile: Account; 
       disabled={isLoggingIn}
     >
       <div className="flex items-center gap-2">
-        <UserAvatar account={profile} className="w-8 h-8" />
-        {profile.username?.localName ?? profile.address}
+        <UserAvatar account={account} className="w-8 h-8" />
+        {account.username?.localName ?? account.address}
       </div>
       {isLoggingIn && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
     </Button>

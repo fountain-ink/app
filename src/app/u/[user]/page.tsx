@@ -17,6 +17,8 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
       metadata: { mainContentFocus: [MainContentFocus.Article] },
     },
   })
+
+  // console.log(posts)
   if (posts.isErr()) {
     console.error(posts.error);
     return null;

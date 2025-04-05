@@ -53,27 +53,27 @@ export const useOnboardingClient = () => {
   return authenticate;
 };
 
-export const useAccountOwnerClient = () => {
-  const { address } = useAccount();
-  const { signMessageAsync } = useSignMessage();
+// export const useAccountOwnerClient = () => {
+//   const { address } = useAccount();
+//   const { signMessageAsync } = useSignMessage();
 
-  const authenticate = async (accountAddress: string) => {
-    try {
-      if (!address || !signMessageAsync || !accountAddress) {
-        return null;
-      }
+//   const authenticate = async (accountAddress: string) => {
+//     try {
+//       if (!address || !signMessageAsync || !accountAddress) {
+//         return null;
+//       }
 
-      const signMessage = async (message: string) => {
-        return await signMessageAsync({ message });
-      };
+//       const signMessage = async (message: string) => {
+//         return await signMessageAsync({ message });
+//       };
 
-      const accountOwner = await getAccountOwnerClient(address, accountAddress, signMessage);
-      return accountOwner;
-    } catch (error) {
-      console.error("Authentication error:", error);
-      return null;
-    }
-  };
+//       const accountOwner = await getAccountOwnerClient(address, accountAddress, signMessage);
+//       return accountOwner;
+//     } catch (error) {
+//       console.error("Authentication error:", error);
+//       return null;
+//     }
+//   };
 
-  return authenticate;
-};
+//   return authenticate;
+// };
