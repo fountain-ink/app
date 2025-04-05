@@ -86,7 +86,9 @@ export const CommentReplyArea = ({
 
       if (result.isErr()) {
         toast.dismiss(pendingToast);
-        toast.error("Failed to publish comment");
+        toast.error("Failed to publish comment", {
+          description: result.error instanceof Error ? result.error.message : "An unknown error occurred",
+        });
         console.error("Error publishing comment:", result.error);
         return;
       }
@@ -100,7 +102,9 @@ export const CommentReplyArea = ({
       }
     } catch (error) {
       console.error("Error publishing comment:", error);
-      toast.error("An error occurred while publishing the comment");
+      toast.error("Error publishing comment", {
+        description: error instanceof Error ? error.message : "An unknown error occurred",
+      });
     } finally {
       setIsSubmitting(false);
     }
