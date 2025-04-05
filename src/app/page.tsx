@@ -73,35 +73,6 @@ export default function HomePage() {
               <GraphicInk />
             </div>
 
-            <h2>Rediscover the Joy of Writing.</h2>
-            <p>
-              In a world dominated by fast-paced social media and endless scrolling, there emerges a sanctuary for writers
-              and readers alike. Fountain is a serene escape, a return to mindful engagement and authentic connection. We
-              offer you an oasis where creativity thrives, unencumbered by the noise of modern digital life.
-            </p>
-            <p>
-              Fountain is stripping away everything and helps you focus on what matters, making it beautiful. Without
-              attention it's very difficult to produce anything profound, immerse in the flow or enjoy to learn.
-            </p>
-
-            <h2>True Connection in a Digital World.</h2>
-            <p>
-              Fountain redefines social interaction by fostering genuine connections. In a world where engagement often
-              feels superficial, Fountain offers a space where every comment, every share, is meaningful. Your readers
-              don't just skim; they engage deeply, leaving thoughtful comments that resonate with authenticity.
-            </p>
-            <p>
-              Fountain is a community of creators who uplift and inspire each other. Here, your work is seen, appreciated,
-              and celebrated. High-quality content is highlighted, and exceptional contributions are recognized and
-              rewarded.
-            </p>
-
-            <h2>Join Us.</h2>
-            <p>
-              We hope you enjoy this release of Fountain, and invite you to become a co-creator on the journey of making
-              it a less grueling and more fun experience to write, read and share.
-            </p>
-
             <div className="flex justify-center py-10 pb-20 items-center">
               <DraftCreateButton text="Start Writing" />
             </div>
