@@ -92,17 +92,17 @@ export const turnIntoItems = [
     label: "Quote",
     value: BlockquotePlugin.key,
   },
-  {
-    icon: <LightbulbIcon />,
-    keywords: ["highlight", "note", "important"],
-    label: "Callout",
-    value: CalloutPlugin.key,
-  },
-  {
-    icon: <Columns3Icon />,
-    label: "3 columns",
-    value: "action_three_columns",
-  },
+  // {
+  //   icon: <LightbulbIcon />,
+  //   keywords: ["highlight", "note", "important"],
+  //   label: "Callout",
+  //   value: CalloutPlugin.key,
+  // },
+  // {
+  //   icon: <Columns3Icon />,
+  //   label: "3 columns",
+  //   value: "action_three_columns",
+  // },
 ];
 
 export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
