@@ -65,7 +65,7 @@ const UserPostLayout = async ({
     return notFound();
   }
 
-  const blogAddress = post.feed.group?.address || account.address;
+  const blogAddress = post.feed.group?.address || account.username?.localName;
   const settings = await getBlogData(blogAddress);
   const themeName = settings?.theme?.name;
   const title = settings?.title;

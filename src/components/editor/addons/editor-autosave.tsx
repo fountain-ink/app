@@ -30,7 +30,7 @@ export function AutoSave({ documentId }: { documentId: string }) {
         const { title, subtitle, coverUrl } = extractMetadata(editor.children as any);
         // console.log(title, subtitle, coverUrl);
         const contentMarkdown = api.markdown.serialize({ value: editor.children });
-        // console.log(contentMarkdown);
+        console.log(contentMarkdown);
         // const staticEditor = getStaticEditor(content);
         // const contentHtml = await serializeHtml(staticEditor, {
         //   components: { ...staticComponents },
