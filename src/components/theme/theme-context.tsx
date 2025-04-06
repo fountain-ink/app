@@ -13,7 +13,7 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: PropsWithChildren) => {
-  const { theme: nextTheme } = useNextTheme();
+  const { resolvedTheme: lightMode } = useNextTheme();
   const [isMounted, setIsMounted] = useState(false);
 
   const [theme, setTheme] = useState<ThemeType>(() => {
@@ -23,14 +23,14 @@ export const ThemeProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     const root = document.documentElement;
-    if (!root) return;
+    if (!root || !lightMode) return;
 
-    setGlobalColorTheme(nextTheme as "light" | "dark", theme);
+    setGlobalColorTheme(lightMode as "light" | "dark", theme);
 
     if (!isMounted) {
       setIsMounted(true);
     }
-  }, [theme, nextTheme, isMounted]);
+  }, [theme, lightMode, isMounted]);
 
   if (!isMounted) {
     return null;

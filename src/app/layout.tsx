@@ -39,7 +39,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
         )}
       >
         <Web3Providers>
-          <DarkModeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
+          <DarkModeProvider attribute="class" defaultTheme="system" enableSystem={true} disableTransitionOnChange>
             <ThemeProvider>
               <AuthManager credentials={credentials} />
               <Toaster position="top-center" offset={16} />

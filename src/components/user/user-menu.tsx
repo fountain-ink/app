@@ -33,7 +33,7 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
   const { disconnect } = useDisconnect();
   const pathname = usePathname();
   const router = useRouter();
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme: theme, setTheme } = useTheme();
   const isDarkMode = theme === "dark";
   const [showProfileSelect, setShowProfileSelect] = useState(!session);
   const resetBlogStorage = useBlogStorage((state) => state.resetState);

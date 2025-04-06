@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { useRef } from "react";
 
 export const FountainLogo = () => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useTheme();
 
   if (theme === "dark") {
     return (
@@ -132,7 +132,7 @@ export const CoinIcon = ({
   style?: React.CSSProperties;
   [key: string]: any;
 }) => {
-  const { theme, resolvedTheme } = useTheme();
+  const { resolvedTheme: theme } = useTheme();
 
   return (
     <svg
