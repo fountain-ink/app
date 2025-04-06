@@ -53,8 +53,8 @@ export default function PlateEditor(
 
           {props.children}
 
-          <EditorContainer className={"w-full overflow-visible"} data-plate-selectable>
-            <div className="w-[65ch] mx-auto overflow-visible">
+          <EditorContainer data-plate-selectable>
+            <div className="max-w-[65ch] w-full mx-auto">
               <Editor variant={"fullWidth"} autoFocus />
             </div>
           </EditorContainer>
