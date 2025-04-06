@@ -135,6 +135,7 @@ export async function publishPost(
         contentUri: uri,
         feed: feedValue,
         actions: actions,
+        
       })
         .andThen(handleOperationWith(walletClient as any))
         .andTee((v) => {

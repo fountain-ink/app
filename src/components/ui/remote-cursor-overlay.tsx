@@ -90,10 +90,10 @@ export function RemoteCursorOverlay() {
     containerRef,
   });
 
-  useEffect(() => {
-    editor.tf.select()
-    editor.tf.focus({ edge: "endEditor" });
-  }, []);
+  // useEffect(() => {
+    // editor.tf.select()
+    // editor.tf.focus({ edge: "endEditor" });
+  // }, []);
 
   return (
     <>

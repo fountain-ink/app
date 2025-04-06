@@ -1,7 +1,7 @@
 import { LinkFloatingToolbar } from "@/components/ui/link-floating-toolbar";
 import { useYjsState } from "@/hooks/use-yjs-state";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
-import { PathApi } from "@udecode/plate";
+import { PathApi, TElement, TNode, TText } from "@udecode/plate";
 import { AlignPlugin } from "@udecode/plate-alignment/react";
 import { AutoformatPlugin } from "@udecode/plate-autoformat/react";
 import {
@@ -37,7 +37,7 @@ import { KbdPlugin } from "@udecode/plate-kbd/react";
 import { ColumnItemPlugin, ColumnPlugin } from "@udecode/plate-layout/react";
 import { LinkPlugin } from "@udecode/plate-link/react";
 import { ListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
-import { MarkdownPlugin } from "@udecode/plate-markdown";
+import { MarkdownPlugin, MdastTypes, SerializeMdOptions } from "@udecode/plate-markdown";
 import { EquationPlugin, InlineEquationPlugin } from "@udecode/plate-math/react";
 import {
   AudioPlugin,
@@ -68,6 +68,10 @@ import { NormalizePlugin } from "./plugins/normalize-plugin";
 import { SubtitlePlugin, TITLE_KEYS, TitlePlugin } from "./plugins/title-plugin";
 import emojiMartData, { type EmojiMartData } from "@emoji-mart/data";
 import { autoformatRules } from "./plugins/autoformat-rules";
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import { TEquationElement } from "@udecode/plate-math";
+import { Heading, Text } from "mdast";
 
 const lowlight = createLowlight(all);
 
@@ -489,12 +493,70 @@ export const plugins = [
   TrailingBlockPlugin.configure({
     options: { type: ParagraphPlugin.key },
   }),
-
-  // Deserialization
   DocxPlugin,
   MarkdownPlugin.configure({
     options: {
-      indentList: false,
+      rules: {
+        [TitlePlugin.key]: {
+          serialize: (slateNode: TElement): Heading | Text => {
+            const text = slateNode.children[0]?.text;
+
+            if (!text || text === "") { 
+              return { type: "text", value: "" };
+            }
+
+            return {
+              type: 'heading',
+              children: [{ type: "text", value: text as string }],
+              depth: 1,
+            };
+          },
+          deserialize: (mdastNode: Heading) => {
+            if (!mdastNode || !mdastNode.children[0]) return;
+
+            if (mdastNode.depth === 1) {
+              const text = "value" in mdastNode?.children[0] ? mdastNode.children[0].value : "";
+              return {
+                type: TitlePlugin.key,
+                children: [{ text }],
+              };
+            }
+          },
+        },
+        [SubtitlePlugin.key]: {
+          serialize: (slateNode: TElement): Heading | Text => {
+            const text = slateNode.children[0]?.text;
+
+            if (!text || text === "") {
+              return { type: "text", value: "" };
+            }
+
+            return {
+              type: 'heading',
+              children: [{ type: "text", value: text as string }],
+              depth: 2,
+            };
+          },
+          deserialize: (mdastNode: Heading) => {
+            if (!mdastNode || !mdastNode.children[0]) return;
+
+            const text = "value" in mdastNode?.children[0] ? mdastNode.children[0].value : "";
+            if (mdastNode.depth === 2) {
+              return {
+                type: SubtitlePlugin.key,
+                children: [{ text }],
+              };
+            }
+          },
+        },
+        [EquationPlugin.key]: {
+          serialize: (node: TEquationElement) => ({
+            type: 'math',
+            value: node.texExpression,
+          }),
+        },
+      },
+      remarkPlugins: [remarkMath, remarkGfm],
     },
   }),
   JuicePlugin,

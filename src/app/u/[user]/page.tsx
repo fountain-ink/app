@@ -12,13 +12,13 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
 
   const posts = await fetchPosts(lens, {
     filter: {
-      // apps: [appEvmAddress],
+      // apps: [evmAddress(appEvmAddress)],
       authors: [evmAddress(account?.address)],
       metadata: { mainContentFocus: [MainContentFocus.Article] },
     },
   })
 
-  // console.log(posts)
+  // console.log(posts, appEvmAddress, account?.address)
   if (posts.isErr()) {
     console.error(posts.error);
     return null;
