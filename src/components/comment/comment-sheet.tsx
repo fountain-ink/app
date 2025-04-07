@@ -109,7 +109,7 @@ export const CommentSheet = ({
     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
       <SheetContent side="right" className="w-full sm:min-w-[450px] p-0">
         <div className="h-full flex flex-col">
-          <div className="flex-none p-6 py-3 flex items-center gap-2 border-b">
+          <div className="flex-none p-6 py-3 flex items-center gap-2">
             {isViewingNested && (
               <Button variant="ghost" size="icon" onClick={handleGoBack} className="h-8 w-8">
                 <ChevronLeftIcon className="h-4 w-4" />
