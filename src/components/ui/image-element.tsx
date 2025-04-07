@@ -168,7 +168,7 @@ export const ImageElement = withRef<typeof PlateElement>(
               damping: 30,
             }}
           >
-            {!url ? (
+            {!url || !imageProps.src ? (
               <div className={cn("rounded-sm flex items-center justify-center w-full", selected && "ring-2 ring-ring")}>
                 <div className="absolute">
                   {!readonly && (
@@ -197,7 +197,7 @@ export const ImageElement = withRef<typeof PlateElement>(
               </div>
             ) : (
               <div className="relative w-full aspect-auto">
-                <Image
+                <img
                   className={cn("block w-full h-auto max-h-full", "rounded-sm", selected && "ring-2 ring-ring")}
                   alt=""
                   width={1200}

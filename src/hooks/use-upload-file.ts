@@ -36,12 +36,12 @@ export function useUploadFile({
     onUploadBegin?.(file.name);
 
     try {
-      console.log("uploading file", file);
+      // console.log("uploading file", file);
       const url = await uploadFile(file);
-      console.log("uploaded file", url);
+      // console.log("uploaded file", url);
 
       const uploadedFile = {
-        key: url.split("/").pop() || "", // Use the IPFS hash as the key
+        key: url.split("/").pop() || "", 
         url,
         name: file.name,
         size: file.size,

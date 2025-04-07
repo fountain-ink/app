@@ -28,6 +28,7 @@ import { nanoid } from "@udecode/plate";
 import { setMediaNode } from "@udecode/plate-media";
 import { useUploadFile } from "@/hooks/use-upload-file";
 import { ElementPopover, ElementWidth, widthVariants } from "./element-popover";
+import { uploadFile } from "@/lib/upload/upload-file";
 
 const MEDIA_CONFIG: Record<
   string,
@@ -76,7 +77,6 @@ function MediaPopover({
   const element = useElement();
   const [isUploading, setIsUploading] = useState(false);
   const [width, setWidth] = useState<ElementWidth>((element?.width as ElementWidth) || "column");
-  const { uploadFile } = useUploadFile();
 
   const handleWidth = (newWidth: ElementWidth) => {
     setWidth(newWidth);
@@ -136,7 +136,9 @@ export const MediaPlaceholderElement = withHOC(
       (file: File) => {
         setUpdatedFiles([file]);
         void uploadFile(file);
-        api.placeholder.addUploadingFile(element.id as string, file);
+        if (element.id && typeof element.id === "string") {
+          api.placeholder.addUploadingFile(element.id, file);
+        }
       },
       [element.id, uploadFile, setUpdatedFiles, api.placeholder],
     );
@@ -284,7 +286,6 @@ export function formatBytes(
 
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
 
-  return `${(bytes / 1024 ** i).toFixed(decimals)} ${
-    sizeType === "accurate" ? (accurateSizes[i] ?? "Bytest") : (sizes[i] ?? "Bytes")
-  }`;
+  return `${(bytes / 1024 ** i).toFixed(decimals)} ${sizeType === "accurate" ? (accurateSizes[i] ?? "Bytest") : (sizes[i] ?? "Bytes")
+    }`;
 }

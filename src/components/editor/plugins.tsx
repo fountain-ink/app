@@ -72,6 +72,7 @@ import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import { TEquationElement } from "@udecode/plate-math";
 import { Heading, Text } from "mdast";
+import { uploadFile } from "@/lib/upload/upload-file";
 
 const lowlight = createLowlight(all);
 
@@ -312,6 +313,12 @@ export const plugins = [
       isVoid: true,
       isElement: true,
     },
+    options: {
+      
+      uploadImage: uploadFile,
+      // disableUploadInsert: true,
+      // disableEmbedInsert: true,
+    },
   }),
   VideoPlugin,
   AudioPlugin,
@@ -501,7 +508,7 @@ export const plugins = [
           serialize: (slateNode: TElement): Heading | Text => {
             const text = slateNode.children[0]?.text;
 
-            if (!text || text === "") { 
+            if (!text || text === "") {
               return { type: "text", value: "" };
             }
 

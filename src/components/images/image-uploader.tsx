@@ -7,17 +7,7 @@ import Cropper from "react-easy-crop";
 import { useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { storageClient } from "@/lib/lens/storage-client";
-
-export const getIpfsImageUrl = (uri: string | undefined): string => {
-  if (!uri) return "";
-  if (uri.startsWith("ipfs://")) {
-    return `https://fountain.4everland.link/ipfs/${uri.slice(7)}`;
-  }
-  if (uri.startsWith("lens://")) {
-    return storageClient.resolve(uri);
-  }
-  return uri;
-};
+import { resolveImageUrl } from "@/lib/utils/resolve-image-url";
 
 const createImage = (url: string): Promise<HTMLImageElement> =>
   new Promise((resolve, reject) => {
@@ -154,7 +144,7 @@ export const ImageCropperUploader = ({
       >
         {localImage || image ? (
           <>
-            <img src={localImage || getIpfsImageUrl(image)} alt={""} className="w-full h-full object-cover" />
+            <img src={localImage || resolveImageUrl(image)} alt={""} className="w-full h-full object-cover" />
             {(localImage || image) && (
               <div
                 className="absolute inset-0 w-10 h-10 mx-auto my-auto flex items-center justify-center bg-black/50 hover:bg-black/70 p-1.5 rounded-full cursor-pointer transition-colors"
@@ -272,7 +262,7 @@ export function ImageUploader({ label, onImageChange, initialImage, className }:
       >
         {localImage || image ? (
           <>
-            <img src={localImage || getIpfsImageUrl(image)} alt={""} className="w-full h-full object-cover" />
+            <img src={localImage || resolveImageUrl(image)} alt={""} className="w-full h-full object-cover" />
             {(localImage || image) && (
               <div
                 className="absolute inset-0 w-10 h-10 mx-auto my-auto flex items-center justify-center bg-black/50 hover:bg-black/70 p-1.5 rounded-full cursor-pointer transition-colors"

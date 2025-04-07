@@ -1,9 +1,9 @@
 "use client";
 
-import { getIpfsImageUrl } from "@/components/images/image-uploader";
 import imageCompression from "browser-image-compression";
 import { toast } from "sonner";
 import { storageClient } from "../lens/storage-client";
+import { resolveImageUrl } from "../utils/resolve-image-url";
 
 export const uploadFile = async (input: File | ArrayBuffer | string) => {
   try {
@@ -15,7 +15,6 @@ export const uploadFile = async (input: File | ArrayBuffer | string) => {
         useWebWorker: true,
       });
     } else if (input instanceof ArrayBuffer) {
-      console.log("input is ArrayBuffer");
       const blob = new Blob([input]);
       fileToUpload = new File([blob], "file.dat");
     } else if (typeof input === "string") {
@@ -37,7 +36,7 @@ export const uploadFile = async (input: File | ArrayBuffer | string) => {
     const { uri } = await storageClient.uploadFile(fileToUpload);
     console.log(`Uploading file to ${uri}`);
 
-    return getIpfsImageUrl(uri);
+    return resolveImageUrl(uri);
   } catch (error) {
     console.error(error);
     toast.error("Failed to upload file");
