@@ -180,7 +180,6 @@ const UserBlogPage = async ({
         <div className="flex flex-col my-4 gap-4">
           <UserContent
             posts={[...(posts?.items ?? [])]}
-            contentType="articles"
             profile={profile}
             isUserProfile={isUserBlog || isUserMemeber}
           />
