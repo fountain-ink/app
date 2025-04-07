@@ -109,9 +109,11 @@ export function SelectAccountButton({ account, onSuccess }: { account: Account; 
       onClick={login}
       disabled={isLoggingIn}
     >
-      <div className="flex items-center gap-2">
-        <UserAvatar account={account} className="w-8 h-8" />
-        {account.username?.localName ?? account.address}
+      <div className="flex items-center truncate overflow-hidden text-ellipsis max-w-[260px] gap-2">
+        <UserAvatar account={account} className="w-8 h-8 flex-shrink-0" />
+        <div className="truncate overflow-hidden text-ellipsis max-w-[260px]">
+          {account.username?.localName ?? account.address}
+        </div>
       </div>
       {isLoggingIn && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
     </Button>

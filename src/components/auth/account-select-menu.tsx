@@ -153,8 +153,8 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
             )}
 
             {accounts?.length > 0 && (
-              <ScrollArea className="w-full px-2 max-h-[300px]">
-                <div className="w-full flex flex-col gap-1">
+              <ScrollArea className="w-full max-h-[350px]">
+                <div className="w-full flex flex-col gap-2 pr-4">
                   {accounts.map((account) => (
                     <SelectAccountButton key={account.address} account={account} onSuccess={handleSelectAccountSuccess} />
                   ))}
