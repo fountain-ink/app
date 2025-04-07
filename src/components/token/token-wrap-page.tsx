@@ -7,13 +7,14 @@ import { useAccount, useBalance, useWalletClient } from "wagmi";
 import { ConnectWalletButton } from "@/components/auth/auth-wallet-button";
 import { ArrowRight, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
+import Link from "next/link";
 
 interface TokenWrapClientPageProps {
   accountAddress?: string;
-  wghoAddress: string;
+  tokenAddress: string;
 }
 
-export function TokenWrapClientPage({ accountAddress, wghoAddress }: TokenWrapClientPageProps) {
+export function TokenWrap({ accountAddress, tokenAddress }: TokenWrapClientPageProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isTransferring, setIsTransferring] = useState(false);
   const [transferAmount, setTransferAmount] = useState<string>("");
@@ -28,7 +29,7 @@ export function TokenWrapClientPage({ accountAddress, wghoAddress }: TokenWrapCl
 
   const { data: walletWrappedGhoBalance, isLoading: isWalletWrappedGhoBalanceLoading } = useBalance({
     address: walletAddress || "0x0000000000000000000000000000000000000000",
-    token: wghoAddress as `0x${string}`,
+    token: tokenAddress as `0x${string}`,
   });
 
   const { data: accountGhoBalance, isLoading: isAccountGhoBalanceLoading } = useBalance({
@@ -37,7 +38,7 @@ export function TokenWrapClientPage({ accountAddress, wghoAddress }: TokenWrapCl
 
   const { data: accountWrappedGhoBalance, isLoading: isAccountWrappedGhoBalanceLoading } = useBalance({
     address: (accountAddress as `0x${string}`) || "0x0000000000000000000000000000000000000000",
-    token: wghoAddress as `0x${string}`,
+    token: tokenAddress as `0x${string}`,
   });
 
   const hasLensAccount = !!accountAddress;
@@ -69,12 +70,17 @@ export function TokenWrapClientPage({ accountAddress, wghoAddress }: TokenWrapCl
     }
   };
 
+  const truncateAddress = (address: string) => {
+    if (!address) return "";
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+
   const showWalletData = walletAddress && isConnected;
   const showAccountData = accountAddress && hasLensAccount;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] px-4">
-      <div className="max-w-md w-full p-4 py-8">
+      <div className="max-w-lg w-full p-4 py-8">
         {isConnected ? (
           hasLensAccount ? (
             <div className="space-y-6">
@@ -82,8 +88,8 @@ export function TokenWrapClientPage({ accountAddress, wghoAddress }: TokenWrapCl
               <div className="bg-muted/30 rounded-lg p-6 space-y-4">
                 <div className="flex justify-between items-center mb-2">
                   <h2 className="text-xl font-semibold">Wallet Balances</h2>
-                  <div className="text-xs text-muted-foreground bg-background rounded-md px-2 py-1 border border-border">
-                    {walletAddress ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}` : ""}
+                  <div className="text-xs text-muted-foreground bg-muted/50 rounded-md px-2 py-1 border border-border max-w-[120px] truncate" title={walletAddress || ""}>
+                    {truncateAddress(walletAddress || "")}
                   </div>
                 </div>
 
@@ -151,8 +157,8 @@ export function TokenWrapClientPage({ accountAddress, wghoAddress }: TokenWrapCl
               <div className="bg-muted/30 rounded-lg p-6 space-y-4">
                 <div className="flex justify-between items-center mb-2">
                   <h2 className="text-xl font-semibold">Lens Account Balances</h2>
-                  <div className="text-xs text-muted-foreground bg-background rounded-md px-2 py-1 border border-border">
-                    {accountAddress ? `${accountAddress.slice(0, 6)}...${accountAddress.slice(-4)}` : ""}
+                  <div className="text-xs text-muted-foreground bg-muted/50 rounded-md px-2 py-1 border border-border max-w-[120px] truncate" title={accountAddress || ""}>
+                    {truncateAddress(accountAddress || "")}
                   </div>
                 </div>
 
@@ -184,8 +190,18 @@ export function TokenWrapClientPage({ accountAddress, wghoAddress }: TokenWrapCl
                 </div>
 
                 <Button onClick={() => setIsDialogOpen(true)} className="w-full mt-4" size="lg">
-                  Wrap/Unwrap GHO
+                  Wrap/Unwrap
                 </Button>
+              </div>
+
+              <div className="bg-muted/30 rounded-lg p-6">
+                <h2 className="text-lg font-semibold mb-3">Send Tokens</h2>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Need to send wGHO tokens to someone? Visit our send page to transfer your wrapped tokens to any address.
+                </p>
+                <Link href="/send">
+                  <Button variant="outline" className="w-full">Go to Send Tokens</Button>
+                </Link>
               </div>
 
               <div className="bg-muted/30 rounded-lg p-6">
