@@ -38,6 +38,7 @@ import { UserSearchList } from "../user/user-search-list";
 import { EvmAddress } from "../misc/evm-address";
 import { UserLazyUsername } from "../user/user-lazy-username";
 import { CombinedFormValues } from "./publish-dialog";
+import { resolveImageUrl } from "@/lib/utils/resolve-image-url";
 
 export const collectingFormSchema = z
   .object({
@@ -614,7 +615,7 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
                         </div>
 
                         {isRevenueSplitEnabled && (
-                          <div className="space-y-4 pt-2">
+                          <div className="pt-2">
                             <FormField
                               control={control}
                               name="collecting.recipients"
@@ -660,7 +661,7 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
                                             </div>
                                             {recipient.picture ? (
                                               <img
-                                                src={recipient.picture}
+                                                src={resolveImageUrl(recipient.picture)}
                                                 alt={recipient.username || "recipient"}
                                                 className="w-8 h-8 rounded-full border border-border"
                                               />
@@ -694,7 +695,7 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
                                   )}
 
                                   {showAddRecipient ? (
-                                    <div className="space-y-4 animate-in slide-in-from-top-2 fade-in duration-200 border-t pt-4 mt-4">
+                                    <div className="space-y-4 animate-in slide-in-from-top-2 fade-in duration-200 border-t border-border/50 pt-4 mt-4">
                                       <div className="flex flex-wrap gap-3 items-end">
                                         <div className="relative min-w-16 w-20">
                                           <Label className="mb-2 block">Percent</Label>

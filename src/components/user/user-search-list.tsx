@@ -4,7 +4,7 @@ import { getLensClient } from "@/lib/lens/client";
 import { fetchAccounts } from "@lens-protocol/client/actions";
 import { User2Icon } from "lucide-react";
 import { Account } from "@lens-protocol/client";
-import { storageClient } from "@/lib/lens/storage-client";
+import { resolveImageUrl } from "@/lib/utils/resolve-image-url";
 
 export function UserSearchList({
   query,
@@ -35,7 +35,7 @@ export function UserSearchList({
             name: item.metadata?.name || "",
             text: item.username?.localName || "",
             username: item.username?.localName || "",
-            picture: item.metadata?.picture ? storageClient.resolve(item.metadata?.picture) : undefined,
+            picture: item.metadata?.picture ? resolveImageUrl(item.metadata?.picture) : undefined,
           }));
           setProfiles(mentionables);
         } else {
