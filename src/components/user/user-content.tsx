@@ -11,60 +11,45 @@ export const UserContent = ({
   posts,
   profile,
   loading,
-  contentType = "articles",
   isUserProfile = false,
 }: {
   posts: AnyPost[];
   profile: Account | null;
   loading?: boolean;
-  contentType?: string;
   isUserProfile?: boolean;
 }) => {
   if (loading) {
     return null;
   }
 
-  // if (error) {
-  //   toast.error(error.message);
-  //   return <ErrorPage error={error.message} />;
-  // }
-
   const postViews = posts.map((post) => {
-    if (post.__typename === "Post") {
-      if (contentType === "articles") {
-        return (
-          <PostView
-            options={{
-              showContent: false,
-              showAuthor: false,
-              showTitle: true,
-              showSubtitle: true,
-              showDate: true,
-              showPreview: true,
-            }}
-            key={post.id}
-            authors={[post.author.address]}
-            item={post}
-          />
-        );
-      }
-
-      return (
-        <PostView
-          options={{
-            showContent: true,
-            showAuthor: true,
-            showTitle: false,
-            showSubtitle: false,
-            showDate: true,
-            showPreview: false,
-          }}
-          key={post.id}
-          authors={[post.author.address]}
-          item={post}
-        />
-      );
+    if (post.__typename !== "Post") {
+      return null;
     }
+
+    if (post.metadata.__typename !== "ArticleMetadata") {
+      return null;
+    }
+
+    if (!post.metadata.attributes.some((attribute) => attribute.key === "contentJson")) {
+      return null;
+    }
+
+    return (
+      <PostView
+        options={{
+          showContent: false,
+          showAuthor: false,
+          showTitle: true,
+          showSubtitle: true,
+          showDate: true,
+          showPreview: true,
+        }}
+        key={post.id}
+        authors={[post.author.address]}
+        item={post}
+      />
+    );
   });
 
   if (postViews.length === 0) {

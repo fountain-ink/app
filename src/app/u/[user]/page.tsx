@@ -8,17 +8,14 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
   const lens = await getLensClient();
   const { address } = await getUserProfile();
   const account = await fetchAccount(lens, { username: { localName: params.user } }).unwrapOr(null);
-  const appEvmAddress = "0xFDa2276FCC1Ad91F45c98cB88248a492a0d285e2";
 
   const posts = await fetchPosts(lens, {
     filter: {
-      // apps: [evmAddress(appEvmAddress)],
       authors: [evmAddress(account?.address)],
       metadata: { mainContentFocus: [MainContentFocus.Article] },
     },
   })
 
-  // console.log(posts, appEvmAddress, account?.address)
   if (posts.isErr()) {
     console.error(posts.error);
     return null;
@@ -31,7 +28,10 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
   const isUserProfile = address === account.address;
 
   return (
-    <UserContent posts={[...posts.value.items]} isUserProfile={isUserProfile} contentType="articles" profile={account} />
+    <UserContent
+      posts={[...posts.value.items]}
+      isUserProfile={isUserProfile}
+      profile={account} />
   );
 };
 
