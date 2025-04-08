@@ -156,7 +156,7 @@ export const ImageElement = withRef<typeof PlateElement>(
         <PlateElement ref={ref} className={cn(className, "my-9 flex flex-col items-center  ")} {...props}>
           <motion.figure
             ref={figureRef}
-            className="group w-full flex flex-col items-center"
+            className="group w-full flex flex-col items-center cursor-default"
             contentEditable={false}
             layout={true}
             initial={width}

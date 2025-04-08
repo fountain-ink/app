@@ -211,7 +211,7 @@ export const MediaPlaceholderElement = withHOC(
       <MediaPopover file={file} open={selected} popoverRef={popoverRef} mediaType={mediaType}>
         <PlateElement
           ref={ref}
-          className={cn(className, "my-9 flex flex-col items-center [&_*]:caret-transparent ")}
+          className={cn(className, "my-9 flex flex-col items-center cursor-default [&_*]:caret-transparent ")}
           editor={editor}
           {...props}
         >
