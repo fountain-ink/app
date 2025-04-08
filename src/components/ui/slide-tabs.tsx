@@ -43,6 +43,7 @@ export function SlideNav({ items, className }: SlideNavProps) {
             ) : (
               <Link
                 href={item.href}
+                scroll={false}
                 ref={(node) => {
                   if (node && pathname === item.href) {
                     setActiveItem(node);
