@@ -3,6 +3,7 @@ import { EditorReadTime } from "@/components/editor/addons/editor-read-time";
 import Editor from "@/components/editor/editor";
 import ErrorPage from "@/components/misc/error-page";
 import { PostActionsBar } from "@/components/post/post-actions-bar";
+import PostDeletedView from "@/components/post/post-deleted-view";
 import { AuthorView } from "@/components/user/user-author-view";
 import { UserPostCard } from "@/components/user/user-post-card";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
@@ -22,8 +23,6 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
   if (post?.__typename === "Repost" || post?.metadata?.__typename === "EventMetadata" || !post) {
     return null;
   }
-
-  //// FIXME: Add app metadata check
 
   if (post.metadata.__typename !== "ArticleMetadata") {
     return null;
