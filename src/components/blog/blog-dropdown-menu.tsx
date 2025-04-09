@@ -43,6 +43,16 @@ export function BlogDropdownMenu({ username }: BlogMenuProps) {
     return `/b/${blog.address}`;
   };
 
+  const getShortBlogUrl = (blog: BlogData): string => {
+    if (blog.handle && blog.handle !== "" && blog.slug && blog.slug !== "") {
+      return blog.slug;
+    }
+    if (blog.handle && !blog.slug) {
+      return blog.handle;
+    }
+    return blog.address.substring(0, 9);
+  };
+
   if (!hasMultipleBlogs) {
     return (
       <AnimatedMenuItem href={`/b/${username}`} icon={CustomPenToolIcon}>
@@ -65,7 +75,7 @@ export function BlogDropdownMenu({ username }: BlogMenuProps) {
         <DropdownMenuContent className="w-fit min-w-48 -mt-1 mr-1" side="left" align="start">
           {blogs.map((blog) => (
             <Link href={getBlogUrl(blog)} key={blog.address} passHref>
-              <DropdownMenuItem className="flex justify-start h-8 gap-2 p-1 mx-0 w-full items-center text-base">
+              <DropdownMenuItem className="flex justify-start h-8 gap-2 p-1 pr-4 mx-0 w-full items-center text-base">
                 <div className="rounded-sm h-full overflow-hidden relative flex-shrink-0 aspect-square">
                   {blog.icon && imageLoadStatus[blog.address] !== false ? (
                     <Image
@@ -97,7 +107,7 @@ export function BlogDropdownMenu({ username }: BlogMenuProps) {
                   )}
                 </div>
                 <span className="truncate flex items-center gap-2 max-w-[300px]">
-                  {blog.handle || blog.title || blog.address.substring(0, 9)}
+                  {blog.title || getShortBlogUrl(blog)}
                   {blog.address === blog.owner && <User2Icon className="w-4 h-4" />}
                 </span>
               </DropdownMenuItem>
