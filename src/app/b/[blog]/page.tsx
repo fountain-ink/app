@@ -3,7 +3,7 @@ import { AuthorView } from "@/components/user/user-author-view";
 import { UserContent } from "@/components/user/user-content";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
-import { fetchAccount, fetchPosts, fetchPostTags, fetchGroup, fetchGroupMembers } from "@lens-protocol/client/actions";
+import { fetchAccount, fetchPosts, fetchPostTags, fetchGroup, fetchGroupMembers, fetchAdminsFor } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
 import { getBlogData } from "@/lib/settings/get-blog-data";
 import { MainContentFocus, Account } from "@lens-protocol/client";
@@ -87,6 +87,7 @@ const UserBlogPage = async ({
   let feedAddress;
   let blogData;
   let group;
+  let groupAdmins: Account[] = [];
 
   const selectedTag = searchParams?.tag || "";
 
@@ -103,6 +104,13 @@ const UserBlogPage = async ({
     profile = group.owner;
     feedAddress = group.feed;
     blogData = await getBlogData(group.address);
+
+    const admins = await fetchAdminsFor(lens, { address: group.address }).unwrapOr(null);
+    if (admins) {
+      groupAdmins = admins.items
+        .map((admin) => admin.account)
+        .filter((account) => account.address !== account.owner); // Check if the admin is a Lens account and not an EOA
+    }
 
     const members = await fetchGroupMembers(lens, {
       group: params.blog,
@@ -158,7 +166,7 @@ const UserBlogPage = async ({
           <div className="p-4">
             <AuthorView
               showUsername={false}
-              accounts={isGroup && groupMembers.length > 0 ? groupMembers : profile ? [profile] : []}
+              accounts={isGroup ? groupAdmins : profile ? [profile] : []}
             />
           </div>
         )}

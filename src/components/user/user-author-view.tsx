@@ -67,6 +67,8 @@ export const AuthorView = ({
 }) => {
   if (!accounts || accounts.length === 0) return null;
 
+  console.log(accounts);
+
   const content = (
     <div className="flex flex-wrap gap-2">
       {accounts.map((acc) => {

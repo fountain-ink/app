@@ -30,7 +30,6 @@ export type BlogData = Omit<Blog, "theme" | "metadata"> & {
  */
 async function findBlogByIdentifier(identifier: string, slug?: string) {
   const db = createClient();
-  console.log(identifier, slug);
 
   if (isEvmAddress(identifier)) {
     return await db.from("blogs").select("*").eq("address", identifier).single();
