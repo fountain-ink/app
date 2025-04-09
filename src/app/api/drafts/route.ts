@@ -78,7 +78,8 @@ export async function GET(req: NextRequest) {
         contentHtml,
         coverUrl
       `)
-      .eq("author", address);
+      .eq("author", address)
+      .order('updatedAt', { ascending: false });
 
     if (error) {
       throw new Error(error.message);
