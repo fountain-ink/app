@@ -7,5 +7,5 @@ export const UserName = ({ profile, className }: { profile?: Account; className?
     return <div className="h-5"></div>
   }
 
-  return <div className={`text-foreground h-10 text-3xl font-bold ${className}`}>{name}</div>;
+  return <div className={`text-foreground text-3xl max-w-[600px] truncate font-bold ${className}`}>{name}</div>;
 };
