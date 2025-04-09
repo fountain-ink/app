@@ -43,6 +43,7 @@ export const BookmarkList = () => {
     <div className="flex flex-col gap-4">
       {bookmarks.map((post) => {
         if (post.__typename !== "Post") return null;
+        if (post.metadata?.__typename !== "ArticleMetadata") return null;
         return (
           <PostView
             key={post.id}
