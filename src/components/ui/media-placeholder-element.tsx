@@ -207,6 +207,8 @@ export const MediaPlaceholderElement = withHOC(
       }
     }, [element.width, width]);
 
+    if (readonly) return null;
+
     return (
       <MediaPopover file={file} open={selected} popoverRef={popoverRef} mediaType={mediaType}>
         <PlateElement
