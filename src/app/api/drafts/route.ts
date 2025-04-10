@@ -118,10 +118,11 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const documentId = body.documentId || getRandomUid();
-
     const contentJson = body.contentJson
-      ? body.contentJson
-      : (!claims.metadata.isAnonymous ? defaultContent : defaultGuestContent);
+
+    if (!contentJson) {
+      return NextResponse.json({ error: "Missing default content" }, { status: 400 });
+    }
 
     let yDoc = null;
     if (body.yDocBase64) {
