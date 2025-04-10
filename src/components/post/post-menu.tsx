@@ -4,7 +4,7 @@ import { Post, postId } from "@lens-protocol/client";
 import { deletePost } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { getCookie } from "cookies-next";
-import { Bookmark, Link, MoreHorizontal, Trash2 } from "lucide-react";
+import { Bookmark, Link, MoreHorizontal, Trash2, Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useWalletClient } from "wagmi";
@@ -12,6 +12,9 @@ import { ActionButton, type DropdownItem } from "./post-action-button";
 import { usePostActions } from "@/hooks/use-post-actions";
 import { getLensClient } from "@/lib/lens/client";
 import { useState } from "react";
+import { createDraft } from "@/lib/plate/create-draft";
+import { useDocumentStorage } from "@/hooks/use-document-storage";
+import { getRandomUid } from "@/lib/get-random-uid";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -29,6 +32,8 @@ export const PostMenu = ({ post }: { post: Post }) => {
   const router = useRouter();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isCreatingDraft, setIsCreatingDraft] = useState(false);
+  const { saveDocument } = useDocumentStorage();
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(`${getBaseUrl()}p/${post.author.username?.localName}/${post.slug}`);
@@ -39,6 +44,59 @@ export const PostMenu = ({ post }: { post: Post }) => {
   const claims = getTokenClaims(appToken);
 
   const isUserPost = post.author.address === claims?.sub;
+
+  const handleEditPost = async () => {
+    if (isCreatingDraft) return;
+    setIsCreatingDraft(true);
+
+    try {
+      const attributes = post.metadata.__typename === 'ArticleMetadata'
+        ? post.metadata.attributes
+        : [];
+
+      const contentJsonAttribute = attributes.find(
+        (attr: { key: string; value: any }) => attr.key === "contentJson"
+      );
+
+      if (!contentJsonAttribute || !contentJsonAttribute.value) {
+        toast.error("Cannot edit this post: Original content not available");
+        return;
+      }
+
+      let contentJson;
+      try {
+        contentJson = JSON.parse(contentJsonAttribute.value as string);
+      } catch (e) {
+        toast.error("Cannot edit this post: Failed to parse content data");
+        return;
+      }
+
+      const documentId = getRandomUid();
+
+      await createDraft({
+        initialContent: contentJson,
+        publishedId: post.id,
+        documentId
+      });
+
+      saveDocument(documentId, {
+        documentId,
+        published_id: post.id,
+        contentJson,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      } as any);
+
+      toast.success("Created editable draft from post");
+
+      router.push(`/write/${documentId}`);
+    } catch (error) {
+      console.error("Failed to create editable draft:", error);
+      toast.error("Failed to create editable draft");
+    } finally {
+      setIsCreatingDraft(false);
+    }
+  };
 
   const openDeleteDialog = () => {
     setIsDeleteDialogOpen(true);
@@ -104,12 +162,17 @@ export const PostMenu = ({ post }: { post: Post }) => {
     },
     ...(isUserPost
       ? [
-          {
-            icon: Trash2,
-            label: "Delete post",
-            onClick: openDeleteDialog,
-          },
-        ]
+        {
+          icon: Pencil,
+          label: isCreatingDraft ? "Creating draft..." : "Edit post",
+          onClick: isCreatingDraft ? () => { } : handleEditPost,
+        },
+        {
+          icon: Trash2,
+          label: "Delete post",
+          onClick: openDeleteDialog,
+        },
+      ]
       : []),
   ];
 

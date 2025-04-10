@@ -118,7 +118,8 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const documentId = body.documentId || getRandomUid();
-    const contentJson = body.contentJson
+    const contentJson = body.contentJson;
+    const publishedId = body.publishedId || null;
 
     if (!contentJson) {
       return NextResponse.json({ error: "Missing default content" }, { status: 400 });
@@ -136,7 +137,13 @@ export async function POST(req: NextRequest) {
 
     const { data, error } = await db
       .from("drafts")
-      .insert({ contentJson, documentId, author: address, yDoc })
+      .insert({
+        contentJson,
+        documentId,
+        author: address,
+        yDoc,
+        published_id: publishedId
+      })
       .select()
       .single();
 

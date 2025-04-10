@@ -74,6 +74,7 @@ type CreateDraftOptions = {
   initialContent?: any;
   documentId?: string;
   isGuest?: boolean;
+  publishedId?: string; // ID of the original published post when editing
 };
 
 
@@ -82,6 +83,7 @@ type CreateDraftOptions = {
  * @param options.initialContent Optional initial content for the draft. If not provided, uses default content.
  * @param options.documentId Optional document ID. If not provided, generates a random UID.
  * @param options.isGuest Optional flag to indicate if user is a guest. Affects default content if initialContent not provided.
+ * @param options.publishedId Optional ID of the original published post when creating a draft from an existing post.
  * @returns Object containing the documentId of the created draft
  * @throws Error if the draft creation fails
  */
@@ -89,7 +91,8 @@ export async function createDraft(options: CreateDraftOptions = {}) {
   const {
     initialContent,
     documentId = getRandomUid(),
-    isGuest = isGuestUser()
+    isGuest = isGuestUser(),
+    publishedId
   } = options;
 
   const contentToUse = initialContent || (isGuest ? defaultGuestContent : defaultContent);
@@ -106,7 +109,8 @@ export async function createDraft(options: CreateDraftOptions = {}) {
     body: JSON.stringify({
       documentId,
       contentJson: contentToUse,
-      yDocBase64
+      yDocBase64,
+      publishedId
     }),
   });
 
