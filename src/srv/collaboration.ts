@@ -12,7 +12,7 @@ import * as Y from "yjs";
 import { TITLE_KEYS } from "@/components/editor/plugins/title-plugin";
 import { ParagraphPlugin } from "@udecode/plate/react";
 
-export const defualtGuestContent: any = [
+export const defaultGuestContent: any = [
   {
     type: TITLE_KEYS.title,
     children: [
@@ -101,17 +101,49 @@ const server = Server.configure({
     new Logger(),
     new Database({
       fetch: async ({ documentName, document, context, instance, requestHeaders, requestParameters }) => {
-        const { data: response, error } = await db.from("drafts").select().eq("documentId", documentName).single();
-        // console.log(response, context, instance, requestHeaders, requestParameters);
+        let retries = 3;
+        let delay = 300;
+        let response = null;
+        let error = null;
+
+        while (retries > 0) {
+          const result = await db.from("drafts").select().eq("documentId", documentName).single();
+          response = result.data;
+          error = result.error;
+
+          if (response) {
+            break;
+          }
+
+          if (error) {
+            console.warn(`Error fetching document: ${error.message}, retries left: ${retries}`);
+          } else {
+            console.warn(`Document ${documentName} not found, retries left: ${retries}`);
+          }
+
+          await new Promise(resolve => setTimeout(resolve, delay));
+          delay *= 2; // Exponential backoff
+          retries--;
+        }
+
         const author = response?.author;
         const isGuest = author?.startsWith("guest-");
 
-        if (error) {
-          console.error(`Error fetching document: ${error.message}`);
+        if (!response) {
+          console.error(`Document ${documentName} not found in database after multiple attempts`);
+
+          const insertDelta = slateNodesToInsertDelta(defaultContent);
+          const sharedRoot = document.get("content", Y.XmlText);
+          sharedRoot.delete(0, sharedRoot.length);
+          sharedRoot.applyDelta(insertDelta);
+          const encoded = Y.encodeStateAsUpdate(document);
+
+          return encoded;
         }
 
-        if (!response || !response.yDoc) {
-          const insertDelta = isGuest ? slateNodesToInsertDelta(defualtGuestContent) : slateNodesToInsertDelta(defaultContent);
+        if (!response.yDoc) {
+          console.warn(`Document ${documentName} has no yDoc, creating default`);
+          const insertDelta = isGuest ? slateNodesToInsertDelta(defaultGuestContent) : slateNodesToInsertDelta(defaultContent);
           const sharedRoot = document.get("content", Y.XmlText);
           sharedRoot.delete(0, sharedRoot.length);
           sharedRoot.applyDelta(insertDelta);

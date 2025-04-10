@@ -39,6 +39,7 @@ export function AutoSave({ documentId }: { documentId: string }) {
         const draft = {
           ...(existingDraft || {}),
           id: Date.now(),
+          published_id: existingDraft?.published_id || null,
           documentId,
           author: "local",
           contentJson: content as any,
