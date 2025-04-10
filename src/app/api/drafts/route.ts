@@ -1,10 +1,10 @@
-import { defaultContent, defualtGuestContent } from "@/components/draft/draft-create-button";
 import { env } from "@/env";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { verifyToken } from "@/lib/auth/verify-token";
 import { getRandomUid } from "@/lib/get-random-uid";
-import { getLensClient } from "@/lib/lens/client";
+import { defaultGuestContent } from "@/lib/plate/create-draft";
+import { defaultContent } from "@/lib/plate/create-draft";
 import { createClient } from "@/lib/supabase/server";
 import { type NextRequest, NextResponse } from "next/server";
 
@@ -24,9 +24,7 @@ export async function GET(req: NextRequest) {
     const db = await createClient();
     const address = claims.sub;
 
-    // If not a guest user, verify with Lens
     if (!claims.metadata.isAnonymous) {
-      const lens = await getLensClient();
       const { address: userAddress } = await getUserProfile();
 
       if (userAddress !== address) {
@@ -110,9 +108,7 @@ export async function POST(req: NextRequest) {
     const db = await createClient();
     const address = claims.sub;
 
-    // If not a guest user, verify with Lens
     if (!claims.metadata.isAnonymous) {
-      const lens = await getLensClient();
       const { address: lensAddress } = await getUserProfile();
 
       if (lensAddress !== address) {
@@ -122,11 +118,24 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const documentId = body.documentId || getRandomUid();
-    const contentJson = !claims.metadata.isAnonymous ? defaultContent : defualtGuestContent;
+
+    const contentJson = body.contentJson
+      ? body.contentJson
+      : (!claims.metadata.isAnonymous ? defaultContent : defaultGuestContent);
+
+    let yDoc = null;
+    if (body.yDocBase64) {
+      const binaryData = Buffer.from(body.yDocBase64, 'base64');
+      yDoc = `\\x${binaryData.toString('hex')}`;
+    }
+
+    if (!yDoc) {
+      return NextResponse.json({ error: "Missing yDoc data" }, { status: 400 });
+    }
 
     const { data, error } = await db
       .from("drafts")
-      .insert({ contentJson, documentId, author: address })
+      .insert({ contentJson, documentId, author: address, yDoc })
       .select()
       .single();
 
@@ -158,9 +167,7 @@ export async function PUT(req: NextRequest) {
     const db = await createClient();
     const address = claims.sub;
 
-    // If not a guest user, verify with Lens
     if (!claims.metadata.isAnonymous) {
-      const lens = await getLensClient();
       const { address: lensAddress } = await getUserProfile();
 
       if (lensAddress !== address) {
@@ -224,9 +231,7 @@ export async function DELETE(req: NextRequest) {
     const db = await createClient();
     const address = claims.sub;
 
-    // If not a guest user, verify with Lens
     if (!claims.metadata.isAnonymous) {
-      const lens = await getLensClient();
       const { address: lensAddress } = await getUserProfile();
 
       if (lensAddress !== address) {

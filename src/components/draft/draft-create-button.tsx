@@ -1,99 +1,36 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { getRandomUid } from "@/lib/get-random-uid";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoadingSpinner } from "../misc/loading-spinner";
-import { TITLE_KEYS } from "@/components/editor/plugins/title-plugin";
 import { toast } from "sonner";
-import { ParagraphPlugin } from "@udecode/plate-core/react";
+import { createDraft } from "@/lib/plate/create-draft";
 
-export const defualtGuestContent: any = [
-  {
-    type: TITLE_KEYS.title,
-    children: [
-      {
-        text: "",
-      },
-    ],
-  },
-  {
-    type: TITLE_KEYS.subtitle,
-    children: [
-      {
-        text: "",
-      },
-    ],
-  },
-  {
-    type: "img",
-    width: "wide",
-    children: [
-      {
-        text: "",
-      },
-    ],
-  },
-  {
-    id: "guest-paragraph",
-    type: ParagraphPlugin.key,
-    children: [
-      {
-        text: "Welcome to Fountain! When you want to save the draft or publish your article, login to continue. Enjoy!",
-      },
-    ],
-  },
-];
-
-export const defaultContent: any = [
-  {
-    type: TITLE_KEYS.title,
-    children: [
-      {
-        text: "",
-      },
-    ],
-  },
-  {
-    type: TITLE_KEYS.subtitle,
-    children: [
-      {
-        text: "",
-      },
-    ],
-  },
-  {
-    type: "img",
-    width: "wide",
-    children: [
-      {
-        text: "",
-      },
-    ],
-  },
-];
-
-export const DraftCreateButton = ({ text = "Write" }: { text?: string }) => {
+export const DraftCreateButton = ({
+  text = "Write",
+  initialContent
+}: {
+  text?: string;
+  initialContent?: any;
+}) => {
   const [isCreating, setIsCreating] = useState(false);
   const router = useRouter();
 
   const handleCreate = async () => {
-    setIsCreating(true);
-    const documentId = getRandomUid();
+    try {
+      setIsCreating(true);
 
-    router.push(`/write/${documentId}`);
+      const { documentId } = await createDraft({
+        initialContent
+      });
 
-    fetch("/api/drafts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ documentId }),
-    }).catch((error) => {
+      router.push(`/write/${documentId}`);
+    } catch (error) {
       console.error("Failed to create draft:", error);
-      toast.error("Failed to create draft");
-    });
+      toast.error(error instanceof Error ? error.message : "Failed to create draft");
+      setIsCreating(false);
+    }
   };
 
   return (
