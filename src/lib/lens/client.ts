@@ -8,7 +8,11 @@ const publicClient = PublicClient.create({
   environment: env.NEXT_PUBLIC_ENVIRONMENT === "development" ? testnet : mainnet,
   origin: "https://fountain.ink",
   storage: isServer ? cookieStorage : clientCookieStorage,
-  apiKey: env.NEXT_PUBLIC_ENVIRONMENT === "development" ? env.LENS_API_KEY_TESTNET : env.LENS_API_KEY,
+  apiKey: isServer
+    ? env.NEXT_PUBLIC_ENVIRONMENT === "development"
+      ? env.LENS_API_KEY_TESTNET
+      : env.LENS_API_KEY
+    : undefined,
 });
 
 export const getPublicClient = () => {
