@@ -1,7 +1,5 @@
 import { useDocumentStorage } from "@/hooks/use-document-storage";
-import { useBlogStorage } from "@/hooks/use-blog-storage";
-import { useEffect, useState, useCallback } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useCallback } from "react";
 import type { Draft } from "@/components/draft/draft";
 
 export const usePublishDraft = (documentId?: string) => {

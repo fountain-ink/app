@@ -7,7 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useWalletClient } from "wagmi";
-import { PenIcon, ShoppingBag as ShoppingBagIcon, AlertCircleIcon, CircleDollarSignIcon } from "lucide-react";
+import { PenIcon, ShoppingBag as ShoppingBagIcon, AlertCircleIcon, CircleDollarSignIcon, RefreshCw } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,6 +17,7 @@ import { Form } from "@/components/ui/form";
 import { ArticleDetailsTab, detailsFormSchema, DetailsFormValues } from "./publish-details-tab";
 import { MonetizationTab, collectingFormSchema, CollectingFormValues } from "./publish-monetization-tab";
 import { publishPost } from "../../lib/publish/publish-post";
+import { publishPostEdit } from "../../lib/publish/publish-post-edit";
 import { usePublishDraft } from "../../hooks/use-publish-draft";
 import { extractMetadata } from "@/lib/extract-metadata";
 import { Draft } from "../draft/draft";
@@ -48,6 +49,8 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
   const [activeTab, setActiveTab] = useState("details");
   const { blogState } = useBlogStorage();
   const { data: user, loading: userLoading } = useAuthenticatedUser();
+  const draft = getDraft();
+  const isEditMode = Boolean(draft?.published_id);
 
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -239,15 +242,20 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
       },
     };
 
-    console.log("Publishing with data:", finalDraft);
+    console.log(isEditMode ? "Updating post:" : "Publishing post:", finalDraft);
 
     try {
       setIsPublishing(true);
-      await publishPost(finalDraft, walletClient, router, queryClient);
-      setOpen(false);
+
+      const publishFn = isEditMode ? publishPostEdit : publishPost;
+      const success = await publishFn(finalDraft, walletClient, router, queryClient);
+
+      if (success) {
+        setOpen(false);
+      }
     } catch (error) {
-      console.error("Failed to publish:", error);
-      toast.error("Publishing failed. Check console for details.");
+      console.error(isEditMode ? "Failed to update post:" : "Failed to publish post:", error);
+      toast.error(isEditMode ? "Update failed. Check console for details." : "Publishing failed. Check console for details.");
     } finally {
       setIsPublishing(false);
     }
@@ -277,7 +285,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
         <Form {...form}>
           <DialogContent className="max-w-[700px] h-[90vh] max-h-[800px] flex flex-col">
             <DialogHeader className="">
-              <DialogTitle>Publish post</DialogTitle>
+              <DialogTitle>{isEditMode ? "Update post" : "Publish post"}</DialogTitle>
             </DialogHeader>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col min-h-0">
               <TabsList className="grid w-fit grid-cols-2 max-w-fit my-2">
@@ -326,13 +334,16 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
             </Tabs>
             <div className="flex items-center justify-start gap-2">
               <Button onClick={handlePublishClick} disabled={!isValid || isPublishing}>
-                {isPublishing ? "Publishing..." : "Publish"}
+                {isPublishing
+                  ? (isEditMode ? "Updating..." : "Publishing...")
+                  : (isEditMode ? "Update Post" : "Publish")
+                }
               </Button>
 
               {!isValid && (isSubmitted || hasDetailsErrors || hasCollectingErrors) && (
                 <p className="text-sm text-destructive flex items-center gap-1">
                   <AlertCircleIcon className="h-4 w-4 shrink-0" />
-                  Please fix the errors before publishing.
+                  Please fix the errors before {isEditMode ? "updating" : "publishing"}.
                 </p>
               )}
             </div>
