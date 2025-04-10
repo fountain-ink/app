@@ -69,7 +69,7 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
       }
       const sessionClient = await client.login({
         onboardingUser: {
-          app: env.NEXT_PUBLIC_APP_ADDRESS,
+          app: env.NEXT_PUBLIC_ENVIRONMENT === "development" ? env.NEXT_PUBLIC_APP_ADDRESS_TESTNET : env.NEXT_PUBLIC_APP_ADDRESS,
           wallet: walletAddress,
         },
         signMessage: async (message: string) => {

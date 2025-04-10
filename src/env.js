@@ -9,6 +9,8 @@ export const env = createEnv({
     LISTMONK_API_URL: z.string(),
     LISTMONK_API_USERNAME: z.string(),
     LISTMONK_API_TOKEN: z.string(),
+    LENS_API_KEY: z.string(),
+    LENS_API_KEY_TESTNET: z.string(),
   },
 
   client: {
@@ -16,6 +18,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string(),
     NEXT_PUBLIC_SUPABASE_URL: z.string(),
     NEXT_PUBLIC_APP_ADDRESS: z.string(),
+    NEXT_PUBLIC_APP_ADDRESS_TESTNET: z.string(),
     NEXT_PUBLIC_ENVIRONMENT: z.enum(["development", "production"]).default("development"),
   },
 
@@ -23,6 +26,8 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     SUPABASE_JWT_SECRET: process.env.SUPABASE_JWT_SECRET,
     SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY,
+    LENS_API_KEY: process.env.LENS_API_KEY,
+    LENS_API_KEY_TESTNET: process.env.LENS_API_KEY_TESTNET,
 
     LISTMONK_API_URL: process.env.LISTMONK_API_URL,
     LISTMONK_API_USERNAME: process.env.LISTMONK_API_USERNAME,
@@ -32,6 +37,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     NEXT_PUBLIC_APP_ADDRESS: process.env.NEXT_PUBLIC_APP_ADDRESS,
+    NEXT_PUBLIC_APP_ADDRESS_TESTNET: process.env.NEXT_PUBLIC_APP_ADDRESS_TESTNET,
     NEXT_PUBLIC_ENVIRONMENT: process.env.NEXT_PUBLIC_ENVIRONMENT,
   },
 

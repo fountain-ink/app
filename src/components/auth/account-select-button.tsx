@@ -11,7 +11,7 @@ import { syncBlogsQuietly } from "../blog/blog-sync-button";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import { getLensClient, getPublicClient } from "@/lib/lens/client";
+import {  getPublicClient } from "@/lib/lens/client";
 import { signMessageWith } from "@lens-protocol/client/viem";
 import { env } from "@/env";
 
@@ -47,14 +47,14 @@ export function SelectAccountButton({ account, onSuccess }: { account: Account; 
         accountOwner: {
           account: account.address,
           owner: walletAddress,
-          app: env.NEXT_PUBLIC_APP_ADDRESS,
+          app: env.NEXT_PUBLIC_ENVIRONMENT === "development" ? env.NEXT_PUBLIC_APP_ADDRESS_TESTNET : env.NEXT_PUBLIC_APP_ADDRESS,
         },
       };
       const managerRequest = {
         accountManager: {
           account: account.address,
           manager: walletAddress,
-          app: env.NEXT_PUBLIC_APP_ADDRESS,
+          app: env.NEXT_PUBLIC_ENVIRONMENT === "development" ? env.NEXT_PUBLIC_APP_ADDRESS_TESTNET : env.NEXT_PUBLIC_APP_ADDRESS,
         },
       };
       const challengeRequest = isOwner ? ownerRequest : managerRequest;
