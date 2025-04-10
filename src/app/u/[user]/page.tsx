@@ -21,11 +21,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
     return null;
   }
 
-  if (!account || !posts) {
-    return null;
-  }
-
-  const isUserProfile = address === account.address;
+  const isUserProfile = address === account?.address;
 
   return (
     <UserContent

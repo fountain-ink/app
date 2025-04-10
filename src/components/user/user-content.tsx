@@ -10,17 +10,12 @@ import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 export const UserContent = ({
   posts,
   profile,
-  loading,
   isUserProfile = false,
 }: {
   posts: AnyPost[];
   profile: Account | null;
-  loading?: boolean;
   isUserProfile?: boolean;
 }) => {
-  if (loading) {
-    return null;
-  }
 
   const postViews = posts.map((post) => {
     if (post.__typename !== "Post") {
@@ -50,7 +45,7 @@ export const UserContent = ({
         item={post}
       />
     );
-  });
+  }).filter(Boolean);
 
   if (postViews.length === 0) {
     return (
@@ -67,6 +62,7 @@ export const UserContent = ({
       </Card>
     );
   }
+  console.log(postViews)
 
   return (
     <motion.div
