@@ -37,15 +37,14 @@ cd app
 
 # Install dependencies
 bun install
-```
 
-### Development
+# Create a .env file (and edit the variables)
+cp .env.example .env
 
-```bash
 # Start the development server
 bun run dev
 
-# Run the collaboration server
+# Run the collaboration server (for yjs sync)
 bun run collab
 
 # Run the notifications server (WIP)

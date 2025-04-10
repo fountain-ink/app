@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { getLensClient, getPublicClient } from "@/lib/lens/client";
 import { signMessageWith } from "@lens-protocol/client/viem";
+import { env } from "@/env";
 
 export function SelectAccountButton({ account, onSuccess }: { account: Account; onSuccess?: () => Promise<void> }) {
   const { address: walletAddress } = useAccount();
@@ -43,13 +44,17 @@ export function SelectAccountButton({ account, onSuccess }: { account: Account; 
 
       const isOwner = account.owner === walletAddress;
       const ownerRequest = {
-        accountOwner: { account: account.address, owner: walletAddress, app: "0xFDa2276FCC1Ad91F45c98cB88248a492a0d285e2" },
+        accountOwner: {
+          account: account.address,
+          owner: walletAddress,
+          app: env.NEXT_PUBLIC_APP_ADDRESS,
+        },
       };
       const managerRequest = {
         accountManager: {
           account: account.address,
           manager: walletAddress,
-          app: "0xFDa2276FCC1Ad91F45c98cB88248a492a0d285e2",
+          app: env.NEXT_PUBLIC_APP_ADDRESS,
         },
       };
       const challengeRequest = isOwner ? ownerRequest : managerRequest;

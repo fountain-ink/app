@@ -13,6 +13,7 @@ import { OnboardingModal } from "./onboarding-modal";
 import { SelectAccountButton } from "./account-select-button";
 import { syncBlogsQuietly } from "../blog/blog-sync-button";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
+import { env } from "@/env";
 
 export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOpenChange?: (open: boolean) => void }) {
   const { address } = useAccount();
@@ -68,7 +69,7 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
       }
       const sessionClient = await client.login({
         onboardingUser: {
-          app: "0xFDa2276FCC1Ad91F45c98cB88248a492a0d285e2",
+          app: env.NEXT_PUBLIC_APP_ADDRESS,
           wallet: walletAddress,
         },
         signMessage: async (message: string) => {

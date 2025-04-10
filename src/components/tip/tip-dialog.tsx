@@ -1,6 +1,6 @@
 "use client";
 import { Dialog, DialogContent, DialogTitle, DialogHeader } from "@/components/ui/dialog";
-import { Post, postId, evmAddress, testnet } from "@lens-protocol/client";
+import { Post, postId, evmAddress } from "@lens-protocol/client";
 import { executePostAction } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { UserAvatar } from "@/components/user/user-avatar";
@@ -8,13 +8,11 @@ import { UserName } from "@/components/user/user-name";
 import { UserUsername } from "@/components/user/user-handle";
 import { Button } from "@/components/ui/button";
 import { CoinsIcon } from "lucide-react";
-import { useWalletClient, useBalance, useReadContract, useReadContracts } from "wagmi";
+import { useWalletClient, useBalance } from "wagmi";
 import { useState } from "react";
 import { getLensClient } from "@/lib/lens/client";
 import { toast } from "sonner";
-import { useAccount, useAuthenticatedUser } from "@lens-protocol/react";
-import { chains } from "@lens-chain/sdk/viem";
-import { erc20Abi } from "viem";
+import { useAuthenticatedUser } from "@lens-protocol/react";
 
 const DEFAULT_CURRENCY = "0x6bDc36E20D267Ff0dd6097799f82e78907105e2F"; // WGHO
 

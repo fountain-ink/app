@@ -1,11 +1,11 @@
 import { mainnet, PublicClient, staging, testnet } from "@lens-protocol/client";
 import { clientCookieStorage, cookieStorage } from "./storage";
+import { env } from "@/env";
 
 const isServer = typeof window === "undefined";
 
 const publicClient = PublicClient.create({
-  // environment: testnet,
-  environment: mainnet,
+  environment: env.NEXT_PUBLIC_ENVIRONMENT === "development" ? testnet : mainnet,
   origin: "https://fountain.ink",
   storage: isServer ? cookieStorage : clientCookieStorage,
 });
@@ -36,7 +36,7 @@ export const getOnboardingClient = async (address: string, signMessage: (message
 
   const authenticated = await publicClient.login({
     onboardingUser: {
-      app: "0xFDa2276FCC1Ad91F45c98cB88248a492a0d285e2",
+      app: env.NEXT_PUBLIC_APP_ADDRESS,
       wallet: address,
     },
     signMessage,
@@ -60,7 +60,7 @@ export const getAccountOwnerClient = async (
   const authenticated = await publicClient.login({
     accountOwner: {
       account: accountAddress,
-      app: "0xFDa2276FCC1Ad91F45c98cB88248a492a0d285e2",
+      app: env.NEXT_PUBLIC_APP_ADDRESS,
       owner: ownerAddress,
     },
     signMessage,
