@@ -15,20 +15,34 @@ export default function Template({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+
   const isSuccess = searchParams.has("success");
+  const isUpdated = searchParams.has("updated");
+  const showModal = isSuccess || isUpdated;
 
   useEffect(() => {
-    if (isSuccess) {
+    if (showModal) {
       setShowSuccessModal(true);
     }
-  }, [isSuccess]);
+  }, [showModal]);
 
   const handleClose = () => {
     setShowSuccessModal(false);
-    // Remove the success param from URL
+    // Remove the success or updated param from URL
     const url = new URL(window.location.href);
     url.searchParams.delete("success");
+    url.searchParams.delete("updated");
     router.replace(url.pathname);
+  };
+
+  const getDialogTitle = () => {
+    if (isUpdated) return "Post Updated!";
+    return "Post Published!";
+  };
+
+  const getDialogDescription = () => {
+    if (isUpdated) return "Your post has been successfully updated. Share it again with your audience!";
+    return "Congratulations! Your post has been successfully published. Time to share it with the world!";
   };
 
   return (
@@ -40,9 +54,9 @@ export default function Template({ children }: { children: React.ReactNode }) {
       <Dialog open={showSuccessModal} onOpenChange={handleClose}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Post Published!</DialogTitle>
+            <DialogTitle className="h-8 flex items-center">{getDialogTitle()}</DialogTitle>
             <DialogDescription>
-              Congratulations! Your post has been successfully published. Time to share it with the world!
+              {getDialogDescription()}
             </DialogDescription>
           </DialogHeader>
 
