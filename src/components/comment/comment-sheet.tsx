@@ -141,20 +141,22 @@ export const CommentSheet = ({
               </div>
             ) : (
               <div className="flex flex-col gap-4 m-6 overflow-visible">
-                {comments.map((comment) => {
-                  if (comment.__typename !== "Post") return null;
+                {/* {comments.map((comment) => {
+                  if (comment.__typename !== "post") return null;
+
                   return (
-                    <CommentView
+                    <commentview
                       key={comment.id}
                       comment={comment}
-                      nestingLevel={1}
-                      maxNestingLevel={4}
-                      onMaxNestingReached={handleMaxNestingReached}
-                      autoShowReplies={isViewingNested}
+                      nestinglevel={1}
+                      maxnestinglevel={4}
+                      onmaxnestingreached={handlemaxnestingreached}
+                      autoshowreplies={isviewingnested}
                     />
                   );
-                })}
+                })} */}
                 {loading && <div className="text-center py-4 text-muted-foreground">Loading...</div>}
+                <div className="h-6"></div>
               </div>
             )}
           </ScrollArea>
