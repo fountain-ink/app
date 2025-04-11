@@ -39,13 +39,14 @@ const UserLayout = async ({
   params: { user: string };
 }) => {
   const lens = await getLensClient();
+  const localName = params.user.toLowerCase();
   const account = await fetchAccount(lens, {
-    username: { localName: params.user },
+    username: { localName },
   }).unwrapOr(null);
 
   if (!account) {
     console.error("Failed to fetch user profile");
-    return notFound();
+    return <ErrorPage error="User not found" />;
   }
 
   const settings = await getBlogData(account.address);
