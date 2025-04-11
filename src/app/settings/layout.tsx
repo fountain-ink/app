@@ -22,7 +22,7 @@ const navItems = [
   { id: "profile", label: "Profile", icon: User2, enabled: true },
   { id: "blogs", label: "Blogs", icon: PenTool, enabled: true },
   { id: "app", label: "Application", icon: Settings, enabled: true },
-  { id: "newsletter", label: "Newsletter", icon: Mail, enabled: true },
+  { id: "newsletter", label: "Newsletters", icon: Mail, enabled: true },
   {
     id: "subscriptions",
     label: "Subscriptions",
