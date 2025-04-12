@@ -89,7 +89,6 @@ const UserPostLayout = async ({
       <ArticleLayout>
         <GradientBlur />
         {children}
-        <FloatingActionBar post={post} account={loggedInAccount} />
       </ArticleLayout>
     </BlogTheme>
   );

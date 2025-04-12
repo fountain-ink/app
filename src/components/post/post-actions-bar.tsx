@@ -11,6 +11,7 @@ import { ActionButton } from "./post-action-button";
 import { TipPopover } from "../tip/tip-popover";
 import { CoinIcon } from "../icons/custom-icons";
 import React, { ReactElement, JSXElementConstructor } from "react";
+import { useActionBar } from "@/contexts/action-bar-context";
 
 type ActionButtonConfig = {
   icon: LucideIcon | IconType | React.FC<any>;
@@ -34,6 +35,8 @@ type ActionButtonConfig = {
 };
 
 export const PostActionsBar = ({ post, account }: { post: AnyPost; account?: Account }) => {
+  const { actionBarRef } = useActionBar();
+
   if (post.__typename !== "Post") {
     return null;
   }
@@ -149,7 +152,10 @@ export const PostActionsBar = ({ post, account }: { post: AnyPost; account?: Acc
   return (
     <>
       <TooltipProvider delayDuration={300}>
-        <div className="flex items-center justify-center gap-4 sm:gap-0 sm:justify-between w-full ">
+        <div
+          ref={actionBarRef}
+          className="flex items-center justify-center gap-4 sm:gap-0 sm:justify-between w-full "
+        >
           <div className="flex items-center gap-4">
             {leftButtons.map((button) => (
               <ActionButton

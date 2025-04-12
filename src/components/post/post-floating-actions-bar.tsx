@@ -22,10 +22,14 @@ import { ActionButton } from "./post-action-button";
 import { TipPopover } from "../tip/tip-popover";
 import { CoinIcon } from "../icons/custom-icons";
 import React from 'react';
+import { useActionBar } from "@/contexts/action-bar-context";
+import { useOnScreen } from "@/hooks/use-on-screen";
 
 export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: Account }) => {
   const { scrollProgress, shouldShow, shouldAnimate } = useScroll();
   const translateY = scrollProgress * 100;
+  const { actionBarRef } = useActionBar();
+  const isActionBarVisible = useOnScreen(actionBarRef, { threshold: 0.5 });
 
   if (post.__typename !== "Post") {
     return null;
@@ -139,10 +143,10 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
       <TooltipProvider delayDuration={300}>
         <motion.div
           style={{
-            opacity: 1.0 - scrollProgress,
+            opacity: isActionBarVisible ? 0 : 1.0 - scrollProgress,
           }}
           animate={{
-            y: shouldAnimate ? (shouldShow ? 0 : 100) : translateY,
+            y: isActionBarVisible ? 100 : (shouldAnimate ? (shouldShow ? 0 : 100) : translateY),
           }}
           transition={{
             type: "spring",

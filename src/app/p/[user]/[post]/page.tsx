@@ -4,8 +4,10 @@ import Editor from "@/components/editor/editor";
 import ErrorPage from "@/components/misc/error-page";
 import { PostActionsBar } from "@/components/post/post-actions-bar";
 import PostDeletedView from "@/components/post/post-deleted-view";
+import { FloatingActionBar } from "@/components/post/post-floating-actions-bar";
 import { AuthorView } from "@/components/user/user-author-view";
 import { UserPostCard } from "@/components/user/user-post-card";
+import { ActionBarProvider } from "@/contexts/action-bar-context";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchAccountStats, fetchPost } from "@lens-protocol/client/actions";
@@ -34,16 +36,19 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
   if (contentJson) {
     return (
       <div>
-        <div className="flex flex-col gap-4 items-center justify-center">
-          <EditorReadTime content={contentJson} />
-          <AuthorView showUsername={false} accounts={[post.author]} />
-        </div>
-        <Editor showToc value={contentJson} readOnly={true} />
-        <div className="max-w-[60ch] mx-auto py-8 px-8 sm:px-16 flex flex-col gap-10">
-          <PostActionsBar post={post} />
-          <UserPostCard account={post.author} stats={authorStats} />
-          <CommentPreview post={post} />
-        </div>
+        <ActionBarProvider>
+          <div className="flex flex-col gap-4 items-center justify-center">
+            <EditorReadTime content={contentJson} />
+            <AuthorView showUsername={false} accounts={[post.author]} />
+          </div>
+          <Editor showToc value={contentJson} readOnly={true} />
+          <div className="max-w-[60ch] mx-auto py-8 px-8 sm:px-16 flex flex-col gap-10">
+            <PostActionsBar post={post} />
+            <UserPostCard account={post.author} stats={authorStats} />
+            <CommentPreview post={post} />
+            <FloatingActionBar post={post} account={profile?.loggedInAs.account} />
+          </div>
+        </ActionBarProvider>
       </div>
     );
   }
