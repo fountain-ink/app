@@ -27,7 +27,7 @@ import {
 import { ConfirmButton } from "@/components/ui/confirm-button";
 
 export const PostMenu = ({ post }: { post: Post }) => {
-  const { handleBookmark, stats, operations } = usePostActions(post);
+  const { handleBookmark, stats, operations, isLoggedIn } = usePostActions(post);
   const { data: walletClient } = useWalletClient();
   const router = useRouter();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -103,16 +103,16 @@ export const PostMenu = ({ post }: { post: Post }) => {
   };
 
   const handleDelete = async () => {
-    if (!post.operations?.canDelete) {
+    if (!operations?.canDelete) {
       toast.error("Unable to determine if you can delete this post");
       return;
     }
 
-    switch (post.operations.canDelete.__typename) {
+    switch (operations.canDelete.__typename) {
       case "PostOperationValidationPassed":
         break;
       case "PostOperationValidationFailed":
-        toast.error(`Cannot delete: ${post.operations.canDelete.reason}`);
+        toast.error(`Cannot delete: ${operations.canDelete.reason}`);
         return;
       case "PostOperationValidationUnknown":
         toast.error("Cannot delete: Unknown validation rules");
@@ -176,7 +176,7 @@ export const PostMenu = ({ post }: { post: Post }) => {
       : []),
   ];
 
-  const hasBookmarked = operations.hasBookmarked;
+  const hasBookmarked = operations?.hasBookmarked || false;
 
   return (
     <>
@@ -190,6 +190,7 @@ export const PostMenu = ({ post }: { post: Post }) => {
           isActive={hasBookmarked}
           shouldIncrementOnClick={true}
           initialCount={stats.bookmarks}
+          isDisabled={!isLoggedIn}
         />
         <ActionButton
           icon={MoreHorizontal}

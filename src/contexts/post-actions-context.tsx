@@ -36,6 +36,17 @@ export const PostActionsProvider = ({ children }: { children: ReactNode }) => {
     address: authenticatedUser?.address,
   });
 
+  const defaultOperations = {
+    hasUpvoted: false,
+    hasBookmarked: false,
+    hasReposted: false,
+    hasQuoted: false,
+    canComment: false,
+    canRepost: false,
+    canQuote: false,
+    canBookmark: false,
+  };
+
   const initPostState = useCallback((post: Post) => {
     setPostStates(prevStates => {
       if (!prevStates.has(post.id)) {
@@ -43,7 +54,7 @@ export const PostActionsProvider = ({ children }: { children: ReactNode }) => {
         newStates.set(post.id, {
           post: post,
           stats: { ...post.stats },
-          operations: { ...post.operations },
+          operations: post.operations ? { ...post.operations } : { ...defaultOperations },
           isCommentSheetOpen: false,
           isCollectSheetOpen: false,
           initialCommentUrlSynced: false,
@@ -53,7 +64,7 @@ export const PostActionsProvider = ({ children }: { children: ReactNode }) => {
       }
       return prevStates;
     });
-  }, []);
+  }, [defaultOperations]);
 
   const getPostState = useCallback((postId: string): PostActionState | undefined => {
     return postStates.get(postId);
@@ -89,10 +100,13 @@ export const PostActionsProvider = ({ children }: { children: ReactNode }) => {
   }, [updatePostStateInternal]);
 
   const updatePostOperations = useCallback((postId: string, updates: Partial<any>) => {
-    updatePostStateInternal(postId, (prevState) => ({
-      ...prevState,
-      operations: { ...prevState.operations, ...updates },
-    }));
+    updatePostStateInternal(postId, (prevState) => {
+      const operations = prevState.operations || {};
+      return {
+        ...prevState,
+        operations: { ...operations, ...updates },
+      };
+    });
   }, [updatePostStateInternal]);
 
   const activeCommentPostEntry = useMemo(() => {

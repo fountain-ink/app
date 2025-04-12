@@ -10,11 +10,12 @@ export const PostReactions = ({ post }: { post: Post }) => {
     handleCollect,
     stats,
     operations,
+    isLoggedIn
   } = usePostActions(post);
 
-  const canCollect = operations.canSimpleCollect.__typename === "SimpleCollectValidationPassed";
-  const hasCommented = operations.hasCommented;
-  const hasUpvoted = operations.hasUpvoted;
+  const canCollect = operations?.canSimpleCollect?.__typename === "SimpleCollectValidationPassed";
+  const hasCommented = operations?.hasCommented || false;
+  const hasUpvoted = operations?.hasUpvoted || false;
 
   return (
     <div className="flex flex-row gap-3 items-center justify-center">
@@ -27,6 +28,7 @@ export const PostReactions = ({ post }: { post: Post }) => {
         onClick={() => handleComment(true)}
         isActive={hasCommented.optimistic}
         shouldIncrementOnClick={false}
+        isDisabled={!isLoggedIn}
       />
       {canCollect && (
         <ActionButton
@@ -37,6 +39,7 @@ export const PostReactions = ({ post }: { post: Post }) => {
           fillColor="rgba(254, 178, 4, 0.3)"
           onClick={handleCollect}
           shouldIncrementOnClick={false}
+          isDisabled={!isLoggedIn}
         />
       )}
       <ActionButton
@@ -48,6 +51,7 @@ export const PostReactions = ({ post }: { post: Post }) => {
         onClick={handleLike}
         isActive={hasUpvoted}
         shouldIncrementOnClick={true}
+        isDisabled={!isLoggedIn}
       />
     </div>
   );

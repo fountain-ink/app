@@ -17,9 +17,9 @@ export const CommentReactions = ({
   hasReplies = false,
   isLoadingReplies = false,
 }: CommentReactionsProps) => {
-  const { handleLike, stats, operations } = usePostActions(comment);
+  const { handleLike, stats, operations, isLoggedIn } = usePostActions(comment);
 
-  const hasUpvoted = operations.hasUpvoted;
+  const hasUpvoted = operations?.hasUpvoted || false;
 
   const handleShowReplies = async () => {
     onShowReplies?.();
@@ -37,6 +37,7 @@ export const CommentReactions = ({
         onClick={handleLike}
         isActive={hasUpvoted}
         shouldIncrementOnClick={true}
+        isDisabled={!isLoggedIn}
       />
       <ActionButton
         icon={MessageCircle}

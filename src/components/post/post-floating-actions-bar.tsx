@@ -45,6 +45,7 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
     handleCollectSheetOpenChange,
     stats,
     operations,
+    isLoggedIn
   } = usePostActions(post);
 
 
@@ -55,13 +56,14 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
   const reposts = stats.reposts;
   const bookmarks = stats.bookmarks;
   const quotes = stats.quotes;
-  const isReposted = operations.hasReposted;
-  const isQuoted = operations.hasQuoted;
-  const canComment = operations.canComment;
-  const canRepost = operations.canRepost;
-  const canQuote = operations.canQuote;
-  const hasUpvoted = operations.hasUpvoted;
-  const hasBookmarked = operations.hasBookmarked;
+
+  const isReposted = operations?.hasReposted || false;
+  const isQuoted = operations?.hasQuoted || false;
+  const canComment = operations?.canComment || false;
+  const canRepost = operations?.canRepost || false;
+  const canQuote = operations?.canQuote || false;
+  const hasUpvoted = operations?.hasUpvoted || false;
+  const hasBookmarked = operations?.hasBookmarked || false;
 
   const actionButtons = [
     {
@@ -100,6 +102,7 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
       fillColor: "hsl(var(--primary) / 0.8)",
       shouldIncrementOnClick: true,
       onClick: handleBookmark,
+      isDisabled: !isLoggedIn,
     },
     {
       icon: CoinIcon,
@@ -114,6 +117,7 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
         </TipPopover>
       ),
       isActive: isCollectSheetOpen,
+      isDisabled: !isLoggedIn,
     },
     {
       icon: MessageCircle,
@@ -124,7 +128,7 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
       onClick: () => handleComment(false),
       shouldIncrementOnClick: false,
       isActive: isCommentSheetOpen,
-      isDisabled: !canComment,
+      isDisabled: !canComment || !isLoggedIn,
     },
     {
       icon: Heart,
@@ -135,6 +139,7 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
       onClick: handleLike,
       isActive: hasUpvoted,
       shouldIncrementOnClick: true,
+      isDisabled: !isLoggedIn,
     },
   ];
 

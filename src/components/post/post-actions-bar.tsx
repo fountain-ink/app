@@ -54,6 +54,7 @@ export const PostActionsBar = ({ post, account }: { post: AnyPost; account?: Acc
     handleCommentSheetOpenChange,
     stats,
     operations,
+    isLoggedIn
   } = usePostActions(typedPost);
 
   const likes = stats.upvotes;
@@ -63,11 +64,13 @@ export const PostActionsBar = ({ post, account }: { post: AnyPost; account?: Acc
   const reposts = stats.reposts;
   const bookmarks = stats.bookmarks;
   const quotes = stats.quotes;
-  const isReposted = operations.hasReposted;
-  const isQuoted = operations.hasQuoted;
-  const canComment = operations.canComment;
-  const hasUpvoted = operations.hasUpvoted;
-  const hasBookmarked = operations.hasBookmarked;
+
+  // Safely access operations with optional chaining for when operations might not be available
+  const isReposted = operations?.hasReposted || false;
+  const isQuoted = operations?.hasQuoted || false;
+  const canComment = operations?.canComment || false;
+  const hasUpvoted = operations?.hasUpvoted || false;
+  const hasBookmarked = operations?.hasBookmarked || false;
 
   const likeButton: ActionButtonConfig = {
     icon: Heart,
@@ -78,6 +81,7 @@ export const PostActionsBar = ({ post, account }: { post: AnyPost; account?: Acc
     onClick: handleLike,
     isActive: hasUpvoted,
     shouldIncrementOnClick: true,
+    isDisabled: !isLoggedIn, 
   };
 
   const collectButton: ActionButtonConfig = {
@@ -93,6 +97,7 @@ export const PostActionsBar = ({ post, account }: { post: AnyPost; account?: Acc
       </TipPopover>
     ),
     isActive: isCollectSheetOpen,
+    isDisabled: !isLoggedIn, 
   };
 
   const commentButton: ActionButtonConfig = {

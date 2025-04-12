@@ -4,6 +4,7 @@ import { addReaction, bookmarkPost, undoBookmarkPost, undoReaction } from "@lens
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useCallback } from "react";
 import { useSharedPostActions } from "@/contexts/post-actions-context";
+import { useAuthenticatedUser } from "@lens-protocol/react";
 
 export const usePostActions = (post: Post) => {
   const router = useRouter();
@@ -16,11 +17,25 @@ export const usePostActions = (post: Post) => {
     updatePostOperations
   } = useSharedPostActions();
 
+  const { data: authenticatedUser, loading } = useAuthenticatedUser();
+  const isLoggedIn = !!authenticatedUser && !loading;
+
   useEffect(() => {
     initPostState(post);
   }, [post, initPostState]);
 
   const sharedState = getPostState(post.id);
+
+  const defaultOperations = {
+    hasUpvoted: false,
+    hasBookmarked: false,
+    hasReposted: false,
+    hasQuoted: false,
+    canComment: false,
+    canRepost: false,
+    canQuote: false,
+    canBookmark: false,
+  };
 
   const {
     stats,
@@ -29,11 +44,10 @@ export const usePostActions = (post: Post) => {
     isCollectSheetOpen
   } = useMemo(() => ({
     stats: sharedState?.stats ?? post.stats,
-    operations: sharedState?.operations ?? post.operations,
+    operations: sharedState?.operations ?? post.operations ?? defaultOperations,
     isCommentSheetOpen: sharedState?.isCommentSheetOpen ?? false,
     isCollectSheetOpen: sharedState?.isCollectSheetOpen ?? false,
-  }), [sharedState, post.stats, post.operations]);
-
+  }), [sharedState, post.stats, post.operations, defaultOperations]);
 
   const isCommentOpenParam = useMemo(() => searchParams.has("comment") && searchParams.get("comment") === post.slug, [searchParams, post.slug]);
   const isCollectOpenParam = useMemo(() => searchParams.has("collect") && searchParams.get("collect") === post.slug, [searchParams, post.slug]);
@@ -47,7 +61,7 @@ export const usePostActions = (post: Post) => {
         updatePostState(post.id, { initialCommentUrlSynced: true });
       }
     }
-  }, [isCommentOpenParam, post.id, sharedState, updatePostState]); 
+  }, [isCommentOpenParam, post.id, sharedState, updatePostState]);
 
   useEffect(() => {
     if (sharedState && !sharedState.initialCollectUrlSynced) {
@@ -58,7 +72,7 @@ export const usePostActions = (post: Post) => {
         updatePostState(post.id, { initialCollectUrlSynced: true });
       }
     }
-  }, [isCollectOpenParam, post.id, sharedState, updatePostState]); 
+  }, [isCollectOpenParam, post.id, sharedState, updatePostState]);
 
   const handleComment = useCallback(async (redirectToPost?: boolean) => {
     if (redirectToPost) {
@@ -126,10 +140,13 @@ export const usePostActions = (post: Post) => {
 
 
   const handleBookmark = useCallback(async () => {
+    // Return early if user is not logged in
+    if (!isLoggedIn) return null;
+
     const lens = await getLensClient();
     if (!lens.isSessionClient()) return null;
 
-    const currentlyBookmarked = operations.hasBookmarked;
+    const currentlyBookmarked = operations?.hasBookmarked || false;
     const currentCount = stats.bookmarks;
 
     updatePostOperations(post.id, { hasBookmarked: !currentlyBookmarked });
@@ -146,13 +163,15 @@ export const usePostActions = (post: Post) => {
       updatePostOperations(post.id, { hasBookmarked: currentlyBookmarked });
       updatePostStats(post.id, { bookmarks: currentCount });
     }
-  }, [post.id, operations.hasBookmarked, stats.bookmarks, updatePostOperations, updatePostStats]); // Add dependencies
+  }, [post.id, operations, stats.bookmarks, updatePostOperations, updatePostStats, isLoggedIn]);
 
   const handleLike = useCallback(async () => {
+    if (!isLoggedIn) return null;
+
     const lens = await getLensClient();
     if (!lens.isSessionClient()) return null;
 
-    const currentlyLiked = operations.hasUpvoted;
+    const currentlyLiked = operations?.hasUpvoted || false;
     const currentCount = stats.upvotes;
 
     updatePostOperations(post.id, { hasUpvoted: !currentlyLiked });
@@ -169,7 +188,7 @@ export const usePostActions = (post: Post) => {
       updatePostOperations(post.id, { hasUpvoted: currentlyLiked });
       updatePostStats(post.id, { upvotes: currentCount });
     }
-  }, [post.id, operations.hasUpvoted, stats.upvotes, updatePostOperations, updatePostStats]); // Add dependencies
+  }, [post.id, operations, stats.upvotes, updatePostOperations, updatePostStats, isLoggedIn]);
 
   return {
     handleComment,
@@ -182,5 +201,6 @@ export const usePostActions = (post: Post) => {
     handleCollectSheetOpenChange,
     stats,
     operations,
+    isLoggedIn, 
   };
 };
