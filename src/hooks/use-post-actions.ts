@@ -2,125 +2,185 @@ import { getLensClient } from "@/lib/lens/client";
 import { Post, PostReactionType } from "@lens-protocol/client";
 import { addReaction, bookmarkPost, undoBookmarkPost, undoReaction } from "@lens-protocol/client/actions";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useCallback } from "react";
+import { useSharedPostActions } from "@/contexts/post-actions-context";
 
 export const usePostActions = (post: Post) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const isCommentOpen = searchParams.has("comment");
-  const isCollectOpen = searchParams.has("collect");
-  const [isCommentSheetOpen, setIsCommentSheetOpen] = useState(isCommentOpen);
-  const [isCollectSheetOpen, setIsCollectSheetOpen] = useState(isCollectOpen);
+  const {
+    getPostState,
+    initPostState,
+    updatePostState,
+    updatePostStats,
+    updatePostOperations
+  } = useSharedPostActions();
 
   useEffect(() => {
-    setIsCommentSheetOpen(isCommentOpen);
-  }, [isCommentOpen]);
+    initPostState(post);
+  }, [post, initPostState]);
+
+  const sharedState = getPostState(post.id);
+
+  const {
+    stats,
+    operations,
+    isCommentSheetOpen,
+    isCollectSheetOpen
+  } = useMemo(() => ({
+    stats: sharedState?.stats ?? post.stats,
+    operations: sharedState?.operations ?? post.operations,
+    isCommentSheetOpen: sharedState?.isCommentSheetOpen ?? false,
+    isCollectSheetOpen: sharedState?.isCollectSheetOpen ?? false,
+  }), [sharedState, post.stats, post.operations]);
+
+
+  const isCommentOpenParam = useMemo(() => searchParams.has("comment") && searchParams.get("comment") === post.slug, [searchParams, post.slug]);
+  const isCollectOpenParam = useMemo(() => searchParams.has("collect") && searchParams.get("collect") === post.slug, [searchParams, post.slug]);
 
   useEffect(() => {
-    setIsCollectSheetOpen(isCollectOpen);
-  }, [isCollectOpen]);
+    if (sharedState && !sharedState.initialCommentUrlSynced) {
+      const shouldOpen = isCommentOpenParam;
+      if (shouldOpen && !sharedState.isCommentSheetOpen) {
+        updatePostState(post.id, { isCommentSheetOpen: true, initialCommentUrlSynced: true });
+      } else {
+        updatePostState(post.id, { initialCommentUrlSynced: true });
+      }
+    }
+  }, [isCommentOpenParam, post.id, sharedState, updatePostState]); 
 
-  const handleComment = async (redirectToPost?: boolean) => {
+  useEffect(() => {
+    if (sharedState && !sharedState.initialCollectUrlSynced) {
+      const shouldOpen = isCollectOpenParam;
+      if (shouldOpen && !sharedState.isCollectSheetOpen) {
+        updatePostState(post.id, { isCollectSheetOpen: true, initialCollectUrlSynced: true });
+      } else {
+        updatePostState(post.id, { initialCollectUrlSynced: true });
+      }
+    }
+  }, [isCollectOpenParam, post.id, sharedState, updatePostState]); 
+
+  const handleComment = useCallback(async (redirectToPost?: boolean) => {
     if (redirectToPost) {
       window.location.href = `/p/${post.author.username?.localName}/${post.slug}?comment=${post.slug}`;
       return;
     }
 
-    setIsCommentSheetOpen(!isCommentSheetOpen);
+    const newOpenState = !isCommentSheetOpen;
+
+    updatePostState(post.id, { isCommentSheetOpen: newOpenState });
 
     const params = new URLSearchParams(searchParams);
-    if (isCommentOpen) {
+    if (!newOpenState) {
       params.delete("comment");
     } else {
-      params.append("comment", post.slug);
-    }
-    router.push(`?${params.toString()}`, { scroll: false });
-    return undefined;
-  };
-
-  const handleCollect = async () => {
-    setIsCollectSheetOpen(!isCollectSheetOpen);
-    const params = new URLSearchParams(searchParams);
-    if (isCollectOpen) {
-      params.delete("collect");
-    } else {
-      params.append("collect", post.slug);
-    }
-    router.push(`?${params.toString()}`, { scroll: false });
-    return undefined;
-  };
-
-  const handleCollectSheetOpenChange = (open: boolean) => {
-    setIsCollectSheetOpen(open);
-    const params = new URLSearchParams(searchParams);
-    if (!open) {
-      params.delete("collect");
-    } else {
-      if (!params.has("collect")) {
-        params.append("collect", post.slug);
-      }
+      params.set("comment", post.slug);
     }
     router.replace(`?${params.toString()}`, { scroll: false });
-  };
+  }, [post.id, post.author.username?.localName, post.slug, isCommentSheetOpen, updatePostState, router, searchParams]);
 
-  const handleBookmark = async () => {
-    const lens = await getLensClient();
+  const handleCollect = useCallback(async () => {
+    const newOpenState = !isCollectSheetOpen;
+    updatePostState(post.id, { isCollectSheetOpen: newOpenState });
 
-    if (!lens.isSessionClient()) {
-      return null;
+    const params = new URLSearchParams(searchParams);
+    if (!newOpenState) {
+      params.delete("collect");
+    } else {
+      params.set("collect", post.slug);
+    }
+    router.replace(`?${params.toString()}`, { scroll: false });
+  }, [post.id, post.slug, isCollectSheetOpen, updatePostState, router, searchParams]);
+
+  const handleCommentSheetOpenChange = useCallback((open: boolean) => {
+    if (isCommentSheetOpen !== open) {
+      updatePostState(post.id, { isCommentSheetOpen: open });
     }
 
+    const params = new URLSearchParams(searchParams);
+    const currentParam = params.get("comment");
+    if (!open && currentParam === post.slug) {
+      params.delete("comment");
+      router.replace(`?${params.toString()}`, { scroll: false });
+    } else if (open && currentParam !== post.slug) {
+      params.set("comment", post.slug);
+      router.replace(`?${params.toString()}`, { scroll: false });
+    }
+  }, [post.id, post.slug, isCommentSheetOpen, updatePostState, router, searchParams]);
+
+  const handleCollectSheetOpenChange = useCallback((open: boolean) => {
+    if (isCollectSheetOpen !== open) {
+      updatePostState(post.id, { isCollectSheetOpen: open });
+    }
+
+    const params = new URLSearchParams(searchParams);
+    const currentParam = params.get("collect");
+    if (!open && currentParam === post.slug) {
+      params.delete("collect");
+      router.replace(`?${params.toString()}`, { scroll: false });
+    } else if (open && currentParam !== post.slug) {
+      params.set("collect", post.slug);
+      router.replace(`?${params.toString()}`, { scroll: false });
+    }
+  }, [post.id, post.slug, isCollectSheetOpen, updatePostState, router, searchParams]);
+
+
+  const handleBookmark = useCallback(async () => {
+    const lens = await getLensClient();
+    if (!lens.isSessionClient()) return null;
+
+    const currentlyBookmarked = operations.hasBookmarked;
+    const currentCount = stats.bookmarks;
+
+    updatePostOperations(post.id, { hasBookmarked: !currentlyBookmarked });
+    updatePostStats(post.id, { bookmarks: currentlyBookmarked ? Math.max(0, currentCount - 1) : currentCount + 1 }); // Prevent negative counts
+
     try {
-      if (post.operations?.hasBookmarked) {
-        await undoBookmarkPost(lens, {
-          post: post.id,
-        });
+      if (currentlyBookmarked) {
+        await undoBookmarkPost(lens, { post: post.id });
       } else {
-        await bookmarkPost(lens, {
-          post: post.id,
-        });
+        await bookmarkPost(lens, { post: post.id });
       }
     } catch (error) {
       console.error("Failed to handle bookmark:", error);
-      throw error;
+      updatePostOperations(post.id, { hasBookmarked: currentlyBookmarked });
+      updatePostStats(post.id, { bookmarks: currentCount });
     }
-  };
+  }, [post.id, operations.hasBookmarked, stats.bookmarks, updatePostOperations, updatePostStats]); // Add dependencies
 
-  const handleLike = async () => {
+  const handleLike = useCallback(async () => {
     const lens = await getLensClient();
+    if (!lens.isSessionClient()) return null;
 
-    if (!lens.isSessionClient()) {
-      return null;
-    }
+    const currentlyLiked = operations.hasUpvoted;
+    const currentCount = stats.upvotes;
+
+    updatePostOperations(post.id, { hasUpvoted: !currentlyLiked });
+    updatePostStats(post.id, { upvotes: currentlyLiked ? Math.max(0, currentCount - 1) : currentCount + 1 }); // Prevent negative counts
 
     try {
-      if (post.operations?.hasUpvoted) {
-        await undoReaction(lens, {
-          post: post.id,
-          reaction: PostReactionType.Upvote,
-        });
+      if (currentlyLiked) {
+        await undoReaction(lens, { post: post.id, reaction: PostReactionType.Upvote });
       } else {
-        await addReaction(lens, {
-          post: post.id,
-          reaction: PostReactionType.Upvote,
-        });
+        await addReaction(lens, { post: post.id, reaction: PostReactionType.Upvote });
       }
     } catch (error) {
       console.error("Failed to handle like:", error);
-      throw error;
+      updatePostOperations(post.id, { hasUpvoted: currentlyLiked });
+      updatePostStats(post.id, { upvotes: currentCount });
     }
-  };
+  }, [post.id, operations.hasUpvoted, stats.upvotes, updatePostOperations, updatePostStats]); // Add dependencies
 
   return {
     handleComment,
     handleCollect,
     handleBookmark,
     handleLike,
-    isCommentOpen,
-    isCollectOpen,
     isCommentSheetOpen,
-    setIsCommentSheetOpen,
     isCollectSheetOpen,
+    handleCommentSheetOpenChange,
     handleCollectSheetOpenChange,
+    stats,
+    operations,
   };
 };

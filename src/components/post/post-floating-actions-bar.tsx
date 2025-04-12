@@ -4,7 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { usePostActions } from "@/hooks/use-post-actions";
 import { useScroll } from "@/hooks/use-scroll";
 import { handlePlatformShare } from "@/lib/get-share-url";
-import { Account, AnyPost } from "@lens-protocol/client";
+import { Account, AnyPost, Post } from "@lens-protocol/client";
 import { motion } from "motion/react";
 import {
   Bookmark,
@@ -19,10 +19,9 @@ import {
 import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
 import { useWalletClient } from "wagmi";
 import { ActionButton } from "./post-action-button";
-import { CommentSheet } from "../comment/comment-sheet";
-import { PostCollect } from "./post-collect-dialog";
 import { TipPopover } from "../tip/tip-popover";
 import { CoinIcon } from "../icons/custom-icons";
+import React from 'react';
 
 export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: Account }) => {
   const { scrollProgress, shouldShow, shouldAnimate } = useScroll();
@@ -37,30 +36,28 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
     handleCollect,
     handleBookmark,
     handleLike,
-    isCommentOpen,
-    isCollectOpen,
     isCommentSheetOpen,
-    setIsCommentSheetOpen,
     isCollectSheetOpen,
     handleCollectSheetOpenChange,
+    stats,
+    operations,
   } = usePostActions(post);
 
-  const handleCommentSheetOpenChange = (open: boolean) => {
-    setIsCommentSheetOpen(open);
-  };
 
-  const likes = post.stats.upvotes;
-  const collects = post.stats.collects;
-  const tips = post.stats.tips;
-  const comments = post.stats.comments;
-  const reposts = post.stats.reposts;
-  const bookmarks = post.stats.bookmarks;
-  const quotes = post.stats.quotes;
-  const isReposted = post.operations?.hasReposted;
-  const isQuoted = post.operations?.hasQuoted;
-  const canComment = post.operations?.canComment;
-  const canRepost = post.operations?.canRepost;
-  const canQuote = post.operations?.canQuote;
+  const likes = stats.upvotes;
+  const collects = stats.collects;
+  const tips = stats.tips;
+  const comments = stats.comments;
+  const reposts = stats.reposts;
+  const bookmarks = stats.bookmarks;
+  const quotes = stats.quotes;
+  const isReposted = operations.hasReposted;
+  const isQuoted = operations.hasQuoted;
+  const canComment = operations.canComment;
+  const canRepost = operations.canRepost;
+  const canQuote = operations.canQuote;
+  const hasUpvoted = operations.hasUpvoted;
+  const hasBookmarked = operations.hasBookmarked;
 
   const actionButtons = [
     {
@@ -71,6 +68,7 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
       strokeColor: "hsl(var(--primary))",
       fillColor: "hsl(var(--primary) / 0.8)",
       shouldIncrementOnClick: false,
+      hideCount: true,
       dropdownItems: [
         {
           icon: TbLink,
@@ -87,27 +85,12 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
           label: "Bluesky",
           onClick: () => handlePlatformShare("bluesky"),
         },
-        // {
-        //   icon: Share2Icon,
-        //   label: "Lens",
-        //   onClick: () => handlePlatformShare("lens"),
-        // },
-        // {
-        //   icon: Repeat2Icon,
-        //   label: "Repost",
-        //   onClick: () => { },
-        // },
-        // {
-        //   icon: PenLineIcon,
-        //   label: "Quote",
-        //   onClick: () => { },
-        // },
       ],
     },
     {
       icon: Bookmark,
       label: "Bookmark",
-      isActive: post.operations?.hasBookmarked,
+      isActive: hasBookmarked,
       initialCount: bookmarks,
       strokeColor: "hsl(var(--primary))",
       fillColor: "hsl(var(--primary) / 0.8)",
@@ -126,7 +109,7 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
           {trigger}
         </TipPopover>
       ),
-      isActive: isCollectOpen,
+      isActive: isCollectSheetOpen,
     },
     {
       icon: MessageCircle,
@@ -136,7 +119,7 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
       fillColor: "hsl(var(--primary) / 0.8)",
       onClick: () => handleComment(false),
       shouldIncrementOnClick: false,
-      isActive: isCommentOpen,
+      isActive: isCommentSheetOpen,
       isDisabled: !canComment,
     },
     {
@@ -146,20 +129,13 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
       strokeColor: "rgb(215, 84, 127)",
       fillColor: "rgba(215, 84, 127, 0.9)",
       onClick: handleLike,
-      isActive: post.operations?.hasUpvoted,
+      isActive: hasUpvoted,
       shouldIncrementOnClick: true,
     },
   ];
 
   return (
     <>
-      <CommentSheet
-        post={post}
-        account={account}
-        forcedOpen={isCommentSheetOpen}
-        onOpenChange={handleCommentSheetOpenChange}
-      />
-      <PostCollect post={post} isOpen={isCollectSheetOpen} onOpenChange={handleCollectSheetOpenChange} />
       <TooltipProvider delayDuration={300}>
         <motion.div
           style={{
@@ -190,6 +166,7 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
                 isActive={button.isActive}
                 shouldIncrementOnClick={button.shouldIncrementOnClick}
                 renderPopover={button.renderPopover}
+                isDisabled={button.isDisabled}
               />
             ))}
           </nav>

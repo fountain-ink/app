@@ -10,10 +10,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, ReactElement, JSXElementConstructor } from "react";
 import { AnimatedChevron } from "../ui/animated-chevron";
 import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
+import { IconType } from "react-icons";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 export type DropdownItem = {
   icon: any;
@@ -22,25 +24,30 @@ export type DropdownItem = {
 };
 
 export type ActionButtonProps = {
-  icon: LucideIcon | React.FC<any>;
+  icon: LucideIcon | IconType | React.FC<any>;
   label: string;
-  initialCount?: number;
+  initialCount: number;
   strokeColor: string;
   fillColor: string;
-  dropdownItems?: DropdownItem[];
+  isActive?: boolean;
+  shouldIncrementOnClick: boolean;
+  onClick?: () => Promise<any> | undefined;
+  renderPopover?: (trigger: ReactElement) => ReactElement;
+  isDisabled?: boolean;
+  dropdownItems?: {
+    icon: LucideIcon | IconType | React.FC<any>;
+    label: string;
+    onClick: () => void;
+  }[];
+  hideCount?: boolean;
   className?: string;
   showChevron?: boolean;
-  onClick?: () => Promise<any> | undefined;
-  isActive?: boolean;
-  isDisabled?: boolean;
-  shouldIncrementOnClick?: boolean;
   fillOnHover?: boolean;
   fillOnClick?: boolean;
-  renderPopover?: (trigger: React.ReactElement) => React.ReactElement;
 };
 
 const formatNumber = (num: number): string => {
-  if (num === 0) return "";
+  if (num === 0 || !num) return "";
   if (num >= 1000000) {
     return `${(num / 1000000).toFixed(1).replace(/\.0$/, "")}M`;
   }
@@ -53,83 +60,39 @@ const formatNumber = (num: number): string => {
 export const ActionButton = ({
   icon: Icon,
   label,
-  initialCount = 0,
+  initialCount,
   strokeColor,
   fillColor,
+  isActive = false,
+  shouldIncrementOnClick,
+  onClick,
+  renderPopover,
+  isDisabled = false,
   dropdownItems,
+  hideCount = false,
   className,
   showChevron = false,
-  onClick,
-  isActive = false,
-  isDisabled = false,
-  shouldIncrementOnClick = true,
   fillOnHover = true,
   fillOnClick = true,
-  renderPopover,
 }: ActionButtonProps) => {
-  const [state, setState] = useState({
-    count: initialCount,
-    isHovered: false,
-    isPressedLocally: isActive,
-  });
-
-  // Add open state for dropdown
+  const [isHovered, setIsHovered] = useState(false);
   const { open, onOpenChange } = useOpenState();
 
-  // Keep local state in sync with prop for URL-based states (comment/collect)
-  useEffect(() => {
-    setState((prev) => ({ ...prev, isPressedLocally: isActive }));
-  }, [isActive]);
+  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (isDisabled || !onClick) return;
 
-  const previousCount = useRef(initialCount);
+    e.stopPropagation();
 
-  useEffect(() => {
-    previousCount.current = state.count;
-  }, [state.count]);
-
-  useEffect(() => {
-    if (!dropdownItems) return;
-
-    const handleScroll = () => {
-      if (open) {
-        onOpenChange(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, true);
-    return () => {
-      window.removeEventListener("scroll", handleScroll, true);
-    };
-  }, [dropdownItems, open, onOpenChange]);
-
-  const handleClick = async () => {
-    if (onClick && !isDisabled) {
-      if (!dropdownItems) {
-        setState((prev) => ({
-          ...prev,
-          isPressedLocally: !prev.isPressedLocally,
-          count: shouldIncrementOnClick ? (!prev.isPressedLocally ? prev.count + 1 : prev.count - 1) : prev.count,
-        }));
-      }
-
-      try {
-        await onClick();
-      } catch (error) {
-        if (!dropdownItems) {
-          setState((prev) => ({
-            ...prev,
-            isPressedLocally: !prev.isPressedLocally,
-            count: shouldIncrementOnClick ? (prev.isPressedLocally ? prev.count + 1 : prev.count - 1) : prev.count,
-          }));
-        }
-        console.error("Error in action button click:", error);
-      }
+    try {
+      await onClick();
+    } catch (error) {
+      console.error(`Action button "${label}" failed:`, error);
     }
   };
 
-  const handleHover = (isHovered: boolean) => {
+  const handleHover = (hovering: boolean) => {
     if (!isDisabled) {
-      setState((prev) => ({ ...prev, isHovered }));
+      setIsHovered(hovering);
     }
   };
 
@@ -140,25 +103,31 @@ export const ActionButton = ({
     style: {
       color: isDisabled
         ? "hsl(var(--muted-foreground))"
-        : (state.isPressedLocally && fillOnClick) || (state.isHovered && fillOnHover)
+        : isActive
           ? strokeColor
+          : isHovered
+            ? strokeColor
+            : undefined,
+      fill: isDisabled
+        ? undefined
+        : isActive && fillOnClick
+          ? fillColor
           : undefined,
-      fill: isDisabled ? undefined : state.isPressedLocally && fillOnClick ? fillColor : undefined,
       opacity: isDisabled ? 0.5 : 1,
     },
   };
 
   const TriggerButton = (
     <div className="relative">
-      <ButtonHoverEffect isHovered={state.isHovered} strokeColor={strokeColor} />
+      <ButtonHoverEffect isHovered={isHovered} strokeColor={strokeColor} />
       <Button
         variant="ghost3"
         onMouseEnter={() => handleHover(true)}
         onMouseLeave={() => handleHover(false)}
         style={{
-          backgroundColor: state.isPressedLocally ? `${strokeColor}10` : undefined,
+          backgroundColor: isActive ? `${strokeColor}10` : undefined,
         }}
-        onClick={!renderPopover && !dropdownItems ? handleClick : undefined}
+        onClick={handleClick}
         className="flex items-center transition-all duration-200 text-foreground rounded-full p-0 w-10 h-10
                   focus:outline-none group-hover:bg-transparent relative"
       >
@@ -176,16 +145,14 @@ export const ActionButton = ({
       ) : dropdownItems ? (
         <DropdownMenu modal={false} open={open} onOpenChange={onOpenChange}>
           <DropdownMenuTrigger
-            // No longer using asChild, the trigger is the div containing button and chevron
             className="flex items-center gap-0.5 outline-none"
           >
-            {/* Wrap TriggerButton and potential Chevron in a single element */}
             <div className="flex items-center gap-0.5">
               {TriggerButton}
               {showChevron && (
                 <AnimatedChevron
-                  isOpen={state.isPressedLocally}
-                  color={state.isPressedLocally || state.isHovered ? strokeColor : undefined}
+                  isOpen={isActive}
+                  color={isActive || isHovered ? strokeColor : undefined}
                   direction="up"
                 />
               )}
@@ -202,15 +169,14 @@ export const ActionButton = ({
       ) : (
         TriggerButton
       )}
-      {!dropdownItems && (
+      {!hideCount && (
         <div className="relative h-5 flex items-center text-xs text-foreground -ml-1">
-          <div className="opacity-0">{formatNumber(state.count)}</div>
+          <div className="opacity-0">{formatNumber(initialCount)}</div>
           <div className="absolute inset-0 flex items-center">
             <AnimatePresence>
               <CounterAnimation
-                value={state.count}
-                prevValue={previousCount.current}
-                strokeColor={state.isPressedLocally ? strokeColor : undefined}
+                value={initialCount}
+                strokeColor={isActive ? strokeColor : undefined}
               />
             </AnimatePresence>
           </div>
@@ -219,21 +185,38 @@ export const ActionButton = ({
     </div>
   );
 
-  return renderPopover || dropdownItems ? (
-    ButtonContent
-  ) : (
+  const triggerElement = (
     <TooltipProvider delayDuration={300}>
       <Tooltip>
         <TooltipTrigger asChild>{ButtonContent}</TooltipTrigger>
-        <TooltipContent>
-          <div className="flex items-center">
-            <span>{label}</span>
-            {/* {state.count > 0 && <span className="text-xs text-foreground">{state.count.toLocaleString()}</span>} */}
-          </div>
+        <TooltipContent side="bottom" className="bg-foreground text-background text-xs">
+          {label}
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );
+
+  if (renderPopover) {
+    return renderPopover(triggerElement);
+  }
+
+  if (dropdownItems && dropdownItems.length > 0) {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>{triggerElement}</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          {dropdownItems.map((item) => (
+            <DropdownMenuItem key={item.label} onClick={item.onClick}>
+              <item.icon className="mr-2 h-4 w-4" />
+              <span>{item.label}</span>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }
+
+  return triggerElement;
 };
 
 const ButtonHoverEffect = ({
@@ -263,14 +246,11 @@ const ButtonHoverEffect = ({
 
 const CounterAnimation = ({
   value,
-  prevValue,
   strokeColor,
 }: {
   value: number;
-  prevValue: number;
   strokeColor?: string;
 }) => {
-  const isIncreasing = value > prevValue;
   const formattedValue = formatNumber(value);
 
   if (!formattedValue) return null;
@@ -278,9 +258,9 @@ const CounterAnimation = ({
   return (
     <motion.span
       key={value}
-      initial={{ y: isIncreasing ? -30 : 30, opacity: 0 }}
+      initial={{ y: -30, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      exit={{ y: isIncreasing ? 30 : -30, opacity: 0 }}
+      exit={{ y: 30, opacity: 0 }}
       transition={{ duration: 0.2 }}
       className="absolute"
       style={{ color: strokeColor }}

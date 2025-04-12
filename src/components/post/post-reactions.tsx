@@ -2,31 +2,37 @@ import { usePostActions } from "@/hooks/use-post-actions";
 import { Post } from "@lens-protocol/client";
 import { Heart, MessageCircle, ShoppingBag } from "lucide-react";
 import { ActionButton } from "./post-action-button";
-import { PostCollect } from "./post-collect-dialog";
 
 export const PostReactions = ({ post }: { post: Post }) => {
-  const { handleLike, handleComment, handleCollect, isCollectSheetOpen, handleCollectSheetOpenChange } =
-    usePostActions(post);
+  const {
+    handleLike,
+    handleComment,
+    handleCollect,
+    stats,
+    operations,
+  } = usePostActions(post);
 
+  const canCollect = operations.canSimpleCollect.__typename === "SimpleCollectValidationPassed";
+  const hasCommented = operations.hasCommented;
+  const hasUpvoted = operations.hasUpvoted;
 
-  const canCollect = post.operations?.canSimpleCollect.__typename === "SimpleCollectValidationPassed";
   return (
     <div className="flex flex-row gap-3 items-center justify-center">
       <ActionButton
         icon={MessageCircle}
         label="Comment"
-        initialCount={post.stats.comments}
+        initialCount={stats.comments}
         strokeColor="hsl(var(--primary))"
         fillColor="hsl(var(--primary) / 0.8)"
         onClick={() => handleComment(true)}
-        isActive={post.operations?.hasCommented.optimistic}
+        isActive={hasCommented.optimistic}
         shouldIncrementOnClick={false}
       />
       {canCollect && (
         <ActionButton
           icon={ShoppingBag}
           label="Collect"
-          initialCount={post.stats.collects}
+          initialCount={stats.collects}
           strokeColor="rgb(254,178,4)"
           fillColor="rgba(254, 178, 4, 0.3)"
           onClick={handleCollect}
@@ -36,14 +42,13 @@ export const PostReactions = ({ post }: { post: Post }) => {
       <ActionButton
         icon={Heart}
         label="Like"
-        initialCount={post.stats.upvotes}
+        initialCount={stats.upvotes}
         strokeColor="rgb(215, 84, 127)"
         fillColor="rgba(215, 84, 127, 0.9)"
         onClick={handleLike}
-        isActive={post.operations?.hasUpvoted}
+        isActive={hasUpvoted}
         shouldIncrementOnClick={true}
       />
-      <PostCollect post={post} isOpen={isCollectSheetOpen} onOpenChange={handleCollectSheetOpenChange} />
     </div>
   );
 };

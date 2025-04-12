@@ -27,7 +27,7 @@ import {
 import { ConfirmButton } from "@/components/ui/confirm-button";
 
 export const PostMenu = ({ post }: { post: Post }) => {
-  const { handleBookmark } = usePostActions(post);
+  const { handleBookmark, stats, operations } = usePostActions(post);
   const { data: walletClient } = useWalletClient();
   const router = useRouter();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -176,6 +176,8 @@ export const PostMenu = ({ post }: { post: Post }) => {
       : []),
   ];
 
+  const hasBookmarked = operations.hasBookmarked;
+
   return (
     <>
       <div className="flex flex-row gap-3 items-center justify-center">
@@ -185,9 +187,9 @@ export const PostMenu = ({ post }: { post: Post }) => {
           strokeColor="hsl(var(--primary))"
           fillColor="hsl(var(--primary) / 0.8)"
           onClick={handleBookmark}
-          isActive={post.operations?.hasBookmarked}
+          isActive={hasBookmarked}
           shouldIncrementOnClick={true}
-          initialCount={post.stats.bookmarks}
+          initialCount={stats.bookmarks}
         />
         <ActionButton
           icon={MoreHorizontal}
@@ -196,6 +198,8 @@ export const PostMenu = ({ post }: { post: Post }) => {
           fillColor="hsl(var(--muted-foreground))"
           dropdownItems={dropdownItems}
           showChevron={false}
+          initialCount={0}
+          shouldIncrementOnClick={false}
         />
       </div>
 

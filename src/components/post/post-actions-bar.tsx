@@ -3,13 +3,11 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { usePostActions } from "@/hooks/use-post-actions";
 import { handlePlatformShare } from "@/lib/get-share-url";
-import { Account, AnyPost } from "@lens-protocol/client";
+import { Account, AnyPost, Post } from "@lens-protocol/client";
 import { Bookmark, Heart, LucideIcon, MessageCircle, Share2 } from "lucide-react";
 import { IconType } from "react-icons";
 import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
 import { ActionButton } from "./post-action-button";
-import { CommentSheet } from "../comment/comment-sheet";
-import { PostCollect } from "./post-collect-dialog";
 import { TipPopover } from "../tip/tip-popover";
 import { CoinIcon } from "../icons/custom-icons";
 import React, { ReactElement, JSXElementConstructor } from "react";
@@ -40,33 +38,33 @@ export const PostActionsBar = ({ post, account }: { post: AnyPost; account?: Acc
     return null;
   }
 
+  const typedPost = post as Post;
+
   const {
     handleComment,
     handleCollect,
     handleBookmark,
     handleLike,
-    isCommentOpen,
-    isCollectOpen,
     isCommentSheetOpen,
-    setIsCommentSheetOpen,
     isCollectSheetOpen,
     handleCollectSheetOpenChange,
-  } = usePostActions(post);
+    handleCommentSheetOpenChange,
+    stats,
+    operations,
+  } = usePostActions(typedPost);
 
-  const handleCommentSheetOpenChange = (open: boolean) => {
-    setIsCommentSheetOpen(open);
-  };
-
-  const likes = post.stats.upvotes;
-  const collects = post.stats.collects;
-  const tips = post.stats.tips;
-  const comments = post.stats.comments;
-  const reposts = post.stats.reposts;
-  const bookmarks = post.stats.bookmarks;
-  const quotes = post.stats.quotes;
-  const isReposted = post.operations?.hasReposted;
-  const isQuoted = post.operations?.hasQuoted;
-  const canComment = post.operations?.canComment;
+  const likes = stats.upvotes;
+  const collects = stats.collects;
+  const tips = stats.tips;
+  const comments = stats.comments;
+  const reposts = stats.reposts;
+  const bookmarks = stats.bookmarks;
+  const quotes = stats.quotes;
+  const isReposted = operations.hasReposted;
+  const isQuoted = operations.hasQuoted;
+  const canComment = operations.canComment;
+  const hasUpvoted = operations.hasUpvoted;
+  const hasBookmarked = operations.hasBookmarked;
 
   const likeButton: ActionButtonConfig = {
     icon: Heart,
@@ -75,7 +73,7 @@ export const PostActionsBar = ({ post, account }: { post: AnyPost; account?: Acc
     strokeColor: "rgb(215, 84, 127)",
     fillColor: "rgba(215, 84, 127, 0.9)",
     onClick: handleLike,
-    isActive: post.operations?.hasUpvoted,
+    isActive: hasUpvoted,
     shouldIncrementOnClick: true,
   };
 
@@ -87,11 +85,11 @@ export const PostActionsBar = ({ post, account }: { post: AnyPost; account?: Acc
     fillColor: "rgba(254, 178, 4, 0.3)",
     shouldIncrementOnClick: false,
     renderPopover: (trigger: React.ReactElement) => (
-      <TipPopover onCollectClick={handleCollect} post={post}>
+      <TipPopover onCollectClick={handleCollect} post={typedPost}>
         {trigger}
       </TipPopover>
     ),
-    isActive: isCollectOpen,
+    isActive: isCollectSheetOpen,
   };
 
   const commentButton: ActionButtonConfig = {
@@ -102,14 +100,14 @@ export const PostActionsBar = ({ post, account }: { post: AnyPost; account?: Acc
     fillColor: "hsl(var(--primary) / 0.8)",
     onClick: () => handleComment(false),
     shouldIncrementOnClick: false,
-    isActive: isCommentOpen,
+    isActive: isCommentSheetOpen,
     isDisabled: !canComment,
   };
 
   const bookmarkButton: ActionButtonConfig = {
     icon: Bookmark,
     label: "Bookmark",
-    isActive: post.operations?.hasBookmarked,
+    isActive: hasBookmarked,
     initialCount: bookmarks,
     strokeColor: "hsl(var(--primary))",
     fillColor: "hsl(var(--primary) / 0.8)",
@@ -150,7 +148,6 @@ export const PostActionsBar = ({ post, account }: { post: AnyPost; account?: Acc
 
   return (
     <>
-      <PostCollect post={post} isOpen={isCollectSheetOpen} onOpenChange={handleCollectSheetOpenChange} />
       <TooltipProvider delayDuration={300}>
         <div className="flex items-center justify-center gap-4 sm:gap-0 sm:justify-between w-full ">
           <div className="flex items-center gap-4">

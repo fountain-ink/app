@@ -12,6 +12,7 @@ import { PlateController } from "@udecode/plate/react";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider as DarkModeProvider } from "next-themes";
+import { PostActionsProvider } from "@/contexts/post-actions-context";
 
 export const metadata = {
   title: "Fountain",
@@ -39,15 +40,17 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
         )}
       >
         <Web3Providers>
-          <DarkModeProvider attribute="class" defaultTheme="system" enableSystem={true} disableTransitionOnChange>
-            <ThemeProvider>
-              <AuthManager credentials={credentials} />
-              <Toaster position="top-center" offset={16} />
-              <Header session={session} />
-              <main className="flex-1">{children}</main>
-              <GlobalFooter />
-            </ThemeProvider>
-          </DarkModeProvider>
+          <PostActionsProvider>
+            <DarkModeProvider attribute="class" defaultTheme="system" enableSystem={true} disableTransitionOnChange>
+              <ThemeProvider>
+                <AuthManager credentials={credentials} />
+                <Toaster position="top-center" offset={16} />
+                <Header session={session} />
+                <main className="flex-1">{children}</main>
+                <GlobalFooter />
+              </ThemeProvider>
+            </DarkModeProvider>
+          </PostActionsProvider>
         </Web3Providers>
       </body>
     </html>

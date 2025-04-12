@@ -17,7 +17,9 @@ export const CommentReactions = ({
   hasReplies = false,
   isLoadingReplies = false,
 }: CommentReactionsProps) => {
-  const { handleLike } = usePostActions(comment);
+  const { handleLike, stats, operations } = usePostActions(comment);
+
+  const hasUpvoted = operations.hasUpvoted;
 
   const handleShowReplies = async () => {
     onShowReplies?.();
@@ -29,21 +31,21 @@ export const CommentReactions = ({
       <ActionButton
         icon={Heart}
         label="Like"
-        initialCount={comment.stats.upvotes}
+        initialCount={stats.upvotes}
         strokeColor="rgb(215, 84, 127)"
         fillColor="rgba(215, 84, 127, 0.9)"
         onClick={handleLike}
-        isActive={comment.operations?.hasUpvoted}
+        isActive={hasUpvoted}
         shouldIncrementOnClick={true}
       />
       <ActionButton
         icon={MessageCircle}
         label={isLoadingReplies ? "Loading..." : "Comments"}
-        initialCount={comment.stats.comments}
+        initialCount={stats.comments}
         strokeColor="hsl(var(--primary))"
         fillColor="hsl(var(--primary) / 0.8)"
         onClick={handleShowReplies}
-        isDisabled={!hasReplies}
+        isDisabled={!hasReplies || isLoadingReplies}
         shouldIncrementOnClick={false}
         fillOnHover={false}
         fillOnClick={false}
