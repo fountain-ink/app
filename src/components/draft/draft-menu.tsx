@@ -53,8 +53,9 @@ export const DraftMenu = ({
         strokeColor="hsl(var(--muted-foreground))"
         fillColor="hsl(var(--muted-foreground))"
         dropdownItems={dropdownItems}
-        showChevron={false}
-      />
+        showChevron={false} 
+        initialCount={0} 
+        shouldIncrementOnClick={false}      />
     </div>
   );
 };
