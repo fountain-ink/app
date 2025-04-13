@@ -55,7 +55,7 @@ export async function GET(request: Request) {
     let platform: keyof typeof platformLogic;
     let slug: string;
 
-    if (url.includes("paragraph.xyz")) {
+    if (url.includes("paragraph.xyz") || url.includes("paragraph.com")) {
       platform = "paragraph";
       slug = url.split("/").pop() || "";
     } else if (url.includes("app.t2.world")) {
