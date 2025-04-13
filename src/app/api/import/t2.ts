@@ -4,9 +4,9 @@ import { JSDOM } from "jsdom";
 import { NextResponse } from "next/server";
 
 interface T2Post {
-  cover_img_url: string;
+  coverImageUrl: string;
   createdAt: number;
-  post_preview: string;
+  postPreview: string;
   title: string;
   subtitle: string;
   id: string;
@@ -73,9 +73,9 @@ export async function getT2Content(slug: string) {
       content: htmlContent.join(""),
       title: content.title,
       subtitle: content.subtitle,
-      cover_img_url: content.cover_img_url,
+      coverImageUrl: content.cover_img_url,
       createdAt: content.createdAt,
-      post_preview: content.post_preview,
+      postPreview: content.post_preview,
       id: content.id,
       slug: content.slug,
       storeOnArweave: content.storeOnArweave,

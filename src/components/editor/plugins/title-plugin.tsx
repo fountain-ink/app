@@ -1,3 +1,4 @@
+import { Descendant } from "@udecode/plate";
 import { createPlatePlugin } from "@udecode/plate/react";
 
 export const TITLE_KEYS = {

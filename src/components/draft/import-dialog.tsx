@@ -45,7 +45,7 @@ export function ImportDialog() {
       const data = await response.json();
       console.log("Imported content:", data);
 
-      const result = await createHtmlDraft(data.content);
+      const result = await createHtmlDraft(data.content, data.title, data.subtitle, data.coverImageUrl);
       console.log("Draft created with ID:", result.documentId);
 
       toast.success("Content imported successfully!");
@@ -72,7 +72,7 @@ export function ImportDialog() {
         <DialogHeader>
           <DialogTitle className="h-8 flex items-center">Import Content</DialogTitle>
           <DialogDescription>
-            Import your content from Paragraph by entering the URL.
+            Import your content from Paragraph, T2 or Mirror by entering your article URL.
           </DialogDescription>
         </DialogHeader>
         <div className="flex gap-4">

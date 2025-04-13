@@ -25,6 +25,7 @@ interface ParagraphPost {
   timestamp: number;
   content: string;
   slug: string;
+  coverImageUrl: string;
 }
 
 export async function getParagraphContent(slug: string) {
@@ -50,6 +51,7 @@ export async function getParagraphContent(slug: string) {
       content: parsedContent.staticHtml,
       timestamp: parsedContent.timestamp,
       slug: parsedContent.slug,
+      coverImageUrl: parsedContent.cover_img.img.src,
     } as ParagraphPost;
   } catch (error) {
     console.error("Error:", error);

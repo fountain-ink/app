@@ -22,6 +22,7 @@ interface MirrorContent {
   content: string;
   timestamp: number;
   slug: string;
+  coverImageUrl: string;
 }
 
 function stripImgTags(content: string): string {

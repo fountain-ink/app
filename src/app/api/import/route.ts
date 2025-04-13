@@ -7,6 +7,7 @@ export interface ForeignPost {
   title: string;
   content: string;
   timestamp: number;
+  coverImageUrl?: string;
   slug: string;
 }
 
@@ -69,7 +70,6 @@ export async function GET(request: Request) {
     }
 
     const content = await platformLogic[platform](slug);
-    content.content = `<h1>${content.title}</h1>${content.content}`;
 
     return NextResponse.json(content, { status: 200 });
   } catch (error) {

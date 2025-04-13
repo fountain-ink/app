@@ -18,13 +18,35 @@ type CreateDraftOptions = {
  */
 export async function createHtmlDraft(
   htmlString: string,
+  title?: string,
+  subtitle?: string,
+  coverImageUrl?: string,
   options: Omit<CreateDraftOptions, 'initialContent'> = {}
 ) {
   const editor = getStaticEditor();
   const nodes = deserializeHtml(editor, {
     element: htmlString,
   });
-  console.log(nodes);
+  if (title) {
+    nodes.unshift({
+      type: "title",
+      children: [{ text: title }],
+    });
+  }
+  if (subtitle) {
+    nodes.unshift({
+      type: "subtitle",
+      children: [{ text: subtitle }],
+    });
+  }
+  if (coverImageUrl) {
+    nodes.unshift({
+      type: "img",
+      width: "wide",
+      url: coverImageUrl,
+      children: [{ text: "" }],
+    });
+  }
 
   return createDraft({
     ...options,
