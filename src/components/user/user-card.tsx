@@ -17,29 +17,38 @@ import { UserFollowing } from "./user-following";
 
 type UserCardProps = PropsWithChildren & {
   username?: string;
+  address?: string;
   linkProfile?: boolean;
 };
 
-export const UserCard = ({ children, username, linkProfile = false }: UserCardProps) => {
+export const UserCard = ({ children, username, address, linkProfile = false }: UserCardProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [account, setAccount] = useState<Account | null>(null);
   const [stats, setStats] = useState<any>(null);
 
   const loadCard = async () => {
-    if (!username) return;
+    if (!username && !address) return;
 
     setLoading(true);
     try {
       const client = await getLensClient();
-      const result = await fetchAccount(client, {
-        username: {
-          localName: username,
-        },
-      });
+      let result;
 
-      if (result.isErr()) {
-        throw result.error;
+      if (username) {
+        result = await fetchAccount(client, {
+          username: {
+            localName: username,
+          },
+        });
+      } else if (address) {
+        result = await fetchAccount(client, {
+          address: address,
+        });
+      }
+
+      if (!result || result.isErr()) {
+        throw result?.error || new Error("Failed to fetch account");
       }
 
       const account = result.unwrapOr(null);
