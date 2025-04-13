@@ -1,8 +1,14 @@
 import { createServiceClient } from "@/lib/supabase/service";
 import { NextRequest, NextResponse } from "next/server";
+import { checkAdminRights } from "@/lib/auth/admin-middleware";
 
 export async function GET(req: NextRequest) {
   try {
+    const authResponse = await checkAdminRights(req);
+    if (authResponse) {
+      return authResponse;
+    }
+
     const url = new URL(req.url);
     const status = url.searchParams.get("status");
     const type = url.searchParams.get("type");
@@ -45,6 +51,13 @@ export async function GET(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   try {
+    // Check if the user is an admin
+    const authResponse = await checkAdminRights(req);
+    if (authResponse) {
+      // Return the auth error response if authentication failed
+      return authResponse;
+    }
+
     const body = await req.json();
     const { id, status } = body;
 

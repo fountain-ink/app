@@ -16,9 +16,20 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Database } from "@/lib/supabase/database";
 
-type BlogType = Database['public']['Tables']['blogs']['Row']
+type BlogType = {
+  address: string;
+  owner: string;
+  title: string | null;
+  handle: string | null;
+  slug: string | null;
+  about: string | null;
+  created_at: string;
+  updated_at: string | null;
+  icon: string | null;
+  metadata: any;
+  theme: any | null;
+};
 
 export default function BlogsLookupPage() {
   const [searchQuery, setSearchQuery] = useState("");

@@ -1,9 +1,14 @@
 import { createServiceClient } from "@/lib/supabase/service";
 import { NextRequest, NextResponse } from "next/server";
-import { Database } from "@/lib/supabase/database";
+import { checkAdminRights } from "@/lib/auth/admin-middleware";
 
 export async function GET(req: NextRequest) {
   try {
+    const authResponse = await checkAdminRights(req);
+    if (authResponse) {
+      return authResponse;
+    }
+
     const url = new URL(req.url);
     const query = url.searchParams.get("query") || "";
     const exactAddress = url.searchParams.get("address") || "";
