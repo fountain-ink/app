@@ -1,6 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import { AuthorView } from "@/components/user/user-author-view";
-import { UserContent } from "@/components/user/user-content";
+import { ArticleFeed } from "@/components/post/post-article-feed";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchAccount, fetchPosts, fetchPostTags, fetchGroup, fetchGroupMembers, fetchAdminsFor } from "@lens-protocol/client/actions";
@@ -187,9 +187,8 @@ const BlogPage = async ({
           <BlogTagNavigation tags={formattedTags} username={params.blog} />
         )} */}
         <div className="flex flex-col my-4 gap-4">
-          <UserContent
+          <ArticleFeed
             posts={[...(posts?.items ?? [])]}
-            profile={profile}
             isUserProfile={isUserBlog || isUserMemeber}
           />
         </div>

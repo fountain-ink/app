@@ -4,16 +4,14 @@ import type { Account, AnyPost } from "@lens-protocol/client";
 import { motion } from "motion/react";
 import { DraftCreateButton } from "../draft/draft-create-button";
 import { GraphicHand2 } from "../icons/custom-icons";
-import { PostView } from "../post/post-view";
+import { PostView } from "./post-view";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 
-export const UserContent = ({
+export const ArticleFeed = ({
   posts,
-  profile,
   isUserProfile = false,
 }: {
   posts: AnyPost[];
-  profile: Account | null;
   isUserProfile?: boolean;
 }) => {
 
@@ -62,7 +60,6 @@ export const UserContent = ({
       </Card>
     );
   }
-  console.log(postViews)
 
   return (
     <motion.div

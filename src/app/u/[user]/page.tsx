@@ -1,4 +1,4 @@
-import { UserContent } from "@/components/user/user-content";
+import { ArticleFeed } from "@/components/post/post-article-feed";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { evmAddress, MainContentFocus } from "@lens-protocol/client";
@@ -25,10 +25,10 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
   const isUserProfile = address === account?.address;
 
   return (
-    <UserContent
+    <ArticleFeed
       posts={[...posts.value.items]}
       isUserProfile={isUserProfile}
-      profile={account} />
+    />
   );
 };
 
