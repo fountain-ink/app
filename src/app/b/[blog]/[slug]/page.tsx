@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import UserBlogPage from "../page";
+import BlogPage from "../page";
 
 export default async function BlogHandlePage({ params }: { params: { blog: string; slug: string } }) {
   const { blog, slug } = params;
@@ -11,7 +11,7 @@ export default async function BlogHandlePage({ params }: { params: { blog: strin
     return notFound();
   }
 
-  return <UserBlogPage params={{ blog: blogAddress }} />;
+  return <BlogPage params={{ blog: blogAddress }} />;
 }
 
 async function resolveBlog(username: string, slug: string): Promise<string | null> {

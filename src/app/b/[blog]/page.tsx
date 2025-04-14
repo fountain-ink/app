@@ -74,7 +74,7 @@ export async function generateMetadata({ params }: { params: { blog: string } })
   };
 }
 
-const UserBlogPage = async ({
+const BlogPage = async ({
   params,
   searchParams,
 }: { params: { blog: string }; searchParams?: { tag?: string } }) => {
@@ -84,7 +84,7 @@ const UserBlogPage = async ({
   let posts;
   let isGroup = false;
   let groupMembers: Account[] = [];
-  let feedAddress;
+  let feed;
   let blogData;
   let group;
   let groupAdmins: Account[] = [];
@@ -102,7 +102,7 @@ const UserBlogPage = async ({
 
     isGroup = true;
     profile = group.owner;
-    feedAddress = group.feed;
+    feed = group.feed;
     blogData = await getBlogData(group.address);
 
     const admins = await fetchAdminsFor(lens, { address: group.address }).unwrapOr(null);
@@ -134,14 +134,14 @@ const UserBlogPage = async ({
     filter: {
       authors: !isGroup && profile ? [profile.address] : undefined,
       metadata: { mainContentFocus: [MainContentFocus.Article] },
-      feeds: feedAddress ? [{ feed: feedAddress }] : [{ globalFeed: true }],
+      feeds: feed ? [{ feed: feed.address }] : [{ globalFeed: true }],
       // tags: selectedTag ? [selectedTag] : undefined,
     },
   }).unwrapOr(null);
 
   const tags = await fetchPostTags(lens, {
     filter: {
-      feeds: feedAddress ? [{ feed: feedAddress }] : undefined,
+      feeds: feed ? [{ feed: feed.address }] : undefined,
     },
   }).unwrapOr(null);
 
@@ -157,6 +157,7 @@ const UserBlogPage = async ({
   const blogTitle = blogData?.title;
   const isUserBlog = username === params.blog && !isGroup;
   const isUserMemeber = groupMembers.some((member) => member.address === userAddress);
+  console.log(posts)
 
   return (
     <BlogTheme initialTheme={blogData?.theme?.name}>
@@ -197,4 +198,4 @@ const UserBlogPage = async ({
   );
 };
 
-export default UserBlogPage;
+export default BlogPage;
