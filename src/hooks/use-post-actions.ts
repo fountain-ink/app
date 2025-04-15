@@ -35,6 +35,9 @@ export const usePostActions = (post: Post) => {
     canRepost: false,
     canQuote: false,
     canBookmark: false,
+    canCollect: false,
+    canDelete: false,
+    canTip: false,
   };
 
   const {
@@ -44,7 +47,7 @@ export const usePostActions = (post: Post) => {
     isCollectSheetOpen
   } = useMemo(() => ({
     stats: sharedState?.stats ?? post.stats,
-    operations: sharedState?.operations ?? post.operations ?? defaultOperations,
+    operations: sharedState?.operations ?? sharedState?.operations ?? defaultOperations,
     isCommentSheetOpen: sharedState?.isCommentSheetOpen ?? false,
     isCollectSheetOpen: sharedState?.isCollectSheetOpen ?? false,
   }), [sharedState, post.stats, post.operations, defaultOperations]);
@@ -201,6 +204,6 @@ export const usePostActions = (post: Post) => {
     handleCollectSheetOpenChange,
     stats,
     operations,
-    isLoggedIn, 
+    isLoggedIn,
   };
 };

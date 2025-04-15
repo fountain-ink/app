@@ -1,36 +1,22 @@
 "use client";
 
 import { useComments } from "@/hooks/use-comments";
-import { Account, AnyPost, Post } from "@lens-protocol/client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { Post } from "@lens-protocol/client";
 import { Button } from "@/components/ui/button";
 import { CommentView } from "./comment-view";
-import { GraphicHand2 } from "../icons/custom-icons";
 import { useEffect } from "react";
+import { usePostActions } from "@/hooks/use-post-actions";
 
-export const CommentPreview = ({
-  post,
-  account,
-}: {
-  post: Post;
-  account?: Account;
-}) => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+export const CommentPreview = ({ post }: { post: Post }) => {
   const { comments, loading, refresh } = useComments(post.id);
+  const { handleComment, stats } = usePostActions(post);
 
   useEffect(() => {
     refresh(0, false);
   }, []);
 
-  const openCommentSheet = () => {
-    const params = new URLSearchParams(searchParams);
-    params.set("comment", post.slug);
-    router.push(`?${params.toString()}`, { scroll: false });
-  };
-
   const visibleComments = comments.slice(0, 3);
-  const totalComments = post.stats.comments;
+  const totalComments = stats.comments;
 
   return (
     <div className="flex flex-col gap-4">
@@ -47,7 +33,7 @@ export const CommentPreview = ({
       {!loading && totalComments === 0 && (
         <div className="text-muted-foreground flex flex-col items-center my-4 gap-4 px-4">
           <span>Be the first one to comment.</span>
-          <Button variant="default" onClick={openCommentSheet}>
+          <Button variant="default" onClick={() => handleComment(false)}>
             Write a comment
           </Button>
         </div>
@@ -61,14 +47,14 @@ export const CommentPreview = ({
               comment={comment}
               nestingLevel={1}
               maxNestingLevel={2}
-              onMaxNestingReached={openCommentSheet}
+              onMaxNestingReached={() => handleComment(false)}
             />
           ))}
         </div>
       )}
 
       {totalComments > 0 && (
-        <Button variant="outline" onClick={openCommentSheet} className="mt-2">
+        <Button variant="outline" onClick={() => handleComment(false)} className="mt-2">
           {totalComments > 3 ? `View all ${totalComments} comments` : "View all comments"}
         </Button>
       )}

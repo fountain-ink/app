@@ -57,19 +57,20 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
   const bookmarks = stats.bookmarks;
   const quotes = stats.quotes;
 
-  const isReposted = operations?.hasReposted || false;
-  const isQuoted = operations?.hasQuoted || false;
-  const canComment = operations?.canComment || false;
-  const canRepost = operations?.canRepost || false;
-  const canQuote = operations?.canQuote || false;
-  const hasUpvoted = operations?.hasUpvoted || false;
-  const hasBookmarked = operations?.hasBookmarked || false;
+  const isReposted = operations?.hasReposted
+  const isQuoted = operations?.hasQuoted
+  const canComment = operations?.canComment
+  const canRepost = operations?.canRepost
+  const canQuote = operations?.canQuote
+  const canCollect = operations?.canCollect
+  const hasUpvoted = operations?.hasUpvoted
+  const hasBookmarked = operations?.hasBookmarked
 
   const actionButtons = [
     {
       icon: Share2,
       label: "Share",
-      isActive: isQuoted?.optimistic || isReposted?.optimistic,
+      isActive: isQuoted || isReposted,
       initialCount: reposts + quotes,
       strokeColor: "hsl(var(--primary))",
       fillColor: "hsl(var(--primary) / 0.8)",
@@ -106,7 +107,7 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
     },
     {
       icon: CoinIcon,
-      label: "Collect",
+      label: canCollect ? "Tip or Collect" : "Tip the author",
       initialCount: collects + tips,
       strokeColor: "rgb(254,178,4)",
       fillColor: "rgba(254, 178, 4, 0.3)",

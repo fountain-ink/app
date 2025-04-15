@@ -22,7 +22,7 @@ export async function generateMetadata() {
   };
 }
 
-const FeedPage = async () => {
+const home = async () => {
   const lens = await getLensClient();
   const { address: userAddress } = await getUserProfile();
 
@@ -57,4 +57,4 @@ const FeedPage = async () => {
   );
 };
 
-export default FeedPage; 
+export default home; 

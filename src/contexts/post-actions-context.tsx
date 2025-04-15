@@ -1,15 +1,29 @@
 "use client";
 
 import React, { createContext, useState, useContext, useCallback, ReactNode, useEffect, useMemo } from 'react';
-import { Post, PostStats } from '@lens-protocol/client';
+import { LoggedInPostOperations, Post, PostStats } from '@lens-protocol/client';
 import { CommentSheet } from '@/components/comment/comment-sheet';
 import { PostCollect } from '@/components/post/post-collect-dialog';
 import { useAccount, useAuthenticatedUser } from '@lens-protocol/react';
 
+interface BooleanPostOperations {
+  hasUpvoted: boolean;
+  hasBookmarked: boolean;
+  hasReposted: boolean;
+  hasQuoted: boolean;
+  canComment: boolean;
+  canRepost: boolean;
+  canQuote: boolean;
+  canBookmark: boolean;
+  canCollect: boolean;
+  canDelete: boolean;
+  canTip: boolean;
+}
+
 interface PostActionState {
   post: Post;
   stats: PostStats;
-  operations: any;
+  operations: BooleanPostOperations;
   isCommentSheetOpen: boolean;
   isCollectSheetOpen: boolean;
   initialCommentUrlSynced: boolean;
@@ -36,7 +50,7 @@ export const PostActionsProvider = ({ children }: { children: ReactNode }) => {
     address: authenticatedUser?.address,
   });
 
-  const defaultOperations = {
+  const defaultOperations: BooleanPostOperations = {
     hasUpvoted: false,
     hasBookmarked: false,
     hasReposted: false,
@@ -45,6 +59,25 @@ export const PostActionsProvider = ({ children }: { children: ReactNode }) => {
     canRepost: false,
     canQuote: false,
     canBookmark: false,
+    canCollect: false,
+    canTip: true,
+    canDelete: false,
+  };
+
+  const convertToBooleanOperations = (operations: LoggedInPostOperations): BooleanPostOperations => {
+    return {
+      hasUpvoted: operations.hasUpvoted,
+      hasBookmarked: operations.hasBookmarked,
+      hasReposted: operations.hasReposted.optimistic,
+      hasQuoted: operations.hasQuoted.optimistic,
+      canComment: operations.canComment.__typename === "PostOperationValidationPassed",
+      canRepost: operations.canRepost.__typename === "PostOperationValidationPassed",
+      canQuote: operations.canQuote.__typename === "PostOperationValidationPassed",
+      canBookmark: true,
+      canCollect: operations.canSimpleCollect.__typename === "SimpleCollectValidationPassed",
+      canTip: operations.canTip,
+      canDelete: operations.canDelete?.__typename === "PostOperationValidationPassed",
+    };
   };
 
   const initPostState = useCallback((post: Post) => {
@@ -54,7 +87,7 @@ export const PostActionsProvider = ({ children }: { children: ReactNode }) => {
         newStates.set(post.id, {
           post: post,
           stats: { ...post.stats },
-          operations: post.operations ? { ...post.operations } : { ...defaultOperations },
+          operations: post.operations ? convertToBooleanOperations(post.operations) : { ...defaultOperations },
           isCommentSheetOpen: false,
           isCollectSheetOpen: false,
           initialCommentUrlSynced: false,

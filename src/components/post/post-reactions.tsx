@@ -13,8 +13,8 @@ export const PostReactions = ({ post }: { post: Post }) => {
     isLoggedIn
   } = usePostActions(post);
 
-  const canCollect = operations?.canSimpleCollect?.__typename === "SimpleCollectValidationPassed";
-  const hasCommented = operations?.hasCommented || false;
+  const canCollect = operations?.canCollect || false;
+  const hasCommented = operations?.canComment || false;
   const hasUpvoted = operations?.hasUpvoted || false;
 
   return (
@@ -26,7 +26,7 @@ export const PostReactions = ({ post }: { post: Post }) => {
         strokeColor="hsl(var(--primary))"
         fillColor="hsl(var(--primary) / 0.8)"
         onClick={() => handleComment(true)}
-        isActive={hasCommented.optimistic}
+        isActive={hasCommented}
         shouldIncrementOnClick={false}
         isDisabled={!isLoggedIn}
       />

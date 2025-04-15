@@ -108,20 +108,6 @@ export const PostMenu = ({ post }: { post: Post }) => {
       return;
     }
 
-    switch (operations.canDelete.__typename) {
-      case "PostOperationValidationPassed":
-        break;
-      case "PostOperationValidationFailed":
-        toast.error(`Cannot delete: ${operations.canDelete.reason}`);
-        return;
-      case "PostOperationValidationUnknown":
-        toast.error("Cannot delete: Unknown validation rules");
-        return;
-      default:
-        toast.error("Cannot determine if deletion is allowed");
-        return;
-    }
-
     try {
       setIsDeleting(true);
       const lens = await getLensClient();

@@ -41,8 +41,6 @@ export const PostActionsBar = ({ post, account }: { post: AnyPost; account?: Acc
     return null;
   }
 
-  const typedPost = post as Post;
-
   const {
     handleComment,
     handleCollect,
@@ -50,12 +48,10 @@ export const PostActionsBar = ({ post, account }: { post: AnyPost; account?: Acc
     handleLike,
     isCommentSheetOpen,
     isCollectSheetOpen,
-    handleCollectSheetOpenChange,
-    handleCommentSheetOpenChange,
     stats,
     operations,
     isLoggedIn
-  } = usePostActions(typedPost);
+  } = usePostActions(post);
 
   const likes = stats.upvotes;
   const collects = stats.collects;
@@ -65,12 +61,12 @@ export const PostActionsBar = ({ post, account }: { post: AnyPost; account?: Acc
   const bookmarks = stats.bookmarks;
   const quotes = stats.quotes;
 
-  // Safely access operations with optional chaining for when operations might not be available
-  const isReposted = operations?.hasReposted || false;
-  const isQuoted = operations?.hasQuoted || false;
+  const isReposted = operations?.hasReposted
+  const isQuoted = operations?.hasQuoted
   const canComment = operations?.canComment || false;
   const hasUpvoted = operations?.hasUpvoted || false;
   const hasBookmarked = operations?.hasBookmarked || false;
+  const canCollect = operations?.canCollect || false;
 
   const likeButton: ActionButtonConfig = {
     icon: Heart,
@@ -81,23 +77,23 @@ export const PostActionsBar = ({ post, account }: { post: AnyPost; account?: Acc
     onClick: handleLike,
     isActive: hasUpvoted,
     shouldIncrementOnClick: true,
-    isDisabled: !isLoggedIn, 
+    isDisabled: !isLoggedIn,
   };
 
   const collectButton: ActionButtonConfig = {
     icon: CoinIcon,
-    label: "Collect",
+    label: canCollect ? "Tip or Collect" : "Tip the author",
     initialCount: collects + tips,
     strokeColor: "rgb(254,178,4)",
     fillColor: "rgba(254, 178, 4, 0.3)",
     shouldIncrementOnClick: false,
     renderPopover: (trigger: React.ReactElement) => (
-      <TipPopover onCollectClick={handleCollect} post={typedPost}>
+      <TipPopover onCollectClick={handleCollect} post={post}>
         {trigger}
       </TipPopover>
     ),
     isActive: isCollectSheetOpen,
-    isDisabled: !isLoggedIn, 
+    isDisabled: !isLoggedIn,
   };
 
   const commentButton: ActionButtonConfig = {
@@ -126,7 +122,7 @@ export const PostActionsBar = ({ post, account }: { post: AnyPost; account?: Acc
   const shareButton: ActionButtonConfig = {
     icon: Share2,
     label: "Share",
-    isActive: isQuoted?.optimistic || isReposted?.optimistic,
+    isActive: isQuoted || isReposted,
     initialCount: reposts + quotes,
     strokeColor: "hsl(var(--primary))",
     fillColor: "hsl(var(--primary) / 0.8)",
