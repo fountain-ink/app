@@ -18,8 +18,7 @@ export const CommentReactions = ({
   isLoadingReplies = false,
 }: CommentReactionsProps) => {
   const { handleLike, stats, operations, isLoggedIn } = usePostActions(comment);
-
-  const hasUpvoted = operations?.hasUpvoted || false;
+  const hasUpvoted = operations?.hasUpvoted;
 
   const handleShowReplies = async () => {
     onShowReplies?.();

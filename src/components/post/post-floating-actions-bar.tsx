@@ -1,29 +1,15 @@
 "use client";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { usePostActions } from "@/hooks/use-post-actions";
 import { useScroll } from "@/hooks/use-scroll";
-import { handlePlatformShare } from "@/lib/get-share-url";
 import { Account, AnyPost, Post } from "@lens-protocol/client";
 import { motion } from "motion/react";
-import {
-  Bookmark,
-  Heart,
-  MessageCircle,
-  PenLineIcon,
-  Repeat2Icon,
-  Share2,
-  Share2Icon,
-  ShoppingBag,
-} from "lucide-react";
-import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
 import { useWalletClient } from "wagmi";
 import { ActionButton } from "./post-action-button";
-import { TipPopover } from "../tip/tip-popover";
-import { CoinIcon } from "../icons/custom-icons";
 import React from 'react';
 import { useActionBar } from "@/contexts/action-bar-context";
 import { useOnScreen } from "@/hooks/use-on-screen";
+import { usePostActionsButtons } from "@/hooks/use-post-actions-buttons";
 
 export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: Account }) => {
   const { scrollProgress, shouldShow, shouldAnimate } = useScroll();
@@ -35,114 +21,9 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
     return null;
   }
 
-  const {
-    handleComment,
-    handleCollect,
-    handleBookmark,
-    handleLike,
-    isCommentSheetOpen,
-    isCollectSheetOpen,
-    handleCollectSheetOpenChange,
-    stats,
-    operations,
-    isLoggedIn
-  } = usePostActions(post);
+  const { likeButton, collectButton, commentButton, bookmarkButton, shareButton } = usePostActionsButtons({ post, account });
 
-
-  const likes = stats.upvotes;
-  const collects = stats.collects;
-  const tips = stats.tips;
-  const comments = stats.comments;
-  const reposts = stats.reposts;
-  const bookmarks = stats.bookmarks;
-  const quotes = stats.quotes;
-
-  const isReposted = operations?.hasReposted
-  const isQuoted = operations?.hasQuoted
-  const canComment = operations?.canComment
-  const canRepost = operations?.canRepost
-  const canQuote = operations?.canQuote
-  const canCollect = operations?.canCollect
-  const hasUpvoted = operations?.hasUpvoted
-  const hasBookmarked = operations?.hasBookmarked
-
-  const actionButtons = [
-    {
-      icon: Share2,
-      label: "Share",
-      isActive: isQuoted || isReposted,
-      initialCount: reposts + quotes,
-      strokeColor: "hsl(var(--primary))",
-      fillColor: "hsl(var(--primary) / 0.8)",
-      shouldIncrementOnClick: false,
-      hideCount: true,
-      dropdownItems: [
-        {
-          icon: TbLink,
-          label: "Copy Link",
-          onClick: () => handlePlatformShare("copy"),
-        },
-        {
-          icon: TbBrandX,
-          label: "Twitter",
-          onClick: () => handlePlatformShare("x"),
-        },
-        {
-          icon: TbBrandBluesky,
-          label: "Bluesky",
-          onClick: () => handlePlatformShare("bluesky"),
-        },
-      ],
-    },
-    {
-      icon: Bookmark,
-      label: "Bookmark",
-      isActive: hasBookmarked,
-      initialCount: bookmarks,
-      strokeColor: "hsl(var(--primary))",
-      fillColor: "hsl(var(--primary) / 0.8)",
-      shouldIncrementOnClick: true,
-      onClick: handleBookmark,
-      isDisabled: !isLoggedIn,
-    },
-    {
-      icon: CoinIcon,
-      label: canCollect ? "Tip or Collect" : "Tip the author",
-      initialCount: collects + tips,
-      strokeColor: "rgb(254,178,4)",
-      fillColor: "rgba(254, 178, 4, 0.3)",
-      shouldIncrementOnClick: false,
-      renderPopover: (trigger: React.ReactElement) => (
-        <TipPopover onCollectClick={handleCollect} post={post}>
-          {trigger}
-        </TipPopover>
-      ),
-      isActive: isCollectSheetOpen,
-      isDisabled: !isLoggedIn,
-    },
-    {
-      icon: MessageCircle,
-      label: "Comment",
-      initialCount: comments,
-      strokeColor: "hsl(var(--primary))",
-      fillColor: "hsl(var(--primary) / 0.8)",
-      onClick: () => handleComment(false),
-      shouldIncrementOnClick: false,
-      isActive: isCommentSheetOpen,
-      isDisabled: !canComment || !isLoggedIn,
-    },
-    {
-      icon: Heart,
-      label: "Like",
-      initialCount: likes,
-      strokeColor: "rgb(215, 84, 127)",
-      fillColor: "rgba(215, 84, 127, 0.9)",
-      onClick: handleLike,
-      isActive: hasUpvoted,
-      shouldIncrementOnClick: true,
-      isDisabled: !isLoggedIn,
-    },
-  ];
+  const actionButtons = [shareButton, bookmarkButton, collectButton, commentButton, likeButton];
 
   return (
     <>
@@ -177,6 +58,7 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
                 shouldIncrementOnClick={button.shouldIncrementOnClick}
                 renderPopover={button.renderPopover}
                 isDisabled={button.isDisabled}
+                hideCount={button.hideCount}
               />
             ))}
           </nav>

@@ -122,7 +122,7 @@ export const CommentSheet = ({
 
           <ScrollArea className="flex-1 h-full" ref={containerRef} onScroll={handleScroll}>
             {!isViewingNested && (
-              <div className="m-4 mt-4">
+              <div className="m-4 mt-0">
                 <CommentReplyArea
                   postId={post.id}
                   account={account}
