@@ -81,7 +81,9 @@ const UserLayout = async ({
         <div className="w-full max-w-3xl flex flex-col">
           <div className="flex items-start justify-between px-4 mt-8">
             <div className="flex flex-col font-[family-name:--title-font]">
-              <UserName profile={account} className="md:text-[42px] text-[32px] pl-1  font-normal tracking-[-0.8px]" />
+              <div className="whitespace-nowrap text-ellipsis overflow-x-clip">
+                <UserName profile={account} className="md:text-[42px] text-[32px] pl-1 font-normal tracking-[-0.8px] overflow-visible" />
+              </div>
               <UserUsername
                 account={account}
                 className="md:font-xl font-normal text-normal tracking-wide text-foreground/65"
