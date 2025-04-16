@@ -32,7 +32,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
 
   return (
     <div className="flex flex-col my-4 gap-4">
-      <div className="flex justify-end items-center mb-4 gap-2">
+      <div className="flex justify-end items-center gap-2">
         <ImportDialog />
         <DraftCreateButton text="New Draft" />
       </div>

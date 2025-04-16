@@ -88,12 +88,8 @@ export const DraftView = ({
   const date = draft.updatedAt ?? draft.createdAt;
   const title = draft.title ?? undefined;
   const subtitle = draft.subtitle ?? undefined;
-  const contentMarkdown = draft.contentHtml ?? "";
+  const contentMarkdown = draft.contentMarkdown ?? "";
   const coverUrl = draft.coverUrl ?? undefined;
-
-  if (options.showContent && !contentMarkdown) {
-    return null;
-  }
 
   return (
     <div
@@ -102,7 +98,7 @@ export const DraftView = ({
       ${isSelectionMode ? "select-none" : ""}
       hover:text-card-foreground transition-all ease-in duration-100
       border-0 shadow-none relative w-screen rounded-sm p-4
-      max-w-full sm:max-w-2xl ${options.showPreview ? "h-48" : "h-fit"}`}
+      max-w-full sm:max-w-3xl ${options.showPreview ? "h-48" : "h-fit"}`}
     >
       {options.showPreview && (
         <div className="h-40 w-40 shrink-0 aspect-square rounded-sm overflow-hidden">

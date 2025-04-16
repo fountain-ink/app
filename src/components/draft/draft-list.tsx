@@ -138,6 +138,13 @@ export function DraftList({ address }: { address?: EvmAddress | null }) {
             draft={draft}
             author={(draft.author || address) as EvmAddress}
             isLocal={false}
+            options={{
+              showContent: true,
+              showPreview: true,
+              showTitle: true,
+              showSubtitle: true,
+              showDate: true,
+            }}
             isSelected={selectedItems.has(draft.documentId)}
             onSelect={() => toggleSelection(draft.documentId)}
             onEnterSelectionMode={() => enterSelectionMode(draft.documentId)}
