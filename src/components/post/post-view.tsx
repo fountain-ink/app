@@ -62,7 +62,7 @@ export const PostView = ({
 
   return (
     <div
-      className={`group/post flex flex-row items-start justify-start gap-4 sm:gap-6 md:gap-8 lg:gap-12
+      className={`group/post flex flex-row items-start justify-start gap-4 sm:gap-6 md:gap-8 lg:gap-10
       ${isSelected ? "bg-primary/10" : "bg-transparent"}
       ${isSelectionMode ? "select-none" : ""}
       hover:text-card-foreground transition-all ease-in duration-100

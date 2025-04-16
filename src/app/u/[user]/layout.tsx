@@ -80,11 +80,11 @@ const UserLayout = async ({
         </div>
         <div className="w-full max-w-3xl flex flex-col">
           <div className="flex items-start justify-between px-4 mt-8">
-            <div className="flex flex-col gap-2 font-[family-name:--title-font]">
+            <div className="flex flex-col font-[family-name:--title-font]">
               <UserName profile={account} className="md:text-[42px] text-[32px] pl-1  font-normal tracking-[-0.8px]" />
               <UserUsername
                 account={account}
-                className="md:font-xl -mt-3 font-normal text-normal tracking-wide text-foreground/65"
+                className="md:font-xl font-normal text-normal tracking-wide text-foreground/65"
               />
             </div>
             <div className="flex items-center gap-2">
@@ -109,7 +109,7 @@ const UserLayout = async ({
             </div>
           )}
 
-          <div className="flex items-center gap-4 p-4 pb-0">
+          <div className="flex items-center font-[family-name:var(--title-font)] gap-4 p-4 pb-0">
             <UserFollowing stats={stats} className="" />
             <div className="flex items-center gap-4">
               <UserLocation profile={account} />
@@ -119,9 +119,10 @@ const UserLayout = async ({
 
           {userBlogs.length > 0 && <UserBlogsList blogs={userBlogs} />}
 
-          <div className="p-4 pb-0 border-b border-border">
+          <div className="p-4 pb-0 font-[family-name:var(--title-font)] border-b border-border">
             <UserNavigation username={params.user} isUserProfile={isUserProfile} />
           </div>
+
           <AnimatePresence mode="wait">
             <PageTransition type="content">{children}</PageTransition>
           </AnimatePresence>

@@ -62,10 +62,10 @@ export const usePostActionsButtons = ({ post, account }: { post: Post; account?:
 
   const isReposted = operations?.hasReposted;
   const isQuoted = operations?.hasQuoted;
-  const canComment = operations?.canComment 
-  const hasUpvoted = operations?.hasUpvoted 
-  const hasBookmarked = operations?.hasBookmarked 
-  const canCollect = operations?.canCollect 
+  const canComment = operations?.canComment
+  const hasUpvoted = operations?.hasUpvoted
+  const hasBookmarked = operations?.hasBookmarked
+  const canCollect = operations?.canCollect
 
   return {
     likeButton: {
@@ -81,7 +81,7 @@ export const usePostActionsButtons = ({ post, account }: { post: Post; account?:
     },
     collectButton: {
       icon: CoinIcon,
-      label: canCollect ? "Tip or Collect" : "Tip the author",
+      label: canCollect ? "Tip or Collect" : "Tip",
       initialCount: collects + tips,
       strokeColor: "rgb(254,178,4)",
       fillColor: "rgba(254, 178, 4, 0.3)",

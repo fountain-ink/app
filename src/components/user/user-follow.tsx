@@ -84,7 +84,7 @@ export const UserFollowButton = ({ account, className }: { account: Account; cla
           variant={following ? "outline" : "default"}
           onClick={() => toggleFollow()}
           disabled={isPending}
-          className={`text-sm right-0 top-0 min-w-[100px] ${className}`}
+          className={`text-sm right-0 top-0 ${className}`}
         >
           {isPending ? (
             <>

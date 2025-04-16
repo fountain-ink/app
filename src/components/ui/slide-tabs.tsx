@@ -33,7 +33,7 @@ export function SlideNav({ items, className }: SlideNavProps) {
             {item.disabled ? (
               <span
                 className={cn(
-                  "px-4 py-2 text-sm font-medium transition-colors relative cursor-not-allowed",
+                  "px-4 py-2 font-medium transition-colors relative cursor-not-allowed",
                   "text-muted-foreground/50",
                 )}
               >
@@ -51,7 +51,7 @@ export function SlideNav({ items, className }: SlideNavProps) {
                 }}
                 prefetch
                 className={cn(
-                  "px-4 py-2 text-sm font-medium transition-colors relative",
+                  "px-4 py-2 font-medium transition-colors relative",
                   pathname === item.href ? "text-foreground" : "text-muted-foreground hover:text-foreground",
                 )}
               >

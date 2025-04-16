@@ -9,7 +9,7 @@ export const UserNavigation = ({ username, isUserProfile }: { username: string; 
       items={[
         {
           href: `/u/${username}`,
-          label: "Articles",
+          label: "Posts",
         },
         // {
         //   href: `/u/${username}/all`,
