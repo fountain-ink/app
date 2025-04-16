@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: { params: { user: string } })
   const title = `@${username} | Fountain`;
   return {
     title,
-    description: `@${username}'s profile on Fountain`,
+    description: `@${username} on Fountain`,
   };
 }
 
