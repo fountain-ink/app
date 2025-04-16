@@ -79,7 +79,7 @@ export const UserCard = ({ children, username, address, linkProfile = false }: U
         {error && <div>Error: {error.message}</div>}
         {account && (
           <div className="flex flex-col gap-2">
-            <div className="flex flex-row place-content-between items-center">
+            <div className="flex flex-row place-content-between items-start">
               <div className="flex flex-row items-center gap-2 text-sm">
                 <UserAvatar account={account} className="w-12 h-12" />
               </div>
@@ -97,7 +97,7 @@ export const UserCard = ({ children, username, address, linkProfile = false }: U
               <span className="font-bold text-xs">{account.metadata?.name}</span>
               <span className="font-light text-xs">@{account.username?.localName}</span>
             </span>
-            <div className="text-xs mt-2 leading-4 line-clamp-5 break-words">
+            <div className="text-xs mt-2 leading-4 line-clamp-5 break-words max-w-xs whitespace-pre-line">
               <TruncatedText text={account.metadata?.bio || ""} maxLength={400} isMarkdown={true} />
             </div>
             <div className="text-xs">
