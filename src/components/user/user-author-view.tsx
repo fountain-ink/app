@@ -70,10 +70,11 @@ export const AuthorView = ({
   const content = (
     <div className="flex flex-wrap gap-2">
       {accounts.map((acc) => {
+        const name = acc.metadata?.name && acc.metadata?.name !== "" ? acc.metadata?.name : acc.username?.localName;
         const item = (
           <span key={acc.address} className="flex flex-row gap-2 items-center">
-            {showAvatar && <UserAvatar className="w-6 h-6" account={acc} />}
-            {showName && <span className="font-[family-name:--title-font]">{acc.metadata?.name}</span>}
+            {showAvatar && <UserAvatar className="w-5 h-5" account={acc} />}
+            {showName && <span className="font-[family-name:--title-font]">{name}</span>}
             {showUsername && <span className="text-sm">@{acc.username?.localName}</span>}
           </span>
         );

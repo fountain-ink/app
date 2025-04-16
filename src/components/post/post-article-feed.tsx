@@ -33,6 +33,7 @@ export const ArticleFeed = ({
         options={{
           showContent: false,
           showAuthor: false,
+          showBlog: false,
           showTitle: true,
           showSubtitle: true,
           showDate: true,
@@ -40,7 +41,7 @@ export const ArticleFeed = ({
         }}
         key={post.id}
         authors={[post.author.address]}
-        item={post}
+        post={post}
       />
     );
   }).filter(Boolean);

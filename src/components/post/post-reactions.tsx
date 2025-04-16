@@ -7,7 +7,7 @@ export const PostReactions = ({ post }: { post: Post }) => {
   const leftButtons = [commentButton, collectButton, likeButton];
 
   return (
-    <div className="flex flex-row gap-3 items-center justify-center">
+    <div className="flex flex-row gap-2 sm:gap-4 items-center justify-center">
       {leftButtons.map((button) => (
         <ActionButton
           key={button.label}

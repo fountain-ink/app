@@ -108,15 +108,16 @@ export const PaginatedArticleFeed = ({
       <PostView
         options={{
           showContent: false,
-          showAuthor: false,
+          showAuthor: true,
           showTitle: true,
           showSubtitle: true,
+          showBlog: true,
           showDate: true,
           showPreview: true,
         }}
         key={post.id}
         authors={[post.author.address]}
-        item={post}
+        post={post}
       />
     );
   }).filter(Boolean);

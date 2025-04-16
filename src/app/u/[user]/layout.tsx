@@ -68,33 +68,26 @@ const UserLayout = async ({
   return (
     <BlogTheme initialTheme={themeName}>
       <div className="flex flex-col items-center">
-        <div className="w-screen md:max-w-3xl">
+        <div className="w-screen md:max-w-4xl">
           <UserCover account={account} />
         </div>
-        <div className="w-full max-w-2xl flex flex-col">
-          <div className="flex justify-between px-4">
-            <div className="flex flex-col relative">
-              <UserAvatar
-                size={40}
-                className="absolute transform -translate-y-[70%] bg-muted w-32 h-32 md:w-40 md:h-40 ring-4 rounded-full ring-background"
+        <div className="w-full h-8 max-w-3xl flex relative px-4">
+          <UserAvatar
+            size={40}
+            className="transform -translate-y-[70%] bg-muted w-32 h-32 md:w-40 md:h-40 ring-4 rounded-full ring-background"
+            account={account}
+          />
+        </div>
+        <div className="w-full max-w-3xl flex flex-col">
+          <div className="flex items-start justify-between px-4 mt-8">
+            <div className="flex flex-col gap-2 font-[family-name:--title-font]">
+              <UserName profile={account} className="md:text-[42px] text-[32px] pl-1  font-normal tracking-[-0.8px]" />
+              <UserUsername
                 account={account}
+                className="md:font-xl -mt-3 font-normal text-normal tracking-wide text-foreground/65"
               />
-              <div className="flex flex-col gap-2 mt-16 font-[family-name:--title-font]">
-                <UserName profile={account} className="md:font-4xl font-normal tracking-[-0.8px] " />
-                <UserUsername
-                  account={account}
-                  className="md:font-xl -mt-3 font-normal text-normal tracking-wide text-foreground/65"
-                />
-                <div className="flex items-center gap-4">
-                  <UserFollowing stats={stats} className="" />
-                  <div className="flex items-center gap-4">
-                    <UserLocation profile={account} />
-                    <UserSite profile={account} />
-                  </div>
-                </div>
-              </div>
             </div>
-            <div className="mt-4">
+            <div className="flex items-center gap-2">
               {isUserProfile ? (
                 <ProfileSettingsModal
                   profile={account}
@@ -111,10 +104,18 @@ const UserLayout = async ({
           </div>
 
           {account?.metadata?.bio && account?.metadata?.bio?.length > 0 && (
-            <div className="p-4 font-[family-name:--title-font] text-foreground/65">
+            <div className="p-4 pb-0 font-[family-name:--title-font] text-foreground/65">
               <UserBio profile={account} />
             </div>
           )}
+
+          <div className="flex items-center gap-4 p-4 pb-0">
+            <UserFollowing stats={stats} className="" />
+            <div className="flex items-center gap-4">
+              <UserLocation profile={account} />
+              <UserSite profile={account} />
+            </div>
+          </div>
 
           {userBlogs.length > 0 && <UserBlogsList blogs={userBlogs} />}
 

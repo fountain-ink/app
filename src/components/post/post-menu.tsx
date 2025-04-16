@@ -166,7 +166,7 @@ export const PostMenu = ({ post }: { post: Post }) => {
 
   return (
     <>
-      <div className="flex flex-row gap-3 items-center justify-center">
+      <div className="flex flex-row  items-center justify-center">
         <ActionButton
           icon={Bookmark}
           label="Bookmark"

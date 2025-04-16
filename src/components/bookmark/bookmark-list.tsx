@@ -47,7 +47,7 @@ export const BookmarkList = () => {
         return (
           <PostView
             key={post.id}
-            item={post}
+            post={post}
             authors={[post.author.address]}
             options={{
               showAuthor: false,

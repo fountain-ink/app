@@ -104,7 +104,7 @@ export function UserBlogsList({ blogs }: UserBlogsListProps) {
       </Button>
 
       <div className="relative overflow-hidden">
-        <div ref={scrollContainerRef} className="flex space-x-4 p-4 overflow-x-auto scrollbar-hide">
+        <div ref={scrollContainerRef} className="flex space-x-4 p-4 pb-0 overflow-x-auto scrollbar-hide">
           {blogs.map((blog) => (
             <div key={blog.address} className="w-[250px] flex-shrink-0">
               <BlogCard
