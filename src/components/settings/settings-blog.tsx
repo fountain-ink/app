@@ -20,6 +20,12 @@ import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { getBaseUrl } from "@/lib/get-base-url";
 import { motion, AnimatePresence } from "motion/react";
+import { group } from "@lens-protocol/metadata";
+import { getLensClient } from "@/lib/lens/client";
+import { fetchGroup, setGroupMetadata } from "@lens-protocol/client/actions";
+import { handleOperationWith } from "@lens-protocol/client/viem";
+import { storageClient } from "@/lib/lens/storage-client";
+import { uri } from "@lens-protocol/client";
 // import { setGroupMetadata } from "@lens-protocol/client/actions";
 // import { handleOperationWith } from "@lens-protocol/client/viem";
 // import { storageClient } from "@/lib/lens/storage-client";
@@ -245,71 +251,91 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
         iconUrl = await uploadFile(imageState.file);
       } catch (error) {
         console.error("Failed to upload blog icon:", error);
+        toast.error("Failed to upload blog icon");
+        setIsSaving(false);
         return;
       }
     }
 
-    const success = await saveSettings({
-      title: formState.title.trim(),
-      about: formState.about,
-      handle: userHandle || null,
-      slug: formState.slug.trim(),
-      metadata: formState.metadata,
-      theme: formState.theme,
-      icon: imageState.isDeleted ? null : iconUrl,
-    });
+    // Show pending toast for saving to Fountain
+    const fountainToastId = toast.loading("Saving settings on Fountain...");
+    let success = false;
+    try {
+      success = await saveSettings({
+        title: formState.title.trim(),
+        about: formState.about,
+        handle: userHandle || null,
+        slug: formState.slug.trim(),
+        metadata: formState.metadata,
+        theme: formState.theme,
+        icon: imageState.isDeleted ? null : iconUrl,
+      });
+      if (success) {
+        toast.success("Settings saved on Fountain!", { id: fountainToastId });
+      } else {
+        toast.error("Failed to save settings on Fountain", { id: fountainToastId });
+      }
+    } catch (error) {
+      toast.error("Failed to save settings on Fountain", { id: fountainToastId });
+      setIsSaving(false);
+      return;
+    }
 
-    // if (!isUserBlog && success) {
-    //   try {
-    //     const sessionClient = await getLensClient();
-    //     if (!sessionClient.isSessionClient()) {
-    //       toast.error("Please login to update group settings");
-    //       return;
-    //     }
+    // Save on-chain
+    if (!isUserBlog && success) {
+      // Show pending toast for on-chain update
+      const chainToastId = toast.loading("Updating blog settings on-chain...");
+      try {
+        const sessionClient = await getLensClient();
+        if (!sessionClient.isSessionClient()) {
+          toast.error("Please login to update group settings", { id: chainToastId });
+          return;
+        }
 
-    //     if (!walletClient) {
-    //       toast.error("Please connect your wallet");
-    //       return;
-    //     }
+        if (!walletClient) {
+          toast.error("Please connect your wallet", { id: chainToastId });
+          return;
+        }
 
-    //     const currentGroup = await fetchGroup(sessionClient, { group: blogAddress })
-    //     if (currentGroup.isErr()) {
-    //       toast.error("Failed to fetch existing group metadata");
-    //       return;
-    //     }
+        const currentGroup = await fetchGroup(sessionClient, { group: blogAddress })
+        if (currentGroup.isErr()) {
+          toast.error("Failed to fetch existing group metadata", { id: chainToastId });
+          return;
+        }
 
-    //     const groupMetadata = group({
-    //       name: currentGroup?.value?.metadata?.name || "",
-    //       icon: iconUrl || currentGroup?.value?.metadata?.icon || undefined,
-    //       coverPicture: currentGroup?.value?.metadata?.coverPicture || undefined,
-    //       description: formState.about,
-    //     });
-    //     console.log(currentGroup, groupMetadata)
+        const groupMetadata = group({
+          name: currentGroup?.value?.metadata?.name || "",
+          icon: iconUrl || currentGroup?.value?.metadata?.icon || undefined,
+          coverPicture: currentGroup?.value?.metadata?.coverPicture || undefined,
+          description: formState.about,
+        });
+        console.log(currentGroup, groupMetadata)
 
-    //     const { uri: metadataUri } = await storageClient.uploadAsJson(groupMetadata);
-    //     console.log("Group metadata uploaded:", metadataUri);
+        const { uri: metadataUri } = await storageClient.uploadAsJson(groupMetadata);
+        console.log("Group metadata uploaded:", metadataUri);
 
-    //     const result = await setGroupMetadata(sessionClient, {
-    //       group: blogAddress,
-    //       metadataUri: uri(metadataUri),
-    //     }).andThen(handleOperationWith(walletClient as any));
+        const result = await setGroupMetadata(sessionClient, {
+          group: blogAddress,
+          metadataUri: uri(metadataUri),
+        }).andThen(handleOperationWith(walletClient as any));
 
-    //     if (result.isErr()) {
-    //       console.error("Failed to update group metadata:", result.error);
-    //       toast.error(`Error updating group metadata: ${result.error.message}`);
-    //       return;
-    //     }
+        if (result.isErr()) {
+          console.error("Failed to update group metadata:", result.error);
+          toast.error(`Error updating group metadata: ${result.error.message}`, { id: chainToastId });
+          return;
+        }
 
-    //     toast.success("Group metadata updated on-chain!");
-    //   } catch (error) {
-    //     console.error("Failed to update group metadata:", error);
-    //     toast.error("Failed to update group metadata on-chain");
-    //     return;
-    //   }
+        toast.success("Blog settings updated on-chain!", { id: chainToastId });
+      } catch (error) {
+        console.error("Failed to update group metadata:", error);
+        toast.error("Failed to update group metadata on-chain", { id: chainToastId });
+        return;
+      }
+    }
 
-    //   if (success) {
-    //     setFormState(prev => ({ ...prev, isDirty: false, errors: { title: null, handle: null } }));
-    //   }
+    if (success) {
+      setFormState(prev => ({ ...prev, isDirty: false, errors: { title: null, slug: null } }));
+    }
 
     setIsSaving(false);
   };
@@ -651,14 +677,12 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                     transition={{ duration: 0.3 }}
                   >
                     <div
-                      className={`w-8 h-8 rounded-full transition-colors duration-300 ${
-                        highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
-                      }`}
+                      className={`w-8 h-8 rounded-full transition-colors duration-300 ${highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
+                        }`}
                     />
                     <div
-                      className={`h-4 w-24 rounded-md transition-colors duration-300 ${
-                        highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
-                      }`}
+                      className={`h-4 w-24 rounded-md transition-colors duration-300 ${highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
+                        }`}
                     />
                   </motion.div>
                 )}
@@ -668,9 +692,8 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
               <AnimatePresence>
                 {formState.metadata.showTitle && (
                   <motion.div
-                    className={`h-6 w-48 rounded-md mb-3 transition-colors duration-300 ${
-                      highlightedElement === "title" ? "bg-primary/70" : "bg-muted"
-                    }`}
+                    className={`h-6 w-48 rounded-md mb-3 transition-colors duration-300 ${highlightedElement === "title" ? "bg-primary/70" : "bg-muted"
+                      }`}
                     initial={{ opacity: 0, height: 0, marginBottom: 0 }}
                     animate={{ opacity: 1, height: 24, marginBottom: 12 }}
                     exit={{ opacity: 0, height: 0, marginBottom: 0 }}
@@ -689,19 +712,16 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                     transition={{ duration: 0.3 }}
                   >
                     <div
-                      className={`h-5 w-16 rounded-full transition-colors duration-300 ${
-                        highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
-                      }`}
+                      className={`h-5 w-16 rounded-full transition-colors duration-300 ${highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
+                        }`}
                     />
                     <div
-                      className={`h-5 w-20 rounded-full transition-colors duration-300 ${
-                        highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
-                      }`}
+                      className={`h-5 w-20 rounded-full transition-colors duration-300 ${highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
+                        }`}
                     />
                     <div
-                      className={`h-5 w-14 rounded-full transition-colors duration-300 ${
-                        highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
-                      }`}
+                      className={`h-5 w-14 rounded-full transition-colors duration-300 ${highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
+                        }`}
                     />
                   </motion.div>
                 )}
