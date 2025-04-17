@@ -25,6 +25,7 @@ export async function signGuestToken(): Promise<AppToken> {
     role: "authenticated",
     metadata: {
       isAnonymous: true,
+      isAdmin: false,
       username: username,
       address: guestId,
     },
