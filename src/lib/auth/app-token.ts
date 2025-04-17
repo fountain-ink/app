@@ -1,4 +1,5 @@
 export interface TokenMetadata {
+  isAdmin: boolean;
   isAnonymous: boolean;
   username: string;
   address: string;

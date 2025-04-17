@@ -10,7 +10,6 @@ import {
   SNSNotification,
   SNSSubscriptionConfirmation,
   PostCreatedNotification,
-  ListmonkCampaignResponse,
   BlogRecord,
 } from "./types";
 

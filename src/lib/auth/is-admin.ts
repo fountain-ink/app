@@ -19,6 +19,14 @@ export async function isAdmin(address?: string): Promise<boolean> {
   if (!address) {
     return false;
   }
+
+  const adminAdresses = await getAppAdmins();
+
+  return adminAdresses.includes(address);
+} 
+
+
+export async function getAppAdmins(): Promise<string[]> {
   const lens = await getLensClient();
   const app = env.NEXT_PUBLIC_APP_ADDRESS;
 
@@ -27,10 +35,8 @@ export async function isAdmin(address?: string): Promise<boolean> {
   })
 
   if (admins.isErr()) {
-    return false;
+    return [];
   }
 
-  const adminAdresses = admins.value.items.map((admin) => admin.account.address);
-
-  return adminAdresses.includes(address);
-} 
+  return admins.value.items.map((admin) => admin.account.address);
+}
