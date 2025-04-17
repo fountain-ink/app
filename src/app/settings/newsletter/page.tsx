@@ -1,9 +1,9 @@
 import { cookies } from "next/headers";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/server";
 import { NewsletterSettings } from "@/components/settings/settings-newsletter";
 import { getListById } from "@/lib/listmonk/client";
-import { Json } from "@/lib/supabase/database";
+import { Json } from "@/lib/db/database";
 import { BlogData, BlogThemeData, BlogMetadata } from "@/lib/settings/get-blog-data";
 
 export type BlogDataWithSubscriberCount = BlogData & {

@@ -17,7 +17,7 @@ import { ArrowLeftIcon, ExternalLink, MailIcon } from "lucide-react";
 import { isValidTheme, ThemeType, themeNames, themeDescriptions, defaultThemeName } from "@/styles/themes";
 import { ThemeButtons } from "@/components/theme/theme-buttons";
 import { toast } from "sonner";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/db/client";
 import { getBaseUrl } from "@/lib/get-base-url";
 import { motion, AnimatePresence } from "motion/react";
 import { group } from "@lens-protocol/metadata";

@@ -1,6 +1,6 @@
 import { settingsEvents } from "@/lib/settings/events";
 import { useState } from "react";
-import { Database } from "@/lib/supabase/database";
+import { Database } from "@/lib/db/database";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { BlogData } from "@/lib/settings/get-blog-data";
 

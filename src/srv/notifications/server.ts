@@ -1,7 +1,7 @@
 import express from "express";
 import * as bodyParser from "body-parser";
 import fetch from "node-fetch";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/server";
 import { env } from "@/env";
 import { findBlogByIdentifier } from "@/lib/utils/find-blog-by-id";
 import {

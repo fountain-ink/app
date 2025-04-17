@@ -28,6 +28,9 @@ const home = async () => {
 
   const postsResult = await fetchPosts(lens, {
     filter: {
+      accountScore: {
+        atLeast: 9500,
+      },
       metadata: { mainContentFocus: [MainContentFocus.Article] },
       feeds: [{ globalFeed: true }],
       apps: [env.NEXT_PUBLIC_APP_ADDRESS],

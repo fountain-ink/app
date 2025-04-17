@@ -1,4 +1,4 @@
-import { createClient } from "../supabase/server";
+import { createClient } from "../db/server";
 import { UserSettings } from "./user-settings";
 
 export async function getUserSettings(address: string): Promise<UserSettings | null> {

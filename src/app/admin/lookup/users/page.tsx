@@ -11,7 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchAccounts } from "@lens-protocol/client/actions";
 import { resolveImageUrl } from "@/lib/utils/resolve-image-url";
-import { Database } from "@/lib/supabase/database";
+import { Database } from "@/lib/db/database";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Type for Lens account data

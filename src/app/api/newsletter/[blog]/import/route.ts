@@ -1,6 +1,6 @@
 import { getListById, importSubscribers } from "@/lib/listmonk/client";
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/server";
 import { findBlogByIdentifier } from "@/lib/utils/find-blog-by-id";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 

@@ -1,7 +1,7 @@
 import { env } from "@/env";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { verifyToken } from "@/lib/auth/verify-token";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/server";
 import { type NextRequest, NextResponse } from "next/server";
 
 type FeedbackType = "bug" | "feature" | "other";

@@ -1,5 +1,5 @@
 import { notFound, redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/server";
 import BlogPage from "../page";
 
 export default async function BlogHandlePage({ params }: { params: { blog: string; slug: string } }) {

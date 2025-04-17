@@ -1,5 +1,5 @@
-import type { Database } from "@/lib/supabase/database";
-import type { Json } from "@/lib/supabase/database";
+import type { Database } from "@/lib/db/database";
+import type { Json } from "@/lib/db/database";
 import { BlogData } from "@/lib/settings/get-blog-data";
 
 export type Draft = Database["public"]["Tables"]["drafts"]["Row"] & {

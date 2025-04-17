@@ -15,7 +15,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatDistanceToNow, format } from "date-fns";
 import Image from "next/image";
 import { useState } from "react";
-import type { Database } from "@/lib/supabase/database";
+import type { Database } from "@/lib/db/database";
 import {
   Select,
   SelectContent,

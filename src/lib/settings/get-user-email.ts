@@ -1,4 +1,4 @@
-import { createClient } from "../supabase/server";
+import { createClient } from "../db/server";
 
 export async function getEmail(address: string): Promise<string | null> {
   const db = await createClient();

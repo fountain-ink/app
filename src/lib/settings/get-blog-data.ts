@@ -1,6 +1,6 @@
-import { Database } from "../supabase/database";
+import { Database } from "../db/database";
 import { isEvmAddress } from "../utils/is-evm-address";
-import { createClient } from "../supabase/client";
+import { createClient } from "../db/client";
 
 type Blog = Database["public"]["Tables"]["blogs"]["Row"];
 

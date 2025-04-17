@@ -1,5 +1,5 @@
 import { env } from "@/env";
-import { createClient } from "../supabase/client";
+import { createClient } from "../db/client";
 import { findBlogByIdentifier } from "../utils/find-blog-by-id";
 import { ListmonkCampaignResponse } from "@/srv/notifications/types";
 

@@ -21,6 +21,7 @@ import { AnimatePresence } from "motion/react";
 import { notFound } from "next/navigation";
 import { UserBlogsList } from "@/components/user/user-blogs-list";
 import { getBlogsByOwner } from "@/lib/settings/get-blogs-by-owner";
+import { Badge } from "@/components/ui/badge";
 
 export async function generateMetadata({ params }: { params: { user: string } }) {
   const username = params.user;
@@ -81,8 +82,13 @@ const UserLayout = async ({
         <div className="w-full max-w-3xl flex flex-col">
           <div className="flex items-start justify-between px-4 mt-8">
             <div className="flex flex-col font-[family-name:--title-font]">
-              <div className="whitespace-nowrap text-ellipsis overflow-x-clip">
+              <div className="whitespace-nowrap text-ellipsis overflow-x-clip flex items-center gap-2">
                 <UserName profile={account} className="md:text-[42px] text-[32px] pl-1 font-normal tracking-[-0.8px] overflow-visible" />
+                {!isUserProfile && account?.operations?.isFollowingMe && (
+                  <Badge className="text-xs h-fit w-fit flex items-center justify-center ml-2" variant="secondary">
+                    <span className="text-xs leading-tight">Follows you</span>
+                  </Badge>
+                )}
               </div>
               <UserUsername
                 account={account}

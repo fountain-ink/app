@@ -1,4 +1,4 @@
-import { createServiceClient } from "@/lib/supabase/service";
+import { createServiceClient } from "@/lib/db/service";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminRights } from "@/lib/auth/admin-middleware";
 

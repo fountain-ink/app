@@ -33,7 +33,7 @@ export const ArticleFeed = ({
         options={{
           showContent: false,
           showAuthor: false,
-          showBlog: false,
+          showBlog: true,
           showTitle: true,
           showSubtitle: true,
           showDate: true,

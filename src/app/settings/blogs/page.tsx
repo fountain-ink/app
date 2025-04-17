@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { BlogCard } from "@/components/blog/blog-card";
 import { cookies } from "next/headers";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/server";
 import { SyncButton } from "@/components/blog/blog-sync-button";
 import { CreateBlogButton } from "@/components/blog/blog-create-modal";
 

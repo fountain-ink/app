@@ -1,5 +1,5 @@
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/server";
 import { NextRequest, NextResponse } from "next/server";
 import { isEvmAddress } from "@/lib/utils/is-evm-address";
 import { getLensClient } from "@/lib/lens/client";

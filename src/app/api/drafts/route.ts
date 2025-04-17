@@ -5,7 +5,7 @@ import { verifyToken } from "@/lib/auth/verify-token";
 import { getRandomUid } from "@/lib/get-random-uid";
 import { defaultGuestContent } from "@/lib/plate/create-draft";
 import { defaultContent } from "@/lib/plate/create-draft";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/server";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {

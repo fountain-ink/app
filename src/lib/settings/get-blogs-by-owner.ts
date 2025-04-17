@@ -1,5 +1,5 @@
-import { Database } from "../supabase/database";
-import { createClient } from "../supabase/server";
+import { Database } from "../db/database";
+import { createClient } from "../db/server";
 
 type Blog = Database["public"]["Tables"]["blogs"]["Row"];
 

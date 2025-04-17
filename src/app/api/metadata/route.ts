@@ -1,6 +1,6 @@
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
-import { Json } from "@/lib/supabase/database";
-import { createClient } from "@/lib/supabase/server";
+import { Json } from "@/lib/db/database";
+import { createClient } from "@/lib/db/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(req: NextRequest) {

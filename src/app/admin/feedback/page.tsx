@@ -22,7 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useState, useEffect } from "react";
-import type { Database } from "@/lib/supabase/database";
+import type { Database } from "@/lib/db/database";
 import { formatDistanceToNow } from "date-fns";
 import { AlertCircle, Bug, Lightbulb, ImageIcon, HelpCircle, Maximize } from "lucide-react";
 import { toast } from "sonner";

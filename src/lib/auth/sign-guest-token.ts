@@ -1,4 +1,4 @@
-import { createServiceClient } from "@/lib/supabase/service";
+import { createServiceClient } from "@/lib/db/service";
 import { sign } from "jsonwebtoken";
 import { customAlphabet } from "nanoid";
 import { AppToken, TokenClaims } from "./app-token";
