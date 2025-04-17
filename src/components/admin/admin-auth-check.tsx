@@ -11,7 +11,7 @@ export default function AdminAuthCheck({ children }: AdminAuthCheckProps) {
   const appToken = getAppToken();
   const claims = getTokenClaims(appToken);
 
-  if (!claims || !isAdmin(claims)) {
+  if (!claims || !isAdmin(claims.sub)) {
     redirect("/");
   }
 

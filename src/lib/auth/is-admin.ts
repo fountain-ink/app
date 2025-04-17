@@ -1,6 +1,8 @@
+import { fetchAdminsFor } from "@lens-protocol/client/actions";
 import { TokenClaims } from "./app-token";
+import { getLensClient } from "../lens/client";
+import { env } from "@/env";
 
-// Hardcoded list of admin addresses for now 
 export const ADMINS = [
   "0x1C03475F4ceA795F255282774A762979f9550611",
   "0xaAd118e88CC813b9915243db41909A2ee4559300",
@@ -10,15 +12,25 @@ export const ADMINS = [
 
 /**
  * Checks if a user is an admin based on their address
- * @param claims The token claims containing the user's address
+ * @param address The user's address
  * @returns True if the user is an admin, false otherwise
  */
-export function isAdmin(claims?: TokenClaims | null): boolean {
-  if (!claims) {
+export async function isAdmin(address?: string): Promise<boolean> {
+  if (!address) {
     return false;
   }
-  
-  const userAddress = claims.sub;
-  
-  return ADMINS.includes(userAddress);
+  const lens = await getLensClient();
+  const app = env.NEXT_PUBLIC_APP_ADDRESS;
+
+  const admins = await fetchAdminsFor(lens, {
+    address: app,
+  })
+
+  if (admins.isErr()) {
+    return false;
+  }
+
+  const adminAdresses = admins.value.items.map((admin) => admin.account.address);
+
+  return adminAdresses.includes(address);
 } 

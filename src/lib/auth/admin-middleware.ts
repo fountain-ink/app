@@ -30,7 +30,7 @@ export async function checkAdminRights(req: NextRequest) {
 
     const claims = getTokenClaims(appToken);
 
-    if (!isAdmin(claims)) {
+    if (!isAdmin(claims?.sub)) {
       return NextResponse.json(
         { error: "Admin access required" },
         { status: 403 }
