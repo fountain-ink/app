@@ -38,18 +38,20 @@ export const CommentReactions = ({
         shouldIncrementOnClick={true}
         isDisabled={!isLoggedIn}
       />
-      <ActionButton
-        icon={MessageCircle}
-        label={isLoadingReplies ? "Loading..." : "Comments"}
-        initialCount={stats.comments}
-        strokeColor="hsl(var(--primary))"
-        fillColor="hsl(var(--primary) / 0.8)"
-        onClick={handleShowReplies}
-        isDisabled={!hasReplies || isLoadingReplies}
-        shouldIncrementOnClick={false}
-        fillOnHover={false}
-        fillOnClick={false}
-      />
+      {hasReplies && (
+        <ActionButton
+          icon={MessageCircle}
+          label={isLoadingReplies ? "Loading..." : "Comments"}
+          initialCount={stats.comments}
+          strokeColor="hsl(var(--primary))"
+          fillColor="hsl(var(--primary) / 0.8)"
+          onClick={handleShowReplies}
+          isDisabled={!hasReplies || isLoadingReplies}
+          shouldIncrementOnClick={false}
+          fillOnHover={false}
+          fillOnClick={false}
+        />
+      )}
     </div>
   );
 };
