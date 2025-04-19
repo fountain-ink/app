@@ -42,7 +42,7 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
             <AuthorView showUsername={false} accounts={[post.author]} />
           </div>
           <Editor showToc value={contentJson} readOnly={true} />
-          <div className="max-w-[60ch] mx-auto py-8 px-8 sm:px-16 flex flex-col gap-10">
+          <div className="max-w-[60ch] mx-auto p-4 sm:p-8 md:px-16 flex flex-col gap-8 sm:gap-10">
             <PostActionsBar post={post} />
             <UserPostCard account={post.author} stats={authorStats} />
             <CommentPreview post={post} />

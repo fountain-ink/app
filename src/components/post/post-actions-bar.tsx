@@ -18,7 +18,7 @@ export const PostActionsBar = ({ post, account }: { post: Post; account?: Accoun
       <TooltipProvider delayDuration={300}>
         <div
           ref={actionBarRef}
-          className="flex items-center justify-center gap-4 sm:gap-0 sm:justify-between w-full "
+          className="flex items-center gap-4 sm:gap-0 justify-between w-full "
         >
           <div className="flex items-center gap-4">
             {leftButtons.map((button) => (
