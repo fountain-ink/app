@@ -23,7 +23,7 @@ export const metadata = {
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   const client = await getLensClient();
   const session = await getSession();
-  const credentials = client.isSessionClient() ? await client.getCredentials().unwrapOr(null) : null;
+  const credentials = client.isSessionClient() ? client.getCredentials().unwrapOr(null) : null;
 
   return (
     <html lang="en" suppressHydrationWarning className={cn(GeistSans.variable, GeistMono.variable)}>

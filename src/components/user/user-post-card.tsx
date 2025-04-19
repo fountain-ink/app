@@ -9,6 +9,7 @@ import { UserBio } from "@/components/user/user-bio";
 import { Button } from "@/components/ui/button";
 import { ProfileSettingsModal } from "@/components/settings/settings-profile";
 import { evmAddress, useAuthenticatedUser } from "@lens-protocol/react";
+import { cn } from "@/lib/utils";
 
 interface UserPostCardProps {
   account: Account;
@@ -25,41 +26,46 @@ export function UserPostCard({ account, stats }: UserPostCardProps) {
   console.log(currentUserProfile?.address, account.address);
 
   return (
-    <div className="flex items-start gap-4 p-4 border border-border rounded-lg bg-card text-card-foreground">
-      <UserAvatar account={account} size={12} className="w-12 h-12 rounded-full flex-shrink-0" />
-
-      <div className="flex flex-col flex-grow min-w-0">
-        <div className="flex justify-between items-start mb-2">
-          <div className="flex flex-col flex-grow mr-4 min-w-0">
+    <div
+      className={cn(
+        "flex p-4 border border-border rounded-lg bg-card text-card-foreground",
+        "flex-col sm:flex-row items-stretch"
+      )}
+    >
+      <div className="flex flex-col flex-shrink-0 w-full sm:w-auto sm:max-w-[260px] min-w-0">
+        <div className="flex flex-row items-start gap-4 w-full">
+          <UserAvatar account={account} size={12} className="w-12 h-12 rounded-full flex-shrink-0" />
+          <div className="flex flex-col justify-center min-w-0 flex-1">
             <UserName profile={account} className="text-lg font-semibold truncate" />
             {stats ? (
-              <UserFollowing stats={stats} className="text-sm text-muted-foreground" />
+              <UserFollowing stats={stats} className="text-sm text-muted-foreground truncate" />
             ) : (
-              <div className="text-sm text-muted-foreground">Stats unavailable</div>
-            )}
-          </div>
-
-          <div className="mt-1 flex-shrink-0">
-            {isUserProfile ? (
-              <ProfileSettingsModal
-                profile={account}
-                trigger={
-                  <Button variant="outline" className="w-fit">
-                    Edit profile
-                  </Button>
-                }
-              />
-            ) : (
-              <UserFollowButton account={account} />
+              <div className="text-sm text-muted-foreground truncate">Stats unavailable</div>
             )}
           </div>
         </div>
-
         {account?.metadata?.bio && account.metadata.bio.length > 0 && (
-          <div className="text-sm text-muted-foreground mt-1">
+          <div className="text-sm text-muted-foreground mt-2 truncate max-w-full">
             <UserBio profile={account} />
           </div>
         )}
+      </div>
+
+      <div className="flex flex-col flex-grow min-w-0 w-full mt-4 sm:mt-0 sm:justify-start sm:items-end">
+        <div className="w-full sm:w-auto">
+          {isUserProfile ? (
+            <ProfileSettingsModal
+              profile={account}
+              trigger={
+                <Button variant="outline" className="w-full sm:w-fit truncate">
+                  Edit profile
+                </Button>
+              }
+            />
+          ) : (
+            <UserFollowButton account={account} className="w-full sm:w-fit truncate" />
+          )}
+        </div>
       </div>
     </div>
   );
