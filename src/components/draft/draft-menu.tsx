@@ -27,7 +27,7 @@ export const DraftMenu = ({
     {
       icon: isSelected ? X : Check,
       label: isSelected ? "Deselect" : "Select",
-      onClick: isSelectionMode ? onSelect : (onEnterSelectionMode ?? (() => {})),
+      onClick: isSelectionMode ? onSelect : (onEnterSelectionMode ?? (() => { })),
     },
     {
       icon: Link,
@@ -53,9 +53,9 @@ export const DraftMenu = ({
         strokeColor="hsl(var(--muted-foreground))"
         fillColor="hsl(var(--muted-foreground))"
         dropdownItems={dropdownItems}
-        showChevron={false} 
-        initialCount={0} 
-        shouldIncrementOnClick={false}      />
+        showChevron={false}
+        initialCount={0}
+        shouldIncrementOnClick={false} />
     </div>
   );
 };

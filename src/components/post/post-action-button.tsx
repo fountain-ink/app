@@ -34,11 +34,7 @@ export type ActionButtonProps = {
   onClick?: () => Promise<any> | undefined;
   renderPopover?: (trigger: ReactElement) => ReactElement;
   isDisabled?: boolean;
-  dropdownItems?: {
-    icon: LucideIcon | IconType | React.FC<any>;
-    label: string;
-    onClick: () => void;
-  }[];
+  dropdownItems?: DropdownItem[];
   hideCount?: boolean;
   className?: string;
   showChevron?: boolean;
@@ -46,16 +42,16 @@ export type ActionButtonProps = {
   fillOnClick?: boolean;
 };
 
-const formatNumber = (num: number): string => {
-  if (num === 0 || !num) return "";
-  if (num >= 1000000) {
-    return `${(num / 1000000).toFixed(1).replace(/\.0$/, "")}M`;
-  }
-  if (num >= 1000) {
-    return `${(num / 1000).toFixed(1).replace(/\.0$/, "")}K`;
-  }
-  return num.toString();
-};
+const TooltipWrapper = ({ children, label }: { children: React.ReactNode; label: string }) => (
+  <TooltipProvider delayDuration={300}>
+    <Tooltip>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent side="bottom" className="bg-foreground text-background text-xs">
+        {label}
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+);
 
 export const ActionButton = ({
   icon: Icon,
@@ -80,9 +76,7 @@ export const ActionButton = ({
 
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     if (isDisabled || !onClick) return;
-
     e.stopPropagation();
-
     try {
       await onClick();
     } catch (error) {
@@ -117,98 +111,58 @@ export const ActionButton = ({
     },
   };
 
-  const TriggerButton = (
+  const MainButton = (
     <div className="relative">
       <ButtonHoverEffect isHovered={isHovered} strokeColor={strokeColor} />
       <Button
         variant="ghost3"
         onMouseEnter={() => handleHover(true)}
         onMouseLeave={() => handleHover(false)}
-        style={{
-          backgroundColor: isActive ? `${strokeColor}10` : undefined,
-        }}
+        style={{ backgroundColor: isActive ? `${strokeColor}10` : undefined }}
         onClick={handleClick}
-        className="flex items-center transition-all duration-200 text-foreground rounded-full p-0 w-10 h-10
-                  focus:outline-none group-hover:bg-transparent relative"
+        className="flex items-center transition-all duration-200 text-foreground rounded-full p-0 w-10 h-10 focus:outline-none group-hover:bg-transparent relative"
       >
         <Icon {...iconProps} />
       </Button>
     </div>
   );
 
-  const ButtonContent = (
-    <div
-      className={`group flex items-center ${isDisabled ? "cursor-not-allowed opacity-70" : "cursor-pointer"} ${className}`}
-    >
-      {renderPopover ? (
-        renderPopover(TriggerButton)
-      ) : dropdownItems ? (
-        <DropdownMenu modal={false} open={open} onOpenChange={onOpenChange}>
-          <DropdownMenuTrigger
-            className="flex items-center gap-0.5 outline-none"
-          >
-            <div className="flex items-center gap-0.5">
-              {TriggerButton}
-              {showChevron && (
-                <AnimatedChevron
-                  isOpen={isActive}
-                  color={isActive || isHovered ? strokeColor : undefined}
-                  direction="up"
-                />
-              )}
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="center" side="top">
-            {dropdownItems?.map((item) => (
-              <DropdownMenuItem key={item.label} onClick={item.onClick} className="gap-1 rounded-sm mx-0 w-full">
-                <item.icon className="w-4 h-4" /> {item.label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ) : (
-        TriggerButton
-      )}
-      {!hideCount && (
-        <div className="relative h-5 flex items-center text-xs text-foreground -ml-1">
-          <div className="opacity-0">{formatNumber(initialCount)}</div>
-          <div className="absolute inset-0 flex items-center">
-            <AnimatePresence>
-              <CounterAnimation
-                value={initialCount}
-                strokeColor={isActive ? strokeColor : undefined}
-              />
-            </AnimatePresence>
-          </div>
-        </div>
-      )}
+  const CountDisplay = !hideCount && (
+    <div className="relative h-5 flex items-center text-xs text-foreground -ml-1">
+      <div className="opacity-0">{formatNumber(initialCount)}</div>
+      <div className="absolute inset-0 flex items-center">
+        <AnimatePresence>
+          <CounterAnimation value={initialCount} strokeColor={isActive ? strokeColor : undefined} />
+        </AnimatePresence>
+      </div>
     </div>
   );
 
-  const triggerElement = (
-    <TooltipProvider delayDuration={300}>
-      <Tooltip>
-        <TooltipTrigger asChild>{ButtonContent}</TooltipTrigger>
-        <TooltipContent side="bottom" className="bg-foreground text-background text-xs">
-          {label}
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  );
-
   if (renderPopover) {
-    return renderPopover(triggerElement);
+    return renderPopover(
+      <div className={`group flex items-center ${isDisabled ? "cursor-not-allowed opacity-70" : "cursor-pointer"} ${className}`}>
+        <TooltipWrapper label={label}>{MainButton}</TooltipWrapper>
+        {CountDisplay}
+      </div>
+    );
   }
 
   if (dropdownItems && dropdownItems.length > 0) {
     return (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>{triggerElement}</DropdownMenuTrigger>
-        <DropdownMenuContent>
+      <DropdownMenu modal={false} open={open} onOpenChange={onOpenChange}>
+        <DropdownMenuTrigger asChild>
+          <div className={`group flex items-center ${isDisabled ? "cursor-not-allowed opacity-70" : "cursor-pointer"} ${className}`}>
+            <TooltipWrapper label={label}>{MainButton}</TooltipWrapper>
+            {showChevron && (
+              <AnimatedChevron isOpen={open} color={isHovered ? strokeColor : undefined} direction="up" />
+            )}
+            {CountDisplay}
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="center" side="top">
           {dropdownItems.map((item) => (
-            <DropdownMenuItem key={item.label} onClick={item.onClick}>
-              <item.icon className="mr-2 h-4 w-4" />
-              <span>{item.label}</span>
+            <DropdownMenuItem key={item.label} onClick={item.onClick} className="gap-1 rounded-sm mx-0 w-full">
+              <item.icon className="w-4 h-4" /> {item.label}
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>
@@ -216,7 +170,25 @@ export const ActionButton = ({
     );
   }
 
-  return triggerElement;
+  return (
+    <TooltipWrapper label={label}>
+      <div className={`group flex items-center ${isDisabled ? "cursor-not-allowed opacity-70" : "cursor-pointer"} ${className}`}>
+        {MainButton}
+        {CountDisplay}
+      </div>
+    </TooltipWrapper>
+  );
+};
+
+const formatNumber = (num: number): string => {
+  if (num === 0 || !num) return "";
+  if (num >= 1000000) {
+    return `${(num / 1000000).toFixed(1).replace(/\.0$/, "")}M`;
+  }
+  if (num >= 1000) {
+    return `${(num / 1000).toFixed(1).replace(/\.0$/, "")}K`;
+  }
+  return num.toString();
 };
 
 const ButtonHoverEffect = ({
