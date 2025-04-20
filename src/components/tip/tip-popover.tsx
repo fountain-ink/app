@@ -4,9 +4,19 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, DollarSign, ArrowLeft } from "lucide-react";
 import { useState } from "react";
-import { TipDialog } from "./tip-dialog";
 import { Input } from "@/components/ui/input";
-import { Post } from "@lens-protocol/client";
+import { Post, postId, evmAddress } from "@lens-protocol/client";
+import { executePostAction } from "@lens-protocol/client/actions";
+import { handleOperationWith, signMessageWith } from "@lens-protocol/client/viem";
+import { useWalletClient, useBalance } from "wagmi";
+import { getLensClient } from "@/lib/lens/client";
+import { toast } from "sonner";
+import { useAuthenticatedUser } from "@lens-protocol/react";
+import { formatUnits } from "viem";
+
+const DEFAULT_CURRENCY = "0x6bDc36E20D267Ff0dd6097799f82e78907105e2F"; // WGHO
+
+const TIP_AMOUNTS = ["0.1", "1", "10"] as const;
 
 interface TipPopoverProps {
   children: React.ReactNode;
@@ -14,11 +24,36 @@ interface TipPopoverProps {
   post: Post;
 }
 
+const formatDisplayAmount = (amount: string): string => {
+  const numAmount = Number.parseFloat(amount);
+  return numAmount % 1 === 0 ? numAmount.toString() : numAmount.toFixed(2);
+};
+
+const formatBalanceDisplay = (value?: bigint, decimals?: number): string => {
+  if (!value || decimals === undefined) return "0";
+  const formatted = formatUnits(value, decimals);
+  const numValue = Number.parseFloat(formatted);
+  return numValue.toFixed(2);
+};
+
 export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) => {
-  const [tipDialogOpen, setTipDialogOpen] = useState(false);
-  const [selectedTipAmount, setSelectedTipAmount] = useState<string | null>("2");
+  const [selectedTipAmount, setSelectedTipAmount] = useState<string | null>(TIP_AMOUNTS[0]);
   const [isCustomTipInput, setIsCustomTipInput] = useState(false);
   const [customTipAmount, setCustomTipAmount] = useState<string>("");
+  const [isTipping, setIsTipping] = useState(false);
+  const [open, setOpen] = useState(false);
+  const { data: walletClient } = useWalletClient();
+  const { data: authenticatedUser } = useAuthenticatedUser();
+
+  const currencyAddress = DEFAULT_CURRENCY;
+
+  const { data: ghoBalance, isLoading: isGhoBalanceLoading } = useBalance({
+    address: authenticatedUser?.address as `0x${string}`,
+    token: currencyAddress as `0x${string}`,
+  });
+
+  const tokenBalance = ghoBalance ? formatBalanceDisplay(ghoBalance.value, ghoBalance.decimals) : "0";
+  const tokenSymbol = ghoBalance?.symbol;
 
   const handleTipButtonClick = (amount: string) => {
     setSelectedTipAmount(amount);
@@ -30,7 +65,7 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
     setIsCustomTipInput(true);
   };
 
-  const handleSendTip = () => {
+  const handleSendTip = async () => {
     let finalAmount = "0";
 
     if (isCustomTipInput && customTipAmount && Number.parseFloat(customTipAmount) > 0) {
@@ -42,8 +77,65 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
       return;
     }
 
-    setTipDialogOpen(true);
-    setSelectedTipAmount(finalAmount);
+    const hasEnoughBalance = tokenBalance
+      ? Number.parseFloat(tokenBalance) >= Number.parseFloat(finalAmount)
+      : false;
+
+    if (!walletClient) {
+      toast.error("Wallet not connected");
+      return;
+    }
+
+    if (!hasEnoughBalance) {
+      toast.error("Insufficient balance");
+      return;
+    }
+
+    try {
+      setIsTipping(true);
+      const lens = await getLensClient();
+
+      if (!lens.isSessionClient()) {
+        toast.error("You need to be logged in to tip this post");
+        setIsTipping(false);
+        return;
+      }
+
+      const formattedTipAmount = formatDisplayAmount(finalAmount);
+
+      const toastId = toast.loading(`Sending $${formattedTipAmount} tip...`);
+
+      await executePostAction(lens, {
+        post: postId(post.id),
+        action: {
+          tipping: {
+            currency: evmAddress(currencyAddress),
+            value: finalAmount,
+          },
+        }
+      }).andThen(handleOperationWith(walletClient))
+        .andTee(
+          (txHash) => {
+            console.log("Tip transaction mined:", txHash);
+            toast.success(`Tipped $${formattedTipAmount} to @${post.author.username?.localName}!`, { id: toastId });
+            setOpen(false);
+            setIsTipping(false);
+          }
+        ).andThen(lens.waitForTransaction).match(
+          (txData) => {
+            console.log("Tip transaction indexed:", txData);
+          },
+          (error) => {
+            console.error("Tip transaction failed:", error);
+            toast.error("Transaction failed on-chain", { id: toastId });
+          }
+        );
+
+    } catch (error) {
+      console.error("Error tipping post:", error);
+      toast.error("An error occurred while tipping the post");
+      setIsTipping(false);
+    }
   };
 
   const handleBackToOptions = () => {
@@ -59,108 +151,118 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
   };
   const canCollect = post.operations?.canSimpleCollect.__typename === "SimpleCollectValidationPassed";
 
+  const getFinalTipAmount = () => {
+    if (isCustomTipInput && customTipAmount && Number.parseFloat(customTipAmount) > 0) {
+      return customTipAmount;
+    } else if (selectedTipAmount) {
+      return selectedTipAmount;
+    }
+    return "0";
+  };
+
+  const finalTipAmount = getFinalTipAmount();
+  const hasEnoughBalance = tokenBalance
+    ? Number.parseFloat(tokenBalance) >= Number.parseFloat(finalTipAmount)
+    : false;
+
   return (
-    <>
-      <Popover>
-        <PopoverTrigger asChild>{children}</PopoverTrigger>
-        <PopoverContent side="top" sideOffset={10} className="max-w-md bg-background p-4">
-          <div className="flex flex-col items-center gap-3">
-            {canCollect && (
-              <>
-                <Button
-                  variant="default"
-                  className="w-full flex items-center gap-2"
-                  disabled={!canCollect}
-                  onClick={() => {
-                    onCollectClick();
-                  }}
-                >
-                  <ShoppingBag className="h-4 w-4" />
-                  Collect Post
-                </Button>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverContent side="top" sideOffset={10} className="max-w-md bg-background p-4 pb-3">
+        <div className="flex flex-col items-center gap-3">
+          {canCollect && (
+            <>
+              <Button
+                variant="default"
+                className="w-full flex items-center gap-2"
+                disabled={!canCollect}
+                onClick={() => {
+                  onCollectClick();
+                }}
+              >
+                <ShoppingBag className="h-4 w-4" />
+                Collect Post
+              </Button>
 
-                <div className="flex items-center w-full gap-2">
-                  <div className="h-px flex-1 bg-border" />
-                  <p className="text-sm text-muted-foreground">Or tip the author</p>
-                  <div className="h-px flex-1 bg-border" />
-                </div>
-              </>
-            )}
-
-            {isCustomTipInput ? (
-              <div className="w-full flex items-center gap-2">
-                <Button variant="ghost" size="icon" className="h-10 w-10" onClick={handleBackToOptions}>
-                  <ArrowLeft className="h-4 w-4" />
-                </Button>
-                <div className="relative flex-1">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
-                    <DollarSign className="h-4 w-4" />
-                  </span>
-                  <Input
-                    type="text"
-                    inputMode="decimal"
-                    value={customTipAmount}
-                    onChange={handleCustomAmountChange}
-                    placeholder="0.00"
-                    className="pl-9"
-                    autoFocus
-                  />
-                </div>
+              <div className="flex items-center w-full gap-2">
+                <div className="h-px flex-1 bg-border" />
+                <p className="text-sm text-muted-foreground">Or tip the author</p>
+                <div className="h-px flex-1 bg-border" />
               </div>
-            ) : (
-              <div className="grid grid-cols-4 gap-2 w-full">
-                <Button
-                  variant={selectedTipAmount === "2" ? "default" : "outline"}
-                  onClick={() => handleTipButtonClick("2")}
-                  className="w-full"
-                >
-                  <DollarSign className="h-3 w-3 -mr-1" />2
-                </Button>
-                <Button
-                  variant={selectedTipAmount === "5" ? "default" : "outline"}
-                  onClick={() => handleTipButtonClick("5")}
-                  className="w-full"
-                >
-                  <DollarSign className="h-3 w-3 -mr-1" />5
-                </Button>
-                <Button
-                  variant={selectedTipAmount === "10" ? "default" : "outline"}
-                  onClick={() => handleTipButtonClick("10")}
-                  className="w-full"
-                >
-                  <DollarSign className="h-3 w-3 -mr-1" />
-                  10
-                </Button>
-                <Button
-                  variant={isCustomTipInput ? "default" : "outline"}
-                  onClick={handleCustomTipClick}
-                  className="w-full"
-                >
-                  Other
-                </Button>
+            </>
+          )}
+
+          {isCustomTipInput ? (
+            <div className="w-full flex items-center gap-2">
+              <Button variant="ghost" size="icon" className="h-10 w-10" onClick={handleBackToOptions}>
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+              <div className="relative flex-1">
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+                  <DollarSign className="h-4 w-4" />
+                </span>
+                <Input
+                  type="text"
+                  inputMode="decimal"
+                  value={customTipAmount}
+                  onChange={handleCustomAmountChange}
+                  placeholder="0.00"
+                  className="pl-9"
+                  autoFocus
+                />
               </div>
-            )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-4 gap-2 w-full">
+              {TIP_AMOUNTS.map((amount) => (
+                <Button
+                  key={amount}
+                  variant={selectedTipAmount === amount ? "default" : "outline"}
+                  onClick={() => handleTipButtonClick(amount)}
+                  className="w-full"
+                >
+                  <DollarSign className="h-3 w-3 -mr-2 text-muted-foreground" />
+                  {amount}
+                </Button>
+              ))}
+              <Button
+                variant={isCustomTipInput ? "default" : "outline"}
+                onClick={handleCustomTipClick}
+                className="w-full"
+              >
+                Other
+              </Button>
+            </div>
+          )}
 
-            <Button
-              variant="default"
-              className="w-full"
-              disabled={
-                !(selectedTipAmount || (isCustomTipInput && customTipAmount && Number.parseFloat(customTipAmount) > 0))
-              }
-              onClick={handleSendTip}
-            >
-              {canCollect ? "Send Tip" : "Tip the author"}
-            </Button>
-          </div>
-        </PopoverContent>
-      </Popover>
+          <Button
+            variant="default"
+            className="w-full"
+            disabled={
+              isTipping ||
+              !hasEnoughBalance ||
+              !(finalTipAmount !== "0")
+            }
+            onClick={handleSendTip}
+          >
+            {isTipping
+              ? "Confirming..."
+              : !hasEnoughBalance && finalTipAmount !== "0"
+                ? "Insufficient balance"
+                : canCollect
+                  ? "Send Tip"
+                  : "Tip the author"}
+          </Button>
 
-      <TipDialog
-        post={post}
-        isOpen={tipDialogOpen}
-        onOpenChange={setTipDialogOpen}
-        tipAmount={selectedTipAmount || "0"}
-      />
-    </>
+          {isGhoBalanceLoading ? null : (
+            <div className="text-xs text-muted-foreground w-full text-center -mt-2">
+              Account balance: ${tokenBalance}
+            </div>
+          )}
+
+
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 };
