@@ -10,12 +10,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useRef, useState, ReactElement, JSXElementConstructor } from "react";
+import { useState, ReactElement } from "react";
 import { AnimatedChevron } from "../ui/animated-chevron";
-import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
 import { IconType } from "react-icons";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 export type DropdownItem = {
   icon: any;
@@ -161,7 +159,7 @@ export const ActionButton = ({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="center" side="top">
           {dropdownItems.map((item) => (
-            <DropdownMenuItem key={item.label} onClick={item.onClick} className="gap-1 rounded-sm mx-0 w-full">
+            <DropdownMenuItem key={item.label} onClick={item.onClick} className="gap-2 px-2 rounded-sm mx-0 w-full">
               <item.icon className="w-4 h-4" /> {item.label}
             </DropdownMenuItem>
           ))}
