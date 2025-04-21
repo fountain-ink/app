@@ -12,6 +12,11 @@ export async function GET(req: NextRequest) {
 
     const url = new URL(req.url);
     const slug = url.searchParams.get("slug");
+    const page = parseInt(url.searchParams.get("page") || "1");
+    const limit = parseInt(url.searchParams.get("limit") || "10");
+
+    // Calculate offset
+    const offset = (page - 1) * limit;
 
     const supabase = await createServiceClient();
 
@@ -29,18 +34,26 @@ export async function GET(req: NextRequest) {
 
       return NextResponse.json({ data });
     } else {
-      // Fetch all curated posts
-      const { data, error } = await supabase
+      // Fetch paginated curated posts
+      const { data, error, count } = await supabase
         .from("curated")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .select("*", { count: "exact" })
+        .order("created_at", { ascending: false })
+        .range(offset, offset + limit - 1);
 
       if (error) {
         console.error("Error fetching curated posts:", error);
         return NextResponse.json({ error: "Failed to fetch curated posts" }, { status: 500 });
       }
 
-      return NextResponse.json({ data });
+      const hasMore = count ? offset + limit < count : false;
+
+      return NextResponse.json({
+        data,
+        hasMore,
+        page,
+        totalCount: count
+      });
     }
   } catch (error) {
     console.error("Unexpected error:", error);
