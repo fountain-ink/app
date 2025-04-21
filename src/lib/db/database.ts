@@ -59,6 +59,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      banlist: {
+        Row: {
+          added_by: string | null
+          address: string
+          created_at: string
+          reason: string | null
+        }
+        Insert: {
+          added_by?: string | null
+          address: string
+          created_at?: string
+          reason?: string | null
+        }
+        Update: {
+          added_by?: string | null
+          address?: string
+          created_at?: string
+          reason?: string | null
+        }
+        Relationships: []
+      }
       blogs: {
         Row: {
           about: string | null
@@ -113,6 +134,27 @@ export type Database = {
             referencedColumns: ["address"]
           },
         ]
+      }
+      curated: {
+        Row: {
+          added_by: string | null
+          created_at: string
+          id: number
+          slug: string | null
+        }
+        Insert: {
+          added_by?: string | null
+          created_at?: string
+          id?: number
+          slug?: string | null
+        }
+        Update: {
+          added_by?: string | null
+          created_at?: string
+          id?: number
+          slug?: string | null
+        }
+        Relationships: []
       }
       drafts: {
         Row: {

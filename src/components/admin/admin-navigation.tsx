@@ -9,6 +9,10 @@ import {
   User2,
   FileText,
   BookOpen,
+  Clock,
+  Award,
+  ShieldAlert,
+  Sparkle,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -20,6 +24,9 @@ import {
 import { useState, useEffect } from "react";
 
 const navItems = [
+  { id: "curate", label: "Featured", icon: Sparkle, enabled: true },
+  { id: "latest", label: "Latest", icon: Clock, enabled: true },
+  { id: "banned", label: "Bans", icon: ShieldAlert, enabled: true },
   { id: "controls", label: "App Controls", icon: FileCog, enabled: false },
   { id: "feedback", label: "Feedback", icon: MessageSquare, enabled: true },
   { id: "stats", label: "Stats", icon: ChartLine, enabled: true },
