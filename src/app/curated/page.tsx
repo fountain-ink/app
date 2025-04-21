@@ -8,28 +8,28 @@ import { FeedNavigation } from "@/components/navigation/feed-navigation";
 
 export async function generateMetadata() {
   return {
-    title: "Fountain",
-    description: "Discover the latest articles on Fountain",
+    title: "Curated | Fountain",
+    description: "Discover curated articles on Fountain",
     openGraph: {
-      title: "Fountain",
-      description: "Discover the latest articles on Fountain",
+      title: "Curated | Fountain",
+      description: "Discover curated articles on Fountain",
     },
     twitter: {
       card: "summary",
-      title: "Fountain",
-      description: "Discover the latest articles on Fountain",
+      title: "Curated | Fountain",
+      description: "Discover curated articles on Fountain",
     },
   };
 }
 
-const home = async () => {
+const CuratedPage = async () => {
   const lens = await getLensClient();
   const { address: userAddress } = await getUserProfile();
 
   const postsResult = await fetchPosts(lens, {
     filter: {
       accountScore: {
-        atLeast: 9500,
+        atLeast: 9800, 
       },
       metadata: { mainContentFocus: [MainContentFocus.Article] },
       feeds: [{ globalFeed: true }],
@@ -54,4 +54,4 @@ const home = async () => {
   );
 };
 
-export default home; 
+export default CuratedPage; 
