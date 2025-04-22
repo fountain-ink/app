@@ -74,7 +74,7 @@ export function BlogDropdownMenu({ username }: BlogMenuProps) {
       <DropdownMenuPortal>
         <DropdownMenuContent className="w-fit min-w-48 -mt-1 mr-1" side="left" align="start">
           {blogs.map((blog) => (
-            <Link href={getBlogUrl(blog)} key={blog.address} passHref>
+            <Link prefetch href={getBlogUrl(blog)} key={blog.address} passHref>
               <DropdownMenuItem className="flex justify-start h-8 gap-2 p-1 pr-4 mx-0 w-full items-center text-base">
                 <div className="rounded-sm h-full overflow-hidden relative flex-shrink-0 aspect-square">
                   {blog.icon && imageLoadStatus[blog.address] !== false ? (

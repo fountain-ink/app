@@ -9,7 +9,9 @@ import { PostMenu } from "./post-menu";
 import { PostReactions } from "./post-reactions";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { resolveImageUrl } from "@/lib/utils/resolve-image-url";
+import { useEffect } from "react";
 
 interface PostViewOptions {
   showDate?: boolean;
@@ -48,6 +50,8 @@ export const PostView = ({
   onEnterSelectionMode,
   isSelectionMode = false,
 }: PostViewProps) => {
+  const router = useRouter();
+
   if (!post || post.metadata.__typename !== "ArticleMetadata") {
     return null;
   }
@@ -55,6 +59,14 @@ export const PostView = ({
   const blog = post.feed.group?.metadata
   const blogImage = resolveImageUrl(blog?.icon)
   const subtitle = metadata.attributes?.find((attr) => "key" in attr && attr.key === "subtitle")?.value
+
+  const username = post.author.username?.localName || "";
+  const href = `/p/${username}/${post.slug}`;
+
+  // Prefetch the post page
+  useEffect(() => {
+    router.prefetch(href);
+  }, [router, href]);
 
   if (options.showContent && !("content" in metadata && metadata.content)) {
     return null;
@@ -98,7 +110,7 @@ export const PostView = ({
                 {options.showAuthor ? (
                   <div className="flex flex-row items-center gap-1">
                     <span className="text-muted-foreground">in</span>
-                    <Link href={`/b/${post.feed.group?.address}`} className="text-foreground gap-1 flex flex-row items-center hover:underline">
+                    <Link prefetch href={`/b/${post.feed.group?.address}`} className="text-foreground gap-1 flex flex-row items-center hover:underline">
                       {/* {blogImage && blogImage !== "" && (
                         <Image src={blogImage} alt={blog.name} width={16} height={16} className="rounded-[4px]" />
                       )} */}
@@ -155,19 +167,16 @@ export const PostView = ({
             onSelect?.();
           } else if (e.shiftKey) {
             e.preventDefault();
-            // Prevent text selection
             window.getSelection()?.removeAllRanges();
             onEnterSelectionMode?.();
           } else {
-            const username = post.author.username?.localName || "";
-            const href = `/p/${username}/${post.slug}`;
-            window.location.href = href;
+            e.preventDefault();
+            router.push(href);
           }
         }}
         onPointerDown={(e) => {
           if (e.pointerType === "touch" && e.isPrimary) {
             e.preventDefault();
-            // Prevent text selection
             window.getSelection()?.removeAllRanges();
             if (isSelectionMode) {
               onSelect?.();

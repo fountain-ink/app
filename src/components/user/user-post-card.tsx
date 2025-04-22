@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { ProfileSettingsModal } from "@/components/settings/settings-profile";
 import { evmAddress, useAuthenticatedUser } from "@lens-protocol/react";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface UserPostCardProps {
   account: Account;
@@ -33,7 +34,7 @@ export function UserPostCard({ account, stats }: UserPostCardProps) {
       )}
     >
       <div className="flex flex-col flex-shrink-0 w-full sm:w-auto sm:max-w-[260px] min-w-0">
-        <div className="flex flex-row items-start gap-4 w-full">
+        <Link prefetch href={`/u/${account.username?.localName}`} className="flex flex-row items-start gap-4 w-full">
           <UserAvatar account={account} size={12} className="w-12 h-12 rounded-full flex-shrink-0" />
           <div className="flex flex-col justify-center min-w-0 flex-1">
             <UserName profile={account} className="text-lg font-semibold truncate" />
@@ -43,7 +44,7 @@ export function UserPostCard({ account, stats }: UserPostCardProps) {
               <div className="text-sm text-muted-foreground truncate">Stats unavailable</div>
             )}
           </div>
-        </div>
+        </Link>
         {account?.metadata?.bio && account.metadata.bio.length > 0 && (
           <div className="text-sm text-muted-foreground mt-2 truncate max-w-full">
             <UserBio profile={account} />

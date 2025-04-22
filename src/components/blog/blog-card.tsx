@@ -38,7 +38,7 @@ export function BlogCard({ blog, href, showExternalLink = true }: BlogCardProps)
 
   return (
     <Card className="transition-all hover:bg-accent/50 relative">
-      <Link href={linkHref} className="block">
+      <Link prefetch href={linkHref} className="block">
         <CardHeader className="flex flex-row items-center p-4 gap-4 space-y-0">
           <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-sm bg-muted">
             {iconUrl && imageLoaded ? (
@@ -73,7 +73,7 @@ export function BlogCard({ blog, href, showExternalLink = true }: BlogCardProps)
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link href={blogUrl} target="_blank" className="block">
+                <Link prefetch href={blogUrl} target="_blank" className="block">
                   <Button variant="ghost" size="icon" className="h-8 w-8">
                     <ExternalLinkIcon className="h-4 w-4" />
                     <span className="sr-only">Open blog in new tab</span>
