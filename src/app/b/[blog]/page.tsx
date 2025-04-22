@@ -11,6 +11,7 @@ import { isEvmAddress } from "@/lib/utils/is-evm-address";
 import { BlogHeader } from "@/components/blog/blog-header";
 import { BlogTheme } from "@/components/blog/blog-theme";
 import { BlogTagNavigation } from "@/components/blog/blog-tag-navigation";
+import { getBaseUrl } from "@/lib/get-base-url";
 
 export async function generateMetadata({ params }: { params: { blog: string } }) {
   const lens = await getLensClient();
@@ -55,6 +56,7 @@ export async function generateMetadata({ params }: { params: { blog: string } })
     blog?.about ||
     groupMetadata?.description ||
     (profile ? `@${username}'s blog on Fountain` : `${params.blog} on Fountain`);
+  const blogUrl = `${getBaseUrl()}/b/${params.blog}`;
 
   return {
     title,
@@ -63,13 +65,23 @@ export async function generateMetadata({ params }: { params: { blog: string } })
     openGraph: {
       title,
       description,
-      ...(icon && { images: [{ url: icon, alt: `${title} icon` }] }),
+      url: blogUrl,
+      siteName: 'Fountain',
+      locale: 'en_US',
+      type: 'website',
+      images: icon ? [
+        {
+          url: icon,
+          alt: `${title} icon`,
+        }
+      ] : undefined,
     },
     twitter: {
       card: "summary",
       title,
       description,
-      ...(icon && { images: [icon] }),
+      creator: profile?.username?.localName ? `@${profile.username.localName}` : undefined,
+      images: icon ? [icon] : undefined,
     },
   };
 }
