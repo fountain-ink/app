@@ -10,9 +10,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { LoadingSpinner } from "../misc/loading-spinner";
 import { Button } from "./button";
 import { Caption, CaptionTextarea } from "./caption";
-import { ElementPopover, type ElementWidth, widthVariants } from "./element-popover";
+import { ELEMENT_WIDTH_CLASSES, ElementPopover, type ElementWidth, widthVariants } from "./element-popover";
 import { PlateElement } from "./plate-element";
-import Image from "next/image";
 
 const ImagePlaceholder = ({ file }: { file?: File }) => {
   const [objectUrl, setObjectUrl] = useState<string | null>(null);
@@ -169,7 +168,7 @@ export const ImageElement = withRef<typeof PlateElement>(
             }}
           >
             {!url || !imageProps.src ? (
-              <div className={cn("rounded-sm flex items-center justify-center w-full", selected && "ring-2 ring-ring")}>
+              <div className={cn("rounded-sm flex items-center justify-center w-full", selected && "ring-2 ring-ring", ELEMENT_WIDTH_CLASSES[width])}>
                 <div className="absolute">
                   {!readonly && (
                     <Button className="hover:bg-transparent" size="lg" variant="ghost" disabled={isUploading}>

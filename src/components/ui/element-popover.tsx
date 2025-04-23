@@ -36,9 +36,9 @@ export const widthVariants: Record<ElementWidth, Variant> = {
 };
 
 export const ELEMENT_WIDTH_CLASSES: Record<ElementWidth, string> = {
-  column: "",
-  wide: "",
-  full: "",
+  column: "column",
+  wide: "wide",
+  full: "full",
 } as const;
 
 export const ElementPopover = forwardRef<HTMLDivElement, ElementPopoverProps>(
