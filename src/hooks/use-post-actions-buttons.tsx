@@ -2,13 +2,15 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { usePostActions } from "@/hooks/use-post-actions";
 import { handlePlatformShare } from "@/lib/get-share-url";
 import { Account, Post } from "@lens-protocol/client";
-import { Bookmark, Heart, LucideIcon, MessageCircle, Share2 } from "lucide-react";
+import { Bookmark, Heart, LucideIcon, MessageCircle, Share2, Ban, StarIcon, ShieldAlert, ShieldX, Meh } from "lucide-react";
 import { IconType } from "react-icons";
 import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
 import { ActionButton } from "@/components/post/post-action-button";
 import { TipPopover } from "@/components/tip/tip-popover";
 import { CoinIcon } from "@/components/icons/custom-icons";
 import React, { ReactElement, JSXElementConstructor } from "react";
+import { useAdminStatus } from "./use-admin-status";
+import { useAdminPostActions } from "./use-admin-post-actions";
 
 type ActionButtonConfig = {
   icon: LucideIcon | IconType | React.FC<any>;
@@ -37,6 +39,7 @@ type PostActionButtons = {
   commentButton: ActionButtonConfig;
   bookmarkButton: ActionButtonConfig;
   shareButton: ActionButtonConfig;
+  adminButtons?: ActionButtonConfig[];
 };
 
 export const usePostActionsButtons = ({ post, account }: { post: Post; account?: Account }): PostActionButtons => {
@@ -51,6 +54,9 @@ export const usePostActionsButtons = ({ post, account }: { post: Post; account?:
     operations,
     isLoggedIn
   } = usePostActions(post);
+
+  const { isAdmin, isLoading: isAdminLoading } = useAdminStatus();
+  const { handleBanAuthor, handleFeaturePost, isBanning, isFeaturing } = useAdminPostActions(post);
 
   const likes = stats.upvotes;
   const collects = stats.collects;
@@ -67,7 +73,7 @@ export const usePostActionsButtons = ({ post, account }: { post: Post; account?:
   const hasBookmarked = operations?.hasBookmarked
   const canCollect = operations?.canCollect
 
-  return {
+  const buttons: PostActionButtons = {
     likeButton: {
       icon: Heart,
       label: "Like",
@@ -143,4 +149,49 @@ export const usePostActionsButtons = ({ post, account }: { post: Post; account?:
       ],
     },
   };
+
+  if (isAdmin && !isAdminLoading) {
+    buttons.adminButtons = [
+      {
+        icon: Ban,
+        label: "Ban Author",
+        initialCount: 0,
+        strokeColor: "rgb(220, 38, 38)",
+        fillColor: "rgba(220, 38, 38, 0.8)",
+        shouldIncrementOnClick: false,
+        isDisabled: isBanning,
+        hideCount: true,
+        dropdownItems: [
+          {
+            icon: ShieldX,
+            label: "Ban (Bot)",
+            onClick: () => handleBanAuthor("bot"),
+          },
+          {
+            icon: Meh,
+            label: "Ban (Spam)",
+            onClick: () => handleBanAuthor("spam"),
+          },
+          {
+            icon: ShieldAlert,
+            label: "Ban (Forbidden)",
+            onClick: () => handleBanAuthor("forbidden"),
+          },
+        ],
+      },
+      {
+        icon: StarIcon,
+        label: "Feature Post",
+        initialCount: 0,
+        strokeColor: "rgb(234, 179, 8)",
+        fillColor: "rgba(234, 179, 8, 0.8)",
+        shouldIncrementOnClick: false,
+        onClick: handleFeaturePost,
+        isDisabled: isFeaturing,
+        hideCount: true,
+      }
+    ];
+  }
+
+  return buttons;
 }; 

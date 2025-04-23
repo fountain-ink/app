@@ -3,7 +3,7 @@ import { ActionButton } from "./post-action-button";
 import { usePostActionsButtons } from "@/hooks/use-post-actions-buttons";
 
 export const PostReactions = ({ post }: { post: Post }) => {
-  const { likeButton, collectButton, commentButton } = usePostActionsButtons({ post });
+  const { likeButton, collectButton, commentButton, adminButtons } = usePostActionsButtons({ post });
   const leftButtons = [commentButton, collectButton, likeButton];
 
   return (
@@ -24,6 +24,27 @@ export const PostReactions = ({ post }: { post: Post }) => {
           dropdownItems={button.dropdownItems}
         />
       ))}
+
+      {adminButtons && adminButtons.length > 0 && (
+        <div className="ml-auto flex gap-2">
+          {adminButtons.map((button) => (
+            <ActionButton
+              key={button.label}
+              icon={button.icon}
+              label={button.label}
+              initialCount={button.initialCount}
+              strokeColor={button.strokeColor}
+              fillColor={button.fillColor}
+              onClick={button.onClick}
+              isActive={button.isActive}
+              shouldIncrementOnClick={button.shouldIncrementOnClick}
+              isDisabled={button.isDisabled}
+              hideCount={button.hideCount}
+              dropdownItems={button.dropdownItems}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
