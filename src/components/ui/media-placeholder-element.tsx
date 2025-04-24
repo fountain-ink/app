@@ -226,7 +226,7 @@ export const MediaPlaceholderElement = withHOC(
             layout={true}
             initial={width}
             animate={width}
-            variants={widthVariants}
+            variants={widthVariants as any}
             contentEditable={false}
             transition={{
               type: "spring",
