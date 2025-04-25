@@ -13,11 +13,11 @@
         "@hocuspocus/provider": "^2.13.2",
         "@hookform/resolvers": "^3.10.0",
         "@irys/arweave": "^0.0.3",
-        "@lens-chain/sdk": "^1.0.2",
+        "@lens-chain/sdk": "^1.0.3",
         "@lens-chain/storage-client": "^0.0.0-next-20250227110209",
-        "@lens-protocol/client": "canary",
+        "@lens-protocol/client": "^0.0.0-canary-20250425124858",
         "@lens-protocol/metadata": "^2.0.0",
-        "@lens-protocol/react": "canary",
+        "@lens-protocol/react": "^0.0.0-canary-20250423123457",
         "@lens-protocol/shared-kernel": "^0.12.0",
         "@radix-ui/react-accordion": "^1.2.1",
         "@radix-ui/react-alert-dialog": "^1.1.4",
@@ -470,11 +470,11 @@
 
     "@lens-chain/storage-client": ["@lens-chain/storage-client@0.0.0-staging-20250228214055", "", {}, "sha512-rwNNc/N5VgLKtcJOJL6AOk81F5fHQ2tCPIPcPs+EoinDzjo9fsSVZ1ylkX7cA2jpDCNhoisIqPCHIrzwFNOMmg=="],
 
-    "@lens-protocol/client": ["@lens-protocol/client@0.0.0-canary-20250423123457", "", { "dependencies": { "@lens-protocol/env": "0.0.0-canary-20250423123457", "@lens-protocol/graphql": "0.0.0-canary-20250423123457", "@lens-protocol/storage": "0.0.0-canary-20250423123457", "@lens-protocol/types": "0.0.0-canary-20250423123457", "@urql/core": "^5.0.8", "@urql/exchange-auth": "^2.2.0", "graphql": "^16.9.0", "jwt-decode": "^4.0.0" }, "peerDependencies": { "@lens-chain/sdk": "^1.0.0", "ethers": "^6.13.4", "viem": "^2.21.53", "zksync-ethers": "^6.15.3" }, "optionalPeers": ["@lens-chain/sdk", "ethers", "viem", "zksync-ethers"] }, "sha512-K/C2asYVnHxJyIdsCnd2mwVNwj03ofR47bygWsWMmO6Px8WkWX91Q7Ousl+qAHTVK3AaBbZahsvX0z0XMI7KEA=="],
+    "@lens-protocol/client": ["@lens-protocol/client@0.0.0-canary-20250425124858", "", { "dependencies": { "@lens-protocol/env": "0.0.0-canary-20250425124858", "@lens-protocol/graphql": "0.0.0-canary-20250425124858", "@lens-protocol/storage": "0.0.0-canary-20250425124858", "@lens-protocol/types": "0.0.0-canary-20250425124858", "@urql/core": "^5.0.8", "@urql/exchange-auth": "^2.2.0", "graphql": "^16.9.0", "jwt-decode": "^4.0.0" }, "peerDependencies": { "@lens-chain/sdk": "^1.0.0", "ethers": "^6.13.4", "viem": "^2.21.53", "zksync-ethers": "^6.15.3" }, "optionalPeers": ["@lens-chain/sdk", "ethers", "viem", "zksync-ethers"] }, "sha512-1U5CU2AR4My49NfItaODz8XDWk89JVh25si3wwWMvRWHubsKWxT/oqEgGldLC5RTByEVhah5IBAQd2jlnbafSA=="],
 
-    "@lens-protocol/env": ["@lens-protocol/env@0.0.0-canary-20250423123457", "", { "dependencies": { "@lens-protocol/types": "0.0.0-canary-20250423123457" } }, "sha512-zbtYlEG+t3uzsaUdCC5/q50qFB2LTpcHmPZKqG08isrIwilXCH2OcB1lDW2H3LU1eLweaoI/inOVeiDX59pVVg=="],
+    "@lens-protocol/env": ["@lens-protocol/env@0.0.0-canary-20250425124858", "", { "dependencies": { "@lens-protocol/types": "0.0.0-canary-20250425124858" } }, "sha512-VitVOy26jJ7BJjQyv89ckOymcTXW5CIQtVuqJ/r/k6OZ9ifGM0w+6So63akncjdwVWkAd1rtHvFPfLQTnnU5CQ=="],
 
-    "@lens-protocol/graphql": ["@lens-protocol/graphql@0.0.0-canary-20250423123457", "", { "dependencies": { "@lens-protocol/types": "0.0.0-canary-20250423123457", "gql.tada": "^1.8.10", "graphql": "^16.9.0", "type-fest": "^4.26.1" } }, "sha512-sLCzxctvhzCRpA8AYSrYh2O4E26FPPRUy3ceP653+li+VjPTYKkV27/SYBkVpAFe5NBN+WvNT9yZnQ2anxtn7g=="],
+    "@lens-protocol/graphql": ["@lens-protocol/graphql@0.0.0-canary-20250425124858", "", { "dependencies": { "@lens-protocol/types": "0.0.0-canary-20250425124858", "gql.tada": "^1.8.10", "graphql": "^16.9.0", "type-fest": "^4.26.1" } }, "sha512-/o3fNB3yE3Ve63ZoqWQpGW/Z7V1iSB6atWF/JOfgXHzsWsHk5cdzc3FC+5vJjmFUC+lVFlcD7IQjMhEfg4hlEg=="],
 
     "@lens-protocol/metadata": ["@lens-protocol/metadata@2.0.0", "", { "dependencies": { "abitype": "^1.0.8", "json-stable-stringify": "^1.1.1", "uuid": "^9.0.1" }, "peerDependencies": { "zod": "^3.22.3" }, "optionalPeers": ["zod"] }, "sha512-KLm9hQvPw8zCYOxnZFA02Cnzfrphbt6i1YIzAK5fBki1ZTMqAnlSoKxCesEXVjDd6m9MM6dd3neRxmvDGwer4Q=="],
 
@@ -482,9 +482,9 @@
 
     "@lens-protocol/shared-kernel": ["@lens-protocol/shared-kernel@0.12.0", "", { "dependencies": { "@ethersproject/address": "^5.7.0", "decimal.js": "^10.4.3", "lodash": "^4.17.21", "traverse": "^0.6.7", "tslib": "^2.6.2" } }, "sha512-+trBZPjGDSRMVafZF6jXcfKc8UVHr1bVRjxeAVO1ZpR7zWfampJhxMO+7jbmmhvmYmf5Losp7Ffq4//szKloaA=="],
 
-    "@lens-protocol/storage": ["@lens-protocol/storage@0.0.0-canary-20250423123457", "", { "dependencies": { "@lens-protocol/types": "0.0.0-canary-20250423123457", "zod": "^3.23.8" } }, "sha512-0EvwtV9o0MYZ6jgO7ufr5NfDqZ0CBL7Pa6d7ThXAhFnFRi4Ivpe5EpTv7SxPTqxhuXFvo24Or9QVhEGXiG5s+Q=="],
+    "@lens-protocol/storage": ["@lens-protocol/storage@0.0.0-canary-20250425124858", "", { "dependencies": { "@lens-protocol/types": "0.0.0-canary-20250425124858", "zod": "^3.23.8" } }, "sha512-dhSMUuhk8Us+6TK/1QbqYjq2sRH+XmigNGjnG3uum0iBN1wwS4Nman12iqTtGbOTMJ92zJ3NXvOGrOIz0wzMbQ=="],
 
-    "@lens-protocol/types": ["@lens-protocol/types@0.0.0-canary-20250423123457", "", { "dependencies": { "neverthrow": "^8.0.0", "type-fest": "^4.26.1" } }, "sha512-Z9J0AQdBPSgwdc5Aq2v1ejUqDhDYMZTxtt2LtlhIIoaDkJHE06h2UHw4f7q7KZkbYlg9lMHuHtrpOUEgi2k+xQ=="],
+    "@lens-protocol/types": ["@lens-protocol/types@0.0.0-canary-20250425124858", "", { "dependencies": { "neverthrow": "^8.0.0", "type-fest": "^4.26.1" } }, "sha512-MaxZUvKHtj3THfuC7CHQEZNqp6aPm+JnTNauibnvGge8bYTO6RRO8ywf+l/+QV9hJPSULyoTBWT9Ns8CPLtvKA=="],
 
     "@lifeomic/attempt": ["@lifeomic/attempt@3.1.0", "", {}, "sha512-QZqem4QuAnAyzfz+Gj5/+SLxqwCAw2qmt7732ZXodr6VDWGeYLG6w1i/vYLa55JQM9wRuBKLmXmiZ2P0LtE5rw=="],
 
@@ -2820,6 +2820,14 @@
 
     "@lens-protocol/metadata/uuid": ["uuid@9.0.1", "", { "bin": { "uuid": "dist/bin/uuid" } }, "sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA=="],
 
+    "@lens-protocol/react/@lens-protocol/client": ["@lens-protocol/client@0.0.0-canary-20250423123457", "", { "dependencies": { "@lens-protocol/env": "0.0.0-canary-20250423123457", "@lens-protocol/graphql": "0.0.0-canary-20250423123457", "@lens-protocol/storage": "0.0.0-canary-20250423123457", "@lens-protocol/types": "0.0.0-canary-20250423123457", "@urql/core": "^5.0.8", "@urql/exchange-auth": "^2.2.0", "graphql": "^16.9.0", "jwt-decode": "^4.0.0" }, "peerDependencies": { "@lens-chain/sdk": "^1.0.0", "ethers": "^6.13.4", "viem": "^2.21.53", "zksync-ethers": "^6.15.3" }, "optionalPeers": ["@lens-chain/sdk", "ethers", "viem", "zksync-ethers"] }, "sha512-K/C2asYVnHxJyIdsCnd2mwVNwj03ofR47bygWsWMmO6Px8WkWX91Q7Ousl+qAHTVK3AaBbZahsvX0z0XMI7KEA=="],
+
+    "@lens-protocol/react/@lens-protocol/env": ["@lens-protocol/env@0.0.0-canary-20250423123457", "", { "dependencies": { "@lens-protocol/types": "0.0.0-canary-20250423123457" } }, "sha512-zbtYlEG+t3uzsaUdCC5/q50qFB2LTpcHmPZKqG08isrIwilXCH2OcB1lDW2H3LU1eLweaoI/inOVeiDX59pVVg=="],
+
+    "@lens-protocol/react/@lens-protocol/graphql": ["@lens-protocol/graphql@0.0.0-canary-20250423123457", "", { "dependencies": { "@lens-protocol/types": "0.0.0-canary-20250423123457", "gql.tada": "^1.8.10", "graphql": "^16.9.0", "type-fest": "^4.26.1" } }, "sha512-sLCzxctvhzCRpA8AYSrYh2O4E26FPPRUy3ceP653+li+VjPTYKkV27/SYBkVpAFe5NBN+WvNT9yZnQ2anxtn7g=="],
+
+    "@lens-protocol/react/@lens-protocol/types": ["@lens-protocol/types@0.0.0-canary-20250423123457", "", { "dependencies": { "neverthrow": "^8.0.0", "type-fest": "^4.26.1" } }, "sha512-Z9J0AQdBPSgwdc5Aq2v1ejUqDhDYMZTxtt2LtlhIIoaDkJHE06h2UHw4f7q7KZkbYlg9lMHuHtrpOUEgi2k+xQ=="],
+
     "@metamask/eth-json-rpc-provider/@metamask/json-rpc-engine": ["@metamask/json-rpc-engine@7.3.3", "", { "dependencies": { "@metamask/rpc-errors": "^6.2.1", "@metamask/safe-event-emitter": "^3.0.0", "@metamask/utils": "^8.3.0" } }, "sha512-dwZPq8wx9yV3IX2caLi9q9xZBw2XeIoYqdyihDDDpuHVCEiqadJLwqM3zy+uwf6F1QYQ65A8aOMQg1Uw7LMLNg=="],
 
     "@metamask/eth-json-rpc-provider/@metamask/utils": ["@metamask/utils@5.0.2", "", { "dependencies": { "@ethereumjs/tx": "^4.1.2", "@types/debug": "^4.1.7", "debug": "^4.3.4", "semver": "^7.3.8", "superstruct": "^1.0.3" } }, "sha512-yfmE79bRQtnMzarnKfX7AEJBwFTxvTyw3nBQlu/5rmGXrjAeAMltoGxO62TFurxrQAFMNa/fEjIHNvungZp0+g=="],
@@ -3385,6 +3393,8 @@
     "@isaacs/cliui/strip-ansi/ansi-regex": ["ansi-regex@6.1.0", "", {}, "sha512-7HSX4QQb4CspciLpVFwyRe79O3xsIZDDLER21kERQ71oaPodF8jL725AgJMFAYbooIqolJoRLuM81SpeUkpkvA=="],
 
     "@isaacs/cliui/wrap-ansi/ansi-styles": ["ansi-styles@6.2.1", "", {}, "sha512-bN798gFfQX+viw3R7yrGWRqnrN2oRkEkUjjl4JNn4E8GxxbjtG3FbrEIIY3l8/hrwUwIeCZvi4QuOTP4MErVug=="],
+
+    "@lens-protocol/react/@lens-protocol/client/@lens-protocol/storage": ["@lens-protocol/storage@0.0.0-canary-20250423123457", "", { "dependencies": { "@lens-protocol/types": "0.0.0-canary-20250423123457", "zod": "^3.23.8" } }, "sha512-0EvwtV9o0MYZ6jgO7ufr5NfDqZ0CBL7Pa6d7ThXAhFnFRi4Ivpe5EpTv7SxPTqxhuXFvo24Or9QVhEGXiG5s+Q=="],
 
     "@metamask/eth-json-rpc-provider/@metamask/json-rpc-engine/@metamask/utils": ["@metamask/utils@8.5.0", "", { "dependencies": { "@ethereumjs/tx": "^4.2.0", "@metamask/superstruct": "^3.0.0", "@noble/hashes": "^1.3.1", "@scure/base": "^1.1.3", "@types/debug": "^4.1.7", "debug": "^4.3.4", "pony-cause": "^2.1.10", "semver": "^7.5.4", "uuid": "^9.0.1" } }, "sha512-I6bkduevXb72TIM9q2LRO63JSsF9EXduh3sBr9oybNX2hNNpr/j1tEjXrsG0Uabm4MJ1xkGAQEMwifvKZIkyxQ=="],
 
