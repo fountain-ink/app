@@ -8,6 +8,7 @@ import { Post } from "@lens-protocol/client";
 import { LoadingSpinner } from "../misc/loading-spinner";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { GraphicHand2 } from "../icons/custom-icons";
+import PostSkeleton from "../post/post-skeleton";
 
 export const BookmarkList = () => {
   const { bookmarks, loading, hasMore, fetchBookmarks } = useBookmarks();
@@ -18,13 +19,15 @@ export const BookmarkList = () => {
 
   if (loading && bookmarks.length === 0) {
     return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <LoadingSpinner />
+      <div className="flex flex-col gap-4">
+        <PostSkeleton />
+        <PostSkeleton />
+        <PostSkeleton />
       </div>
     );
   }
 
-  if (bookmarks.length === 0) {
+  if (!loading && bookmarks && bookmarks.length === 0) {
     return (
       <Card className="m-0 md:m-10 bg-transparent group border-0 flex flex-col gap-4 items-center justify-center shadow-none drop-shadow-none">
         <CardHeader>

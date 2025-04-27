@@ -12,6 +12,7 @@ import { Loader2 } from "lucide-react";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchPosts } from "@lens-protocol/client/actions";
 import { env } from "@/env";
+import PostSkeleton from "./post-skeleton";
 
 export const PaginatedArticleFeed = ({
   initialPosts,
@@ -68,7 +69,7 @@ export const PaginatedArticleFeed = ({
       const result = await fetchPosts(lens, {
         filter: {
           accountScore: {
-            atLeast: 199,
+            atLeast: 8000,
           },
           metadata: { mainContentFocus: [MainContentFocus.Article] },
           feeds: [{ globalFeed: true }],
@@ -154,9 +155,17 @@ export const PaginatedArticleFeed = ({
       {nextCursor && (
         <div
           ref={loadMoreRef}
-          className="w-full flex justify-center py-4"
+          className="w-full flex flex-col items-center py-4 gap-4"
         >
-          {loading && <Loader2 className="animate-spin" size={20} />}
+          {loading && (
+            <>
+              <PostSkeleton />
+              <PostSkeleton />
+              <PostSkeleton />
+              <PostSkeleton />
+              <PostSkeleton />
+            </>
+          )}
         </div>
       )}
     </motion.div>

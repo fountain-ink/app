@@ -6,12 +6,12 @@ export const FeedNavigation = () => {
       <SlideNav
         items={[
           {
-            href: "/home",
-            label: "Latest",
+            href: "/featured",
+            label: "Featured",
           },
           {
-            href: "/curated",
-            label: "Curated",
+            href: "/home",
+            label: "Latest",
           },
           {
             href: "/bookmarks",

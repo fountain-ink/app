@@ -2,16 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { AnyPost } from "@lens-protocol/client";
-import { MainContentFocus } from "@lens-protocol/client";
 import { motion } from "motion/react";
-import { DraftCreateButton } from "../draft/draft-create-button";
 import { GraphicHand2 } from "../icons/custom-icons";
 import { PostView } from "./post-view";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
-import { Loader2 } from "lucide-react";
 import { getLensClient } from "@/lib/lens/client";
-import { fetchPost } from "@lens-protocol/client/actions";
+import { fetchPosts } from "@lens-protocol/client/actions";
 import { env } from "@/env";
+import PostSkeleton from "./post-skeleton";
 
 export const CuratedPaginatedFeed = ({
   initialPostIds = [],
@@ -32,14 +30,12 @@ export const CuratedPaginatedFeed = ({
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  // Initialize loadedPostIds with initialPosts IDs
   useEffect(() => {
     if (initialPosts.length > 0) {
       setLoadedPostIds(new Set(initialPosts.map(post => post.id)));
     }
   }, [initialPosts]);
 
-  // Fetch posts by IDs when component mounts or IDs change
   useEffect(() => {
     if (initialPostIds.length > 0 && initialPosts.length === 0) {
       fetchPostsByIds(initialPostIds);
@@ -79,7 +75,6 @@ export const CuratedPaginatedFeed = ({
       const lens = await getLensClient();
       const fetchedPosts: AnyPost[] = [];
 
-      // Filter out already loaded post IDs
       const newPostIds = postIds.filter(id => !loadedPostIds.has(id));
 
       if (newPostIds.length === 0) {
@@ -87,25 +82,22 @@ export const CuratedPaginatedFeed = ({
         return;
       }
 
-      for (const id of newPostIds) {
-        try {
-          // Use the correct parameter for the Lens API
-          const result = await fetchPost(lens, { post: id });
+      const result = await fetchPosts(lens, { filter: { posts: newPostIds } });
 
-          if (result.isOk()) {
-            const post = result.value;
-            if (post) {
-              fetchedPosts.push(post);
-              // Add to loaded post IDs
-              setLoadedPostIds(prev => new Set([...prev, post.id]));
-            }
-          }
-        } catch (error) {
-          console.error(`Failed to fetch post ${id}:`, error);
+      if (result.isOk()) {
+        const posts = result.value.items;
+        if (posts && posts.length > 0) {
+          fetchedPosts.push(...posts);
+          setLoadedPostIds(prev => {
+            const newIds = new Set(prev);
+            posts.forEach(post => newIds.add(post.id));
+            return newIds;
+          });
         }
+      } else {
+        console.error("Failed to fetch posts batch:", result.error);
       }
 
-      // Only add unique posts
       setAllPosts(prevPosts => {
         const existingPostIds = new Set(prevPosts.map(post => post.id));
         const uniqueNewPosts = fetchedPosts.filter(post => !existingPostIds.has(post.id));
@@ -201,16 +193,24 @@ export const CuratedPaginatedFeed = ({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="flex flex-col gap-4 my-4 items-center w-full"
+      className="flex flex-col gap-4 items-center w-full"
     >
       {postViews}
 
       {hasMorePosts && (
         <div
           ref={loadMoreRef}
-          className="w-full flex justify-center py-4"
+          className="w-full flex flex-col items-center py-4 gap-4"
         >
-          {loading && <Loader2 className="animate-spin" size={20} />}
+          {loading && (
+            <>
+              <PostSkeleton />
+              <PostSkeleton />
+              <PostSkeleton />
+              <PostSkeleton />
+              <PostSkeleton />
+            </>
+          )}
         </div>
       )}
     </motion.div>

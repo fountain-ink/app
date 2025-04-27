@@ -29,7 +29,7 @@ const home = async () => {
   const postsResult = await fetchPosts(lens, {
     filter: {
       accountScore: {
-        atLeast: 9500,
+        atLeast: 8500,
       },
       metadata: { mainContentFocus: [MainContentFocus.Article] },
       feeds: [{ globalFeed: true }],
@@ -43,7 +43,7 @@ const home = async () => {
     <div className="flex flex-col mt-5 items-center justify-center w-full max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
       <FeedNavigation />
 
-      <div className="flex flex-col my-4 items-center w-full">
+      <div className="flex flex-col items-center w-full">
         <PaginatedArticleFeed
           initialPosts={mutablePosts}
           initialPaginationInfo={postsResult?.pageInfo ?? {}}

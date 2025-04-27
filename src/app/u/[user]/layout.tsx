@@ -131,9 +131,7 @@ const UserLayout = async ({
             <UserNavigation username={params.user} isUserProfile={isUserProfile} />
           </div>
 
-          <AnimatePresence mode="wait">
-            <PageTransition type="content">{children}</PageTransition>
-          </AnimatePresence>
+          {children}
         </div>
       </div>
     </BlogTheme>

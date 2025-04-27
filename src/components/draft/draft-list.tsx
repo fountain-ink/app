@@ -13,6 +13,7 @@ import { DraftView } from "./draft-view";
 import { GraphicHand2 } from "../icons/custom-icons";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { DraftCreateButton } from "./draft-create-button";
+import PostSkeleton from "../post/post-skeleton";
 
 async function getCloudDrafts() {
   const response = await fetch("/api/drafts", {
@@ -87,8 +88,10 @@ export function DraftList({ address }: { address?: EvmAddress | null }) {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <LoadingSpinner />
+      <div className="flex flex-col gap-4">
+        <PostSkeleton />
+        <PostSkeleton />
+        <PostSkeleton />
       </div>
     );
   }
