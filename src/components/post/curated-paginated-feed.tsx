@@ -200,7 +200,7 @@ export const CuratedPaginatedFeed = ({
       {hasMorePosts && (
         <div
           ref={loadMoreRef}
-          className="w-full flex flex-col items-center py-4 gap-4"
+          className="w-full flex flex-col items-center gap-4"
         >
           {loading && (
             <>
