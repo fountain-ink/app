@@ -62,6 +62,7 @@ export const PostView = ({
 
   const username = post.author.username?.localName || "";
   const href = `/p/${username}/${post.slug}`;
+  const coverUrl = metadata.attributes?.find((attr) => "key" in attr && attr.key === "coverUrl")?.value 
 
   // Prefetch the post page
   useEffect(() => {
@@ -85,11 +86,15 @@ export const PostView = ({
         <div className="h-40 w-40 shrink-0 aspect-square rounded-sm overflow-hidden">
           {metadata.attributes?.find((attr) => "key" in attr && attr.key === "coverUrl")?.value ? (
             <div className="h-full w-full overflow-hidden relative">
-              <img
-                src={metadata.attributes?.find((attr) => "key" in attr && attr.key === "coverUrl")?.value as string}
-                alt="Cover"
-                className="w-full h-full object-cover transition-all duration-300 ease-in-out group-hover/post:scale-110"
-              />
+              {coverUrl && (
+                <Image
+                  src={coverUrl}
+                  alt="Cover"
+                  className="w-full h-full object-cover transition-all duration-300 ease-in-out group-hover/post:scale-110"
+                  width={256}
+                  height={256}
+                />
+              )}
               <div className="absolute inset-0 pointer-events-none transition-all duration-300 ease-in-out bg-white opacity-0 group-hover/post:opacity-20" />
             </div>
           ) : (
