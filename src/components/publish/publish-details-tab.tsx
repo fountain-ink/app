@@ -4,22 +4,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TagInput } from "emblor";
 import type { Tag } from "emblor";
-import { Checkbox } from "@/components/ui/checkbox";
-import { BlogSelectMenu } from "@/components/blog/blog-select-menu";
-import { FC, useCallback, useEffect, useState, useRef, useMemo } from "react";
-import { useBlogStorage } from "@/hooks/use-blog-storage";
+import { FC, useCallback, useEffect, useState, useRef } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { CombinedFormValues } from "./publish-dialog";
-import { ImageIcon, PenIcon, PenToolIcon, RssIcon } from "lucide-react";
-import Link from "next/link";
+import { ImageIcon, PenIcon } from "lucide-react";
 
 export const detailsFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title should be less than 100 characters"),
   subtitle: z.string().optional(),
   coverUrl: z.string().optional(),
   tags: z.array(z.string()).max(5, "You can add up to 5 tags").default([]),
-  selectedBlogAddress: z.string().min(1, "Please select a blog to publish to"),
-  sendNewsletter: z.boolean().default(true),
 });
 
 export type DetailsFormValues = z.infer<typeof detailsFormSchema>;
@@ -30,7 +24,6 @@ interface ArticleDetailsTabProps {
 }
 
 export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
-  const { blogState } = useBlogStorage();
   const [tags, setTags] = useState<Tag[]>([]);
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
 
@@ -52,13 +45,6 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
       );
     },
     [form, tags],
-  );
-
-  const selectedBlogAddress = form.watch("details.selectedBlogAddress");
-
-  const selectedBlog = useMemo(
-    () => blogState.blogs.find((blog) => blog?.address === selectedBlogAddress) || null,
-    [blogState.blogs, selectedBlogAddress],
   );
 
   return (
@@ -151,86 +137,6 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
             )}
           />
         </div>
-      </div>
-
-      <div className="border border-border flex shrink flex-col gap-2 rounded-sm p-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <RssIcon className="w-4 h-4 text-muted-foreground" />
-            <h3 className="font-medium">Delivery</h3>
-          </div>
-          <p className="text-sm text-muted-foreground">Choose where the post will be published.</p>
-        </div>
-        <FormField
-          control={form.control}
-          name="details.selectedBlogAddress"
-          render={({ field, fieldState }) => (
-            <FormItem>
-              <FormLabel>Publish in</FormLabel>
-              <FormControl>
-                <BlogSelectMenu
-                  selectedBlogAddress={field.value}
-                  onBlogChange={(value) => {
-                    field.onChange(value);
-                    const newSelectedBlog = blogState.blogs.find((b) => b?.address === value);
-                    if (!newSelectedBlog?.mail_list_id) {
-                      form.setValue("details.sendNewsletter", false);
-                    } else {
-                      form.setValue("details.sendNewsletter", true);
-                    }
-                  }}
-                  placeholder="Select a blog to publish to"
-                  className={`max-w-sm mt-1 ${fieldState.error ? "border-destructive ring-1 ring-destructive" : ""}`}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="details.sendNewsletter"
-          render={({ field }) => (
-            <FormItem className="flex flex-col space-y-1 mt-4">
-              <div className="flex items-center space-x-2">
-                <FormControl>
-                  <Checkbox
-                    id="sendNewsletter"
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    disabled={true}
-                  // disabled={!selectedBlog?.mail_list_id}
-                  />
-                </FormControl>
-                <label
-                  htmlFor="sendNewsletter"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Send out newsletter to subscribers
-                </label>
-              </div>
-              <FormDescription className="pl-6">
-                Newsletter delivery is coming soon.
-                {/* {selectedBlog?.mail_list_id ? (
-                  "Subscribers will receive this post in their inbox."
-                ) : (
-                  <>
-                    <span>This blog doesn't have a newsletter.</span>
-                    <Link
-                      href={"/settings/newsletter"}
-                      className="text-muted-foreground pl-1 hover:text-primary underline"
-                    >
-                      Newsletter settings
-                    </Link>
-                    .
-                  </>
-                )} */}
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
       </div>
     </div>
   );

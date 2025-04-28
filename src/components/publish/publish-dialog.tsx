@@ -7,7 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useWalletClient } from "wagmi";
-import { PenIcon, ShoppingBag as ShoppingBagIcon, AlertCircleIcon, CircleDollarSignIcon, RefreshCw } from "lucide-react";
+import { PenIcon, ShoppingBag as ShoppingBagIcon, AlertCircleIcon, CircleDollarSignIcon, RefreshCw, SendIcon } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,6 +16,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Form } from "@/components/ui/form";
 import { ArticleDetailsTab, detailsFormSchema, DetailsFormValues } from "./publish-details-tab";
 import { MonetizationTab, collectingFormSchema, CollectingFormValues } from "./publish-monetization-tab";
+import { DistributionTab, distributionFormSchema, DistributionFormValues } from "./publish-distribution-tab";
 import { publishPost } from "../../lib/publish/publish-post";
 import { publishPostEdit } from "../../lib/publish/publish-post-edit";
 import { usePublishDraft } from "../../hooks/use-publish-draft";
@@ -33,6 +34,7 @@ const isUserBlog = (blogAddress: string | undefined, blogs: any[]): boolean => {
 
 const combinedSchema = z.object({
   details: detailsFormSchema,
+  distribution: distributionFormSchema,
   collecting: collectingFormSchema,
 });
 
@@ -83,6 +85,8 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
         subtitle: "",
         coverUrl: "",
         tags: [],
+      };
+      const defaultDistribution: DistributionFormValues = {
         selectedBlogAddress: "",
         sendNewsletter: false,
       };
@@ -90,6 +94,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
       if (!draft) {
         return {
           details: defaultDetails,
+          distribution: defaultDistribution,
           collecting: defaultCollecting,
         };
       }
@@ -112,7 +117,9 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
           subtitle: draft.subtitle || "",
           coverUrl: draft.coverUrl || "",
           tags: draft.tags || [],
-          selectedBlogAddress: draft.blogAddress || "",
+        },
+        distribution: {
+          selectedBlogAddress: draft.blogAddress || undefined,
           sendNewsletter: draft.publishingSettings?.sendNewsletter ?? false,
         },
         collecting: collectingSettings,
@@ -123,6 +130,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
   const { handleSubmit, formState, watch, trigger, getValues, setValue } = form;
   const { errors, isValid, isSubmitted, isLoading } = formState;
   const hasDetailsErrors = Object.keys(errors.details ?? {}).length > 0;
+  const hasDistributionErrors = Object.keys(errors.distribution ?? {}).length > 0;
   const hasCollectingErrors = Object.keys(errors.collecting ?? {}).length > 0;
 
   useEffect(() => {
@@ -169,17 +177,17 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
   }, [open, isLoading, getDraft, getValues, setValue, trigger]);
 
   useEffect(() => {
-    const subscription = watch((values, { name, type }) => {
-      if (!isLoading && values.details && values.collecting) {
+    const subscription = watch((values: any, { name, type }: { name?: string; type?: string }) => {
+      if (!isLoading && values.details && values.collecting && values.distribution) {
         const currentDraft = getDraft();
         if (currentDraft) {
-          const validTags = (values.details.tags ?? []).filter((tag): tag is string => typeof tag === "string");
+          const validTags = (values.details.tags ?? []).filter((tag: any): tag is string => typeof tag === "string");
 
-          const selectedBlogAddress = values.details.selectedBlogAddress;
+          const selectedBlogAddress = values.distribution.selectedBlogAddress;
           const shouldSaveBlogAddress = selectedBlogAddress && !isUserBlog(selectedBlogAddress, blogState.blogs);
 
           const validRecipients = (values.collecting.recipients ?? []).filter(
-            (r): r is { address: string; percentage: number; username?: string | null; picture?: string | null } =>
+            (r: any): r is { address: string; percentage: number; username?: string | null; picture?: string | null } =>
               r !== undefined && typeof r.address === "string" && typeof r.percentage === "number",
           );
           const updatedDraftData: Partial<Draft> = {
@@ -190,7 +198,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
             blogAddress: shouldSaveBlogAddress ? selectedBlogAddress : undefined,
             publishingSettings: {
               ...(currentDraft.publishingSettings || {}),
-              sendNewsletter: values.details.sendNewsletter ?? false,
+              sendNewsletter: values.distribution.sendNewsletter ?? false,
             },
             collectingSettings: {
               isCollectingEnabled: values.collecting.isCollectingEnabled ?? false,
@@ -219,26 +227,26 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
     const draft = getDraft();
     if (!draft) return;
 
-    const selectedBlogAddress = data.details.selectedBlogAddress;
+    const selectedBlogAddress = data.distribution?.selectedBlogAddress || "";
     const shouldSaveBlogAddress = selectedBlogAddress && !isUserBlog(selectedBlogAddress, blogState.blogs);
 
     const finalDraft: Draft = {
       ...draft,
-      title: data.details.title,
-      subtitle: data.details.subtitle ?? null,
-      coverUrl: data.details.coverUrl ?? null,
-      tags: data.details.tags,
+      title: data.details?.title || "",
+      subtitle: data.details?.subtitle ?? null,
+      coverUrl: data.details?.coverUrl ?? null,
+      tags: data.details?.tags || [],
       blogAddress: shouldSaveBlogAddress ? selectedBlogAddress : undefined,
       publishingSettings: {
         ...(draft.publishingSettings || {}),
-        sendNewsletter: data.details.sendNewsletter,
+        sendNewsletter: data.distribution?.sendNewsletter ?? false,
       },
       collectingSettings: {
-        ...data.collecting,
-        price: data.collecting.price ?? "0",
-        collectLimit: data.collecting.collectLimit ?? 0,
-        collectExpiryDays: data.collecting.collectExpiryDays ?? 0,
-        recipients: data.collecting.recipients ?? [],
+        ...(data.collecting as CollectingFormValues),
+        price: data.collecting?.price ?? "0",
+        collectLimit: data.collecting?.collectLimit ?? 0,
+        collectExpiryDays: data.collecting?.collectExpiryDays ?? 0,
+        recipients: data.collecting?.recipients ?? [],
       },
     };
 
@@ -288,7 +296,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
               <DialogTitle>{isEditMode ? "Update post" : "Publish post"}</DialogTitle>
             </DialogHeader>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col min-h-0">
-              <TabsList className="grid w-fit grid-cols-2 max-w-fit my-2">
+              <TabsList className="grid w-fit grid-cols-3 max-w-fit my-2">
                 <TabsTrigger
                   value="details"
                   className={cn(
@@ -314,6 +322,21 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
                   )}
                   Monetization
                 </TabsTrigger>
+                <TabsTrigger
+                  value="distribution"
+                  className={cn(
+                    "flex items-center gap-2 rounded-sm",
+                    hasDistributionErrors &&
+                    "text-destructive focus:text-destructive data-[state=active]:text-destructive",
+                  )}
+                >
+                  {hasDistributionErrors ? (
+                    <AlertCircleIcon className="w-4 h-4" />
+                  ) : (
+                    <SendIcon className="w-4 h-4" />
+                  )}
+                  Distribution
+                </TabsTrigger>
               </TabsList>
               <ScrollArea className="flex-1 min-h-0 pr-2">
                 <TabsContent
@@ -322,6 +345,13 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
                   tabIndex={-1}
                 >
                   <ArticleDetailsTab form={form} documentId={documentId} />
+                </TabsContent>
+                <TabsContent
+                  value="distribution"
+                  className="h-full m-0 data-[state=inactive]:hidden focus-visible:ring-0 focus-visible:ring-offset-0"
+                  tabIndex={-1}
+                >
+                  <DistributionTab form={form} documentId={documentId} />
                 </TabsContent>
                 <TabsContent
                   value="monetization"
@@ -340,7 +370,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
                 }
               </Button>
 
-              {!isValid && (isSubmitted || hasDetailsErrors || hasCollectingErrors) && (
+              {!isValid && (isSubmitted || hasDetailsErrors || hasDistributionErrors || hasCollectingErrors) && (
                 <p className="text-sm text-destructive flex items-center gap-1">
                   <AlertCircleIcon className="h-4 w-4 shrink-0" />
                   Please fix the errors before {isEditMode ? "updating" : "publishing"}.

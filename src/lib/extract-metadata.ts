@@ -33,7 +33,7 @@ export const extractMetadata = (content?: ContentNode[]): ArticleMetadata => {
   };
 
   return {
-    title: extractText(titleNode) || "Untitled",
+    title: extractText(titleNode),
     subtitle: extractText(subtitleNode),
     coverUrl: imageNode?.url ?? null,
   };
