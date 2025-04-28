@@ -125,7 +125,7 @@ export const PaginatedArticleFeed = ({
     );
   }).filter(Boolean);
 
-  if (postViews.length === 0) {
+  if (!loading && postViews && postViews.length === 0) {
     return (
       <Card className="m-0 md:m-10 bg-transparent group border-0 flex flex-col gap-4 items-center justify-center shadow-none drop-shadow-none">
         <CardHeader>
