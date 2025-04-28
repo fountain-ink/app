@@ -12,6 +12,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { resolveImageUrl } from "@/lib/utils/resolve-image-url";
 import { useEffect } from "react";
+import { extractSubtitle } from "@/lib/extract-subtitle";
 
 interface PostViewOptions {
   showDate?: boolean;
@@ -58,13 +59,14 @@ export const PostView = ({
   const metadata = post.metadata
   const blog = post.feed.group?.metadata
   const blogImage = resolveImageUrl(blog?.icon)
-  const subtitle = metadata.attributes?.find((attr) => "key" in attr && attr.key === "subtitle")?.value
+  const subtitleFromAttributes = metadata.attributes?.find((attr) => "key" in attr && attr.key === "subtitle")?.value
+  const contentJson = metadata.attributes?.find((attr) => "key" in attr && attr.key === "contentJson")?.value
+  const subtitle = subtitleFromAttributes || extractSubtitle(contentJson)
 
   const username = post.author.username?.localName || "";
   const href = `/p/${username}/${post.slug}`;
-  const coverUrl = metadata.attributes?.find((attr) => "key" in attr && attr.key === "coverUrl")?.value 
+  const coverUrl = metadata.attributes?.find((attr) => "key" in attr && attr.key === "coverUrl")?.value
 
-  // Prefetch the post page
   useEffect(() => {
     router.prefetch(href);
   }, [router, href]);
