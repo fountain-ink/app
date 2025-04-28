@@ -64,7 +64,6 @@ export function SlideNav({ items, className }: SlideNavProps) {
       </div>
       {activeItem && (
         <motion.div
-          layoutId="navunderline"
           className="absolute bottom-0 left-0 h-0.5 bg-foreground"
           initial={{
             width: activeItem.offsetWidth,
