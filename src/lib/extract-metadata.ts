@@ -7,16 +7,16 @@ interface ContentNode {
 }
 
 interface ArticleMetadata {
-  title: string;
-  subtitle: string;
+  title: string | null;
+  subtitle: string | null;
   coverUrl: string | null;
 }
 
 export const extractMetadata = (content?: ContentNode[]): ArticleMetadata => {
   if (!content || !Array.isArray(content)) {
     return {
-      title: "Untitled",
-      subtitle: "",
+      title: null,
+      subtitle: null,
       coverUrl: null,
     };
   }
