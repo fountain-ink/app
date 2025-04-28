@@ -27,6 +27,7 @@ import { getLensClient } from "@/lib/lens/client";
 import { useState } from "react";
 import { BlogDropdownMenu } from "../blog/blog-dropdown-menu";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
+import { HomeIcon } from "../icons/home";
 
 export const UserMenu = ({ session }: { session: MeResult | null }) => {
   const { isConnected: isWalletConnected } = useAccount();
@@ -75,6 +76,10 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent align="end" className="w-48">
+          <AnimatedMenuItem href="/featured" icon={HomeIcon}>
+            Home
+          </AnimatedMenuItem>
+
           {username && <BlogDropdownMenu username={username} />}
 
           <AnimatedMenuItem href={`/u/${username}`} icon={UserIcon}>

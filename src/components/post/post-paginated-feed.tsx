@@ -8,7 +8,6 @@ import { DraftCreateButton } from "../draft/draft-create-button";
 import { GraphicHand2 } from "../icons/custom-icons";
 import { PostView } from "./post-view";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
-import { Loader2 } from "lucide-react";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchPosts } from "@lens-protocol/client/actions";
 import { env } from "@/env";
@@ -73,7 +72,7 @@ export const PaginatedArticleFeed = ({
           },
           metadata: { mainContentFocus: [MainContentFocus.Article] },
           feeds: [{ globalFeed: true }],
-          apps: [env.NEXT_PUBLIC_APP_ADDRESS],
+          // apps: [env.NEXT_PUBLIC_APP_ADDRESS],
         },
         cursor: nextCursor,
       }).unwrapOr(null);
@@ -96,9 +95,9 @@ export const PaginatedArticleFeed = ({
       return null;
     }
 
-    if (post.app?.address !== env.NEXT_PUBLIC_APP_ADDRESS) {
-      return null;
-    }
+    // if (post.app?.address !== env.NEXT_PUBLIC_APP_ADDRESS) {
+    //   return null;
+    // }
 
     if (post.metadata.__typename !== "ArticleMetadata") {
       return null;
