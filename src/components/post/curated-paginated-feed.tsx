@@ -141,9 +141,9 @@ export const CuratedPaginatedFeed = ({
       return null;
     }
 
-    if (post.app?.address !== env.NEXT_PUBLIC_APP_ADDRESS) {
-      return null;
-    }
+    // if (post.app?.address !== env.NEXT_PUBLIC_APP_ADDRESS) {
+    //   return null;
+    // }
 
     if (post.metadata.__typename !== "ArticleMetadata") {
       return null;
