@@ -55,7 +55,8 @@ export function AutoSave({ documentId }: { documentId: string }) {
           coverUrl,
         };
 
-        saveDocument(documentId, draft);
+        // FIXME: possibly an issue with the type inference here
+        saveDocument(documentId, draft as Draft);
         setSaveSuccess(true);
         setTimeout(() => {
           setIsVisible(false);

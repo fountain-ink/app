@@ -6,12 +6,14 @@ import { FC, useMemo } from "react";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { CombinedFormValues } from "./publish-dialog";
-import { SendIcon, RssIcon } from "lucide-react";
+import { SendIcon, RssIcon, LayoutIcon, ClubIcon } from "lucide-react";
 import Link from "next/link";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export const distributionFormSchema = z.object({
   selectedBlogAddress: z.string().optional(),
   sendNewsletter: z.boolean().default(true),
+  lensDisplay: z.enum(["link", "title_link", "content_link", "content_only"]).default("title_link"),
 });
 
 export type DistributionFormValues = z.infer<typeof distributionFormSchema>;
@@ -36,7 +38,7 @@ export const DistributionTab: FC<DistributionTabProps> = ({ form }) => {
       <div className="border border-border flex shrink flex-col gap-2 rounded-sm p-4">
         <div>
           <div className="flex items-center gap-2">
-            <RssIcon className="w-4 h-4 text-muted-foreground" />
+            <SendIcon className="w-4 h-4 text-muted-foreground" />
             <h3 className="font-medium">Delivery</h3>
           </div>
           <p className="text-sm text-muted-foreground">Choose where the post will be published.</p>
@@ -106,6 +108,45 @@ export const DistributionTab: FC<DistributionTabProps> = ({ form }) => {
                     .
                   </>
                 )} */}
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+
+      <div className="border border-border flex shrink flex-col gap-2 rounded-sm p-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <ClubIcon className="w-4 h-4 text-muted-foreground" />
+            <h3 className="font-medium">Lens</h3>
+          </div>
+          <p className="text-sm text-muted-foreground">Choose how your post is displayed on other apps.</p>
+        </div>
+        <FormField
+          control={form.control}
+          name="distribution.lensDisplay"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Display format</FormLabel>
+              <Select
+                value={field.value}
+                onValueChange={field.onChange}
+              >
+                <FormControl>
+                  <SelectTrigger className="max-w-sm">
+                    <SelectValue placeholder="How to display your post" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent className="z-[52]">
+                  <SelectItem value="link">Link only</SelectItem>
+                  <SelectItem value="title_link">Title and link</SelectItem>
+                  <SelectItem value="content_link">Content and link</SelectItem>
+                  <SelectItem value="content_only">Content only</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormDescription>
+                Controls how much of your content is displayed on Lens appsa
               </FormDescription>
               <FormMessage />
             </FormItem>

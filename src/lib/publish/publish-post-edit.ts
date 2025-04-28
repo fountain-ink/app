@@ -1,7 +1,7 @@
 import { getLensClient } from "@/lib/lens/client";
 import { storageClient } from "@/lib/lens/storage-client";
 import { TransactionIndexingError, postId, uri } from "@lens-protocol/client";
-import { currentSession, editPost, fetchPost } from "@lens-protocol/client/actions";
+import { currentSession, editPost, fetchAccount, fetchPost } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { MetadataAttributeType, article } from "@lens-protocol/metadata";
 import { toast } from "sonner";
@@ -9,6 +9,7 @@ import { type UseWalletClientReturnType } from "wagmi";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import type { Draft } from "@/components/draft/draft";
+import { getPostContent } from "./get-post-content";
 
 /**
  * Edits an existing post on Lens Protocol
@@ -31,6 +32,7 @@ export async function publishPostEdit(
     }
 
     const documentId = draft.documentId;
+    const lensDisplay = draft.distributionSettings?.lensDisplay || "title";
 
     const lens = await getLensClient();
     if (!lens.isSessionClient()) {
@@ -38,9 +40,20 @@ export async function publishPostEdit(
       return false;
     }
 
-    const account = await lens.getAuthenticatedUser();
-    const session = await currentSession(lens).unwrapOr(null);
-    if (!session || account.isErr()) {
+    const authenticatedUser = await lens.getAuthenticatedUser();
+    if (authenticatedUser.isErr()) {
+      toast.error("Please log in to edit this post");
+      return false;
+    }
+
+    const account = await fetchAccount(lens, { address: authenticatedUser.value?.address });
+    if (account.isErr()) {
+      toast.error("Please log in to edit this post");
+      return false;
+    }
+
+    const username = account.value?.username?.localName;
+    if (!username) {
       toast.error("Please log in to edit this post");
       return false;
     }
@@ -61,9 +74,19 @@ export async function publishPostEdit(
         attributes.push({ key: "coverUrl", type: MetadataAttributeType.STRING, value: draft.coverUrl });
       }
 
+      if (draft.slug) {
+        attributes.push({ key: "slug", type: MetadataAttributeType.STRING, value: draft.slug });
+      }
+
+      // Add lens display preference
+      attributes.push({ key: "lensDisplay", type: MetadataAttributeType.STRING, value: lensDisplay });
+
+      // Use the helper function to generate the appropriate content based on lensDisplay setting
+      const postContent = getPostContent(draft, username);
+
       const metadata = article({
         title: draft.title || "",
-        content: draft.contentMarkdown || "",
+        content: postContent,
         locale: "en",
         tags: draft.tags || [],
         attributes,
@@ -106,14 +129,35 @@ export async function publishPostEdit(
       }
 
       const postSlug = postValue.value?.__typename === "Post" ? postValue.value.slug : postValue.value?.id;
-      const username =
-        postValue.value?.__typename === "Post" ? postValue.value.author.username?.localName : postValue.value?.id;
 
       toast.dismiss(pendingToast);
       toast.success("Post updated successfully!");
 
-      console.log(postSlug, username)
       if (postSlug && username) {
+        // Update record in our database if the slug changed
+        try {
+          const recordResponse = await fetch('/api/posts', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              lens_slug: postSlug,
+              slug: draft.slug,
+              handle: username,
+              post_id: draft.published_id,
+            }),
+          });
+
+          if (!recordResponse.ok) {
+            console.error('Failed to update post record:', await recordResponse.text());
+          } else {
+            console.log('Post record updated successfully');
+          }
+        } catch (error) {
+          console.error('Error updating post record:', error);
+        }
+
         router.push(`/p/${username}/${postSlug}?updated=true`);
         router.refresh();
       }

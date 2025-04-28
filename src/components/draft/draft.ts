@@ -1,29 +1,23 @@
 import type { Database } from "@/lib/db/database";
 import type { Json } from "@/lib/db/database";
-import { BlogData } from "@/lib/settings/get-blog-data";
+import { z } from "zod";
+import { detailsFormSchema } from "../publish/publish-details-tab";
+import { distributionFormSchema } from "../publish/publish-distribution-tab";
+import { collectingFormSchema } from "../publish/publish-monetization-tab";
+
+export type DraftDetailsFormValues = z.infer<typeof detailsFormSchema>;
+export type DraftDistributionFormValues = z.infer<typeof distributionFormSchema>;
+export type DraftCollectingFormValues = z.infer<typeof collectingFormSchema>;
 
 export type Draft = Database["public"]["Tables"]["drafts"]["Row"] & {
-  collectingSettings?: CollectingSettings;
-  publishingSettings?: PublishingSettings;
-  blogAddress?: string;
+  title: string;
+  subtitle: string | null;
+  coverUrl: string | null;
+  slug: string | null;
+  tags: string[];
+
+  distributionSettings: DraftDistributionFormValues;
+  collectingSettings: DraftCollectingFormValues;
+
+  published_id?: string;
 };
-
-export interface PublishingSettings {
-  sendNewsletter: boolean;
-}
-
-export interface CollectingSettings {
-  isCollectingEnabled: boolean;
-  collectingLicense: string;
-  isChargeEnabled: boolean;
-  price: string;
-  currency: string;
-  isReferralRewardsEnabled: boolean;
-  referralPercent: number;
-  isRevenueSplitEnabled: boolean;
-  recipients: { address: string; percentage: number; username?: string | null; picture?: string | null }[];
-  isLimitedEdition: boolean;
-  collectLimit: number;
-  isCollectExpiryEnabled: boolean;
-  collectExpiryDays: number;
-}

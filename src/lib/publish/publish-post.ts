@@ -1,7 +1,7 @@
 import { getLensClient } from "@/lib/lens/client";
 import { storageClient } from "@/lib/lens/storage-client";
 import { TransactionIndexingError } from "@lens-protocol/client";
-import { currentSession, fetchGroup, fetchPost, post } from "@lens-protocol/client/actions";
+import { currentSession, fetchAccount, fetchGroup, fetchPost, post } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { MetadataAttributeType, article } from "@lens-protocol/metadata";
 import { dateTime, evmAddress } from "@lens-protocol/client";
@@ -11,7 +11,8 @@ import { createClient } from "@/lib/db/client";
 import { createCampaignForPost } from "@/lib/listmonk/newsletter";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import type { CollectingSettings, Draft } from "@/components/draft/draft";
+import type { Draft } from "@/components/draft/draft";
+import { getPostContent } from "./get-post-content";
 
 export async function publishPost(
   draft: Draft,
@@ -20,10 +21,11 @@ export async function publishPost(
   queryClient: ReturnType<typeof useQueryClient>,
 ): Promise<boolean> {
   try {
-    const anyDraft = draft;
     const documentId = typeof draft.id === "string" ? draft.id : String(draft.id || "");
     const collectingSettings = draft.collectingSettings;
-    const sendNewsletter = anyDraft.publishingSettings?.sendNewsletter;
+    const sendNewsletter = draft.distributionSettings?.sendNewsletter;
+    const selectedBlogAddress = draft.distributionSettings?.selectedBlogAddress;
+    const lensDisplay = draft.distributionSettings?.lensDisplay || "title";
 
     const lens = await getLensClient();
     if (!lens.isSessionClient()) {
@@ -31,9 +33,20 @@ export async function publishPost(
       return false;
     }
 
-    const account = await lens.getAuthenticatedUser();
-    const session = await currentSession(lens).unwrapOr(null);
-    if (!session || account.isErr()) {
+    const authenticatedUser = await lens.getAuthenticatedUser();
+    if (authenticatedUser.isErr()) {
+      toast.error("Please log in to publish");
+      return false;
+    }
+
+    const account = await fetchAccount(lens, { address: authenticatedUser.value?.address });
+    if (account.isErr()) {
+      toast.error("Please log in to publish");
+      return false;
+    }
+
+    const username = account.value?.username?.localName;
+    if (!username) {
       toast.error("Please log in to publish");
       return false;
     }
@@ -53,9 +66,18 @@ export async function publishPost(
         attributes.push({ key: "coverUrl", type: MetadataAttributeType.STRING, value: draft.coverUrl });
       }
 
+      if (draft.slug) {
+        attributes.push({ key: "slug", type: MetadataAttributeType.STRING, value: draft.slug });
+      }
+
+      attributes.push({ key: "lensDisplay", type: MetadataAttributeType.STRING, value: lensDisplay });
+
+
+      const postContent = getPostContent(draft, username ?? "");
+
       const metadata = article({
         title: draft.title || "",
-        content: draft.contentMarkdown || "",
+        content: postContent,
         locale: "en",
         tags: draft.tags || [],
         attributes,
@@ -65,9 +87,9 @@ export async function publishPost(
       console.log(metadata, uri);
 
       let feedValue: string | undefined = undefined;
-      if (draft.blogAddress) {
+      if (selectedBlogAddress) {
         const blog = await fetchGroup(lens, {
-          group: draft.blogAddress,
+          group: selectedBlogAddress,
         });
 
         if (blog.isErr()) {
@@ -100,7 +122,7 @@ export async function publishPost(
                 }))
                 : [
                   {
-                    address: evmAddress(account.value?.address),
+                    address: evmAddress(authenticatedUser.value?.address),
                     percent: 100,
                   },
                 ],
@@ -111,10 +133,10 @@ export async function publishPost(
         ? [
           {
             simpleCollect: {
-              ...(collectingSettings.isLimitedEdition
+              ...(collectingSettings.isLimitedEdition && collectingSettings.collectLimit
                 ? { collectLimit: Number(collectingSettings.collectLimit) }
                 : undefined),
-              ...(collectingSettings.isCollectExpiryEnabled
+              ...(collectingSettings.isCollectExpiryEnabled && collectingSettings.collectExpiryDays
                 ? {
                   endsAt: dateTime(
                     new Date(
@@ -171,21 +193,42 @@ export async function publishPost(
       }
 
       const postSlug = postValue.value?.__typename === "Post" ? postValue.value.slug : postValue.value?.id;
-      const username =
-        postValue.value?.__typename === "Post" ? postValue.value.author.username?.localName : postValue.value?.id;
 
       toast.dismiss(pendingToast);
       toast.success("Post published successfully!");
 
       if (postSlug && username) {
+        try {
+          const recordResponse = await fetch('/api/posts', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              lens_slug: postSlug,
+              slug: draft.slug,
+              handle: username,
+              post_id: postValue.value?.id,
+            }),
+          });
+
+          if (!recordResponse.ok) {
+            console.error('Failed to create post record:', await recordResponse.text());
+          } else {
+            console.log('Post record created successfully');
+          }
+        } catch (error) {
+          console.error('Error creating post record:', error);
+        }
+
         router.push(`/p/${username}/${postSlug}?success=true`);
         router.refresh();
       }
 
-      if (draft.blogAddress && postSlug && username && documentId && sendNewsletter) {
+      if (selectedBlogAddress && postSlug && username && documentId && sendNewsletter) {
         try {
           const db = await createClient();
-          const { data: blog } = await db.from("blogs").select("*").eq("address", draft.blogAddress).single();
+          const { data: blog } = await db.from("blogs").select("*").eq("address", selectedBlogAddress).single();
 
           if (blog?.mail_list_id) {
             try {
@@ -198,7 +241,7 @@ export async function publishPost(
               };
 
               try {
-                const result = await createCampaignForPost(draft.blogAddress, postSlug, newsletterPostData);
+                const result = await createCampaignForPost(selectedBlogAddress, postSlug, newsletterPostData);
                 if (result?.success) {
                   console.log("Created campaign for mailing list subscribers");
                 } else {

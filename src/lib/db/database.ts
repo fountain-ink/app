@@ -243,6 +243,33 @@ export type Database = {
         }
         Relationships: []
       }
+      posts: {
+        Row: {
+          author: string | null
+          handle: string | null
+          created_at: string
+          id: number
+          lens_slug: string | null
+          slug: string | null
+        }
+        Insert: {
+          author?: string | null
+          handle: string | null
+          created_at?: string
+          id?: number
+          lens_slug?: string | null
+          slug?: string | null
+        }
+        Update: {
+          author?: string | null
+          handle: string | null
+          created_at?: string
+          id?: number
+          lens_slug?: string | null
+          slug?: string | null
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           address: string

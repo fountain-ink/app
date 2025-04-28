@@ -7,7 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useWalletClient } from "wagmi";
-import { PenIcon, ShoppingBag as ShoppingBagIcon, AlertCircleIcon, CircleDollarSignIcon, RefreshCw, SendIcon } from "lucide-react";
+import { PenIcon, ShoppingBag as ShoppingBagIcon, AlertCircleIcon, CircleDollarSignIcon, RefreshCw, SendIcon, RssIcon } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,10 +21,11 @@ import { publishPost } from "../../lib/publish/publish-post";
 import { publishPostEdit } from "../../lib/publish/publish-post-edit";
 import { usePublishDraft } from "../../hooks/use-publish-draft";
 import { extractMetadata } from "@/lib/extract-metadata";
-import { Draft } from "../draft/draft";
+import { Draft, DraftDetailsFormValues, DraftDistributionFormValues, DraftCollectingFormValues } from "../draft/draft";
 import { cn } from "@/lib/utils";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { useAuthenticatedUser } from "@lens-protocol/react";
+import { checkSlugAvailability } from "@/lib/slug/check-slug-availability";
 
 const isUserBlog = (blogAddress: string | undefined, blogs: any[]): boolean => {
   if (!blogAddress) return false;
@@ -58,73 +59,106 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
   const queryClient = useQueryClient();
   const { data: walletClient } = useWalletClient();
 
-  const form = useForm<CombinedFormValues>({
-    resolver: zodResolver(combinedSchema),
-    mode: "onChange",
-    defaultValues: async () => {
-      const draft = getDraft();
-      // console.log("Draft for defaultValues:", draft);
+  // Utility functions to convert between form and draft
+  const formToDraft = (values: CombinedFormValues, currentDraft: Draft | null, blogState: any): Partial<Draft> => {
+    const selectedBlogAddress = values.distribution?.selectedBlogAddress || "";
+    const shouldSaveBlogAddress = selectedBlogAddress && !isUserBlog(selectedBlogAddress, blogState.blogs);
 
-      const defaultCollecting: CollectingFormValues = {
+    return {
+      // Details tab values
+      title: values.details.title || "",
+      subtitle: values.details.subtitle || null,
+      coverUrl: values.details.coverUrl || null,
+      slug: values.details.slug || null,
+      tags: Array.isArray(values.details.tags) ? values.details.tags : [],
+
+      // Distribution tab values
+      distributionSettings: {
+        selectedBlogAddress: shouldSaveBlogAddress ? selectedBlogAddress : undefined,
+        sendNewsletter: Boolean(values.distribution.sendNewsletter),
+        lensDisplay: values.distribution.lensDisplay || "title",
+      },
+
+      // Monetization tab values
+      collectingSettings: {
+        ...values.collecting,
+        collectLimit: values.collecting.collectLimit ?? 0,
+        collectExpiryDays: values.collecting.collectExpiryDays ?? 0,
+        price: values.collecting.price || "1",
+        referralPercent: values.collecting.referralPercent || 0,
+        recipients: Array.isArray(values.collecting.recipients) ? values.collecting.recipients : [],
+      },
+    };
+  };
+
+  const draftToFormDefaults = (draft: Draft | null): CombinedFormValues => {
+    if (!draft) {
+      return {
+        details: {
+          title: "",
+          subtitle: "",
+          coverUrl: "",
+          slug: "",
+          tags: [],
+        },
+        distribution: {
+          selectedBlogAddress: "",
+          sendNewsletter: false,
+          lensDisplay: "title_link",
+        },
+        collecting: {
+          isCollectingEnabled: false,
+          collectingLicense: "CC BY-NC 4.0",
+          isChargeEnabled: false,
+          price: "1",
+          currency: "GHO",
+          isReferralRewardsEnabled: false,
+          referralPercent: 25,
+          isRevenueSplitEnabled: false,
+          recipients: [],
+          isLimitedEdition: false,
+          collectLimit: 1,
+          isCollectExpiryEnabled: false,
+          collectExpiryDays: 1,
+        },
+      };
+    }
+
+    return {
+      details: {
+        title: draft?.title || "",
+        subtitle: draft?.subtitle,
+        coverUrl: draft?.coverUrl,
+        slug: draft?.slug || "",
+        tags: draft?.tags || [],
+      },
+      distribution: {
+        selectedBlogAddress: draft?.distributionSettings?.selectedBlogAddress || "",
+        sendNewsletter: draft?.distributionSettings?.sendNewsletter || false,
+        lensDisplay: draft?.distributionSettings?.lensDisplay || "title_link",
+      },
+      collecting: draft?.collectingSettings || {
         isCollectingEnabled: false,
         collectingLicense: "CC BY-NC 4.0",
         isChargeEnabled: false,
-        price: "0",
+        price: "1",
         currency: "GHO",
         isReferralRewardsEnabled: false,
         referralPercent: 25,
         isRevenueSplitEnabled: false,
         recipients: [],
         isLimitedEdition: false,
-        collectLimit: undefined,
+        collectLimit: 1,
         isCollectExpiryEnabled: false,
-        collectExpiryDays: undefined,
-      };
-      const defaultDetails: DetailsFormValues = {
-        title: "",
-        subtitle: "",
-        coverUrl: "",
-        tags: [],
-      };
-      const defaultDistribution: DistributionFormValues = {
-        selectedBlogAddress: "",
-        sendNewsletter: false,
-      };
+        collectExpiryDays: 1,
+      },
+    };
+  };
 
-      if (!draft) {
-        return {
-          details: defaultDetails,
-          distribution: defaultDistribution,
-          collecting: defaultCollecting,
-        };
-      }
-
-      let collectingSettings = { ...defaultCollecting };
-      if (draft.collectingSettings) {
-        collectingSettings = {
-          ...collectingSettings,
-          ...draft.collectingSettings,
-          collectLimit: draft.collectingSettings.collectLimit === 0 ? undefined : draft.collectingSettings.collectLimit,
-          collectExpiryDays:
-            draft.collectingSettings.collectExpiryDays === 0 ? undefined : draft.collectingSettings.collectExpiryDays,
-          recipients: draft.collectingSettings.recipients ?? [],
-        };
-      }
-
-      return {
-        details: {
-          title: draft.title || "",
-          subtitle: draft.subtitle || "",
-          coverUrl: draft.coverUrl || "",
-          tags: draft.tags || [],
-        },
-        distribution: {
-          selectedBlogAddress: draft.blogAddress || undefined,
-          sendNewsletter: draft.publishingSettings?.sendNewsletter ?? false,
-        },
-        collecting: collectingSettings,
-      };
-    },
+  const form = useForm<CombinedFormValues>({
+    resolver: zodResolver(combinedSchema),
+    mode: "onChange",
+    defaultValues: async () => draftToFormDefaults(getDraft()),
   });
 
   const { handleSubmit, formState, watch, trigger, getValues, setValue } = form;
@@ -181,45 +215,12 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
       if (!isLoading && values.details && values.collecting && values.distribution) {
         const currentDraft = getDraft();
         if (currentDraft) {
-          const validTags = (values.details.tags ?? []).filter((tag: any): tag is string => typeof tag === "string");
-
-          const selectedBlogAddress = values.distribution.selectedBlogAddress;
-          const shouldSaveBlogAddress = selectedBlogAddress && !isUserBlog(selectedBlogAddress, blogState.blogs);
-
-          const validRecipients = (values.collecting.recipients ?? []).filter(
-            (r: any): r is { address: string; percentage: number; username?: string | null; picture?: string | null } =>
-              r !== undefined && typeof r.address === "string" && typeof r.percentage === "number",
-          );
-          const updatedDraftData: Partial<Draft> = {
-            title: values.details.title,
-            subtitle: values.details.subtitle ?? null,
-            coverUrl: values.details.coverUrl ?? null,
-            tags: validTags,
-            blogAddress: shouldSaveBlogAddress ? selectedBlogAddress : undefined,
-            publishingSettings: {
-              ...(currentDraft.publishingSettings || {}),
-              sendNewsletter: values.distribution.sendNewsletter ?? false,
-            },
-            collectingSettings: {
-              isCollectingEnabled: values.collecting.isCollectingEnabled ?? false,
-              collectingLicense: values.collecting.collectingLicense ?? "CC BY-NC 4.0",
-              isChargeEnabled: values.collecting.isChargeEnabled ?? false,
-              isReferralRewardsEnabled: values.collecting.isReferralRewardsEnabled ?? false,
-              referralPercent: values.collecting.referralPercent ?? 25,
-              isRevenueSplitEnabled: values.collecting.isRevenueSplitEnabled ?? false,
-              isLimitedEdition: values.collecting.isLimitedEdition ?? false,
-              isCollectExpiryEnabled: values.collecting.isCollectExpiryEnabled ?? false,
-              currency: values.collecting.currency ?? "GHO",
-              price: values.collecting.price ?? "0",
-              collectLimit: values.collecting.collectLimit ?? 0,
-              collectExpiryDays: values.collecting.collectExpiryDays ?? 0,
-              recipients: validRecipients,
-            },
-          };
+          const updatedDraftData = formToDraft(values, currentDraft, blogState);
           updateDraft({ ...currentDraft, ...updatedDraftData });
         }
       }
     });
+
     return () => subscription.unsubscribe();
   }, [watch, isLoading, getDraft, updateDraft, blogState]);
 
@@ -227,27 +228,24 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
     const draft = getDraft();
     if (!draft) return;
 
-    const selectedBlogAddress = data.distribution?.selectedBlogAddress || "";
-    const shouldSaveBlogAddress = selectedBlogAddress && !isUserBlog(selectedBlogAddress, blogState.blogs);
+    // Check slug availability if slug is provided
+    if (data.details.slug) {
+      try {
+        const { available } = await checkSlugAvailability(data.details.slug);
+        if (!available) {
+          toast.error("The chosen slug is already taken. Please choose another one.");
+          setActiveTab("details");
+          return;
+        }
+      } catch (error) {
+        console.error("Error checking slug availability:", error);
+        // Continue anyway since this is not critical
+      }
+    }
 
     const finalDraft: Draft = {
       ...draft,
-      title: data.details?.title || "",
-      subtitle: data.details?.subtitle ?? null,
-      coverUrl: data.details?.coverUrl ?? null,
-      tags: data.details?.tags || [],
-      blogAddress: shouldSaveBlogAddress ? selectedBlogAddress : undefined,
-      publishingSettings: {
-        ...(draft.publishingSettings || {}),
-        sendNewsletter: data.distribution?.sendNewsletter ?? false,
-      },
-      collectingSettings: {
-        ...(data.collecting as CollectingFormValues),
-        price: data.collecting?.price ?? "0",
-        collectLimit: data.collecting?.collectLimit ?? 0,
-        collectExpiryDays: data.collecting?.collectExpiryDays ?? 0,
-        recipients: data.collecting?.recipients ?? [],
-      },
+      ...formToDraft(data, draft, blogState),
     };
 
     console.log(isEditMode ? "Updating post:" : "Publishing post:", finalDraft);
@@ -333,7 +331,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
                   {hasDistributionErrors ? (
                     <AlertCircleIcon className="w-4 h-4" />
                   ) : (
-                    <SendIcon className="w-4 h-4" />
+                    <RssIcon className="w-4 h-4 text-muted-foreground" />
                   )}
                   Distribution
                 </TabsTrigger>

@@ -30,7 +30,6 @@ import {
 } from "lucide-react";
 import { ShoppingBag as ShoppingBagSvg } from "../icons/custom-icons";
 
-import { CollectingSettings } from "../draft/draft";
 import { isValidEthereumAddress } from "@/lib/utils";
 import { toast } from "sonner";
 import { MentionableUser } from "../user/user-search";

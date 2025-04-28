@@ -166,7 +166,7 @@ const server = Server.configure({
           .from("drafts")
           .update({
             yDoc,
-            title,
+            title: title ?? undefined,
             subtitle,
             coverUrl,
             contentJson: contentJson as any,

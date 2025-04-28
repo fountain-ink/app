@@ -10,16 +10,24 @@ import { fetchAccount, fetchPost } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
 import PostDeletedView from "@/components/post/post-deleted-view";
 import { getBaseUrl } from "@/lib/get-base-url";
+import { getPostIdBySlug } from "@/lib/slug/get-post-by-slug";
 
 export async function generateMetadata({ params }: { params: { user: string; post: string } }) {
   const username = params.user;
+  const postParam = params.post;
+
   const lens = await getLensClient();
+
+  // Look up whether this is a custom slug
+  const lensPostId = await getPostIdBySlug(postParam, username);
+  const postId = lensPostId || postParam;
+
   const profile = await fetchAccount(lens, {
     username: { localName: username },
   }).unwrapOr(null);
 
   const post = await fetchPost(lens, {
-    post: params.post,
+    post: postId,
   }).unwrapOr(null);
 
   if (!profile || !post || post?.__typename !== "Post") {
@@ -32,9 +40,10 @@ export async function generateMetadata({ params }: { params: { user: string; pos
   const blog = await getBlogData(post.feed.group?.address || profile.address);
   const icon = blog?.icon;
   const title = "title" in post.metadata ? post.metadata.title : undefined;
-  const description = "attributes" in post.metadata ? post.metadata.attributes?.find((attr) => "key" in attr && attr.key === "subtitle")?.value || blog?.about : blog?.about; const coverUrl = "attributes" in post.metadata ? post.metadata.attributes?.find((attr) => "key" in attr && attr.key === "coverUrl")?.value : undefined;
+  const description = "attributes" in post.metadata ? post.metadata.attributes?.find((attr) => "key" in attr && attr.key === "subtitle")?.value || blog?.about : blog?.about;
+  const coverUrl = "attributes" in post.metadata ? post.metadata.attributes?.find((attr) => "key" in attr && attr.key === "coverUrl")?.value : undefined;
   const content = "content" in post.metadata ? post.metadata.content : undefined;
-  const postUrl = `${getBaseUrl()}/p/${username}/${params.post}`;
+  const postUrl = `${getBaseUrl()}/p/${username}/${postParam}`;
 
   const contentExcerpt = !description && content ? content.substring(0, 200).replace(/[#*_]/g, '') + (content.length > 200 ? '...' : '') : undefined;
 
@@ -72,12 +81,18 @@ const UserPostLayout = async ({
   params,
 }: { children: React.ReactNode; params: { user: string; post: string } }) => {
   const lens = await getLensClient();
+  const username = params.user;
+  const postParam = params.post;
+
   const account = await fetchAccount(lens, {
-    username: { localName: params.user },
+    username: { localName: username },
   }).unwrapOr(null);
 
+  const lensPostId = await getPostIdBySlug(postParam, username);
+  const postId = lensPostId || postParam;
+
   const post = await fetchPost(lens, {
-    post: params.post,
+    post: postId,
   }).unwrapOr(null);
 
   const { profile } = await getUserProfile();

@@ -10,15 +10,28 @@ import { UserPostCard } from "@/components/user/user-post-card";
 import { ActionBarProvider } from "@/contexts/action-bar-context";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
+import { getPostIdBySlug } from "@/lib/slug/get-post-by-slug";
 import { fetchAccountStats, fetchPost } from "@lens-protocol/client/actions";
 import DOMPurify from "isomorphic-dompurify";
 
 const post = async ({ params }: { params: { user: string; post: string } }) => {
   const lens = await getLensClient();
-  const id = params.post;
-  const post = await fetchPost(lens, { post: id }).unwrapOr(null);
+  const username = params.user;
+  const postParam = params.post;
+
+  // First, try to look up the post by slug in our database
+  const lensPostId = await getPostIdBySlug(postParam, username);
+
+  // If we found a post ID by slug, use it; otherwise, assume the param is the actual post ID
+  const postId = lensPostId || postParam;
+
+  const post = await fetchPost(lens, { post: postId }).unwrapOr(null);
   const { profile } = await getUserProfile();
-  const authorStats = await fetchAccountStats(lens, { account: post?.author.address }).unwrapOr(null);
+
+  // Only fetch author stats if we have a post
+  const authorStats = post ?
+    await fetchAccountStats(lens, { account: post.author.address }).unwrapOr(null) :
+    null;
 
   if (!post) return <ErrorPage error="Couldn't find post to show" />;
 
