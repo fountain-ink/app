@@ -71,10 +71,10 @@ export const UserCard = ({ children, username, address, linkProfile = false }: U
 
   return (
     <HoverCard defaultOpen={false} onOpenChange={(open: boolean) => open && loadCard()} closeDelay={100}>
-      <HoverCardTrigger asChild>
+      <HoverCardTrigger className="z-20" asChild>
         {linkProfile && username ? <Link href={`/u/${username}`}>{children}</Link> : children}
       </HoverCardTrigger>
-      <HoverCardContent className={`w-full min-w-64 max-w-fit overflow-hidden ${inter.className}`} side="top">
+      <HoverCardContent className={`w-full min-w-64 z-[101] max-w-fit overflow-hidden ${inter.className}`} side="top">
         {loading && !account && <LoadingSpinner />}
         {error && <div>Error: {error.message}</div>}
         {account && (

@@ -168,7 +168,7 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent side="top" sideOffset={10} className="max-w-md bg-background p-4 pb-3">
+      <PopoverContent side="top" sideOffset={10} className="max-w-md bg-background p-4 z-20 pb-3">
         <div className="flex flex-col items-center gap-3">
           {canCollect && (
             <>

@@ -150,18 +150,18 @@ export const PostView = ({
           )}
         </div>
 
-        <div className="flex flex-row items-center justify-between text-sm tracking-wide relative z-10 mt-auto">
+        <div className="flex flex-row items-center justify-between text-sm tracking-wide relative mt-auto">
           <div className="flex flex-row items-center gap-3">
             {options.showDate && (
               <span className="text-foreground/80">
                 {formatDate(post.timestamp)}
               </span>
             )}
-            <div className="relative z-10">
+            <div style={{ position: 'relative', zIndex: 5 }}>
               <PostReactions post={post} />
             </div>
           </div>
-          <div className="relative z-10">
+          <div style={{ position: 'relative', zIndex: 5 }}>
             <PostMenu post={post} />
           </div>
         </div>
