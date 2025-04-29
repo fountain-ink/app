@@ -20,7 +20,6 @@ import { BlogEmailSubscribe } from "../newsletter/newsletter-subscribe-dialog";
 export const Header = ({ session }: { session: MeResult | null }) => {
   const pathname = usePathname();
   const [blogData, setBlogData] = useState<BlogData | null>(null);
-  const hostname = typeof window !== "undefined" && window.location.hostname ? window.location.hostname : "";
   const isWritePage = pathname.startsWith("/write");
   const isSettingsPage = pathname.startsWith("/settings");
   const isBlogPage = pathname.startsWith("/b/");
@@ -29,12 +28,14 @@ export const Header = ({ session }: { session: MeResult | null }) => {
   const blogId = isBlogPage && pathSegments.length >= 2 ? pathSegments[1] : undefined;
   const blogSlug = isBlogPage && pathSegments.length >= 3 ? pathSegments[2] : undefined;
   const postId = isPostPage && pathSegments.length >= 3 ? pathSegments[2] : undefined;
+  const isAuthenticated = session !== null;
+  const logoLink = isAuthenticated ? "/featured" : "/";
 
   useEffect(() => {
     const fetchBlogData = async () => {
       if (blogId) {
         try {
-          const data = await getBlogData(blogId, isBlogPage ? blogSlug  : undefined);
+          const data = await getBlogData(blogId, isBlogPage ? blogSlug : undefined);
           setBlogData(data);
         } catch (error) {
           console.error("Error fetching blog data:", error);
@@ -56,7 +57,7 @@ export const Header = ({ session }: { session: MeResult | null }) => {
   const HeaderContent = () => (
     <div className="flex items-center justify-between h-full px-2">
       <div className="flex gap-4 items-center justify-center">
-        <Link prefetch href={"/"} className="w-10 h-10 flex items-center justify-center pointer-events-auto">
+        <Link prefetch href={logoLink} className="w-10 h-10 flex items-center justify-center pointer-events-auto">
           <FountainLogo />
         </Link>
         {isWritePage && <ConnectionBadge {...yjsState} />}
