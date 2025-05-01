@@ -4,6 +4,21 @@ import { motion, useInView } from "motion/react";
 import { useTheme } from "next-themes";
 import { useRef } from "react";
 
+export const LensLineLogo = () => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      style={{ width: "100%", height: "100%" }}
+    >
+      <title> </title>
+      <path className="stroke-current" d="M12.3528 5.81406C11.6941 5.81406 11.103 6.07554 10.6526 6.49749L10.6063 6.47405C10.503 5.09096 9.39217 4 8 4C6.60783 4 5.49695 5.09096 5.39369 6.47405L5.3474 6.49749C4.897 6.07554 4.30595 5.81406 3.64725 5.81406C2.18566 5.81406 1 7.01502 1 8.49729C1 9.77759 2.25508 10.8758 2.56663 11.1282C4.03179 12.3094 5.94023 13 8 13C10.0598 13 11.9682 12.3094 13.4334 11.1282C13.7467 10.8758 15 9.77939 15 8.49729C15 7.01502 13.8144 5.81406 12.3509 5.81406H12.3528Z" stroke-linejoin="round" />
+    </svg>
+  );
+}
+
 export const FountainLogo = () => {
   const { resolvedTheme: theme } = useTheme();
 

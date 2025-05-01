@@ -9,6 +9,8 @@ import { CombinedFormValues } from "./publish-dialog";
 import { SendIcon, RssIcon, LayoutIcon, ClubIcon } from "lucide-react";
 import Link from "next/link";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { usePublishDraft } from "@/hooks/use-publish-draft";
+import { LensLineLogo } from "../icons/custom-icons";
 
 export const distributionFormSchema = z.object({
   selectedBlogAddress: z.string().optional(),
@@ -23,10 +25,128 @@ interface DistributionTabProps {
   documentId?: string;
 }
 
-export const DistributionTab: FC<DistributionTabProps> = ({ form }) => {
+interface LensPreviewProps {
+  lensDisplay: string;
+  title: string;
+  documentId?: string;
+}
+
+const LensPreview: FC<LensPreviewProps> = ({ lensDisplay, title, documentId }) => {
+  const { getDraft } = usePublishDraft(documentId);
+  const draft = getDraft();
+
+  const subtitle = draft?.subtitle || "";
+  const coverUrl = draft?.coverUrl;
+
+  const ContentSkeleton = () => (
+    <div className="space-y-2">
+      <div className="h-4 bg-muted rounded w-[90%]"></div>
+      <div className="h-4 bg-muted rounded w-[72%]"></div>
+      <div className="h-4 bg-muted rounded w-[86%]"></div>
+    </div>
+  );
+
+  const OgPreview = () => (
+    <div className="mt-3 border border-border rounded-md overflow-hidden max-w-md select-none text-muted-foreground">
+      {coverUrl ? (
+        <div className="h-36 w-full bg-muted overflow-hidden">
+          <img
+            src={coverUrl}
+            alt="Post cover"
+            className="w-full h-full object-cover"
+          />
+        </div>
+      ) : (
+        <div className="bg-muted h-36 w-full"></div>
+      )}
+      <div className="p-3 space-y-2">
+        <div className="font-medium text-xs truncate">{title || "Your post title"}</div>
+        {subtitle ? (
+          <div className="text-xs truncate">{subtitle}</div>
+        ) : (
+          <div className="h-3 bg-muted/50 rounded w-2/3"></div>
+        )}
+        <div className="flex items-center gap-1 mt-1">
+          <img
+            src="/favicon.ico"
+            alt="Fountain"
+            className="w-3 h-3"
+          />
+          <div className="text-xs">fountain.ink</div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const username = draft?.author?.split(':')[2] || "username";
+  const slug = draft?.slug || "example-post";
+  const baseUrl = 'https://fountain.ink/';
+  const postUrl = `${baseUrl}p/${username}/${slug}`;
+
+  // Dimmer link style
+  const LinkStyle = "text-blue-500/70 select-none";
+
+  switch (lensDisplay) {
+    case 'link':
+      return (
+        <div className="select-none text-muted-foreground">
+          <a href="#" className={LinkStyle}>{postUrl}</a>
+          <OgPreview />
+        </div>
+      );
+
+    case 'title_link':
+      return (
+        <div className="select-none text-muted-foreground">
+          <div className="line-clamp-1 text-foreground">
+            <span className="text-foreground">{title}</span> - <span className={LinkStyle}>{postUrl}</span>
+          </div>
+          <OgPreview />
+        </div>
+      );
+
+    case 'content_link':
+      return (
+        <div className="select-none text-muted-foreground">
+          <em className="line-clamp-1 text-foreground">Posted on Fountain - <span className={LinkStyle}>{postUrl}</span></em>
+
+          {title && (
+            <div className="font-semibold text-base mt-3 mb-1 text-foreground">{title}</div>
+          )}
+
+          {subtitle && (
+            <div className="text-sm mb-3">{subtitle}</div>
+          )}
+
+          <div className="mt-2">
+            <ContentSkeleton />
+          </div>
+          <OgPreview />
+        </div>
+      );
+
+    case 'content_only':
+    default:
+      return (
+        <div className="select-none text-muted-foreground">
+          {title && (
+            <div className="font-semibold text-lg mb-1 text-foreground">{title}</div>
+          )}
+          {subtitle && (
+            <div className="text-sm mb-3">{subtitle}</div>
+          )}
+          <ContentSkeleton />
+        </div>
+      );
+  }
+};
+
+export const DistributionTab: FC<DistributionTabProps> = ({ form, documentId }) => {
   const { blogState } = useBlogStorage();
 
   const selectedBlogAddress = form.watch("distribution.selectedBlogAddress");
+  const lensDisplay = form.watch("distribution.lensDisplay");
+  const title = form.watch("details.title") || "Example Title";
 
   const selectedBlog = useMemo(
     () => blogState.blogs.find((blog) => blog?.address === selectedBlogAddress) || null,
@@ -118,7 +238,9 @@ export const DistributionTab: FC<DistributionTabProps> = ({ form }) => {
       <div className="border border-border flex shrink flex-col gap-2 rounded-sm p-4">
         <div>
           <div className="flex items-center gap-2">
-            <ClubIcon className="w-4 h-4 text-muted-foreground" />
+            <div className="w-5 h-5 text-muted-foreground">
+              <LensLineLogo />
+            </div>
             <h3 className="font-medium">Lens</h3>
           </div>
           <p className="text-sm text-muted-foreground">Choose how your post is displayed on other apps.</p>
@@ -128,26 +250,38 @@ export const DistributionTab: FC<DistributionTabProps> = ({ form }) => {
           name="distribution.lensDisplay"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Display format</FormLabel>
+              <FormLabel>Display option</FormLabel>
               <Select
                 value={field.value}
                 onValueChange={field.onChange}
               >
                 <FormControl>
-                  <SelectTrigger className="max-w-sm">
+                  <SelectTrigger className="max-w-md">
                     <SelectValue placeholder="How to display your post" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent className="z-[52]">
-                  <SelectItem value="link">Link only</SelectItem>
-                  <SelectItem value="title_link">Title and link</SelectItem>
+                  {/* <SelectItem value="link">Link only</SelectItem> */}
+                  <SelectItem value="title_link">Title and link (recommended)</SelectItem>
                   <SelectItem value="content_link">Content and link</SelectItem>
                   <SelectItem value="content_only">Content only</SelectItem>
                 </SelectContent>
               </Select>
-              <FormDescription>
-                Controls how much of your content is displayed on Lens appsa
-              </FormDescription>
+              <div className="mt-4 space-y-2">
+                <div>
+                  <div className="text-sm font-medium mt-0">Preview</div>
+                  {/* <FormDescription>
+                    How your post might look like
+                  </FormDescription> */}
+                </div>
+                <div className="text-sm max-w-md bg-background p-3 rounded-md border border-border">
+                  <LensPreview
+                    lensDisplay={lensDisplay}
+                    title={title}
+                    documentId={documentId}
+                  />
+                </div>
+              </div>
               <FormMessage />
             </FormItem>
           )}
