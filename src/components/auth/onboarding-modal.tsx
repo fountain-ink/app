@@ -46,6 +46,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
       setValidationMessage("");
       return false;
     }
+    const lowerCaseName = name.toLowerCase();
 
     setValidationStatus("checking");
 
@@ -56,7 +57,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
       }
 
       const result = await canCreateUsername(client, {
-        localName: name,
+        localName: lowerCaseName,
       });
 
       if (result.isErr()) {
@@ -67,6 +68,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
       }
 
       const data = result.value;
+      console.log("Username validation data:", data)
       switch (data.__typename) {
         case "NamespaceOperationValidationPassed":
           setValidationStatus("valid");
@@ -135,6 +137,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
     if (validationStatus === "idle" || validationStatus === "checking") {
       setValidationStatus("checking");
       const isValid = await validateUsername(username);
+      console.log("Username validation result:", isValid);
       if (!isValid) {
         toast.error(validationMessage || "Username is not available");
         return;
@@ -214,7 +217,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
 
       const result = await createAccountWithUsername(client, {
         username: {
-          localName: username,
+          localName: username.toLowerCase(),
         },
         metadataUri: metadataUri,
       })
