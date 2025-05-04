@@ -42,7 +42,7 @@ export function ConnectionBadge({ status, error, className }: ConnectionBadgePro
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <Badge variant={"outline"} className={cn("cursor-default select-none", className)} title={error}>
+          <Badge variant={"outlineSecondary"} className={cn("cursor-default rounded-md select-none", className)} title={error}>
             {config.label}
           </Badge>
         </motion.div>
