@@ -7,13 +7,14 @@ import type { Tag } from "emblor";
 import { FC, useCallback, useEffect, useState, useRef } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { CombinedFormValues } from "./publish-dialog";
-import { ImageIcon, PenIcon, LinkIcon, Check, AlertCircle } from "lucide-react";
+import { ImageIcon, PenIcon, LinkIcon, Check, AlertCircle, ListPlus, PenOffIcon, ListIcon, ScrollText } from "lucide-react";
 import { checkSlugAvailability } from "@/lib/slug/check-slug-availability";
 import { debounce } from "lodash";
 import { useAuthenticatedUser } from "@lens-protocol/react";
 import { getAppToken } from "@/lib/auth/get-app-token";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { getCookie } from "cookies-next";
+import { Button } from "@/components/ui/button";
 
 export const detailsFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title should be less than 100 characters"),
@@ -28,7 +29,6 @@ export const detailsFormSchema = z.object({
 
 export type DetailsFormValues = z.infer<typeof detailsFormSchema>;
 
-// Function to generate a slug from title and subtitle
 const generateSlug = (title: string, subtitle: string = ""): string => {
   const combinedText = (title + " " + subtitle).trim();
   return combinedText
@@ -50,6 +50,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
   const [isCheckingSlug, setIsCheckingSlug] = useState(false);
   const [isSlugAvailable, setIsSlugAvailable] = useState<boolean | null>(null);
+  const [isEditingPreview, setIsEditingPreview] = useState(false);
 
   const { data: user } = useAuthenticatedUser();
   const title = form.watch("details.title");
@@ -63,7 +64,6 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
     }
   }, [form.watch("details.tags")]);
 
-  // Update slug when title or subtitle changes, unless manually edited
   useEffect(() => {
     if (!isSlugManuallyEdited && title) {
       const newSlug = generateSlug(title, subtitle || "");
@@ -95,7 +95,6 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
     [slug]
   );
 
-  // Check slug availability when slug changes
   useEffect(() => {
     if (slug) {
       checkSlugDebounced(slug);
@@ -129,63 +128,106 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
 
   return (
     <div className="space-y-6 p-2 pl-0 pr-4">
-      <div className="space-y-2">
+      <div className="space-y-4">
         <div className="border border-border flex shrink flex-col gap-4 rounded-sm p-4">
-          <div className="pb-2">
+          <div className="pb-0 flex items-center justify-between h-[24px]">
             <div className="flex items-center gap-2">
               <ImageIcon className="w-4 h-4 text-muted-foreground" />
               <h3 className="font-medium">Preview</h3>
             </div>
-            <p className="text-sm text-muted-foreground">
-              You can change how the post will be shown on social media and your blog index. This will not affect post's
-              original title or subtitle.
-            </p>
+            <Button
+              variant="ghost"
+              size="iconSm"
+              icon={isEditingPreview ? <PenOffIcon className="w-4 h-4" /> : <PenIcon className="w-4 h-4" />}
+              label={isEditingPreview ? "Cancel editing preview" : "Edit preview"}
+              onClick={() => setIsEditingPreview(prev => !prev)}
+            />
           </div>
-          <div className="space-y-2 max-w-lg">
-            <Label>Image</Label>
-            {form.watch("details.coverUrl") ? (
-              <div className="relative w-full rounded-sm overflow-hidden border border-border">
-                <img src={form.watch("details.coverUrl") ?? undefined} alt="Cover" className="w-full h-auto object-cover" />
-              </div>
-            ) : (
-              <div className="flex relative aspect-video w-full rounded-sm -z-[1]">
-                <div className="placeholder-background rounded-sm" />
-              </div>
-            )}
-          </div>
-
-          <FormField
-            control={form.control}
-            name="details.title"
-            render={({ field, fieldState }) => (
-              <FormItem className="max-w-sm">
-                <FormLabel htmlFor="title">Title</FormLabel>
-                <FormControl>
-                  <Input
-                    id="title"
-                    placeholder="Enter title"
-                    {...field}
-                    className={fieldState.error ? "border-destructive" : ""}
+          {isEditingPreview ? (
+            <div className="flex flex-row items-start gap-4 sm:gap-8">
+              <div className="h-40 w-40 shrink-0 aspect-square rounded-sm overflow-hidden">
+                {form.watch("details.coverUrl") ? (
+                  <img
+                    src={form.watch("details.coverUrl")!}
+                    alt="Cover"
+                    className="w-full h-full object-cover"
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                ) : (
+                  <div className="w-full h-full placeholder-background" />
+                )}
+              </div>
+              <div className="flex flex-col w-full gap-4">
+                <FormField
+                  control={form.control}
+                  name="details.title"
+                  render={({ field, fieldState }) => (
+                    <FormItem className="max-w-full">
+                      <FormLabel htmlFor="title">Title</FormLabel>
+                      <FormControl>
+                        <Input
+                          id="title"
+                          placeholder="Enter title"
+                          {...field}
+                          className={fieldState.error ? "border-destructive" : ""}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="details.subtitle"
+                  render={({ field }) => (
+                    <FormItem className="max-w-full">
+                      <FormLabel htmlFor="subtitle">Subtitle</FormLabel>
+                      <FormControl>
+                        <Input id="subtitle" placeholder="Enter subtitle (optional)" {...field} value={field.value ?? ""} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-row items-start gap-4 sm:gap-8">
+              <div className="h-40 w-40 shrink-0 aspect-square rounded-sm overflow-hidden">
+                {form.watch("details.coverUrl") ? (
+                  <img
+                    src={form.watch("details.coverUrl")!}
+                    alt="Cover"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full placeholder-background" />
+                )}
+              </div>
+              <div className="flex flex-col gap-1">
+                <h2 className="text-[1.75rem] font-[family-name:var(--title-font)] tracking-[-0.8px] font-medium">
+                  {title || "Title will appear here"}
+                </h2>
+                {subtitle && (
+                  <p className="text-lg font-[family-name:--subtitle-font] text-foreground/60">
+                    {subtitle}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+          <p className="text-sm text-muted-foreground">
+            Change how the post will be shown on social media and your blog index. This does not affect post's
+            original title or subtitle.
+          </p>
+        </div>
 
-          <FormField
-            control={form.control}
-            name="details.subtitle"
-            render={({ field }) => (
-              <FormItem className="max-w-lg">
-                <FormLabel htmlFor="subtitle">Subtitle</FormLabel>
-                <FormControl>
-                  <Input id="subtitle" placeholder="Enter subtitle (optional)" {...field} value={field.value ?? ""} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <div className="border border-border flex shrink flex-col gap-4 rounded-sm p-4">
+          <div className="pb-2 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <ScrollText className="w-4 h-4 text-muted-foreground" />
+              <h3 className="font-medium">Misc</h3>
+            </div>
+          </div>
 
           <FormField
             control={form.control}
@@ -220,7 +262,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
                 <FormDescription>
                   {isSlugAvailable === false ?
                     "This slug is already taken for your account. Please choose another one." :
-                    "The slug is used in the URL of your post. Only lowercase letters, numbers, and hyphens are allowed."}
+                    "The slug is used in the URL of your post."}
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -232,7 +274,9 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
             name="details.tags"
             render={({ field, fieldState }) => (
               <FormItem className="space-y-2 max-w-full min-w-sm w-fit">
-                <FormLabel>Tags</FormLabel>
+                <FormLabel htmlFor="tags" className="flex items-center gap-1">
+                  <span>Tags</span>
+                </FormLabel>
                 <FormControl>
                   <TagInput
                     maxTags={5}

@@ -21,7 +21,7 @@ import { publishPost } from "../../lib/publish/publish-post";
 import { publishPostEdit } from "../../lib/publish/publish-post-edit";
 import { usePublishDraft } from "../../hooks/use-publish-draft";
 import { extractMetadata } from "@/lib/extract-metadata";
-import { Draft, DraftDetailsFormValues, DraftDistributionFormValues, DraftCollectingFormValues } from "../draft/draft";
+import { Draft } from "../draft/draft";
 import { cn } from "@/lib/utils";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { useAuthenticatedUser } from "@lens-protocol/react";
@@ -336,7 +336,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
                   Distribution
                 </TabsTrigger>
               </TabsList>
-              <ScrollArea className="flex-1 min-h-0 pr-2">
+              <ScrollArea className="flex-1 min-h-0">
                 <TabsContent
                   value="details"
                   className="h-full m-0 data-[state=inactive]:hidden focus-visible:ring-0 focus-visible:ring-offset-0"

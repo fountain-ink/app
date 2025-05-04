@@ -182,7 +182,7 @@ export const DistributionTab: FC<DistributionTabProps> = ({ form, documentId }) 
                     }
                   }}
                   placeholder="Select a blog to publish to"
-                  className={`max-w-sm mt-1 ${fieldState.error ? "border-destructive ring-1 ring-destructive" : ""}`}
+                  className={`max-w-md mt-1 ${fieldState.error ? "border-destructive ring-1 ring-destructive" : ""}`}
                 />
               </FormControl>
               <FormMessage />
