@@ -235,6 +235,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
               </div>
             </div>
           )}
+
           <p className="text-sm text-muted-foreground">
             Change how the post will be shown on social media and your blog index. This does not affect post's
             original title or subtitle.

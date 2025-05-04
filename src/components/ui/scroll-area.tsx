@@ -42,7 +42,7 @@ const ScrollBar = React.forwardRef<
     {...props}
   >
     <ScrollAreaPrimitive.ScrollAreaThumb
-      className="relative flex-1 rounded-full bg-primary/80 hover:bg-primary/60 cursor-pointer"
+      className="relative flex-1 rounded-full bg-primary/60 hover:bg-primary/40 cursor-pointer"
       tabIndex={-1}
     />
   </ScrollAreaPrimitive.ScrollAreaScrollbar>
