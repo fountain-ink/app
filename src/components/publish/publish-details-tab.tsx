@@ -7,7 +7,7 @@ import type { Tag } from "emblor";
 import { FC, useCallback, useEffect, useState, useRef } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { CombinedFormValues } from "./publish-dialog";
-import { ImageIcon, PenIcon, LinkIcon, Check, AlertCircle, ListPlus, PenOffIcon, ListIcon, ScrollText } from "lucide-react";
+import { ImageIcon, PenIcon, LinkIcon, Check, AlertCircle, ListPlus, PenOffIcon, ListIcon, ScrollText, Heart, MessageCircle, MoreHorizontalIcon } from "lucide-react";
 import { checkSlugAvailability } from "@/lib/slug/check-slug-availability";
 import { debounce } from "lodash";
 import { useAuthenticatedUser } from "@lens-protocol/react";
@@ -15,6 +15,7 @@ import { getAppToken } from "@/lib/auth/get-app-token";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { getCookie } from "cookies-next";
 import { Button } from "@/components/ui/button";
+import { CoinIcon } from "@/components/icons/custom-icons";
 
 export const detailsFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title should be less than 100 characters"),
@@ -145,7 +146,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
           </div>
           {isEditingPreview ? (
             <div className="flex flex-row items-start gap-4 sm:gap-8">
-              <div className="h-40 w-40 shrink-0 aspect-square rounded-sm overflow-hidden">
+              <div className="h-40 w-40 relative shrink-0 aspect-square rounded-sm overflow-hidden">
                 {form.watch("details.coverUrl") ? (
                   <img
                     src={form.watch("details.coverUrl")!}
@@ -153,7 +154,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full placeholder-background" />
+                  <div className="placeholder-background" />
                 )}
               </div>
               <div className="flex flex-col w-full gap-4">
@@ -192,7 +193,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
             </div>
           ) : (
             <div className="flex flex-row items-start gap-4 sm:gap-8">
-              <div className="h-40 w-40 shrink-0 aspect-square rounded-sm overflow-hidden">
+              <div className="h-40 w-40 relative shrink-0 aspect-square rounded-sm overflow-hidden">
                 {form.watch("details.coverUrl") ? (
                   <img
                     src={form.watch("details.coverUrl")!}
@@ -200,18 +201,37 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full placeholder-background" />
+                  <div className="placeholder-background" />
                 )}
               </div>
-              <div className="flex flex-col gap-1">
-                <h2 className="text-[1.75rem] font-[family-name:var(--title-font)] tracking-[-0.8px] font-medium">
-                  {title || "Title will appear here"}
+              <div className="flex flex-col h-full min-h-[150px] gap-1">
+                <h2 className="text-[1.75rem] font-[family-name:var(--title-font)] line-clamp-2 tracking-[-0.8px] font-medium">
+                  {title || "Untitled"}
                 </h2>
                 {subtitle && (
-                  <p className="text-lg font-[family-name:--subtitle-font] text-foreground/60">
+                  <p className="text-lg font-[family-name:--subtitle-font] max-w-[500px] line-clamp-2 text-foreground/60">
                     {subtitle}
                   </p>
                 )}
+                <div className="flex flex-row items-center gap-3 mt-auto pt-2">
+                  <div className="flex flex-row justify-between min-w-[400px] w-full items-center text-muted-foreground">
+                    <div className="flex flex-row  gap-4 sm:gap-8 items-center">
+                      <div className="flex items-center gap-1 cursor-default select-none">
+                        <MessageCircle className="w-5 h-5" />
+                      </div>
+                      <div className="flex items-center gap-1 cursor-default select-none">
+                        <CoinIcon className="w-5 h-5" />
+                      </div>
+                      <div className="flex items-center gap-1 cursor-default select-none">
+                        <Heart className="w-5 h-5" />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1 cursor-default select-none">
+                      <MoreHorizontalIcon className="w-5 h-5" />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -233,7 +253,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
             control={form.control}
             name="details.slug"
             render={({ field, fieldState }) => (
-              <FormItem className="max-w-lg">
+              <FormItem className="max-w-md">
                 <FormLabel htmlFor="slug" className="flex items-center gap-1">
                   <span>Post slug</span>
                 </FormLabel>
