@@ -11,6 +11,7 @@ import { ActionBarProvider } from "@/contexts/action-bar-context";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { getPostIdBySlug } from "@/lib/slug/get-post-by-slug";
+import { formatDate } from "@/lib/utils";
 import { fetchAccountStats, fetchPost } from "@lens-protocol/client/actions";
 import DOMPurify from "isomorphic-dompurify";
 
@@ -52,7 +53,16 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
         <ActionBarProvider>
           <div className="flex flex-col gap-4 items-center justify-center">
             <EditorReadTime content={contentJson} />
-            <AuthorView showUsername={false} accounts={[post.author]} />
+            <div className="flex flex-row items-center gap-2">
+              <AuthorView showUsername={false} accounts={[post.author]} />
+              <span className="text-[var(--subtitle-color)] font-[family-name:var(--subtitle-font)]">
+            · {new Date(post.timestamp).toLocaleDateString("en-GB", {
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+              })}
+              </span>
+            </div>
           </div>
           <Editor showToc value={contentJson} readOnly={true} />
           <div className="max-w-[60ch] mx-auto p-4 sm:p-8 md:px-16 flex flex-col gap-8 sm:gap-10">
