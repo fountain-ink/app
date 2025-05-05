@@ -69,28 +69,31 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
   const isShowingUploader = currentImageIndex === images.length;
 
   useEffect(() => {
-    if (!draft?.images || draft?.images.length === 0) {
+    const draftImages = draft?.images || [];
+    const currentImages = form.getValues("details.images") || [];
+
+    if (JSON.stringify(draftImages) === JSON.stringify(currentImages)) {
+      return;
+    }
+
+    if (!draftImages.length) {
       form.setValue("details.images", [], { shouldValidate: true });
       setCurrentImageIndex(0);
       if (form.getValues("details.coverUrl") !== null) {
         form.setValue("details.coverUrl", null, { shouldValidate: true });
       }
     } else {
-      const existingImages = form.getValues("details.images") || [];
-      const uniqueImages = [...existingImages];
+      const uniqueImages = [...currentImages];
 
-      draft?.images.forEach(img => {
+      draftImages.forEach(img => {
         if (!uniqueImages.includes(img)) {
           uniqueImages.push(img);
         }
       });
 
       form.setValue("details.images", uniqueImages, { shouldValidate: true });
-
-      const currentCoverUrl = form.getValues("details.coverUrl");
-      console.log('currentCoverUrl', currentCoverUrl);
     }
-  }, [form, coverUrl]);
+  }, [draft?.images]);
 
   const handlePrevImage = () => {
     const totalCount = images.length + 1;
