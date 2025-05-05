@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
+import { useAuthenticatedUser } from "@lens-protocol/react";
 
 import {
   PlusIcon,
@@ -42,6 +43,8 @@ import { resolveImageUrl } from "@/lib/utils/resolve-image-url";
 import { MetadataLicenseType } from "@lens-protocol/metadata";
 import { LicenseDescriptions, Licenses } from "@/lib/licenses";
 import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
+import { fetchAccount } from "@lens-protocol/client/actions";
+import { getLensClient } from "@/lib/lens/client";
 
 export const collectingFormSchema = z
   .object({
@@ -198,6 +201,7 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
   const [selectedUser, setSelectedUser] = useState<MentionableUser | null>(null);
   const [showAddRecipient, setShowAddRecipient] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { data: authenticatedUser } = useAuthenticatedUser();
 
   const {
     control,
@@ -395,6 +399,37 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
       setNewRecipientAddress(user.key);
       setIsSearchOpen(false);
       handleAddRecipient(user);
+    }
+  };
+
+  const handleRevenueSplitToggle = async (checked: boolean) => {
+    setValue("collecting.isRevenueSplitEnabled", checked, { shouldValidate: true, shouldDirty: true });
+
+    if (checked) {
+      const currentRecipients = getValues("collecting.recipients") || [];
+
+      if (currentRecipients.length === 0 && authenticatedUser?.address) {
+        const client = await getLensClient()
+        const account = await fetchAccount(client, {
+          address: authenticatedUser.address,
+        }).unwrapOr(null);
+
+        if (account) {
+          const newRecipient: RecipientEntry = {
+            address: account.address,
+            picture: account.metadata?.picture,
+            username: account.metadata?.name,
+            percentage: 100
+          };
+
+        setValue("collecting.recipients", [newRecipient], {
+          shouldValidate: true,
+            shouldDirty: true
+          });
+        }
+      }
+    } else {
+      clearErrors("collecting.recipients");
     }
   };
 
@@ -606,9 +641,7 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
                                   <Switch
                                     checked={field.value}
                                     onCheckedChange={(checked) => {
-                                      field.onChange(checked);
-                                      if (!checked) clearErrors("collecting.recipients");
-                                      else trigger("collecting.recipients");
+                                      handleRevenueSplitToggle(checked);
                                     }}
                                   />
                                 </FormControl>
