@@ -82,7 +82,7 @@ export const PostView = ({
       ${isSelectionMode ? "select-none" : ""}
       hover:text-card-foreground transition-all ease-in duration-100
       border-0 shadow-none relative w-screen rounded-sm p-4
-      max-w-full sm:max-w-3xl h-fit leading-tight`}
+      max-w-full sm:max-w-3xl h-fit  leading-tight`}
     >
       {options.showPreview && (
         <div className="h-40 w-40 shrink-0 aspect-square rounded-sm overflow-hidden">
