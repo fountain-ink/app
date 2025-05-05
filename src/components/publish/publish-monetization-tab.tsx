@@ -47,7 +47,7 @@ export const collectingFormSchema = z
     isChargeEnabled: z.boolean().default(false),
     price: z
       .string()
-      .default("0")
+      .default("1")
       .refine(
         (val) => {
           if (val === "") return true;
@@ -85,13 +85,13 @@ export const collectingFormSchema = z
     isLimitedEdition: z.boolean().default(false),
     collectLimit: z.preprocess(
       (val) => (val === "" || val == null ? undefined : Number(val)),
-      z.number().int().positive("Collect limit must be a positive number").optional(),
+      z.number().int().positive("Collect limit must be a positive number").optional().default(1),
     ),
 
     isCollectExpiryEnabled: z.boolean().default(false),
     collectExpiryDays: z.preprocess(
       (val) => (val === "" || val == null ? undefined : Number(val)),
-      z.number().positive("Expiry days must be a positive number").optional(),
+      z.number().positive("Expiry days must be a positive number").optional().default(1),
     ),
   })
   .superRefine((data, ctx) => {
@@ -468,7 +468,7 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
                       name="collecting.price"
                       render={({ field, fieldState }) => (
                         <FormItem
-                          className={`space-y-2 ${getCollectingError("price") || getCollectingError("currency") ? "bg-destructive/5 rounded-sm p-2 -m-2" : ""}`}
+                          className="space-y-2"
                         >
                           <FormLabel>Price</FormLabel>
                           <div className="flex items-center">
@@ -500,7 +500,7 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
                     />
 
                     <div
-                      className={`border-t pt-4 mt-4 space-y-4 border-border ${isReferralRewardsEnabled && getCollectingError("referralPercent") ? "bg-destructive/5 rounded-sm p-2 -m-2" : ""}`}
+                      className="border-t pt-4 mt-4 space-y-4 border-border"
                     >
                       <div className="flex items-center justify-between">
                         <div>
@@ -583,7 +583,7 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
                       )}
 
                       <div
-                        className={`space-y-4 border-t pt-6 border-border ${isRevenueSplitEnabled && getCollectingError("recipients") ? "bg-destructive/5 rounded-sm p-2 -m-2" : ""}`}
+                        className="space-y-4 border-t pt-6 border-border"
                       >
                         <div className="flex items-center justify-between">
                           <div>
@@ -823,7 +823,7 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
               </div>
 
               <div
-                className={`space-y-4 border-t pt-6 border-border/50 ${isLimitedEdition && getCollectingError("collectLimit") ? "bg-destructive/5 rounded-sm p-2 -m-2" : ""}`}
+                className="space-y-4 border-t pt-6 border-border/50"
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -851,7 +851,7 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
                     control={control}
                     name="collecting.collectLimit"
                     render={({ field, fieldState }) => (
-                      <FormItem className="space-y-2 max-w-[200px] pt-2">
+                      <FormItem className="space-y-2 max-w-xs pt-2">
                         <FormLabel>Maximum collects</FormLabel>
                         <FormControl>
                           <Input
@@ -876,7 +876,7 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
               </div>
 
               <div
-                className={`space-y-4 border-t pt-6 border-border/50 ${isCollectExpiryEnabled && getCollectingError("collectExpiryDays") ? "bg-destructive/5 rounded-sm p-2 -m-2" : ""}`}
+                className="space-y-4 border-t pt-6 border-border/50"
               >
                 <div className="flex items-center justify-between">
                   <div>
