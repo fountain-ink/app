@@ -53,6 +53,7 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
       <div>
         <ActionBarProvider>
           <div className="flex flex-col gap-4 items-center justify-center">
+            <DateLabel date={post.timestamp} />
             <EditorReadTime content={contentJson} />
             <div className="flex w-fit flex-row items-center gap-2">
               <AuthorView showUsername={false} accounts={[post.author]} />

@@ -78,7 +78,7 @@ export const UserFollowButton = ({ account, className }: { account: Account; cla
 
   return (
     <>
-      <div className="items-center justify-center">
+      <div className="items-center cursor-pointer justify-center">
         <Button
           size="default"
           variant={following ? "outline" : "default"}
