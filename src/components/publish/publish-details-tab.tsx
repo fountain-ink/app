@@ -323,6 +323,9 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
                 <h2 className="text-[1.75rem] font-[family-name:var(--title-font)] line-clamp-2 tracking-[-0.8px] font-medium">
                   {title || "Untitled"}
                 </h2>
+                {form.formState.errors.details?.title && (
+                  <p className="text-sm text-destructive">{form.formState.errors.details.title.message}</p>
+                )}
                 {subtitle && (
                   <p className="text-lg font-[family-name:--subtitle-font] max-w-[500px] line-clamp-2 text-foreground/60">
                     {subtitle}
