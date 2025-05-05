@@ -15,6 +15,7 @@ export type Draft = Database["public"]["Tables"]["drafts"]["Row"] & {
   coverUrl: string | null;
   slug: string | null;
   tags: string[];
+  images: string[];
 
   distributionSettings: DraftDistributionFormValues;
   collectingSettings: DraftCollectingFormValues;

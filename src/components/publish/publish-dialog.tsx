@@ -201,6 +201,9 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
             setValue("details.coverUrl", extracted.coverUrl, { shouldValidate: true, shouldDirty: false, shouldTouch: false });
             updated = true;
           }
+          if (extracted.images) {
+            updated = true;
+          }
           if (updated) {
             console.log("Applied extracted metadata to form.");
             trigger("details");
@@ -342,7 +345,10 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
                   className="h-full m-0 data-[state=inactive]:hidden focus-visible:ring-0 focus-visible:ring-offset-0"
                   tabIndex={-1}
                 >
-                  <ArticleDetailsTab form={form} documentId={documentId} />
+                  <ArticleDetailsTab
+                    form={form}
+                    documentId={documentId}
+                  />
                 </TabsContent>
                 <TabsContent
                   value="distribution"

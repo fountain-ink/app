@@ -7,7 +7,7 @@ import type { Tag } from "emblor";
 import { FC, useCallback, useEffect, useState, useRef } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { CombinedFormValues } from "./publish-dialog";
-import { ImageIcon, PenIcon, LinkIcon, Check, AlertCircle, ListPlus, PenOffIcon, ListIcon, ScrollText, Heart, MessageCircle, MoreHorizontalIcon } from "lucide-react";
+import { ImageIcon, PenIcon, LinkIcon, Check, AlertCircle, ListPlus, PenOffIcon, ListIcon, ScrollText, Heart, MessageCircle, MoreHorizontalIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { checkSlugAvailability } from "@/lib/slug/check-slug-availability";
 import { debounce } from "lodash";
 import { useAuthenticatedUser } from "@lens-protocol/react";
@@ -16,6 +16,8 @@ import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { getCookie } from "cookies-next";
 import { Button } from "@/components/ui/button";
 import { CoinIcon } from "@/components/icons/custom-icons";
+import { usePublishDraft } from "@/hooks/use-publish-draft";
+import { extractMetadata } from "@/lib/extract-metadata";
 
 export const detailsFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title should be less than 100 characters"),
@@ -45,32 +47,52 @@ interface ArticleDetailsTabProps {
   documentId?: string;
 }
 
-export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
+export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId }) => {
   const [tags, setTags] = useState<Tag[]>([]);
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
   const [isCheckingSlug, setIsCheckingSlug] = useState(false);
   const [isSlugAvailable, setIsSlugAvailable] = useState<boolean | null>(null);
   const [isEditingPreview, setIsEditingPreview] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [localImages, setLocalImages] = useState<string[]>([]);
+
+  // Get access to the draft
+  const { getDraft } = usePublishDraft(documentId || "");
 
   const { data: user } = useAuthenticatedUser();
   const title = form.watch("details.title");
   const subtitle = form.watch("details.subtitle");
   const slug = form.watch("details.slug");
+  const coverUrl = form.watch("details.coverUrl");
+  const draft = getDraft();
 
   useEffect(() => {
-    const formTags = form.getValues("details.tags") || [];
-    if (JSON.stringify(tags.map((t) => t.text)) !== JSON.stringify(formTags)) {
-      setTags(formTags.map((text: string) => ({ text, id: crypto.randomUUID() })));
+    console.log(localImages, coverUrl, draft?.coverUrl)
+    if (!draft?.images || draft?.images.length === 0) {
+      setLocalImages([]);
+      form.setValue("details.coverUrl", null, { shouldValidate: true });
     }
-  }, [form.watch("details.tags")]);
+    if (draft) {
+      setLocalImages(draft?.images);
+    }
+  }, [getDraft, form]);
 
-  useEffect(() => {
-    if (!isSlugManuallyEdited && title) {
-      const newSlug = generateSlug(title, subtitle || "");
-      form.setValue("details.slug", newSlug, { shouldValidate: true });
-    }
-  }, [title, subtitle, isSlugManuallyEdited, form]);
+  const handlePrevImage = () => {
+    if (localImages.length === 0) return;
+
+    const newIndex = (currentImageIndex - 1 + localImages.length) % localImages.length;
+    setCurrentImageIndex(newIndex);
+    form.setValue("details.coverUrl", localImages[newIndex], { shouldValidate: true });
+  };
+
+  const handleNextImage = () => {
+    if (localImages.length === 0) return;
+
+    const newIndex = (currentImageIndex + 1) % localImages.length;
+    setCurrentImageIndex(newIndex);
+    form.setValue("details.coverUrl", localImages[newIndex], { shouldValidate: true });
+  };
 
   const checkSlugDebounced = useCallback(
     debounce(async (slug: string) => {
@@ -107,6 +129,20 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
       checkSlugDebounced.cancel();
     };
   }, [slug, checkSlugDebounced]);
+
+  useEffect(() => {
+    if (!isSlugManuallyEdited && title) {
+      const newSlug = generateSlug(title, subtitle || "");
+      form.setValue("details.slug", newSlug, { shouldValidate: true });
+    }
+  }, [title, subtitle, isSlugManuallyEdited, form]);
+
+  useEffect(() => {
+    const formTags = form.getValues("details.tags") || [];
+    if (JSON.stringify(tags.map((t) => t.text)) !== JSON.stringify(formTags)) {
+      setTags(formTags.map((text: string) => ({ text, id: crypto.randomUUID() })));
+    }
+  }, [form.watch("details.tags"), tags, form]);
 
   const handleSetTags = useCallback(
     (newTags: Tag[] | ((prev: Tag[]) => Tag[])) => {
@@ -155,6 +191,30 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form }) => {
                   />
                 ) : (
                   <div className="placeholder-background" />
+                )}
+
+                {localImages.length > 1 && (
+                  <>
+                    <Button
+                      className="absolute left-0 top-1/2 -translate-y-1/2 bg-transparent hover:bg-black/70 p-1 ml-1 rounded-full"
+                      variant="ghost"
+                      size="icon"
+                      onClick={handlePrevImage}
+                    >
+                      <ChevronLeft className="h-5 w-5 text-white" />
+                    </Button>
+                    <Button
+                      className="absolute right-0 top-1/2 -translate-y-1/2 bg-transparent hover:bg-black/70 p-1 mr-1 rounded-full"
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleNextImage}
+                    >
+                      <ChevronRight className="h-5 w-5 text-white" />
+                    </Button>
+                    <div className="absolute bottom-1 left-1/2 -translate-x-1/2 text-white text-xs bg-black/50 px-2 py-0.5 rounded-full">
+                      {currentImageIndex + 1}/{localImages.length}
+                    </div>
+                  </>
                 )}
               </div>
               <div className="flex flex-col w-full gap-4">

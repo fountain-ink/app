@@ -24,17 +24,10 @@ export function AutoSave({ documentId }: { documentId: string }) {
       setIsVisible(true);
       setSaveSuccess(false);
       try {
-        console.log(content);
         const now = new Date().toISOString();
         const existingDraft = getDocument(documentId);
-        const { title, subtitle, coverUrl } = extractMetadata(editor.children as any);
-        // console.log(title, subtitle, coverUrl);
+        const { images, subtitle, title, coverUrl } = extractMetadata(editor.children as any);
         const contentMarkdown = api.markdown.serialize({ value: editor.children });
-        console.log(contentMarkdown);
-        // const staticEditor = getStaticEditor(content);
-        // const contentHtml = await serializeHtml(staticEditor, {
-        //   components: { ...staticComponents },
-        // });
 
         const draft = {
           ...(existingDraft || {}),
@@ -48,11 +41,11 @@ export function AutoSave({ documentId }: { documentId: string }) {
           createdAt: existingDraft?.createdAt || now,
           title,
           subtitle,
+          images,
           contentHtml: null,
           contributors: null,
           yDoc: null,
           tags: existingDraft?.tags || [],
-          coverUrl,
         };
 
         // FIXME: possibly an issue with the type inference here
