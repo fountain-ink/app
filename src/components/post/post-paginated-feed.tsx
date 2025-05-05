@@ -69,7 +69,7 @@ export const PaginatedArticleFeed = ({
         filter: {
           metadata: { mainContentFocus: [MainContentFocus.Article] },
           feeds: [{ globalFeed: true }],
-          // apps: [env.NEXT_PUBLIC_APP_ADDRESS],
+          apps: [env.NEXT_PUBLIC_APP_ADDRESS],
         },
         cursor: nextCursor,
       }).unwrapOr(null);
