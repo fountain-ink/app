@@ -1,7 +1,7 @@
 "use client";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
-import { UploadIcon, XIcon } from "lucide-react";
+import { Loader2Icon, LoaderIcon, UploadIcon, XIcon } from "lucide-react";
 import Cropper from "react-easy-crop";
 
 import { useRef, useState } from "react";
@@ -57,6 +57,7 @@ interface ImageCropperUploaderProps {
   initialImage: string;
   aspectRatio: number;
   onImageChange: (newImage: File | null) => void;
+  isUploading?: boolean;
 }
 
 export const ImageCropperUploader = ({
@@ -64,6 +65,7 @@ export const ImageCropperUploader = ({
   initialImage,
   aspectRatio,
   onImageChange,
+  isUploading = false,
 }: ImageCropperUploaderProps) => {
   const [image, setImage] = useState(initialImage);
   const [localImage, setLocalImage] = useState<string | null>(null);
@@ -150,10 +152,14 @@ export const ImageCropperUploader = ({
                 className="absolute inset-0 w-10 h-10 mx-auto my-auto flex items-center justify-center bg-black/50 hover:bg-black/70 p-1.5 rounded-full cursor-pointer transition-colors"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleImageDelete();
+                  if (!isUploading) handleImageDelete();
                 }}
               >
-                <XIcon className="size-4 text-white" />
+                {isUploading ? (
+                  <LoaderIcon className="size-4 text-white animate-spin" />
+                ) : (
+                  <XIcon className="size-4 text-white" />
+                )}
               </div>
             )}
           </>
@@ -218,9 +224,10 @@ interface ImageUploaderProps {
   onImageChange: (file: File | null) => void;
   initialImage?: string | null;
   className?: string;
+  isUploading?: boolean;
 }
 
-export function ImageUploader({ label, onImageChange, initialImage, className }: ImageUploaderProps) {
+export function ImageUploader({ label, onImageChange, initialImage, className, isUploading = false }: ImageUploaderProps) {
   const [image, setImage] = useState(initialImage || "");
   const [localImage, setLocalImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -268,10 +275,14 @@ export function ImageUploader({ label, onImageChange, initialImage, className }:
                 className="absolute inset-0 w-10 h-10 mx-auto my-auto flex items-center justify-center bg-black/50 hover:bg-black/70 p-1.5 rounded-full cursor-pointer transition-colors"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleImageDelete();
+                  if (!isUploading) handleImageDelete();
                 }}
               >
-                <XIcon className="size-4 text-white" />
+                {isUploading ? (
+                  <Loader2Icon className="size-4 text-white animate-spin" />
+                ) : (
+                  <XIcon className="size-4 text-white" />
+                )}
               </div>
             )}
           </>

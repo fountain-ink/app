@@ -18,6 +18,8 @@ import { Button } from "@/components/ui/button";
 import { CoinIcon } from "@/components/icons/custom-icons";
 import { usePublishDraft } from "@/hooks/use-publish-draft";
 import { extractMetadata } from "@/lib/extract-metadata";
+import { ImageUploader } from "@/components/images/image-uploader";
+import { uploadFile } from "@/lib/upload/upload-file";
 
 export const detailsFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title should be less than 100 characters"),
@@ -55,43 +57,90 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
   const [isSlugAvailable, setIsSlugAvailable] = useState<boolean | null>(null);
   const [isEditingPreview, setIsEditingPreview] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
   const [localImages, setLocalImages] = useState<string[]>([]);
-
-  // Get access to the draft
   const { getDraft } = usePublishDraft(documentId || "");
-
-  const { data: user } = useAuthenticatedUser();
   const title = form.watch("details.title");
   const subtitle = form.watch("details.subtitle");
   const slug = form.watch("details.slug");
-  const coverUrl = form.watch("details.coverUrl");
+  const coverUrl = form.getValues("details.coverUrl");
   const draft = getDraft();
 
+  const isShowingUploader = currentImageIndex === localImages.length;
+
   useEffect(() => {
-    console.log(localImages, coverUrl, draft?.coverUrl)
     if (!draft?.images || draft?.images.length === 0) {
       setLocalImages([]);
-      form.setValue("details.coverUrl", null, { shouldValidate: true });
+      setCurrentImageIndex(0);
+      if (form.getValues("details.coverUrl") !== null) {
+        form.setValue("details.coverUrl", null, { shouldValidate: true });
+      }
+    } else {
+      setLocalImages(prevImages => {
+        const uniqueImages = [...prevImages];
+        draft?.images.forEach(img => {
+          if (!uniqueImages.includes(img)) {
+            uniqueImages.push(img);
+          }
+        });
+        return uniqueImages;
+      });
+
+      const currentCoverUrl = form.getValues("details.coverUrl");
+      if (!currentCoverUrl && draft?.images.length > 0) {
+        form.setValue("details.coverUrl", draft?.images[0], { shouldValidate: true });
+      }
     }
-    if (draft) {
-      setLocalImages(draft?.images);
+  }, [draft, form]);
+
+  const getDisplayImage = () => {
+    if (isShowingUploader) {
+      return null;
     }
-  }, [getDraft, form]);
+    return localImages[currentImageIndex];
+  };
+
+  const displayImage = getDisplayImage();
 
   const handlePrevImage = () => {
-    if (localImages.length === 0) return;
+    const totalCount = localImages.length + 1;
+    if (totalCount <= 1) return;
 
-    const newIndex = (currentImageIndex - 1 + localImages.length) % localImages.length;
+    const newIndex = (currentImageIndex - 1 + totalCount) % totalCount;
     setCurrentImageIndex(newIndex);
-    form.setValue("details.coverUrl", localImages[newIndex], { shouldValidate: true });
+
+    if (newIndex === localImages.length) {
+      form.setValue("details.coverUrl", null, { shouldValidate: true });
+    } else {
+      form.setValue("details.coverUrl", localImages[newIndex], { shouldValidate: true });
+    }
   };
 
   const handleNextImage = () => {
-    if (localImages.length === 0) return;
+    const totalCount = localImages.length + 1;
+    if (totalCount <= 1) return;
 
-    const newIndex = (currentImageIndex + 1) % localImages.length;
+    const newIndex = (currentImageIndex + 1) % totalCount;
     setCurrentImageIndex(newIndex);
-    form.setValue("details.coverUrl", localImages[newIndex], { shouldValidate: true });
+
+    if (newIndex === localImages.length) {
+      form.setValue("details.coverUrl", null, { shouldValidate: true });
+    } else {
+      form.setValue("details.coverUrl", localImages[newIndex], { shouldValidate: true });
+    }
+  };
+
+  const handleNewCoverImage = async (file: File | null) => {
+    if (file) {
+      setIsUploading(true);
+
+      const uploadUrl = await uploadFile(file);
+      setLocalImages(prev => [...prev, uploadUrl]);
+      form.setValue("details.coverUrl", uploadUrl, { shouldValidate: true });
+
+      setCurrentImageIndex(localImages.length);
+      setIsUploading(false);
+    }
   };
 
   const checkSlugDebounced = useCallback(
@@ -183,17 +232,23 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
           {isEditingPreview ? (
             <div className="flex flex-row items-start gap-4 sm:gap-8">
               <div className="h-40 w-40 relative shrink-0 aspect-square rounded-sm overflow-hidden">
-                {form.watch("details.coverUrl") ? (
+                {displayImage ? (
                   <img
-                    src={form.watch("details.coverUrl")!}
+                    src={displayImage}
                     alt="Cover"
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="placeholder-background" />
+                  <ImageUploader
+                    label=""
+                    onImageChange={handleNewCoverImage}
+                    initialImage={null}
+                    className="h-full"
+                    isUploading={isUploading}
+                  />
                 )}
 
-                {localImages.length > 1 && (
+                {(localImages.length > 0 || isShowingUploader) && (
                   <>
                     <Button
                       className="absolute left-0 top-1/2 -translate-y-1/2 bg-transparent hover:bg-black/70 p-1 ml-1 rounded-full"
@@ -212,7 +267,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
                       <ChevronRight className="h-5 w-5 text-white" />
                     </Button>
                     <div className="absolute bottom-1 left-1/2 -translate-x-1/2 text-white text-xs bg-black/50 px-2 py-0.5 rounded-full">
-                      {currentImageIndex + 1}/{localImages.length}
+                      {`${currentImageIndex + 1}/${localImages.length + 1}`}
                     </div>
                   </>
                 )}
@@ -254,14 +309,20 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
           ) : (
             <div className="flex flex-row items-start gap-4 sm:gap-8">
               <div className="h-40 w-40 relative shrink-0 aspect-square rounded-sm overflow-hidden">
-                {form.watch("details.coverUrl") ? (
+                {displayImage ? (
                   <img
-                    src={form.watch("details.coverUrl")!}
+                    src={displayImage}
                     alt="Cover"
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="placeholder-background" />
+                  <ImageUploader
+                    label=""
+                    onImageChange={handleNewCoverImage}
+                    initialImage={null}
+                    className="h-full"
+                    isUploading={isUploading}
+                  />
                 )}
               </div>
               <div className="flex flex-col h-full min-h-[150px] gap-1">
