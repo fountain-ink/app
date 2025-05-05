@@ -1,12 +1,11 @@
 import { formatTime } from "@/lib/utils";
 
-export const DateLabel = () => {
-  const today = new Date();
-  const formattedDate = today.toDateString();
-  const _formattedTime = today.toLocaleTimeString();
+export const DateLabel = ({ date }: { date: string }) => {
+  const dateToFormat = date ? new Date(date) : new Date();
+  const formattedDate = dateToFormat.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
   const formattedDateTime = `${formattedDate}`;
 
-  return <div className="tk-plantin text-center text-sm py-2">{formattedDateTime}</div>;
+  return <div className="tk-plantin text-center text-sm text-primary/50">{formattedDateTime}</div>;
 };
 
 export const PastDateLabel = ({ updatedAt }: { updatedAt: string }) => {
