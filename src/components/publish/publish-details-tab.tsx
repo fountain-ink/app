@@ -30,6 +30,7 @@ export const detailsFormSchema = z.object({
       message: "Slug must contain only lowercase letters, numbers, and hyphens"
     }),
   tags: z.array(z.string()).max(5, "You can add up to 5 tags").default([]),
+  images: z.array(z.string()).default([]),
 });
 
 export type DetailsFormValues = z.infer<typeof detailsFormSchema>;
@@ -50,83 +51,72 @@ interface ArticleDetailsTabProps {
 }
 
 export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId }) => {
+  const { getDraft } = usePublishDraft(documentId || "");
+  const title = form.watch("details.title");
+  const subtitle = form.watch("details.subtitle");
+  const slug = form.watch("details.slug");
+  const coverUrl = form.getValues("details.coverUrl");
+  const images = form.watch("details.images");
+  const draft = getDraft();
   const [tags, setTags] = useState<Tag[]>([]);
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
   const [isCheckingSlug, setIsCheckingSlug] = useState(false);
   const [isSlugAvailable, setIsSlugAvailable] = useState<boolean | null>(null);
   const [isEditingPreview, setIsEditingPreview] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
-  const [localImages, setLocalImages] = useState<string[]>([]);
-  const { getDraft } = usePublishDraft(documentId || "");
-  const title = form.watch("details.title");
-  const subtitle = form.watch("details.subtitle");
-  const slug = form.watch("details.slug");
-  const coverUrl = form.getValues("details.coverUrl");
-  const draft = getDraft();
-
-  const isShowingUploader = currentImageIndex === localImages.length;
+  const [currentImageIndex, setCurrentImageIndex] = useState(images.findIndex(image => image === coverUrl) || 0);
+  const isShowingUploader = currentImageIndex === images.length;
 
   useEffect(() => {
     if (!draft?.images || draft?.images.length === 0) {
-      setLocalImages([]);
+      form.setValue("details.images", [], { shouldValidate: true });
       setCurrentImageIndex(0);
       if (form.getValues("details.coverUrl") !== null) {
         form.setValue("details.coverUrl", null, { shouldValidate: true });
       }
     } else {
-      setLocalImages(prevImages => {
-        const uniqueImages = [...prevImages];
-        draft?.images.forEach(img => {
-          if (!uniqueImages.includes(img)) {
-            uniqueImages.push(img);
-          }
-        });
-        return uniqueImages;
+      const existingImages = form.getValues("details.images") || [];
+      const uniqueImages = [...existingImages];
+
+      draft?.images.forEach(img => {
+        if (!uniqueImages.includes(img)) {
+          uniqueImages.push(img);
+        }
       });
 
+      form.setValue("details.images", uniqueImages, { shouldValidate: true });
+
       const currentCoverUrl = form.getValues("details.coverUrl");
-      if (!currentCoverUrl && draft?.images.length > 0) {
-        form.setValue("details.coverUrl", draft?.images[0], { shouldValidate: true });
-      }
+      console.log('currentCoverUrl', currentCoverUrl);
     }
-  }, [draft, form]);
-
-  const getDisplayImage = () => {
-    if (isShowingUploader) {
-      return null;
-    }
-    return localImages[currentImageIndex];
-  };
-
-  const displayImage = getDisplayImage();
+  }, [form, coverUrl]);
 
   const handlePrevImage = () => {
-    const totalCount = localImages.length + 1;
+    const totalCount = images.length + 1;
     if (totalCount <= 1) return;
 
     const newIndex = (currentImageIndex - 1 + totalCount) % totalCount;
     setCurrentImageIndex(newIndex);
 
-    if (newIndex === localImages.length) {
+    if (newIndex === images.length) {
       form.setValue("details.coverUrl", null, { shouldValidate: true });
     } else {
-      form.setValue("details.coverUrl", localImages[newIndex], { shouldValidate: true });
+      form.setValue("details.coverUrl", images[newIndex], { shouldValidate: true });
     }
   };
 
   const handleNextImage = () => {
-    const totalCount = localImages.length + 1;
+    const totalCount = images.length + 1;
     if (totalCount <= 1) return;
 
     const newIndex = (currentImageIndex + 1) % totalCount;
     setCurrentImageIndex(newIndex);
 
-    if (newIndex === localImages.length) {
+    if (newIndex === images.length) {
       form.setValue("details.coverUrl", null, { shouldValidate: true });
     } else {
-      form.setValue("details.coverUrl", localImages[newIndex], { shouldValidate: true });
+      form.setValue("details.coverUrl", images[newIndex], { shouldValidate: true });
     }
   };
 
@@ -135,10 +125,11 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
       setIsUploading(true);
 
       const uploadUrl = await uploadFile(file);
-      setLocalImages(prev => [...prev, uploadUrl]);
+      const updatedImages = [...form.getValues("details.images"), uploadUrl];
+      form.setValue("details.images", updatedImages, { shouldValidate: true });
       form.setValue("details.coverUrl", uploadUrl, { shouldValidate: true });
 
-      setCurrentImageIndex(localImages.length);
+      setCurrentImageIndex(updatedImages.length - 1);
       setIsUploading(false);
     }
   };
@@ -232,9 +223,9 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
           {isEditingPreview ? (
             <div className="flex flex-row items-start gap-4 sm:gap-8">
               <div className="h-40 w-40 relative shrink-0 aspect-square rounded-sm overflow-hidden">
-                {displayImage ? (
+                {coverUrl ? (
                   <img
-                    src={displayImage}
+                    src={coverUrl}
                     alt="Cover"
                     className="w-full h-full object-cover"
                   />
@@ -248,7 +239,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
                   />
                 )}
 
-                {(localImages.length > 0 || isShowingUploader) && (
+                {(images.length > 0 || isShowingUploader) && (
                   <>
                     <Button
                       className="absolute left-0 top-1/2 -translate-y-1/2 bg-transparent hover:bg-black/70 p-1 ml-1 rounded-full"
@@ -267,7 +258,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
                       <ChevronRight className="h-5 w-5 text-white" />
                     </Button>
                     <div className="absolute bottom-1 left-1/2 -translate-x-1/2 text-white text-xs bg-black/50 px-2 py-0.5 rounded-full">
-                      {`${currentImageIndex + 1}/${localImages.length + 1}`}
+                      {`${currentImageIndex + 1}/${images.length + 1}`}
                     </div>
                   </>
                 )}
@@ -309,9 +300,9 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
           ) : (
             <div className="flex flex-row items-start gap-4 sm:gap-8">
               <div className="h-40 w-40 relative shrink-0 aspect-square rounded-sm overflow-hidden">
-                {displayImage ? (
+                {coverUrl ? (
                   <img
-                    src={displayImage}
+                    src={coverUrl}
                     alt="Cover"
                     className="w-full h-full object-cover"
                   />

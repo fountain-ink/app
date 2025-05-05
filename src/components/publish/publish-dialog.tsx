@@ -71,6 +71,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
       coverUrl: values.details.coverUrl || null,
       slug: values.details.slug || null,
       tags: Array.isArray(values.details.tags) ? values.details.tags : [],
+      images: Array.isArray(values.details.images) ? values.details.images : [],
 
       // Distribution tab values
       distributionSettings: {
@@ -100,6 +101,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
           coverUrl: "",
           slug: "",
           tags: [],
+          images: [],
         },
         distribution: {
           selectedBlogAddress: "",
@@ -131,6 +133,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
         coverUrl: draft?.coverUrl,
         slug: draft?.slug || "",
         tags: draft?.tags || [],
+        images: draft?.images || [],
       },
       distribution: {
         selectedBlogAddress: draft?.distributionSettings?.selectedBlogAddress || "",
