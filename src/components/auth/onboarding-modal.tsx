@@ -1,5 +1,5 @@
 import { storageClient } from "@/lib/lens/storage-client";
-import { Account, AnyClient } from "@lens-protocol/client";
+import { AnyClient } from "@lens-protocol/client";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { account as accountMetadataBuilder, image, MetadataAttribute } from "@lens-protocol/metadata"; // Updated imports
 import { useState, useEffect, useCallback, useRef } from "react";

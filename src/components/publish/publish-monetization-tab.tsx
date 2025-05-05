@@ -27,6 +27,7 @@ import {
   Coins,
   HandCoins,
   ShoppingBagIcon,
+  Copyright,
 } from "lucide-react";
 import { ShoppingBag as ShoppingBagSvg } from "../icons/custom-icons";
 
@@ -38,11 +39,14 @@ import { EvmAddress } from "../misc/evm-address";
 import { UserLazyUsername } from "../user/user-lazy-username";
 import { CombinedFormValues } from "./publish-dialog";
 import { resolveImageUrl } from "@/lib/utils/resolve-image-url";
+import { MetadataLicenseType } from "@lens-protocol/metadata";
+import { LicenseDescriptions, Licenses } from "@/lib/licenses";
+import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 
 export const collectingFormSchema = z
   .object({
     isCollectingEnabled: z.boolean().default(false),
-    collectingLicense: z.string().min(1, { message: "License is required" }).default("CC BY-NC 4.0"),
+    collectingLicense: z.nativeEnum(Licenses).default(Licenses.NoLicense),
 
     isChargeEnabled: z.boolean().default(false),
     price: z
@@ -938,7 +942,7 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="flex items-center gap-2">
-                      <FileTextIcon className="h-4 w-4 text-muted-foreground" />
+                      <Copyright className="h-4 w-4 text-muted-foreground" />
                       <h3 className="font-medium">License</h3>
                     </div>
                     <p className="text-sm text-muted-foreground">
@@ -959,16 +963,29 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
                             <SelectValue placeholder="Select a license" />
                           </SelectTrigger>
                           <SelectContent position="popper" sideOffset={5} className="z-[60]" side="bottom">
-                            <SelectItem value="CC BY 4.0">Creative Commons (CC BY 4.0)</SelectItem>
-                            <SelectItem value="CC BY-SA 4.0">CC BY-SA 4.0</SelectItem>
-                            <SelectItem value="CC BY-NC 4.0">CC BY-NC 4.0</SelectItem>
-                            <SelectItem value="CC BY-ND 4.0">CC BY-ND 4.0</SelectItem>
-                            <SelectItem value="CC BY-NC-SA 4.0">CC BY-NC-SA 4.0</SelectItem>
-                            <SelectItem value="CC BY-NC-ND 4.0">CC BY-NC-ND 4.0</SelectItem>
-                            <SelectItem value="CC0 1.0">CC0 1.0 (Public Domain)</SelectItem>
+                            {Object.values(Licenses).map((license) => (
+                              <SelectItem key={license} value={license}>
+                                {license}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       </FormControl>
+                      {field.value && (
+                        <FormDescription className="mt-2 text-sm">
+                          <div className="inline">
+                            {LicenseDescriptions[field.value as Licenses]}{" "}
+                            <a
+                              href="https://lens.xyz/docs/protocol/best-practices/content-licensing"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-muted-foreground hover:text-primary transition-colors inline-flex align-text-bottom"
+                            >
+                              <QuestionMarkCircledIcon className="h-4 w-4 ml-1" />
+                            </a>
+                          </div>
+                        </FormDescription>
+                      )}
                       <FormMessage />
                     </FormItem>
                   )}

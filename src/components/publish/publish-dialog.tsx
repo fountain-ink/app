@@ -26,6 +26,7 @@ import { cn } from "@/lib/utils";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { useAuthenticatedUser } from "@lens-protocol/react";
 import { checkSlugAvailability } from "@/lib/slug/check-slug-availability";
+import { Licenses } from "@/lib/licenses";
 
 const isUserBlog = (blogAddress: string | undefined, blogs: any[]): boolean => {
   if (!blogAddress) return false;
@@ -59,13 +60,11 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
   const queryClient = useQueryClient();
   const { data: walletClient } = useWalletClient();
 
-  // Utility functions to convert between form and draft
   const formToDraft = (values: CombinedFormValues, currentDraft: Draft | null, blogState: any): Partial<Draft> => {
     const selectedBlogAddress = values.distribution?.selectedBlogAddress || "";
     const shouldSaveBlogAddress = selectedBlogAddress && !isUserBlog(selectedBlogAddress, blogState.blogs);
 
     return {
-      // Details tab values
       title: values.details.title || "",
       subtitle: values.details.subtitle || null,
       coverUrl: values.details.coverUrl || null,
@@ -73,14 +72,12 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
       tags: Array.isArray(values.details.tags) ? values.details.tags : [],
       images: Array.isArray(values.details.images) ? values.details.images : [],
 
-      // Distribution tab values
       distributionSettings: {
         selectedBlogAddress: shouldSaveBlogAddress ? selectedBlogAddress : undefined,
         sendNewsletter: Boolean(values.distribution.sendNewsletter),
         lensDisplay: values.distribution.lensDisplay || "title",
       },
 
-      // Monetization tab values
       collectingSettings: {
         ...values.collecting,
         collectLimit: values.collecting.collectLimit ?? 0,
@@ -88,6 +85,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
         price: values.collecting.price || "1",
         referralPercent: values.collecting.referralPercent || 0,
         recipients: Array.isArray(values.collecting.recipients) ? values.collecting.recipients : [],
+        collectingLicense: values.collecting.collectingLicense || Licenses.NoLicense,
       },
     };
   };
@@ -110,7 +108,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
         },
         collecting: {
           isCollectingEnabled: false,
-          collectingLicense: "CC BY-NC 4.0",
+          collectingLicense: Licenses.NoLicense,
           isChargeEnabled: false,
           price: "1",
           currency: "GHO",
@@ -142,7 +140,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
       },
       collecting: draft?.collectingSettings || {
         isCollectingEnabled: false,
-        collectingLicense: "CC BY-NC 4.0",
+        collectingLicense: Licenses.NoLicense,
         isChargeEnabled: false,
         price: "1",
         currency: "GHO",
@@ -234,7 +232,6 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
     const draft = getDraft();
     if (!draft) return;
 
-    // Check slug availability if slug is provided
     if (data.details.slug) {
       try {
         const { available } = await checkSlugAvailability(data.details.slug);
@@ -245,7 +242,6 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
         }
       } catch (error) {
         console.error("Error checking slug availability:", error);
-        // Continue anyway since this is not critical
       }
     }
 

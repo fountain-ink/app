@@ -70,6 +70,10 @@ export async function publishPost(
         attributes.push({ key: "slug", type: MetadataAttributeType.STRING, value: draft.slug });
       }
 
+      if (collectingSettings?.collectingLicense) {
+        attributes.push({ key: "license", type: MetadataAttributeType.STRING, value: collectingSettings.collectingLicense });
+      }
+
       attributes.push({ key: "lensDisplay", type: MetadataAttributeType.STRING, value: lensDisplay });
 
 
@@ -107,8 +111,7 @@ export async function publishPost(
         collectingSettings?.isChargeEnabled && collectingSettings.price
           ? {
             amount: {
-              /// WGRASS
-              currency: evmAddress("0x6bDc36E20D267Ff0dd6097799f82e78907105e2F"),
+              currency: evmAddress("0x6bDc36E20D267Ff0dd6097799f82e78907105e2F"), // WGHO
               value: collectingSettings.price,
             },
             ...(collectingSettings.isReferralRewardsEnabled
@@ -157,7 +160,6 @@ export async function publishPost(
         contentUri: uri,
         feed: feedValue,
         actions: actions,
-
       })
         .andThen(handleOperationWith(walletClient as any))
         .andTee((v) => {
@@ -227,7 +229,7 @@ export async function publishPost(
 
       if (selectedBlogAddress && postSlug && username && documentId && sendNewsletter) {
         try {
-          const db = await createClient();
+          const db = createClient();
           const { data: blog } = await db.from("blogs").select("*").eq("address", selectedBlogAddress).single();
 
           if (blog?.mail_list_id) {

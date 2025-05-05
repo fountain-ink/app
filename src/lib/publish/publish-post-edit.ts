@@ -78,6 +78,10 @@ export async function publishPostEdit(
         attributes.push({ key: "slug", type: MetadataAttributeType.STRING, value: draft.slug });
       }
 
+      if (draft.collectingSettings?.collectingLicense) {
+        attributes.push({ key: "license", type: MetadataAttributeType.STRING, value: draft.collectingSettings.collectingLicense });
+      }
+
       // Add lens display preference
       attributes.push({ key: "lensDisplay", type: MetadataAttributeType.STRING, value: lensDisplay });
 
