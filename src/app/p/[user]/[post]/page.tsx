@@ -1,6 +1,7 @@
 import { CommentPreview } from "@/components/comment/comment-preview";
 import { EditorReadTime } from "@/components/editor/addons/editor-read-time";
 import Editor from "@/components/editor/editor";
+import { DateLabel } from "@/components/misc/date-label";
 import ErrorPage from "@/components/misc/error-page";
 import { PostActionsBar } from "@/components/post/post-actions-bar";
 import PostDeletedView from "@/components/post/post-deleted-view";
@@ -53,14 +54,11 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
         <ActionBarProvider>
           <div className="flex flex-col gap-4 items-center justify-center">
             <EditorReadTime content={contentJson} />
-            <div className="flex flex-row items-center gap-2">
+            <div className="flex w-fit flex-row items-center gap-2">
               <AuthorView showUsername={false} accounts={[post.author]} />
-              <span className="text-[var(--subtitle-color)] font-[family-name:var(--subtitle-font)]">
-            · {new Date(post.timestamp).toLocaleDateString("en-GB", {
-                year: "numeric",
-                month: "long",
-                day: "numeric"
-              })}
+              <span className=" flex flex-row gap-2 items-center text-[var(--subtitle-color)] font-[family-name:var(--subtitle-font)]">
+                {" · "}
+                <DateLabel date={post.timestamp} />
               </span>
             </div>
           </div>
