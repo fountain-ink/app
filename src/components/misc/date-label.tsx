@@ -5,7 +5,7 @@ export const DateLabel = ({ date }: { date: string }) => {
   const formattedDate = dateToFormat.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
   const formattedDateTime = `${formattedDate}`;
 
-  return <div className="tk-plantin text-center text-base">{formattedDateTime}</div>;
+  return <span className="font-[family-name:--title-font]">{formattedDateTime}</span>;
 };
 
 export const PastDateLabel = ({ updatedAt }: { updatedAt: string }) => {
