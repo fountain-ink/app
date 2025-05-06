@@ -5,11 +5,18 @@ import type { AutoformatRule } from "@udecode/plate-autoformat";
 import { type SlateEditor, ElementApi, isType } from "@udecode/plate";
 import {
   autoformatArrow,
+  autoformatFraction,
+  autoformatEquality,
+  autoformatComparison,
   autoformatLegal,
   autoformatLegalHtml,
-  autoformatMath,
+  autoformatSubscriptNumbers,
+  autoformatSuperscriptNumbers,
+  autoformatSubscriptSymbols,
+  autoformatSuperscriptSymbols,
   autoformatPunctuation,
   autoformatSmartQuotes,
+  autoformatOperation,
 } from "@udecode/plate-autoformat";
 import { AutoformatPlugin } from "@udecode/plate-autoformat/react";
 import {
@@ -247,7 +254,6 @@ export const autoformatLists: AutoformatRule[] = [
     format: (editor) => formatList(editor, BulletedListPlugin.key),
     match: ["* ", "- "],
     mode: "block",
-    // preFormat,
     type: ListItemPlugin.key,
   },
   {
@@ -255,7 +261,6 @@ export const autoformatLists: AutoformatRule[] = [
     match: ["^\\d+\\.$ ", "^\\d+\\)$ "],
     matchByRegex: true,
     mode: "block",
-    // preFormat,
     type: ListItemPlugin.key,
   },
   {
@@ -276,6 +281,17 @@ export const autoformatLists: AutoformatRule[] = [
     type: TodoListPlugin.key,
   },
 ];
+
+export const autoformatMath = [
+  ...autoformatComparison,
+  ...autoformatEquality,
+  ...autoformatFraction,
+  ...autoformatSuperscriptSymbols,
+  ...autoformatSubscriptSymbols,
+  ...autoformatSuperscriptNumbers,
+  ...autoformatSubscriptNumbers,
+];
+
 
 export const autoformatPlugin = AutoformatPlugin.configure({
   options: {
