@@ -64,8 +64,7 @@ export const Header = ({ session }: { session: MeResult | null }) => {
         {isSettingsPage && <SettingsBadge />}
       </div>
       <div className="flex gap-4 pointer-events-auto">
-        <FeedbackForm />
-
+        {isAuthenticated && <FeedbackForm />}
         {isBlogPage && blogData && <BlogEmailSubscribe blogData={blogData} variant="default" />}
         {isWritePage && <PublishMenu documentId={documentId} />}
         {isWritePage && <EditorOptionsDropdown />}
