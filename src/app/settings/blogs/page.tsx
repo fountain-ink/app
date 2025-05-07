@@ -74,7 +74,7 @@ export default async function BlogsSettingsPage() {
                 slug: personalBlog.slug || undefined,
               }}
               href={`/settings/b/${personalBlog.address}`}
-              showExternalLink={true}
+              showExternalLink={false}
             />
           )}
 
@@ -93,7 +93,7 @@ export default async function BlogsSettingsPage() {
                   slug: blog.slug || undefined,
                 }}
                 href={`/settings/b/${blog.address}`}
-                showExternalLink={true}
+                showExternalLink={false}
               />
             ))
           )}
