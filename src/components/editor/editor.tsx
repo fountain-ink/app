@@ -16,19 +16,8 @@ import { getElements, getRichElements } from "./elements";
 import { getEditorPlugins } from "./plugins";
 import { useMounted } from "@/hooks/use-mounted";
 import { YjsPlugin } from "@udecode/plate-yjs/react";
-import { defaultContent, defaultGuestContent } from "@/lib/plate/default-content";
-import { getRandomUid } from "@/lib/get-random-uid";
-
-// Helper function to strip 'id' properties
-const stripIds = (nodes: any[] | undefined): any[] | undefined => {
-  if (!nodes) return undefined;
-  return nodes.map(({ id, ...rest }) => {
-    if (rest.children) {
-      return { ...rest, children: stripIds(rest.children) };
-    }
-    return rest;
-  });
-};
+import { defaultContent } from "@/lib/plate/default-content";
+import { trimEmptyTrailingParagraphs as trimEmptyNodes } from "@/lib/plate/trim-empty-paragraphs";
 
 export default function PlateEditor(
   props: PropsWithChildren & {
@@ -54,7 +43,7 @@ export default function PlateEditor(
       components: getRichElements(),
     },
     skipInitialization: !props.readOnly,
-    value: props.readOnly ? JSON.parse(props.value as string) : undefined,
+    value: props.readOnly ? trimEmptyNodes(JSON.parse(props.value as string)) : undefined,
   });
 
   useEffect(() => {

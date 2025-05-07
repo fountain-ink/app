@@ -80,7 +80,7 @@ const generateYDoc = async (documentId: string, content: any) => {
   // const insertDelta = slateNodesToInsertDelta(content);
   // console.log("insertDelta", insertDelta);
   // console.log("initialDelta", initialDelta);
-  // sharedRoot.applyDelta(insertDelta as any);
+   //sharedRoot.applyDelta(insertDelta as any);
 
   return yDoc;
 }
