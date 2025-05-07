@@ -69,7 +69,7 @@ export const TokenWrapDialog = ({ isOpen, onOpenChange, accountAddress }: TokenW
 
       const result = await wrapTokens(lens, {
         amount: decimalAmount,
-      }).andThen(handleOperationWith(walletClient as any));
+      }).andThen(handleOperationWith(walletClient));
 
       if (result.isErr()) {
         console.error(result.error);
@@ -111,7 +111,7 @@ export const TokenWrapDialog = ({ isOpen, onOpenChange, accountAddress }: TokenW
 
       const result = await unwrapTokens(lens, {
         amount: decimalAmount,
-      }).andThen(handleOperationWith(walletClient as any));
+      }).andThen(handleOperationWith(walletClient));
 
       if (result.isErr()) {
         console.error(result.error);

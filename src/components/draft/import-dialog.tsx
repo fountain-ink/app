@@ -51,7 +51,7 @@ export function ImportDialog() {
       toast.success("Content imported successfully!");
       setIsOpen(false);
 
-      router.push(`/write/${result.documentId}`);
+      router.push(`/write/${result.documentId}?import`);
     } catch (error) {
       console.error("Import failed:", error);
       toast.error(error instanceof Error ? error.message : "Failed to import content");

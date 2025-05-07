@@ -292,7 +292,6 @@ export const autoformatMath = [
   ...autoformatSubscriptNumbers,
 ];
 
-
 export const autoformatPlugin = AutoformatPlugin.configure({
   options: {
     enableUndoOnDelete: true,

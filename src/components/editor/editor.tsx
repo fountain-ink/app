@@ -1,8 +1,8 @@
 "use client";
 
-import { Plate, createPlateEditor, usePlateEditor } from "@udecode/plate/react";
-import { useSearchParams } from "next/navigation";
-import type { PropsWithChildren } from "react";
+import { Plate, createPlateEditor, useEditorMounted, usePlateEditor } from "@udecode/plate/react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useEffect, useState, type PropsWithChildren } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Editor, EditorContainer } from "../ui/editor";
@@ -14,6 +14,21 @@ import { TocSidebar } from "../ui/toc-sidebar";
 import { AutoSave } from "./addons/editor-autosave";
 import { getElements, getRichElements } from "./elements";
 import { getEditorPlugins } from "./plugins";
+import { useMounted } from "@/hooks/use-mounted";
+import { YjsPlugin } from "@udecode/plate-yjs/react";
+import { defaultContent, defaultGuestContent } from "@/lib/plate/default-content";
+import { getRandomUid } from "@/lib/get-random-uid";
+
+// Helper function to strip 'id' properties
+const stripIds = (nodes: any[] | undefined): any[] | undefined => {
+  if (!nodes) return undefined;
+  return nodes.map(({ id, ...rest }) => {
+    if (rest.children) {
+      return { ...rest, children: stripIds(rest.children) };
+    }
+    return rest;
+  });
+};
 
 export default function PlateEditor(
   props: PropsWithChildren & {
@@ -21,23 +36,48 @@ export default function PlateEditor(
     showToc?: boolean;
     username?: string;
     readOnly?: boolean;
-    value?: string;
     pathname?: string;
     appToken?: string;
+    value?: string;
   },
 ) {
   const documentId = props?.pathname?.split("?")?.[0]?.split("/")?.at(-1) ?? "erroredDocumentId";
   const searchParams = useSearchParams();
   const isPreview = searchParams.has("preview");
   const isReadOnly = props.readOnly || isPreview;
+  const isMounted = useMounted()
+  const imported = searchParams.has("import");
+
   const editor = createPlateEditor({
     plugins: [...getEditorPlugins(documentId, props.appToken, isReadOnly)],
     override: {
       components: getRichElements(),
     },
-    shouldNormalizeEditor: true,
-    value: props.value ? JSON.parse(props.value) || "" : undefined,
+    skipInitialization: !props.readOnly,
+    value: props.readOnly ? JSON.parse(props.value as string) : undefined,
   });
+
+  useEffect(() => {
+    if (!imported || editor || !isMounted) return;
+
+    // TODO: remove last 3 nodes
+
+  }, [imported, editor, isMounted]);
+
+  useEffect(() => {
+    if (!isMounted || props.readOnly) return;
+
+    editor.getApi(YjsPlugin).yjs.init({
+      id: documentId,
+      value: defaultContent,
+      autoSelect: "end",
+    })
+
+    return () => {
+      editor.getApi(YjsPlugin).yjs.destroy();
+    };
+
+  }, [isMounted, editor]);
 
   return (
     <DndProvider backend={HTML5Backend}>

@@ -8,7 +8,7 @@ import {
   InlineComboboxInput,
   InlineComboboxItem,
 } from "./inline-combobox";
-import { PlateElement } from "./plate-element";
+import { PlateElement } from "@udecode/plate/react";
 
 import { ImagePlugin } from "@udecode/plate-media/react";
 import type { PlateEditor } from "@udecode/plate/react";

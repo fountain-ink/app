@@ -3,14 +3,14 @@
 import { cn, withRef } from "@udecode/cn";
 
 import { Calendar } from "./calendar";
-import { PlateElement } from "./plate-element";
+import { PlateElement } from "@udecode/plate/react";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
 export const DateElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
   const { editor, element } = props;
 
   return (
-    <PlateElement ref={ref} className={cn("inline-block", className)} contentEditable={false} {...props}>
+    <PlateElement ref={ref} className={cn("inline-block", className)} {...props}>
       <Popover>
         <PopoverTrigger asChild>
           <span

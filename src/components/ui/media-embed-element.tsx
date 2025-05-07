@@ -12,7 +12,7 @@ import { ResizableProvider, useResizableStore } from "@udecode/plate-resizable";
 
 import { Caption, CaptionTextarea } from "./caption";
 import { MediaPopover } from "./media-popover";
-import { PlateElement } from "./plate-element";
+import { PlateElement } from "@udecode/plate/react";
 import { Resizable, ResizeHandle, mediaResizeHandleVariants } from "./resizable";
 
 export const MediaEmbedElement = withHOC(

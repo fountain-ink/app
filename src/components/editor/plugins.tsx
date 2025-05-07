@@ -73,6 +73,7 @@ import remarkMath from 'remark-math';
 import { TEquationElement } from "@udecode/plate-math";
 import { Heading, Text } from "mdast";
 import { uploadFile } from "@/lib/upload/upload-file";
+import { getRandomUid } from "@/lib/get-random-uid";
 
 const lowlight = createLowlight(all);
 
@@ -106,53 +107,56 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
           beforeEditable: RemoteCursorOverlay,
         },
         options: {
-          cursorOptions: {
+          cursors: {
             autoSend: true,
             data: {
               name: username || "anonymous",
               color: "#0101af",
             },
           },
-          disableCursors: false,
-          hocuspocusProviderOptions: {
-            // url: "ws://0.0.0.0:4444",
-            url: "https://collab.fountain.ink",
-            name: path,
-            connect: false,
-            token: appToken,
-            onOpen: () => {
-              useYjsState.getState().setActiveDocument(path);
-            },
-            onDestroy: () => {
-              useYjsState.getState().setStatus(path, "disconnected");
-              useYjsState.getState().setActiveDocument(null);
-            },
-            onStatus(data: any) {
-              useYjsState.getState().setStatus(path, data.status);
-            },
-            onClose(data: any) {
-              useYjsState.getState().setError(path, `Connection closed: ${data.event.reason}`);
-            },
-            onAuthenticated() {
-              useYjsState.getState().setStatus(path, "connected");
-            },
-            onConnect() {
-              useYjsState.getState().setStatus(path, "connected");
-            },
-            onSynced() {
-              useYjsState.getState().setStatus(path, "synced");
-            },
-            onAuthenticationFailed(data: any) {
-              toast.error(`Authentication failed: ${data.reason}`);
-              useYjsState.getState().setError(path, `Authentication failed: ${data.reason}`);
-            },
-            onDisconnect(data: any) {
-              useYjsState.getState().setStatus(path, "disconnected");
-              if (data.event.reason) {
-                useYjsState.getState().setError(path, data.event.reason);
-              }
-            },
-          },
+          providers: [
+            {
+              type: "hocuspocus",
+              options: {
+                // url: "ws://0.0.0.0:4444",
+                url: "https://collab.fountain.ink",
+                name: path,
+                connect: false,
+                token: appToken,
+                onOpen: () => {
+                  useYjsState.getState().setActiveDocument(path);
+                },
+                onDestroy: () => {
+                  useYjsState.getState().setStatus(path, "disconnected");
+                  useYjsState.getState().setActiveDocument(null);
+                },
+                onStatus(data: any) {
+                  useYjsState.getState().setStatus(path, data.status);
+                },
+                onClose(data: any) {
+                  useYjsState.getState().setError(path, `Connection closed: ${data.event.reason}`);
+                },
+                onAuthenticated() {
+                  useYjsState.getState().setStatus(path, "connected");
+                },
+                onConnect() {
+                  useYjsState.getState().setStatus(path, "connected");
+                },
+                onSynced() {
+                  useYjsState.getState().setStatus(path, "synced");
+                },
+                onAuthenticationFailed(data: any) {
+                  toast.error(`Authentication failed: ${data.reason}`);
+                  useYjsState.getState().setError(path, `Authentication failed: ${data.reason}`);
+                },
+                onDisconnect(data: any) {
+                  useYjsState.getState().setStatus(path, "disconnected");
+                  if (data.event.reason) {
+                    useYjsState.getState().setError(path, data.event.reason);
+                  }
+                },
+              },
+            }],
         },
       }) as any,
       // ExtendedCommentsPlugin.configure({
@@ -191,6 +195,7 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
 
 export const plugins = [
   NormalizePlugin,
+  TrailingBlockPlugin,
   LeadingBlockPlugin.configure({
     options: {
       type: TitlePlugin.key,

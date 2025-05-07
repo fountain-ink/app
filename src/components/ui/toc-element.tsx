@@ -3,7 +3,7 @@ import { useTocElement, useTocElementState } from "@udecode/plate-heading/react"
 import { cva } from "class-variance-authority";
 
 import { Button } from "./button";
-import { PlateElement } from "./plate-element";
+import { PlateElement } from "@udecode/plate/react";
 import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
 
 const headingItemVariants = cva(

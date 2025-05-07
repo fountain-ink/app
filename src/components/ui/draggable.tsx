@@ -14,7 +14,7 @@ import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
 import { TableCellPlugin, TablePlugin, TableRowPlugin } from "@udecode/plate-table/react";
 import { TogglePlugin } from "@udecode/plate-toggle/react";
 import {
-  type PlateRenderElementProps,
+  type PlateElementProps,
   type RenderNodeWrapper,
   ParagraphPlugin,
   useEditorRef,
@@ -23,7 +23,8 @@ import {
   usePluginOption,
   useReadOnly,
   useSelected,
-} from "@udecode/plate/react";
+} from '@udecode/plate/react';
+
 import { GripVertical } from "lucide-react";
 
 import { BlockMenu } from "./block-menu";
@@ -75,7 +76,11 @@ export const DraggableAboveNodes: RenderNodeWrapper = (props) => {
   return (props) => <Draggable {...props} />;
 };
 
-export const Draggable = withRef<"div", PlateRenderElementProps>(({ className, ...props }, ref) => {
+export function Draggable({
+  className,
+  ...props
+}: React.ComponentProps<'div'> & PlateElementProps) {
+
   const { children, editor, element, path } = props;
   const { isDragging, previewRef, handleRef } = useDraggable({ element });
   const isInColumn = path?.length === 3;
@@ -83,7 +88,7 @@ export const Draggable = withRef<"div", PlateRenderElementProps>(({ className, .
 
   return (
     <div
-      ref={ref}
+      // ref={ref}
       className={cn(
         "relative",
         isDragging && "opacity-50",
@@ -126,7 +131,7 @@ export const Draggable = withRef<"div", PlateRenderElementProps>(({ className, .
       </div>
     </div>
   );
-});
+};
 
 const Gutter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ children, className, ...props }, ref) => {

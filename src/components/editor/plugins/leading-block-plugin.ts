@@ -6,7 +6,9 @@ import {
   queryNode,
 } from "@udecode/plate";
 import { TitlePlugin } from "./title-plugin";
-
+import { getEditorPlugin, usePluginOption } from "@udecode/plate-core/react";
+import { YjsPlugin } from "@udecode/plate-yjs/react";
+import { useMounted } from "@/hooks/use-mounted";
 export type LeadingBlockConfig = PluginConfig<
   "leadingBlock",
   {
@@ -24,6 +26,10 @@ const withLeadingBlock: OverrideEditor<LeadingBlockConfig> = ({ editor, getOptio
   transforms: {
     normalizeNode([currentNode, currentPath]) {
       const { level, type, ...query } = getOptions();
+      const isSynced = editor.getOptions(YjsPlugin)._isSynced;
+      const isConnected = editor.getOptions(YjsPlugin)._isConnected;
+
+      if (!isSynced || !isConnected) return; 
 
       if (currentPath.length === 0) {
         const firstChild = editor.children[0];

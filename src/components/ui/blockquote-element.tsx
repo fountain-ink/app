@@ -1,13 +1,18 @@
-"use client";
+'use client';
 
-import { cn, withRef } from "@udecode/cn";
+import React from 'react';
 
-import { PlateElement } from "./plate-element";
+import { cn } from '@udecode/cn';
+import { PlateElement } from '@udecode/plate/react';
 
-export const BlockquoteElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
+export function BlockquoteElement({
+  children,
+  className,
+  ...props
+}: React.ComponentProps<typeof PlateElement>) {
   return (
-    <PlateElement ref={ref} as="blockquote" className={cn("my-1 px-0.5 py-[3px]", className)} {...props}>
+    <PlateElement as="blockquote" className={cn("my-1 px-0.5 py-[3px]", className)} {...props}>
       {children}
     </PlateElement>
   );
-});
+}

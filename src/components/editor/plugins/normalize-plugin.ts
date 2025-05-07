@@ -2,6 +2,7 @@ import { NodeApi, Path, TNode } from "@udecode/plate";
 import { ParagraphPlugin, createPlatePlugin } from "@udecode/plate-core/react";
 import { useYjsState } from "../../../hooks/use-yjs-state";
 import { TITLE_KEYS } from "./title-plugin";
+import { YjsPlugin } from "@udecode/plate-yjs/react";
 
 function hasId(node: any): boolean {
   return typeof node === "object" && node !== null && "id" in node && typeof node.id === "string";
@@ -12,6 +13,9 @@ export const NormalizePlugin = createPlatePlugin({
 
   extendEditor: ({ editor }: { editor: any }) => {
     const { normalizeNode, apply } = editor;
+    const isSynced = editor.getOptions(YjsPlugin)._isSynced;
+    const isConnected = editor.getOptions(YjsPlugin)._isConnected;
+
 
     editor.apply = (...args: any) => {
       const operation = args[0] as { type: string; path: number[]; properties: { type?: string } };
@@ -27,10 +31,10 @@ export const NormalizePlugin = createPlatePlugin({
 
       if (NodeApi.isEditor(node)) {
         const children = [...editor.children];
-        const activeDocument = useYjsState.getState().activeDocument;
-        const documentState = activeDocument ? useYjsState.getState().getState(activeDocument) : null;
-        const isConnected = documentState?.status === "connected";
-        const isSynced = documentState?.status === "synced";
+        // const activeDocument = useYjsState.getState().activeDocument;
+        // const documentState = activeDocument ? useYjsState.getState().getState(activeDocument) : null;
+        // const isConnected = documentState?.status === "connected";
+        // const isSynced = documentState?.status === "synced";
 
         if (isConnected) {
           // console.log("remove em");
@@ -73,7 +77,7 @@ export const NormalizePlugin = createPlatePlugin({
           editor.tf.removeNodes({
             at: [],
             match: (n: TNode) => {
-              return !hasId(n) && n.type === ParagraphPlugin.key;
+              return n.type === ParagraphPlugin.key;
             },
           });
         }
@@ -85,6 +89,14 @@ export const NormalizePlugin = createPlatePlugin({
             return p[0] !== undefined && p[0] > 0 && "type" in n && n.type === TITLE_KEYS.title;
           },
         });
+
+        // // Remove any paragraph nodes at index 0
+        // editor.tf.removeNodes({
+        //   at: [],
+        //   match: (n: TNode, p: Path) => {
+        //     return p[0] !== undefined && p[0] === 0 && "type" in n && n.type === ParagraphPlugin.key;
+        //   },
+        // });
 
         // Remove any subtitle nodes after index 1
         editor.tf.removeNodes({

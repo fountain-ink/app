@@ -1,13 +1,13 @@
 "use client";
 
-import type { PlateRenderElementProps } from "@udecode/plate/react";
+import type { SlateRenderElementProps } from "@udecode/plate";
 
 import { cn } from "@udecode/cn";
 import { useIndentTodoListElement, useIndentTodoListElementState } from "@udecode/plate-indent-list/react";
 
 import { Checkbox } from "./checkbox";
 
-export const TodoMarker = ({ element }: Omit<PlateRenderElementProps, "children">) => {
+export const TodoMarker = ({ element }: Omit<SlateRenderElementProps, "children">) => {
   const state = useIndentTodoListElementState({ element });
   const { checkboxProps } = useIndentTodoListElement(state);
 
@@ -18,7 +18,7 @@ export const TodoMarker = ({ element }: Omit<PlateRenderElementProps, "children"
   );
 };
 
-export const TodoLi = (props: PlateRenderElementProps) => {
+export const TodoLi = (props: SlateRenderElementProps) => {
   const { children, element } = props;
 
   return <span className={cn((element.checked as boolean) && "text-muted-foreground line-through")}>{children}</span>;

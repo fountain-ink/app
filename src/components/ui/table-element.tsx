@@ -45,7 +45,7 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 import { ElementPopover, type ElementWidth, widthVariants } from "./element-popover";
-import { PlateElement } from "./plate-element";
+import { PlateElement } from "@udecode/plate/react";
 import { PopoverContent } from "./popover";
 import { Separator } from "./separator";
 import { Toolbar, ToolbarButton, ToolbarGroup } from "./toolbar";
@@ -73,7 +73,6 @@ export const TableElement = withHOC(
       <PlateElement
         className={cn("relative my-8 flex flex-col items-center", className)}
         style={{ paddingLeft: marginLeft }}
-        blockSelectionClassName={cn(hasControls && "left-2")}
         {...props}
       >
         <motion.figure

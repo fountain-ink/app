@@ -20,7 +20,7 @@ import { AudioLinesIcon, FileUpIcon, FilmIcon, ImageIcon } from "lucide-react";
 import { motion } from "framer-motion";
 
 import { BlockActionButton } from "./block-context-menu";
-import { PlateElement } from "./plate-element";
+import { PlateElement } from "@udecode/plate/react";
 import { LoadingSpinner } from "../misc/loading-spinner";
 import { Button } from "./button";
 import { useFilePicker } from "use-file-picker";
@@ -108,7 +108,7 @@ function MediaPopover({
 
 export const MediaPlaceholderElement = withHOC(
   PlaceholderProvider,
-  withRef<typeof PlateElement>(({ children, className, editor, nodeProps, ...props }, ref) => {
+  withRef<typeof PlateElement>(({ children, className, editor, ...props }, ref) => {
     const { mediaType, progresses, progressing, setSize, updatedFiles, element } = usePlaceholderElementState();
     const { setIsUploading, setProgresses, setUpdatedFiles } = usePlaceholderPopoverState();
     const { api } = useEditorPlugin(PlaceholderPlugin);
@@ -212,9 +212,8 @@ export const MediaPlaceholderElement = withHOC(
     return (
       <MediaPopover file={file} open={selected} popoverRef={popoverRef} mediaType={mediaType}>
         <PlateElement
-          ref={ref}
-          className={cn(className, "my-9 flex flex-col items-center cursor-default [&_*]:caret-transparent ")}
           editor={editor}
+          className={cn(className, "my-9 flex flex-col items-center cursor-default [&_*]:caret-transparent ")}
           {...props}
         >
           <motion.div

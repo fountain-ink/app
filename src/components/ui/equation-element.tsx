@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import { useReadOnly } from "@udecode/plate/react";
 import { Caption, CaptionTextarea } from "./caption";
 import { ELEMENT_WIDTH_CLASSES, ElementPopover, type ElementWidth } from "./element-popover";
-import { PlateElement } from "./plate-element";
+import { PlateElement } from "@udecode/plate/react";
 import { TextareaAutosize } from "./textarea";
 
 const EquationInput = createPrimitiveComponent(TextareaAutosize)({

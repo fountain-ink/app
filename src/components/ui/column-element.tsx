@@ -9,7 +9,7 @@ import { useElement, withHOC } from "@udecode/plate/react";
 import { ResizableProvider } from "@udecode/plate-resizable";
 import { useReadOnly } from "@udecode/plate/react";
 
-import { PlateElement } from "./plate-element";
+import { PlateElement } from "@udecode/plate/react";
 
 export const ColumnElement = withHOC(
   ResizableProvider,

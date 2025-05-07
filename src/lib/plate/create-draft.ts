@@ -2,73 +2,8 @@ import { getRandomUid } from "@/lib/get-random-uid";
 import { slateNodesToInsertDelta } from "@slate-yjs/core";
 import * as Y from "yjs";
 import { isGuestUser } from "../auth/is-guest-user";
-import { TITLE_KEYS } from "@/components/editor/plugins/title-plugin";
-import { ParagraphPlugin } from "@udecode/plate-core/react";
-
-export const defaultGuestContent: any = [
-  {
-    type: TITLE_KEYS.title,
-    children: [
-      {
-        text: "",
-      },
-    ],
-  },
-  {
-    type: TITLE_KEYS.subtitle,
-    children: [
-      {
-        text: "",
-      },
-    ],
-  },
-  {
-    type: "img",
-    width: "wide",
-    children: [
-      {
-        text: "",
-      },
-    ],
-  },
-  {
-    id: "guest-paragraph",
-    type: ParagraphPlugin.key,
-    children: [
-      {
-        text: "Welcome to Fountain! When you want to save the draft or publish your article, login to continue. Enjoy!",
-      },
-    ],
-  },
-];
-
-export const defaultContent: any = [
-  {
-    type: TITLE_KEYS.title,
-    children: [
-      {
-        text: "",
-      },
-    ],
-  },
-  {
-    type: TITLE_KEYS.subtitle,
-    children: [
-      {
-        text: "",
-      },
-    ],
-  },
-  {
-    type: "img",
-    width: "wide",
-    children: [
-      {
-        text: "",
-      },
-    ],
-  },
-];
+import { defaultContent } from "./default-content";
+import { defaultGuestContent } from "./default-content";
 
 type CreateDraftOptions = {
   initialContent?: any;
@@ -96,8 +31,7 @@ export async function createDraft(options: CreateDraftOptions = {}) {
   } = options;
 
   const contentToUse = initialContent || (isGuest ? defaultGuestContent : defaultContent);
-
-  const yDoc = generateYDoc(contentToUse);
+  const yDoc = await generateYDoc(documentId, contentToUse);
   const yDocBinary = Y.encodeStateAsUpdate(yDoc);
   const yDocBase64 = Buffer.from(yDocBinary).toString('base64');
 
@@ -108,8 +42,8 @@ export async function createDraft(options: CreateDraftOptions = {}) {
     },
     body: JSON.stringify({
       documentId,
+      yDocBase64: yDocBase64,
       contentJson: contentToUse,
-      yDocBase64,
       publishedId
     }),
   });
@@ -121,16 +55,32 @@ export async function createDraft(options: CreateDraftOptions = {}) {
   return { documentId };
 }
 
+
+import { slateToDeterministicYjsState } from "@udecode/plate-yjs";
+
+
 /**
  * Generates a Yjs document from the given content
  * @param content The content to generate the Yjs document from
  * @returns A Yjs document
  */
-const generateYDoc = (content: any) => {
+const generateYDoc = async (documentId: string, content: any) => {
   const yDoc = new Y.Doc();
-  const sharedRoot = yDoc.get("content", Y.XmlText);
-  const insertDelta = slateNodesToInsertDelta(content);
-  sharedRoot.applyDelta(insertDelta);
+  const initialDelta = await slateToDeterministicYjsState(
+    documentId,
+    content
+  );
+
+  yDoc.transact(() => {
+    Y.applyUpdate(yDoc, initialDelta);
+  });
+
+  // console.log("yDoc", yDoc);
+  // const sharedRoot = yDoc.get("content", Y.XmlText);
+  // const insertDelta = slateNodesToInsertDelta(content);
+  // console.log("insertDelta", insertDelta);
+  // console.log("initialDelta", initialDelta);
+  // sharedRoot.applyDelta(insertDelta as any);
 
   return yDoc;
 }

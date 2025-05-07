@@ -15,7 +15,7 @@ import {
 import { TITLE_KEYS } from "../editor/plugins/title-plugin";
 
 export const Placeholder = (props: PlaceholderProps) => {
-  const { children, nodeProps, placeholder } = props;
+  const { children, attributes, placeholder } = props;
 
   const { enabled } = usePlaceholderState(props);
   const isReadOnly = useReadOnly();
@@ -26,12 +26,12 @@ export const Placeholder = (props: PlaceholderProps) => {
 
   return React.Children.map(children, (child) => {
     return React.cloneElement(child, {
-      className: child.props.className,
-      nodeProps: {
-        ...nodeProps,
+      attributes: {
+        ...attributes,
         className: cn(
+          attributes.className,
           enabled &&
-            "before:absolute before:cursor-text before:opacity-30 before:content-[attr(placeholder)] before:left-0 before:right-0 before:text-inherit",
+          "before:absolute before:cursor-text before:opacity-30 before:content-[attr(placeholder)] before:left-0 before:right-0 before:text-inherit",
         ),
         placeholder,
       },

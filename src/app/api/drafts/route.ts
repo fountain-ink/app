@@ -3,8 +3,6 @@ import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { verifyToken } from "@/lib/auth/verify-token";
 import { getRandomUid } from "@/lib/get-random-uid";
-import { defaultGuestContent } from "@/lib/plate/create-draft";
-import { defaultContent } from "@/lib/plate/create-draft";
 import { createClient } from "@/lib/db/server";
 import { type NextRequest, NextResponse } from "next/server";
 
@@ -138,10 +136,10 @@ export async function POST(req: NextRequest) {
     const { data, error } = await db
       .from("drafts")
       .insert({
+        yDoc,
         contentJson,
         documentId,
         author: address,
-        yDoc,
         published_id: publishedId
       })
       .select()

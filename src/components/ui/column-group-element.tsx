@@ -1,7 +1,7 @@
 "use client";
 
 import { cn, withRef } from "@udecode/cn";
-import { PlateElement } from "./plate-element";
+import { PlateElement } from "@udecode/plate/react";
 
 export const ColumnGroupElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
   return (

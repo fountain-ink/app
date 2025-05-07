@@ -11,7 +11,7 @@ import { LoadingSpinner } from "../misc/loading-spinner";
 import { Button } from "./button";
 import { Caption, CaptionTextarea } from "./caption";
 import { ELEMENT_WIDTH_CLASSES, ElementPopover, type ElementWidth, widthVariants } from "./element-popover";
-import { PlateElement } from "./plate-element";
+import { PlateElement } from "@udecode/plate/react";
 
 const ImagePlaceholder = ({ file }: { file?: File }) => {
   const [objectUrl, setObjectUrl] = useState<string | null>(null);
@@ -100,7 +100,7 @@ function ImagePopover({
 }
 
 export const ImageElement = withRef<typeof PlateElement>(
-  ({ children, className, nodeProps, autoFocus = true, ...props }, ref) => {
+  ({ children, className, attributes: { nodeProps, ...attributes }, ...props }, ref) => {
     const [_isImageLoaded, setIsImageLoaded] = useState(false);
     const [url, setUrl] = useState<string | undefined>(props?.element?.url as string | undefined);
     const [isUploading, setIsUploading] = useState(false);
@@ -152,7 +152,7 @@ export const ImageElement = withRef<typeof PlateElement>(
 
     return (
       <ImagePopover url={url} open={selected} popoverRef={popoverRef}>
-        <PlateElement ref={ref} className={cn(className, "my-9 flex flex-col items-center  ")} {...props}>
+        <PlateElement attributes={attributes} className={cn(className, "my-9 flex flex-col items-center  ")} {...props}>
           <motion.figure
             ref={figureRef}
             className="group w-full flex flex-col items-center cursor-default"

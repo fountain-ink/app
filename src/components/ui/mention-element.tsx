@@ -7,7 +7,7 @@ import type { TMentionElement } from "@udecode/plate-mention";
 import { useElement, useFocused, useSelected } from "@udecode/plate/react";
 import React from "react";
 import { UserLazyUsername } from "../user/user-lazy-username";
-import { PlateElement } from "./plate-element";
+import { PlateElement } from "@udecode/plate/react";
 
 export const MentionElement = withRef<
   typeof PlateElement,
@@ -16,7 +16,7 @@ export const MentionElement = withRef<
     renderLabel?: (mentionable: TMentionElement) => string;
     onClick?: (mentionNode: any) => void;
   }
->(({ children, className, prefix, renderLabel, onClick, ...props }, ref) => {
+>(({ children, className, prefix, renderLabel, onClick, attributes, ...props }, ref) => {
   const element = useElement<TMentionElement>();
   const selected = useSelected();
   const focused = useFocused();
@@ -32,9 +32,12 @@ export const MentionElement = withRef<
         element?.children?.[0]?.italic === true && "italic",
         className,
       )}
-      onClick={getHandler(onClick, element)}
+      attributes={{
+        onClick: getHandler(onClick, element),
+        contentEditable: false,
+        ...attributes,
+      }}
       data-slate-value={element.value}
-      contentEditable={false}
       {...props}
     >
       {mounted && (

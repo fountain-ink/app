@@ -55,7 +55,6 @@ import { ParagraphPlugin, PlateLeaf } from "@udecode/plate/react";
 import { EmojiInputElement } from "../ui/emoji-input-element";
 import { EquationElement } from "../ui/equation-element";
 import { HighlightLeaf } from "../ui/highlight-leaf";
-import { ImageElementPlate } from "../ui/image-element-plate";
 import { InlineEquationElement } from "../ui/inline-equation-element";
 import { KbdLeaf } from "../ui/kbd-leaf";
 import { ListElement } from "../ui/list-element";
@@ -86,7 +85,6 @@ export const getElements = () => {
     [HEADING_KEYS.h1]: withProps(HeadingElement, { variant: "h1" }),
     [HEADING_KEYS.h2]: withProps(HeadingElement, { variant: "h2" }),
     [HEADING_KEYS.h3]: withProps(HeadingElement, { variant: "h3" }),
-    [HEADING_KEYS.h4]: withProps(HeadingElement, { variant: "h4" }),
     [EquationPlugin.key]: EquationElement,
     [InlineEquationPlugin.key]: InlineEquationElement,
     [KbdPlugin.key]: KbdLeaf,
@@ -101,7 +99,7 @@ export const getElements = () => {
     [MentionPlugin.key]: MentionElement,
     [EmojiInputPlugin.key]: EmojiInputElement,
     [MentionInputPlugin.key]: MentionInputElement,
-    [ParagraphPlugin.key]: withProps(ParagraphElement, { as: "p" }),
+    [ParagraphPlugin.key]: ParagraphElement,
     [BulletedListPlugin.key]: withProps(ListElement, { variant: "ul" }),
     [NumberedListPlugin.key]: withProps(ListElement, { variant: "ol" }),
     [TodoListPlugin.key]: TodoListElement,

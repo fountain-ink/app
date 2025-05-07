@@ -6,7 +6,7 @@
 //   useTableCellElementResizable,
 // } from "@udecode/plate-table/react";
 
-// import { PlateElement } from "./plate-element";
+// import { PlateElement } from "@udecode/plate/react";
 // import { ResizeHandle } from "./resizable";
 
 // export const TableCellElement = withRef<

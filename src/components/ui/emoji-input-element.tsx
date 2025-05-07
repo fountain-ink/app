@@ -15,7 +15,7 @@ import {
   InlineComboboxInput,
   InlineComboboxItem,
 } from "./inline-combobox";
-import { PlateElement } from "./plate-element";
+import { PlateElement } from "@udecode/plate/react";
 import { useDebounce } from "@/hooks/use-debounce";
 
 export const EmojiInputElement = withRef<typeof PlateElement>(({ className, ...props }, ref) => {
