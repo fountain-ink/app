@@ -4,7 +4,7 @@ import { Account } from "@lens-protocol/client";
 import { User2Icon } from "lucide-react";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { resolveImageUrl } from "@/lib/utils/resolve-image-url";
+import { resolveUrl } from "@/lib/utils/resolve-url";
 
 export const UserAvatar = ({
   account,
@@ -28,7 +28,7 @@ export const UserAvatar = ({
     return <AvatarSuspense size={size} />;
   }
 
-  const avatar = resolveImageUrl(account?.metadata?.picture);
+  const avatar = resolveUrl(account?.metadata?.picture);
 
   return (
     <div className={className}>

@@ -39,7 +39,7 @@ import { UserSearchList } from "../user/user-search-list";
 import { EvmAddress } from "../misc/evm-address";
 import { UserLazyUsername } from "../user/user-lazy-username";
 import { CombinedFormValues } from "./publish-dialog";
-import { resolveImageUrl } from "@/lib/utils/resolve-image-url";
+import { resolveUrl } from "@/lib/utils/resolve-url";
 import { MetadataLicenseType } from "@lens-protocol/metadata";
 import { LicenseDescriptions, Licenses } from "@/lib/licenses";
 import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
@@ -422,8 +422,8 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
             percentage: 100
           };
 
-        setValue("collecting.recipients", [newRecipient], {
-          shouldValidate: true,
+          setValue("collecting.recipients", [newRecipient], {
+            shouldValidate: true,
             shouldDirty: true
           });
         }
@@ -697,7 +697,7 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
                                             </div>
                                             {recipient.picture ? (
                                               <img
-                                                src={resolveImageUrl(recipient.picture)}
+                                                src={resolveUrl(recipient.picture)}
                                                 alt={recipient.username || "recipient"}
                                                 className="w-8 h-8 rounded-full border border-border"
                                               />

@@ -1,8 +1,8 @@
 import { Account } from "@lens-protocol/client";
-import { resolveImageUrl } from "@/lib/utils/resolve-image-url";
+import { resolveUrl } from "@/lib/utils/resolve-url";
 
 export const UserCover = ({ account, className }: { account?: Account; className?: string }) => {
-  const cover = resolveImageUrl(account?.metadata?.coverPicture);
+  const cover = resolveUrl(account?.metadata?.coverPicture);
 
   if (!cover) {
     return (

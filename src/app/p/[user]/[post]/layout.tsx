@@ -15,10 +15,7 @@ import { getPostIdBySlug } from "@/lib/slug/get-post-by-slug";
 export async function generateMetadata({ params }: { params: { user: string; post: string } }) {
   const username = params.user;
   const postParam = params.post;
-
   const lens = await getLensClient();
-
-  // Look up whether this is a custom slug
   const lensPostId = await getPostIdBySlug(postParam, username);
   const postId = lensPostId || postParam;
 

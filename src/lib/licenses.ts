@@ -39,11 +39,11 @@ export enum Licenses {
 }
 
 export const LicenseDescriptions: Record<Licenses, string> = {
-  [Licenses.NoLicense]: "You retain all rights to your content. No permissions are granted to collectors.",
-  [Licenses.CCO]: "Public domain dedication. Allows anyone to use your content without any restrictions.",
-  [Licenses.CC_BY]: "Allows commercial use and derivatives with attribution to you required.",
-  [Licenses.CC_BY_ND]: "Allows commercial use but no derivatives. Attribution required.",
-  [Licenses.CC_BY_NC]: "Allows non-commercial use and derivatives. Attribution required.",
+  [Licenses.NoLicense]: "All rights to the content are retained.",
+  [Licenses.CCO]: "Public domain dedication. Anyone can use the content without any restrictions.",
+  [Licenses.CC_BY]: "Allows commercial use and derivatives with attribution to the creator required.",
+  [Licenses.CC_BY_ND]: "Allows commercial use but no derivatives. Attribution to the creator required.",
+  [Licenses.CC_BY_NC]: "Allows non-commercial use and derivatives. Attribution to the creator required.",
   [Licenses.TBNL_C_D_PL_Legal]: "Grants commercial rights, allows derivatives, public can use content. Legal authority prevails.",
   [Licenses.TBNL_C_DT_PL_Legal]: "Grants commercial rights, derivatives must be NFTs, public can use content. Legal authority prevails.",
   [Licenses.TBNL_C_ND_PL_Legal]: "Grants commercial rights, no derivatives, public can use content. Legal authority prevails.",

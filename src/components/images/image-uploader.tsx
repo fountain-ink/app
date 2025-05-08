@@ -7,7 +7,7 @@ import Cropper from "react-easy-crop";
 import { useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { storageClient } from "@/lib/lens/storage-client";
-import { resolveImageUrl } from "@/lib/utils/resolve-image-url";
+import { resolveUrl } from "@/lib/utils/resolve-url";
 
 const createImage = (url: string): Promise<HTMLImageElement> =>
   new Promise((resolve, reject) => {
@@ -146,7 +146,7 @@ export const ImageCropperUploader = ({
       >
         {localImage || image ? (
           <>
-            <img src={localImage || resolveImageUrl(image)} alt={""} className="w-full h-full object-cover" />
+            <img src={localImage || resolveUrl(image)} alt={""} className="w-full h-full object-cover" />
             {(localImage || image) && (
               <div
                 className="absolute inset-0 w-10 h-10 mx-auto my-auto flex items-center justify-center bg-black/50 hover:bg-black/70 p-1.5 rounded-full cursor-pointer transition-colors"
@@ -269,7 +269,7 @@ export function ImageUploader({ label, onImageChange, initialImage, className, i
       >
         {localImage || image ? (
           <>
-            <img src={localImage || resolveImageUrl(image)} alt={""} className="w-full h-full object-cover" />
+            <img src={localImage || resolveUrl(image)} alt={""} className="w-full h-full object-cover" />
             {(localImage || image) && (
               <div
                 className="absolute inset-0 w-10 h-10 mx-auto my-auto flex items-center justify-center bg-black/50 hover:bg-black/70 p-1.5 rounded-full cursor-pointer transition-colors"

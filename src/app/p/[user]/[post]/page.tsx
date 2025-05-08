@@ -4,15 +4,14 @@ import Editor from "@/components/editor/editor";
 import { DateLabel } from "@/components/misc/date-label";
 import ErrorPage from "@/components/misc/error-page";
 import { PostActionsBar } from "@/components/post/post-actions-bar";
-import PostDeletedView from "@/components/post/post-deleted-view";
 import { FloatingActionBar } from "@/components/post/post-floating-actions-bar";
+import { PostMetadata } from "@/components/post/post-metadata";
 import { AuthorView } from "@/components/user/user-author-view";
 import { UserPostCard } from "@/components/user/user-post-card";
 import { ActionBarProvider } from "@/contexts/action-bar-context";
 import { getUserProfile } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { getPostIdBySlug } from "@/lib/slug/get-post-by-slug";
-import { formatDate } from "@/lib/utils";
 import { fetchAccountStats, fetchPost } from "@lens-protocol/client/actions";
 import DOMPurify from "isomorphic-dompurify";
 
@@ -20,20 +19,16 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
   const lens = await getLensClient();
   const username = params.user;
   const postParam = params.post;
-
-  // First, try to look up the post by slug in our database
   const lensPostId = await getPostIdBySlug(postParam, username);
-
-  // If we found a post ID by slug, use it; otherwise, assume the param is the actual post ID
   const postId = lensPostId || postParam;
 
   const post = await fetchPost(lens, { post: postId }).unwrapOr(null);
   const { profile } = await getUserProfile();
 
-  // Only fetch author stats if we have a post
-  const authorStats = post ?
-    await fetchAccountStats(lens, { account: post.author.address }).unwrapOr(null) :
-    null;
+  const authorStats =
+    post
+      ? await fetchAccountStats(lens, { account: post.author.address }).unwrapOr(null)
+      : null;
 
   if (!post) return <ErrorPage error="Couldn't find post to show" />;
 
@@ -63,9 +58,10 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
             </div>
           </div>
           <Editor showToc value={contentJson} readOnly={true} />
-          <div className="max-w-[60ch] mx-auto p-4 sm:p-8 md:px-16 flex flex-col gap-8 sm:gap-10">
+          <div className="max-w-[60ch] mx-auto p-4 sm:p-8 md:px-16 flex flex-col gap-6 sm:gap-8">
             <PostActionsBar post={post} />
             <UserPostCard account={post.author} stats={authorStats} />
+            <PostMetadata post={post} />
             <CommentPreview post={post} />
             <FloatingActionBar post={post} account={profile?.loggedInAs.account} />
           </div>

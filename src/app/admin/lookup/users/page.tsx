@@ -10,7 +10,7 @@ import { useState, useEffect, useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchAccounts } from "@lens-protocol/client/actions";
-import { resolveImageUrl } from "@/lib/utils/resolve-image-url";
+import { resolveUrl } from "@/lib/utils/resolve-url";
 import { Database } from "@/lib/db/database";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -93,7 +93,7 @@ export default function UsersLookupPage() {
             address: item.address,
             username: item.username?.localName,
             name: item.metadata?.name,
-            picture: item.metadata?.picture ? resolveImageUrl(item.metadata.picture) : undefined,
+            picture: item.metadata?.picture ? resolveUrl(item.metadata.picture) : undefined,
             metadata: item.metadata
           })) as LensAccountData[];
 
@@ -155,7 +155,7 @@ export default function UsersLookupPage() {
           username: item.username?.localName,
           name: item.metadata?.name,
           picture: item.metadata?.picture
-            ? resolveImageUrl(item.metadata.picture)
+            ? resolveUrl(item.metadata.picture)
             : undefined,
           metadata: item.metadata || {}
         };

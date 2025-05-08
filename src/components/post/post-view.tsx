@@ -10,7 +10,7 @@ import { PostReactions } from "./post-reactions";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { resolveImageUrl } from "@/lib/utils/resolve-image-url";
+import { resolveUrl } from "@/lib/utils/resolve-url";
 import { useEffect, MouseEvent } from "react";
 import { extractSubtitle } from "@/lib/extract-subtitle";
 
@@ -58,7 +58,7 @@ export const PostView = ({
   }
   const metadata = post.metadata
   const blog = post.feed.group?.metadata
-  const blogImage = resolveImageUrl(blog?.icon)
+  const blogImage = resolveUrl(blog?.icon)
   const subtitleFromAttributes = metadata.attributes?.find((attr) => "key" in attr && attr.key === "subtitle")?.value
   const contentJson = metadata.attributes?.find((attr) => "key" in attr && attr.key === "contentJson")?.value
   const subtitle = subtitleFromAttributes || extractSubtitle(contentJson)

@@ -3,7 +3,7 @@
 import imageCompression from "browser-image-compression";
 import { toast } from "sonner";
 import { storageClient } from "../lens/storage-client";
-import { resolveImageUrl } from "../utils/resolve-image-url";
+import { resolveUrl } from "../utils/resolve-url";
 
 export const uploadFile = async (input: File | ArrayBuffer | string) => {
   try {
@@ -36,7 +36,7 @@ export const uploadFile = async (input: File | ArrayBuffer | string) => {
     const { uri } = await storageClient.uploadFile(fileToUpload);
     console.log(`Uploading file to ${uri}`);
 
-    return resolveImageUrl(uri);
+    return resolveUrl(uri);
   } catch (error) {
     console.error(error);
     toast.error("Failed to upload file");

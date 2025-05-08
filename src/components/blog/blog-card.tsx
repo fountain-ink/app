@@ -7,7 +7,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import Image from "next/image";
 import { useState } from "react";
-import { resolveImageUrl } from "@/lib/utils/resolve-image-url";
+import { resolveUrl } from "@/lib/utils/resolve-url";
 
 interface Blog {
   title: string;
@@ -34,7 +34,7 @@ export function BlogCard({ blog, href, showExternalLink = true }: BlogCardProps)
 
   const linkHref = href || blogUrl;
 
-  const iconUrl = resolveImageUrl(icon || undefined);
+  const iconUrl = resolveUrl(icon || undefined);
 
   return (
     <Card className="transition-all hover:bg-accent/50 relative">
