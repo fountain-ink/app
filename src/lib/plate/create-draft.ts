@@ -30,7 +30,7 @@ export async function createDraft(options: CreateDraftOptions = {}) {
     publishedId
   } = options;
 
-  const contentToUse = initialContent || (isGuest ? defaultGuestContent : defaultContent);
+  const contentToUse = initialContent || defaultContent;
   const yDoc = await generateYDoc(documentId, contentToUse);
   const yDocBinary = Y.encodeStateAsUpdate(yDoc);
   const yDocBase64 = Buffer.from(yDocBinary).toString('base64');
@@ -80,7 +80,7 @@ const generateYDoc = async (documentId: string, content: any) => {
   // const insertDelta = slateNodesToInsertDelta(content);
   // console.log("insertDelta", insertDelta);
   // console.log("initialDelta", initialDelta);
-   //sharedRoot.applyDelta(insertDelta as any);
+  //sharedRoot.applyDelta(insertDelta as any);
 
   return yDoc;
 }
