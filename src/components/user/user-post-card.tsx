@@ -33,7 +33,7 @@ export function UserPostCard({ account, stats }: UserPostCardProps) {
         "flex-col sm:flex-row items-stretch"
       )}
     >
-      <div className="flex flex-col flex-shrink-0 w-full sm:w-auto sm:max-w-[260px] min-w-0">
+      <div className="flex flex-col flex-shrink-0 w-full min-w-0">
         <Link prefetch href={`/u/${account.username?.localName}`} className="flex flex-row items-start gap-4 w-full">
           <UserAvatar account={account} size={12} className="w-12 h-12 rounded-full flex-shrink-0" />
           <div className="flex flex-col justify-center min-w-0 flex-1">
@@ -46,7 +46,7 @@ export function UserPostCard({ account, stats }: UserPostCardProps) {
           </div>
         </Link>
         {account?.metadata?.bio && account.metadata.bio.length > 0 && (
-          <div className="text-sm text-muted-foreground mt-2 truncate max-w-full">
+          <div className="text-sm text-muted-foreground mt-4 max-w-full">
             <UserBio profile={account} />
           </div>
         )}
