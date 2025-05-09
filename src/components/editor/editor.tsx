@@ -17,7 +17,7 @@ import { getEditorPlugins } from "./plugins";
 import { useMounted } from "@/hooks/use-mounted";
 import { YjsPlugin } from "@udecode/plate-yjs/react";
 import { defaultContent } from "@/lib/plate/default-content";
-import { trimEmptyTrailingParagraphs as trimEmptyNodes } from "@/lib/plate/trim-empty-paragraphs";
+import { trimEmptyNodes as trimEmptyNodes } from "@/lib/plate/trim-empty-nodes";
 
 export default function PlateEditor(
   props: PropsWithChildren & {
