@@ -85,7 +85,7 @@ const UserLayout = async ({
               <div className="whitespace-nowrap text-ellipsis overflow-x-clip flex items-center gap-2">
                 <UserName profile={account} className="md:text-[42px] text-[32px] pl-1 font-normal tracking-[-0.8px] overflow-visible" />
                 {!isUserProfile && account?.operations?.isFollowingMe && (
-                  <Badge className="text-xs h-fit w-fit flex items-center justify-center ml-2" variant="secondary">
+                  <Badge className="text-xs rounded-sm text-primary/70 bg-secondary/50 -mb-1 h-fit w-fit flex items-center justify-center ml-2" variant="secondary">
                     <span className="text-xs leading-tight">Follows you</span>
                   </Badge>
                 )}

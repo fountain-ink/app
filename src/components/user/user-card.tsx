@@ -86,7 +86,7 @@ export const UserCard = ({ children, username, address, linkProfile = false }: U
 
               <span className="flex flex-row gap-2 items-center justify-center">
                 {isFollowingMe && (
-                  <Badge className="text-xs h-fit w-fit mr-8 ml-2" variant="secondary">
+                  <Badge className="text-xs rounded-sm text-primary/70 bg-secondary/50 -mb-1 h-fit w-fit flex items-center justify-center ml-2" variant="secondary">
                     Follows you
                   </Badge>
                 )}
