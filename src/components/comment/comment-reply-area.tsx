@@ -15,6 +15,7 @@ import { UserAvatar } from "../user/user-avatar";
 import { UserUsername } from "../user/user-handle";
 import { UserName } from "../user/user-name";
 import { cn } from "@/lib/utils";
+import { useAuthenticatedUser } from "@lens-protocol/react";
 
 interface PostReplyAreaProps {
   postId: string;
@@ -36,6 +37,7 @@ export const CommentReplyArea = ({
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: walletClient } = useWalletClient();
+  const { data: authenticatedUser, loading: isAuthenticatedUserLoading } = useAuthenticatedUser();
 
   const handleSubmit = async () => {
     if (!content.trim() || isSubmitting) return;
@@ -50,8 +52,7 @@ export const CommentReplyArea = ({
         return;
       }
 
-      const session = await currentSession(lens).unwrapOr(null);
-      if (!session) {
+      if (!authenticatedUser && !isAuthenticatedUserLoading) {
         toast.error("Please log in to comment");
         return;
       }
@@ -121,7 +122,17 @@ export const CommentReplyArea = ({
       })}
     >
       <div className="flex flex-col gap-4">
-        {!isCompact && (
+        {isAuthenticatedUserLoading && (
+          <div className="flex items-start gap-3">
+            <UserAvatar account={account} className="w-10 h-10" />
+            <div className="flex flex-col">
+              <UserName profile={account} className="text-sm font-medium" />
+              <UserUsername account={account} className="text-sm text-muted-foreground" />
+            </div>
+          </div>
+        )}
+
+        {!isCompact && !isAuthenticatedUserLoading && authenticatedUser && (
           <div className="flex items-start gap-3">
             <UserAvatar account={account} className="w-10 h-10" />
             <div className="flex flex-col">

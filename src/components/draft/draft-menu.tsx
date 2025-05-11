@@ -55,7 +55,7 @@ export const DraftMenu = ({
         dropdownItems={dropdownItems}
         showChevron={false}
         initialCount={0}
-        shouldIncrementOnClick={false} />
+      />
     </div>
   );
 };
