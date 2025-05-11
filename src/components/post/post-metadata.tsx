@@ -93,8 +93,8 @@ export const PostMetadata = ({ post }: PostMetadataProps) => {
   }
 
   return (
-    <div className="w-full bg-card border border-border shadow-md rounded-lg p-4">
-      <Tabs defaultValue="copyright-license">
+    <div className="w-full bg-card border border-border rounded-lg p-4">
+      <Tabs defaultValue="storage">
         <TabsList>
           <TabsTrigger value="copyright-license">Copyright & License</TabsTrigger>
           <TabsTrigger value="storage">Storage</TabsTrigger>
