@@ -13,7 +13,9 @@ export const TruncatedText = ({
   isMarkdown?: boolean;
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
+
   if (!text) return null;
+
   const isTruncated = isCollapsed && text.length > maxLength;
   const truncatedText = isCollapsed ? text.substring(0, maxLength) : text;
   const ellipsis = isTruncated ? "..." : "";

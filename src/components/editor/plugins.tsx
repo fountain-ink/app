@@ -43,7 +43,7 @@ import {
   AudioPlugin,
   FilePlugin,
   ImagePlugin,
-  MediaEmbedPlugin,
+  // MediaEmbedPlugin,
   PlaceholderPlugin,
   VideoPlugin,
 } from "@udecode/plate-media/react";
@@ -74,6 +74,7 @@ import { TEquationElement } from "@udecode/plate-math";
 import { Heading, Text } from "mdast";
 import { uploadFile } from "@/lib/upload/upload-file";
 import { getRandomUid } from "@/lib/get-random-uid";
+import { IframePlugin } from "./plugins/iframe-plugin";
 
 const lowlight = createLowlight(all);
 
@@ -203,6 +204,7 @@ export const plugins = [
   }),
   TitlePlugin,
   SubtitlePlugin,
+  IframePlugin,
   HeadingPlugin.configure({
     options: { levels: 2 },
     handlers: {
@@ -269,9 +271,9 @@ export const plugins = [
   LinkPlugin.extend({
     render: { afterEditable: () => <LinkFloatingToolbar /> },
   }),
-  MediaEmbedPlugin,
+  // MediaEmbedPlugin,
   CaptionPlugin.configure({
-    options: { plugins: [ImagePlugin, MediaEmbedPlugin, CodeBlockPlugin, EquationPlugin] },
+    options: { plugins: [ImagePlugin, IframePlugin, CodeBlockPlugin, EquationPlugin] },
   }),
   DatePlugin,
   MentionPlugin.configure({
@@ -328,8 +330,7 @@ export const plugins = [
   VideoPlugin,
   AudioPlugin,
   FilePlugin,
-  MediaEmbedPlugin,
-
+  // MediaEmbedPlugin,
   // ImagePlugin.extend({
   //   render: {
   //     node: ImageElement,
@@ -352,11 +353,11 @@ export const plugins = [
   KbdPlugin,
 
   // Block Style
-  AlignPlugin.extend({
-    inject: {
-      targetPlugins: [ParagraphPlugin.key, MediaEmbedPlugin.key, HEADING_KEYS.h1, HEADING_KEYS.h2, ImagePlugin.key],
-    },
-  }),
+  // AlignPlugin.extend({
+  //   inject: {
+  //     targetPlugins: [ParagraphPlugin.key, MediaEmbedPlugin.key, HEADING_KEYS.h1, HEADING_KEYS.h2, ImagePlugin.key],
+  //   },
+  // }),
   IndentPlugin.extend({
     inject: {
       targetPlugins: [
@@ -455,7 +456,7 @@ export const plugins = [
           VideoPlugin.key,
           AudioPlugin.key,
           FilePlugin.key,
-          MediaEmbedPlugin.key,
+          IframePlugin.key,
         ],
       },
     },

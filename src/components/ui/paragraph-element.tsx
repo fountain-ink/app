@@ -10,6 +10,7 @@ export function ParagraphElement({
   className,
   ...props
 }: React.ComponentProps<typeof PlateElement>) {
+
   return (
     <PlateElement
       className={cn(className)}

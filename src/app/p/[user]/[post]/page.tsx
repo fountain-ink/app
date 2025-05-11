@@ -42,6 +42,7 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
 
   const contentJson = post?.metadata?.attributes?.find((attr: any) => attr.key === "contentJson")?.value;
   const contentHtml = post?.metadata?.attributes?.find((attr: any) => attr.key === "contentHtml")?.value;
+  console.log(contentJson)
 
   if (contentJson) {
     return (

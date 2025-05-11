@@ -63,6 +63,8 @@ import { MediaPlaceholderElement } from "../ui/media-placeholder-element";
 import { TodoListElement } from "../ui/todo-list-element";
 import { TITLE_KEYS } from "./plugins/title-plugin";
 import { ImageElement } from "../ui/image-element";
+import { IframePlugin } from "./plugins/iframe-plugin";
+import { IframeElement } from "../ui/iframe-element";
 
 export const getRichElements = () => {
   return withPlaceholders(getElements());
@@ -91,11 +93,8 @@ export const getElements = () => {
     [HighlightPlugin.key]: HighlightLeaf,
     [PlaceholderPlugin.key]: MediaPlaceholderElement,
     [ImagePlugin.key]: ImageElement,
-    // [VideoPlugin.key]: VideoElement,
-    // [AudioPlugin.key]: AudioElement,
-    // [FilePlugin.key]: FileElement,
     [LinkPlugin.key]: LinkElement,
-    [MediaEmbedPlugin.key]: MediaEmbedElement,
+    [IframePlugin.key]: IframeElement,
     [MentionPlugin.key]: MentionElement,
     [EmojiInputPlugin.key]: EmojiInputElement,
     [MentionInputPlugin.key]: MentionInputElement,

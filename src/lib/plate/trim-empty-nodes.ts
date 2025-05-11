@@ -1,3 +1,6 @@
+import { SubtitlePlugin, TitlePlugin } from "@/components/editor/plugins/title-plugin";
+import { ParagraphPlugin } from "@udecode/plate-core/react";
+
 export const trimEmptyNodes = (nodes: any[] | undefined): any[] | undefined => {
   if (!Array.isArray(nodes)) {
     return nodes;
@@ -6,7 +9,7 @@ export const trimEmptyNodes = (nodes: any[] | undefined): any[] | undefined => {
   const nodesWithoutEmptySubtitles = nodes.filter(node => {
     if (
       node &&
-      (node.type === 'subtitle' || node.type === 'title') &&
+      (node.type === SubtitlePlugin.key || node.type === TitlePlugin.key) &&
       Array.isArray(node.children) &&
       node.children.length === 1 &&
       node.children[0] &&
@@ -24,6 +27,7 @@ export const trimEmptyNodes = (nodes: any[] | undefined): any[] | undefined => {
     if (
       lastNode &&
       lastNode.type &&
+      lastNode.type === ParagraphPlugin.key &&
       Array.isArray(lastNode.children) &&
       lastNode.children.length === 1 &&
       lastNode.children[0] &&
