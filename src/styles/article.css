@@ -216,7 +216,7 @@
   }
 }
 
-@media (min-width: 480px) and (max-width: 639px) {
+@media (max-width: 639px) {
   .article .title {
     font-size: calc(var(--title-size) * 0.8);
     line-height: calc(var(--title-line-height) * 0.9);
@@ -225,17 +225,5 @@
   .article .subtitle {
     font-size: calc(var(--subtitle-size) * 0.8);
     line-height: calc(var(--subtitle-line-height) * 0.9);
-  }
-}
-
-@media (max-width: 479px) {
-  .article .title {
-    font-size: calc(var(--title-size) * 0.5);
-    line-height: calc(var(--title-line-height) * 0.7);
-  }
-
-  .article .subtitle {
-    font-size: calc(var(--subtitle-size) * 0.5);
-    line-height: calc(var(--subtitle-line-height) * 0.7);
   }
 }
