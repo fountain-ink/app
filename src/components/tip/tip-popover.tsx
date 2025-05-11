@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ShoppingBag, DollarSign, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Post, postId, evmAddress } from "@lens-protocol/client";
+import { Post, postId, evmAddress, bigDecimal } from "@lens-protocol/client";
 import { executePostAction } from "@lens-protocol/client/actions";
 import { handleOperationWith, signMessageWith } from "@lens-protocol/client/viem";
 import { useWalletClient, useBalance } from "wagmi";
@@ -105,12 +105,12 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
 
       const toastId = toast.loading(`Sending $${formattedTipAmount} tip...`);
 
-      await executePostAction(lens, {
+      executePostAction(lens, {
         post: postId(post.id),
         action: {
           tipping: {
             currency: evmAddress(currencyAddress),
-            value: finalAmount,
+            value: bigDecimal(finalAmount),
           },
         }
       }).andThen(handleOperationWith(walletClient))
