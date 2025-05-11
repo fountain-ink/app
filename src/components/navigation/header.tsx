@@ -16,6 +16,7 @@ import { PublishMenu } from "../publish/publish-dialog";
 import { getBlogData, BlogData } from "@/lib/settings/get-blog-data";
 import { toast } from "sonner";
 import { BlogEmailSubscribe } from "../newsletter/newsletter-subscribe-dialog";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const Header = ({ session }: { session: MeResult | null }) => {
   const pathname = usePathname();
@@ -28,8 +29,11 @@ export const Header = ({ session }: { session: MeResult | null }) => {
   const blogId = isBlogPage && pathSegments.length >= 2 ? pathSegments[1] : undefined;
   const blogSlug = isBlogPage && pathSegments.length >= 3 ? pathSegments[2] : undefined;
   const postId = isPostPage && pathSegments.length >= 3 ? pathSegments[2] : undefined;
+  const documentId = pathname.split("/").filter(Boolean).pop() ?? "";
+  const yjsState = useYjsState((state) => state.getState(documentId) ?? { status: "disconnected" as ConnectionStatus });
   const isAuthenticated = session !== null;
   const logoLink = isAuthenticated ? "/featured" : "/";
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     const fetchBlogData = async () => {
@@ -51,8 +55,6 @@ export const Header = ({ session }: { session: MeResult | null }) => {
     }
   }, [isBlogPage, blogId, blogSlug]);
 
-  const documentId = pathname.split("/").filter(Boolean).pop() ?? "";
-  const yjsState = useYjsState((state) => state.getState(documentId) ?? { status: "disconnected" as ConnectionStatus });
 
   const HeaderContent = () => (
     <div className="flex items-center justify-between h-full px-2">
@@ -68,7 +70,7 @@ export const Header = ({ session }: { session: MeResult | null }) => {
         {isBlogPage && blogData && <BlogEmailSubscribe blogData={blogData} variant="default" />}
         {isWritePage && <PublishMenu documentId={documentId} />}
         {isWritePage && <EditorOptionsDropdown />}
-        {!isWritePage && <DraftCreateButton />}
+        {!isWritePage && !isMobile && <DraftCreateButton />}
         <UserMenu session={session} />
       </div>
     </div>
