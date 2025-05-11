@@ -13,6 +13,7 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider as DarkModeProvider } from "next-themes";
 import { PostActionsProvider } from "@/contexts/post-actions-context";
+import { GlobalModals } from "@/components/misc/global-modals";
 
 export const metadata = {
   title: "Fountain",
@@ -46,6 +47,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
                 <AuthManager credentials={credentials} />
                 <Toaster position="top-center" offset={16} />
                 <Header session={session} />
+                <GlobalModals />
                 <main className="flex-1">{children}</main>
                 <GlobalFooter />
               </ThemeProvider>
@@ -56,5 +58,6 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
     </html>
   );
 };
+
 
 export default RootLayout;

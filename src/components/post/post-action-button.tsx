@@ -14,6 +14,9 @@ import { useState, ReactElement } from "react";
 import { AnimatedChevron } from "../ui/animated-chevron";
 import { LucideIcon } from "lucide-react";
 import { IconType } from "react-icons";
+import { useAccount } from "wagmi";
+import { useUIStore } from "@/stores/ui-store";
+import { useModal } from "connectkit";
 
 export type DropdownItem = {
   icon: any;
@@ -28,10 +31,10 @@ export type ActionButtonProps = {
   strokeColor: string;
   fillColor: string;
   isActive?: boolean;
-  shouldIncrementOnClick: boolean;
-  onClick?: () => Promise<any> | undefined;
+  onClick?: () => Promise<any> | void | undefined;
   renderPopover?: (trigger: ReactElement) => ReactElement;
   isDisabled?: boolean;
+  isUserLoggedIn?: boolean;
   dropdownItems?: DropdownItem[];
   hideCount?: boolean;
   className?: string;
@@ -58,23 +61,49 @@ export const ActionButton = ({
   strokeColor,
   fillColor,
   isActive = false,
-  shouldIncrementOnClick,
   onClick,
   renderPopover,
   isDisabled = false,
+  isUserLoggedIn,
   dropdownItems,
   hideCount = false,
   className,
   showChevron = false,
-  fillOnHover = true,
   fillOnClick = true,
 }: ActionButtonProps) => {
+  const setProfileSelectModalOpen = useUIStore((state) => state.setProfileSelectModalOpen);
+  const { setOpen: openConnectKitModal, open: openConnectKitModalOpen } = useModal();
+  const { isConnected: isWalletConnected } = useAccount();
   const [isHovered, setIsHovered] = useState(false);
   const { open, onOpenChange } = useOpenState();
 
-  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (isDisabled || !onClick) return;
+  const effectiveIsDisabled = isUserLoggedIn ? isDisabled : false;
+  const showLoginActions = !isUserLoggedIn;
+
+  const connectWalletHandler = () => {
+    openConnectKitModal(true);
+  };
+
+  const selectProfileHandler = () => {
+    setProfileSelectModalOpen(true);
+  };
+
+  const showLoginModal = () => {
+    if (!isWalletConnected) {
+      connectWalletHandler();
+    } else {
+      selectProfileHandler();
+    }
+  }
+
+  const handleClick = async (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
     e.stopPropagation();
+    if (showLoginActions) {
+      showLoginModal()
+      return;
+    }
+
+    if (isDisabled || !onClick) return;
     try {
       await onClick();
     } catch (error) {
@@ -83,41 +112,65 @@ export const ActionButton = ({
   };
 
   const handleHover = (hovering: boolean) => {
-    if (!isDisabled) {
-      setIsHovered(hovering);
+    if (isUserLoggedIn && isDisabled) {
+      setIsHovered(false);
+      return;
     }
+    setIsHovered(hovering);
   };
+
+  let iconStyleColor, iconStyleFill, iconOpacityStyle, buttonBgStyle, divCursorStyle, divOpacityClass;
+
+  if (showLoginActions) {
+    iconStyleColor = isHovered ? "hsl(var(--primary))" : "hsl(var(--foreground))";
+    iconStyleFill = undefined;
+    iconOpacityStyle = 1;
+    buttonBgStyle = undefined;
+    divCursorStyle = "cursor-pointer";
+    divOpacityClass = "";
+  } else {
+    iconStyleColor = isDisabled
+      ? "hsl(var(--muted-foreground))"
+      : isActive
+        ? strokeColor
+        : isHovered
+          ? strokeColor
+          : undefined;
+    iconStyleFill = isDisabled
+      ? undefined
+      : isActive && fillOnClick
+        ? fillColor
+        : undefined;
+    iconOpacityStyle = isDisabled ? 0.5 : 1;
+    buttonBgStyle = isActive ? `${strokeColor}10` : undefined;
+    divCursorStyle = isDisabled ? "cursor-not-allowed" : "cursor-pointer";
+    divOpacityClass = isDisabled ? "opacity-70" : "";
+  }
 
   const iconProps = {
     size: 20,
     strokeWidth: 1.5,
     className: "transition-all duration-200 group-hover:scale-110 group-active:scale-95",
     style: {
-      color: isDisabled
-        ? "hsl(var(--muted-foreground))"
-        : isActive
-          ? strokeColor
-          : isHovered
-            ? strokeColor
-            : undefined,
-      fill: isDisabled
-        ? undefined
-        : isActive && fillOnClick
-          ? fillColor
-          : undefined,
-      opacity: isDisabled ? 0.5 : 1,
+      color: iconStyleColor,
+      fill: iconStyleFill,
+      opacity: iconOpacityStyle,
     },
   };
 
   const MainButton = (
     <div className="relative">
-      <ButtonHoverEffect isHovered={isHovered} strokeColor={strokeColor} />
+      <ButtonHoverEffect
+        isHovered={isHovered && !effectiveIsDisabled && (isUserLoggedIn || isHovered)}
+        strokeColor={isUserLoggedIn ? strokeColor : "hsl(var(--primary))"}
+      />
       <Button
         variant="ghost3"
         onMouseEnter={() => handleHover(true)}
         onMouseLeave={() => handleHover(false)}
-        style={{ backgroundColor: isActive ? `${strokeColor}10` : undefined }}
+        style={{ backgroundColor: buttonBgStyle }}
         onClick={handleClick}
+        disabled={isUserLoggedIn && isDisabled}
         className="flex items-center transition-all duration-200 text-foreground rounded-full p-0 w-10 h-10 focus:outline-none group-hover:bg-transparent relative"
       >
         <Icon {...iconProps} />
@@ -130,15 +183,25 @@ export const ActionButton = ({
       <div className="opacity-0">{formatNumber(initialCount)}</div>
       <div className="absolute inset-0 flex items-center">
         <AnimatePresence>
-          <CounterAnimation value={initialCount} strokeColor={isActive ? strokeColor : undefined} />
+          <CounterAnimation
+            value={initialCount}
+            strokeColor={(isUserLoggedIn && isActive) ? strokeColor : undefined}
+          />
         </AnimatePresence>
       </div>
     </div>
   );
 
+  const divWrapperClassName = `group flex items-center ${divCursorStyle} ${divOpacityClass} ${className || ""}`.trim();
+
   if (renderPopover) {
+    const onPopoverClick = (e: React.MouseEvent<HTMLDivElement>) => {
+      e.stopPropagation();
+      handleClick(e);
+    }
+
     return renderPopover(
-      <div className={`group flex items-center ${isDisabled ? "cursor-not-allowed opacity-70" : "cursor-pointer"} ${className}`}>
+      <div onClick={onPopoverClick} className={divWrapperClassName}>
         <TooltipWrapper label={label}>{MainButton}</TooltipWrapper>
         {CountDisplay}
       </div>
@@ -149,10 +212,14 @@ export const ActionButton = ({
     return (
       <DropdownMenu modal={false} open={open} onOpenChange={onOpenChange}>
         <DropdownMenuTrigger asChild>
-          <div className={`group flex items-center ${isDisabled ? "cursor-not-allowed opacity-70" : "cursor-pointer"} ${className}`}>
+          <div className={divWrapperClassName}>
             <TooltipWrapper label={label}>{MainButton}</TooltipWrapper>
             {showChevron && (
-              <AnimatedChevron isOpen={open} color={isHovered ? strokeColor : undefined} direction="up" />
+              <AnimatedChevron
+                isOpen={open}
+                color={(isUserLoggedIn && isHovered && !isDisabled) ? strokeColor : (showLoginActions && isHovered ? "hsl(var(--primary))" : undefined)}
+                direction="up"
+              />
             )}
             {CountDisplay}
           </div>
@@ -170,7 +237,7 @@ export const ActionButton = ({
 
   return (
     <TooltipWrapper label={label}>
-      <div className={`group flex items-center ${isDisabled ? "cursor-not-allowed opacity-70" : "cursor-pointer"} ${className}`}>
+      <div className={divWrapperClassName}>
         {MainButton}
         {CountDisplay}
       </div>

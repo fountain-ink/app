@@ -1,11 +1,11 @@
-import { TooltipProvider } from "@/components/ui/tooltip";
+"use client";
+
 import { usePostActions } from "@/hooks/use-post-actions";
 import { handlePlatformShare } from "@/lib/get-share-url";
 import { Account, Post } from "@lens-protocol/client";
 import { Bookmark, Heart, LucideIcon, MessageCircle, Share2, Ban, StarIcon, ShieldAlert, ShieldX, Meh } from "lucide-react";
 import { IconType } from "react-icons";
 import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
-import { ActionButton } from "@/components/post/post-action-button";
 import { TipPopover } from "@/components/tip/tip-popover";
 import { CoinIcon } from "@/components/icons/custom-icons";
 import React, { ReactElement, JSXElementConstructor } from "react";
@@ -31,6 +31,9 @@ type ActionButtonConfig = {
     onClick: () => void;
   }[];
   hideCount?: boolean;
+  isUserLoggedIn?: boolean;
+  onConnectWallet?: () => void;
+  onSelectProfile?: () => void;
 };
 
 type PostActionButtons = {
@@ -42,7 +45,7 @@ type PostActionButtons = {
   adminButtons?: ActionButtonConfig[];
 };
 
-export const usePostActionsButtons = ({ post, account }: { post: Post; account?: Account }): PostActionButtons => {
+export const usePostActionsButtons = ({ post }: { post: Post }): PostActionButtons => {
   const {
     handleComment,
     handleCollect,
@@ -83,7 +86,8 @@ export const usePostActionsButtons = ({ post, account }: { post: Post; account?:
       onClick: handleLike,
       isActive: hasUpvoted,
       shouldIncrementOnClick: true,
-      isDisabled: !isLoggedIn,
+      isDisabled: false,
+      isUserLoggedIn: isLoggedIn,
     },
     collectButton: {
       icon: CoinIcon,
@@ -98,7 +102,8 @@ export const usePostActionsButtons = ({ post, account }: { post: Post; account?:
         </TipPopover>
       ),
       isActive: isCollectSheetOpen,
-      isDisabled: !isLoggedIn,
+      isDisabled: false,
+      isUserLoggedIn: isLoggedIn,
     },
     commentButton: {
       icon: MessageCircle,
@@ -109,7 +114,8 @@ export const usePostActionsButtons = ({ post, account }: { post: Post; account?:
       onClick: () => handleComment(false),
       shouldIncrementOnClick: false,
       isActive: isCommentSheetOpen,
-      isDisabled: !canComment,
+      isDisabled: false,
+      isUserLoggedIn: true,
     },
     bookmarkButton: {
       icon: Bookmark,
@@ -120,6 +126,8 @@ export const usePostActionsButtons = ({ post, account }: { post: Post; account?:
       fillColor: "hsl(var(--primary) / 0.8)",
       shouldIncrementOnClick: true,
       onClick: handleBookmark,
+      isDisabled: false,
+      isUserLoggedIn: isLoggedIn,
     },
     shareButton: {
       icon: Share2,
@@ -130,6 +138,7 @@ export const usePostActionsButtons = ({ post, account }: { post: Post; account?:
       fillColor: "hsl(var(--primary) / 0.8)",
       shouldIncrementOnClick: false,
       hideCount: true,
+      isUserLoggedIn: true,
       dropdownItems: [
         {
           icon: TbLink,

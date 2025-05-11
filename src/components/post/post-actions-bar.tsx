@@ -8,7 +8,7 @@ import { ActionButton } from "./post-action-button";
 
 export const PostActionsBar = ({ post, account }: { post: Post; account?: Account }) => {
   const { actionBarRef } = useActionBar();
-  const { likeButton, collectButton, commentButton, bookmarkButton, shareButton } = usePostActionsButtons({ post, account });
+  const { likeButton, collectButton, commentButton, bookmarkButton, shareButton } = usePostActionsButtons({ post });
 
   const leftButtons = [likeButton, collectButton, commentButton];
   const rightButtons = [bookmarkButton, shareButton];
@@ -31,7 +31,7 @@ export const PostActionsBar = ({ post, account }: { post: Post; account?: Accoun
                 fillColor={button.fillColor}
                 onClick={button.onClick}
                 isActive={button.isActive}
-                shouldIncrementOnClick={button.shouldIncrementOnClick}
+                isUserLoggedIn={button.isUserLoggedIn}
                 renderPopover={button.renderPopover}
                 isDisabled={button.isDisabled}
               />
@@ -49,7 +49,7 @@ export const PostActionsBar = ({ post, account }: { post: Post; account?: Accoun
                 fillColor={button.fillColor}
                 onClick={button.onClick}
                 isActive={button.isActive}
-                shouldIncrementOnClick={button.shouldIncrementOnClick}
+                isUserLoggedIn={button.isUserLoggedIn}
                 dropdownItems={button.dropdownItems}
                 hideCount={button.hideCount}
               />

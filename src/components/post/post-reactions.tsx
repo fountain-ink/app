@@ -18,8 +18,8 @@ export const PostReactions = ({ post }: { post: Post }) => {
           fillColor={button.fillColor}
           onClick={button.onClick}
           isActive={button.isActive}
-          shouldIncrementOnClick={button.shouldIncrementOnClick}
           isDisabled={button.isDisabled}
+          isUserLoggedIn={button.isUserLoggedIn}
           renderPopover={button.renderPopover}
           dropdownItems={button.dropdownItems}
         />
@@ -37,7 +37,7 @@ export const PostReactions = ({ post }: { post: Post }) => {
               fillColor={button.fillColor}
               onClick={button.onClick}
               isActive={button.isActive}
-              shouldIncrementOnClick={button.shouldIncrementOnClick}
+              isUserLoggedIn={button.isUserLoggedIn}
               isDisabled={button.isDisabled}
               hideCount={button.hideCount}
               dropdownItems={button.dropdownItems}
