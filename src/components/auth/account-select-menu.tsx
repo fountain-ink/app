@@ -14,6 +14,7 @@ import { SelectAccountButton } from "./account-select-button";
 import { syncBlogsQuietly } from "../blog/blog-sync-button";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { env } from "@/env";
+import { useAuthenticatedUser } from "@lens-protocol/react";
 
 export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOpenChange?: (open: boolean) => void }) {
   const { address } = useAccount();
@@ -26,6 +27,7 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
   const setBlogs = useBlogStorage((state) => state.setBlogs);
   const { signMessageAsync } = useSignMessage();
   const { address: walletAddress } = useAccount();
+  const { data: authenticatedUser, loading: isAuthenticatedUserLoading } = useAuthenticatedUser();
 
   const fetchAccounts = async () => {
     if (!address) return;
@@ -134,6 +136,11 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
   if (!address) {
     return null;
   }
+
+  if (address && authenticatedUser) {
+    return null;
+  }
+
 
   return (
     <>
