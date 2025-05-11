@@ -29,7 +29,7 @@ import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { HomeIcon } from "../icons/home";
 import { useUIStore } from "@/stores/ui-store";
 
-export const UserMenu = ({ session }: { session: MeResult | null }) => {
+export const UserMenu = ({ session, showDropdown = false }: { session: MeResult | null, showDropdown?: boolean }) => {
   const { isConnected: isWalletConnected, status } = useAccount();
   const { disconnect } = useDisconnect();
   const pathname = usePathname();
@@ -40,10 +40,10 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
   const setProfileSelectModalOpen = useUIStore((state) => state.setProfileSelectModalOpen);
 
   useEffect(() => {
-    if (isWalletConnected && !session) {
+    if (isWalletConnected && !session && showDropdown) {
       setProfileSelectModalOpen(true);
     }
-  }, [isWalletConnected, session, setProfileSelectModalOpen]);
+  }, [isWalletConnected, session, setProfileSelectModalOpen, showDropdown]);
 
   const handleDisconnect = async () => {
     const client = await getLensClient();
@@ -68,6 +68,14 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
     if (pathname.match(/^\/b\/[^/]+$/)) return "/settings/blogs";
     return "/settings";
   };
+
+  if (!showDropdown) {
+    return (
+      <Button variant="default" className="shrink-0" onClick={() => setProfileSelectModalOpen(true)}>
+        Login
+      </Button>
+    );
+  }
 
   return (
     <DropdownMenu modal={false}>
@@ -98,7 +106,7 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
               setProfileSelectModalOpen(true);
             }}
           >
-            Switch Profile
+            {session ? "Switch Profile" : "Select Profile"}
           </AnimatedMenuItem>
 
           {session && (

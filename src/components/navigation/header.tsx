@@ -71,7 +71,7 @@ export const Header = ({ session }: { session: MeResult | null }) => {
         {isWritePage && <PublishMenu documentId={documentId} />}
         {isWritePage && <EditorOptionsDropdown />}
         {!isWritePage && !isMobile && <DraftCreateButton />}
-        <UserMenu session={session} />
+        <UserMenu session={session} showDropdown={true} />
       </div>
     </div>
   );

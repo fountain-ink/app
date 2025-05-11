@@ -10,12 +10,14 @@ import { handleOperationWith } from "@lens-protocol/client/viem";
 import { textOnly } from "@lens-protocol/metadata";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useWalletClient } from "wagmi";
+import { useAccount, useWalletClient } from "wagmi";
 import { UserAvatar } from "../user/user-avatar";
 import { UserUsername } from "../user/user-handle";
 import { UserName } from "../user/user-name";
 import { cn } from "@/lib/utils";
 import { useAuthenticatedUser } from "@lens-protocol/react";
+import { ConnectWalletButton } from "../auth/auth-wallet-button";
+import { UserMenu } from "../user/user-menu";
 
 interface PostReplyAreaProps {
   postId: string;
@@ -37,6 +39,7 @@ export const CommentReplyArea = ({
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: walletClient } = useWalletClient();
+  const { isConnected: isWalletConnected, status: walletClientStatus } = useAccount();
   const { data: authenticatedUser, loading: isAuthenticatedUserLoading } = useAuthenticatedUser();
 
   const handleSubmit = async () => {
@@ -115,6 +118,15 @@ export const CommentReplyArea = ({
     onCancel?.();
   };
 
+  if (!isAuthenticatedUserLoading && !authenticatedUser) {
+    return (
+      <div className="flex items-center justify-between p-4 border border-border drop-shadow-lg rounded-sm bg-background">
+        <p className="text-sm text-muted-foreground">Please login to comment</p>
+        <UserMenu session={null} showDropdown={false} />
+      </div>
+    );
+  }
+
   return (
     <div
       className={cn("p-4 border border-border drop-shadow-lg rounded-sm bg-background", {
@@ -122,15 +134,6 @@ export const CommentReplyArea = ({
       })}
     >
       <div className="flex flex-col gap-4">
-        {isAuthenticatedUserLoading && (
-          <div className="flex items-start gap-3">
-            <UserAvatar account={account} className="w-10 h-10" />
-            <div className="flex flex-col">
-              <UserName profile={account} className="text-sm font-medium" />
-              <UserUsername account={account} className="text-sm text-muted-foreground" />
-            </div>
-          </div>
-        )}
 
         {!isCompact && !isAuthenticatedUserLoading && authenticatedUser && (
           <div className="flex items-start gap-3">

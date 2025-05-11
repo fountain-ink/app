@@ -145,10 +145,6 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
   return (
     <>
       <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-        <DialogTrigger className="p-2" asChild>
-          <AnimatedMenuItem asButton icon={UserIcon} />
-        </DialogTrigger>
-
         <DialogContent className="max-w-96">
           <DialogHeader>
             <DialogTitle className="h-8 text-base flex items-center">Select profile</DialogTitle>
