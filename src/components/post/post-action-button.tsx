@@ -97,7 +97,6 @@ export const ActionButton = ({
   }
 
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
-    e.stopPropagation();
     if (showLoginActions) {
       showLoginModal()
       return;
@@ -195,13 +194,12 @@ export const ActionButton = ({
   const divWrapperClassName = `group flex items-center ${divCursorStyle} ${divOpacityClass} ${className || ""}`.trim();
 
   if (renderPopover) {
-    const onPopoverClick = (e: React.MouseEvent<HTMLDivElement>) => {
-      e.stopPropagation();
-      handleClick(e);
-    }
-
     return renderPopover(
-      <div onClick={onPopoverClick} className={divWrapperClassName}>
+      <div
+        onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+          handleClick(e);
+        }}
+        className={divWrapperClassName}>
         <TooltipWrapper label={label}>{MainButton}</TooltipWrapper>
         {CountDisplay}
       </div>

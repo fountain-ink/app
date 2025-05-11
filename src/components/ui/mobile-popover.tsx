@@ -33,13 +33,13 @@ export const MobilePopover: React.FC<CustomPopoverProps> = ({
 
   const updatePosition = useCallback(() => {
     if (!open || !triggerRef.current || !contentRef.current) {
-      setContentStyle({}); 
+      setContentStyle({});
       return;
     }
 
     const triggerRect = triggerRef.current.getBoundingClientRect();
     const contentHeight = contentRef.current.offsetHeight;
-    const contentWidth = contentRef.current.offsetWidth; 
+    const contentWidth = contentRef.current.offsetWidth;
 
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
@@ -161,8 +161,8 @@ export const MobilePopover: React.FC<CustomPopoverProps> = ({
   const popoverAnimationVariants = {
     hidden: {
       opacity: 0,
-      scale: 0.95, 
-      y: 0 
+      scale: 0.95,
+      y: 0
     },
     visible: {
       opacity: 1,
@@ -171,8 +171,8 @@ export const MobilePopover: React.FC<CustomPopoverProps> = ({
     },
     exit: {
       opacity: 0,
-      scale: 0.95, 
-      y: 0 
+      scale: 0.95,
+      y: 0
     },
   };
 
@@ -197,15 +197,15 @@ export const MobilePopover: React.FC<CustomPopoverProps> = ({
               transition={transition}
               style={contentStyle}
               className={cn(
-                "z-50 outline-none shadow-floating rounded-md fixed", 
+                "z-50 outline-none shadow-floating rounded-md fixed",
                 {
                   "origin-bottom": side === "top",
                   "origin-top": side === "bottom" || !["top", "bottom", "left", "right"].includes(side), // Default to top if side is invalid
                   "origin-right": side === "left",
                   "origin-left": side === "right",
                 },
-                "w-auto left-auto sm:translate-x-0",
-                isMobile && "w-[96vw] left-2 right-2",
+                "w-auto max-w-xs left-auto sm:translate-x-0",
+                isMobile && "w-[96vw] max-w-none left-2 right-2",
                 contentClassName
               )}
             >
