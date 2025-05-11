@@ -30,7 +30,7 @@ import { HomeIcon } from "../icons/home";
 import { useUIStore } from "@/stores/ui-store";
 
 export const UserMenu = ({ session }: { session: MeResult | null }) => {
-  const { isConnected: isWalletConnected } = useAccount();
+  const { isConnected: isWalletConnected, status } = useAccount();
   const { disconnect } = useDisconnect();
   const pathname = usePathname();
   const router = useRouter();
@@ -57,15 +57,8 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
     window.location.reload();
   };
 
-  if (!isWalletConnected) {
+  if (!isWalletConnected && status !== "connecting") {
     return <ConnectWalletButton text="Login" />;
-  }
-
-  if (!session) {
-    // Render a minimal menu or a loading state if desired,
-    // or rely on the global modal being the primary focus.
-    // For now, let it fall through to render the UserAvatar, which will show a generic icon.
-    // The dropdown will be mostly empty/disabled until a session is active.
   }
 
   const username = session?.loggedInAs.account.username?.localName;
