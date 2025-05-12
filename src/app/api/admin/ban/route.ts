@@ -2,7 +2,6 @@ import { createServiceClient } from "@/lib/db/service";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminRights } from "@/lib/auth/admin-middleware";
 
-// GET - Fetch all banned authors
 export async function GET(req: NextRequest) {
   try {
     const authResponse = await checkAdminRights(req);
@@ -10,25 +9,42 @@ export async function GET(req: NextRequest) {
       return authResponse;
     }
 
+    const url = new URL(req.url);
+    const address = url.searchParams.get("address");
     const supabase = await createServiceClient();
-    const { data, error } = await supabase
-      .from("banlist")
-      .select("*")
-      .order("created_at", { ascending: false });
 
-    if (error) {
-      console.error("Error fetching banned authors:", error);
-      return NextResponse.json({ error: "Failed to fetch banned authors" }, { status: 500 });
+    if (address) {
+      const { data: existingBan, error } = await supabase
+        .from("banlist")
+        .select("address")
+        .eq("address", address)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Error checking ban status:", error);
+        return NextResponse.json({ error: "Failed to check ban status" }, { status: 500 });
+      }
+      return NextResponse.json({ isBanned: !!existingBan });
+
+    } else {
+      const { data, error } = await supabase
+        .from("banlist")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching banned authors:", error);
+        return NextResponse.json({ error: "Failed to fetch banned authors" }, { status: 500 });
+      }
+
+      return NextResponse.json({ data });
     }
-
-    return NextResponse.json({ data });
   } catch (error) {
     console.error("Unexpected error:", error);
     return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
   }
 }
 
-// POST - Ban an author
 export async function POST(req: NextRequest) {
   try {
     const authResponse = await checkAdminRights(req);
@@ -45,7 +61,6 @@ export async function POST(req: NextRequest) {
 
     const supabase = await createServiceClient();
 
-    // Check if entry already exists
     const { data: existingBan } = await supabase
       .from("banlist")
       .select("*")
@@ -76,7 +91,6 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// DELETE - Unban an author
 export async function DELETE(req: NextRequest) {
   try {
     const authResponse = await checkAdminRights(req);

@@ -2,7 +2,7 @@ import { createServiceClient } from "@/lib/db/service";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminRights } from "@/lib/auth/admin-middleware";
 
-// GET - Fetch all curated posts
+// GET - Fetch all curated posts OR check status for a specific post
 export async function GET(req: NextRequest) {
   try {
     const authResponse = await checkAdminRights(req);
@@ -21,20 +21,19 @@ export async function GET(req: NextRequest) {
     const supabase = await createServiceClient();
 
     if (slug) {
-      // Fetch specific curated post
       const { data, error } = await supabase
         .from("curated")
-        .select("*")
-        .eq("slug", slug);
+        .select("slug")
+        .eq("slug", slug)
+        .maybeSingle();
 
       if (error) {
-        console.error("Error fetching curated post:", error);
-        return NextResponse.json({ error: "Failed to fetch curated post" }, { status: 500 });
+        console.error("Error fetching curated status:", error);
+        return NextResponse.json({ error: "Failed to fetch curated status" }, { status: 500 });
       }
 
-      return NextResponse.json({ data });
+      return NextResponse.json({ isFeatured: !!data });
     } else {
-      // Fetch paginated curated posts
       const { data, error, count } = await supabase
         .from("curated")
         .select("*", { count: "exact" })
@@ -61,7 +60,6 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST - Add a post to curated list
 export async function POST(req: NextRequest) {
   try {
     const authResponse = await checkAdminRights(req);
@@ -78,7 +76,6 @@ export async function POST(req: NextRequest) {
 
     const supabase = await createServiceClient();
 
-    // Check if entry already exists
     const { data: existingEntry } = await supabase
       .from("curated")
       .select("*")
@@ -108,7 +105,6 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// DELETE - Remove a post from curated list
 export async function DELETE(req: NextRequest) {
   try {
     const authResponse = await checkAdminRights(req);

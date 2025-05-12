@@ -59,7 +59,19 @@ export const usePostActionsButtons = ({ post }: { post: Post }): PostActionButto
   } = usePostActions(post);
 
   const { isAdmin, isLoading: isAdminLoading } = useAdminStatus();
-  const { handleBanAuthor, handleFeaturePost, isBanning, isFeaturing } = useAdminPostActions(post);
+  const {
+    handleBanAuthor,
+    handleUnbanAuthor,
+    handleFeaturePost,
+    handleUnfeaturePost,
+    isBanning,
+    isUnbanning,
+    isFeaturing,
+    isUnfeaturing,
+    isAuthorBanned,
+    isFeatured,
+    isLoadingStatus,
+  } = useAdminPostActions(post, isAdmin);
 
   const likes = stats.upvotes;
   const collects = stats.collects;
@@ -159,44 +171,57 @@ export const usePostActionsButtons = ({ post }: { post: Post }): PostActionButto
     },
   };
 
-  if (isAdmin && !isAdminLoading) {
+  if (isAdmin && !isAdminLoading && !isLoadingStatus) {
     buttons.adminButtons = [
       {
         icon: Ban,
-        label: "Ban Author",
+        label: isAuthorBanned ? "Author Banned" : "Ban Author",
         initialCount: 0,
-        strokeColor: "rgb(220, 38, 38)",
-        fillColor: "rgba(220, 38, 38, 0.8)",
+        strokeColor: "hsl(var(--destructive))",
+        fillColor: "hsl(var(--destructive) / 0.1)",
+        isUserLoggedIn: true,
         shouldIncrementOnClick: false,
-        isDisabled: isBanning,
+        isActive: isAuthorBanned,
+        isDisabled: isBanning || isUnbanning,
         hideCount: true,
         dropdownItems: [
-          {
-            icon: ShieldX,
-            label: "Ban (Bot)",
-            onClick: () => handleBanAuthor("bot"),
-          },
-          {
-            icon: Meh,
-            label: "Ban (Spam)",
-            onClick: () => handleBanAuthor("spam"),
-          },
-          {
-            icon: ShieldAlert,
-            label: "Ban (Forbidden)",
-            onClick: () => handleBanAuthor("forbidden"),
-          },
+          ...(!isAuthorBanned ? [
+            {
+              icon: ShieldX,
+              label: "Ban (Bot)",
+              onClick: () => handleBanAuthor("bot"),
+            },
+            {
+              icon: Meh,
+              label: "Ban (Spam)",
+              onClick: () => handleBanAuthor("spam"),
+            },
+            {
+              icon: ShieldAlert,
+              label: "Ban (Forbidden)",
+              onClick: () => handleBanAuthor("forbidden"),
+            },
+          ] : []),
+          ...(isAuthorBanned ? [
+            {
+              icon: ShieldX,
+              label: "Unban Author",
+              onClick: handleUnbanAuthor,
+            },
+          ] : []),
         ],
       },
       {
         icon: StarIcon,
-        label: "Feature Post",
+        label: isFeatured ? "Featured" : "Feature Post",
         initialCount: 0,
-        strokeColor: "rgb(234, 179, 8)",
-        fillColor: "rgba(234, 179, 8, 0.8)",
+        isUserLoggedIn: true,
+        strokeColor: "hsl(var(--primary))",
+        fillColor: "hsl(var(--primary) / 0.8)",
         shouldIncrementOnClick: false,
-        onClick: handleFeaturePost,
-        isDisabled: isFeaturing,
+        onClick: isFeatured ? handleUnfeaturePost : handleFeaturePost,
+        isActive: isFeatured,
+        isDisabled: isFeaturing || isUnfeaturing,
         hideCount: true,
       }
     ];
