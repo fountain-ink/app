@@ -137,10 +137,6 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
     return null;
   }
 
-  if (address && authenticatedUser) {
-    return null;
-  }
-
 
   return (
     <>
