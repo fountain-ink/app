@@ -33,7 +33,6 @@ export const useAdminPostActions = (post: Post, isAdmin: boolean) => {
         }
 
         const featureStatusRes = await fetch(`/api/admin/curate?slug=${encodeURIComponent(post.slug)}`);
-        console.log(featureStatusRes)
         if (featureStatusRes.ok) {
           const { isFeatured } = await featureStatusRes.json();
           setIsFeatured(isFeatured);
@@ -81,7 +80,7 @@ export const useAdminPostActions = (post: Post, isAdmin: boolean) => {
         throw new Error(error.error || "Failed to ban author");
       }
 
-      setIsAuthorBanned(true); 
+      setIsAuthorBanned(true);
       toast.success(`Author ${post.author.username?.localName || authorAddress} has been banned${reason ? ` for ${reason}` : ''}`);
     } catch (error) {
       console.error("Error banning author:", error);

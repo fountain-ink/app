@@ -203,7 +203,7 @@ export const ImageElement = withRef<typeof PlateElement>(
                   height={800}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   style={{ height: 'auto', objectFit: 'contain' }}
-                  {...nodeProps}
+                  {...(nodeProps || {})}
                   {...imageProps}
                   onLoad={() => {
                     setIsImageLoaded(true);
