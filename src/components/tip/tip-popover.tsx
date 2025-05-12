@@ -193,7 +193,7 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
 
             <div className="flex items-center w-full gap-2">
               <div className="h-px flex-1 bg-border" />
-              <p className="text-sm text-muted-foreground">Or tip the author</p>
+              <span className="text-sm text-muted-foreground">Or tip the author</span>
               <div className="h-px flex-1 bg-border" />
             </div>
           </>
