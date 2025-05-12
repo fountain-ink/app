@@ -1,3 +1,5 @@
+import { ParagraphPlugin } from "@udecode/plate-core/react";
+
 export const trimEmptyNodes = (nodes: any[] | undefined): any[] | undefined => {
   if (!Array.isArray(nodes)) {
     return nodes;
@@ -24,6 +26,7 @@ export const trimEmptyNodes = (nodes: any[] | undefined): any[] | undefined => {
     if (
       lastNode &&
       lastNode.type &&
+      lastNode.type === ParagraphPlugin.key &&
       Array.isArray(lastNode.children) &&
       lastNode.children.length === 1 &&
       lastNode.children[0] &&
