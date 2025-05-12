@@ -7,7 +7,7 @@ import { cn } from '@udecode/cn';
 export function HrElementStatic({
   children,
   className,
-  attributes: { nodeProps, ...attributes },
+  attributes,
   ...props
 }: SlateElementProps) {
   return (
@@ -20,7 +20,6 @@ export function HrElementStatic({
     >
       <div contentEditable={false}>
         <hr
-          {...nodeProps}
           className={cn("h-0.5 cursor-pointer rounded-sm border-none bg-muted bg-clip-content")}
         />
       </div>
