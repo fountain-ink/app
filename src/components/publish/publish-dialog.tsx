@@ -189,6 +189,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
         if (needsExtraction && draft.contentJson) {
           console.log("Extracting metadata...");
           const extracted = extractMetadata(draft.contentJson as any);
+          console.log("Extracted metadata:", extracted, draft.contentJson);
           let updated = false;
 
           if (!getValues("details.title") && extracted.title) {
