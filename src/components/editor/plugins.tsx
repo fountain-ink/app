@@ -201,7 +201,41 @@ export const plugins = [
       type: TitlePlugin.key,
     },
   }),
-  TitlePlugin,
+  TitlePlugin.configure({
+    handlers: {
+      onKeyDown: (ctx) => {
+        const { editor, event } = ctx;
+        if ((event.ctrlKey || event.metaKey) && event.key === "v") {
+          const anchor = editor.selection?.anchor?.path;
+          if (!anchor) return false;
+
+          const currentNode = editor.api.parent(anchor);
+          if (!currentNode) return false;
+
+          const [node] = currentNode;
+          const isTitle = node.type === TITLE_KEYS.title;
+          const isSubtitle = node.type === TITLE_KEYS.subtitle;
+
+          if (isTitle || isSubtitle) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            window.navigator.clipboard.readText().then((textToPaste: string) => {
+              console.log(textToPaste);
+              if (textToPaste) {
+                const singleLineText = textToPaste.replace(/(\r\n|\n|\r)/gm, "").trim();
+                editor.tf.insertText(singleLineText);
+              }
+            }).catch(err => {
+              console.error("Failed to read clipboard contents: ", err);
+            });
+            return true;
+          }
+        }
+        return false;
+      },
+    },
+  }),
   SubtitlePlugin,
   HeadingPlugin.configure({
     options: { levels: 2 },
@@ -456,6 +490,8 @@ export const plugins = [
           AudioPlugin.key,
           FilePlugin.key,
           MediaEmbedPlugin.key,
+          // TitlePlugin.key,
+          // SubtitlePlugin.key
         ],
       },
     },
