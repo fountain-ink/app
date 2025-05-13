@@ -25,7 +25,6 @@ import { Draft } from "../draft/draft";
 import { cn } from "@/lib/utils";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { useAuthenticatedUser } from "@lens-protocol/react";
-import { checkSlugAvailability } from "@/lib/slug/check-slug-availability";
 import { Licenses } from "@/lib/licenses";
 
 const isUserBlog = (blogAddress: string | undefined, blogs: any[]): boolean => {
@@ -100,6 +99,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
           slug: "",
           tags: [],
           images: [],
+          isSlugManuallyEdited: false,
         },
         distribution: {
           selectedBlogAddress: "",
@@ -132,6 +132,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
         slug: draft?.slug || "",
         tags: draft?.tags || [],
         images: draft?.images || [],
+        isSlugManuallyEdited: draft?.slug ? true : false,
       },
       distribution: {
         selectedBlogAddress: draft?.distributionSettings?.selectedBlogAddress || "",
@@ -231,19 +232,6 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
   const onSubmit = async (data: CombinedFormValues) => {
     const draft = getDraft();
     if (!draft) return;
-
-    if (data.details.slug) {
-      try {
-        const { available } = await checkSlugAvailability(data.details.slug);
-        if (!available) {
-          toast.error("The chosen slug is already taken. Please choose another one.");
-          setActiveTab("details");
-          return;
-        }
-      } catch (error) {
-        console.error("Error checking slug availability:", error);
-      }
-    }
 
     const finalDraft: Draft = {
       ...draft,

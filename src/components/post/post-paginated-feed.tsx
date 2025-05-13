@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { AnyPost, PaginatedResultInfo } from "@lens-protocol/client";
-import { MainContentFocus } from "@lens-protocol/client";
+import { MainContentFocus, PageSize } from "@lens-protocol/client";
 import { motion } from "motion/react";
 import { DraftCreateButton } from "../draft/draft-create-button";
 import { GraphicHand2 } from "../icons/custom-icons";

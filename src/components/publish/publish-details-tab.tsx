@@ -4,20 +4,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TagInput } from "emblor";
 import type { Tag } from "emblor";
-import { FC, useCallback, useEffect, useState, useRef } from "react";
+import { FC, useCallback, useEffect, useState, useRef, useMemo } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { CombinedFormValues } from "./publish-dialog";
-import { ImageIcon, PenIcon, LinkIcon, Check, AlertCircle, ListPlus, PenOffIcon, ListIcon, ScrollText, Heart, MessageCircle, MoreHorizontalIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import { ImageIcon, PenIcon, AlertCircle, PenOffIcon, ScrollText, Heart, MessageCircle, MoreHorizontalIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { checkSlugAvailability } from "@/lib/slug/check-slug-availability";
 import { debounce } from "lodash";
-import { useAuthenticatedUser } from "@lens-protocol/react";
-import { getAppToken } from "@/lib/auth/get-app-token";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { getCookie } from "cookies-next";
 import { Button } from "@/components/ui/button";
 import { CoinIcon } from "@/components/icons/custom-icons";
 import { usePublishDraft } from "@/hooks/use-publish-draft";
-import { extractMetadata } from "@/lib/extract-metadata";
 import { ImageUploader } from "@/components/images/image-uploader";
 import { uploadFile } from "@/lib/upload/upload-file";
 
@@ -31,6 +28,7 @@ export const detailsFormSchema = z.object({
     }),
   tags: z.array(z.string()).max(5, "You can add up to 5 tags").default([]),
   images: z.array(z.string()).default([]),
+  isSlugManuallyEdited: z.boolean().optional().default(false),
 });
 
 export type DetailsFormValues = z.infer<typeof detailsFormSchema>;
@@ -57,10 +55,10 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
   const slug = form.watch("details.slug");
   const coverUrl = form.getValues("details.coverUrl");
   const images = form.watch("details.images");
+  const watchedIsSlugManuallyEdited = form.watch("details.isSlugManuallyEdited");
   const draft = getDraft();
   const [tags, setTags] = useState<Tag[]>([]);
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
-  const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
   const [isCheckingSlug, setIsCheckingSlug] = useState(false);
   const [isSlugAvailable, setIsSlugAvailable] = useState<boolean | null>(null);
   const [isEditingPreview, setIsEditingPreview] = useState(false);
@@ -137,48 +135,52 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
     }
   };
 
-  const checkSlugDebounced = useCallback(
-    debounce(async (slug: string) => {
-      if (!slug) {
-        setIsSlugAvailable(null);
-        return;
-      }
+  const slugCheckRunner = useCallback(async (slugToValidate: string) => {
+    if (!slugToValidate) {
+      setIsSlugAvailable(null);
+      return;
+    }
+    setIsCheckingSlug(true);
+    try {
+      const appToken = getCookie("appToken") as string;
+      const claims = getTokenClaims(appToken);
+      const handle = claims?.metadata?.username || '';
+      const result = await checkSlugAvailability(slugToValidate, handle);
+      setIsSlugAvailable(result.available);
+    } catch (error) {
+      console.error("Failed to check slug availability:", error);
+      setIsSlugAvailable(null);
+    } finally {
+      setIsCheckingSlug(false);
+    }
+  }, [setIsSlugAvailable, setIsCheckingSlug]);
 
-      setIsCheckingSlug(true);
-      try {
-        const appToken = getCookie("appToken") as string;
-        const claims = getTokenClaims(appToken)
-        const handle = claims?.metadata?.username || '';
-        const result = await checkSlugAvailability(slug, handle);
-        setIsSlugAvailable(result.available);
-      } catch (error) {
-        console.error("Failed to check slug availability:", error);
-        setIsSlugAvailable(null);
-      } finally {
-        setIsCheckingSlug(false);
-      }
-    }, 500),
-    [slug]
+  const checkSlugDebounced = useMemo(() =>
+    debounce(slugCheckRunner, 500),
+    [slugCheckRunner]
   );
 
   useEffect(() => {
-    if (slug) {
+    if (typeof slug === 'string') {
       checkSlugDebounced(slug);
     } else {
       setIsSlugAvailable(null);
+      checkSlugDebounced.cancel();
     }
 
     return () => {
       checkSlugDebounced.cancel();
     };
-  }, [slug, checkSlugDebounced]);
+  }, [slug, checkSlugDebounced, setIsSlugAvailable]);
 
   useEffect(() => {
-    if (!isSlugManuallyEdited && title) {
+    if (!watchedIsSlugManuallyEdited && title) {
       const newSlug = generateSlug(title, subtitle || "");
-      form.setValue("details.slug", newSlug, { shouldValidate: true });
+      if (slug !== newSlug) {
+        form.setValue("details.slug", newSlug, { shouldValidate: true });
+      }
     }
-  }, [title, subtitle, isSlugManuallyEdited, form]);
+  }, [title, subtitle, watchedIsSlugManuallyEdited, slug, form]);
 
   useEffect(() => {
     const formTags = form.getValues("details.tags") || [];
@@ -201,7 +203,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
   );
 
   const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsSlugManuallyEdited(true);
+    form.setValue("details.isSlugManuallyEdited", true, { shouldDirty: true });
     form.setValue("details.slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""),
       { shouldValidate: true });
   };
