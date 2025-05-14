@@ -38,9 +38,9 @@ export const TocSidebar = ({
 
   return (
     <div className={cn("fixed left-0 top-0 z-[5]", className)}>
-      <div className={cn("group absolute left-0 top-0 z-10 max-h-fit")}>
+      <div className={cn("group absolute left-0 -top-1 z-10 max-h-fit")}>
         <div className="relative z-10 mr-2.5 flex flex-col justify-center pb-3 pr-2">
-          <div className={cn("flex flex-col gap-3 pb-3 pl-5")}>
+          <div className={cn("flex flex-col gap-2 pb-3 pl-5")}>
             {headingList.slice(0, maxShowCount).map((item) => {
               return (
                 <div key={item.id}>
@@ -61,7 +61,7 @@ export const TocSidebar = ({
 
           <nav
             className={cn(
-              "absolute -top-2.5 left-0 px-2.5 transition-all duration-300",
+              "absolute -top-3 left-0 px-2.5 transition-all duration-300",
               "pointer-events-none -translate-x-[50px] opacity-0",
               "group-hover:pointer-events-auto group-hover:translate-x-0 group-hover:opacity-100",
               "touch:opacity-100 touch:translate-x-0 touch:pointer-events-auto select-none",
