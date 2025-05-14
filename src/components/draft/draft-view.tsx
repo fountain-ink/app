@@ -86,8 +86,8 @@ export const DraftView = ({
   };
 
   const date = draft.updatedAt ?? draft.createdAt;
-  const title = draft.title ?? undefined;
-  const subtitle = draft.subtitle ?? undefined;
+  const title = draft.title && draft.title !== "" ? draft.title : "Untitled";
+  const subtitle = draft.subtitle && draft.subtitle !== "" ? draft.subtitle : "No subtitle";
   const contentMarkdown = draft.contentMarkdown ?? "";
   const coverUrl = draft.coverUrl ?? undefined;
 
