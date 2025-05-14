@@ -6,6 +6,7 @@ import { useState } from "react";
 import { LoadingSpinner } from "../misc/loading-spinner";
 import { toast } from "sonner";
 import { createDraft } from "@/lib/plate/create-draft";
+import { getRandomUid } from "@/lib/get-random-uid";
 
 export const DraftCreateButton = ({
   text = "Write",
@@ -21,11 +22,11 @@ export const DraftCreateButton = ({
     try {
       setIsCreating(true);
 
-      const { documentId } = await createDraft({
-        initialContent
-      });
-
+      const documentId = getRandomUid();
       router.push(`/write/${documentId}`);
+
+      await createDraft({ documentId, initialContent });
+
     } catch (error) {
       console.error("Failed to create draft:", error);
       toast.error(error instanceof Error ? error.message : "Failed to create draft");
