@@ -19,9 +19,10 @@ type UserCardProps = PropsWithChildren & {
   username?: string;
   address?: string;
   linkProfile?: boolean;
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement | HTMLDivElement | HTMLButtonElement>) => void;
 };
 
-export const UserCard = ({ children, username, address, linkProfile = false }: UserCardProps) => {
+export const UserCard = ({ children, username, address, onClick, linkProfile = false }: UserCardProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [account, setAccount] = useState<Account | null>(null);
@@ -72,7 +73,7 @@ export const UserCard = ({ children, username, address, linkProfile = false }: U
   return (
     <HoverCard defaultOpen={false} onOpenChange={(open: boolean) => open && loadCard()} closeDelay={100}>
       <HoverCardTrigger className="z-20" asChild>
-        {linkProfile && username ? <Link href={`/u/${username}`}>{children}</Link> : children}
+        {linkProfile && username ? <Link prefetch href={`/u/${username}`} onClick={onClick}>{children}</Link> : children}
       </HoverCardTrigger>
       <HoverCardContent className={`w-full min-w-64 z-[101] max-w-fit overflow-hidden ${inter.className}`} side="top">
         {loading && !account && <LoadingSpinner />}

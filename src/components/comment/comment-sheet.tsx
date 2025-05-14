@@ -150,6 +150,7 @@ export const CommentSheet = ({
                       comment={comment}
                       nestingLevel={1}
                       maxNestingLevel={4}
+                      onOpenChange={handleOpenChange}
                       onMaxNestingReached={handleMaxNestingReached}
                       autoShowReplies={isViewingNested}
                     />
