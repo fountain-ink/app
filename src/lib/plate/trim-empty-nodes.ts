@@ -5,12 +5,12 @@ export const trimEmptyNodes = (nodes: any[] | undefined): any[] | undefined => {
     return nodes;
   }
 
+  console.log(nodes);
   const nodesWithoutPlaceholders = nodes.filter(node => {
-    return (node
-      && (node.type === 'subtitle' || node.type === 'title')
-      && node.children[0]
-      && node.children[0].text.trim() === ''
-    ) ? false : true;
+    if (node && (node.type === 'subtitle' || node.type === 'title') && node.children) {
+      return !node.children.every((child: { text: string }) => child.text.trim() === '');
+    }
+    return true;
   });
 
   const nodesWithoutImagePlaceholders = nodesWithoutPlaceholders.filter(node => {
