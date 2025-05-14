@@ -73,7 +73,7 @@ export const CommentView = ({
           <div className="flex flex-col gap-1">
             <UserCard onClick={(e) => onOpenChange?.(false)} linkProfile username={comment.author.username?.localName} >
               <div className="flex items-center gap-2">
-                <UserName profile={comment.author} className="text-sm font-medium" />
+                <UserName account={comment.author} className="text-sm font-medium" />
                 <UserUsername account={comment.author} className="text-sm text-muted-foreground" />
               </div>
             </UserCard>

@@ -37,7 +37,7 @@ export function UserPostCard({ account, stats }: UserPostCardProps) {
         <Link prefetch href={`/u/${account.username?.localName}`} className="flex flex-row items-start gap-4 w-full">
           <UserAvatar account={account} size={12} className="w-12 h-12 rounded-full flex-shrink-0" />
           <div className="flex flex-col justify-center min-w-0 flex-1">
-            <UserName profile={account} className="text-lg font-semibold truncate" />
+            <UserName account={account} className="text-lg font-semibold truncate" />
             {stats ? (
               <UserFollowing stats={stats} className="text-sm text-muted-foreground truncate" />
             ) : (

@@ -25,7 +25,7 @@ export const CommentView = ({ comment }: CommentViewProps) => {
           <UserAvatar account={comment.author} className="w-10 h-10" />
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
-              <UserName profile={comment.author} className="text-sm font-medium" />
+              <UserName account={comment.author} className="text-sm font-medium" />
               <UserUsername account={comment.author} className="text-sm text-muted-foreground" />
             </div>
             <span className="text-xs text-muted-foreground">{formatRelativeTime(comment.timestamp)}</span>

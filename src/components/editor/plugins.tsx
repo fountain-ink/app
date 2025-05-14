@@ -311,7 +311,6 @@ export const plugins = [
   MentionPlugin.configure({
     options: { triggerPreviousCharPattern: /^$|^[\s"']$/ },
   }),
-
   SlashPlugin.extend({
     options: {
       trigger: "/",
@@ -353,41 +352,25 @@ export const plugins = [
       isElement: true,
     },
     options: {
-
       uploadImage: uploadFile,
-      // disableUploadInsert: true,
-      // disableEmbedInsert: true,
     },
   }),
   VideoPlugin,
   AudioPlugin,
   FilePlugin,
   MediaEmbedPlugin,
-
-  // ImagePlugin.extend({
-  //   render: {
-  //     node: ImageElement,
-  //   },
-  // }).configure({
-  //   options: {
-  //     uploadImage: uploadFile,
-  //     // disableUploadInsert: true,
-  //     // disableEmbedInsert: true,
-  //   },
-  // }),
   InlineEquationPlugin,
   EquationPlugin,
   CalloutPlugin,
   ColumnPlugin,
-
-  // Marks
   BasicMarksPlugin,
   HighlightPlugin,
   KbdPlugin,
-
-  // Block Style
   AlignPlugin.extend({
     inject: {
+      nodeProps: {
+        validNodeValues: ['start', 'left', 'center', 'right', 'end'],
+      },
       targetPlugins: [ParagraphPlugin.key, MediaEmbedPlugin.key, HEADING_KEYS.h1, HEADING_KEYS.h2, ImagePlugin.key],
     },
   }),
@@ -610,13 +593,7 @@ export const plugins = [
   JuicePlugin,
   CodeSyntaxPlugin,
   MentionInputPlugin,
-  // TableRowPlugin,
-  // TableCellPlugin,
-  // TableCellHeaderPlugin,
-  // ExcalidrawPlugin,
   ColumnItemPlugin,
-
-  // Marks
   BoldPlugin,
   ItalicPlugin,
   UnderlinePlugin,
@@ -624,9 +601,6 @@ export const plugins = [
   CodePlugin,
   SubscriptPlugin,
   SuperscriptPlugin,
-  // FontSizePlugin,
-
-  // Functionality
   ResetNodePlugin.configure({
     options: {
       rules: [

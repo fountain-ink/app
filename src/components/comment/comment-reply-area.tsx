@@ -139,7 +139,7 @@ export const CommentReplyArea = ({
           <div className="flex items-start gap-3">
             <UserAvatar account={account} className="w-10 h-10" />
             <div className="flex flex-col">
-              <UserName profile={account} className="text-sm font-medium" />
+              <UserName account={account} className="text-sm font-medium" />
               <UserUsername account={account} className="text-sm text-muted-foreground" />
             </div>
           </div>

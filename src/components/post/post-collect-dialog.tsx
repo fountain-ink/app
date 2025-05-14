@@ -86,9 +86,9 @@ export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) =>
   const title = "title" in post.metadata ? post.metadata.title : collectibleMetadata?.name;
   const totalValue = amount
     ? formatAmount({
-        value: (currentSupply * Number.parseFloat(amount.value)).toString(),
-        asset: amount.asset,
-      })
+      value: (currentSupply * Number.parseFloat(amount.value)).toString(),
+      asset: amount.asset,
+    })
     : null;
 
   const endsAt = collectAction?.endsAt ? new Date(collectAction.endsAt) : null;
@@ -149,7 +149,7 @@ export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) =>
             <div className="flex flex-row items-center gap-2">
               <UserAvatar account={post.author} className="w-12 h-12" />
               <div className="flex flex-col">
-                <UserName className="text-base" profile={post.author} />
+                <UserName className="text-base" account={post.author} />
                 <UserUsername account={post.author} />
               </div>
             </div>
