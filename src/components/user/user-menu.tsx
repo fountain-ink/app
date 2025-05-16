@@ -31,7 +31,7 @@ import { useUIStore } from "@/stores/ui-store";
 
 export const UserMenu = ({ session, showDropdown = false }: { session: MeResult | null, showDropdown?: boolean }) => {
   const { isConnected: isWalletConnected, status } = useAccount();
-  const { disconnect } = useDisconnect();
+  const { disconnect: disconnectWallet } = useDisconnect();
   const pathname = usePathname();
   const router = useRouter();
   const { resolvedTheme: theme, setTheme } = useTheme();
@@ -47,14 +47,16 @@ export const UserMenu = ({ session, showDropdown = false }: { session: MeResult 
 
   const handleDisconnect = async () => {
     const client = await getLensClient();
-    if (client.isSessionClient()) {
-      await client.logout();
-    }
-    disconnect();
+
+    disconnectWallet();
     clearAllCookies();
     resetBlogStorage();
-    router.push("/");
-    window.location.reload();
+
+    if (client.isSessionClient()) {
+      await client.logout();
+      router.push("/");
+      window.location.reload();
+    }
   };
 
   if (!isWalletConnected && status !== "connecting") {
