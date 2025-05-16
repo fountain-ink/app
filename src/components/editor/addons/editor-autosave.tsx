@@ -27,6 +27,7 @@ export function AutoSave({ documentId }: { documentId: string }) {
         const now = new Date().toISOString();
         const existingDraft = getDocument(documentId);
         const { images, subtitle, title, coverUrl } = extractMetadata(editor.children as any);
+        console.log(editor.children)
         const contentMarkdown = api.markdown.serialize({ value: editor.children });
 
         const uniqueImages = [...existingDraft?.images || []];
@@ -36,6 +37,8 @@ export function AutoSave({ documentId }: { documentId: string }) {
           }
         });
 
+        console.log(content)
+        console.log(contentMarkdown)
         const draft = {
           ...(existingDraft || {}),
           id: Date.now(),

@@ -4,6 +4,7 @@ export const trimEmptyNodes = (nodes: any[] | undefined): any[] | undefined => {
   if (!Array.isArray(nodes)) {
     return nodes;
   }
+  console.log(nodes)
 
   const nodesWithoutPlaceholders = nodes.filter(node => {
     if (node && (node.type === 'subtitle' || node.type === 'title') && node.children) {

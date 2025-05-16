@@ -37,7 +37,7 @@ import { KbdPlugin } from "@udecode/plate-kbd/react";
 import { ColumnItemPlugin, ColumnPlugin } from "@udecode/plate-layout/react";
 import { LinkPlugin } from "@udecode/plate-link/react";
 import { ListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
-import { MarkdownPlugin, MdastTypes, SerializeMdOptions } from "@udecode/plate-markdown";
+import { MarkdownPlugin, MdastTypes, remarkMention, remarkMdx, SerializeMdOptions } from "@udecode/plate-markdown";
 import { EquationPlugin, InlineEquationPlugin } from "@udecode/plate-math/react";
 import {
   AudioPlugin,
@@ -527,6 +527,7 @@ export const plugins = [
   DocxPlugin,
   MarkdownPlugin.configure({
     options: {
+        remarkPlugins: [remarkMath, remarkGfm, remarkMdx, remarkMention],
       rules: {
         [TitlePlugin.key]: {
           serialize: (slateNode: TElement): Heading | Text => {
@@ -587,7 +588,6 @@ export const plugins = [
           }),
         },
       },
-      remarkPlugins: [remarkMath, remarkGfm],
     },
   }),
   JuicePlugin,
