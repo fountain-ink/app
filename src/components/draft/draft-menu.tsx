@@ -53,6 +53,7 @@ export const DraftMenu = ({
         strokeColor="hsl(var(--muted-foreground))"
         fillColor="hsl(var(--muted-foreground))"
         dropdownItems={dropdownItems}
+        isUserLoggedIn={true}
         showChevron={false}
         initialCount={0}
       />
