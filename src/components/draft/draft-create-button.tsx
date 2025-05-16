@@ -23,7 +23,7 @@ export const DraftCreateButton = ({
       setIsCreating(true);
 
       const documentId = getRandomUid();
-      router.push(`/write/${documentId}`);
+      router.push(`/w/${documentId}`);
 
       await createDraft({ documentId, initialContent });
 

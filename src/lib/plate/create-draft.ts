@@ -1,9 +1,8 @@
 import { getRandomUid } from "@/lib/get-random-uid";
-import { slateNodesToInsertDelta } from "@slate-yjs/core";
 import * as Y from "yjs";
 import { isGuestUser } from "../auth/is-guest-user";
 import { defaultContent } from "./default-content";
-import { defaultGuestContent } from "./default-content";
+import { slateToDeterministicYjsState } from "@udecode/plate-yjs";
 
 type CreateDraftOptions = {
   initialContent?: any;
@@ -11,7 +10,6 @@ type CreateDraftOptions = {
   isGuest?: boolean;
   publishedId?: string; // ID of the original published post when editing
 };
-
 
 /**
  * Creates a new draft with the specified content
@@ -54,10 +52,6 @@ export async function createDraft(options: CreateDraftOptions = {}) {
 
   return { documentId };
 }
-
-
-import { slateToDeterministicYjsState } from "@udecode/plate-yjs";
-
 
 /**
  * Generates a Yjs document from the given content

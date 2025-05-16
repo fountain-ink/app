@@ -21,7 +21,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 export const Header = ({ session }: { session: MeResult | null }) => {
   const pathname = usePathname();
   const [blogData, setBlogData] = useState<BlogData | null>(null);
-  const isWritePage = pathname.startsWith("/write");
+  const isWritePage = pathname.startsWith("/w");
   const isSettingsPage = pathname.startsWith("/settings");
   const isBlogPage = pathname.startsWith("/b/");
   const isPostPage = pathname.startsWith("/p/");

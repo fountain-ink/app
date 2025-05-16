@@ -7,7 +7,7 @@ import { TbBrandTelegram, TbBrandX, TbX } from "react-icons/tb";
 export const GlobalFooter = () => {
   const pathname = usePathname();
 
-  if (pathname.includes("/write") || pathname.includes("/publish")) {
+  if (pathname.includes("/w") || pathname.includes("/publish")) {
     return null;
   }
 

@@ -174,7 +174,7 @@ export const DraftView = ({
               window.getSelection()?.removeAllRanges();
               onEnterSelectionMode?.();
             } else {
-              const href = `/write/${draft.documentId}`;
+              const href = `/w/${draft.documentId}`;
               window.location.href = href;
             }
           }}

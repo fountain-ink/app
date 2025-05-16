@@ -89,7 +89,7 @@ export const PostMenu = ({ post }: { post: Post }) => {
 
       toast.success("Created editable draft from post");
 
-      router.push(`/write/${documentId}`);
+      router.push(`/w/${documentId}`);
     } catch (error) {
       console.error("Failed to create editable draft:", error);
       toast.error("Failed to create editable draft");
