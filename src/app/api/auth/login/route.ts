@@ -1,5 +1,5 @@
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
-import { getUserProfile } from "@/lib/auth/get-user-profile";
+import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { signAppToken } from "@/lib/auth/sign-app-token";
 import { signGuestToken } from "@/lib/auth/sign-guest-token";
 import { createServiceClient } from "@/lib/db/service";
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     const claims = getTokenClaims(jwt);
     if (!claims) throw new Error("Failed to create app token");
 
-    const profile = await getUserProfile();
+    const profile = await getUserAccount();
     if (!profile) throw new Error("Failed to get user profile");
 
     await manageUserRecord(profile);
@@ -82,11 +82,11 @@ export async function POST(req: Request) {
   }
 }
 
-async function manageUserRecord(profile: Awaited<ReturnType<typeof getUserProfile>>) {
+async function manageUserRecord(profile: Awaited<ReturnType<typeof getUserAccount>>) {
   if (!profile) return;
 
   const db = await createServiceClient();
-  const account = profile.profile?.loggedInAs?.account;
+  const account = profile.account?.loggedInAs?.account;
 
   const { data: existingUser } = await db.from("users").select().eq("address", profile.address).single();
 

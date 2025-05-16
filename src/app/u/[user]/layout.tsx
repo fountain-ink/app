@@ -13,7 +13,7 @@ import { UserName } from "@/components/user/user-name";
 import { UserNavigation } from "@/components/user/user-navigation";
 import { UserSite } from "@/components/user/user-site";
 import { BlogTheme } from "@/components/blog/blog-theme";
-import { getUserProfile } from "@/lib/auth/get-user-profile";
+import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { getBlogData } from "@/lib/settings/get-blog-data";
 import { fetchAccount, fetchAccountStats } from "@lens-protocol/client/actions";
@@ -54,7 +54,7 @@ const UserLayout = async ({
   const themeName = settings?.theme?.name;
   const title = settings?.title;
 
-  const { address, username } = await getUserProfile();
+  const { address, username } = await getUserAccount();
 
   const stats = await fetchAccountStats(lens, { account: account?.address }).unwrapOr(null);
 

@@ -1,4 +1,4 @@
-import { getUserProfile } from "@/lib/auth/get-user-profile";
+import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchPosts } from "@lens-protocol/client/actions";
 import { MainContentFocus, AnyPost } from "@lens-protocol/client";

@@ -1,4 +1,4 @@
-import { getUserProfile } from "@/lib/auth/get-user-profile";
+import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { FeedNavigation } from "@/components/navigation/feed-navigation";
 import { CuratedPaginatedFeed } from "@/components/post/curated-paginated-feed";
 import { getBaseUrl } from "@/lib/get-base-url";

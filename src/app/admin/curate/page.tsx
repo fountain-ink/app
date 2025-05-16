@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import { getUserProfile } from "@/lib/auth/get-user-profile";
+import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchPosts } from "@lens-protocol/client/actions";
 import { MainContentFocus, AnyPost } from "@lens-protocol/client";
@@ -13,7 +13,7 @@ export const metadata = {
 
 const CuratePage = async () => {
   const lens = await getLensClient();
-  const { address: userAddress } = await getUserProfile();
+  const { address: userAddress } = await getUserAccount();
 
   const postsResult = await fetchPosts(lens, {
     filter: {
@@ -27,7 +27,7 @@ const CuratePage = async () => {
 
   return (
     <div className="flex flex-col mt-5 items-center justify-center max-w-4xl">
-       <div className="font-bold text-2xl mb-2 w-full">
+      <div className="font-bold text-2xl mb-2 w-full">
         Curate Posts
       </div>
       <p className="text-muted-foreground mb-6 w-full">

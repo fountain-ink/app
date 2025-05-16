@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import { getUserProfile } from "@/lib/auth/get-user-profile";
+import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchPosts } from "@lens-protocol/client/actions";
 import { MainContentFocus, AnyPost } from "@lens-protocol/client";
@@ -13,7 +13,7 @@ export const metadata = {
 
 const LatestPostsPage = async () => {
   const lens = await getLensClient();
-  const { address: userAddress } = await getUserProfile();
+  const { address: userAddress } = await getUserAccount();
 
   const postsResult = await fetchPosts(lens, {
     filter: {

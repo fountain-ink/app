@@ -9,7 +9,7 @@ import { PostMetadata } from "@/components/post/post-metadata";
 import { AuthorView } from "@/components/user/user-author-view";
 import { UserPostCard } from "@/components/user/user-post-card";
 import { ActionBarProvider } from "@/contexts/action-bar-context";
-import { getUserProfile } from "@/lib/auth/get-user-profile";
+import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { getPostIdBySlug } from "@/lib/slug/get-post-by-slug";
 import { fetchAccountStats, fetchPost } from "@lens-protocol/client/actions";
@@ -23,7 +23,7 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
   const postId = lensPostId || postParam;
 
   const post = await fetchPost(lens, { post: postId }).unwrapOr(null);
-  const { profile } = await getUserProfile();
+  const { account: profile } = await getUserAccount();
 
   const authorStats =
     post

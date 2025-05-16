@@ -149,6 +149,8 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
       setCustomTipAmount(value);
     }
   };
+
+  const hasCollectAction = post.operations?.canSimpleCollect.__typename === "SimpleCollectValidationPassed" || post.operations?.canSimpleCollect.__typename === "SimpleCollectValidationFailed";
   const canCollect = post.operations?.canSimpleCollect.__typename === "SimpleCollectValidationPassed";
 
   const getFinalTipAmount = () => {
@@ -177,7 +179,7 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
       contentClassName="bg-card border border-border p-4 pb-3 z-20"
     >
       <div className="flex flex-col items-center gap-3">
-        {canCollect && (
+        {hasCollectAction && (
           <>
             <Button
               variant="default"
@@ -256,7 +258,7 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
             ? "Confirming..."
             : !hasEnoughBalance && finalTipAmount !== "0"
               ? "Insufficient balance"
-              : canCollect
+              : hasCollectAction
                 ? "Send Tip"
                 : "Tip the author"}
         </Button>

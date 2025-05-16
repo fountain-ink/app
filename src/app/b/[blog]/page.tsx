@@ -1,7 +1,7 @@
 import { Separator } from "@/components/ui/separator";
 import { AuthorView } from "@/components/user/user-author-view";
 import { ArticleFeed } from "@/components/post/post-article-feed";
-import { getUserProfile } from "@/lib/auth/get-user-profile";
+import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchAccount, fetchPosts, fetchPostTags, fetchGroup, fetchGroupMembers, fetchAdminsFor } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
@@ -91,7 +91,7 @@ const BlogPage = async ({
   searchParams,
 }: { params: { blog: string }; searchParams?: { tag?: string } }) => {
   const lens = await getLensClient();
-  const { username, address: userAddress } = await getUserProfile();
+  const { username, address: userAddress } = await getUserAccount();
   let profile;
   let posts;
   let isGroup = false;
