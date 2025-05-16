@@ -7,7 +7,7 @@ import type { Tag } from "emblor";
 import { FC, useCallback, useEffect, useState, useRef, useMemo } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { CombinedFormValues } from "./publish-dialog";
-import { ImageIcon, PenIcon, AlertCircle, PenOffIcon, ScrollText, Heart, MessageCircle, MoreHorizontalIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import { ImageIcon, PenIcon, AlertCircle, PenOffIcon, ScrollText, Heart, MessageCircle, MoreHorizontalIcon, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import { checkSlugAvailability } from "@/lib/slug/check-slug-availability";
 import { debounce } from "lodash";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
@@ -17,6 +17,8 @@ import { CoinIcon } from "@/components/icons/custom-icons";
 import { usePublishDraft } from "@/hooks/use-publish-draft";
 import { ImageUploader } from "@/components/images/image-uploader";
 import { uploadFile } from "@/lib/upload/upload-file";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 export const detailsFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title should be less than 100 characters"),
@@ -69,6 +71,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
   const [isUploading, setIsUploading] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(images.findIndex(image => image === coverUrl) || 0);
   const isShowingUploader = currentImageIndex === images.length;
+  const [isMiscExpanded, setIsMiscExpanded] = useState(false);
 
   useEffect(() => {
     const draftImages = draft?.images || [];
@@ -366,85 +369,110 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
           </p>
         </div>
 
-        <div className="border border-border flex shrink flex-col gap-4 rounded-sm p-4">
-          <div className="pb-2 flex items-center justify-between">
+        <div className="border border-border flex shrink flex-col gap-4 min-h-0 h-fit rounded-sm p-4">
+          <div
+            className="flex items-center justify-between cursor-pointer"
+            onClick={() => setIsMiscExpanded(!isMiscExpanded)}
+          >
             <div className="flex items-center gap-2">
               <ScrollText className="w-4 h-4 text-muted-foreground" />
               <h3 className="font-medium">Misc</h3>
             </div>
+            <motion.div
+              animate={{ rotate: isMiscExpanded ? 180 : 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+            </motion.div>
           </div>
 
-          <FormField
-            control={form.control}
-            name="details.slug"
-            render={({ field, fieldState }) => (
-              <FormItem className="max-w-md">
-                <FormLabel htmlFor="slug" className="flex items-center gap-1">
-                  <span>Post slug</span>
-                </FormLabel>
-                <div className="relative">
+          {!isMiscExpanded && (
+            <p className="text-sm text-muted-foreground">
+              Configure post slug, tags, and other article settings
+            </p>
+          )}
+
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{
+              height: isMiscExpanded ? "auto" : 0,
+              opacity: isMiscExpanded ? 1 : 0
+            }}
+            transition={{ duration: 0.3 }}
+            className={cn("overflow-hidden flex flex-col gap-4", !isMiscExpanded && "-mt-4")}
+          >
+            <FormField
+              control={form.control}
+              name="details.slug"
+              render={({ field, fieldState }) => (
+                <FormItem className="max-w-md">
+                  <FormLabel htmlFor="slug" className="flex items-center gap-1">
+                    <span>Post slug</span>
+                  </FormLabel>
+                  <div className="relative">
+                    <FormControl>
+                      <Input
+                        id="slug"
+                        placeholder="generated-from-title"
+                        {...field}
+                        onChange={handleSlugChange}
+                        value={field.value ?? ""}
+                        className={`${fieldState.error ? "border-destructive" : ""} ${isSlugAvailable === false ? "pr-10 border-destructive" : ""}`}
+                      />
+                    </FormControl>
+                    {isCheckingSlug && (
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                        <div className="animate-spin h-4 w-4 border-2 border-primary/20 border-t-primary rounded-full" />
+                      </div>
+                    )}
+                    {!isCheckingSlug && isSlugAvailable === false && (
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-destructive">
+                        <AlertCircle className="h-4 w-4" />
+                      </div>
+                    )}
+                  </div>
+                  <FormDescription>
+                    {isSlugAvailable === false ?
+                      "This slug is already taken for your account. Please choose another one." :
+                      "The slug is used in the URL of your post."}
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="details.tags"
+              render={({ field, fieldState }) => (
+                <FormItem className="space-y-2 max-w-full min-w-sm w-fit">
+                  <FormLabel htmlFor="tags" className="flex items-center gap-1">
+                    <span>Tags</span>
+                  </FormLabel>
                   <FormControl>
-                    <Input
-                      id="slug"
-                      placeholder="generated-from-title"
-                      {...field}
-                      onChange={handleSlugChange}
-                      value={field.value ?? ""}
-                      className={`${fieldState.error ? "border-destructive" : ""} ${isSlugAvailable === false ? "pr-10 border-destructive" : ""}`}
+                    <TagInput
+                      maxTags={5}
+                      styleClasses={{
+                        input: "shadow-none w-[200px] h-6",
+                        tag: {
+                          body: "border border-secondary",
+                        },
+                      }}
+                      placeholder="Add a tag"
+                      tags={tags}
+                      setTags={handleSetTags}
+                      activeTagIndex={activeTagIndex}
+                      setActiveTagIndex={setActiveTagIndex}
+                      variant="outline"
+                      className={fieldState.error ? "border-destructive ring-1 ring-destructive" : ""}
                     />
                   </FormControl>
-                  {isCheckingSlug && (
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                      <div className="animate-spin h-4 w-4 border-2 border-primary/20 border-t-primary rounded-full" />
-                    </div>
-                  )}
-                  {!isCheckingSlug && isSlugAvailable === false && (
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-destructive">
-                      <AlertCircle className="h-4 w-4" />
-                    </div>
-                  )}
-                </div>
-                <FormDescription>
-                  {isSlugAvailable === false ?
-                    "This slug is already taken for your account. Please choose another one." :
-                    "The slug is used in the URL of your post."}
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="details.tags"
-            render={({ field, fieldState }) => (
-              <FormItem className="space-y-2 max-w-full min-w-sm w-fit">
-                <FormLabel htmlFor="tags" className="flex items-center gap-1">
-                  <span>Tags</span>
-                </FormLabel>
-                <FormControl>
-                  <TagInput
-                    maxTags={5}
-                    styleClasses={{
-                      input: "shadow-none w-[200px] h-6",
-                      tag: {
-                        body: "border border-secondary",
-                      },
-                    }}
-                    placeholder="Add a tag"
-                    tags={tags}
-                    setTags={handleSetTags}
-                    activeTagIndex={activeTagIndex}
-                    setActiveTagIndex={setActiveTagIndex}
-                    variant="outline"
-                    className={fieldState.error ? "border-destructive ring-1 ring-destructive" : ""}
-                  />
-                </FormControl>
-                <FormDescription>Add up to 5 tags that will be used to categorize the post.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  <FormDescription>Add up to 5 tags that will be used to categorize the post.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </motion.div>
         </div>
       </div>
     </div>
