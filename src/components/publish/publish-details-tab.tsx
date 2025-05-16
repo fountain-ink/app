@@ -35,7 +35,11 @@ export type DetailsFormValues = z.infer<typeof detailsFormSchema>;
 
 const generateSlug = (title: string, subtitle: string = ""): string => {
   const combinedText = (title + " " + subtitle).trim();
-  return combinedText
+  const words = combinedText.split(/\s+/);
+  const limitedWords = words.slice(0, 10);
+  const limitedText = limitedWords.join(" ");
+
+  return limitedText
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, "") // Remove non-alphanumeric characters except spaces and hyphens
     .replace(/\s+/g, "-") // Replace spaces with hyphens
