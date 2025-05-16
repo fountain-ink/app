@@ -70,6 +70,8 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
       slug: values.details.slug || null,
       tags: Array.isArray(values.details.tags) ? values.details.tags : [],
       images: Array.isArray(values.details.images) ? values.details.images : [],
+      originalDate: values.details.originalDate || null,
+      isMiscSectionExpanded: values.details.isMiscSectionExpanded ?? false,
 
       distributionSettings: {
         selectedBlogAddress: shouldSaveBlogAddress ? selectedBlogAddress : undefined,
@@ -100,6 +102,8 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
           tags: [],
           images: [],
           isSlugManuallyEdited: false,
+          originalDate: null,
+          isMiscSectionExpanded: false,
         },
         distribution: {
           selectedBlogAddress: "",
@@ -133,6 +137,8 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
         tags: draft?.tags || [],
         images: draft?.images || [],
         isSlugManuallyEdited: draft?.slug ? true : false,
+        originalDate: draft?.originalDate ? new Date(draft.originalDate) : null,
+        isMiscSectionExpanded: draft?.isMiscSectionExpanded ?? false,
       },
       distribution: {
         selectedBlogAddress: draft?.distributionSettings?.selectedBlogAddress || "",

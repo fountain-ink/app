@@ -7,7 +7,7 @@ import type { Tag } from "emblor";
 import { FC, useCallback, useEffect, useState, useRef, useMemo } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { CombinedFormValues } from "./publish-dialog";
-import { ImageIcon, PenIcon, AlertCircle, PenOffIcon, ScrollText, Heart, MessageCircle, MoreHorizontalIcon, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
+import { ImageIcon, PenIcon, AlertCircle, PenOffIcon, ScrollText, Heart, MessageCircle, MoreHorizontalIcon, ChevronLeft, ChevronRight, ChevronDown, CalendarIcon, XIcon } from "lucide-react";
 import { checkSlugAvailability } from "@/lib/slug/check-slug-availability";
 import { debounce } from "lodash";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
@@ -19,6 +19,9 @@ import { ImageUploader } from "@/components/images/image-uploader";
 import { uploadFile } from "@/lib/upload/upload-file";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger, PopoverPortal } from "@/components/ui/popover";
+import { format } from "date-fns";
 
 export const detailsFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title should be less than 100 characters"),
@@ -31,6 +34,8 @@ export const detailsFormSchema = z.object({
   tags: z.array(z.string()).max(5, "You can add up to 5 tags").default([]),
   images: z.array(z.string()).default([]),
   isSlugManuallyEdited: z.boolean().optional().default(false),
+  originalDate: z.date().optional().nullable(),
+  isMiscSectionExpanded: z.boolean().optional().default(false),
 });
 
 export type DetailsFormValues = z.infer<typeof detailsFormSchema>;
@@ -71,7 +76,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
   const [isUploading, setIsUploading] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(images.findIndex(image => image === coverUrl) || 0);
   const isShowingUploader = currentImageIndex === images.length;
-  const [isMiscExpanded, setIsMiscExpanded] = useState(false);
+  const isMiscExpanded = form.watch("details.isMiscSectionExpanded");
 
   useEffect(() => {
     const draftImages = draft?.images || [];
@@ -372,7 +377,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
         <div className="border border-border flex shrink flex-col gap-4 min-h-0 h-fit rounded-sm p-4">
           <div
             className="flex items-center justify-between cursor-pointer"
-            onClick={() => setIsMiscExpanded(!isMiscExpanded)}
+            onClick={() => form.setValue("details.isMiscSectionExpanded", !isMiscExpanded, { shouldDirty: true })}
           >
             <div className="flex items-center gap-2">
               <ScrollText className="w-4 h-4 text-muted-foreground" />
@@ -393,7 +398,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
           )}
 
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
+            initial={isMiscExpanded ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
             animate={{
               height: isMiscExpanded ? "auto" : 0,
               opacity: isMiscExpanded ? 1 : 0
@@ -441,6 +446,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
               )}
             />
 
+
             <FormField
               control={form.control}
               name="details.tags"
@@ -468,6 +474,71 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
                     />
                   </FormControl>
                   <FormDescription>Add up to 5 tags that will be used to categorize the post.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="details.originalDate"
+              render={({ field }) => (
+                <FormItem className="flex flex-col max-w-md">
+                  <FormLabel htmlFor="originalDate" className="flex items-center gap-1">
+                    <span>Original Date</span>
+                  </FormLabel>
+                  <div className="grid gap-2">
+                    <Popover>
+                      <div className="relative flex flex-row items-center gap-2">
+                        <PopoverTrigger asChild>
+                          <Button
+                            id="date"
+                            variant="outline"
+                            className={cn(
+                              "w-full justify-start text-left max-w-xs font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        {field.value && (
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => {
+                              field.onChange(null);
+                              form.setValue("details.originalDate", null);
+                            }}
+                          >
+                            <XIcon className="w-4 h-4" />
+                          </Button>
+                        )}
+                      </div>
+
+                      <PopoverContent align="start" className="w-auto z-[60] p-0">
+                        <Calendar
+                          mode="single"
+                          selected={field.value || undefined}
+                          fixedWeeks
+                          showWeekNumber={false}
+                          onSelect={(date) => {
+                            field.onChange(date);
+                            if (date) form.setValue("details.originalDate", date);
+                          }}
+                          disabled={(date) => date > new Date()}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <FormDescription>
+                    Set an original publication date for this post.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

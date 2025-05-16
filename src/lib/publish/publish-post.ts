@@ -70,6 +70,10 @@ export async function publishPost(
         attributes.push({ key: "slug", type: MetadataAttributeType.STRING, value: draft.slug });
       }
 
+      if (draft.originalDate) {
+        attributes.push({ key: "originalDate", type: MetadataAttributeType.DATE, value: new Date(draft.originalDate).toISOString() });
+      }
+
       if (collectingSettings?.collectingLicense) {
         attributes.push({ key: "license", type: MetadataAttributeType.STRING, value: collectingSettings.collectingLicense });
       }

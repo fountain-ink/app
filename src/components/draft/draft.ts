@@ -16,6 +16,8 @@ export type Draft = Database["public"]["Tables"]["drafts"]["Row"] & {
   slug: string | null;
   tags: string[];
   images: string[];
+  originalDate: Date | null;
+  isMiscSectionExpanded: boolean;
 
   distributionSettings: DraftDistributionFormValues;
   collectingSettings: DraftCollectingFormValues;

@@ -42,6 +42,7 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
 
   const contentJson = post?.metadata?.attributes?.find((attr: any) => attr.key === "contentJson")?.value;
   const contentHtml = post?.metadata?.attributes?.find((attr: any) => attr.key === "contentHtml")?.value;
+  const originalDate = post?.metadata?.attributes?.find((attr: any) => attr.key === "originalDate")?.value;
 
   if (contentJson) {
     return (
@@ -53,7 +54,7 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
               <AuthorView showUsername={false} accounts={[post.author]} />
               <span className=" flex flex-row gap-2 items-center text-[var(--subtitle-color)] font-[family-name:var(--subtitle-font)]">
                 {" · "}
-                <DateLabel date={post.timestamp} />
+                <DateLabel date={post.timestamp} originalDate={originalDate} />
               </span>
             </div>
           </div>
