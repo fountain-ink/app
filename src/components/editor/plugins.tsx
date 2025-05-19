@@ -527,7 +527,7 @@ export const plugins = [
   DocxPlugin,
   MarkdownPlugin.configure({
     options: {
-        remarkPlugins: [remarkMath, remarkGfm, remarkMdx, remarkMention],
+      remarkPlugins: [remarkMath, remarkGfm, remarkMdx, remarkMention],
       rules: {
         [TitlePlugin.key]: {
           serialize: (slateNode: TElement): Heading | Text => {
