@@ -44,6 +44,7 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
   const contentHtml = post?.metadata?.attributes?.find((attr: any) => attr.key === "contentHtml")?.value;
   const originalDate = post?.metadata?.attributes?.find((attr: any) => attr.key === "originalDate")?.value;
 
+
   if (contentJson) {
     return (
       <div>

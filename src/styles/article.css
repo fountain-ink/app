@@ -9,6 +9,12 @@
   border-radius: var(--image-border-radius);
 }
 
+.article iframe {
+  border-radius: var(--image-border-radius);
+  width: 100%;
+  height: 100%;
+}
+
 .article .title {
   color: var(--title-color);
   margin-top: var(--header-margin);

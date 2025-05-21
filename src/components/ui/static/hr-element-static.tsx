@@ -7,7 +7,7 @@ import { cn } from '@udecode/cn';
 export function HrElementStatic({
   children,
   className,
-  attributes,
+  attributes: { ...attributes },
   ...props
 }: SlateElementProps) {
   return (

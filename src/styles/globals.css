@@ -211,3 +211,29 @@ p.first-paragraph {
     @apply bg-background text-foreground;
   }
 }
+
+.iframely-responsive {
+	position: relative;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 0;
+	padding-bottom: 56.25%;
+}
+
+.iframely-responsive > * {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.iframely-embed {
+	width: 100%;
+  height: 100%;
+  margin: 0;
+}

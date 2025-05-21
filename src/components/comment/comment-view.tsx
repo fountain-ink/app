@@ -11,7 +11,9 @@ import { UserUsername } from "../user/user-handle";
 import { UserName } from "../user/user-name";
 import { CommentReactions } from "./comment-reactions";
 import { CommentReplyArea } from "./comment-reply-area";
+import { UserLazyUsername } from "../user/user-lazy-username";
 import { UserCard } from "../user/user-card";
+
 
 interface CommentViewProps {
   comment: AnyPost;

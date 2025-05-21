@@ -13,6 +13,7 @@ import { PlateElement } from "@udecode/plate/react";
 import { ImagePlugin } from "@udecode/plate-media/react";
 import type { PlateEditor } from "@udecode/plate/react";
 import {
+  FrameIcon,
   Heading2Icon,
   HeadingIcon,
   ImageIcon,
@@ -37,6 +38,8 @@ import { insertBlock } from "@/lib/transforms";
 import { ListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
 import { EquationPlugin } from "@udecode/plate-math/react";
 import { insertTable } from "@udecode/plate-table";
+import { IframePlugin } from "../editor/plugins/iframe-plugin";
+import { insertIframe } from "../editor/transforms/insert-iframe";
 
 interface SlashCommandRule {
   icon: ComponentType<SVGProps<SVGSVGElement>>;
@@ -135,6 +138,15 @@ const rules: SlashCommandRule[] = [
       insertEmptyCodeBlock(editor, {
         insertNodesOptions: { select: true },
       });
+    },
+  },
+  {
+    icon: FrameIcon,
+    value: "Embed",
+    description: "Add an embed.",
+    keywords: ["iframe", "embed", "video", "media"],
+    onSelect: (editor) => {
+      insertIframe(editor, { url: undefined });
     },
   },
   {

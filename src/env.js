@@ -11,6 +11,8 @@ export const env = createEnv({
     LISTMONK_API_TOKEN: z.string(),
     LENS_API_KEY: z.string(),
     LENS_API_KEY_TESTNET: z.string(),
+    IFRAMELY_API_KEY: z.string(),
+    IFRAMELY_BASE_URL: z.string(),
   },
 
   client: {
@@ -26,8 +28,12 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     SUPABASE_JWT_SECRET: process.env.SUPABASE_JWT_SECRET,
     SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY,
+
     LENS_API_KEY: process.env.LENS_API_KEY,
     LENS_API_KEY_TESTNET: process.env.LENS_API_KEY_TESTNET,
+
+    IFRAMELY_API_KEY: process.env.IFRAMELY_API_KEY,
+    IFRAMELY_BASE_URL: process.env.IFRAMELY_BASE_URL,
 
     LISTMONK_API_URL: process.env.LISTMONK_API_URL,
     LISTMONK_API_USERNAME: process.env.LISTMONK_API_USERNAME,
