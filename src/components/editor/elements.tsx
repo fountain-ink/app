@@ -65,6 +65,8 @@ import { TITLE_KEYS } from "./plugins/title-plugin";
 import { ImageElement } from "../ui/image-element";
 import { IframePlugin } from "./plugins/iframe-plugin";
 import { IframeElement } from "../ui/iframe-element";
+import { SubtitleElement } from "../ui/subtitle-element";
+
 
 export const getRichElements = () => {
   return withPlaceholders(getElements());
@@ -112,7 +114,7 @@ export const getElements = () => {
     [StrikethroughPlugin.key]: withProps(PlateLeaf, { as: "s" }),
     [UnderlinePlugin.key]: withProps(PlateLeaf, { as: "u" }),
     // [CommentsPlugin.key]: CommentLeaf,
-    [TITLE_KEYS.title]: withProps(TitleElement, { variant: "title" }),
-    [TITLE_KEYS.subtitle]: withProps(TitleElement, { variant: "subtitle" }),
+    [TITLE_KEYS.title]: TitleElement,
+    [TITLE_KEYS.subtitle]: SubtitleElement,
   };
 };

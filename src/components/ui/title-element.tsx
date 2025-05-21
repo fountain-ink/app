@@ -1,34 +1,17 @@
-import { withRef, withVariants } from "@udecode/cn";
-import { cva } from "class-variance-authority";
+import { withRef } from "@udecode/cn";
 import { PlateElement } from "@udecode/plate/react";
 
-const titleVariants = cva("relative", {
-  variants: {
-    variant: {
-      title: "title",
-      subtitle: "subtitle",
-    },
-  },
-});
-
-const TitleElementVariants = withVariants(PlateElement, titleVariants, ["variant"]);
-
-export const TitleElement = withRef<typeof TitleElementVariants>(
-  ({ children, element, variant = "title", attributes, ...props }, ref) => {
+export const TitleElement = withRef<typeof PlateElement>(
+  ({ children, ...props }, ref) => {
     return (
-      <TitleElementVariants
-        attributes={{
-          id: element?.id as string,
-          ...attributes,
-        }}
+      <PlateElement
         ref={ref}
-        variant={variant}
-        element={element}
         as="header"
+        className={"title"}
         {...props}
       >
         {children}
-      </TitleElementVariants>
+      </PlateElement>
     );
   },
 );

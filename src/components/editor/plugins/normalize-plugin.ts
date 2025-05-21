@@ -1,12 +1,7 @@
 import { NodeApi, Path, TNode } from "@udecode/plate";
 import { ParagraphPlugin, createPlatePlugin } from "@udecode/plate-core/react";
-import { useYjsState } from "../../../hooks/use-yjs-state";
 import { TITLE_KEYS } from "./title-plugin";
 import { YjsPlugin } from "@udecode/plate-yjs/react";
-
-function hasId(node: any): boolean {
-  return typeof node === "object" && node !== null && "id" in node && typeof node.id === "string";
-}
 
 export const NormalizePlugin = createPlatePlugin({
   key: "normalize",

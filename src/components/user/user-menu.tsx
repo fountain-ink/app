@@ -13,7 +13,6 @@ import { useTheme } from "next-themes";
 import { usePathname, useRouter } from "next/navigation";
 import { useAccount, useDisconnect } from "wagmi";
 import { ConnectWalletButton } from "../auth/auth-wallet-button";
-import { SelectAccountMenu } from "../auth/account-select-menu";
 import { LogoutIcon } from "../icons/logout";
 import { MoonIcon } from "../icons/moon";
 import { SettingsGearIcon } from "../icons/settings";
@@ -24,42 +23,47 @@ import { UserIcon } from "../icons/user";
 import { UserAvatar } from "./user-avatar";
 import { AnimatedMenuItem } from "../navigation/animated-item";
 import { getLensClient } from "@/lib/lens/client";
-import { useState } from "react";
+import { useEffect } from "react";
 import { BlogDropdownMenu } from "../blog/blog-dropdown-menu";
 import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { HomeIcon } from "../icons/home";
+import { useUIStore } from "@/stores/ui-store";
 
-export const UserMenu = ({ session }: { session: MeResult | null }) => {
-  const { isConnected: isWalletConnected } = useAccount();
-  const { disconnect } = useDisconnect();
+export const UserMenu = ({ session, showDropdown = false }: { session: MeResult | null, showDropdown?: boolean }) => {
+  const { isConnected: isWalletConnected, status } = useAccount();
+  const { disconnect: disconnectWallet } = useDisconnect();
   const pathname = usePathname();
   const router = useRouter();
   const { resolvedTheme: theme, setTheme } = useTheme();
   const isDarkMode = theme === "dark";
-  const [showProfileSelect, setShowProfileSelect] = useState(!session);
   const resetBlogStorage = useBlogStorage((state) => state.resetState);
+  const setProfileSelectModalOpen = useUIStore((state) => state.setProfileSelectModalOpen);
+
+  useEffect(() => {
+    if (isWalletConnected && !session && showDropdown) {
+      setProfileSelectModalOpen(true);
+    }
+  }, [isWalletConnected, session, setProfileSelectModalOpen, showDropdown]);
 
   const handleDisconnect = async () => {
     const client = await getLensClient();
-    if (client.isSessionClient()) {
-      await client.logout();
-    }
-    disconnect();
+
+    disconnectWallet();
     clearAllCookies();
     resetBlogStorage();
-    router.push("/");
-    window.location.reload();
+
+    if (client.isSessionClient()) {
+      await client.logout();
+      router.push("/");
+      window.location.reload();
+    }
   };
 
-  if (!isWalletConnected) {
+  if (!isWalletConnected && status !== "connecting") {
     return <ConnectWalletButton text="Login" />;
   }
 
-  if (!session || showProfileSelect) {
-    return <SelectAccountMenu open={showProfileSelect} onOpenChange={setShowProfileSelect} />;
-  }
-
-  const username = session.loggedInAs.account.username?.localName;
+  const username = session?.loggedInAs.account.username?.localName;
 
   const getSettingsPath = () => {
     if (pathname.match(/^\/u\/[^/]+$/)) return "/settings/profile";
@@ -67,41 +71,57 @@ export const UserMenu = ({ session }: { session: MeResult | null }) => {
     return "/settings";
   };
 
+  if (!showDropdown) {
+    return (
+      <Button variant="default" className="shrink-0" onClick={() => setProfileSelectModalOpen(true)}>
+        Login
+      </Button>
+    );
+  }
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon" className="rounded-full shrink-0">
-          <UserAvatar account={session.loggedInAs.account} />
+          <UserAvatar account={session?.loggedInAs.account} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent align="end" className="w-48">
-          <AnimatedMenuItem href="/featured" icon={HomeIcon}>
-            Home
-          </AnimatedMenuItem>
+          {session && (
+            <>
+              <AnimatedMenuItem href="/featured" icon={HomeIcon}>
+                Home
+              </AnimatedMenuItem>
 
-          {username && <BlogDropdownMenu username={username} />}
+              {username && <BlogDropdownMenu username={username} />}
 
-          <AnimatedMenuItem href={`/u/${username}`} icon={UserIcon}>
-            Profile
-          </AnimatedMenuItem>
+              <AnimatedMenuItem href={`/u/${username}`} icon={UserIcon}>
+                Profile
+              </AnimatedMenuItem>
+            </>
+          )}
 
           <AnimatedMenuItem
             icon={UserRoundPenIcon}
             onClick={() => {
-              setShowProfileSelect(true);
+              setProfileSelectModalOpen(true);
             }}
           >
-            Switch Profile
+            {session ? "Switch Profile" : "Select Profile"}
           </AnimatedMenuItem>
 
-          <AnimatedMenuItem href={`/u/${username}/drafts`} icon={SquarePenIcon}>
-            Drafts
-          </AnimatedMenuItem>
+          {session && (
+            <>
+              <AnimatedMenuItem href={`/u/${username}/drafts`} icon={SquarePenIcon}>
+                Drafts
+              </AnimatedMenuItem>
 
-          <AnimatedMenuItem href={getSettingsPath()} icon={SettingsGearIcon}>
-            Settings
-          </AnimatedMenuItem>
+              <AnimatedMenuItem href={getSettingsPath()} icon={SettingsGearIcon}>
+                Settings
+              </AnimatedMenuItem>
+            </>
+          )}
 
           {isDarkMode ? (
             <AnimatedMenuItem

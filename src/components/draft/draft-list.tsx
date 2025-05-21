@@ -135,6 +135,7 @@ export function DraftList({ address }: { address?: EvmAddress | null }) {
           </Button>
         </div>
       )}
+
       {drafts.map((draft: Draft, index) => (
         <div key={draft.documentId}>
           <DraftView

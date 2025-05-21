@@ -21,7 +21,7 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
     return null;
   }
 
-  const { likeButton, collectButton, commentButton, bookmarkButton, shareButton } = usePostActionsButtons({ post, account });
+  const { likeButton, collectButton, commentButton, bookmarkButton, shareButton } = usePostActionsButtons({ post });
 
   const actionButtons = [shareButton, bookmarkButton, collectButton, commentButton, likeButton];
 
@@ -55,10 +55,10 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
                 dropdownItems={button.dropdownItems}
                 onClick={button.onClick}
                 isActive={button.isActive}
-                shouldIncrementOnClick={button.shouldIncrementOnClick}
                 renderPopover={button.renderPopover}
                 isDisabled={button.isDisabled}
                 hideCount={button.hideCount}
+                isUserLoggedIn={button.isUserLoggedIn}
               />
             ))}
           </nav>

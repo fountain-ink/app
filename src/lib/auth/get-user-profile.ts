@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { getLensClient } from "../lens/client";
 import { LensIdToken } from "./app-token";
 
-export async function getUserProfile() {
+export async function getUserAccount() {
   const client = await getLensClient();
 
   if (!client.isSessionClient()) {
@@ -43,7 +43,7 @@ export async function getUserProfile() {
 
   return {
     address: account.loggedInAs.account.address,
-    profile: account,
+    account,
     username: account.loggedInAs.account.username?.localName,
   };
 }

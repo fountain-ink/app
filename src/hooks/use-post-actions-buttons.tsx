@@ -1,11 +1,11 @@
-import { TooltipProvider } from "@/components/ui/tooltip";
+"use client";
+
 import { usePostActions } from "@/hooks/use-post-actions";
 import { handlePlatformShare } from "@/lib/get-share-url";
 import { Account, Post } from "@lens-protocol/client";
 import { Bookmark, Heart, LucideIcon, MessageCircle, Share2, Ban, StarIcon, ShieldAlert, ShieldX, Meh } from "lucide-react";
 import { IconType } from "react-icons";
 import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
-import { ActionButton } from "@/components/post/post-action-button";
 import { TipPopover } from "@/components/tip/tip-popover";
 import { CoinIcon } from "@/components/icons/custom-icons";
 import React, { ReactElement, JSXElementConstructor } from "react";
@@ -31,6 +31,9 @@ type ActionButtonConfig = {
     onClick: () => void;
   }[];
   hideCount?: boolean;
+  isUserLoggedIn?: boolean;
+  onConnectWallet?: () => void;
+  onSelectProfile?: () => void;
 };
 
 type PostActionButtons = {
@@ -42,7 +45,7 @@ type PostActionButtons = {
   adminButtons?: ActionButtonConfig[];
 };
 
-export const usePostActionsButtons = ({ post, account }: { post: Post; account?: Account }): PostActionButtons => {
+export const usePostActionsButtons = ({ post }: { post: Post }): PostActionButtons => {
   const {
     handleComment,
     handleCollect,
@@ -56,7 +59,19 @@ export const usePostActionsButtons = ({ post, account }: { post: Post; account?:
   } = usePostActions(post);
 
   const { isAdmin, isLoading: isAdminLoading } = useAdminStatus();
-  const { handleBanAuthor, handleFeaturePost, isBanning, isFeaturing } = useAdminPostActions(post);
+  const {
+    handleBanAuthor,
+    handleUnbanAuthor,
+    handleFeaturePost,
+    handleUnfeaturePost,
+    isBanning,
+    isUnbanning,
+    isFeaturing,
+    isUnfeaturing,
+    isAuthorBanned,
+    isFeatured,
+    isLoadingStatus,
+  } = useAdminPostActions(post, isAdmin);
 
   const likes = stats.upvotes;
   const collects = stats.collects;
@@ -83,7 +98,8 @@ export const usePostActionsButtons = ({ post, account }: { post: Post; account?:
       onClick: handleLike,
       isActive: hasUpvoted,
       shouldIncrementOnClick: true,
-      isDisabled: !isLoggedIn,
+      isDisabled: false,
+      isUserLoggedIn: isLoggedIn,
     },
     collectButton: {
       icon: CoinIcon,
@@ -98,7 +114,8 @@ export const usePostActionsButtons = ({ post, account }: { post: Post; account?:
         </TipPopover>
       ),
       isActive: isCollectSheetOpen,
-      isDisabled: !isLoggedIn,
+      isDisabled: false,
+      isUserLoggedIn: isLoggedIn,
     },
     commentButton: {
       icon: MessageCircle,
@@ -109,7 +126,8 @@ export const usePostActionsButtons = ({ post, account }: { post: Post; account?:
       onClick: () => handleComment(false),
       shouldIncrementOnClick: false,
       isActive: isCommentSheetOpen,
-      isDisabled: !canComment,
+      isDisabled: false,
+      isUserLoggedIn: true,
     },
     bookmarkButton: {
       icon: Bookmark,
@@ -120,6 +138,8 @@ export const usePostActionsButtons = ({ post, account }: { post: Post; account?:
       fillColor: "hsl(var(--primary) / 0.8)",
       shouldIncrementOnClick: true,
       onClick: handleBookmark,
+      isDisabled: false,
+      isUserLoggedIn: isLoggedIn,
     },
     shareButton: {
       icon: Share2,
@@ -130,6 +150,7 @@ export const usePostActionsButtons = ({ post, account }: { post: Post; account?:
       fillColor: "hsl(var(--primary) / 0.8)",
       shouldIncrementOnClick: false,
       hideCount: true,
+      isUserLoggedIn: true,
       dropdownItems: [
         {
           icon: TbLink,
@@ -150,44 +171,57 @@ export const usePostActionsButtons = ({ post, account }: { post: Post; account?:
     },
   };
 
-  if (isAdmin && !isAdminLoading) {
+  if (isAdmin && !isAdminLoading && !isLoadingStatus) {
     buttons.adminButtons = [
       {
         icon: Ban,
-        label: "Ban Author",
+        label: isAuthorBanned ? "Author Banned" : "Ban Author",
         initialCount: 0,
-        strokeColor: "rgb(220, 38, 38)",
-        fillColor: "rgba(220, 38, 38, 0.8)",
+        strokeColor: "hsl(var(--destructive))",
+        fillColor: "hsl(var(--destructive) / 0.1)",
+        isUserLoggedIn: true,
         shouldIncrementOnClick: false,
-        isDisabled: isBanning,
+        isActive: isAuthorBanned,
+        isDisabled: isBanning || isUnbanning,
         hideCount: true,
         dropdownItems: [
-          {
-            icon: ShieldX,
-            label: "Ban (Bot)",
-            onClick: () => handleBanAuthor("bot"),
-          },
-          {
-            icon: Meh,
-            label: "Ban (Spam)",
-            onClick: () => handleBanAuthor("spam"),
-          },
-          {
-            icon: ShieldAlert,
-            label: "Ban (Forbidden)",
-            onClick: () => handleBanAuthor("forbidden"),
-          },
+          ...(!isAuthorBanned ? [
+            {
+              icon: ShieldX,
+              label: "Ban (Bot)",
+              onClick: () => handleBanAuthor("bot"),
+            },
+            {
+              icon: Meh,
+              label: "Ban (Spam)",
+              onClick: () => handleBanAuthor("spam"),
+            },
+            {
+              icon: ShieldAlert,
+              label: "Ban (Forbidden)",
+              onClick: () => handleBanAuthor("forbidden"),
+            },
+          ] : []),
+          ...(isAuthorBanned ? [
+            {
+              icon: ShieldX,
+              label: "Unban Author",
+              onClick: handleUnbanAuthor,
+            },
+          ] : []),
         ],
       },
       {
         icon: StarIcon,
-        label: "Feature Post",
+        label: isFeatured ? "Featured" : "Feature Post",
         initialCount: 0,
-        strokeColor: "rgb(234, 179, 8)",
-        fillColor: "rgba(234, 179, 8, 0.8)",
+        isUserLoggedIn: true,
+        strokeColor: "hsl(var(--primary))",
+        fillColor: "hsl(var(--primary) / 0.8)",
         shouldIncrementOnClick: false,
-        onClick: handleFeaturePost,
-        isDisabled: isFeaturing,
+        onClick: isFeatured ? handleUnfeaturePost : handleFeaturePost,
+        isActive: isFeatured,
+        isDisabled: isFeaturing || isUnfeaturing,
         hideCount: true,
       }
     ];

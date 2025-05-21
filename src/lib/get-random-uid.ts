@@ -1,6 +1,79 @@
-export function getRandomUid() {
-  return Math.random()
-    .toString(36)
-    .replace(/[^a-z]+/g, "")
-    .substring(0, 10);
+/**
+ * Generates a random unique identifier in the format "adjective-word-randomstring"
+ * @returns A string with format "adjective-word-randomletters" 
+ */
+export function getRandomUid(): string {
+  const adjectiveIndex = Math.floor(Math.random() * ADJECTIVES.length);
+  const randomAdjective = ADJECTIVES[adjectiveIndex]!;
+
+  const wordIndex = Math.floor(Math.random() * RANDOM_WORDS.length);
+  const randomWord = RANDOM_WORDS[wordIndex]!;
+
+  const timestamp = Date.now().toString();
+  const randomPart = Math.random().toString(36).substring(2);
+  const source = timestamp + randomPart;
+
+  // djb2 hashing algorithm
+  let hash = 5381;
+  for (let i = 0; i < source.length; i++) {
+    hash = ((hash << 5) + hash) + source.charCodeAt(i);
+  }
+
+  let randomString = '';
+  let num = Math.abs(hash);
+
+  const randomStringLength = 8;
+  while (randomString.length < randomStringLength) {
+    // Generate only letters (a-z) instead of alphanumeric characters
+    const letterCode = (num % 26) + 97; // 97 is ASCII for 'a'
+    randomString += String.fromCharCode(letterCode);
+    num = (num * 7919) % 2147483647;
+  }
+
+  randomString = randomString.substring(0, randomStringLength);
+
+  return `${randomAdjective}-${randomWord}-${randomString}`;
 }
+
+export const ADJECTIVES = [
+  "adorable", "amazing", "brave", "bright", "calm", "charming", "clever", "cool",
+  "creative", "curious", "delightful", "eager", "elegant", "energetic", "enormous",
+  "excellent", "fantastic", "friendly", "funny", "generous", "gentle", "glorious",
+  "good", "gorgeous", "graceful", "grand", "great", "happy", "helpful", "honest",
+  "incredible", "intelligent", "jolly", "kind", "lively", "lovely", "lucky",
+  "magnificent", "mighty", "modern", "nice", "perfect", "playful", "polite",
+  "powerful", "proud", "quick", "quiet", "rare", "remarkable", "shiny", "silly",
+  "smart", "sparkling", "special", "splendid", "strong", "super", "swift", "talented",
+  "terrific", "thoughtful", "tiny", "trusty", "unique", "unusual", "valuable",
+  "wild", "wise", "wonderful", "zany", "zealous"
+] as const;
+
+export const RANDOM_WORDS = [
+  "apple", "banana", "cherry", "date", "elder", "fig", "grape", "honey",
+  "indigo", "jasmine", "kiwi", "lemon", "mango", "nutmeg", "orange", "peach",
+  "quince", "rose", "sage", "thyme", "umbrella", "violet", "wheat", "xenia",
+  "yellow", "zinc", "amber", "blue", "crimson", "denim", "emerald", "fuchsia",
+  "garnet", "helium", "jade", "kumquat", "lilac", "marigold", "narcissus",
+  "orchid", "poppy", "quicksilver", "raspberry", "sunflower", "tulip",
+  "urchin", "verbena", "wisteria", "xeranthemum", "yarrow", "zinnia",
+  "almond", "blueberry", "cranberry", "dandelion", "elderberry", "fern",
+  "ginger", "hibiscus", "iris", "juniper", "kale", "lavender", "mint",
+  "nectarine", "olive", "pineapple", "quinoa", "rosemary", "strawberry",
+  "tangerine", "ugli", "vanilla", "walnut", "xylem", "yucca", "zucchini",
+  "apricot", "blackberry", "coconut", "dragonfruit", "guava", "jackfruit",
+  "kiwano", "longan", "mulberry", "papaya", "persimmon", "pomegranate",
+  "rambutan", "starfruit", "tamarind", "watermelon", "yuzu", "boysenberry",
+
+  "alligator", "bear", "cheetah", "dolphin", "elephant", "flamingo", "giraffe",
+  "hippo", "iguana", "jaguar", "koala", "leopard", "monkey", "narwhal",
+  "octopus", "penguin", "quokka", "rhino", "shark", "tiger", "unicorn",
+  "vulture", "walrus", "xerus", "yak", "zebra", "ant", "bat", "cat",
+  "deer", "eagle", "fox", "goat", "hare", "ibis", "jellyfish", "kangaroo",
+  "lemur", "moose", "newt", "otter", "panda", "quail", "rabbit", "snake",
+  "turtle", "uakari", "viper", "wolf", "xerus", "yellowjacket", "zebu",
+  "armadillo", "badger", "camel", "dingo", "emu", "ferret", "gorilla",
+  "hedgehog", "impala", "jackal", "kiwi", "llama", "meerkat", "nightingale",
+  "opossum", "platypus", "raccoon", "squirrel", "tapir", "urchin",
+  "vicuna", "weasel", "xerus", "yapok", "zorilla", "bison", "chameleon",
+  "duck", "elk", "falcon", "gazelle", "hyena", "ibex", "jay"
+] as const;

@@ -35,7 +35,6 @@ export const CommentReactions = ({
         fillColor="rgba(215, 84, 127, 0.9)"
         onClick={handleLike}
         isActive={hasUpvoted}
-        shouldIncrementOnClick={true}
         isDisabled={!isLoggedIn}
       />
       {hasReplies && (
@@ -47,7 +46,6 @@ export const CommentReactions = ({
           fillColor="hsl(var(--primary) / 0.8)"
           onClick={handleShowReplies}
           isDisabled={!hasReplies || isLoadingReplies}
-          shouldIncrementOnClick={false}
           fillOnHover={false}
           fillOnClick={false}
         />

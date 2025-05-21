@@ -145,7 +145,7 @@ export const PostView = ({
         )}
         <div className="flex flex-col w-full h-full min-h-40 gap-2">
           <div className="flex flex-col gap-2">
-            <div className="flex flex-row items-center w-full z-10 gap-1 font-[family-name:var(--title-font)] tracking-[-0.8px]">
+            <div className="flex flex-row items-center w-full gap-1 font-[family-name:var(--title-font)] tracking-[-0.8px]">
               {options.showAuthor && (
                 <div onClick={handleInteractiveElementClick}>
                   <AuthorView showUsername={false} accounts={[post.author]} />

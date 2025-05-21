@@ -89,7 +89,7 @@ export const PostMenu = ({ post }: { post: Post }) => {
 
       toast.success("Created editable draft from post");
 
-      router.push(`/write/${documentId}`);
+      router.push(`/w/${documentId}`);
     } catch (error) {
       console.error("Failed to create editable draft:", error);
       toast.error("Failed to create editable draft");
@@ -174,7 +174,7 @@ export const PostMenu = ({ post }: { post: Post }) => {
           fillColor="hsl(var(--primary) / 0.8)"
           onClick={handleBookmark}
           isActive={hasBookmarked}
-          shouldIncrementOnClick={true}
+          isUserLoggedIn={isLoggedIn}
           initialCount={stats.bookmarks}
           isDisabled={!isLoggedIn}
         />
@@ -186,7 +186,7 @@ export const PostMenu = ({ post }: { post: Post }) => {
           dropdownItems={dropdownItems}
           showChevron={false}
           initialCount={0}
-          shouldIncrementOnClick={false}
+          isUserLoggedIn={true}
         />
       </div>
 

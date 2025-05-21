@@ -12,6 +12,8 @@ import { UserName } from "../user/user-name";
 import { CommentReactions } from "./comment-reactions";
 import { CommentReplyArea } from "./comment-reply-area";
 import { UserLazyUsername } from "../user/user-lazy-username";
+import { UserCard } from "../user/user-card";
+
 
 interface CommentViewProps {
   comment: AnyPost;
@@ -19,12 +21,14 @@ interface CommentViewProps {
   maxNestingLevel?: number;
   onMaxNestingReached?: (comment: AnyPost) => void;
   autoShowReplies?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export const CommentView = ({
   comment,
   nestingLevel = 1,
   maxNestingLevel = 4,
+  onOpenChange,
   onMaxNestingReached,
   autoShowReplies = false,
 }: CommentViewProps) => {
@@ -65,12 +69,16 @@ export const CommentView = ({
     <div className="flex flex-col">
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-3">
-          <UserAvatar account={comment.author} className="w-10 h-10" />
+          <UserCard onClick={(e) => onOpenChange?.(false)} linkProfile username={comment.author.username?.localName} >
+            <UserAvatar account={comment.author} className="w-10 h-10" />
+          </UserCard>
           <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2">
-              <UserName profile={comment.author} className="text-sm font-medium" />
-              <UserUsername account={comment.author} className="text-sm text-muted-foreground" />
-            </div>
+            <UserCard onClick={(e) => onOpenChange?.(false)} linkProfile username={comment.author.username?.localName} >
+              <div className="flex items-center gap-2">
+                <UserName account={comment.author} className="text-sm font-medium" />
+                <UserUsername account={comment.author} className="text-sm text-muted-foreground" />
+              </div>
+            </UserCard>
             <span className="text-xs text-muted-foreground">{formatRelativeTime(comment.timestamp)}</span>
           </div>
         </div>

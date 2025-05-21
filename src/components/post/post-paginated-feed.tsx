@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { AnyPost, PaginatedResultInfo } from "@lens-protocol/client";
-import { MainContentFocus } from "@lens-protocol/client";
+import { MainContentFocus, PageSize } from "@lens-protocol/client";
 import { motion } from "motion/react";
 import { DraftCreateButton } from "../draft/draft-create-button";
 import { GraphicHand2 } from "../icons/custom-icons";
@@ -13,7 +13,33 @@ import { fetchPosts } from "@lens-protocol/client/actions";
 import { env } from "@/env";
 import PostSkeleton from "./post-skeleton";
 
-export const PaginatedArticleFeed = ({
+async function filterBannedPosts(posts: readonly AnyPost[]): Promise<AnyPost[]> {
+  if (!posts || posts.length === 0) {
+    return [];
+  }
+  const authorAddresses = [...new Set(posts.map(post => post.author.address))];
+
+  try {
+    const banCheckResponse = await fetch(`/api/ban/check`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ addresses: authorAddresses }),
+    });
+    if (!banCheckResponse.ok) {
+      console.error("Failed to fetch ban statuses:", await banCheckResponse.text());
+      return posts.slice();
+    }
+    const banStatusMap: Record<string, boolean> = await banCheckResponse.json();
+    return posts.filter(post => !banStatusMap[post.author.address]);
+  } catch (error) {
+    console.error("Error during ban check fetch:", error);
+    return posts.slice();
+  }
+}
+
+export const LatestArticleFeed = ({
   initialPosts,
   initialPaginationInfo,
   isUserProfile = false,
@@ -22,19 +48,28 @@ export const PaginatedArticleFeed = ({
   initialPaginationInfo: Partial<PaginatedResultInfo>;
   isUserProfile?: boolean;
 }) => {
-  const [allPosts, setAllPosts] = useState<AnyPost[]>([...initialPosts]);
+  const [allPosts, setAllPosts] = useState<AnyPost[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(initialPaginationInfo?.next || null);
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setAllPosts([...initialPosts]);
-    setNextCursor(initialPaginationInfo?.next || null);
+    const filterInitial = async () => {
+      setInitialLoading(true);
+      const filtered = await filterBannedPosts(initialPosts);
+      setAllPosts(filtered);
+      setNextCursor(initialPaginationInfo?.next || null);
+      setInitialLoading(false);
+    };
+
+    filterInitial();
   }, [initialPosts, initialPaginationInfo]);
 
+
   useEffect(() => {
-    if (!nextCursor) return;
+    if (!nextCursor || initialLoading) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -46,20 +81,24 @@ export const PaginatedArticleFeed = ({
     );
 
     observerRef.current = observer;
+    const currentLoadMoreRef = loadMoreRef.current;
 
-    if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current);
+    if (currentLoadMoreRef) {
+      observer.observe(currentLoadMoreRef);
     }
 
     return () => {
       if (observerRef.current) {
         observerRef.current.disconnect();
+      } else if (currentLoadMoreRef) {
+        observer.unobserve(currentLoadMoreRef);
       }
     };
-  }, [nextCursor, loading]);
+  }, [nextCursor, loading, initialLoading]);
+
 
   const handleLoadMore = async () => {
-    if (!nextCursor || loading) return;
+    if (!nextCursor || loading || initialLoading) return;
 
     try {
       setLoading(true);
@@ -74,9 +113,12 @@ export const PaginatedArticleFeed = ({
         cursor: nextCursor,
       }).unwrapOr(null);
 
-      if (result?.items) {
-        const newPosts = [...result.items];
-        setAllPosts((prevPosts) => [...prevPosts, ...newPosts]);
+      if (result?.items && result.items.length > 0) {
+        const fetchedPosts = result.items;
+        const cleanPosts = await filterBannedPosts(fetchedPosts);
+        setAllPosts((prevPosts) => [...prevPosts, ...cleanPosts]);
+      } else {
+        console.log("No more items fetched or result is null");
       }
 
       setNextCursor(result?.pageInfo?.next || null);
@@ -122,6 +164,18 @@ export const PaginatedArticleFeed = ({
     );
   }).filter(Boolean);
 
+  if (initialLoading) {
+    return (
+      <div className="w-full flex flex-col items-center py-4 gap-4">
+        <PostSkeleton />
+        <PostSkeleton />
+        <PostSkeleton />
+        <PostSkeleton />
+        <PostSkeleton />
+      </div>
+    );
+  }
+
   if (!loading && postViews && postViews.length === 0) {
     return (
       <Card className="m-0 md:m-10 bg-transparent group border-0 flex flex-col gap-4 items-center justify-center shadow-none drop-shadow-none">
@@ -148,21 +202,23 @@ export const PaginatedArticleFeed = ({
     >
       {postViews}
 
-      {nextCursor && (
+      {/* Show loading skeletons for infinite scroll */}
+      {loading && (
+        <div className="w-full flex flex-col items-center py-4 gap-4">
+          <PostSkeleton />
+          <PostSkeleton />
+          <PostSkeleton />
+          <PostSkeleton />
+          <PostSkeleton />
+        </div>
+      )}
+
+      {/* Load more trigger (only render if not loading and there's a next cursor) */}
+      {!loading && nextCursor && (
         <div
           ref={loadMoreRef}
-          className="w-full flex flex-col items-center py-4 gap-4"
-        >
-          {loading && (
-            <>
-              <PostSkeleton />
-              <PostSkeleton />
-              <PostSkeleton />
-              <PostSkeleton />
-              <PostSkeleton />
-            </>
-          )}
-        </div>
+          className="h-10 w-full" // Add some height to ensure it can be observed
+        />
       )}
     </motion.div>
   );

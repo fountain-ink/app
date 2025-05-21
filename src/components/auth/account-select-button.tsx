@@ -1,7 +1,7 @@
 "use client";
 
 import { Account } from "@lens-protocol/client";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAccount, useSignMessage } from "wagmi";
 import { Button } from "../ui/button";
 import { UserAvatar } from "../user/user-avatar";
@@ -11,16 +11,20 @@ import { syncBlogsQuietly } from "../blog/blog-sync-button";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import {  getPublicClient } from "@/lib/lens/client";
+import { getPublicClient } from "@/lib/lens/client";
 import { signMessageWith } from "@lens-protocol/client/viem";
 import { env } from "@/env";
+import { useUIStore } from "@/stores/ui-store";
 
 export function SelectAccountButton({ account, onSuccess }: { account: Account; onSuccess?: () => Promise<void> }) {
   const { address: walletAddress } = useAccount();
   const router = useRouter();
+  const pathname = usePathname();
   const resetBlogStorage = useBlogStorage((state) => state.resetState);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const { signMessageAsync, error, isError, isPending, variables } = useSignMessage();
+  const isLandingPage = pathname === "/";
+  const setProfileSelectModalOpen = useUIStore((state) => state.setProfileSelectModalOpen);
 
   useEffect(() => {
     if (isError) {
@@ -97,7 +101,11 @@ export function SelectAccountButton({ account, onSuccess }: { account: Account; 
       resetBlogStorage();
       await onSuccess?.();
 
-      router.push(`/u/${account.username?.localName}`);
+      if (isLandingPage) {
+        router.push(`/u/${account.username?.localName}`);
+      }
+      setProfileSelectModalOpen(false);
+
       window.location.reload();
     } catch (err) {
       console.error("Error logging in:", err);

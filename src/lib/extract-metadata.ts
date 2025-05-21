@@ -33,7 +33,12 @@ export const extractMetadata = (content?: ContentNode[]): ArticleMetadata => {
     if (!node || !Array.isArray(node.children) || node.children.length === 0) {
       return "";
     }
-    return node.children[0]?.text ?? "";
+    for (const child of node.children) {
+      if (child.text && child.text !== "") {
+        return child.text;
+      }
+    }
+    return "";
   };
 
   return {

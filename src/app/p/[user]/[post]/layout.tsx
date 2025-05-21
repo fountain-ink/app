@@ -3,7 +3,7 @@ import { FloatingActionBar } from "@/components/post/post-floating-actions-bar";
 import { GradientBlur } from "@/components/navigation/gradient-blur";
 import { BlogHeader } from "@/components/blog/blog-header";
 import { BlogTheme } from "@/components/blog/blog-theme";
-import { getUserProfile } from "@/lib/auth/get-user-profile";
+import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { getBlogData } from "@/lib/settings/get-blog-data";
 import { fetchAccount, fetchPost } from "@lens-protocol/client/actions";
@@ -92,8 +92,8 @@ const UserPostLayout = async ({
     post: postId,
   }).unwrapOr(null);
 
-  const { profile } = await getUserProfile();
-  const loggedInAccount = profile?.loggedInAs.account;
+  const { account: userAccount } = await getUserAccount();
+  const loggedInAccount = userAccount?.loggedInAs.account;
 
   if (!account) {
     console.error("Failed to fetch user profile");

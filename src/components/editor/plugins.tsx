@@ -37,7 +37,7 @@ import { KbdPlugin } from "@udecode/plate-kbd/react";
 import { ColumnItemPlugin, ColumnPlugin } from "@udecode/plate-layout/react";
 import { LinkPlugin } from "@udecode/plate-link/react";
 import { ListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
-import { MarkdownPlugin, MdastTypes, SerializeMdOptions } from "@udecode/plate-markdown";
+import { MarkdownPlugin, MdastTypes, remarkMention, remarkMdx, SerializeMdOptions } from "@udecode/plate-markdown";
 import { EquationPlugin, InlineEquationPlugin } from "@udecode/plate-math/react";
 import {
   AudioPlugin,
@@ -202,7 +202,41 @@ export const plugins = [
       type: TitlePlugin.key,
     },
   }),
-  TitlePlugin,
+  TitlePlugin.configure({
+    handlers: {
+      onKeyDown: (ctx) => {
+        const { editor, event } = ctx;
+        if ((event.ctrlKey || event.metaKey) && event.key === "v") {
+          const anchor = editor.selection?.anchor?.path;
+          if (!anchor) return false;
+
+          const currentNode = editor.api.parent(anchor);
+          if (!currentNode) return false;
+
+          const [node] = currentNode;
+          const isTitle = node.type === TITLE_KEYS.title;
+          const isSubtitle = node.type === TITLE_KEYS.subtitle;
+
+          if (isTitle || isSubtitle) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            window.navigator.clipboard.readText().then((textToPaste: string) => {
+              console.log(textToPaste);
+              if (textToPaste) {
+                const singleLineText = textToPaste.replace(/(\r\n|\n|\r)/gm, "").trim();
+                editor.tf.insertText(singleLineText);
+              }
+            }).catch(err => {
+              console.error("Failed to read clipboard contents: ", err);
+            });
+            return true;
+          }
+        }
+        return false;
+      },
+    },
+  }),
   SubtitlePlugin,
   IframePlugin,
   HeadingPlugin.configure({
@@ -279,7 +313,6 @@ export const plugins = [
   MentionPlugin.configure({
     options: { triggerPreviousCharPattern: /^$|^[\s"']$/ },
   }),
-
   SlashPlugin.extend({
     options: {
       trigger: "/",
@@ -321,43 +354,28 @@ export const plugins = [
       isElement: true,
     },
     options: {
-
       uploadImage: uploadFile,
-      // disableUploadInsert: true,
-      // disableEmbedInsert: true,
     },
   }),
   VideoPlugin,
   AudioPlugin,
   FilePlugin,
-  // MediaEmbedPlugin,
-  // ImagePlugin.extend({
-  //   render: {
-  //     node: ImageElement,
-  //   },
-  // }).configure({
-  //   options: {
-  //     uploadImage: uploadFile,
-  //     // disableUploadInsert: true,
-  //     // disableEmbedInsert: true,
-  //   },
-  // }),
+  MediaEmbedPlugin,
   InlineEquationPlugin,
   EquationPlugin,
   CalloutPlugin,
   ColumnPlugin,
-
-  // Marks
   BasicMarksPlugin,
   HighlightPlugin,
   KbdPlugin,
-
-  // Block Style
-  // AlignPlugin.extend({
-  //   inject: {
-  //     targetPlugins: [ParagraphPlugin.key, MediaEmbedPlugin.key, HEADING_KEYS.h1, HEADING_KEYS.h2, ImagePlugin.key],
-  //   },
-  // }),
+  AlignPlugin.extend({
+    inject: {
+      nodeProps: {
+        validNodeValues: ['start', 'left', 'center', 'right', 'end'],
+      },
+      targetPlugins: [ParagraphPlugin.key, MediaEmbedPlugin.key, HEADING_KEYS.h1, HEADING_KEYS.h2, ImagePlugin.key],
+    },
+  }),
   IndentPlugin.extend({
     inject: {
       targetPlugins: [
@@ -457,6 +475,9 @@ export const plugins = [
           AudioPlugin.key,
           FilePlugin.key,
           IframePlugin.key,
+          MediaEmbedPlugin.key,
+          // TitlePlugin.key,
+          // SubtitlePlugin.key
         ],
       },
     },
@@ -509,6 +530,7 @@ export const plugins = [
   DocxPlugin,
   MarkdownPlugin.configure({
     options: {
+      remarkPlugins: [remarkMath, remarkGfm, remarkMdx, remarkMention],
       rules: {
         [TitlePlugin.key]: {
           serialize: (slateNode: TElement): Heading | Text => {
@@ -569,19 +591,12 @@ export const plugins = [
           }),
         },
       },
-      remarkPlugins: [remarkMath, remarkGfm],
     },
   }),
   JuicePlugin,
   CodeSyntaxPlugin,
   MentionInputPlugin,
-  // TableRowPlugin,
-  // TableCellPlugin,
-  // TableCellHeaderPlugin,
-  // ExcalidrawPlugin,
   ColumnItemPlugin,
-
-  // Marks
   BoldPlugin,
   ItalicPlugin,
   UnderlinePlugin,
@@ -589,9 +604,6 @@ export const plugins = [
   CodePlugin,
   SubscriptPlugin,
   SuperscriptPlugin,
-  // FontSizePlugin,
-
-  // Functionality
   ResetNodePlugin.configure({
     options: {
       rules: [

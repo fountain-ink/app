@@ -4,22 +4,24 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TagInput } from "emblor";
 import type { Tag } from "emblor";
-import { FC, useCallback, useEffect, useState, useRef } from "react";
+import { FC, useCallback, useEffect, useState, useRef, useMemo } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { CombinedFormValues } from "./publish-dialog";
-import { ImageIcon, PenIcon, LinkIcon, Check, AlertCircle, ListPlus, PenOffIcon, ListIcon, ScrollText, Heart, MessageCircle, MoreHorizontalIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import { ImageIcon, PenIcon, AlertCircle, PenOffIcon, ScrollText, Heart, MessageCircle, MoreHorizontalIcon, ChevronLeft, ChevronRight, ChevronDown, CalendarIcon, XIcon } from "lucide-react";
 import { checkSlugAvailability } from "@/lib/slug/check-slug-availability";
 import { debounce } from "lodash";
-import { useAuthenticatedUser } from "@lens-protocol/react";
-import { getAppToken } from "@/lib/auth/get-app-token";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { getCookie } from "cookies-next";
 import { Button } from "@/components/ui/button";
 import { CoinIcon } from "@/components/icons/custom-icons";
 import { usePublishDraft } from "@/hooks/use-publish-draft";
-import { extractMetadata } from "@/lib/extract-metadata";
 import { ImageUploader } from "@/components/images/image-uploader";
 import { uploadFile } from "@/lib/upload/upload-file";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger, PopoverPortal } from "@/components/ui/popover";
+import { format } from "date-fns";
 
 export const detailsFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title should be less than 100 characters"),
@@ -31,13 +33,20 @@ export const detailsFormSchema = z.object({
     }),
   tags: z.array(z.string()).max(5, "You can add up to 5 tags").default([]),
   images: z.array(z.string()).default([]),
+  isSlugManuallyEdited: z.boolean().optional().default(false),
+  originalDate: z.date().optional().nullable(),
+  isMiscSectionExpanded: z.boolean().optional().default(false),
 });
 
 export type DetailsFormValues = z.infer<typeof detailsFormSchema>;
 
 const generateSlug = (title: string, subtitle: string = ""): string => {
   const combinedText = (title + " " + subtitle).trim();
-  return combinedText
+  const words = combinedText.split(/\s+/);
+  const limitedWords = words.slice(0, 10);
+  const limitedText = limitedWords.join(" ");
+
+  return limitedText
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, "") // Remove non-alphanumeric characters except spaces and hyphens
     .replace(/\s+/g, "-") // Replace spaces with hyphens
@@ -57,16 +66,17 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
   const slug = form.watch("details.slug");
   const coverUrl = form.getValues("details.coverUrl");
   const images = form.watch("details.images");
+  const watchedIsSlugManuallyEdited = form.watch("details.isSlugManuallyEdited");
   const draft = getDraft();
   const [tags, setTags] = useState<Tag[]>([]);
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
-  const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
   const [isCheckingSlug, setIsCheckingSlug] = useState(false);
   const [isSlugAvailable, setIsSlugAvailable] = useState<boolean | null>(null);
   const [isEditingPreview, setIsEditingPreview] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(images.findIndex(image => image === coverUrl) || 0);
   const isShowingUploader = currentImageIndex === images.length;
+  const isMiscExpanded = form.watch("details.isMiscSectionExpanded");
 
   useEffect(() => {
     const draftImages = draft?.images || [];
@@ -137,48 +147,52 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
     }
   };
 
-  const checkSlugDebounced = useCallback(
-    debounce(async (slug: string) => {
-      if (!slug) {
-        setIsSlugAvailable(null);
-        return;
-      }
+  const slugCheckRunner = useCallback(async (slugToValidate: string) => {
+    if (!slugToValidate) {
+      setIsSlugAvailable(null);
+      return;
+    }
+    setIsCheckingSlug(true);
+    try {
+      const appToken = getCookie("appToken") as string;
+      const claims = getTokenClaims(appToken);
+      const handle = claims?.metadata?.username || '';
+      const result = await checkSlugAvailability(slugToValidate, handle);
+      setIsSlugAvailable(result.available);
+    } catch (error) {
+      console.error("Failed to check slug availability:", error);
+      setIsSlugAvailable(null);
+    } finally {
+      setIsCheckingSlug(false);
+    }
+  }, [setIsSlugAvailable, setIsCheckingSlug]);
 
-      setIsCheckingSlug(true);
-      try {
-        const appToken = getCookie("appToken") as string;
-        const claims = getTokenClaims(appToken)
-        const handle = claims?.metadata?.username || '';
-        const result = await checkSlugAvailability(slug, handle);
-        setIsSlugAvailable(result.available);
-      } catch (error) {
-        console.error("Failed to check slug availability:", error);
-        setIsSlugAvailable(null);
-      } finally {
-        setIsCheckingSlug(false);
-      }
-    }, 500),
-    [slug]
+  const checkSlugDebounced = useMemo(() =>
+    debounce(slugCheckRunner, 500),
+    [slugCheckRunner]
   );
 
   useEffect(() => {
-    if (slug) {
+    if (typeof slug === 'string') {
       checkSlugDebounced(slug);
     } else {
       setIsSlugAvailable(null);
+      checkSlugDebounced.cancel();
     }
 
     return () => {
       checkSlugDebounced.cancel();
     };
-  }, [slug, checkSlugDebounced]);
+  }, [slug, checkSlugDebounced, setIsSlugAvailable]);
 
   useEffect(() => {
-    if (!isSlugManuallyEdited && title) {
+    if (!watchedIsSlugManuallyEdited && title) {
       const newSlug = generateSlug(title, subtitle || "");
-      form.setValue("details.slug", newSlug, { shouldValidate: true });
+      if (slug !== newSlug) {
+        form.setValue("details.slug", newSlug, { shouldValidate: true });
+      }
     }
-  }, [title, subtitle, isSlugManuallyEdited, form]);
+  }, [title, subtitle, watchedIsSlugManuallyEdited, slug, form]);
 
   useEffect(() => {
     const formTags = form.getValues("details.tags") || [];
@@ -201,7 +215,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
   );
 
   const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsSlugManuallyEdited(true);
+    form.setValue("details.isSlugManuallyEdited", true, { shouldDirty: true });
     form.setValue("details.slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""),
       { shouldValidate: true });
   };
@@ -360,85 +374,176 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
           </p>
         </div>
 
-        <div className="border border-border flex shrink flex-col gap-4 rounded-sm p-4">
-          <div className="pb-2 flex items-center justify-between">
+        <div className="border border-border flex shrink flex-col gap-4 min-h-0 h-fit rounded-sm p-4">
+          <div
+            className="flex items-center justify-between cursor-pointer"
+            onClick={() => form.setValue("details.isMiscSectionExpanded", !isMiscExpanded, { shouldDirty: true })}
+          >
             <div className="flex items-center gap-2">
               <ScrollText className="w-4 h-4 text-muted-foreground" />
               <h3 className="font-medium">Misc</h3>
             </div>
+            <motion.div
+              animate={{ rotate: isMiscExpanded ? 180 : 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+            </motion.div>
           </div>
 
-          <FormField
-            control={form.control}
-            name="details.slug"
-            render={({ field, fieldState }) => (
-              <FormItem className="max-w-md">
-                <FormLabel htmlFor="slug" className="flex items-center gap-1">
-                  <span>Post slug</span>
-                </FormLabel>
-                <div className="relative">
+          {!isMiscExpanded && (
+            <p className="text-sm text-muted-foreground">
+              Configure post slug, tags, and other article settings
+            </p>
+          )}
+
+          <motion.div
+            initial={isMiscExpanded ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+            animate={{
+              height: isMiscExpanded ? "auto" : 0,
+              opacity: isMiscExpanded ? 1 : 0
+            }}
+            transition={{ duration: 0.3 }}
+            className={cn("overflow-hidden flex flex-col gap-4", !isMiscExpanded && "-mt-4")}
+          >
+            <FormField
+              control={form.control}
+              name="details.slug"
+              render={({ field, fieldState }) => (
+                <FormItem className="max-w-md">
+                  <FormLabel htmlFor="slug" className="flex items-center gap-1">
+                    <span>Post slug</span>
+                  </FormLabel>
+                  <div className="relative">
+                    <FormControl>
+                      <Input
+                        id="slug"
+                        placeholder="generated-from-title"
+                        {...field}
+                        onChange={handleSlugChange}
+                        value={field.value ?? ""}
+                        className={`${fieldState.error ? "border-destructive" : ""} ${isSlugAvailable === false ? "pr-10 border-destructive" : ""}`}
+                      />
+                    </FormControl>
+                    {isCheckingSlug && (
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                        <div className="animate-spin h-4 w-4 border-2 border-primary/20 border-t-primary rounded-full" />
+                      </div>
+                    )}
+                    {!isCheckingSlug && isSlugAvailable === false && (
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-destructive">
+                        <AlertCircle className="h-4 w-4" />
+                      </div>
+                    )}
+                  </div>
+                  <FormDescription>
+                    {isSlugAvailable === false ?
+                      "This slug is already taken for your account. Please choose another one." :
+                      "The slug is used in the URL of your post."}
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+
+            <FormField
+              control={form.control}
+              name="details.tags"
+              render={({ field, fieldState }) => (
+                <FormItem className="space-y-2 max-w-full min-w-sm w-fit">
+                  <FormLabel htmlFor="tags" className="flex items-center gap-1">
+                    <span>Tags</span>
+                  </FormLabel>
                   <FormControl>
-                    <Input
-                      id="slug"
-                      placeholder="generated-from-title"
-                      {...field}
-                      onChange={handleSlugChange}
-                      value={field.value ?? ""}
-                      className={`${fieldState.error ? "border-destructive" : ""} ${isSlugAvailable === false ? "pr-10 border-destructive" : ""}`}
+                    <TagInput
+                      maxTags={5}
+                      styleClasses={{
+                        input: "shadow-none w-[200px] h-6",
+                        tag: {
+                          body: "border border-secondary",
+                        },
+                      }}
+                      placeholder="Add a tag"
+                      tags={tags}
+                      setTags={handleSetTags}
+                      activeTagIndex={activeTagIndex}
+                      setActiveTagIndex={setActiveTagIndex}
+                      variant="outline"
+                      className={fieldState.error ? "border-destructive ring-1 ring-destructive" : ""}
                     />
                   </FormControl>
-                  {isCheckingSlug && (
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                      <div className="animate-spin h-4 w-4 border-2 border-primary/20 border-t-primary rounded-full" />
-                    </div>
-                  )}
-                  {!isCheckingSlug && isSlugAvailable === false && (
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-destructive">
-                      <AlertCircle className="h-4 w-4" />
-                    </div>
-                  )}
-                </div>
-                <FormDescription>
-                  {isSlugAvailable === false ?
-                    "This slug is already taken for your account. Please choose another one." :
-                    "The slug is used in the URL of your post."}
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  <FormDescription>Add up to 5 tags that will be used to categorize the post.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="details.tags"
-            render={({ field, fieldState }) => (
-              <FormItem className="space-y-2 max-w-full min-w-sm w-fit">
-                <FormLabel htmlFor="tags" className="flex items-center gap-1">
-                  <span>Tags</span>
-                </FormLabel>
-                <FormControl>
-                  <TagInput
-                    maxTags={5}
-                    styleClasses={{
-                      input: "shadow-none w-[200px] h-6",
-                      tag: {
-                        body: "border border-secondary",
-                      },
-                    }}
-                    placeholder="Add a tag"
-                    tags={tags}
-                    setTags={handleSetTags}
-                    activeTagIndex={activeTagIndex}
-                    setActiveTagIndex={setActiveTagIndex}
-                    variant="outline"
-                    className={fieldState.error ? "border-destructive ring-1 ring-destructive" : ""}
-                  />
-                </FormControl>
-                <FormDescription>Add up to 5 tags that will be used to categorize the post.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="details.originalDate"
+              render={({ field }) => (
+                <FormItem className="flex flex-col max-w-md">
+                  <FormLabel htmlFor="originalDate" className="flex items-center gap-1">
+                    <span>Original Date</span>
+                  </FormLabel>
+                  <div className="grid gap-2">
+                    <Popover>
+                      <div className="relative flex flex-row items-center gap-2">
+                        <PopoverTrigger asChild>
+                          <Button
+                            id="date"
+                            variant="outline"
+                            className={cn(
+                              "w-full justify-start text-left max-w-xs font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        {field.value && (
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => {
+                              field.onChange(null);
+                              form.setValue("details.originalDate", null);
+                            }}
+                          >
+                            <XIcon className="w-4 h-4" />
+                          </Button>
+                        )}
+                      </div>
+
+                      <PopoverContent align="start" className="w-auto z-[60] p-0">
+                        <Calendar
+                          mode="single"
+                          selected={field.value || undefined}
+                          fixedWeeks
+                          showWeekNumber={false}
+                          onSelect={(date) => {
+                            field.onChange(date);
+                            if (date) form.setValue("details.originalDate", date);
+                          }}
+                          disabled={(date) => date > new Date()}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <FormDescription>
+                    Set an original publication date for this post.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </motion.div>
         </div>
       </div>
     </div>

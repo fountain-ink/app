@@ -6,22 +6,21 @@ export const trimEmptyNodes = (nodes: any[] | undefined): any[] | undefined => {
     return nodes;
   }
 
-  const nodesWithoutEmptySubtitles = nodes.filter(node => {
-    if (
-      node &&
-      (node.type === SubtitlePlugin.key || node.type === TitlePlugin.key) &&
-      Array.isArray(node.children) &&
-      node.children.length === 1 &&
-      node.children[0] &&
-      typeof node.children[0].text === 'string' &&
-      node.children[0].text.trim() === ''
-    ) {
+  const nodesWithoutPlaceholders = nodes.filter(node => {
+    if (node && (node.type === 'subtitle' || node.type === 'title') && node.children) {
+      return !node.children.every((child: { text: string }) => child.text.trim() === '');
+    }
+    return true;
+  });
+
+  const nodesWithoutImagePlaceholders = nodesWithoutPlaceholders.filter(node => {
+    if (node.type === 'img' && !node.url) {
       return false;
     }
     return true;
   });
 
-  const mutableNodes = [...nodesWithoutEmptySubtitles];
+  const mutableNodes = [...nodesWithoutImagePlaceholders];
   while (mutableNodes.length > 0) {
     const lastNode = mutableNodes[mutableNodes.length - 1];
     if (

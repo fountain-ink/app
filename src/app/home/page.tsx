@@ -1,9 +1,9 @@
-import { getUserProfile } from "@/lib/auth/get-user-profile";
+import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchPosts } from "@lens-protocol/client/actions";
 import { MainContentFocus, AnyPost } from "@lens-protocol/client";
 import { env } from "@/env";
-import { PaginatedArticleFeed } from "@/components/post/post-paginated-feed";
+import { LatestArticleFeed } from "@/components/post/post-paginated-feed";
 import { FeedNavigation } from "@/components/navigation/feed-navigation";
 
 export async function generateMetadata() {
@@ -24,16 +24,12 @@ export async function generateMetadata() {
 
 const home = async () => {
   const lens = await getLensClient();
-  const { address: userAddress } = await getUserProfile();
 
   const postsResult = await fetchPosts(lens, {
     filter: {
-      accountScore: {
-        atLeast: 8000,
-      },
       metadata: { mainContentFocus: [MainContentFocus.Article] },
       feeds: [{ globalFeed: true }],
-      // apps: [env.NEXT_PUBLIC_APP_ADDRESS],
+      apps: [env.NEXT_PUBLIC_APP_ADDRESS],
     },
   }).unwrapOr(null);
 
@@ -44,7 +40,7 @@ const home = async () => {
       <FeedNavigation />
 
       <div className="flex flex-col items-center w-full">
-        <PaginatedArticleFeed
+        <LatestArticleFeed
           initialPosts={mutablePosts}
           initialPaginationInfo={postsResult?.pageInfo ?? {}}
           isUserProfile={false}

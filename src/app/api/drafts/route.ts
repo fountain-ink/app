@@ -1,6 +1,6 @@
 import { env } from "@/env";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
-import { getUserProfile } from "@/lib/auth/get-user-profile";
+import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { verifyToken } from "@/lib/auth/verify-token";
 import { getRandomUid } from "@/lib/get-random-uid";
 import { createClient } from "@/lib/db/server";
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
     const address = claims.sub;
 
     if (!claims.metadata.isAnonymous) {
-      const { address: userAddress } = await getUserProfile();
+      const { address: userAddress } = await getUserAccount();
 
       if (userAddress !== address) {
         return NextResponse.json({ error: "Invalid profile" }, { status: 401 });
@@ -107,7 +107,7 @@ export async function POST(req: NextRequest) {
     const address = claims.sub;
 
     if (!claims.metadata.isAnonymous) {
-      const { address: lensAddress } = await getUserProfile();
+      const { address: lensAddress } = await getUserAccount();
 
       if (lensAddress !== address) {
         return NextResponse.json({ error: "Invalid profile" }, { status: 401 });
@@ -174,7 +174,7 @@ export async function PUT(req: NextRequest) {
     const address = claims.sub;
 
     if (!claims.metadata.isAnonymous) {
-      const { address: lensAddress } = await getUserProfile();
+      const { address: lensAddress } = await getUserAccount();
 
       if (lensAddress !== address) {
         return NextResponse.json({ error: "Invalid profile" }, { status: 401 });
@@ -238,7 +238,7 @@ export async function DELETE(req: NextRequest) {
     const address = claims.sub;
 
     if (!claims.metadata.isAnonymous) {
-      const { address: lensAddress } = await getUserProfile();
+      const { address: lensAddress } = await getUserAccount();
 
       if (lensAddress !== address) {
         return NextResponse.json({ error: "Invalid profile" }, { status: 401 });
