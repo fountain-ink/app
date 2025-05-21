@@ -1,7 +1,7 @@
 import { env } from '@/env';
 import { NextResponse } from 'next/server';
 
-// export const revalidate = 60 * 60 * 24 * 2; // 2 days
+export const revalidate = 60 * 60 * 24 * 2; // 2 days
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

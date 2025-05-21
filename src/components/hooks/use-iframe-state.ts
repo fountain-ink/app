@@ -30,8 +30,8 @@ export const useIframeState = () => {
           `/api/iframe?url=${encodeURIComponent(initialUrl)}`,
           {
             next: {
-              // revalidate: 60 * 60 * 24 * 2, // 2 days
-              // tags: [`iframe-${initialUrl}`],
+              revalidate: 60 * 60 * 24 * 2, // 2 days
+              tags: [`iframe-${initialUrl}`],
             },
           }
         );
