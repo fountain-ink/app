@@ -146,7 +146,7 @@ const rules: SlashCommandRule[] = [
     description: "Add an embed.",
     keywords: ["iframe", "embed", "video", "media"],
     onSelect: (editor) => {
-      insertIframe(editor, { url: "https://www.youtube.com/watch?v=QaoAEy9b4ZI" });
+      insertIframe(editor, { url: undefined });
     },
   },
   {

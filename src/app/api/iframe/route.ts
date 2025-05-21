@@ -17,7 +17,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const iframelyApiUrl = `${baseUrl}/oembed?url=${encodeURIComponent(urlToEmbed)}&api_key=${apiKey}&omit_css=true&iframe=1&omit_script=1`;
+    const iframelyApiUrl = `${baseUrl}/iframely?url=${encodeURIComponent(urlToEmbed)}&api_key=${apiKey}&iframe=1&omit_css=1&omit_script=1&theme=auto`;
     const response = await fetch(iframelyApiUrl);
 
     if (!response.ok) {

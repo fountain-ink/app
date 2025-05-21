@@ -100,7 +100,7 @@ function ImagePopover({
 }
 
 export const ImageElement = withRef<typeof PlateElement>(
-  ({ children, className, attributes: { nodeProps, ...attributes }, ...props }, ref) => {
+  ({ children, className, attributes, ...props }, ref) => {
     const [_isImageLoaded, setIsImageLoaded] = useState(false);
     const [url, setUrl] = useState<string | undefined>(props?.element?.url as string | undefined);
     const [isUploading, setIsUploading] = useState(false);
@@ -203,7 +203,6 @@ export const ImageElement = withRef<typeof PlateElement>(
                   height={800}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   style={{ height: 'auto', objectFit: 'contain' }}
-                  {...nodeProps}
                   {...imageProps}
                   onLoad={() => {
                     setIsImageLoaded(true);

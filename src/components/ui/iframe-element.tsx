@@ -3,33 +3,81 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { cn, withRef } from '@udecode/cn';
-import { ResizableProvider, useResizableValue } from '@udecode/plate-resizable';
 import {
   PlateElement,
   useReadOnly,
   useFocused,
   useSelected,
-  withHOC,
+  useEditorRef,
+  useElement,
 } from '@udecode/plate/react';
 
-import { IframePlugin, TIframeElement } from '../editor/plugins/iframe-plugin';
+import { TIframeElement } from '../editor/plugins/iframe-plugin';
 import { useIframeState } from '../hooks/use-iframe-state';
-import { Caption, CaptionTextarea } from './caption';
-import { MediaPopover } from './media-popover';
-import {
-  mediaResizeHandleVariants,
-  Resizable,
-  ResizeHandle,
-} from './resizable';
-import { AlertCircleIcon, Loader2Icon } from 'lucide-react';
+import { ElementPopover } from './element-popover';
+import { Button } from './button';
+import { AlertCircleIcon } from 'lucide-react';
+import { CheckIcon } from 'lucide-react';
+import { Link2OffIcon } from 'lucide-react';
+import { LinkIcon } from 'lucide-react';
 import { LoadingSpinner } from '../misc/loading-spinner';
 import DOMPurify from 'dompurify';
+import { loadIframelyEmbedJs } from '@/lib/load-embed-js';
+import { Input } from './input';
 
 export const IframeElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
   const { embed, isLoading, error, unsafeUrl } = useIframeState();
   const [sanitizedHtml, setSanitizedHtml] = useState('');
-  const readOnly = useReadOnly()
-  const selected = useSelected()
+  const readOnly = useReadOnly();
+  const selected = useSelected();
+  const focused = useFocused();
+  const editor = useEditorRef();
+  const element = useElement<TIframeElement>();
+
+  const [editUrlValue, setEditUrlValue] = useState(element.url ?? '');
+
+  useEffect(() => {
+    setEditUrlValue(element.url ?? '');
+  }, [element.url]);
+
+  const handleUrlSubmit = () => {
+    if (editUrlValue !== element.url) {
+      editor.tf.setNodes<TIframeElement>({ url: editUrlValue }, { at: editor.selection ?? element });
+    }
+  };
+
+  const editUrlPopoverContent = (
+    <div className="flex items-center gap-1">
+      <Input
+        type="text"
+        value={editUrlValue}
+        onChange={(e) => setEditUrlValue(e.target.value)}
+        onBlur={handleUrlSubmit}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            handleUrlSubmit();
+            (e.target as HTMLElement).blur();
+          }
+          e.stopPropagation();
+        }}
+        placeholder="Enter URL and press Enter"
+        className="border px-3 h-10 rounded-md text-sm bg-background text-foreground focus:ring-1 focus:ring-ring min-w-[250px] sm:min-w-[300px] md:min-w-[350px] w-full"
+        onClick={(e) => e.stopPropagation()}
+      />
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-10 w-10 flex-shrink-0"
+        onClick={(e) => {
+          e.stopPropagation();
+          handleUrlSubmit();
+        }}
+      >
+        <CheckIcon className="h-4 w-4" />
+      </Button>
+    </div>
+  );
 
   useEffect(() => {
     setSanitizedHtml(DOMPurify.sanitize(embed?.html || '', {
@@ -40,10 +88,7 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
   }, [embed?.html]);
 
   useEffect(() => {
-    console.log("iframely" in window)
-    if ((window as any).iframely) {
-      (window as any).iframely.load();
-    }
+    loadIframelyEmbedJs()
   }, [sanitizedHtml]);
 
   const divWithIframe = useMemo(() => {
@@ -51,12 +96,17 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
   }, [sanitizedHtml])
 
   return (
-
-    <MediaPopover plugin={IframePlugin}>
+    <ElementPopover
+      open={selected}
+      showWidth={false}
+      showCaption={false}
+      content={editUrlPopoverContent}
+    >
       <PlateElement
         ref={ref}
         className={cn(className, 'my-9 rounded-md overflow-hidden',
           error && 'border-2 border-destructive ',
+          selected && !readOnly && 'ring ring-2 ring-ring'
         )}
 
         {...props}
@@ -81,33 +131,44 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
             </div>
           )}
 
-          {!error && !isLoading && !embed?.html && (
-            <div className="flex flex-col aspect-video gap-2 p-4 items-center justify-center">
-              <AlertCircleIcon className="w-8 h-8 text-muted-foreground" />
-              <span className="text-sm p-4 line-clamp-3 inline-block text-center rounded-md">No embeddable content found for this URL.</span>
-              <div className="placeholder-background" />
-            </div>
+          {!isLoading && !error && (
+            <>
+              {embed?.html ? (
+                <div className={cn(
+                  "w-full h-full relative not-prose not-article m-0",
+                  selected && !readOnly && 'ring ring-2 ring-ring'
+                )}
+                >
+                  {divWithIframe}
+                </div>
+              ) : (
+                <>
+                  {!unsafeUrl ? (
+                    <div className="flex flex-col aspect-video bg-muted/20 gap-2 p-4 items-center justify-center">
+                      <LinkIcon className="w-10 h-10 text-muted-foreground" />
+                      <span className="text-sm p-2 text-center text-muted-foreground">
+                        Add a link to embed content.
+                      </span>
+                      <div className="placeholder-background" />
+                    </div>
+                  ) : (
+                    <div className="flex flex-col aspect-video bg-muted/20 gap-2 p-4 items-center justify-center">
+                      <Link2OffIcon className="w-10 h-10 text-muted-foreground" />
+                      <span className="text-sm p-2 text-center text-muted-foreground">No preview available for this link.</span>
+                      <span className="text-xs p-2 max-w-full truncate border border-dashed border-border bg-muted/30 rounded-md text-muted-foreground">
+                        {unsafeUrl}
+                      </span>
+                      <div className="placeholder-background" />
+                    </div>
+                  )}
+                </>
+              )}
+            </>
           )}
-
-          <div className={cn(
-            "w-full h-full relative not-prose not-article m-0",
-            selected && 'ring ring-2 ring-primary'
-          )}
-          >
-            {divWithIframe}
-          </div>
-
         </figure>
-
-        <Caption>
-          <CaptionTextarea
-            placeholder="Write a caption..."
-            readOnly={readOnly}
-          />
-        </Caption>
 
         {children}
       </PlateElement>
-    </MediaPopover>
+    </ElementPopover>
   );
 })

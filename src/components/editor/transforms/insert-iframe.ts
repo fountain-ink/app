@@ -23,6 +23,7 @@ export const insertIframe = (
     {
       at: path,
       nextBlock: true,
+      select: true,
       ...(options as any),
     }
   );
