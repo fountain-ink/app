@@ -360,7 +360,6 @@ export const plugins = [
   VideoPlugin,
   AudioPlugin,
   FilePlugin,
-  MediaEmbedPlugin,
   InlineEquationPlugin,
   EquationPlugin,
   CalloutPlugin,
@@ -373,7 +372,7 @@ export const plugins = [
       nodeProps: {
         validNodeValues: ['start', 'left', 'center', 'right', 'end'],
       },
-      targetPlugins: [ParagraphPlugin.key, MediaEmbedPlugin.key, HEADING_KEYS.h1, HEADING_KEYS.h2, ImagePlugin.key],
+      targetPlugins: [ParagraphPlugin.key, HEADING_KEYS.h1, HEADING_KEYS.h2, ImagePlugin.key],
     },
   }),
   IndentPlugin.extend({
@@ -475,7 +474,6 @@ export const plugins = [
           AudioPlugin.key,
           FilePlugin.key,
           IframePlugin.key,
-          MediaEmbedPlugin.key,
           // TitlePlugin.key,
           // SubtitlePlugin.key
         ],
