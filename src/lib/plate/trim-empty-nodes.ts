@@ -1,26 +1,25 @@
-import { SubtitlePlugin, TitlePlugin } from "@/components/editor/plugins/title-plugin";
 import { ParagraphPlugin } from "@udecode/plate-core/react";
 
 export const trimEmptyNodes = (nodes: any[] | undefined): any[] | undefined => {
   if (!Array.isArray(nodes)) {
     return nodes;
   }
+  console.log(nodes)
 
   const nodesWithoutPlaceholders = nodes.filter(node => {
     if (node && (node.type === 'subtitle' || node.type === 'title') && node.children) {
       return !node.children.every((child: { text: string }) => child.text.trim() === '');
     }
-    return true;
-  });
-
-  const nodesWithoutImagePlaceholders = nodesWithoutPlaceholders.filter(node => {
     if (node.type === 'img' && !node.url) {
+      return false;
+    }
+    if (node.type === 'iframe' && !node.url) {
       return false;
     }
     return true;
   });
 
-  const mutableNodes = [...nodesWithoutImagePlaceholders];
+  const mutableNodes = [...nodesWithoutPlaceholders];
   while (mutableNodes.length > 0) {
     const lastNode = mutableNodes[mutableNodes.length - 1];
     if (
