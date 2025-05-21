@@ -6,21 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useState, useEffect } from "react";
 import type { Database } from "@/lib/db/database";
 import { formatDistanceToNow } from "date-fns";
@@ -131,7 +118,7 @@ export default function FeedbackPage() {
         const updatedFeedback = {
           ...selectedFeedback,
           status: "completed",
-          resolvedAt: new Date().toISOString()
+          resolvedAt: new Date().toISOString(),
         };
         setSelectedFeedback(updatedFeedback);
       }
@@ -150,9 +137,7 @@ export default function FeedbackPage() {
           <div className="flex justify-between items-center">
             <div>
               <CardTitle>User Feedback</CardTitle>
-              <CardDescription>
-                Manage the feedback and support tickets
-              </CardDescription>
+              <CardDescription>Manage the feedback and support tickets</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -182,10 +167,7 @@ export default function FeedbackPage() {
                 </TabsTrigger>
               </TabsList>
 
-              <Select
-                value={statusFilter}
-                onValueChange={setStatusFilter}
-              >
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Filter by status" />
                 </SelectTrigger>
@@ -236,7 +218,7 @@ function FeedbackTable({
   onViewFeedback,
   sortField,
   sortDirection,
-  onSort
+  onSort,
 }: {
   items: FeedbackItem[];
   loading: boolean;
@@ -254,20 +236,20 @@ function FeedbackTable({
     return <div className="py-8 text-center text-muted-foreground">No feedback items found</div>;
   }
 
-  const SortHeader = ({ field, children, className }: { field: string; children: React.ReactNode; className?: string }) => {
+  const SortHeader = ({
+    field,
+    children,
+    className,
+  }: { field: string; children: React.ReactNode; className?: string }) => {
     const isSorted = sortField === field;
     return (
       <TableHead
         onClick={() => onSort(field)}
-        className={`cursor-pointer hover:bg-muted/30 transition-colors ${className || ''}`}
+        className={`cursor-pointer hover:bg-muted/30 transition-colors ${className || ""}`}
       >
         <div className="flex items-center space-x-1">
           <span>{children}</span>
-          {isSorted && (
-            <span className="text-xs">
-              {sortDirection === "asc" ? "↑" : "↓"}
-            </span>
-          )}
+          {isSorted && <span className="text-xs">{sortDirection === "asc" ? "↑" : "↓"}</span>}
         </div>
       </TableHead>
     );
@@ -277,23 +259,32 @@ function FeedbackTable({
     <Table>
       <TableHeader>
         <TableRow>
-          <SortHeader field="id" className="w-20">ID</SortHeader>
-          <SortHeader field="text" className="w-[400px]">Text</SortHeader>
-          <SortHeader field="author" className="w-32">Author</SortHeader>
-          <SortHeader field="type" className="w-28">Type</SortHeader>
-          <SortHeader field="status" className="w-36">Status</SortHeader>
-          <SortHeader field="createdAt" className="w-40">Created</SortHeader>
-          <SortHeader field="actions" className="w-24">Actions</SortHeader>
+          <SortHeader field="id" className="w-20">
+            ID
+          </SortHeader>
+          <SortHeader field="text" className="w-[400px]">
+            Text
+          </SortHeader>
+          <SortHeader field="author" className="w-32">
+            Author
+          </SortHeader>
+          <SortHeader field="type" className="w-28">
+            Type
+          </SortHeader>
+          <SortHeader field="status" className="w-36">
+            Status
+          </SortHeader>
+          <SortHeader field="createdAt" className="w-40">
+            Created
+          </SortHeader>
+          <SortHeader field="actions" className="w-24">
+            Actions
+          </SortHeader>
         </TableRow>
       </TableHeader>
       <TableBody>
         {items.map((item) => (
-          <FeedbackRow
-            key={item.id}
-            feedback={item}
-            onResolve={onResolve}
-            onViewFeedback={onViewFeedback}
-          />
+          <FeedbackRow key={item.id} feedback={item} onResolve={onResolve} onViewFeedback={onViewFeedback} />
         ))}
       </TableBody>
     </Table>
@@ -303,7 +294,7 @@ function FeedbackTable({
 function FeedbackRow({
   feedback,
   onResolve,
-  onViewFeedback
+  onViewFeedback,
 }: {
   feedback: FeedbackItem;
   onResolve: (id: number) => Promise<void>;
@@ -313,11 +304,12 @@ function FeedbackRow({
   const [isUpdating, setIsUpdating] = useState(false);
   const [resolvedAt, setResolvedAt] = useState<string | null>(feedback.resolvedAt);
 
-  const typeVariant = {
-    "bug": "bg-red-50 text-red-700 border-border",
-    "feature": "bg-purple-50 text-purple-700 border-border",
-    "other": "bg-blue-50 text-blue-700 border-border",
-  }[feedback.type] || "bg-gray-50 text-gray-700 border-border";
+  const typeVariant =
+    {
+      bug: "bg-red-50 text-red-700 border-border",
+      feature: "bg-purple-50 text-purple-700 border-border",
+      other: "bg-blue-50 text-blue-700 border-border",
+    }[feedback.type] || "bg-gray-50 text-gray-700 border-border";
 
   const authorAddress = feedback.author || "Unknown";
   const isGuestAuthor = authorAddress.startsWith("guest-");
@@ -325,21 +317,20 @@ function FeedbackRow({
   let displayAddress;
 
   if (isGuestAuthor) {
-    const guestId = authorAddress.replace('guest-', '');
+    const guestId = authorAddress.replace("guest-", "");
     displayAddress = `${guestId}`;
   } else {
-    displayAddress = authorAddress && authorAddress.length > 8
-      ? `${authorAddress.substring(2, 6)}...${authorAddress.substring(authorAddress.length - 4)}`
-      : authorAddress;
+    displayAddress =
+      authorAddress && authorAddress.length > 8
+        ? `${authorAddress.substring(2, 6)}...${authorAddress.substring(authorAddress.length - 4)}`
+        : authorAddress;
   }
 
   const formattedDate = feedback.createdAt
     ? formatDistanceToNow(new Date(feedback.createdAt), { addSuffix: true })
     : "Unknown";
 
-  const formattedResolvedDate = resolvedAt
-    ? formatDistanceToNow(new Date(resolvedAt), { addSuffix: true })
-    : "-";
+  const formattedResolvedDate = resolvedAt ? formatDistanceToNow(new Date(resolvedAt), { addSuffix: true }) : "-";
 
   const hasScreenshot = !!feedback.screenshot;
 
@@ -359,7 +350,7 @@ function FeedbackRow({
   const formatStatus = (status: string) => {
     return status
       .split("_")
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
   };
 
@@ -386,15 +377,9 @@ function FeedbackRow({
         </Badge>
       </TableCell>
       <TableCell>
-        <Select
-          value={status}
-          onValueChange={handleStatusChange}
-          disabled={isUpdating}
-        >
+        <Select value={status} onValueChange={handleStatusChange} disabled={isUpdating}>
           <SelectTrigger className="w-[130px] h-8">
-            <SelectValue>
-              {formatStatus(status)}
-            </SelectValue>
+            <SelectValue>{formatStatus(status)}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="new">New</SelectItem>
@@ -411,12 +396,7 @@ function FeedbackRow({
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8"
-                    onClick={() => onViewFeedback(feedback)}
-                  >
+                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onViewFeedback(feedback)}>
                     <ImageIcon className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
@@ -428,12 +408,7 @@ function FeedbackRow({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8"
-                  onClick={() => onViewFeedback(feedback)}
-                >
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onViewFeedback(feedback)}>
                   <Maximize className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
@@ -493,16 +468,28 @@ function TableSkeleton() {
       <TableBody>
         {skeletonRows.map((i) => (
           <TableRow key={i} className="animate-pulse">
-            <TableCell><div className="h-4 w-8 bg-muted rounded"></div></TableCell>
-            <TableCell><div className="h-4 w-full bg-muted rounded"></div></TableCell>
-            <TableCell><div className="h-4 w-20 bg-muted rounded"></div></TableCell>
-            <TableCell><div className="h-6 w-16 bg-muted rounded-full"></div></TableCell>
-            <TableCell><div className="h-8 w-[130px] bg-muted rounded"></div></TableCell>
-            <TableCell><div className="h-4 w-24 bg-muted rounded"></div></TableCell>
+            <TableCell>
+              <div className="h-4 w-8 bg-muted rounded" />
+            </TableCell>
+            <TableCell>
+              <div className="h-4 w-full bg-muted rounded" />
+            </TableCell>
+            <TableCell>
+              <div className="h-4 w-20 bg-muted rounded" />
+            </TableCell>
+            <TableCell>
+              <div className="h-6 w-16 bg-muted rounded-full" />
+            </TableCell>
+            <TableCell>
+              <div className="h-8 w-[130px] bg-muted rounded" />
+            </TableCell>
+            <TableCell>
+              <div className="h-4 w-24 bg-muted rounded" />
+            </TableCell>
             <TableCell>
               <div className="flex justify-end space-x-2">
-                <div className="h-8 w-8 bg-muted rounded-sm"></div>
-                <div className="h-8 w-8 bg-muted rounded-sm"></div>
+                <div className="h-8 w-8 bg-muted rounded-sm" />
+                <div className="h-8 w-8 bg-muted rounded-sm" />
               </div>
             </TableCell>
           </TableRow>
@@ -510,4 +497,4 @@ function TableSkeleton() {
       </TableBody>
     </Table>
   );
-} 
+}

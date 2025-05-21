@@ -37,7 +37,7 @@ const resolveContentType = (contentUri: string) => {
   }
 
   return ContentType.Other;
-}
+};
 
 const getStorageTypeText = (storageType: ContentType) => {
   switch (storageType) {
@@ -50,7 +50,7 @@ const getStorageTypeText = (storageType: ContentType) => {
     default:
       return "Custom storage";
   }
-}
+};
 
 const getStorageAboutLink = (storageType: ContentType): string | undefined => {
   switch (storageType) {
@@ -63,8 +63,7 @@ const getStorageAboutLink = (storageType: ContentType): string | undefined => {
     default:
       return undefined;
   }
-}
-
+};
 
 export const PostMetadata = ({ post }: PostMetadataProps) => {
   let licenseValue: Licenses = Licenses.NoLicense;
@@ -74,14 +73,14 @@ export const PostMetadata = ({ post }: PostMetadataProps) => {
   const contentUri = post.contentUri;
   const resolvedUri = resolveUrl(contentUri);
 
-  if (!post.metadata || typeof post.metadata !== 'object' || !('attributes' in post.metadata)) {
-    return null
+  if (!post.metadata || typeof post.metadata !== "object" || !("attributes" in post.metadata)) {
+    return null;
   }
 
   const attributes = post.metadata.attributes as MetadataAttribute[];
   const licenseAttribute = attributes.find((attr: MetadataAttribute) => attr.key === "license");
 
-  if (licenseAttribute && licenseAttribute.value) {
+  if (licenseAttribute?.value) {
     const potentialLicense = licenseAttribute.value as Licenses;
 
     if (potentialLicense in LicenseDescriptions) {
@@ -103,14 +102,23 @@ export const PostMetadata = ({ post }: PostMetadataProps) => {
           <div className="mt-4 flex flex-col gap-2 not-article ">
             <div className="flex flex-row items-center">
               <p className="!text-sm !text-muted-foreground">License</p>
-              <a href={`https://lens.xyz/docs/protocol/best-practices/content-licensing#supported-licenses`} target="_blank" rel="noopener noreferrer" aria-label="About License">
+              <a
+                href={"https://lens.xyz/docs/protocol/best-practices/content-licensing#supported-licenses"}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="About License"
+              >
                 <InfoIcon className="h-3 w-3 ml-1 text-muted-foreground" />
               </a>
             </div>
             <Separator orientation="horizontal" />
             <div className="flex flex-row items-center gap-2 bg-muted rounded-md p-2">
               <p className="!text-sm !text-muted-foreground">
-                <span className="!font-semibold">{licenseValue}{". "}</span>{licenseDescription && <span className="ml-1">{licenseDescription}</span>}
+                <span className="!font-semibold">
+                  {licenseValue}
+                  {". "}
+                </span>
+                {licenseDescription && <span className="ml-1">{licenseDescription}</span>}
               </p>
             </div>
           </div>
@@ -121,7 +129,12 @@ export const PostMetadata = ({ post }: PostMetadataProps) => {
               <span className="text-sm flex flex-row items-center font-medium text-muted-foreground">
                 {getStorageTypeText(storageType)}
                 {getStorageAboutLink(storageType) && (
-                  <a href={getStorageAboutLink(storageType)} target="_blank" rel="noopener noreferrer" aria-label="About Grove">
+                  <a
+                    href={getStorageAboutLink(storageType)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="About Grove"
+                  >
                     <InfoIcon className="h-3 w-3 ml-1" />
                   </a>
                 )}
@@ -132,10 +145,10 @@ export const PostMetadata = ({ post }: PostMetadataProps) => {
               <div className="flex items-center justify-between bg-muted p-2 pl-1.5 h-[36px] rounded-md">
                 <div className="flex items-center gap-1.5 min-w-0 flex-1">
                   <span className="text-sm font-semibold bg-background/40 tracking-normal text-muted-foreground px-2 py-0.5 pr-1.5 rounded-sm shrink-0">
-                    {contentUri.split('://')[0]}://
+                    {contentUri.split("://")[0]}://
                   </span>
                   <span className="text-sm text-muted-foreground tracking-normal truncate min-w-0">
-                    {contentUri.split('://')[1]}
+                    {contentUri.split("://")[1]}
                   </span>
                 </div>
                 <a
@@ -149,13 +162,11 @@ export const PostMetadata = ({ post }: PostMetadataProps) => {
                 </a>
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">
-                Storage URI not available.
-              </p>
+              <p className="text-sm text-muted-foreground">Storage URI not available.</p>
             )}
           </div>
         </TabsContent>
       </Tabs>
     </div>
   );
-}; 
+};

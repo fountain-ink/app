@@ -6,7 +6,7 @@ import { Account, AnyPost, Post } from "@lens-protocol/client";
 import { motion } from "motion/react";
 import { useWalletClient } from "wagmi";
 import { ActionButton } from "./post-action-button";
-import React from 'react';
+import React from "react";
 import { useActionBar } from "@/contexts/action-bar-context";
 import { useOnScreen } from "@/hooks/use-on-screen";
 import { usePostActionsButtons } from "@/hooks/use-post-actions-buttons";
@@ -33,7 +33,7 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
             opacity: isActionBarVisible ? 0 : 1.0 - scrollProgress,
           }}
           animate={{
-            y: isActionBarVisible ? 100 : (shouldAnimate ? (shouldShow ? 0 : 100) : translateY),
+            y: isActionBarVisible ? 100 : shouldAnimate ? (shouldShow ? 0 : 100) : translateY,
           }}
           transition={{
             type: "spring",

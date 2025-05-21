@@ -40,9 +40,9 @@ const LensPreview: FC<LensPreviewProps> = ({ lensDisplay, title, documentId }) =
 
   const ContentSkeleton = () => (
     <div className="space-y-2">
-      <div className="h-4 bg-muted rounded w-[90%]"></div>
-      <div className="h-4 bg-muted rounded w-[72%]"></div>
-      <div className="h-4 bg-muted rounded w-[86%]"></div>
+      <div className="h-4 bg-muted rounded w-[90%]" />
+      <div className="h-4 bg-muted rounded w-[72%]" />
+      <div className="h-4 bg-muted rounded w-[86%]" />
     </div>
   );
 
@@ -50,52 +50,46 @@ const LensPreview: FC<LensPreviewProps> = ({ lensDisplay, title, documentId }) =
     <div className="mt-3 border border-border rounded-md overflow-hidden max-w-md select-none text-muted-foreground">
       {coverUrl ? (
         <div className="h-36 w-full bg-muted overflow-hidden">
-          <img
-            src={coverUrl}
-            alt="Post cover"
-            className="w-full h-full object-cover"
-          />
+          <img src={coverUrl} alt="Post cover" className="w-full h-full object-cover" />
         </div>
       ) : (
-        <div className="bg-muted h-36 w-full"></div>
+        <div className="bg-muted h-36 w-full" />
       )}
       <div className="p-3 space-y-2">
         <div className="font-medium text-xs truncate">{title || "Your post title"}</div>
         {subtitle ? (
           <div className="text-xs truncate">{subtitle}</div>
         ) : (
-          <div className="h-3 bg-muted/50 rounded w-2/3"></div>
+          <div className="h-3 bg-muted/50 rounded w-2/3" />
         )}
         <div className="flex items-center gap-1 mt-1">
-          <img
-            src="/favicon.ico"
-            alt="Fountain"
-            className="w-3 h-3"
-          />
+          <img src="/favicon.ico" alt="Fountain" className="w-3 h-3" />
           <div className="text-xs">fountain.ink</div>
         </div>
       </div>
     </div>
   );
 
-  const username = draft?.author?.split(':')[2] || "username";
+  const username = draft?.author?.split(":")[2] || "username";
   const slug = draft?.slug || "example-post";
-  const baseUrl = 'https://fountain.ink/';
+  const baseUrl = "https://fountain.ink/";
   const postUrl = `${baseUrl}p/${username}/${slug}`;
 
   // Dimmer link style
   const LinkStyle = "text-blue-500/70 select-none";
 
   switch (lensDisplay) {
-    case 'link':
+    case "link":
       return (
         <div className="select-none text-muted-foreground">
-          <a href="#" className={LinkStyle}>{postUrl}</a>
+          <a href="#" className={LinkStyle}>
+            {postUrl}
+          </a>
           <OgPreview />
         </div>
       );
 
-    case 'title_link':
+    case "title_link":
       return (
         <div className="select-none text-muted-foreground">
           <div className="line-clamp-1 text-foreground">
@@ -105,18 +99,16 @@ const LensPreview: FC<LensPreviewProps> = ({ lensDisplay, title, documentId }) =
         </div>
       );
 
-    case 'content_link':
+    case "content_link":
       return (
         <div className="select-none text-muted-foreground">
-          <em className="line-clamp-1 text-foreground">Posted on Fountain - <span className={LinkStyle}>{postUrl}</span></em>
+          <em className="line-clamp-1 text-foreground">
+            Posted on Fountain - <span className={LinkStyle}>{postUrl}</span>
+          </em>
 
-          {title && (
-            <div className="font-semibold text-base mt-3 mb-1 text-foreground">{title}</div>
-          )}
+          {title && <div className="font-semibold text-base mt-3 mb-1 text-foreground">{title}</div>}
 
-          {subtitle && (
-            <div className="text-sm mb-3">{subtitle}</div>
-          )}
+          {subtitle && <div className="text-sm mb-3">{subtitle}</div>}
 
           <div className="mt-2">
             <ContentSkeleton />
@@ -124,17 +116,11 @@ const LensPreview: FC<LensPreviewProps> = ({ lensDisplay, title, documentId }) =
           <OgPreview />
         </div>
       );
-
-    case 'content_only':
     default:
       return (
         <div className="select-none text-muted-foreground">
-          {title && (
-            <div className="font-semibold text-lg mb-1 text-foreground">{title}</div>
-          )}
-          {subtitle && (
-            <div className="text-sm mb-3">{subtitle}</div>
-          )}
+          {title && <div className="font-semibold text-lg mb-1 text-foreground">{title}</div>}
+          {subtitle && <div className="text-sm mb-3">{subtitle}</div>}
           <ContentSkeleton />
         </div>
       );
@@ -202,7 +188,7 @@ export const DistributionTab: FC<DistributionTabProps> = ({ form, documentId }) 
                     checked={field.value}
                     onCheckedChange={field.onChange}
                     disabled={true}
-                  // disabled={!selectedBlog?.mail_list_id}
+                    // disabled={!selectedBlog?.mail_list_id}
                   />
                 </FormControl>
                 <label
@@ -251,10 +237,7 @@ export const DistributionTab: FC<DistributionTabProps> = ({ form, documentId }) 
           render={({ field }) => (
             <FormItem>
               <FormLabel>Display option</FormLabel>
-              <Select
-                value={field.value}
-                onValueChange={field.onChange}
-              >
+              <Select value={field.value} onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger className="max-w-md">
                     <SelectValue placeholder="How to display your post" />
@@ -275,11 +258,7 @@ export const DistributionTab: FC<DistributionTabProps> = ({ form, documentId }) 
                   </FormDescription> */}
                 </div>
                 <div className="text-sm max-w-md bg-background p-3 rounded-md border border-border">
-                  <LensPreview
-                    lensDisplay={lensDisplay}
-                    title={title}
-                    documentId={documentId}
-                  />
+                  <LensPreview lensDisplay={lensDisplay} title={title} documentId={documentId} />
                 </div>
               </div>
               <FormMessage />
@@ -289,4 +268,4 @@ export const DistributionTab: FC<DistributionTabProps> = ({ form, documentId }) 
       </div>
     </div>
   );
-}; 
+};

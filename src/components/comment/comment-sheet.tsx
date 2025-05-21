@@ -157,7 +157,7 @@ export const CommentSheet = ({
                   );
                 })}
                 {loading && <div className="text-center py-4 text-muted-foreground">Loading...</div>}
-                <div className="h-6"></div>
+                <div className="h-6" />
               </div>
             )}
           </ScrollArea>

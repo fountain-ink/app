@@ -16,4 +16,4 @@ export const extractSubtitle = (contentJson?: string): string => {
     console.error("Failed to parse contentJson:", e);
     return "";
   }
-}; 
+};

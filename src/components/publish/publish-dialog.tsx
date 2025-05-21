@@ -7,7 +7,15 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useWalletClient } from "wagmi";
-import { PenIcon, ShoppingBag as ShoppingBagIcon, AlertCircleIcon, CircleDollarSignIcon, RefreshCw, SendIcon, RssIcon } from "lucide-react";
+import {
+  PenIcon,
+  ShoppingBag as ShoppingBagIcon,
+  AlertCircleIcon,
+  CircleDollarSignIcon,
+  RefreshCw,
+  SendIcon,
+  RssIcon,
+} from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -136,7 +144,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
         slug: draft?.slug || "",
         tags: draft?.tags || [],
         images: draft?.images || [],
-        isSlugManuallyEdited: draft?.slug ? true : false,
+        isSlugManuallyEdited: !!draft?.slug,
         originalDate: draft?.originalDate ? new Date(draft.originalDate) : null,
         isMiscSectionExpanded: draft?.isMiscSectionExpanded ?? false,
       },
@@ -199,15 +207,27 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
           let updated = false;
 
           if (!getValues("details.title") && extracted.title) {
-            setValue("details.title", extracted.title, { shouldValidate: true, shouldDirty: false, shouldTouch: false });
+            setValue("details.title", extracted.title, {
+              shouldValidate: true,
+              shouldDirty: false,
+              shouldTouch: false,
+            });
             updated = true;
           }
           if (!getValues("details.subtitle") && extracted.subtitle) {
-            setValue("details.subtitle", extracted.subtitle, { shouldValidate: true, shouldDirty: false, shouldTouch: false });
+            setValue("details.subtitle", extracted.subtitle, {
+              shouldValidate: true,
+              shouldDirty: false,
+              shouldTouch: false,
+            });
             updated = true;
           }
           if (!getValues("details.coverUrl") && extracted.coverUrl) {
-            setValue("details.coverUrl", extracted.coverUrl, { shouldValidate: true, shouldDirty: false, shouldTouch: false });
+            setValue("details.coverUrl", extracted.coverUrl, {
+              shouldValidate: true,
+              shouldDirty: false,
+              shouldTouch: false,
+            });
             updated = true;
           }
           if (extracted.images) {
@@ -258,7 +278,9 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
       }
     } catch (error) {
       console.error(isEditMode ? "Failed to update post:" : "Failed to publish post:", error);
-      toast.error(isEditMode ? "Update failed. Check console for details." : "Publishing failed. Check console for details.");
+      toast.error(
+        isEditMode ? "Update failed. Check console for details." : "Publishing failed. Check console for details.",
+      );
     } finally {
       setIsPublishing(false);
     }
@@ -268,7 +290,9 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
     handleSubmit(onSubmit)();
   };
 
-  if (!user) { return null; }
+  if (!user) {
+    return null;
+  }
 
   if (isLoading) {
     return (
@@ -307,7 +331,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
                   className={cn(
                     "flex items-center gap-2 rounded-sm",
                     hasCollectingErrors &&
-                    "text-destructive focus:text-destructive data-[state=active]:text-destructive",
+                      "text-destructive focus:text-destructive data-[state=active]:text-destructive",
                   )}
                 >
                   {hasCollectingErrors ? (
@@ -322,7 +346,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
                   className={cn(
                     "flex items-center gap-2 rounded-sm",
                     hasDistributionErrors &&
-                    "text-destructive focus:text-destructive data-[state=active]:text-destructive",
+                      "text-destructive focus:text-destructive data-[state=active]:text-destructive",
                   )}
                 >
                   {hasDistributionErrors ? (
@@ -339,10 +363,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
                   className="h-full m-0 data-[state=inactive]:hidden focus-visible:ring-0 focus-visible:ring-offset-0"
                   tabIndex={-1}
                 >
-                  <ArticleDetailsTab
-                    form={form}
-                    documentId={documentId}
-                  />
+                  <ArticleDetailsTab form={form} documentId={documentId} />
                 </TabsContent>
                 <TabsContent
                   value="distribution"
@@ -362,10 +383,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
             </Tabs>
             <div className="flex items-center justify-start gap-2">
               <Button onClick={handlePublishClick} disabled={!isValid || isPublishing}>
-                {isPublishing
-                  ? (isEditMode ? "Updating..." : "Publishing...")
-                  : (isEditMode ? "Update Post" : "Publish")
-                }
+                {isPublishing ? (isEditMode ? "Updating..." : "Publishing...") : isEditMode ? "Update Post" : "Publish"}
               </Button>
 
               {!isValid && (isSubmitted || hasDetailsErrors || hasDistributionErrors || hasCollectingErrors) && (

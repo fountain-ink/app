@@ -41,7 +41,7 @@ export function useUploadFile({
       // console.log("uploaded file", url);
 
       const uploadedFile = {
-        key: url.split("/").pop() || "", 
+        key: url.split("/").pop() || "",
         url,
         name: file.name,
         size: file.size,

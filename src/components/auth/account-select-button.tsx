@@ -51,14 +51,20 @@ export function SelectAccountButton({ account, onSuccess }: { account: Account; 
         accountOwner: {
           account: account.address,
           owner: walletAddress,
-          app: env.NEXT_PUBLIC_ENVIRONMENT === "development" ? env.NEXT_PUBLIC_APP_ADDRESS_TESTNET : env.NEXT_PUBLIC_APP_ADDRESS,
+          app:
+            env.NEXT_PUBLIC_ENVIRONMENT === "development"
+              ? env.NEXT_PUBLIC_APP_ADDRESS_TESTNET
+              : env.NEXT_PUBLIC_APP_ADDRESS,
         },
       };
       const managerRequest = {
         accountManager: {
           account: account.address,
           manager: walletAddress,
-          app: env.NEXT_PUBLIC_ENVIRONMENT === "development" ? env.NEXT_PUBLIC_APP_ADDRESS_TESTNET : env.NEXT_PUBLIC_APP_ADDRESS,
+          app:
+            env.NEXT_PUBLIC_ENVIRONMENT === "development"
+              ? env.NEXT_PUBLIC_APP_ADDRESS_TESTNET
+              : env.NEXT_PUBLIC_APP_ADDRESS,
         },
       };
       const challengeRequest = isOwner ? ownerRequest : managerRequest;
@@ -71,7 +77,7 @@ export function SelectAccountButton({ account, onSuccess }: { account: Account; 
       });
 
       if (authenticated.isErr()) {
-        throw new Error("Failed to get authenticated client: " + authenticated.error.message);
+        throw new Error(`Failed to get authenticated client: ${authenticated.error.message}`);
       }
 
       const credentials = await authenticated.value.getCredentials();

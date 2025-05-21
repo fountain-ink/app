@@ -37,12 +37,21 @@ export async function generateMetadata({ params }: { params: { user: string; pos
   const blog = await getBlogData(post.feed.group?.address || profile.address);
   const icon = blog?.icon;
   const title = "title" in post.metadata ? post.metadata.title : undefined;
-  const description = "attributes" in post.metadata ? post.metadata.attributes?.find((attr) => "key" in attr && attr.key === "subtitle")?.value || blog?.about : blog?.about;
-  const coverUrl = "attributes" in post.metadata ? post.metadata.attributes?.find((attr) => "key" in attr && attr.key === "coverUrl")?.value : undefined;
+  const description =
+    "attributes" in post.metadata
+      ? post.metadata.attributes?.find((attr) => "key" in attr && attr.key === "subtitle")?.value || blog?.about
+      : blog?.about;
+  const coverUrl =
+    "attributes" in post.metadata
+      ? post.metadata.attributes?.find((attr) => "key" in attr && attr.key === "coverUrl")?.value
+      : undefined;
   const content = "content" in post.metadata ? post.metadata.content : undefined;
   const postUrl = `${getBaseUrl()}/p/${username}/${postParam}`;
 
-  const contentExcerpt = !description && content ? content.substring(0, 200).replace(/[#*_]/g, '') + (content.length > 200 ? '...' : '') : undefined;
+  const contentExcerpt =
+    !description && content
+      ? content.substring(0, 200).replace(/[#*_]/g, "") + (content.length > 200 ? "..." : "")
+      : undefined;
 
   return {
     title: `${title ? `${title} - ` : ""}${blog?.title}`,
@@ -52,24 +61,26 @@ export async function generateMetadata({ params }: { params: { user: string; pos
       title: title || `${username}'s blog post`,
       description: description || contentExcerpt || `A blog post by @${username} on Fountain`,
       url: postUrl,
-      siteName: blog?.title || 'Fountain',
-      locale: 'en_US',
-      type: 'article',
-      images: coverUrl ? [
-        {
-          url: coverUrl,
-          alt: title || `${username}'s blog post`
-        }
-      ] : undefined,
+      siteName: blog?.title || "Fountain",
+      locale: "en_US",
+      type: "article",
+      images: coverUrl
+        ? [
+            {
+              url: coverUrl,
+              alt: title || `${username}'s blog post`,
+            },
+          ]
+        : undefined,
       authors: [username],
     },
     twitter: {
-      card: coverUrl ? 'summary_large_image' : 'summary',
+      card: coverUrl ? "summary_large_image" : "summary",
       title: title || `${username}'s blog post`,
       description: description || contentExcerpt || `A blog post by @${username} on Fountain`,
       images: coverUrl ? [coverUrl] : undefined,
       creator: `@${username}`,
-    }
+    },
   };
 }
 

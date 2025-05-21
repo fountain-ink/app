@@ -50,4 +50,4 @@ const home = async () => {
   );
 };
 
-export default home; 
+export default home;

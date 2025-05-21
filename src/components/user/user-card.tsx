@@ -73,7 +73,13 @@ export const UserCard = ({ children, username, address, onClick, linkProfile = f
   return (
     <HoverCard defaultOpen={false} onOpenChange={(open: boolean) => open && loadCard()} closeDelay={100}>
       <HoverCardTrigger className="z-20" asChild>
-        {linkProfile && username ? <Link prefetch href={`/u/${username}`} onClick={onClick}>{children}</Link> : children}
+        {linkProfile && username ? (
+          <Link prefetch href={`/u/${username}`} onClick={onClick}>
+            {children}
+          </Link>
+        ) : (
+          children
+        )}
       </HoverCardTrigger>
       <HoverCardContent className={`w-full min-w-64 z-[101] max-w-fit overflow-hidden ${inter.className}`} side="top">
         {loading && !account && <LoadingSpinner />}
@@ -87,7 +93,10 @@ export const UserCard = ({ children, username, address, onClick, linkProfile = f
 
               <span className="flex flex-row gap-2 items-center justify-center">
                 {isFollowingMe && (
-                  <Badge className="text-xs rounded-sm text-primary/70 bg-secondary/50 -mb-1 h-fit w-fit flex items-center justify-center ml-2" variant="secondary">
+                  <Badge
+                    className="text-xs rounded-sm text-primary/70 bg-secondary/50 -mb-1 h-fit w-fit flex items-center justify-center ml-2"
+                    variant="secondary"
+                  >
                     Follows you
                   </Badge>
                 )}

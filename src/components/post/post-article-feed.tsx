@@ -14,37 +14,38 @@ export const ArticleFeed = ({
   posts: AnyPost[];
   isUserProfile?: boolean;
 }) => {
+  const postViews = posts
+    .map((post) => {
+      if (post.__typename !== "Post") {
+        return null;
+      }
 
-  const postViews = posts.map((post) => {
-    if (post.__typename !== "Post") {
-      return null;
-    }
+      if (post.metadata.__typename !== "ArticleMetadata") {
+        return null;
+      }
 
-    if (post.metadata.__typename !== "ArticleMetadata") {
-      return null;
-    }
+      if (!post.metadata.attributes.some((attribute) => attribute.key === "contentJson")) {
+        return null;
+      }
 
-    if (!post.metadata.attributes.some((attribute) => attribute.key === "contentJson")) {
-      return null;
-    }
-
-    return (
-      <PostView
-        options={{
-          showContent: false,
-          showAuthor: false,
-          showBlog: true,
-          showTitle: true,
-          showSubtitle: true,
-          showDate: true,
-          showPreview: true,
-        }}
-        key={post.id}
-        authors={[post.author.address]}
-        post={post}
-      />
-    );
-  }).filter(Boolean);
+      return (
+        <PostView
+          options={{
+            showContent: false,
+            showAuthor: false,
+            showBlog: true,
+            showTitle: true,
+            showSubtitle: true,
+            showDate: true,
+            showPreview: true,
+          }}
+          key={post.id}
+          authors={[post.author.address]}
+          post={post}
+        />
+      );
+    })
+    .filter(Boolean);
 
   if (postViews.length === 0) {
     return (

@@ -4,16 +4,16 @@ export const trimEmptyNodes = (nodes: any[] | undefined): any[] | undefined => {
   if (!Array.isArray(nodes)) {
     return nodes;
   }
-  console.log(nodes)
+  console.log(nodes);
 
-  const nodesWithoutPlaceholders = nodes.filter(node => {
-    if (node && (node.type === 'subtitle' || node.type === 'title') && node.children) {
-      return !node.children.every((child: { text: string }) => child.text.trim() === '');
+  const nodesWithoutPlaceholders = nodes.filter((node) => {
+    if (node && (node.type === "subtitle" || node.type === "title") && node.children) {
+      return !node.children.every((child: { text: string }) => child.text.trim() === "");
     }
-    if (node.type === 'img' && !node.url) {
+    if (node.type === "img" && !node.url) {
       return false;
     }
-    if (node.type === 'iframe' && !node.url) {
+    if (node.type === "iframe" && !node.url) {
       return false;
     }
     return true;
@@ -23,14 +23,13 @@ export const trimEmptyNodes = (nodes: any[] | undefined): any[] | undefined => {
   while (mutableNodes.length > 0) {
     const lastNode = mutableNodes[mutableNodes.length - 1];
     if (
-      lastNode &&
-      lastNode.type &&
+      lastNode?.type &&
       lastNode.type === ParagraphPlugin.key &&
       Array.isArray(lastNode.children) &&
       lastNode.children.length === 1 &&
       lastNode.children[0] &&
-      typeof lastNode.children[0].text === 'string' &&
-      lastNode.children[0].text.trim() === ''
+      typeof lastNode.children[0].text === "string" &&
+      lastNode.children[0].text.trim() === ""
     ) {
       mutableNodes.pop();
     } else {
@@ -38,4 +37,4 @@ export const trimEmptyNodes = (nodes: any[] | undefined): any[] | undefined => {
     }
   }
   return mutableNodes;
-}; 
+};

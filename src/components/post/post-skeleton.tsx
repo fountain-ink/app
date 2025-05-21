@@ -2,11 +2,12 @@ import React from "react";
 
 export const PostSkeleton = () => {
   return (
-    <div className="group/post flex flex-row items-start justify-start gap-4 sm:gap-6 md:gap-8 lg:gap-10
+    <div
+      className="group/post flex flex-row items-start justify-start gap-4 sm:gap-6 md:gap-8 lg:gap-10
       bg-transparent hover:text-card-foreground transition-all ease-in duration-100
       border-0 shadow-none relative w-screen rounded-sm p-4
-      max-w-full sm:max-w-3xl h-fit leading-tight">
-
+      max-w-full sm:max-w-3xl h-fit leading-tight"
+    >
       {/* Preview image skeleton */}
       <div className="h-40 w-40 shrink-0 aspect-square rounded-md overflow-hidden bg-muted animate-pulse">
         <div className="h-full w-full relative" />

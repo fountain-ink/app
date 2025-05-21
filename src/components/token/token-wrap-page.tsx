@@ -88,7 +88,10 @@ export function TokenWrap({ accountAddress, tokenAddress }: TokenWrapClientPageP
               <div className="bg-muted/30 rounded-lg p-6 space-y-4">
                 <div className="flex justify-between items-center mb-2">
                   <h2 className="text-xl font-semibold">Wallet Balances</h2>
-                  <div className="text-xs text-muted-foreground bg-muted/50 rounded-md px-2 py-1 border border-border max-w-[120px] truncate" title={walletAddress || ""}>
+                  <div
+                    className="text-xs text-muted-foreground bg-muted/50 rounded-md px-2 py-1 border border-border max-w-[120px] truncate"
+                    title={walletAddress || ""}
+                  >
                     {truncateAddress(walletAddress || "")}
                   </div>
                 </div>
@@ -157,7 +160,10 @@ export function TokenWrap({ accountAddress, tokenAddress }: TokenWrapClientPageP
               <div className="bg-muted/30 rounded-lg p-6 space-y-4">
                 <div className="flex justify-between items-center mb-2">
                   <h2 className="text-xl font-semibold">Lens Account Balances</h2>
-                  <div className="text-xs text-muted-foreground bg-muted/50 rounded-md px-2 py-1 border border-border max-w-[120px] truncate" title={accountAddress || ""}>
+                  <div
+                    className="text-xs text-muted-foreground bg-muted/50 rounded-md px-2 py-1 border border-border max-w-[120px] truncate"
+                    title={accountAddress || ""}
+                  >
                     {truncateAddress(accountAddress || "")}
                   </div>
                 </div>
@@ -197,10 +203,13 @@ export function TokenWrap({ accountAddress, tokenAddress }: TokenWrapClientPageP
               <div className="bg-muted/30 rounded-lg p-6">
                 <h2 className="text-lg font-semibold mb-3">Send Tokens</h2>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Need to send wGHO tokens to someone? Visit our send page to transfer your wrapped tokens to any address.
+                  Need to send wGHO tokens to someone? Visit our send page to transfer your wrapped tokens to any
+                  address.
                 </p>
                 <Link href="/send">
-                  <Button variant="outline" className="w-full">Go to Send Tokens</Button>
+                  <Button variant="outline" className="w-full">
+                    Go to Send Tokens
+                  </Button>
                 </Link>
               </div>
 

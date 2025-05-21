@@ -15,7 +15,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
       authors: [evmAddress(account?.address)],
       metadata: { mainContentFocus: [MainContentFocus.Article] },
     },
-  })
+  });
 
   if (posts.isErr()) {
     console.error(posts.error);
@@ -24,12 +24,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
 
   const isUserProfile = address === account?.address;
 
-  return (
-    <ArticleFeed
-      posts={[...posts.value.items]}
-      isUserProfile={isUserProfile}
-    />
-  );
+  return <ArticleFeed posts={[...posts.value.items]} isUserProfile={isUserProfile} />;
 };
 
 export default UserPage;

@@ -80,18 +80,17 @@ export async function GET(req: NextRequest) {
           guest: guestUsers || 0,
           evm: authedUsers || 0,
           other: (totalUsers || 0) - (guestUsers || 0) - (authedUsers || 0),
-          active: activeUsers || 0
+          active: activeUsers || 0,
         },
         content: {
           blogs: totalBlogs || 0,
           drafts: totalDrafts || 0,
-          total: (totalBlogs || 0) + (totalDrafts || 0)
-        }
-      }
+          total: (totalBlogs || 0) + (totalDrafts || 0),
+        },
+      },
     });
-
   } catch (error) {
     console.error("Unexpected error:", error);
     return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
   }
-} 
+}

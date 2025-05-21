@@ -5,10 +5,7 @@ export interface DeleteDraftArgs {
   queryClient: QueryClient;
 }
 
-export async function deleteCloudDraft({
-  documentId,
-  queryClient,
-}: DeleteDraftArgs): Promise<void> {
+export async function deleteCloudDraft({ documentId, queryClient }: DeleteDraftArgs): Promise<void> {
   try {
     const res = await fetch(`/api/drafts?id=${documentId}`, {
       method: "DELETE",
@@ -26,4 +23,4 @@ export async function deleteCloudDraft({
   } catch (error) {
     console.error("Error deleting cloud draft:", error);
   }
-} 
+}

@@ -9,13 +9,8 @@ import { useAuthenticatedUser } from "@lens-protocol/react";
 export const usePostActions = (post: Post) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const {
-    getPostState,
-    initPostState,
-    updatePostState,
-    updatePostStats,
-    updatePostOperations
-  } = useSharedPostActions();
+  const { getPostState, initPostState, updatePostState, updatePostStats, updatePostOperations } =
+    useSharedPostActions();
 
   const { data: authenticatedUser, loading } = useAuthenticatedUser();
   const isLoggedIn = !!authenticatedUser && !loading;
@@ -40,20 +35,24 @@ export const usePostActions = (post: Post) => {
     canTip: false,
   };
 
-  const {
-    stats,
-    operations,
-    isCommentSheetOpen,
-    isCollectSheetOpen
-  } = useMemo(() => ({
-    stats: sharedState?.stats ?? post.stats,
-    operations: sharedState?.operations ?? sharedState?.operations ?? defaultOperations,
-    isCommentSheetOpen: sharedState?.isCommentSheetOpen ?? false,
-    isCollectSheetOpen: sharedState?.isCollectSheetOpen ?? false,
-  }), [sharedState, post.stats, post.operations, defaultOperations]);
+  const { stats, operations, isCommentSheetOpen, isCollectSheetOpen } = useMemo(
+    () => ({
+      stats: sharedState?.stats ?? post.stats,
+      operations: sharedState?.operations ?? sharedState?.operations ?? defaultOperations,
+      isCommentSheetOpen: sharedState?.isCommentSheetOpen ?? false,
+      isCollectSheetOpen: sharedState?.isCollectSheetOpen ?? false,
+    }),
+    [sharedState, post.stats, post.operations, defaultOperations],
+  );
 
-  const isCommentOpenParam = useMemo(() => searchParams.has("comment") && searchParams.get("comment") === post.slug, [searchParams, post.slug]);
-  const isCollectOpenParam = useMemo(() => searchParams.has("collect") && searchParams.get("collect") === post.slug, [searchParams, post.slug]);
+  const isCommentOpenParam = useMemo(
+    () => searchParams.has("comment") && searchParams.get("comment") === post.slug,
+    [searchParams, post.slug],
+  );
+  const isCollectOpenParam = useMemo(
+    () => searchParams.has("collect") && searchParams.get("collect") === post.slug,
+    [searchParams, post.slug],
+  );
 
   useEffect(() => {
     if (sharedState && !sharedState.initialCommentUrlSynced) {
@@ -77,24 +76,27 @@ export const usePostActions = (post: Post) => {
     }
   }, [isCollectOpenParam, post.id, sharedState, updatePostState]);
 
-  const handleComment = useCallback(async (redirectToPost?: boolean) => {
-    if (redirectToPost) {
-      window.location.href = `/p/${post.author.username?.localName}/${post.slug}?comment=${post.slug}`;
-      return;
-    }
+  const handleComment = useCallback(
+    async (redirectToPost?: boolean) => {
+      if (redirectToPost) {
+        window.location.href = `/p/${post.author.username?.localName}/${post.slug}?comment=${post.slug}`;
+        return;
+      }
 
-    const newOpenState = !isCommentSheetOpen;
+      const newOpenState = !isCommentSheetOpen;
 
-    updatePostState(post.id, { isCommentSheetOpen: newOpenState });
+      updatePostState(post.id, { isCommentSheetOpen: newOpenState });
 
-    const params = new URLSearchParams(searchParams);
-    if (!newOpenState) {
-      params.delete("comment");
-    } else {
-      params.set("comment", post.slug);
-    }
-    router.replace(`?${params.toString()}`, { scroll: false });
-  }, [post.id, post.author.username?.localName, post.slug, isCommentSheetOpen, updatePostState, router, searchParams]);
+      const params = new URLSearchParams(searchParams);
+      if (!newOpenState) {
+        params.delete("comment");
+      } else {
+        params.set("comment", post.slug);
+      }
+      router.replace(`?${params.toString()}`, { scroll: false });
+    },
+    [post.id, post.author.username?.localName, post.slug, isCommentSheetOpen, updatePostState, router, searchParams],
+  );
 
   const handleCollect = useCallback(async () => {
     const newOpenState = !isCollectSheetOpen;
@@ -109,38 +111,43 @@ export const usePostActions = (post: Post) => {
     router.replace(`?${params.toString()}`, { scroll: false });
   }, [post.id, post.slug, isCollectSheetOpen, updatePostState, router, searchParams]);
 
-  const handleCommentSheetOpenChange = useCallback((open: boolean) => {
-    if (isCommentSheetOpen !== open) {
-      updatePostState(post.id, { isCommentSheetOpen: open });
-    }
+  const handleCommentSheetOpenChange = useCallback(
+    (open: boolean) => {
+      if (isCommentSheetOpen !== open) {
+        updatePostState(post.id, { isCommentSheetOpen: open });
+      }
 
-    const params = new URLSearchParams(searchParams);
-    const currentParam = params.get("comment");
-    if (!open && currentParam === post.slug) {
-      params.delete("comment");
-      router.replace(`?${params.toString()}`, { scroll: false });
-    } else if (open && currentParam !== post.slug) {
-      params.set("comment", post.slug);
-      router.replace(`?${params.toString()}`, { scroll: false });
-    }
-  }, [post.id, post.slug, isCommentSheetOpen, updatePostState, router, searchParams]);
+      const params = new URLSearchParams(searchParams);
+      const currentParam = params.get("comment");
+      if (!open && currentParam === post.slug) {
+        params.delete("comment");
+        router.replace(`?${params.toString()}`, { scroll: false });
+      } else if (open && currentParam !== post.slug) {
+        params.set("comment", post.slug);
+        router.replace(`?${params.toString()}`, { scroll: false });
+      }
+    },
+    [post.id, post.slug, isCommentSheetOpen, updatePostState, router, searchParams],
+  );
 
-  const handleCollectSheetOpenChange = useCallback((open: boolean) => {
-    if (isCollectSheetOpen !== open) {
-      updatePostState(post.id, { isCollectSheetOpen: open });
-    }
+  const handleCollectSheetOpenChange = useCallback(
+    (open: boolean) => {
+      if (isCollectSheetOpen !== open) {
+        updatePostState(post.id, { isCollectSheetOpen: open });
+      }
 
-    const params = new URLSearchParams(searchParams);
-    const currentParam = params.get("collect");
-    if (!open && currentParam === post.slug) {
-      params.delete("collect");
-      router.replace(`?${params.toString()}`, { scroll: false });
-    } else if (open && currentParam !== post.slug) {
-      params.set("collect", post.slug);
-      router.replace(`?${params.toString()}`, { scroll: false });
-    }
-  }, [post.id, post.slug, isCollectSheetOpen, updatePostState, router, searchParams]);
-
+      const params = new URLSearchParams(searchParams);
+      const currentParam = params.get("collect");
+      if (!open && currentParam === post.slug) {
+        params.delete("collect");
+        router.replace(`?${params.toString()}`, { scroll: false });
+      } else if (open && currentParam !== post.slug) {
+        params.set("collect", post.slug);
+        router.replace(`?${params.toString()}`, { scroll: false });
+      }
+    },
+    [post.id, post.slug, isCollectSheetOpen, updatePostState, router, searchParams],
+  );
 
   const handleBookmark = useCallback(async () => {
     // Return early if user is not logged in

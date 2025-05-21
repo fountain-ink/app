@@ -93,15 +93,11 @@ export function ImportDialog() {
           <b>Note:</b> By importing content, you acknowledge that you have the right to import and use it.
         </p>
         <DialogFooter>
-          <Button
-            type="submit"
-            onClick={handleImport}
-            disabled={isLoading}
-          >
+          <Button type="submit" onClick={handleImport} disabled={isLoading}>
             {isLoading ? "Importing..." : "Import"}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
-} 
+}

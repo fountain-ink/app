@@ -1,6 +1,6 @@
-import { createDraft } from './create-draft';
-import { getStaticEditor } from '@/components/editor/static';
-import { Value, deserializeHtml } from '@udecode/plate';
+import { createDraft } from "./create-draft";
+import { getStaticEditor } from "@/components/editor/static";
+import { Value, deserializeHtml } from "@udecode/plate";
 
 type CreateDraftOptions = {
   initialContent?: any;
@@ -21,7 +21,7 @@ export async function createHtmlDraft(
   title?: string,
   subtitle?: string,
   coverImageUrl?: string,
-  options: Omit<CreateDraftOptions, 'initialContent'> = {}
+  options: Omit<CreateDraftOptions, "initialContent"> = {},
 ) {
   const editor = getStaticEditor();
   const nodes = deserializeHtml(editor, {
@@ -52,4 +52,4 @@ export async function createHtmlDraft(
     ...options,
     initialContent: nodes as Value,
   });
-} 
+}

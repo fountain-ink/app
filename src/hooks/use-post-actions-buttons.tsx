@@ -3,7 +3,18 @@
 import { usePostActions } from "@/hooks/use-post-actions";
 import { handlePlatformShare } from "@/lib/get-share-url";
 import { Account, Post } from "@lens-protocol/client";
-import { Bookmark, Heart, LucideIcon, MessageCircle, Share2, Ban, StarIcon, ShieldAlert, ShieldX, Meh } from "lucide-react";
+import {
+  Bookmark,
+  Heart,
+  LucideIcon,
+  MessageCircle,
+  Share2,
+  Ban,
+  StarIcon,
+  ShieldAlert,
+  ShieldX,
+  Meh,
+} from "lucide-react";
 import { IconType } from "react-icons";
 import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
 import { TipPopover } from "@/components/tip/tip-popover";
@@ -55,7 +66,7 @@ export const usePostActionsButtons = ({ post }: { post: Post }): PostActionButto
     isCollectSheetOpen,
     stats,
     operations,
-    isLoggedIn
+    isLoggedIn,
   } = usePostActions(post);
 
   const { isAdmin, isLoading: isAdminLoading } = useAdminStatus();
@@ -83,10 +94,10 @@ export const usePostActionsButtons = ({ post }: { post: Post }): PostActionButto
 
   const isReposted = operations?.hasReposted;
   const isQuoted = operations?.hasQuoted;
-  const canComment = operations?.canComment
-  const hasUpvoted = operations?.hasUpvoted
-  const hasBookmarked = operations?.hasBookmarked
-  const canCollect = operations?.canCollect
+  const canComment = operations?.canComment;
+  const hasUpvoted = operations?.hasUpvoted;
+  const hasBookmarked = operations?.hasBookmarked;
+  const canCollect = operations?.canCollect;
 
   const buttons: PostActionButtons = {
     likeButton: {
@@ -185,30 +196,34 @@ export const usePostActionsButtons = ({ post }: { post: Post }): PostActionButto
         isDisabled: isBanning || isUnbanning,
         hideCount: true,
         dropdownItems: [
-          ...(!isAuthorBanned ? [
-            {
-              icon: ShieldX,
-              label: "Ban (Bot)",
-              onClick: () => handleBanAuthor("bot"),
-            },
-            {
-              icon: Meh,
-              label: "Ban (Spam)",
-              onClick: () => handleBanAuthor("spam"),
-            },
-            {
-              icon: ShieldAlert,
-              label: "Ban (Forbidden)",
-              onClick: () => handleBanAuthor("forbidden"),
-            },
-          ] : []),
-          ...(isAuthorBanned ? [
-            {
-              icon: ShieldX,
-              label: "Unban Author",
-              onClick: handleUnbanAuthor,
-            },
-          ] : []),
+          ...(!isAuthorBanned
+            ? [
+                {
+                  icon: ShieldX,
+                  label: "Ban (Bot)",
+                  onClick: () => handleBanAuthor("bot"),
+                },
+                {
+                  icon: Meh,
+                  label: "Ban (Spam)",
+                  onClick: () => handleBanAuthor("spam"),
+                },
+                {
+                  icon: ShieldAlert,
+                  label: "Ban (Forbidden)",
+                  onClick: () => handleBanAuthor("forbidden"),
+                },
+              ]
+            : []),
+          ...(isAuthorBanned
+            ? [
+                {
+                  icon: ShieldX,
+                  label: "Unban Author",
+                  onClick: handleUnbanAuthor,
+                },
+              ]
+            : []),
         ],
       },
       {
@@ -223,9 +238,9 @@ export const usePostActionsButtons = ({ post }: { post: Post }): PostActionButto
         isActive: isFeatured,
         isDisabled: isFeaturing || isUnfeaturing,
         hideCount: true,
-      }
+      },
     ];
   }
 
   return buttons;
-}; 
+};

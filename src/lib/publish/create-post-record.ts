@@ -7,17 +7,12 @@ interface ManagePostRecordArgs {
   postId: PostId;
 }
 
-export async function createPostRecord({
-  lensSlug,
-  draftSlug,
-  username,
-  postId,
-}: ManagePostRecordArgs): Promise<void> {
+export async function createPostRecord({ lensSlug, draftSlug, username, postId }: ManagePostRecordArgs): Promise<void> {
   try {
-    const recordResponse = await fetch('/api/posts', {
-      method: 'POST',
+    const recordResponse = await fetch("/api/posts", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         lens_slug: lensSlug,
@@ -28,11 +23,11 @@ export async function createPostRecord({
     });
 
     if (!recordResponse.ok) {
-      console.error('Failed to create/update post record:', await recordResponse.text());
+      console.error("Failed to create/update post record:", await recordResponse.text());
     } else {
-      console.log('Post record created/updated successfully');
+      console.log("Post record created/updated successfully");
     }
   } catch (error) {
-    console.error('Error creating/updating post record:', error);
+    console.error("Error creating/updating post record:", error);
   }
 }

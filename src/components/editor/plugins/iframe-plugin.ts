@@ -1,14 +1,14 @@
-import { IframeElement } from '@/components/ui/iframe-element';
-import { type PluginConfig, createTSlatePlugin } from '@udecode/plate';
-import { toPlatePlugin } from '@udecode/plate-core/react';
-import { MediaPluginOptions, parseIframeUrl, TMediaElement } from '@udecode/plate-media';
+import { IframeElement } from "@/components/ui/iframe-element";
+import { type PluginConfig, createTSlatePlugin } from "@udecode/plate";
+import { toPlatePlugin } from "@udecode/plate-core/react";
+import { MediaPluginOptions, parseIframeUrl, TMediaElement } from "@udecode/plate-media";
 
-export type IframeConfig = PluginConfig<'iframe', MediaPluginOptions>;
+export type IframeConfig = PluginConfig<"iframe", MediaPluginOptions>;
 
-export interface TIframeElement extends TMediaElement { }
+export interface TIframeElement extends TMediaElement {}
 
 export const BaseIframePlugin = createTSlatePlugin<IframeConfig>({
-  key: 'iframe',
+  key: "iframe",
   node: {
     component: IframeElement,
     isElement: true,
@@ -22,11 +22,11 @@ export const BaseIframePlugin = createTSlatePlugin<IframeConfig>({
       deserializer: {
         rules: [
           {
-            validNodeName: 'IFRAME',
+            validNodeName: "IFRAME",
           },
         ],
         parse: ({ element, type }) => {
-          const url = element.getAttribute('src');
+          const url = element.getAttribute("src");
 
           if (url) {
             return {

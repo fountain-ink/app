@@ -4,21 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useState, useEffect } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { Ban, Trash2 } from "lucide-react";
@@ -26,7 +13,15 @@ import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { UserCard } from "@/components/user/user-card";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuthenticatedUser } from "@lens-protocol/react";
@@ -116,7 +111,7 @@ export default function BannedUsersPage() {
         body: JSON.stringify({
           address: newBan.address,
           reason: newBan.reason,
-          added_by: user?.address
+          added_by: user?.address,
         }),
       });
 
@@ -144,24 +139,25 @@ export default function BannedUsersPage() {
     }
   };
 
-  const filteredUsers = bannedUsers.filter(user =>
-    user.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.reason.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredUsers = bannedUsers.filter(
+    (user) =>
+      user.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.reason.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   // Sort the filtered users
   const sortedUsers = [...filteredUsers].sort((a, b) => {
-    let valueA = a[sortField as keyof BannedUser];
-    let valueB = b[sortField as keyof BannedUser];
+    const valueA = a[sortField as keyof BannedUser];
+    const valueB = b[sortField as keyof BannedUser];
 
     const multiplier = sortDirection === "asc" ? 1 : -1;
 
-    if (typeof valueA === 'string' && typeof valueB === 'string') {
+    if (typeof valueA === "string" && typeof valueB === "string") {
       return multiplier * valueA.localeCompare(valueB);
     }
 
     // For dates
-    if (sortField === 'created_at') {
+    if (sortField === "created_at") {
       return multiplier * (new Date(valueA as string).getTime() - new Date(valueB as string).getTime());
     }
 
@@ -175,9 +171,7 @@ export default function BannedUsersPage() {
           <div className="flex justify-between items-center">
             <div>
               <CardTitle>Banned Users</CardTitle>
-              <CardDescription>
-                Manage users who have been banned from the platform
-              </CardDescription>
+              <CardDescription>Manage users who have been banned from the platform</CardDescription>
             </div>
             <Button onClick={() => setShowBanDialog(true)}>
               <Ban className="h-4 w-4 mr-2" />
@@ -212,15 +206,11 @@ export default function BannedUsersPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Ban a User</DialogTitle>
-            <DialogDescription>
-              Enter the user's address and reason for banning.
-            </DialogDescription>
+            <DialogDescription>Enter the user's address and reason for banning.</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid items-center gap-4">
-              <Label htmlFor="address">
-                Address
-              </Label>
+              <Label htmlFor="address">Address</Label>
               <Input
                 id="address"
                 value={newBan.address}
@@ -229,13 +219,8 @@ export default function BannedUsersPage() {
               />
             </div>
             <div className="grid items-center gap-4">
-              <Label htmlFor="reason">
-                Reason
-              </Label>
-              <Select
-                value={newBan.reason}
-                onValueChange={(value) => setNewBan({ ...newBan, reason: value  })}
-              >
+              <Label htmlFor="reason">Reason</Label>
+              <Select value={newBan.reason} onValueChange={(value) => setNewBan({ ...newBan, reason: value })}>
                 <SelectTrigger id="reason">
                   <SelectValue placeholder="Select a reason" />
                 </SelectTrigger>
@@ -265,7 +250,7 @@ function BannedUsersTable({
   onUnban,
   sortField,
   sortDirection,
-  onSort
+  onSort,
 }: {
   users: BannedUser[];
   loading: boolean;
@@ -282,20 +267,20 @@ function BannedUsersTable({
     return <div className="py-8 text-center text-muted-foreground">No banned users found</div>;
   }
 
-  const SortHeader = ({ field, children, className }: { field: string; children: React.ReactNode; className?: string }) => {
+  const SortHeader = ({
+    field,
+    children,
+    className,
+  }: { field: string; children: React.ReactNode; className?: string }) => {
     const isSorted = sortField === field;
     return (
       <TableHead
         onClick={() => onSort(field)}
-        className={`cursor-pointer hover:bg-muted/30 transition-colors ${className || ''}`}
+        className={`cursor-pointer hover:bg-muted/30 transition-colors ${className || ""}`}
       >
         <div className="flex items-center space-x-1">
           <span>{children}</span>
-          {isSorted && (
-            <span className="text-xs">
-              {sortDirection === "asc" ? "↑" : "↓"}
-            </span>
-          )}
+          {isSorted && <span className="text-xs">{sortDirection === "asc" ? "↑" : "↓"}</span>}
         </div>
       </TableHead>
     );
@@ -305,20 +290,24 @@ function BannedUsersTable({
     <Table>
       <TableHeader>
         <TableRow>
-          <SortHeader field="address" className="w-[250px]">User Address</SortHeader>
-          <SortHeader field="reason" className="w-[400px]">Reason</SortHeader>
-          <SortHeader field="added_by" className="w-[200px]">Added By</SortHeader>
-          <SortHeader field="created_at" className="w-[150px]">Banned On</SortHeader>
+          <SortHeader field="address" className="w-[250px]">
+            User Address
+          </SortHeader>
+          <SortHeader field="reason" className="w-[400px]">
+            Reason
+          </SortHeader>
+          <SortHeader field="added_by" className="w-[200px]">
+            Added By
+          </SortHeader>
+          <SortHeader field="created_at" className="w-[150px]">
+            Banned On
+          </SortHeader>
           <TableHead className="w-[100px] text-right">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {users.map((user) => (
-          <BannedUserRow
-            key={user.address}
-            user={user}
-            onUnban={onUnban}
-          />
+          <BannedUserRow key={user.address} user={user} onUnban={onUnban} />
         ))}
       </TableBody>
     </Table>
@@ -327,7 +316,7 @@ function BannedUsersTable({
 
 function BannedUserRow({
   user,
-  onUnban
+  onUnban,
 }: {
   user: BannedUser;
   onUnban: (address: string) => Promise<void>;
@@ -346,13 +335,15 @@ function BannedUserRow({
     ? formatDistanceToNow(new Date(user.created_at), { addSuffix: true })
     : "Unknown";
 
-  const displayAddress = user.address && user.address.length > 8
-    ? `${user.address.substring(0, 6)}...${user.address.substring(user.address.length - 4)}`
-    : user.address;
+  const displayAddress =
+    user.address && user.address.length > 8
+      ? `${user.address.substring(0, 6)}...${user.address.substring(user.address.length - 4)}`
+      : user.address;
 
-  const displayAddedBy = user.added_by && user.added_by.length > 8
-    ? `${user.added_by.substring(0, 6)}...${user.added_by.substring(user.added_by.length - 4)}`
-    : user.added_by;
+  const displayAddedBy =
+    user.added_by && user.added_by.length > 8
+      ? `${user.added_by.substring(0, 6)}...${user.added_by.substring(user.added_by.length - 4)}`
+      : user.added_by;
 
   return (
     <TableRow>
@@ -374,13 +365,7 @@ function BannedUserRow({
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                onClick={handleUnban}
-                disabled={isUnbanning}
-              >
+              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleUnban} disabled={isUnbanning}>
                 <Trash2 className="h-4 w-4 text-destructive" />
               </Button>
             </TooltipTrigger>
@@ -409,16 +394,24 @@ function TableSkeleton() {
       <TableBody>
         {skeletonRows.map((i) => (
           <TableRow key={i} className="animate-pulse">
-            <TableCell><div className="h-4 w-32 bg-muted rounded"></div></TableCell>
-            <TableCell><div className="h-4 w-full bg-muted rounded"></div></TableCell>
-            <TableCell><div className="h-4 w-20 bg-muted rounded"></div></TableCell>
-            <TableCell><div className="h-4 w-24 bg-muted rounded"></div></TableCell>
+            <TableCell>
+              <div className="h-4 w-32 bg-muted rounded" />
+            </TableCell>
+            <TableCell>
+              <div className="h-4 w-full bg-muted rounded" />
+            </TableCell>
+            <TableCell>
+              <div className="h-4 w-20 bg-muted rounded" />
+            </TableCell>
+            <TableCell>
+              <div className="h-4 w-24 bg-muted rounded" />
+            </TableCell>
             <TableCell className="text-right">
-              <div className="h-8 w-8 bg-muted rounded-sm ml-auto"></div>
+              <div className="h-8 w-8 bg-muted rounded-sm ml-auto" />
             </TableCell>
           </TableRow>
         ))}
       </TableBody>
     </Table>
   );
-} 
+}

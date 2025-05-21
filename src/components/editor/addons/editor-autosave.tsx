@@ -29,8 +29,8 @@ export function AutoSave({ documentId }: { documentId: string }) {
         const { images, subtitle, title, coverUrl } = extractMetadata(editor.children as any);
         const contentMarkdown = api.markdown.serialize({ value: editor.children });
 
-        const uniqueImages = [...existingDraft?.images || []];
-        images.forEach(img => {
+        const uniqueImages = [...(existingDraft?.images || [])];
+        images.forEach((img) => {
           if (!uniqueImages.includes(img)) {
             uniqueImages.push(img);
           }

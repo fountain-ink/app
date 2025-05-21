@@ -33,7 +33,7 @@ export const Header = ({ session }: { session: MeResult | null }) => {
   const yjsState = useYjsState((state) => state.getState(documentId) ?? { status: "disconnected" as ConnectionStatus });
   const isAuthenticated = session !== null;
   const logoLink = isAuthenticated ? "/featured" : "/";
-  const isMobile = useIsMobile()
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const fetchBlogData = async () => {
@@ -54,7 +54,6 @@ export const Header = ({ session }: { session: MeResult | null }) => {
       setBlogData(null);
     }
   }, [isBlogPage, blogId, blogSlug]);
-
 
   const HeaderContent = () => (
     <div className="flex items-center justify-between h-full px-2">

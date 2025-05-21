@@ -50,7 +50,7 @@ export const MobilePopover: React.FC<CustomPopoverProps> = ({
     if (isMobile) {
       top = triggerRect.top - contentHeight - sideOffset;
 
-      if (top < sideOffset && (triggerRect.bottom + contentHeight + sideOffset < viewportHeight)) {
+      if (top < sideOffset && triggerRect.bottom + contentHeight + sideOffset < viewportHeight) {
         top = triggerRect.bottom + sideOffset;
       } else if (top < sideOffset) {
         top = sideOffset;
@@ -64,7 +64,6 @@ export const MobilePopover: React.FC<CustomPopoverProps> = ({
         position: "fixed",
         top: `${top}px`,
       });
-
     } else {
       switch (side) {
         case "top":
@@ -145,8 +144,10 @@ export const MobilePopover: React.FC<CustomPopoverProps> = ({
 
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        triggerRef.current && !triggerRef.current.contains(event.target as Node) &&
-        contentRef.current && !contentRef.current.contains(event.target as Node)
+        triggerRef.current &&
+        !triggerRef.current.contains(event.target as Node) &&
+        contentRef.current &&
+        !contentRef.current.contains(event.target as Node)
       ) {
         onOpenChange(false);
       }
@@ -162,17 +163,17 @@ export const MobilePopover: React.FC<CustomPopoverProps> = ({
     hidden: {
       opacity: 0,
       scale: 0.95,
-      y: 0
+      y: 0,
     },
     visible: {
       opacity: 1,
       scale: 1,
-      y: 0
+      y: 0,
     },
     exit: {
       opacity: 0,
       scale: 0.95,
-      y: 0
+      y: 0,
     },
   };
 
@@ -186,34 +187,32 @@ export const MobilePopover: React.FC<CustomPopoverProps> = ({
 
       <AnimatePresence>
         {open && (
-          <>
-            <motion.div
-              key="content"
-              ref={contentRef}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              variants={popoverAnimationVariants}
-              transition={transition}
-              style={contentStyle}
-              className={cn(
-                "z-50 outline-none shadow-floating rounded-md fixed",
-                {
-                  "origin-bottom": side === "top",
-                  "origin-top": side === "bottom" || !["top", "bottom", "left", "right"].includes(side), // Default to top if side is invalid
-                  "origin-right": side === "left",
-                  "origin-left": side === "right",
-                },
-                "w-auto max-w-xs left-auto sm:translate-x-0",
-                isMobile && "w-[96vw] max-w-none left-2 right-2",
-                contentClassName
-              )}
-            >
-              {children}
-            </motion.div>
-          </>
+          <motion.div
+            key="content"
+            ref={contentRef}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={popoverAnimationVariants}
+            transition={transition}
+            style={contentStyle}
+            className={cn(
+              "z-50 outline-none shadow-floating rounded-md fixed",
+              {
+                "origin-bottom": side === "top",
+                "origin-top": side === "bottom" || !["top", "bottom", "left", "right"].includes(side), // Default to top if side is invalid
+                "origin-right": side === "left",
+                "origin-left": side === "right",
+              },
+              "w-auto max-w-xs left-auto sm:translate-x-0",
+              isMobile && "w-[96vw] max-w-none left-2 right-2",
+              contentClassName,
+            )}
+          >
+            {children}
+          </motion.div>
         )}
       </AnimatePresence>
     </>
   );
-}; 
+};

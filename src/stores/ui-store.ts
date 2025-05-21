@@ -8,4 +8,4 @@ interface UIState {
 export const useUIStore = create<UIState>((set) => ({
   isProfileSelectModalOpen: false,
   setProfileSelectModalOpen: (isOpen: boolean) => set({ isProfileSelectModalOpen: isOpen }),
-})); 
+}));

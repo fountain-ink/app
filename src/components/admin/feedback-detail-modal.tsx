@@ -16,13 +16,7 @@ import { formatDistanceToNow, format } from "date-fns";
 import Image from "next/image";
 import { useState } from "react";
 import type { Database } from "@/lib/db/database";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type FeedbackItem = Database["public"]["Tables"]["feedback"]["Row"];
 
@@ -83,25 +77,22 @@ export function FeedbackDetailModal({
   const formatStatus = (status: string) => {
     return status
       .split("_")
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
   };
 
-  const typeVariant = {
-    "bug": "bg-red-50 text-red-700 border-border",
-    "feature": "bg-purple-50 text-purple-700 border-border",
-    "other": "bg-blue-50 text-blue-700 border-border",
-  }[feedback.type] || "bg-gray-50 text-gray-700 border-border";
+  const typeVariant =
+    {
+      bug: "bg-red-50 text-red-700 border-border",
+      feature: "bg-purple-50 text-purple-700 border-border",
+      other: "bg-blue-50 text-blue-700 border-border",
+    }[feedback.type] || "bg-gray-50 text-gray-700 border-border";
 
   const authorAddress = feedback.author || "Unknown";
 
-  const displayAddress = authorAddress && authorAddress.length > 2
-    ? authorAddress.substring(2)
-    : authorAddress;
+  const displayAddress = authorAddress && authorAddress.length > 2 ? authorAddress.substring(2) : authorAddress;
 
-  const initials = authorAddress && authorAddress.length >= 4
-    ? authorAddress.substring(2, 4).toUpperCase()
-    : "??";
+  const initials = authorAddress && authorAddress.length >= 4 ? authorAddress.substring(2, 4).toUpperCase() : "??";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -121,15 +112,9 @@ export function FeedbackDetailModal({
             <span>Submitted {feedback.createdAt && format(new Date(feedback.createdAt), "PPP 'at' p")}</span>
             <div className="flex items-center gap-2">
               <span className="text-sm">Status:</span>
-              <Select
-                value={currentStatus}
-                onValueChange={handleStatusChange}
-                disabled={isUpdating}
-              >
+              <Select value={currentStatus} onValueChange={handleStatusChange} disabled={isUpdating}>
                 <SelectTrigger className="w-[150px] h-8">
-                  <SelectValue>
-                    {formatStatus(currentStatus)}
-                  </SelectValue>
+                  <SelectValue>{formatStatus(currentStatus)}</SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="new">New</SelectItem>
@@ -152,16 +137,12 @@ export function FeedbackDetailModal({
 
             {currentStatus === "completed" && currentResolvedAt && (
               <div className="rounded-lg bg-green-50 p-4 text-green-800 text-sm border border-border">
-                <p>
-                  Resolved {formatDistanceToNow(new Date(currentResolvedAt), { addSuffix: true })}
-                </p>
+                <p>Resolved {formatDistanceToNow(new Date(currentResolvedAt), { addSuffix: true })}</p>
               </div>
             )}
 
             <div className="space-y-4">
-              <div className="rounded-lg border border-border p-4 whitespace-pre-wrap">
-                {feedback.text}
-              </div>
+              <div className="rounded-lg border border-border p-4 whitespace-pre-wrap">{feedback.text}</div>
 
               {feedback.screenshot && (
                 <div className="space-y-2">
@@ -169,11 +150,7 @@ export function FeedbackDetailModal({
                   <div className="rounded-lg border border-border overflow-hidden">
                     <ScrollArea className="h-[400px]">
                       <div className="w-full">
-                        <img
-                          src={feedback.screenshot}
-                          alt="Feedback screenshot"
-                          className="w-full object-contain"
-                        />
+                        <img src={feedback.screenshot} alt="Feedback screenshot" className="w-full object-contain" />
                       </div>
                     </ScrollArea>
                   </div>
@@ -194,4 +171,4 @@ export function FeedbackDetailModal({
       </DialogContent>
     </Dialog>
   );
-} 
+}

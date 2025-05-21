@@ -17,13 +17,13 @@ async function filterBannedPosts(posts: readonly AnyPost[]): Promise<AnyPost[]> 
   if (!posts || posts.length === 0) {
     return [];
   }
-  const authorAddresses = [...new Set(posts.map(post => post.author.address))];
+  const authorAddresses = [...new Set(posts.map((post) => post.author.address))];
 
   try {
-    const banCheckResponse = await fetch(`/api/ban/check`, {
-      method: 'POST',
+    const banCheckResponse = await fetch("/api/ban/check", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ addresses: authorAddresses }),
     });
@@ -32,7 +32,7 @@ async function filterBannedPosts(posts: readonly AnyPost[]): Promise<AnyPost[]> 
       return posts.slice();
     }
     const banStatusMap: Record<string, boolean> = await banCheckResponse.json();
-    return posts.filter(post => !banStatusMap[post.author.address]);
+    return posts.filter((post) => !banStatusMap[post.author.address]);
   } catch (error) {
     console.error("Error during ban check fetch:", error);
     return posts.slice();
@@ -67,7 +67,6 @@ export const LatestArticleFeed = ({
     filterInitial();
   }, [initialPosts, initialPaginationInfo]);
 
-
   useEffect(() => {
     if (!nextCursor || initialLoading) return;
 
@@ -77,7 +76,7 @@ export const LatestArticleFeed = ({
           handleLoadMore();
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.5 },
     );
 
     observerRef.current = observer;
@@ -95,7 +94,6 @@ export const LatestArticleFeed = ({
       }
     };
   }, [nextCursor, loading, initialLoading]);
-
 
   const handleLoadMore = async () => {
     if (!nextCursor || loading || initialLoading) return;
@@ -129,40 +127,42 @@ export const LatestArticleFeed = ({
     }
   };
 
-  const postViews = allPosts.map((post) => {
-    if (post.__typename !== "Post") {
-      return null;
-    }
+  const postViews = allPosts
+    .map((post) => {
+      if (post.__typename !== "Post") {
+        return null;
+      }
 
-    // if (post.app?.address !== env.NEXT_PUBLIC_APP_ADDRESS) {
-    //   return null;
-    // }
+      // if (post.app?.address !== env.NEXT_PUBLIC_APP_ADDRESS) {
+      //   return null;
+      // }
 
-    if (post.metadata.__typename !== "ArticleMetadata") {
-      return null;
-    }
+      if (post.metadata.__typename !== "ArticleMetadata") {
+        return null;
+      }
 
-    if (!post.metadata.attributes.some((attribute) => attribute.key === "contentJson")) {
-      return null;
-    }
+      if (!post.metadata.attributes.some((attribute) => attribute.key === "contentJson")) {
+        return null;
+      }
 
-    return (
-      <PostView
-        options={{
-          showContent: false,
-          showAuthor: true,
-          showTitle: true,
-          showSubtitle: true,
-          showBlog: true,
-          showDate: true,
-          showPreview: true,
-        }}
-        key={post.id}
-        authors={[post.author.address]}
-        post={post}
-      />
-    );
-  }).filter(Boolean);
+      return (
+        <PostView
+          options={{
+            showContent: false,
+            showAuthor: true,
+            showTitle: true,
+            showSubtitle: true,
+            showBlog: true,
+            showDate: true,
+            showPreview: true,
+          }}
+          key={post.id}
+          authors={[post.author.address]}
+          post={post}
+        />
+      );
+    })
+    .filter(Boolean);
 
   if (initialLoading) {
     return (
@@ -222,4 +222,4 @@ export const LatestArticleFeed = ({
       )}
     </motion.div>
   );
-}; 
+};

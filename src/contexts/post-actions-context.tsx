@@ -1,10 +1,10 @@
 "use client";
 
-import React, { createContext, useState, useContext, useCallback, ReactNode, useEffect, useMemo } from 'react';
-import { LoggedInPostOperations, Post, PostStats } from '@lens-protocol/client';
-import { CommentSheet } from '@/components/comment/comment-sheet';
-import { PostCollect } from '@/components/post/post-collect-dialog';
-import { useAccount, useAuthenticatedUser } from '@lens-protocol/react';
+import React, { createContext, useState, useContext, useCallback, ReactNode, useEffect, useMemo } from "react";
+import { LoggedInPostOperations, Post, PostStats } from "@lens-protocol/client";
+import { CommentSheet } from "@/components/comment/comment-sheet";
+import { PostCollect } from "@/components/post/post-collect-dialog";
+import { useAccount, useAuthenticatedUser } from "@lens-protocol/react";
 
 interface BooleanPostOperations {
   hasUpvoted: boolean;
@@ -33,7 +33,7 @@ interface PostActionState {
 interface PostActionsContextType {
   getPostState: (postId: string) => PostActionState | undefined;
   initPostState: (post: Post) => void;
-  updatePostState: (postId: string, updates: Partial<Omit<PostActionState, 'post'>>) => void;
+  updatePostState: (postId: string, updates: Partial<Omit<PostActionState, "post">>) => void;
   updatePostStats: (postId: string, updates: Partial<PostStats>) => void;
   updatePostOperations: (postId: string, updates: Partial<any>) => void;
 }
@@ -80,67 +80,85 @@ export const PostActionsProvider = ({ children }: { children: ReactNode }) => {
     };
   };
 
-  const initPostState = useCallback((post: Post) => {
-    setPostStates(prevStates => {
-      if (!prevStates.has(post.id)) {
-        const newStates = new Map(prevStates);
-        newStates.set(post.id, {
-          post: post,
-          stats: { ...post.stats },
-          operations: post.operations ? convertToBooleanOperations(post.operations) : { ...defaultOperations },
-          isCommentSheetOpen: false,
-          isCollectSheetOpen: false,
-          initialCommentUrlSynced: false,
-          initialCollectUrlSynced: false,
-        });
-        return newStates;
-      }
-      return prevStates;
-    });
-  }, [defaultOperations]);
-
-  const getPostState = useCallback((postId: string): PostActionState | undefined => {
-    return postStates.get(postId);
-  }, [postStates]);
-
-  const updatePostStateInternal = useCallback((postId: string, updateFn: (prevState: PostActionState) => PostActionState) => {
-    setPostStates(prevStates => {
-      const currentState = prevStates.get(postId);
-      if (currentState) {
-        const newState = updateFn(currentState);
-        if (newState !== currentState) {
+  const initPostState = useCallback(
+    (post: Post) => {
+      setPostStates((prevStates) => {
+        if (!prevStates.has(post.id)) {
           const newStates = new Map(prevStates);
-          newStates.set(postId, newState);
+          newStates.set(post.id, {
+            post: post,
+            stats: { ...post.stats },
+            operations: post.operations ? convertToBooleanOperations(post.operations) : { ...defaultOperations },
+            isCommentSheetOpen: false,
+            isCollectSheetOpen: false,
+            initialCommentUrlSynced: false,
+            initialCollectUrlSynced: false,
+          });
           return newStates;
         }
-      }
-      return prevStates;
-    });
-  }, []);
+        return prevStates;
+      });
+    },
+    [defaultOperations],
+  );
 
-  const updatePostState = useCallback((postId: string, updates: Partial<Omit<PostActionState, 'post'>>) => {
-    updatePostStateInternal(postId, (prevState) => ({
-      ...prevState,
-      ...updates,
-    }));
-  }, [updatePostStateInternal]);
+  const getPostState = useCallback(
+    (postId: string): PostActionState | undefined => {
+      return postStates.get(postId);
+    },
+    [postStates],
+  );
 
-  const updatePostStats = useCallback((postId: string, updates: Partial<PostStats>) => {
-    updatePostStateInternal(postId, (prevState) => ({
-      ...prevState,
-      stats: { ...prevState.stats, ...updates },
-    }));
-  }, [updatePostStateInternal]);
+  const updatePostStateInternal = useCallback(
+    (postId: string, updateFn: (prevState: PostActionState) => PostActionState) => {
+      setPostStates((prevStates) => {
+        const currentState = prevStates.get(postId);
+        if (currentState) {
+          const newState = updateFn(currentState);
+          if (newState !== currentState) {
+            const newStates = new Map(prevStates);
+            newStates.set(postId, newState);
+            return newStates;
+          }
+        }
+        return prevStates;
+      });
+    },
+    [],
+  );
 
-  const updatePostOperations = useCallback((postId: string, updates: Partial<any>) => {
-    updatePostStateInternal(postId, (prevState) => {
-      const operations = prevState.operations || {};
-      return {
+  const updatePostState = useCallback(
+    (postId: string, updates: Partial<Omit<PostActionState, "post">>) => {
+      updatePostStateInternal(postId, (prevState) => ({
         ...prevState,
-        operations: { ...operations, ...updates },
-      };
-    });
-  }, [updatePostStateInternal]);
+        ...updates,
+      }));
+    },
+    [updatePostStateInternal],
+  );
+
+  const updatePostStats = useCallback(
+    (postId: string, updates: Partial<PostStats>) => {
+      updatePostStateInternal(postId, (prevState) => ({
+        ...prevState,
+        stats: { ...prevState.stats, ...updates },
+      }));
+    },
+    [updatePostStateInternal],
+  );
+
+  const updatePostOperations = useCallback(
+    (postId: string, updates: Partial<any>) => {
+      updatePostStateInternal(postId, (prevState) => {
+        const operations = prevState.operations || {};
+        return {
+          ...prevState,
+          operations: { ...operations, ...updates },
+        };
+      });
+    },
+    [updatePostStateInternal],
+  );
 
   const activeCommentPostEntry = useMemo(() => {
     for (const entry of postStates.entries()) {
@@ -172,43 +190,49 @@ export const PostActionsProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [activeCollectPostEntry]);
 
-  const handleCommentSheetOpenChange = useCallback((open: boolean) => {
-    const postId = activeCommentPostEntry?.[0];
-    const postSlug = activeCommentPostEntry?.[1]?.post.slug;
+  const handleCommentSheetOpenChange = useCallback(
+    (open: boolean) => {
+      const postId = activeCommentPostEntry?.[0];
+      const postSlug = activeCommentPostEntry?.[1]?.post.slug;
 
-    if (!open && postId && postSlug) {
-      updatePostState(postId, { isCommentSheetOpen: false });
+      if (!open && postId && postSlug) {
+        updatePostState(postId, { isCommentSheetOpen: false });
 
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("comment") === postSlug) {
-        params.delete("comment");
-        window.history.replaceState({}, '', `?${params.toString()}`);
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("comment") === postSlug) {
+          params.delete("comment");
+          window.history.replaceState({}, "", `?${params.toString()}`);
+        }
+
+        setTimeout(() => {
+          setVisibleCommentPost(null);
+        }, 300);
       }
+    },
+    [activeCommentPostEntry, updatePostState],
+  );
 
-      setTimeout(() => {
-        setVisibleCommentPost(null);
-      }, 300);
-    }
-  }, [activeCommentPostEntry, updatePostState]);
+  const handleCollectSheetOpenChange = useCallback(
+    (open: boolean) => {
+      const postId = activeCollectPostEntry?.[0];
+      const postSlug = activeCollectPostEntry?.[1]?.post.slug;
 
-  const handleCollectSheetOpenChange = useCallback((open: boolean) => {
-    const postId = activeCollectPostEntry?.[0];
-    const postSlug = activeCollectPostEntry?.[1]?.post.slug;
+      if (!open && postId && postSlug) {
+        updatePostState(postId, { isCollectSheetOpen: false });
 
-    if (!open && postId && postSlug) {
-      updatePostState(postId, { isCollectSheetOpen: false });
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("collect") === postSlug) {
+          params.delete("collect");
+          window.history.replaceState({}, "", `?${params.toString()}`);
+        }
 
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("collect") === postSlug) {
-        params.delete("collect");
-        window.history.replaceState({}, '', `?${params.toString()}`);
+        setTimeout(() => {
+          setVisibleCollectPost(null);
+        }, 300);
       }
-
-      setTimeout(() => {
-        setVisibleCollectPost(null);
-      }, 300);
-    }
-  }, [activeCollectPostEntry, updatePostState]);
+    },
+    [activeCollectPostEntry, updatePostState],
+  );
 
   const value = {
     getPostState,
@@ -248,7 +272,7 @@ export const PostActionsProvider = ({ children }: { children: ReactNode }) => {
 export const useSharedPostActions = () => {
   const context = useContext(PostActionsContext);
   if (context === undefined) {
-    throw new Error('useSharedPostActions must be used within a PostActionsProvider');
+    throw new Error("useSharedPostActions must be used within a PostActionsProvider");
   }
   return context;
-}; 
+};

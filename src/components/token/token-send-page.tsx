@@ -16,13 +16,13 @@ const LENS_ACCOUNT_ABI = [
     inputs: [
       { name: "target", type: "address" },
       { name: "value", type: "uint256" },
-      { name: "data", type: "bytes" }
+      { name: "data", type: "bytes" },
     ],
     name: "executeTransaction",
     outputs: [{ name: "", type: "bytes" }],
     stateMutability: "payable",
-    type: "function"
-  }
+    type: "function",
+  },
 ] as const;
 
 // Minimal ABI for ERC20 token's transfer function
@@ -31,13 +31,13 @@ const ERC20_ABI = [
   {
     inputs: [
       { name: "recipient", type: "address" },
-      { name: "amount", type: "uint256" }
+      { name: "amount", type: "uint256" },
     ],
     name: "transfer",
     outputs: [{ name: "", type: "bool" }],
     stateMutability: "nonpayable",
-    type: "function"
-  }
+    type: "function",
+  },
 ] as const;
 
 interface TokenSendClientPageProps {
@@ -105,27 +105,27 @@ export function TokenSend({ accountAddress, tokenAddress }: TokenSendClientPageP
             value: amountInWei,
           });
 
-          toast.success(`Transaction submitted`, {
-            description: `Sending ${transferAmount} GHO from your wallet to ${recipientAddress.slice(0, 6)}...${recipientAddress.slice(-4)}`
+          toast.success("Transaction submitted", {
+            description: `Sending ${transferAmount} GHO from your wallet to ${recipientAddress.slice(0, 6)}...${recipientAddress.slice(-4)}`,
           });
         } else if (sendFrom === "account" && accountAddress) {
           // Transfer via Lens account's executeTransaction
           const { request } = await publicClient.simulateContract({
             address: accountAddress as `0x${string}`,
             abi: LENS_ACCOUNT_ABI,
-            functionName: 'executeTransaction',
+            functionName: "executeTransaction",
             args: [
               recipientAddress as `0x${string}`,
               amountInWei,
-              '0x' as `0x${string}` // Empty bytes for native transfers
+              "0x" as `0x${string}`, // Empty bytes for native transfers
             ],
             account: walletAddress,
           });
 
           txHash = await walletClient.writeContract(request);
 
-          toast.success(`Transaction submitted`, {
-            description: `Sending ${transferAmount} GHO from your Lens account to ${recipientAddress.slice(0, 6)}...${recipientAddress.slice(-4)}`
+          toast.success("Transaction submitted", {
+            description: `Sending ${transferAmount} GHO from your Lens account to ${recipientAddress.slice(0, 6)}...${recipientAddress.slice(-4)}`,
           });
         }
       } else if (tokenType === "wrapped") {
@@ -134,18 +134,15 @@ export function TokenSend({ accountAddress, tokenAddress }: TokenSendClientPageP
           const { request } = await publicClient.simulateContract({
             address: tokenAddress as `0x${string}`,
             abi: ERC20_ABI,
-            functionName: 'transfer',
-            args: [
-              recipientAddress as `0x${string}`,
-              amountInWei
-            ],
+            functionName: "transfer",
+            args: [recipientAddress as `0x${string}`, amountInWei],
             account: walletAddress,
           });
 
           txHash = await walletClient.writeContract(request);
 
-          toast.success(`Transaction submitted`, {
-            description: `Sending ${transferAmount} wGHO from your wallet to ${recipientAddress.slice(0, 6)}...${recipientAddress.slice(-4)}`
+          toast.success("Transaction submitted", {
+            description: `Sending ${transferAmount} wGHO from your wallet to ${recipientAddress.slice(0, 6)}...${recipientAddress.slice(-4)}`,
           });
         } else if (sendFrom === "account" && accountAddress) {
           // Transfer ERC20 via Lens account's executeTransaction
@@ -153,30 +150,27 @@ export function TokenSend({ accountAddress, tokenAddress }: TokenSendClientPageP
           // Encode the ERC20 transfer function call
           const transferCalldata = encodeFunctionData({
             abi: ERC20_ABI,
-            functionName: 'transfer',
-            args: [
-              recipientAddress as `0x${string}`,
-              amountInWei
-            ]
+            functionName: "transfer",
+            args: [recipientAddress as `0x${string}`, amountInWei],
           });
 
           // Simulate the Lens account's executeTransaction call
           const { request } = await publicClient.simulateContract({
             address: accountAddress as `0x${string}`,
             abi: LENS_ACCOUNT_ABI,
-            functionName: 'executeTransaction',
+            functionName: "executeTransaction",
             args: [
               tokenAddress as `0x${string}`, // Target is the token contract
               0n, // No ETH value for ERC20 transfers
-              transferCalldata as `0x${string}` // The encoded ERC20 transfer call
+              transferCalldata as `0x${string}`, // The encoded ERC20 transfer call
             ],
             account: walletAddress,
           });
 
           txHash = await walletClient.writeContract(request);
 
-          toast.success(`Transaction submitted`, {
-            description: `Sending ${transferAmount} wGHO from your Lens account to ${recipientAddress.slice(0, 6)}...${recipientAddress.slice(-4)}`
+          toast.success("Transaction submitted", {
+            description: `Sending ${transferAmount} wGHO from your Lens account to ${recipientAddress.slice(0, 6)}...${recipientAddress.slice(-4)}`,
           });
         }
       }
@@ -189,15 +183,15 @@ export function TokenSend({ accountAddress, tokenAddress }: TokenSendClientPageP
 
       const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
 
-      if (receipt.status === 'success') {
-        toast.success(`Transfer successful!`, {
-          description: `${transferAmount} ${tokenType === "native" ? "GHO" : "wGHO"} has been sent successfully.`
+      if (receipt.status === "success") {
+        toast.success("Transfer successful!", {
+          description: `${transferAmount} ${tokenType === "native" ? "GHO" : "wGHO"} has been sent successfully.`,
         });
         setTransferAmount("");
         setRecipientAddress("");
       } else {
-        toast.error(`Transfer failed`, {
-          description: `Transaction was processed but failed. Please check the transaction for details.`
+        toast.error("Transfer failed", {
+          description: "Transaction was processed but failed. Please check the transaction for details.",
         });
       }
     } catch (error) {
@@ -231,7 +225,10 @@ export function TokenSend({ accountAddress, tokenAddress }: TokenSendClientPageP
                   <div className="bg-background p-4 rounded-md border border-border">
                     <div className="flex justify-between items-center mb-3">
                       <div className="font-medium">Wallet</div>
-                      <div className="text-xs text-muted-foreground bg-muted/50 rounded-md px-2 py-1 border border-border max-w-[120px] truncate" title={walletAddress || ""}>
+                      <div
+                        className="text-xs text-muted-foreground bg-muted/50 rounded-md px-2 py-1 border border-border max-w-[120px] truncate"
+                        title={walletAddress || ""}
+                      >
                         {truncateAddress(walletAddress || "")}
                       </div>
                     </div>
@@ -267,7 +264,10 @@ export function TokenSend({ accountAddress, tokenAddress }: TokenSendClientPageP
                   <div className="bg-background p-4 rounded-md border border-border">
                     <div className="flex justify-between items-center mb-3">
                       <div className="font-medium">Lens Account</div>
-                      <div className="text-xs text-muted-foreground bg-muted/50 rounded-md px-2 py-1 border border-border max-w-[120px] truncate" title={accountAddress || ""}>
+                      <div
+                        className="text-xs text-muted-foreground bg-muted/50 rounded-md px-2 py-1 border border-border max-w-[120px] truncate"
+                        title={accountAddress || ""}
+                      >
                         {truncateAddress(accountAddress || "")}
                       </div>
                     </div>
@@ -308,7 +308,9 @@ export function TokenSend({ accountAddress, tokenAddress }: TokenSendClientPageP
 
                 <div className="space-y-3">
                   <div>
-                    <label htmlFor="tokenType" className="text-sm font-medium block mb-1">Token Type</label>
+                    <label htmlFor="tokenType" className="text-sm font-medium block mb-1">
+                      Token Type
+                    </label>
                     <select
                       id="tokenType"
                       value={tokenType}
@@ -321,7 +323,9 @@ export function TokenSend({ accountAddress, tokenAddress }: TokenSendClientPageP
                   </div>
 
                   <div>
-                    <label htmlFor="sendFrom" className="text-sm font-medium block mb-1">Send From</label>
+                    <label htmlFor="sendFrom" className="text-sm font-medium block mb-1">
+                      Send From
+                    </label>
                     <select
                       id="sendFrom"
                       value={sendFrom}
@@ -334,7 +338,9 @@ export function TokenSend({ accountAddress, tokenAddress }: TokenSendClientPageP
                   </div>
 
                   <div>
-                    <label htmlFor="recipient" className="text-sm font-medium block mb-1">Recipient Address</label>
+                    <label htmlFor="recipient" className="text-sm font-medium block mb-1">
+                      Recipient Address
+                    </label>
                     <input
                       id="recipient"
                       type="text"
@@ -346,7 +352,9 @@ export function TokenSend({ accountAddress, tokenAddress }: TokenSendClientPageP
                   </div>
 
                   <div>
-                    <label htmlFor="amount" className="text-sm font-medium block mb-1">Amount to Send</label>
+                    <label htmlFor="amount" className="text-sm font-medium block mb-1">
+                      Amount to Send
+                    </label>
                     <input
                       id="amount"
                       type="text"
@@ -379,9 +387,7 @@ export function TokenSend({ accountAddress, tokenAddress }: TokenSendClientPageP
                         Sending...
                       </>
                     ) : (
-                      <>
-                        Send {tokenType === "native" ? "GHO" : "wGHO"}
-                      </>
+                      <>Send {tokenType === "native" ? "GHO" : "wGHO"}</>
                     )}
                   </Button>
                 </div>
@@ -393,15 +399,15 @@ export function TokenSend({ accountAddress, tokenAddress }: TokenSendClientPageP
                   You can wrap your native GHO tokens to wGHO or unwrap your wGHO tokens back to native GHO.
                 </p>
                 <Link href="/wrap">
-                  <Button variant="outline" className="w-full">Go to Wrap/Unwrap</Button>
+                  <Button variant="outline" className="w-full">
+                    Go to Wrap/Unwrap
+                  </Button>
                 </Link>
               </div>
             </div>
           ) : (
             <div className="bg-muted/30 rounded-lg p-8 text-center space-y-4">
-              <p className="mb-4">
-                No Lens account found. Please create or connect a Lens account to send tokens.
-              </p>
+              <p className="mb-4">No Lens account found. Please create or connect a Lens account to send tokens.</p>
             </div>
           )
         ) : (
@@ -415,4 +421,4 @@ export function TokenSend({ accountAddress, tokenAddress }: TokenSendClientPageP
       </div>
     </div>
   );
-} 
+}

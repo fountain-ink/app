@@ -22,14 +22,10 @@ export default function LookupLayout({ children }: { children: React.ReactNode }
       <Card>
         <CardHeader>
           <CardTitle>{title} Lookup</CardTitle>
-          <CardDescription>
-            Search and manage {title.toLowerCase()}
-          </CardDescription>
+          <CardDescription>Search and manage {title.toLowerCase()}</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          {children}
-        </CardContent>
+        <CardContent className="space-y-6">{children}</CardContent>
       </Card>
     </div>
   );
-} 
+}

@@ -8,7 +8,7 @@ export const UserName = ({ account, className }: { account?: Account; className?
   }
 
   if (!name || name === "") {
-    return <div className="h-5" />
+    return <div className="h-5" />;
   }
 
   return <div className={`text-foreground text-3xl max-w-[600px] font-bold ${className}`}>{name}</div>;

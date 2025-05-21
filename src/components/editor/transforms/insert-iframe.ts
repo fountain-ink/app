@@ -1,11 +1,10 @@
 import { InsertNodesOptions, SlateEditor } from "@udecode/plate";
 import { BaseIframePlugin, TIframeElement } from "../plugins/iframe-plugin";
 
-
 export const insertIframe = (
   editor: SlateEditor,
-  { url = '' }: Partial<TIframeElement>,
-  options: InsertNodesOptions = {}
+  { url = "" }: Partial<TIframeElement>,
+  options: InsertNodesOptions = {},
 ): void => {
   if (!editor.selection) return;
 
@@ -16,7 +15,7 @@ export const insertIframe = (
   const [, path] = selectionParentEntry;
   editor.tf.insertNodes<TIframeElement>(
     {
-      children: [{ text: '' }],
+      children: [{ text: "" }],
       type: editor.getType(BaseIframePlugin),
       url,
     },
@@ -25,6 +24,6 @@ export const insertIframe = (
       nextBlock: true,
       select: true,
       ...(options as any),
-    }
+    },
   );
 };

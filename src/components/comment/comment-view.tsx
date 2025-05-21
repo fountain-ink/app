@@ -14,7 +14,6 @@ import { CommentReplyArea } from "./comment-reply-area";
 import { UserLazyUsername } from "../user/user-lazy-username";
 import { UserCard } from "../user/user-card";
 
-
 interface CommentViewProps {
   comment: AnyPost;
   nestingLevel?: number;
@@ -69,11 +68,11 @@ export const CommentView = ({
     <div className="flex flex-col">
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-3">
-          <UserCard onClick={(e) => onOpenChange?.(false)} linkProfile username={comment.author.username?.localName} >
+          <UserCard onClick={(e) => onOpenChange?.(false)} linkProfile username={comment.author.username?.localName}>
             <UserAvatar account={comment.author} className="w-10 h-10" />
           </UserCard>
           <div className="flex flex-col gap-1">
-            <UserCard onClick={(e) => onOpenChange?.(false)} linkProfile username={comment.author.username?.localName} >
+            <UserCard onClick={(e) => onOpenChange?.(false)} linkProfile username={comment.author.username?.localName}>
               <div className="flex items-center gap-2">
                 <UserName account={comment.author} className="text-sm font-medium" />
                 <UserUsername account={comment.author} className="text-sm text-muted-foreground" />
