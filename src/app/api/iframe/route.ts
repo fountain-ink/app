@@ -24,7 +24,7 @@ export async function GET(request: Request) {
       const errorData = await response.json().catch(() => ({}));
       console.error('Iframely API error:', response.status, errorData);
       return NextResponse.json(
-        { error: `Iframely API request failed: ${response.statusText}`, details: errorData },
+        { error: `API request failed: ${response.statusText}`, details: errorData },
         { status: response.status }
       );
     }
