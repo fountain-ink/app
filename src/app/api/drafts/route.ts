@@ -1,22 +1,15 @@
 import { env } from "@/env";
-import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { getUserAccount } from "@/lib/auth/get-user-profile";
-import { verifyToken } from "@/lib/auth/verify-token";
+import { verifyAuth } from "@/lib/auth/verify-auth-request";
 import { getRandomUid } from "@/lib/get-random-uid";
 import { createClient } from "@/lib/db/server";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
-    const appToken = req.cookies.get("appToken")?.value;
-    const verified = verifyToken(appToken, env.SUPABASE_JWT_SECRET);
-    if (!appToken || !verified) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const claims = getTokenClaims(appToken);
-    if (!claims) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const { claims, error: authError } = verifyAuth(req);
+    if (authError) {
+      return authError;
     }
 
     const db = await createClient();
@@ -75,7 +68,7 @@ export async function GET(req: NextRequest) {
         coverUrl
       `)
       .eq("author", address)
-      .order('updatedAt', { ascending: false });
+      .order("updatedAt", { ascending: false });
 
     if (error) {
       throw new Error(error.message);
@@ -92,15 +85,9 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const appToken = req.cookies.get("appToken")?.value;
-    const verified = verifyToken(appToken, env.SUPABASE_JWT_SECRET);
-    if (!appToken || !verified) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const claims = getTokenClaims(appToken);
-    if (!claims) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const { claims, error: authError } = verifyAuth(req);
+    if (authError) {
+      return authError;
     }
 
     const db = await createClient();
@@ -125,8 +112,8 @@ export async function POST(req: NextRequest) {
 
     let yDoc = null;
     if (body.yDocBase64) {
-      const binaryData = Buffer.from(body.yDocBase64, 'base64');
-      yDoc = `\\x${binaryData.toString('hex')}`;
+      const binaryData = Buffer.from(body.yDocBase64, "base64");
+      yDoc = `\\x${binaryData.toString("hex")}`;
     }
 
     if (!yDoc) {
@@ -140,7 +127,7 @@ export async function POST(req: NextRequest) {
         contentJson,
         documentId,
         author: address,
-        published_id: publishedId
+        published_id: publishedId,
       })
       .select()
       .single();
@@ -159,15 +146,9 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const appToken = req.cookies.get("appToken")?.value;
-    const verified = verifyToken(appToken, env.SUPABASE_JWT_SECRET);
-    if (!appToken || !verified) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const claims = getTokenClaims(appToken);
-    if (!claims) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const { claims, error: authError } = verifyAuth(req);
+    if (authError) {
+      return authError;
     }
 
     const db = await createClient();
@@ -223,15 +204,9 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const appToken = req.cookies.get("appToken")?.value;
-    const verified = verifyToken(appToken, env.SUPABASE_JWT_SECRET);
-    if (!appToken || !verified) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const claims = getTokenClaims(appToken);
-    if (!claims) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const { claims, error: authError } = verifyAuth(req);
+    if (authError) {
+      return authError;
     }
 
     const db = await createClient();

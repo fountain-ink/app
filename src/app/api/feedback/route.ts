@@ -1,6 +1,5 @@
 import { env } from "@/env";
-import { getTokenClaims } from "@/lib/auth/get-token-claims";
-import { verifyToken } from "@/lib/auth/verify-token";
+import { verifyAuth } from "@/lib/auth/verify-auth-request";
 import { createClient } from "@/lib/db/server";
 import { type NextRequest, NextResponse } from "next/server";
 
@@ -14,15 +13,9 @@ interface FeedbackPayload {
 
 export async function POST(req: NextRequest) {
   try {
-    const appToken = req.cookies.get("appToken")?.value;
-    const verified = verifyToken(appToken, env.SUPABASE_JWT_SECRET);
-    if (!appToken || !verified) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const claims = getTokenClaims(appToken);
-    if (!claims) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const { claims, error: authError } = verifyAuth(req);
+    if (authError) {
+      return authError;
     }
 
     const db = await createClient();

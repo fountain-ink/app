@@ -1,17 +1,12 @@
-import { getTokenClaims } from "@/lib/auth/get-token-claims";
+import { verifyAuth } from "@/lib/auth/verify-auth-request";
 import { createClient } from "@/lib/db/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(req: NextRequest) {
   try {
-    const token = req.cookies.get("appToken")?.value;
-    if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const claims = getTokenClaims(token);
-    if (!claims?.metadata?.address) {
-      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    const { claims, error: authError } = verifyAuth(req);
+    if (authError) {
+      return authError;
     }
 
     const { email } = await req.json();

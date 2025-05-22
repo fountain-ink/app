@@ -2,18 +2,13 @@ import { createCampaignForPost } from "@/lib/listmonk/client";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/db/server";
 import { findBlogByIdentifier } from "@/lib/utils/find-blog-by-id";
-import { getTokenClaims } from "@/lib/auth/get-token-claims";
+import { verifyAuth } from "@/lib/auth/verify-auth-request";
 
 export async function POST(req: NextRequest, { params }: { params: { blog: string } }) {
   try {
-    const token = req.cookies.get("appToken")?.value;
-    if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const claims = getTokenClaims(token);
-    if (!claims?.metadata?.address) {
-      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    const { claims, error: authError } = verifyAuth(req);
+    if (authError) {
+      return authError;
     }
 
     const userAddress = claims.metadata.address;
