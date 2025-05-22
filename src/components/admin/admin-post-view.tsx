@@ -7,13 +7,7 @@ import { PostView } from "../post/post-view";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { AlertTriangle, CheckCircle2, XCircle, Sparkles } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Database } from "@/lib/db/database";
 import { toast } from "sonner";
 import { useAuthenticatedUser } from "@lens-protocol/react";
@@ -44,8 +38,8 @@ export const CuratedPostView = ({
   const [banned, setBanned] = useState(isAuthorBanned);
   const [reason, setReason] = useState<string | null>(banReason);
   const [isLoading, setIsLoading] = useState(false);
-  const [banInfo, setBanInfo] = useState<{ addedBy?: string, timestamp?: string } | null>(null);
-  const [curationInfo, setCurationInfo] = useState<{ addedBy?: string, timestamp?: string } | null>(null);
+  const [banInfo, setBanInfo] = useState<{ addedBy?: string; timestamp?: string } | null>(null);
+  const [curationInfo, setCurationInfo] = useState<{ addedBy?: string; timestamp?: string } | null>(null);
   const { data: user } = useAuthenticatedUser();
 
   useEffect(() => {
@@ -82,12 +76,12 @@ export const CuratedPostView = ({
           const banRecord = result.data[0];
           setBanInfo({
             addedBy: banRecord.added_by,
-            timestamp: banRecord.created_at
+            timestamp: banRecord.created_at,
           });
         }
       }
     } catch (error) {
-      console.error('Error fetching ban details:', error);
+      console.error("Error fetching ban details:", error);
     }
   };
 
@@ -101,12 +95,12 @@ export const CuratedPostView = ({
           const curationRecord = result.data[0];
           setCurationInfo({
             addedBy: curationRecord.added_by,
-            timestamp: curationRecord.created_at
+            timestamp: curationRecord.created_at,
           });
         }
       }
     } catch (error) {
-      console.error('Error fetching curation details:', error);
+      console.error("Error fetching curation details:", error);
     }
   };
 
@@ -115,10 +109,10 @@ export const CuratedPostView = ({
     try {
       if (checked) {
         // Add to curated
-        const response = await fetch('/api/admin/curate', {
-          method: 'POST',
+        const response = await fetch("/api/admin/curate", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             slug: post.slug,
@@ -127,36 +121,36 @@ export const CuratedPostView = ({
         });
 
         if (!response.ok) {
-          throw new Error('Failed to add to featured list');
+          throw new Error("Failed to add to featured list");
         }
 
         setCurated(true);
         onCurationChange?.(post, true);
-        toast.success('Post added to featured list');
+        toast.success("Post added to featured list");
 
         // Update curation info
         setCurationInfo({
           addedBy: user?.address,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
       } else {
         // Remove from curated
         const response = await fetch(`/api/admin/curate?slug=${post.slug}`, {
-          method: 'DELETE',
+          method: "DELETE",
         });
 
         if (!response.ok) {
-          throw new Error('Failed to remove from featured list');
+          throw new Error("Failed to remove from featured list");
         }
 
         setCurated(false);
         setCurationInfo(null);
         onCurationChange?.(post, false);
-        toast.success('Post removed from featured list');
+        toast.success("Post removed from featured list");
       }
     } catch (error) {
-      console.error('Error toggling curation:', error);
-      toast.error('Failed to update featured status');
+      console.error("Error toggling curation:", error);
+      toast.error("Failed to update featured status");
     } finally {
       setIsLoading(false);
     }
@@ -168,25 +162,25 @@ export const CuratedPostView = ({
       if (banned) {
         // Remove ban
         const response = await fetch(`/api/admin/ban?address=${post.author.address}`, {
-          method: 'DELETE',
+          method: "DELETE",
         });
 
         if (!response.ok) {
-          throw new Error('Failed to unban author');
+          throw new Error("Failed to unban author");
         }
 
         setBanned(false);
         setReason(null);
         setBanInfo(null);
         onBanChange?.(post, false);
-        toast.success('Author unbanned');
+        toast.success("Author unbanned");
       } else if (selectedReason || (reason && reason !== null)) {
         // Add ban with reason (use passed reason or state reason)
-        const banReason = selectedReason || reason as string;
-        const response = await fetch('/api/admin/ban', {
-          method: 'POST',
+        const banReason = selectedReason || (reason as string);
+        const response = await fetch("/api/admin/ban", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             address: post.author.address,
@@ -196,7 +190,7 @@ export const CuratedPostView = ({
         });
 
         if (!response.ok) {
-          throw new Error('Failed to ban author');
+          throw new Error("Failed to ban author");
         }
 
         setBanned(true);
@@ -206,14 +200,14 @@ export const CuratedPostView = ({
         // Update ban info
         setBanInfo({
           addedBy: user?.address,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
       } else {
-        toast.error('Please select a reason for banning');
+        toast.error("Please select a reason for banning");
       }
     } catch (error) {
-      console.error('Error toggling ban:', error);
-      toast.error('Failed to update ban status');
+      console.error("Error toggling ban:", error);
+      toast.error("Failed to update ban status");
     } finally {
       setIsLoading(false);
     }
@@ -224,22 +218,15 @@ export const CuratedPostView = ({
       {/* Featured Toggle - Moved Above Post */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <Switch
-            id="featured-toggle"
-            checked={curated}
-            onCheckedChange={handleCurationToggle}
-            disabled={isLoading}
-          />
-          <Label
-            htmlFor="featured-toggle"
-            className="flex items-center gap-2 font-medium cursor-pointer"
-          >
-            <Sparkles className={`h-4 w-4 ${curated ? 'text-yellow-500' : 'text-muted-foreground'}`} />
+          <Switch id="featured-toggle" checked={curated} onCheckedChange={handleCurationToggle} disabled={isLoading} />
+          <Label htmlFor="featured-toggle" className="flex items-center gap-2 font-medium cursor-pointer">
+            <Sparkles className={`h-4 w-4 ${curated ? "text-yellow-500" : "text-muted-foreground"}`} />
             <span>Featured</span>
 
             {curated && curationInfo && (
               <span className="text-xs text-muted-foreground ml-2">
-                by {curationInfo.addedBy?.slice(0, 6)}...{curationInfo.addedBy?.slice(-4)} on {curationInfo.timestamp ? formatDate(curationInfo.timestamp) : 'unknown date'}
+                by {curationInfo.addedBy?.slice(0, 6)}...{curationInfo.addedBy?.slice(-4)} on{" "}
+                {curationInfo.timestamp ? formatDate(curationInfo.timestamp) : "unknown date"}
               </span>
             )}
           </Label>
@@ -254,10 +241,7 @@ export const CuratedPostView = ({
           )}
 
           {banned && (
-            <Badge
-              variant="destructive"
-              className="flex items-center gap-1"
-            >
+            <Badge variant="destructive" className="flex items-center gap-1">
               <AlertTriangle className="h-3 w-3" />
               Banned
             </Badge>
@@ -289,33 +273,24 @@ export const CuratedPostView = ({
 
               {banInfo && (
                 <span className="text-xs text-muted-foreground">
-                  by {banInfo.addedBy?.slice(0, 6)}...{banInfo.addedBy?.slice(-4)} on {banInfo.timestamp ? formatDate(banInfo.timestamp) : 'unknown date'}
+                  by {banInfo.addedBy?.slice(0, 6)}...{banInfo.addedBy?.slice(-4)} on{" "}
+                  {banInfo.timestamp ? formatDate(banInfo.timestamp) : "unknown date"}
                 </span>
               )}
             </div>
 
-            <Button
-              variant="outline"
-              onClick={() => handleBanToggle()}
-              disabled={isLoading}
-            >
+            <Button variant="outline" onClick={() => handleBanToggle()} disabled={isLoading}>
               Unban Author
             </Button>
           </div>
         ) : (
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium flex items-center gap-1">Author Status:
-                Active
-              </span>
+              <span className="text-sm font-medium flex items-center gap-1">Author Status: Active</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <Select
-                value={reason || ""}
-                onValueChange={handleReasonChange}
-                disabled={banned || isLoading}
-              >
+              <Select value={reason || ""} onValueChange={handleReasonChange} disabled={banned || isLoading}>
                 <SelectTrigger className="h-8 w-36">
                   <SelectValue placeholder="Ban reason" />
                 </SelectTrigger>
@@ -331,4 +306,4 @@ export const CuratedPostView = ({
       </div>
     </div>
   );
-}; 
+};

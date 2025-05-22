@@ -20,7 +20,10 @@ async function migrateGuestData(guestAddress: string, newAddress: string) {
     throw new Error("Failed to migrate feedback");
   }
 
-  const { error: userError } = await db.from("users").update({ isAnonymous: false, address: newAddress }).eq("address", guestAddress);
+  const { error: userError } = await db
+    .from("users")
+    .update({ isAnonymous: false, address: newAddress })
+    .eq("address", guestAddress);
   if (userError) {
     console.error("Error migrating user:", userError);
     throw new Error("Failed to migrate user");

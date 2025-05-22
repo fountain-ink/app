@@ -56,16 +56,16 @@ export const PostView = ({
   if (!post || post.metadata.__typename !== "ArticleMetadata") {
     return null;
   }
-  const metadata = post.metadata
-  const blog = post.feed.group?.metadata
-  const blogImage = resolveUrl(blog?.icon)
-  const subtitleFromAttributes = metadata.attributes?.find((attr) => "key" in attr && attr.key === "subtitle")?.value
-  const contentJson = metadata.attributes?.find((attr) => "key" in attr && attr.key === "contentJson")?.value
-  const subtitle = subtitleFromAttributes || extractSubtitle(contentJson)
+  const metadata = post.metadata;
+  const blog = post.feed.group?.metadata;
+  const blogImage = resolveUrl(blog?.icon);
+  const subtitleFromAttributes = metadata.attributes?.find((attr) => "key" in attr && attr.key === "subtitle")?.value;
+  const contentJson = metadata.attributes?.find((attr) => "key" in attr && attr.key === "contentJson")?.value;
+  const subtitle = subtitleFromAttributes || extractSubtitle(contentJson);
 
   const username = post.author.username?.localName || "";
   const href = `/p/${username}/${post.slug}`;
-  const coverUrl = metadata.attributes?.find((attr) => "key" in attr && attr.key === "coverUrl")?.value
+  const coverUrl = metadata.attributes?.find((attr) => "key" in attr && attr.key === "coverUrl")?.value;
 
   useEffect(() => {
     router.prefetch(href);
@@ -107,7 +107,9 @@ export const PostView = ({
   };
 
   return (
-    <div className={`group/post relative w-screen max-w-full sm:max-w-3xl p-4 ${isSelected ? "bg-primary/10" : "bg-transparent"}`}>
+    <div
+      className={`group/post relative w-screen max-w-full sm:max-w-3xl p-4 ${isSelected ? "bg-primary/10" : "bg-transparent"}`}
+    >
       <Link
         href={isSelectionMode ? "#" : href}
         className={`flex flex-row items-start justify-start gap-4 sm:gap-6 md:gap-8 lg:gap-10
@@ -157,7 +159,11 @@ export const PostView = ({
                     <div className="flex flex-row items-center gap-1">
                       <span className="text-muted-foreground">in</span>
                       <div onClick={handleInteractiveElementClick}>
-                        <Link prefetch href={`/b/${post.feed.group?.address}`} className="text-foreground gap-1 flex flex-row items-center hover:underline">
+                        <Link
+                          prefetch
+                          href={`/b/${post.feed.group?.address}`}
+                          className="text-foreground gap-1 flex flex-row items-center hover:underline"
+                        >
                           {blog.name}
                         </Link>
                       </div>
@@ -169,12 +175,18 @@ export const PostView = ({
               )}
             </div>
             {options.showTitle && metadata.title && (
-              <div className="text-[1.75rem]  font-[family-name:var(--title-font)] tracking-[-0.8px] font-medium font-[color:var(--title-color)] line-clamp-2" suppressHydrationWarning>
+              <div
+                className="text-[1.75rem]  font-[family-name:var(--title-font)] tracking-[-0.8px] font-medium font-[color:var(--title-color)] line-clamp-2"
+                suppressHydrationWarning
+              >
                 {metadata.title}
               </div>
             )}
             {options.showSubtitle && subtitle && (
-              <div className="text-lg mt-2 font-[family-name:--subtitle-font] text-foreground/60 line-clamp-2" suppressHydrationWarning>
+              <div
+                className="text-lg mt-2 font-[family-name:--subtitle-font] text-foreground/60 line-clamp-2"
+                suppressHydrationWarning
+              >
                 {subtitle}
               </div>
             )}
@@ -188,12 +200,13 @@ export const PostView = ({
             )}
           </div>
 
-          <div className="flex h-10 flex-row items-center text-sm tracking-wide relative mt-auto">
-          </div>
+          <div className="flex h-10 flex-row items-center text-sm tracking-wide relative mt-auto"></div>
         </div>
       </Link>
 
-      <div className={`absolute bottom-4 left-0 right-0 ${options.showPreview ? 'ml-[190px] sm:ml-[200px] md:ml-[210px] lg:ml-[220px]' : ''}`}>
+      <div
+        className={`absolute bottom-4 left-0 right-0 ${options.showPreview ? "ml-[190px] sm:ml-[200px] md:ml-[210px] lg:ml-[220px]" : ""}`}
+      >
         <div className="flex flex-row justify-between items-center text-sm tracking-wide">
           <div className="flex flex-row items-center gap-3">
             <div className="flex justify-start">

@@ -139,8 +139,9 @@ export const ImageCropperUploader = ({
   return (
     <span>
       <div
-        className={`relative w-full h-full ${aspectRatio === 1 ? "rounded-full" : "rounded-lg"
-          } overflow-hidden cursor-pointer ring-2 ring-background `}
+        className={`relative w-full h-full ${
+          aspectRatio === 1 ? "rounded-full" : "rounded-lg"
+        } overflow-hidden cursor-pointer ring-2 ring-background `}
         onClick={handleImageClick}
         onKeyDown={handleImageClick}
       >
@@ -227,7 +228,13 @@ interface ImageUploaderProps {
   isUploading?: boolean;
 }
 
-export function ImageUploader({ label, onImageChange, initialImage, className, isUploading = false }: ImageUploaderProps) {
+export function ImageUploader({
+  label,
+  onImageChange,
+  initialImage,
+  className,
+  isUploading = false,
+}: ImageUploaderProps) {
   const [image, setImage] = useState(initialImage || "");
   const [localImage, setLocalImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -302,7 +309,7 @@ export function ImageUploader({ label, onImageChange, initialImage, className, i
         accept="image/*"
         onChange={handleFileSelection}
         onClick={(event) => {
-          (event.target as HTMLInputElement).value = '';
+          (event.target as HTMLInputElement).value = "";
         }}
         className="hidden"
       />

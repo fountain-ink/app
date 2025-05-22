@@ -147,16 +147,14 @@ export const DraftView = ({
         <div className="flex flex-row items-center justify-between text-sm tracking-wide relative z-10">
           <div className="flex flex-row items-center gap-3">
             {options.showDate && (
-              <span className="text-muted-foreground">
-                Last updated {date ? new Date(date).toLocaleString() : ""}
-              </span>
+              <span className="text-muted-foreground">Last updated {date ? new Date(date).toLocaleString() : ""}</span>
             )}
           </div>
           <div className="relative z-10">
             <DraftMenu
               draft={draft}
               onDeleteClick={handleDelete}
-              onSelect={onSelect ?? (() => { })}
+              onSelect={onSelect ?? (() => {})}
               isSelected={isSelected}
               onEnterSelectionMode={onEnterSelectionMode}
               isSelectionMode={isSelectionMode}

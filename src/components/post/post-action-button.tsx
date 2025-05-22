@@ -31,7 +31,7 @@ export type ActionButtonProps = {
   strokeColor: string;
   fillColor: string;
   isActive?: boolean;
-  onClick?: () => Promise<any> | void | undefined;
+  onClick?: () => Promise<any> | undefined | undefined;
   renderPopover?: (trigger: ReactElement) => ReactElement;
   isDisabled?: boolean;
   isUserLoggedIn?: boolean;
@@ -94,11 +94,11 @@ export const ActionButton = ({
     } else {
       selectProfileHandler();
     }
-  }
+  };
 
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
     if (showLoginActions) {
-      showLoginModal()
+      showLoginModal();
       return;
     }
 
@@ -118,7 +118,12 @@ export const ActionButton = ({
     setIsHovered(hovering);
   };
 
-  let iconStyleColor, iconStyleFill, iconOpacityStyle, buttonBgStyle, divCursorStyle, divOpacityClass;
+  let iconStyleColor;
+  let iconStyleFill;
+  let iconOpacityStyle;
+  let buttonBgStyle;
+  let divCursorStyle;
+  let divOpacityClass;
 
   if (showLoginActions) {
     iconStyleColor = isHovered ? "hsl(var(--primary))" : "hsl(var(--foreground))";
@@ -135,11 +140,7 @@ export const ActionButton = ({
         : isHovered
           ? strokeColor
           : undefined;
-    iconStyleFill = isDisabled
-      ? undefined
-      : isActive && fillOnClick
-        ? fillColor
-        : undefined;
+    iconStyleFill = isDisabled ? undefined : isActive && fillOnClick ? fillColor : undefined;
     iconOpacityStyle = isDisabled ? 0.5 : 1;
     buttonBgStyle = isActive ? `${strokeColor}10` : undefined;
     divCursorStyle = isDisabled ? "cursor-not-allowed" : "cursor-pointer";
@@ -182,10 +183,7 @@ export const ActionButton = ({
       <div className="opacity-0">{formatNumber(initialCount)}</div>
       <div className="absolute inset-0 flex items-center">
         <AnimatePresence>
-          <CounterAnimation
-            value={initialCount}
-            strokeColor={(isUserLoggedIn && isActive) ? strokeColor : undefined}
-          />
+          <CounterAnimation value={initialCount} strokeColor={isUserLoggedIn && isActive ? strokeColor : undefined} />
         </AnimatePresence>
       </div>
     </div>
@@ -199,10 +197,11 @@ export const ActionButton = ({
         onClick={(e: React.MouseEvent<HTMLDivElement>) => {
           handleClick(e);
         }}
-        className={divWrapperClassName}>
+        className={divWrapperClassName}
+      >
         <TooltipWrapper label={label}>{MainButton}</TooltipWrapper>
         {CountDisplay}
-      </div>
+      </div>,
     );
   }
 
@@ -215,7 +214,13 @@ export const ActionButton = ({
             {showChevron && (
               <AnimatedChevron
                 isOpen={open}
-                color={(isUserLoggedIn && isHovered && !isDisabled) ? strokeColor : (showLoginActions && isHovered ? "hsl(var(--primary))" : undefined)}
+                color={
+                  isUserLoggedIn && isHovered && !isDisabled
+                    ? strokeColor
+                    : showLoginActions && isHovered
+                      ? "hsl(var(--primary))"
+                      : undefined
+                }
                 direction="up"
               />
             )}

@@ -134,7 +134,6 @@ export const CommentReplyArea = ({
       })}
     >
       <div className="flex flex-col gap-4">
-
         {!isCompact && !isAuthenticatedUserLoading && authenticatedUser && (
           <div className="flex items-start gap-3">
             <UserAvatar account={account} className="w-10 h-10" />

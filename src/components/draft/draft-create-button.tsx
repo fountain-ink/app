@@ -10,7 +10,7 @@ import { getRandomUid } from "@/lib/get-random-uid";
 
 export const DraftCreateButton = ({
   text = "Write",
-  initialContent
+  initialContent,
 }: {
   text?: string;
   initialContent?: any;
@@ -26,7 +26,6 @@ export const DraftCreateButton = ({
       router.push(`/w/${documentId}`);
 
       await createDraft({ documentId, initialContent });
-
     } catch (error) {
       console.error("Failed to create draft:", error);
       toast.error(error instanceof Error ? error.message : "Failed to create draft");

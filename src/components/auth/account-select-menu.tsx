@@ -71,7 +71,10 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
       }
       const sessionClient = await client.login({
         onboardingUser: {
-          app: env.NEXT_PUBLIC_ENVIRONMENT === "development" ? env.NEXT_PUBLIC_APP_ADDRESS_TESTNET : env.NEXT_PUBLIC_APP_ADDRESS,
+          app:
+            env.NEXT_PUBLIC_ENVIRONMENT === "development"
+              ? env.NEXT_PUBLIC_APP_ADDRESS_TESTNET
+              : env.NEXT_PUBLIC_APP_ADDRESS,
           wallet: walletAddress,
         },
         signMessage: async (message: string) => {
@@ -80,7 +83,7 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
       });
 
       if (sessionClient.isErr()) {
-        throw new Error("Failed to get session client: " + sessionClient.error.message);
+        throw new Error(`Failed to get session client: ${sessionClient.error.message}`);
       }
 
       setShowProfileSelect(false);
@@ -137,7 +140,6 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
     return null;
   }
 
-
   return (
     <>
       <Dialog open={isOpen} onOpenChange={handleOpenChange}>
@@ -156,7 +158,11 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
               <ScrollArea className="w-full max-h-[350px]">
                 <div className="w-full flex flex-col gap-2 pr-4">
                   {accounts.map((account) => (
-                    <SelectAccountButton key={account.address} account={account} onSuccess={handleSelectAccountSuccess} />
+                    <SelectAccountButton
+                      key={account.address}
+                      account={account}
+                      onSuccess={handleSelectAccountSuccess}
+                    />
                   ))}
                 </div>
               </ScrollArea>

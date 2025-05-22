@@ -55,9 +55,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle className="h-8 flex items-center">{getDialogTitle()}</DialogTitle>
-            <DialogDescription>
-              {getDialogDescription()}
-            </DialogDescription>
+            <DialogDescription>{getDialogDescription()}</DialogDescription>
           </DialogHeader>
 
           <div className="flex flex-col gap-3 mt-6">

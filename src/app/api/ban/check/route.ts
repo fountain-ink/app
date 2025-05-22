@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid JSON body or missing 'addresses' array" }, { status: 400 });
     }
 
-    addressesToCheck = addressesToCheck.filter(addr => typeof addr === 'string' && addr.trim() !== '');
+    addressesToCheck = addressesToCheck.filter((addr) => typeof addr === "string" && addr.trim() !== "");
 
     if (addressesToCheck.length === 0) {
       return NextResponse.json({ error: "No valid addresses provided in the request body" }, { status: 400 });
@@ -33,20 +33,19 @@ export async function POST(req: NextRequest) {
     }
 
     const banStatusMap: Record<string, boolean> = {};
-    addressesToCheck.forEach(addr => {
+    addressesToCheck.forEach((addr) => {
       banStatusMap[addr] = false;
     });
 
-    bannedAddresses?.forEach(ban => {
+    bannedAddresses?.forEach((ban) => {
       if (ban.address) {
         banStatusMap[ban.address] = true;
       }
     });
 
     return NextResponse.json(banStatusMap);
-
   } catch (error) {
     console.error("Unexpected error in ban check:", error);
     return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
   }
-} 
+}

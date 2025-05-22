@@ -44,13 +44,23 @@ export default function HomePage() {
               <ConnectWalletButton text="Join Now" />
             </div>
 
-            <p><b>Own your content and audience.</b> Because of the way Fountain is built, nobody, not even us, can take it away.</p>
+            <p>
+              <b>Own your content and audience.</b> Because of the way Fountain is built, nobody, not even us, can take
+              it away.
+            </p>
 
-            <p><b>Copyrighted automatically.</b> All Fountain posts are timestamped and written into blockchain, with a license of your liking attached.</p>
+            <p>
+              <b>Copyrighted automatically.</b> All Fountain posts are timestamped and written into blockchain, with a
+              license of your liking attached.
+            </p>
 
-            <p><b>Earn in new ways.</b> We help you get rewarded directly by the people who enjoy your words.</p>
+            <p>
+              <b>Earn in new ways.</b> We help you get rewarded directly by the people who enjoy your words.
+            </p>
 
-            <p><b>Human collaboration.</b> Writing with friends is as simple as copy-pasting a link to your browser.</p>
+            <p>
+              <b>Human collaboration.</b> Writing with friends is as simple as copy-pasting a link to your browser.
+            </p>
 
             <p>
               <b>Public goods.</b> Fountain is proudly{" "}
@@ -77,7 +87,6 @@ export default function HomePage() {
               <DraftCreateButton text="Start Writing" />
             </div>
           </div>
-
         </ArticleLayout>
       </main>
 

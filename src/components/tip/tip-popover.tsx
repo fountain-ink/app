@@ -77,9 +77,7 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
       return;
     }
 
-    const hasEnoughBalance = tokenBalance
-      ? Number.parseFloat(tokenBalance) >= Number.parseFloat(finalAmount)
-      : false;
+    const hasEnoughBalance = tokenBalance ? Number.parseFloat(tokenBalance) >= Number.parseFloat(finalAmount) : false;
 
     if (!walletClient) {
       toast.error("Wallet not connected");
@@ -112,25 +110,25 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
             currency: evmAddress(currencyAddress),
             value: bigDecimal(finalAmount),
           },
-        }
-      }).andThen(handleOperationWith(walletClient))
-        .andTee(
-          (txHash) => {
-            console.log("Tip transaction mined:", txHash);
-            toast.success(`Tipped $${formattedTipAmount} to @${post.author.username?.localName}!`, { id: toastId });
-            setOpen(false);
-            setIsTipping(false);
-          }
-        ).andThen(lens.waitForTransaction).match(
+        },
+      })
+        .andThen(handleOperationWith(walletClient))
+        .andTee((txHash) => {
+          console.log("Tip transaction mined:", txHash);
+          toast.success(`Tipped $${formattedTipAmount} to @${post.author.username?.localName}!`, { id: toastId });
+          setOpen(false);
+          setIsTipping(false);
+        })
+        .andThen(lens.waitForTransaction)
+        .match(
           (txData) => {
             console.log("Tip transaction indexed:", txData);
           },
           (error) => {
             console.error("Tip transaction failed:", error);
             toast.error("Transaction failed on-chain", { id: toastId });
-          }
+          },
         );
-
     } catch (error) {
       console.error("Error tipping post:", error);
       toast.error("An error occurred while tipping the post");
@@ -150,23 +148,23 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
     }
   };
 
-  const hasCollectAction = post.operations?.canSimpleCollect.__typename === "SimpleCollectValidationPassed" || post.operations?.canSimpleCollect.__typename === "SimpleCollectValidationFailed";
+  const hasCollectAction =
+    post.operations?.canSimpleCollect.__typename === "SimpleCollectValidationPassed" ||
+    post.operations?.canSimpleCollect.__typename === "SimpleCollectValidationFailed";
   const canCollect = post.operations?.canSimpleCollect.__typename === "SimpleCollectValidationPassed";
 
   const getFinalTipAmount = () => {
     if (isCustomTipInput && customTipAmount && Number.parseFloat(customTipAmount) > 0) {
       return customTipAmount;
-    } else if (selectedTipAmount) {
-      return selectedTipAmount;
-    } else {
-      return "0";
     }
+    if (selectedTipAmount) {
+      return selectedTipAmount;
+    }
+    return "0";
   };
 
   const finalTipAmount = getFinalTipAmount();
-  const hasEnoughBalance = tokenBalance
-    ? Number.parseFloat(tokenBalance) >= Number.parseFloat(finalTipAmount)
-    : false;
+  const hasEnoughBalance = tokenBalance ? Number.parseFloat(tokenBalance) >= Number.parseFloat(finalTipAmount) : false;
 
   return (
     <MobilePopover
@@ -247,11 +245,7 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
         <Button
           variant="default"
           className="w-full"
-          disabled={
-            isTipping ||
-            !hasEnoughBalance ||
-            !(finalTipAmount !== "0")
-          }
+          disabled={isTipping || !hasEnoughBalance || !(finalTipAmount !== "0")}
           onClick={handleSendTip}
         >
           {isTipping
@@ -264,12 +258,8 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
         </Button>
 
         {isGhoBalanceLoading ? null : (
-          <div className="text-xs text-muted-foreground w-full text-center -mt-2">
-            Account balance: ${tokenBalance}
-          </div>
+          <div className="text-xs text-muted-foreground w-full text-center -mt-2">Account balance: ${tokenBalance}</div>
         )}
-
-
       </div>
     </MobilePopover>
   );

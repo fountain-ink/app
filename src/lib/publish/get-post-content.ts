@@ -9,24 +9,22 @@ import { getBaseUrl } from "../get-base-url";
  */
 export function getPostContent(draft: Draft, username: string): string {
   const { title, slug, contentMarkdown, distributionSettings } = draft;
-  const lensDisplay = distributionSettings?.lensDisplay || 'content_only';
+  const lensDisplay = distributionSettings?.lensDisplay || "content_only";
   // const baseUrl = getBaseUrl();
-  const baseUrl = 'https://fountain.ink/';
+  const baseUrl = "https://fountain.ink/";
 
   const postUrl = `${baseUrl}p/${username}/${slug}`;
 
   switch (lensDisplay) {
-    case 'link':
+    case "link":
       return `${postUrl}`;
 
-    case 'title_link':
+    case "title_link":
       return `${title} - ${postUrl}`;
 
-    case 'content_link':
-      return `*Posted on Fountain - ${postUrl}*\n\n${contentMarkdown || ''}`;
-
-    case 'content_only':
+    case "content_link":
+      return `*Posted on Fountain - ${postUrl}*\n\n${contentMarkdown || ""}`;
     default:
-      return contentMarkdown || '';
+      return contentMarkdown || "";
   }
-} 
+}

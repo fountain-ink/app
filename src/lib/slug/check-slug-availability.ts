@@ -6,11 +6,11 @@
  */
 export async function checkSlugAvailability(
   slug: string,
-  handle?: string
+  handle?: string,
 ): Promise<{ available: boolean; slug: string }> {
   try {
     if (!slug) {
-      return { available: true, slug: '' };
+      return { available: true, slug: "" };
     }
 
     let url = `/api/posts/slug/check?slug=${encodeURIComponent(slug)}`;
@@ -19,24 +19,24 @@ export async function checkSlugAvailability(
     }
 
     const response = await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
 
     if (!response.ok) {
-      console.error('Error checking slug availability:', await response.text());
+      console.error("Error checking slug availability:", await response.text());
       return { available: true, slug }; // Default to available on error
     }
 
     const data = await response.json();
     return {
       available: data.available,
-      slug: data.slug
+      slug: data.slug,
     };
   } catch (error) {
-    console.error('Failed to check slug availability:', error);
+    console.error("Failed to check slug availability:", error);
     return { available: true, slug }; // Default to available on error
   }
-} 
+}

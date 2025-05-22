@@ -1,18 +1,15 @@
-'use client';
+"use client";
 
 // Lifted from slate-yjs https://github.com/BitPhinix/slate-yjs/blob/main/examples/frontend/src/pages/RemoteCursorOverlay/Overlay.tsx
 
-import React, { type CSSProperties, useState } from 'react';
+import React, { type CSSProperties, useState } from "react";
 
-import {
-  type CursorOverlayData,
-  useRemoteCursorOverlayPositions,
-} from '@slate-yjs/react';
-import { YjsPlugin } from '@udecode/plate-yjs/react';
-import { useEditorContainerRef, usePluginOption } from '@udecode/plate/react';
+import { type CursorOverlayData, useRemoteCursorOverlayPositions } from "@slate-yjs/react";
+import { YjsPlugin } from "@udecode/plate-yjs/react";
+import { useEditorContainerRef, usePluginOption } from "@udecode/plate/react";
 
 export function RemoteCursorOverlay() {
-  const isSynced = usePluginOption(YjsPlugin, '_isSynced');
+  const isSynced = usePluginOption(YjsPlugin, "_isSynced");
 
   if (!isSynced) {
     return null;
@@ -36,11 +33,7 @@ function RemoteCursorOverlayContent() {
   );
 }
 
-function RemoteSelection({
-  caretPosition,
-  data,
-  selectionRects,
-}: CursorOverlayData<CursorData>) {
+function RemoteSelection({ caretPosition, data, selectionRects }: CursorOverlayData<CursorData>) {
   if (!data) {
     return null;
   }
@@ -53,11 +46,7 @@ function RemoteSelection({
   return (
     <React.Fragment>
       {selectionRects.map((position, i) => (
-        <div
-          key={i}
-          className="pointer-events-none absolute"
-          style={{ ...selectionStyle, ...position }}
-        ></div>
+        <div key={i} className="pointer-events-none absolute" style={{ ...selectionStyle, ...position }} />
       ))}
       {caretPosition && <Caret data={data} caretPosition={caretPosition} />}
     </React.Fragment>
@@ -68,7 +57,7 @@ export type CursorData = {
   color: string;
   name: string;
 };
-type CaretProps = Pick<CursorOverlayData<CursorData>, 'caretPosition' | 'data'>;
+type CaretProps = Pick<CursorOverlayData<CursorData>, "caretPosition" | "data">;
 
 const cursorOpacity = 0.7;
 const hoverOpacity = 1;
@@ -86,23 +75,20 @@ function Caret({ caretPosition, data }: CaretProps) {
     ...caretPosition,
     background: data?.color,
     opacity: cursorOpacity,
-    transition: 'opacity 0.2s',
+    transition: "opacity 0.2s",
   };
   const caretStyleHover = { ...caretStyle, opacity: hoverOpacity };
 
   const labelStyle: CSSProperties = {
     background: data?.color,
     opacity: cursorOpacity,
-    transform: 'translateY(-100%)',
-    transition: 'opacity 0.2s',
+    transform: "translateY(-100%)",
+    transition: "opacity 0.2s",
   };
   const labelStyleHover = { ...labelStyle, opacity: hoverOpacity };
 
   return (
-    <div
-      className="absolute w-0.5"
-      style={isHover ? caretStyleHover : caretStyle}
-    >
+    <div className="absolute w-0.5" style={isHover ? caretStyleHover : caretStyle}>
       <div
         className="absolute top-0 rounded rounded-bl-none px-1.5 py-0.5 text-xs whitespace-nowrap text-white"
         style={isHover ? labelStyleHover : labelStyle}

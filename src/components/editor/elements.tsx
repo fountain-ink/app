@@ -67,7 +67,6 @@ import { IframePlugin } from "./plugins/iframe-plugin";
 import { IframeElement } from "../ui/iframe-element";
 import { SubtitleElement } from "../ui/subtitle-element";
 
-
 export const getRichElements = () => {
   return withPlaceholders(getElements());
 };

@@ -17,9 +17,7 @@ export async function GET(req: NextRequest) {
 
     const supabase = await createServiceClient();
 
-    let query = supabase
-      .from("feedback")
-      .select(`*`);
+    let query = supabase.from("feedback").select("*");
 
     if (status && status !== "all") {
       query = query.eq("status", status);
@@ -31,7 +29,7 @@ export async function GET(req: NextRequest) {
 
     const validSortFields = ["id", "createdAt", "status", "type", "resolvedAt"];
     const field = validSortFields.includes(sortBy) ? sortBy : "createdAt";
-    const direction = sortDirection === "asc" ? true : false;
+    const direction = sortDirection === "asc";
 
     query = query.order(field, { ascending: direction });
 
@@ -75,10 +73,7 @@ export async function PATCH(req: NextRequest) {
       updateData.resolvedAt = new Date().toISOString();
     }
 
-    const { error } = await supabase
-      .from("feedback")
-      .update(updateData)
-      .eq("id", id);
+    const { error } = await supabase.from("feedback").update(updateData).eq("id", id);
 
     if (error) {
       console.error("Error updating feedback:", error);
@@ -90,4 +85,4 @@ export async function PATCH(req: NextRequest) {
     console.error("Unexpected error:", error);
     return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
   }
-} 
+}

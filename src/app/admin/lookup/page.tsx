@@ -11,4 +11,4 @@ export default function LookupPage() {
   }, [router]);
 
   return <div className="flex justify-center py-8">Redirecting...</div>;
-} 
+}

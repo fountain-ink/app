@@ -68,8 +68,8 @@ import { NormalizePlugin } from "./plugins/normalize-plugin";
 import { SubtitlePlugin, TITLE_KEYS, TitlePlugin } from "./plugins/title-plugin";
 import emojiMartData, { type EmojiMartData } from "@emoji-mart/data";
 import { autoformatRules } from "./plugins/autoformat-rules";
-import remarkGfm from 'remark-gfm';
-import remarkMath from 'remark-math';
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 import { TEquationElement } from "@udecode/plate-math";
 import { Heading, Text } from "mdast";
 import { uploadFile } from "@/lib/upload/upload-file";
@@ -157,7 +157,8 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
                   }
                 },
               },
-            }],
+            },
+          ],
         },
       }) as any,
       // ExtendedCommentsPlugin.configure({
@@ -221,15 +222,18 @@ export const plugins = [
             event.preventDefault();
             event.stopPropagation();
 
-            window.navigator.clipboard.readText().then((textToPaste: string) => {
-              console.log(textToPaste);
-              if (textToPaste) {
-                const singleLineText = textToPaste.replace(/(\r\n|\n|\r)/gm, "").trim();
-                editor.tf.insertText(singleLineText);
-              }
-            }).catch(err => {
-              console.error("Failed to read clipboard contents: ", err);
-            });
+            window.navigator.clipboard
+              .readText()
+              .then((textToPaste: string) => {
+                console.log(textToPaste);
+                if (textToPaste) {
+                  const singleLineText = textToPaste.replace(/(\r\n|\n|\r)/gm, "").trim();
+                  editor.tf.insertText(singleLineText);
+                }
+              })
+              .catch((err) => {
+                console.error("Failed to read clipboard contents: ", err);
+              });
             return true;
           }
         }
@@ -370,7 +374,7 @@ export const plugins = [
   AlignPlugin.extend({
     inject: {
       nodeProps: {
-        validNodeValues: ['start', 'left', 'center', 'right', 'end'],
+        validNodeValues: ["start", "left", "center", "right", "end"],
       },
       targetPlugins: [ParagraphPlugin.key, HEADING_KEYS.h1, HEADING_KEYS.h2, ImagePlugin.key],
     },
@@ -539,7 +543,7 @@ export const plugins = [
             }
 
             return {
-              type: 'heading',
+              type: "heading",
               children: [{ type: "text", value: text as string }],
               depth: 1,
             };
@@ -565,7 +569,7 @@ export const plugins = [
             }
 
             return {
-              type: 'heading',
+              type: "heading",
               children: [{ type: "text", value: text as string }],
               depth: 2,
             };
@@ -584,7 +588,7 @@ export const plugins = [
         },
         [EquationPlugin.key]: {
           serialize: (node: TEquationElement) => ({
-            type: 'math',
+            type: "math",
             value: node.texExpression,
           }),
         },

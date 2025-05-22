@@ -3,14 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useState, useEffect, useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,7 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Database } from "@/lib/db/database";
 
-type DraftType = Database['public']['Tables']['drafts']['Row']
+type DraftType = Database["public"]["Tables"]["drafts"]["Row"];
 
 export default function DraftsLookupPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -118,7 +111,7 @@ export default function DraftsLookupPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') submitSearch();
+              if (e.key === "Enter") submitSearch();
             }}
             onFocus={() => {
               if (drafts.length > 0) setShowResults(true);
@@ -142,9 +135,7 @@ export default function DraftsLookupPage() {
                 </div>
               ) : drafts.length > 0 ? (
                 <div className="space-y-1">
-                  <div className="px-2 py-1 text-xs font-medium text-muted-foreground">
-                    Draft Results
-                  </div>
+                  <div className="px-2 py-1 text-xs font-medium text-muted-foreground">Draft Results</div>
                   {drafts.map((draft) => (
                     <div
                       key={draft.id}
@@ -153,30 +144,22 @@ export default function DraftsLookupPage() {
                     >
                       <div className="flex-1 min-w-0">
                         <div className="flex gap-2 items-baseline">
-                          <span className="text-sm font-semibold truncate">
-                            {draft.title || 'Untitled Draft'}
-                          </span>
+                          <span className="text-sm font-semibold truncate">{draft.title || "Untitled Draft"}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-xs text-muted-foreground truncate">
-                            {draft.author || 'Unknown author'}
+                            {draft.author || "Unknown author"}
                           </span>
-                          <span className="text-xs font-mono text-muted-foreground">
-                            ID: {draft.documentId}
-                          </span>
+                          <span className="text-xs font-mono text-muted-foreground">ID: {draft.documentId}</span>
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : searchQuery.length >= 2 ? (
-                <div className="p-4 text-center text-muted-foreground">
-                  No drafts found
-                </div>
+                <div className="p-4 text-center text-muted-foreground">No drafts found</div>
               ) : (
-                <div className="p-4 text-center text-muted-foreground">
-                  Start typing to search
-                </div>
+                <div className="p-4 text-center text-muted-foreground">Start typing to search</div>
               )}
             </div>
           </div>
@@ -238,20 +221,12 @@ function DraftDetailView({ draft }: { draft: DraftType }) {
           <div className="flex items-start gap-6">
             <div className="space-y-1 flex-1">
               <CardTitle className="text-xl">{draft.title || "Untitled Draft"}</CardTitle>
-              {draft.author && (
-                <p className="text-muted-foreground">Author: {draft.author}</p>
-              )}
-              <p className="text-sm font-mono text-muted-foreground">
-                Document ID: {draft.documentId}
-              </p>
+              {draft.author && <p className="text-muted-foreground">Author: {draft.author}</p>}
+              <p className="text-sm font-mono text-muted-foreground">Document ID: {draft.documentId}</p>
               <div className="flex gap-2 mt-2">
-                <Badge variant="secondary">
-                  {new Date(draft.createdAt).toLocaleDateString()}
-                </Badge>
+                <Badge variant="secondary">{new Date(draft.createdAt).toLocaleDateString()}</Badge>
                 {draft.updatedAt && (
-                  <Badge variant="outline">
-                    Updated: {new Date(draft.updatedAt).toLocaleDateString()}
-                  </Badge>
+                  <Badge variant="outline">Updated: {new Date(draft.updatedAt).toLocaleDateString()}</Badge>
                 )}
               </div>
             </div>
@@ -273,4 +248,4 @@ function DraftDetailView({ draft }: { draft: DraftType }) {
       </Card>
     </div>
   );
-} 
+}

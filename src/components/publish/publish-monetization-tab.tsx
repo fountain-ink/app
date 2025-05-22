@@ -409,7 +409,7 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
       const currentRecipients = getValues("collecting.recipients") || [];
 
       if (currentRecipients.length === 0 && authenticatedUser?.address) {
-        const client = await getLensClient()
+        const client = await getLensClient();
         const account = await fetchAccount(client, {
           address: authenticatedUser.address,
         }).unwrapOr(null);
@@ -419,12 +419,12 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
             address: account.address,
             picture: account.metadata?.picture,
             username: account.metadata?.name,
-            percentage: 100
+            percentage: 100,
           };
 
           setValue("collecting.recipients", [newRecipient], {
             shouldValidate: true,
-            shouldDirty: true
+            shouldDirty: true,
           });
         }
       }
@@ -506,9 +506,7 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
                       control={control}
                       name="collecting.price"
                       render={({ field, fieldState }) => (
-                        <FormItem
-                          className="space-y-2"
-                        >
+                        <FormItem className="space-y-2">
                           <FormLabel>Price</FormLabel>
                           <div className="flex items-center">
                             <div className="relative w-full">
@@ -538,9 +536,7 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
                       )}
                     />
 
-                    <div
-                      className="border-t pt-4 mt-4 space-y-4 border-border"
-                    >
+                    <div className="border-t pt-4 mt-4 space-y-4 border-border">
                       <div className="flex items-center justify-between">
                         <div>
                           <div className="flex items-center gap-2">
@@ -621,9 +617,7 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
                         </div>
                       )}
 
-                      <div
-                        className="space-y-4 border-t pt-6 border-border"
-                      >
+                      <div className="space-y-4 border-t pt-6 border-border">
                         <div className="flex items-center justify-between">
                           <div>
                             <div className="flex items-center gap-2">
@@ -859,9 +853,7 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
                 )}
               </div>
 
-              <div
-                className="space-y-4 border-t pt-6 border-border/50"
-              >
+              <div className="space-y-4 border-t pt-6 border-border/50">
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="flex items-center gap-2">
@@ -912,9 +904,7 @@ export const MonetizationTab = ({ form }: CollectingTabProps): JSX.Element => {
                 )}
               </div>
 
-              <div
-                className="space-y-4 border-t pt-6 border-border/50"
-              >
+              <div className="space-y-4 border-t pt-6 border-border/50">
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="flex items-center gap-2">

@@ -30,18 +30,18 @@ export default function StatsPage() {
     const fetchStats = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/admin/stats');
+        const response = await fetch("/api/admin/stats");
         const result = await response.json();
 
         if (!response.ok) {
-          throw new Error(result.error || 'Failed to fetch stats');
+          throw new Error(result.error || "Failed to fetch stats");
         }
 
         setStats(result.data);
         setError(null);
       } catch (err) {
-        console.error('Error fetching stats:', err);
-        setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+        console.error("Error fetching stats:", err);
+        setError(err instanceof Error ? err.message : "An unexpected error occurred");
       } finally {
         setLoading(false);
       }
@@ -55,9 +55,7 @@ export default function StatsPage() {
       <Card>
         <CardHeader>
           <CardTitle>Analytics Dashboard</CardTitle>
-          <CardDescription>
-            View detailed metrics and statistics about your application
-          </CardDescription>
+          <CardDescription>View detailed metrics and statistics about your application</CardDescription>
         </CardHeader>
         <CardContent>
           {error && (
@@ -81,10 +79,7 @@ export default function StatsPage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <StatsCard
-                    title="Total Users"
-                    value={stats?.users.total.toString() || "0"}
-                  />
+                  <StatsCard title="Total Users" value={stats?.users.total.toString() || "0"} />
                   <StatsCard
                     title="Authenticated Users"
                     value={stats?.users.evm.toString() || "0"}
@@ -93,7 +88,9 @@ export default function StatsPage() {
                   <StatsCard
                     title="Guest Users"
                     value={stats?.users.guest.toString() || "0"}
-                    subtext={stats ? `${Math.round((stats.users.guest / stats.users.total) * 100)}% of total` : undefined}
+                    subtext={
+                      stats ? `${Math.round((stats.users.guest / stats.users.total) * 100)}% of total` : undefined
+                    }
                   />
                 </div>
               )}
@@ -107,14 +104,8 @@ export default function StatsPage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <StatsCard
-                    title="Blogs"
-                    value={stats?.content.blogs.toString() || "0"}
-                  />
-                  <StatsCard
-                    title="Drafts"
-                    value={stats?.content.drafts.toString() || "0"}
-                  />
+                  <StatsCard title="Blogs" value={stats?.content.blogs.toString() || "0"} />
+                  <StatsCard title="Drafts" value={stats?.content.drafts.toString() || "0"} />
                 </div>
               )}
             </TabsContent>
@@ -128,7 +119,7 @@ export default function StatsPage() {
 function StatsCard({
   title,
   value,
-  subtext
+  subtext,
 }: {
   title: string;
   value: string;
@@ -140,9 +131,7 @@ function StatsCard({
         <div className="space-y-1">
           <p className="text-sm text-muted-foreground">{title}</p>
           <p className="text-3xl font-bold">{value}</p>
-          {subtext && (
-            <p className="text-xs text-muted-foreground">{subtext}</p>
-          )}
+          {subtext && <p className="text-xs text-muted-foreground">{subtext}</p>}
         </div>
       </CardContent>
     </Card>
@@ -161,4 +150,4 @@ function StatsCardSkeleton() {
       </CardContent>
     </Card>
   );
-} 
+}

@@ -25,20 +25,15 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: "Failed to check ban status" }, { status: 500 });
       }
       return NextResponse.json({ isBanned: !!existingBan });
-
-    } else {
-      const { data, error } = await supabase
-        .from("banlist")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        console.error("Error fetching banned authors:", error);
-        return NextResponse.json({ error: "Failed to fetch banned authors" }, { status: 500 });
-      }
-
-      return NextResponse.json({ data });
     }
+    const { data, error } = await supabase.from("banlist").select("*").order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching banned authors:", error);
+      return NextResponse.json({ error: "Failed to fetch banned authors" }, { status: 500 });
+    }
+
+    return NextResponse.json({ data });
   } catch (error) {
     console.error("Unexpected error:", error);
     return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
@@ -61,23 +56,17 @@ export async function POST(req: NextRequest) {
 
     const supabase = await createServiceClient();
 
-    const { data: existingBan } = await supabase
-      .from("banlist")
-      .select("*")
-      .eq("address", address)
-      .maybeSingle();
+    const { data: existingBan } = await supabase.from("banlist").select("*").eq("address", address).maybeSingle();
 
     if (existingBan) {
       return NextResponse.json({ error: "Author already banned" }, { status: 409 });
     }
 
-    const { error } = await supabase
-      .from("banlist")
-      .insert({
-        address,
-        reason,
-        added_by,
-      });
+    const { error } = await supabase.from("banlist").insert({
+      address,
+      reason,
+      added_by,
+    });
 
     if (error) {
       console.error("Error banning author:", error);
@@ -107,10 +96,7 @@ export async function DELETE(req: NextRequest) {
 
     const supabase = await createServiceClient();
 
-    const { error } = await supabase
-      .from("banlist")
-      .delete()
-      .eq("address", address);
+    const { error } = await supabase.from("banlist").delete().eq("address", address);
 
     if (error) {
       console.error("Error unbanning author:", error);
@@ -122,4 +108,4 @@ export async function DELETE(req: NextRequest) {
     console.error("Unexpected error:", error);
     return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
   }
-} 
+}

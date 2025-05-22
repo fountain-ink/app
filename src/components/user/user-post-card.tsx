@@ -30,7 +30,7 @@ export function UserPostCard({ account, stats }: UserPostCardProps) {
     <div
       className={cn(
         "flex p-4 border border-border rounded-lg bg-card text-card-foreground",
-        "flex-col sm:flex-row items-stretch"
+        "flex-col sm:flex-row items-stretch",
       )}
     >
       <div className="flex flex-col flex-shrink-0 w-full min-w-0">

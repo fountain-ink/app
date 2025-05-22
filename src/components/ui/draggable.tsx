@@ -23,7 +23,7 @@ import {
   usePluginOption,
   useReadOnly,
   useSelected,
-} from '@udecode/plate/react';
+} from "@udecode/plate/react";
 
 import { GripVertical } from "lucide-react";
 
@@ -76,11 +76,7 @@ export const DraggableAboveNodes: RenderNodeWrapper = (props) => {
   return (props) => <Draggable {...props} />;
 };
 
-export function Draggable({
-  className,
-  ...props
-}: React.ComponentProps<'div'> & PlateElementProps) {
-
+export function Draggable({ className, ...props }: React.ComponentProps<"div"> & PlateElementProps) {
   const { children, editor, element, path } = props;
   const { isDragging, previewRef, handleRef } = useDraggable({ element });
   const isInColumn = path?.length === 3;
@@ -131,7 +127,7 @@ export function Draggable({
       </div>
     </div>
   );
-};
+}
 
 const Gutter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ children, className, ...props }, ref) => {

@@ -75,7 +75,7 @@ export async function GET(req: NextRequest) {
         coverUrl
       `)
       .eq("author", address)
-      .order('updatedAt', { ascending: false });
+      .order("updatedAt", { ascending: false });
 
     if (error) {
       throw new Error(error.message);
@@ -125,8 +125,8 @@ export async function POST(req: NextRequest) {
 
     let yDoc = null;
     if (body.yDocBase64) {
-      const binaryData = Buffer.from(body.yDocBase64, 'base64');
-      yDoc = `\\x${binaryData.toString('hex')}`;
+      const binaryData = Buffer.from(body.yDocBase64, "base64");
+      yDoc = `\\x${binaryData.toString("hex")}`;
     }
 
     if (!yDoc) {
@@ -140,7 +140,7 @@ export async function POST(req: NextRequest) {
         contentJson,
         documentId,
         author: address,
-        published_id: publishedId
+        published_id: publishedId,
       })
       .select()
       .single();

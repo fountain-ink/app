@@ -27,9 +27,7 @@ const CuratePage = async () => {
 
   return (
     <div className="flex flex-col mt-5 items-center justify-center max-w-4xl">
-      <div className="font-bold text-2xl mb-2 w-full">
-        Curate Posts
-      </div>
+      <div className="font-bold text-2xl mb-2 w-full">Curate Posts</div>
       <p className="text-muted-foreground mb-6 w-full">
         Add or remove posts from the curated list, or ban post authors.
       </p>
@@ -37,13 +35,10 @@ const CuratePage = async () => {
       <Separator className="w-full bg-border mb-8" />
 
       <div className="flex flex-col items-center">
-        <CuratedPaginatedFeed
-          initialPosts={mutablePosts}
-          initialPaginationInfo={postsResult?.pageInfo ?? {}}
-        />
+        <CuratedPaginatedFeed initialPosts={mutablePosts} initialPaginationInfo={postsResult?.pageInfo ?? {}} />
       </div>
     </div>
   );
 };
 
-export default CuratePage; 
+export default CuratePage;

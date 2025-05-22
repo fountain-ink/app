@@ -66,5 +66,5 @@ export const walletConnectTheme = {
   "--ck-qr-border-color": "#E9EAEC",
   "--ck-siwe-border": "#EAEBED",
   "--ck-overlay-backdrop-filter": "blur(16px)",
-  "--ck-primary-button-font-weight": "500"
+  "--ck-primary-button-font-weight": "500",
 };

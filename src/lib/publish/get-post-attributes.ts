@@ -6,9 +6,7 @@ interface UploadPostMetadataArgs {
   username: string;
 }
 
-export async function getPostAttributes({
-  draft,
-}: UploadPostMetadataArgs): Promise<any[] | null> {
+export async function getPostAttributes({ draft }: UploadPostMetadataArgs): Promise<any[] | null> {
   const attributes: any[] = [
     { key: "contentJson", type: MetadataAttributeType.JSON, value: JSON.stringify(draft.contentJson) },
   ];
@@ -26,16 +24,28 @@ export async function getPostAttributes({
   }
 
   if (draft.originalDate) {
-    attributes.push({ key: "originalDate", type: MetadataAttributeType.DATE, value: new Date(draft.originalDate).toISOString() });
+    attributes.push({
+      key: "originalDate",
+      type: MetadataAttributeType.DATE,
+      value: new Date(draft.originalDate).toISOString(),
+    });
   }
 
   if (draft.collectingSettings?.collectingLicense) {
-    attributes.push({ key: "license", type: MetadataAttributeType.STRING, value: draft.collectingSettings.collectingLicense });
+    attributes.push({
+      key: "license",
+      type: MetadataAttributeType.STRING,
+      value: draft.collectingSettings.collectingLicense,
+    });
   }
 
   if (draft.distributionSettings?.lensDisplay) {
-    attributes.push({ key: "lensDisplay", type: MetadataAttributeType.STRING, value: draft.distributionSettings.lensDisplay });
+    attributes.push({
+      key: "lensDisplay",
+      type: MetadataAttributeType.STRING,
+      value: draft.distributionSettings.lensDisplay,
+    });
   }
 
   return attributes;
-} 
+}

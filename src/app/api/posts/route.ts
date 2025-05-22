@@ -79,12 +79,18 @@ export async function POST(req: NextRequest) {
     if (post_id) {
       console.log(`[Posts Update] Attempting to update post with ID: ${post_id}`);
 
-      const { data: existingPost } = await db.from("posts").select("*").eq("id", post_id).eq("author", userAddress).single();
+      const { data: existingPost } = await db
+        .from("posts")
+        .select("*")
+        .eq("id", post_id)
+        .eq("author", userAddress)
+        .single();
 
       if (!existingPost) {
         console.error("[Posts Update] Post not found or doesn't belong to user");
       } else {
-        const { data: updatedPost, error: updateError } = await db.from("posts")
+        const { data: updatedPost, error: updateError } = await db
+          .from("posts")
           .update({
             lens_slug,
             slug,
@@ -108,14 +114,18 @@ export async function POST(req: NextRequest) {
     }
 
     // Create new post record
-    const { data: newPost, error } = await db.from("posts").insert({
-      author: userAddress,
-      handle,
-      lens_slug,
-      slug,
-      created_at: new Date().toISOString(),
-      id: post_id,
-    }).select().single();
+    const { data: newPost, error } = await db
+      .from("posts")
+      .insert({
+        author: userAddress,
+        handle,
+        lens_slug,
+        slug,
+        created_at: new Date().toISOString(),
+        id: post_id,
+      })
+      .select()
+      .single();
 
     if (error) {
       console.error("[Posts Create] Error creating post record:", error);
@@ -136,4 +146,4 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export const dynamic = "force-dynamic"; 
+export const dynamic = "force-dynamic";

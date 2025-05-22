@@ -3,14 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, ExternalLink } from "lucide-react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useState, useEffect, useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
@@ -128,7 +121,7 @@ export default function BlogsLookupPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') submitSearch();
+              if (e.key === "Enter") submitSearch();
             }}
             onFocus={() => {
               if (blogs.length > 0) setShowResults(true);
@@ -152,27 +145,19 @@ export default function BlogsLookupPage() {
                 </div>
               ) : blogs.length > 0 ? (
                 <div className="space-y-1">
-                  <div className="px-2 py-1 text-xs font-medium text-muted-foreground">
-                    Blog Results
-                  </div>
+                  <div className="px-2 py-1 text-xs font-medium text-muted-foreground">Blog Results</div>
                   {blogs.map((blog) => (
                     <div
                       key={blog.address}
                       className="flex items-center gap-2 px-2 py-1 hover:bg-accent cursor-pointer rounded-sm"
                       onClick={() => selectBlog(blog)}
                     >
-                      {blog.icon && (
-                        <img src={blog.icon} alt={blog.title || ''} className="w-6 h-6 rounded-full" />
-                      )}
+                      {blog.icon && <img src={blog.icon} alt={blog.title || ""} className="w-6 h-6 rounded-full" />}
                       <div className="flex-1 min-w-0">
                         <div className="flex gap-2 items-baseline">
-                          <span className="text-sm font-semibold truncate">
-                            {blog.title || 'Untitled Blog'}
-                          </span>
+                          <span className="text-sm font-semibold truncate">{blog.title || "Untitled Blog"}</span>
                           {blog.handle && (
-                            <span className="text-xs text-muted-foreground truncate">
-                              @{blog.handle}
-                            </span>
+                            <span className="text-xs text-muted-foreground truncate">@{blog.handle}</span>
                           )}
                         </div>
                         <span className="text-xs font-mono text-muted-foreground truncate">
@@ -183,13 +168,9 @@ export default function BlogsLookupPage() {
                   ))}
                 </div>
               ) : searchQuery.length >= 2 ? (
-                <div className="p-4 text-center text-muted-foreground">
-                  No blogs found
-                </div>
+                <div className="p-4 text-center text-muted-foreground">No blogs found</div>
               ) : (
-                <div className="p-4 text-center text-muted-foreground">
-                  Start typing to search
-                </div>
+                <div className="p-4 text-center text-muted-foreground">Start typing to search</div>
               )}
             </div>
           </div>
@@ -268,20 +249,12 @@ function BlogDetailView({ blog }: { blog: BlogType }) {
                   </a>
                 )}
               </CardTitle>
-              {blog.handle && (
-                <p className="text-muted-foreground">@{blog.handle}</p>
-              )}
-              <p className="text-sm font-mono text-muted-foreground truncate">
-                Address: {blog.address}
-              </p>
+              {blog.handle && <p className="text-muted-foreground">@{blog.handle}</p>}
+              <p className="text-sm font-mono text-muted-foreground truncate">Address: {blog.address}</p>
               <div className="flex gap-2 mt-2">
-                <Badge variant="secondary">
-                  Created: {new Date(blog.created_at).toLocaleDateString()}
-                </Badge>
+                <Badge variant="secondary">Created: {new Date(blog.created_at).toLocaleDateString()}</Badge>
                 {blog.updated_at && (
-                  <Badge variant="outline">
-                    Updated: {new Date(blog.updated_at).toLocaleDateString()}
-                  </Badge>
+                  <Badge variant="outline">Updated: {new Date(blog.updated_at).toLocaleDateString()}</Badge>
                 )}
               </div>
             </div>
@@ -340,4 +313,4 @@ function BlogDetailView({ blog }: { blog: BlogType }) {
       )}
     </div>
   );
-} 
+}

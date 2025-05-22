@@ -5,11 +5,11 @@ export default function Loading() {
     <div className="flex flex-col mt-5 items-center justify-center w-full max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
       {/* Placeholder for author section */}
       <div className="p-4 w-full flex justify-center">
-        <div className="h-4 w-48 bg-muted animate-pulse rounded-full"></div>
+        <div className="h-4 w-48 bg-muted animate-pulse rounded-full" />
       </div>
 
       {/* Placeholder for title */}
-      <div className="h-10 w-64 bg-muted animate-pulse rounded-lg mx-auto mb-4"></div>
+      <div className="h-10 w-64 bg-muted animate-pulse rounded-lg mx-auto mb-4" />
 
       {/* Posts */}
       <div className="flex flex-col py-4 mt-5 items-center justify-center w-full max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
@@ -19,4 +19,4 @@ export default function Loading() {
       </div>
     </div>
   );
-} 
+}

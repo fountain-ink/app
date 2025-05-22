@@ -3,7 +3,14 @@ import { AuthorView } from "@/components/user/user-author-view";
 import { ArticleFeed } from "@/components/post/post-article-feed";
 import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
-import { fetchAccount, fetchPosts, fetchPostTags, fetchGroup, fetchGroupMembers, fetchAdminsFor } from "@lens-protocol/client/actions";
+import {
+  fetchAccount,
+  fetchPosts,
+  fetchPostTags,
+  fetchGroup,
+  fetchGroupMembers,
+  fetchAdminsFor,
+} from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
 import { getBlogData } from "@/lib/settings/get-blog-data";
 import { MainContentFocus, Account } from "@lens-protocol/client";
@@ -66,15 +73,17 @@ export async function generateMetadata({ params }: { params: { blog: string } })
       title,
       description,
       url: blogUrl,
-      siteName: 'Fountain',
-      locale: 'en_US',
-      type: 'website',
-      images: icon ? [
-        {
-          url: icon,
-          alt: `${title} icon`,
-        }
-      ] : undefined,
+      siteName: "Fountain",
+      locale: "en_US",
+      type: "website",
+      images: icon
+        ? [
+            {
+              url: icon,
+              alt: `${title} icon`,
+            },
+          ]
+        : undefined,
     },
     twitter: {
       card: "summary",
@@ -86,10 +95,7 @@ export async function generateMetadata({ params }: { params: { blog: string } })
   };
 }
 
-const BlogPage = async ({
-  params,
-  searchParams,
-}: { params: { blog: string }; searchParams?: { tag?: string } }) => {
+const BlogPage = async ({ params, searchParams }: { params: { blog: string }; searchParams?: { tag?: string } }) => {
   const lens = await getLensClient();
   const { username, address: userAddress } = await getUserAccount();
   let profile;
@@ -119,9 +125,7 @@ const BlogPage = async ({
 
     const admins = await fetchAdminsFor(lens, { address: group.address }).unwrapOr(null);
     if (admins) {
-      groupAdmins = admins.items
-        .map((admin) => admin.account)
-        .filter((account) => account.address !== account.owner); // Check if the admin is a Lens account and not an EOA
+      groupAdmins = admins.items.map((admin) => admin.account).filter((account) => account.address !== account.owner); // Check if the admin is a Lens account and not an EOA
     }
 
     const members = await fetchGroupMembers(lens, {
@@ -169,7 +173,7 @@ const BlogPage = async ({
   const blogTitle = blogData?.title;
   const isUserBlog = username === params.blog && !isGroup;
   const isUserMemeber = groupMembers.some((member) => member.address === userAddress);
-  console.log(posts)
+  console.log(posts);
 
   return (
     <BlogTheme initialTheme={blogData?.theme?.name}>
@@ -177,10 +181,7 @@ const BlogPage = async ({
       <div className="flex flex-col mt-5 items-center justify-center w-full max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
         {showAuthor && (
           <div className="p-4">
-            <AuthorView
-              showUsername={false}
-              accounts={isGroup ? groupAdmins : profile ? [profile] : []}
-            />
+            <AuthorView showUsername={false} accounts={isGroup ? groupAdmins : profile ? [profile] : []} />
           </div>
         )}
 
@@ -199,10 +200,7 @@ const BlogPage = async ({
           <BlogTagNavigation tags={formattedTags} username={params.blog} />
         )} */}
         <div className="flex flex-col my-4 gap-4">
-          <ArticleFeed
-            posts={[...(posts?.items ?? [])]}
-            isUserProfile={isUserBlog || isUserMemeber}
-          />
+          <ArticleFeed posts={[...(posts?.items ?? [])]} isUserProfile={isUserBlog || isUserMemeber} />
         </div>
       </div>
     </BlogTheme>

@@ -68,7 +68,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
       }
 
       const data = result.value;
-      console.log("Username validation data:", data)
+      console.log("Username validation data:", data);
       switch (data.__typename) {
         case "NamespaceOperationValidationPassed":
           setValidationStatus("valid");
