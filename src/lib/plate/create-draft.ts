@@ -21,17 +21,12 @@ type CreateDraftOptions = {
  * @throws Error if the draft creation fails
  */
 export async function createDraft(options: CreateDraftOptions = {}) {
-  const {
-    initialContent,
-    documentId = getRandomUid(),
-    isGuest = isGuestUser(),
-    publishedId
-  } = options;
+  const { initialContent, documentId = getRandomUid(), isGuest = isGuestUser(), publishedId } = options;
 
   const contentToUse = initialContent || defaultContent;
   const yDoc = await generateYDoc(documentId, contentToUse);
   const yDocBinary = Y.encodeStateAsUpdate(yDoc);
-  const yDocBase64 = Buffer.from(yDocBinary).toString('base64');
+  const yDocBase64 = Buffer.from(yDocBinary).toString("base64");
 
   const response = await fetch("/api/drafts", {
     method: "POST",
@@ -42,7 +37,7 @@ export async function createDraft(options: CreateDraftOptions = {}) {
       documentId,
       yDocBase64: yDocBase64,
       contentJson: contentToUse,
-      publishedId
+      publishedId,
     }),
   });
 
@@ -60,10 +55,7 @@ export async function createDraft(options: CreateDraftOptions = {}) {
  */
 const generateYDoc = async (documentId: string, content: any) => {
   const yDoc = new Y.Doc();
-  const initialDelta = await slateToDeterministicYjsState(
-    documentId,
-    content
-  );
+  const initialDelta = await slateToDeterministicYjsState(documentId, content);
 
   yDoc.transact(() => {
     Y.applyUpdate(yDoc, initialDelta);
@@ -77,4 +69,4 @@ const generateYDoc = async (documentId: string, content: any) => {
   //sharedRoot.applyDelta(insertDelta as any);
 
   return yDoc;
-}
+};

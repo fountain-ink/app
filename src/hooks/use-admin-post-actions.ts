@@ -12,7 +12,7 @@ export const useAdminPostActions = (post: Post, isAdmin: boolean) => {
   const [isFeatured, setIsFeatured] = useState(false);
   const [isLoadingStatus, setIsLoadingStatus] = useState(isAdmin);
 
-  const { data: user } = useAuthenticatedUser()
+  const { data: user } = useAuthenticatedUser();
 
   useEffect(() => {
     const fetchStatus = async () => {
@@ -40,8 +40,6 @@ export const useAdminPostActions = (post: Post, isAdmin: boolean) => {
           console.error("Failed to fetch feature status:", await featureStatusRes.text());
           toast.error("Failed to fetch feature status");
         }
-
-
       } catch (error) {
         console.error("Error fetching admin status:", error);
         toast.error("Failed to fetch admin status");
@@ -57,38 +55,42 @@ export const useAdminPostActions = (post: Post, isAdmin: boolean) => {
     }
   }, [post.author.address, post.slug, isAdmin]);
 
+  const handleBanAuthor = useCallback(
+    async (reason = "") => {
+      try {
+        setIsBanning(true);
+        const authorAddress = post.author.address;
 
-  const handleBanAuthor = useCallback(async (reason: string = "") => {
-    try {
-      setIsBanning(true);
-      const authorAddress = post.author.address;
+        const response = await fetch("/api/admin/ban", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            address: authorAddress,
+            reason: reason,
+            added_by: user?.address,
+          }),
+        });
 
-      const response = await fetch("/api/admin/ban", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          address: authorAddress,
-          reason: reason,
-          added_by: user?.address
-        }),
-      });
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || "Failed to ban author");
+        }
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Failed to ban author");
+        setIsAuthorBanned(true);
+        toast.success(
+          `Author ${post.author.username?.localName || authorAddress} has been banned${reason ? ` for ${reason}` : ""}`,
+        );
+      } catch (error) {
+        console.error("Error banning author:", error);
+        toast.error(error instanceof Error ? error.message : "Failed to ban author");
+      } finally {
+        setIsBanning(false);
       }
-
-      setIsAuthorBanned(true);
-      toast.success(`Author ${post.author.username?.localName || authorAddress} has been banned${reason ? ` for ${reason}` : ''}`);
-    } catch (error) {
-      console.error("Error banning author:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to ban author");
-    } finally {
-      setIsBanning(false);
-    }
-  }, [post.author.address, post.author.username?.localName, user?.address]);
+    },
+    [post.author.address, post.author.username?.localName, user?.address],
+  );
 
   const handleUnbanAuthor = useCallback(async () => {
     try {
@@ -117,7 +119,6 @@ export const useAdminPostActions = (post: Post, isAdmin: boolean) => {
     }
   }, [post.author.address, post.author.username?.localName, user?.address]);
 
-
   const handleFeaturePost = useCallback(async () => {
     try {
       setIsFeaturing(true);
@@ -129,7 +130,7 @@ export const useAdminPostActions = (post: Post, isAdmin: boolean) => {
         },
         body: JSON.stringify({
           slug: post.slug,
-          added_by: user?.address
+          added_by: user?.address,
         }),
       });
 
@@ -139,7 +140,7 @@ export const useAdminPostActions = (post: Post, isAdmin: boolean) => {
       }
 
       setIsFeatured(true);
-      toast.success(`Post has been featured successfully`);
+      toast.success("Post has been featured successfully");
     } catch (error) {
       console.error("Error featuring post:", error);
       toast.error(error instanceof Error ? error.message : "Failed to feature post");
@@ -165,7 +166,7 @@ export const useAdminPostActions = (post: Post, isAdmin: boolean) => {
       }
 
       setIsFeatured(false);
-      toast.success(`Post has been unfeatured successfully`);
+      toast.success("Post has been unfeatured successfully");
     } catch (error) {
       console.error("Error unfeaturing post:", error);
       toast.error(error instanceof Error ? error.message : "Failed to unfeature post");
@@ -173,7 +174,6 @@ export const useAdminPostActions = (post: Post, isAdmin: boolean) => {
       setIsUnfeaturing(false);
     }
   }, [post.slug, post.id, user?.address]);
-
 
   return {
     handleBanAuthor,
@@ -188,4 +188,4 @@ export const useAdminPostActions = (post: Post, isAdmin: boolean) => {
     isFeatured,
     isLoadingStatus,
   };
-}; 
+};

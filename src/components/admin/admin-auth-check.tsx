@@ -16,4 +16,4 @@ export default function AdminAuthCheck({ children }: AdminAuthCheckProps) {
   }
 
   return <>{children}</>;
-} 
+}

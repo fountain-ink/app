@@ -99,138 +99,142 @@ function ImagePopover({
   );
 }
 
-export const ImageElement = withRef<typeof PlateElement>(
-  ({ children, className, attributes, ...props }, ref) => {
-    const [_isImageLoaded, setIsImageLoaded] = useState(false);
-    const [url, setUrl] = useState<string | undefined>(props?.element?.url as string | undefined);
-    const [isUploading, setIsUploading] = useState(false);
-    const [width, setWidth] = useState<ElementWidth>((props.element.width as ElementWidth) || "column");
-    const readonly = useReadOnly();
-    const figureRef = useRef<HTMLElement>(null);
-    const popoverRef = useRef<HTMLDivElement>(null);
-    const { api, editor } = useEditorPlugin(PlaceholderPlugin);
-    const print = editor.mode === "print";
-    const element = props.element as TImageElement;
-    const { align = "center", focused, readOnly, selected } = useMediaState();
-    const { props: imageProps } = useImage();
+export const ImageElement = withRef<typeof PlateElement>(({ children, className, attributes, ...props }, ref) => {
+  const [_isImageLoaded, setIsImageLoaded] = useState(false);
+  const [url, setUrl] = useState<string | undefined>(props?.element?.url as string | undefined);
+  const [isUploading, setIsUploading] = useState(false);
+  const [width, setWidth] = useState<ElementWidth>((props.element.width as ElementWidth) || "column");
+  const readonly = useReadOnly();
+  const figureRef = useRef<HTMLElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const { api, editor } = useEditorPlugin(PlaceholderPlugin);
+  const print = editor.mode === "print";
+  const element = props.element as TImageElement;
+  const { align = "center", focused, readOnly, selected } = useMediaState();
+  const { props: imageProps } = useImage();
 
-    const currentUploadingFile = useMemo(() => {
-      if (!element.placeholderId) return;
+  const currentUploadingFile = useMemo(() => {
+    if (!element.placeholderId) return;
 
-      return api.placeholder.getUploadingFile(element.placeholderId);
-    }, [element.placeholderId, api.placeholder]);
+    return api.placeholder.getUploadingFile(element.placeholderId);
+  }, [element.placeholderId, api.placeholder]);
 
-    useEffect(() => {
-      if (props.element?.url) {
-        setUrl(props.element.url as string);
-      } else {
-        setUrl(undefined);
+  useEffect(() => {
+    if (props.element?.url) {
+      setUrl(props.element.url as string);
+    } else {
+      setUrl(undefined);
+    }
+  }, [props.element.url]);
+
+  useEffect(() => {
+    if (props.element?.width) {
+      setWidth(props.element.width as ElementWidth);
+    }
+  }, [props.element.width]);
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const url = await uploadFile(file);
+      if (url) {
+        editor.tf.setNodes({ url, width }, { at: element });
+        editor.tf.select(editor.selection?.focus, { focus: true, edge: "end" });
       }
-    }, [props.element.url]);
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
-    useEffect(() => {
-      if (props.element?.width) {
-        setWidth(props.element.width as ElementWidth);
-      }
-    }, [props.element.width]);
-
-    const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-
-      setIsUploading(true);
-      try {
-        const url = await uploadFile(file);
-        if (url) {
-          editor.tf.setNodes({ url, width }, { at: element });
-          editor.tf.select(editor.selection?.focus, { focus: true, edge: "end" });
-        }
-      } finally {
-        setIsUploading(false);
-      }
-    };
-
-    return (
-      <ImagePopover url={url} open={selected} popoverRef={popoverRef}>
-        <PlateElement attributes={attributes} className={cn(className, "my-9 flex flex-col items-center  ")} {...props}>
-          <motion.figure
-            ref={figureRef}
-            className="group w-full flex flex-col items-center cursor-default"
-            contentEditable={false}
-            layout={true}
-            initial={width}
-            animate={width}
-            variants={widthVariants}
-            transition={{
-              type: "spring",
-              stiffness: 200,
-              damping: 30,
-            }}
-          >
-            {!url || !imageProps.src ? (
-              <div className={cn("rounded-sm flex items-center justify-center w-full", selected && "ring-2 ring-ring", ELEMENT_WIDTH_CLASSES[width])}>
-                <div className="absolute">
-                  {!readonly && (
-                    <Button className="hover:bg-transparent" size="lg" variant="ghost" disabled={isUploading}>
-                      <div className="relative flex gap-1 text-base text-muted-foreground hover:text-foreground duration-300 transition-colors cursor-pointer items-center justify-center">
-                        <input
-                          title=""
-                          type="file"
-                          accept="image/*"
-                          onChange={handleFileSelect}
-                          className="absolute inset-0 cursor-pointer opacity-0"
-                          disabled={isUploading}
-                        />
-                        {isUploading ? (
-                          <LoadingSpinner />
-                        ) : (
-                          <>{!url && <UploadIcon className="size-4 mr-2 text-inherit" />}</>
-                        )}
-                        <span className="">{isUploading ? "Uploading..." : "Upload Image"}</span>
-                      </div>
-                    </Button>
-                  )}
-                </div>
-
-                <ImagePlaceholder file={currentUploadingFile} />
+  return (
+    <ImagePopover url={url} open={selected} popoverRef={popoverRef}>
+      <PlateElement attributes={attributes} className={cn(className, "my-9 flex flex-col items-center  ")} {...props}>
+        <motion.figure
+          ref={figureRef}
+          className="group w-full flex flex-col items-center cursor-default"
+          contentEditable={false}
+          layout={true}
+          initial={width}
+          animate={width}
+          variants={widthVariants}
+          transition={{
+            type: "spring",
+            stiffness: 200,
+            damping: 30,
+          }}
+        >
+          {!url || !imageProps.src ? (
+            <div
+              className={cn(
+                "rounded-sm flex items-center justify-center w-full",
+                selected && "ring-2 ring-ring",
+                ELEMENT_WIDTH_CLASSES[width],
+              )}
+            >
+              <div className="absolute">
+                {!readonly && (
+                  <Button className="hover:bg-transparent" size="lg" variant="ghost" disabled={isUploading}>
+                    <div className="relative flex gap-1 text-base text-muted-foreground hover:text-foreground duration-300 transition-colors cursor-pointer items-center justify-center">
+                      <input
+                        title=""
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileSelect}
+                        className="absolute inset-0 cursor-pointer opacity-0"
+                        disabled={isUploading}
+                      />
+                      {isUploading ? (
+                        <LoadingSpinner />
+                      ) : (
+                        <>{!url && <UploadIcon className="size-4 mr-2 text-inherit" />}</>
+                      )}
+                      <span className="">{isUploading ? "Uploading..." : "Upload Image"}</span>
+                    </div>
+                  </Button>
+                )}
               </div>
-            ) : (
-              <div className="relative w-full aspect-auto">
-                <img
-                  className={cn("block w-full h-auto max-h-full", "rounded-sm", selected && "ring-2 ring-ring")}
-                  alt=""
-                  width={1200}
-                  height={800}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  style={{ height: 'auto', objectFit: 'contain' }}
-                  {...imageProps}
-                  onLoad={() => {
-                    setIsImageLoaded(true);
-                    currentUploadingFile &&
-                      api.placeholder.removeUploadingFile(props.element.fromPlaceholderId as string);
+
+              <ImagePlaceholder file={currentUploadingFile} />
+            </div>
+          ) : (
+            <div className="relative w-full aspect-auto">
+              <img
+                className={cn("block w-full h-auto max-h-full", "rounded-sm", selected && "ring-2 ring-ring")}
+                alt=""
+                width={1200}
+                height={800}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                style={{ height: "auto", objectFit: "contain" }}
+                {...imageProps}
+                onLoad={() => {
+                  setIsImageLoaded(true);
+                  currentUploadingFile &&
+                    api.placeholder.removeUploadingFile(props.element.fromPlaceholderId as string);
+                }}
+              />
+            </div>
+          )}
+
+          <AnimatePresence mode="wait">
+            <div className="w-full flex justify-center">
+              <Caption align={align}>
+                <CaptionTextarea
+                  readOnly={readonly}
+                  onFocus={(e) => {
+                    e.preventDefault();
                   }}
+                  placeholder="Write a caption..."
                 />
-              </div>
-            )}
+              </Caption>
+            </div>
+          </AnimatePresence>
+        </motion.figure>
 
-            <AnimatePresence mode="wait">
-              <div className="w-full flex justify-center">
-                <Caption align={align}>
-                  <CaptionTextarea
-                    readOnly={readonly}
-                    onFocus={(e) => {
-                      e.preventDefault();
-                    }}
-                    placeholder="Write a caption..."
-                  />
-                </Caption>
-              </div>
-            </AnimatePresence>
-          </motion.figure>
-
-          {children}
-        </PlateElement>
-      </ImagePopover>
-    );
-  },
-);
+        {children}
+      </PlateElement>
+    </ImagePopover>
+  );
+});

@@ -11,7 +11,6 @@ export const NormalizePlugin = createPlatePlugin({
     const isSynced = editor.getOptions(YjsPlugin)._isSynced;
     const isConnected = editor.getOptions(YjsPlugin)._isConnected;
 
-
     editor.apply = (...args: any) => {
       const operation = args[0] as { type: string; path: number[]; properties: { type?: string } };
       if (operation.type === "set_node" && operation.path[0] === 0 && operation.properties.type === TITLE_KEYS.title) {

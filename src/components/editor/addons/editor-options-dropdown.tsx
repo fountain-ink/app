@@ -38,7 +38,9 @@ export const EditorOptionsDropdown = () => {
   };
   const onEditTheme = () => {};
 
-  if (!user) { return null; }
+  if (!user) {
+    return null;
+  }
 
   return (
     <DropdownMenu open={open} onOpenChange={onOpenChange}>

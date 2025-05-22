@@ -17,18 +17,16 @@ const headingVariants = cva("relative mb-1", {
   },
 });
 
-const HeadingElementVariants = withVariants(PlateElement, headingVariants, [
-  'variant',
-]);
+const HeadingElementVariants = withVariants(PlateElement, headingVariants, ["variant"]);
 
 export function HeadingElement({
   children,
   element,
-  variant = 'h1',
+  variant = "h1",
   attributes,
   ...props
 }: React.ComponentProps<typeof HeadingElementVariants> & {
-  variant?: 'h1' | 'h2' | 'h3';
+  variant?: "h1" | "h2" | "h3";
 }) {
   return (
     <HeadingElementVariants
@@ -39,7 +37,7 @@ export function HeadingElement({
       as={variant}
       variant={variant}
       element={element}
-      {...props }
+      {...props}
     >
       {children}
     </HeadingElementVariants>

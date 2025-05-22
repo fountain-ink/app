@@ -24,7 +24,7 @@ type LensAccountData = {
 };
 
 // Type for DB user data - using the database definition
-type DbUserData = Database['public']['Tables']['users']['Row'] | null;
+type DbUserData = Database["public"]["Tables"]["users"]["Row"] | null;
 
 // Combined user data
 type UserData = {
@@ -66,7 +66,7 @@ export default function UsersLookupPage() {
 
       try {
         const lens = await getLensClient();
-        const isEthereumAddress = searchQuery.startsWith('0x');
+        const isEthereumAddress = searchQuery.startsWith("0x");
 
         let accounts;
         if (isEthereumAddress) {
@@ -74,27 +74,27 @@ export default function UsersLookupPage() {
           accounts = await fetchAccounts(lens, {
             filter: {
               searchBy: {
-                localNameQuery: searchQuery  // Search will still find by address
-              }
-            }
+                localNameQuery: searchQuery, // Search will still find by address
+              },
+            },
           }).unwrapOr(null);
         } else {
           accounts = await fetchAccounts(lens, {
             filter: {
               searchBy: {
-                localNameQuery: searchQuery
-              }
-            }
+                localNameQuery: searchQuery,
+              },
+            },
           }).unwrapOr(null);
         }
 
-        if (accounts && accounts.items) {
-          const results = accounts.items.map(item => ({
+        if (accounts?.items) {
+          const results = accounts.items.map((item) => ({
             address: item.address,
             username: item.username?.localName,
             name: item.metadata?.name,
             picture: item.metadata?.picture ? resolveUrl(item.metadata.picture) : undefined,
-            metadata: item.metadata
+            metadata: item.metadata,
           })) as LensAccountData[];
 
           setLensAccounts(results);
@@ -125,24 +125,24 @@ export default function UsersLookupPage() {
     setLoading(true);
     try {
       const lens = await getLensClient();
-      const isEthereumAddress = searchQuery.startsWith('0x');
+      const isEthereumAddress = searchQuery.startsWith("0x");
 
       let accounts;
       if (isEthereumAddress) {
         accounts = await fetchAccounts(lens, {
           filter: {
             searchBy: {
-              localNameQuery: searchQuery
-            }
-          }
+              localNameQuery: searchQuery,
+            },
+          },
         }).unwrapOr(null);
       } else {
         accounts = await fetchAccounts(lens, {
           filter: {
             searchBy: {
-              localNameQuery: searchQuery
-            }
-          }
+              localNameQuery: searchQuery,
+            },
+          },
         }).unwrapOr(null);
       }
 
@@ -154,10 +154,8 @@ export default function UsersLookupPage() {
           address: item.address || "",
           username: item.username?.localName,
           name: item.metadata?.name,
-          picture: item.metadata?.picture
-            ? resolveUrl(item.metadata.picture)
-            : undefined,
-          metadata: item.metadata || {}
+          picture: item.metadata?.picture ? resolveUrl(item.metadata.picture) : undefined,
+          metadata: item.metadata || {},
         };
 
         await selectLensAccount(account);
@@ -195,13 +193,13 @@ export default function UsersLookupPage() {
       // Set the selected user data
       setSelectedUser({
         lensData: account,
-        dbData: response.ok && result.data ? result.data : null
+        dbData: response.ok && result.data ? result.data : null,
       });
     } catch (error) {
       console.error("Error looking up account in database:", error);
       setSelectedUser({
         lensData: account,
-        dbData: null
+        dbData: null,
       });
     } finally {
       setLoading(false);
@@ -218,7 +216,7 @@ export default function UsersLookupPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') submitSearch();
+              if (e.key === "Enter") submitSearch();
             }}
             onFocus={() => {
               if (lensAccounts.length > 0) setShowResults(true);
@@ -242,9 +240,7 @@ export default function UsersLookupPage() {
                 </div>
               ) : lensAccounts.length > 0 ? (
                 <div className="space-y-1">
-                  <div className="px-2 py-1 text-xs font-medium text-muted-foreground">
-                    Lens Protocol Results
-                  </div>
+                  <div className="px-2 py-1 text-xs font-medium text-muted-foreground">Lens Protocol Results</div>
                   {lensAccounts.map((account) => (
                     <div
                       key={account.address}
@@ -252,23 +248,21 @@ export default function UsersLookupPage() {
                       onClick={() => selectLensAccount(account)}
                     >
                       {account.picture ? (
-                        <img src={account.picture} alt={account.username || account.name || ''} className="w-8 h-8 rounded-full" />
+                        <img
+                          src={account.picture}
+                          alt={account.username || account.name || ""}
+                          className="w-8 h-8 rounded-full"
+                        />
                       ) : (
                         <Avatar className="h-8 w-8">
-                          <AvatarFallback>
-                            {account.name ? account.name.charAt(0).toUpperCase() : '?'}
-                          </AvatarFallback>
+                          <AvatarFallback>{account.name ? account.name.charAt(0).toUpperCase() : "?"}</AvatarFallback>
                         </Avatar>
                       )}
                       <div className="flex-1 min-w-0">
                         <div className="flex gap-2 items-baseline">
-                          <span className="text-sm font-semibold truncate">
-                            {account.name || 'Unknown'}
-                          </span>
+                          <span className="text-sm font-semibold truncate">{account.name || "Unknown"}</span>
                           {account.username && (
-                            <span className="text-xs text-muted-foreground truncate">
-                              @{account.username}
-                            </span>
+                            <span className="text-xs text-muted-foreground truncate">@{account.username}</span>
                           )}
                         </div>
                         <span className="text-xs font-mono text-muted-foreground truncate">
@@ -279,13 +273,9 @@ export default function UsersLookupPage() {
                   ))}
                 </div>
               ) : searchQuery.length >= 2 ? (
-                <div className="p-4 text-center text-muted-foreground">
-                  No accounts found
-                </div>
+                <div className="p-4 text-center text-muted-foreground">No accounts found</div>
               ) : (
-                <div className="p-4 text-center text-muted-foreground">
-                  Start typing to search
-                </div>
+                <div className="p-4 text-center text-muted-foreground">Start typing to search</div>
               )}
             </div>
           </div>
@@ -335,7 +325,11 @@ function UserDetailView({ userData }: { userData: UserData }) {
   const { lensData, dbData } = userData;
 
   const initials = lensData.name
-    ? lensData.name.split(" ").map(part => part.charAt(0)).join("").toUpperCase()
+    ? lensData.name
+        .split(" ")
+        .map((part) => part.charAt(0))
+        .join("")
+        .toUpperCase()
     : "??";
 
   return (
@@ -344,28 +338,22 @@ function UserDetailView({ userData }: { userData: UserData }) {
         <CardHeader>
           <div className="flex items-start gap-6">
             <Avatar className="h-16 w-16">
-              {lensData.picture ? (
-                <AvatarImage src={lensData.picture} alt={lensData.name || "User"} />
-              ) : null}
+              {lensData.picture ? <AvatarImage src={lensData.picture} alt={lensData.name || "User"} /> : null}
               <AvatarFallback className="text-lg">{initials}</AvatarFallback>
             </Avatar>
 
             <div className="space-y-1 flex-1">
-              <CardTitle className="text-xl">
-                {lensData.name || "Unknown User"}
-              </CardTitle>
-              {lensData.username && (
-                <p className="text-muted-foreground">@{lensData.username}</p>
-              )}
-              <p className="text-sm font-mono text-muted-foreground truncate">
-                {lensData.address}
-              </p>
+              <CardTitle className="text-xl">{lensData.name || "Unknown User"}</CardTitle>
+              {lensData.username && <p className="text-muted-foreground">@{lensData.username}</p>}
+              <p className="text-sm font-mono text-muted-foreground truncate">{lensData.address}</p>
               <div className="flex gap-2 mt-2">
                 <Badge variant="secondary">Lens Protocol</Badge>
                 {dbData ? (
                   <Badge variant="default">Internal DB</Badge>
                 ) : (
-                  <Badge variant="outline" className="text-muted-foreground">Not in Database</Badge>
+                  <Badge variant="outline" className="text-muted-foreground">
+                    Not in Database
+                  </Badge>
                 )}
               </div>
             </div>
@@ -403,7 +391,9 @@ function UserDetailView({ userData }: { userData: UserData }) {
                 <p className="text-sm font-medium text-muted-foreground">Metadata</p>
                 <ScrollArea className="h-60 w-full rounded-md border border-border bg-muted">
                   <div className="text-sm font-mono">
-                    <pre className="text-xs border border-border rounded-md p-2">{JSON.stringify(lensData.metadata, null, 2)}</pre>
+                    <pre className="text-xs border border-border rounded-md p-2">
+                      {JSON.stringify(lensData.metadata, null, 2)}
+                    </pre>
                   </div>
                 </ScrollArea>
               </div>
@@ -470,7 +460,9 @@ function UserDetailView({ userData }: { userData: UserData }) {
                   <p className="text-sm font-medium text-muted-foreground">Metadata</p>
                   <ScrollArea className="h-60 w-full rounded-md border border-border bg-muted">
                     <div className="text-sm font-mono">
-                      <pre className="text-xs border border-border rounded-md p-2">{JSON.stringify(dbData.metadata, null, 2)}</pre>
+                      <pre className="text-xs border border-border rounded-md p-2">
+                        {JSON.stringify(dbData.metadata, null, 2)}
+                      </pre>
                     </div>
                   </ScrollArea>
                 </div>
@@ -481,7 +473,9 @@ function UserDetailView({ userData }: { userData: UserData }) {
                   <p className="text-sm font-medium text-muted-foreground">Settings</p>
                   <ScrollArea className="h-60 w-full rounded-md border border-border bg-muted">
                     <div className="text-sm font-mono">
-                      <pre className="text-xs border border-border rounded-md p-2">{JSON.stringify(dbData.settings, null, 2)}</pre>
+                      <pre className="text-xs border border-border rounded-md p-2">
+                        {JSON.stringify(dbData.settings, null, 2)}
+                      </pre>
                     </div>
                   </ScrollArea>
                 </div>
@@ -503,4 +497,4 @@ function UserDetailView({ userData }: { userData: UserData }) {
       </div>
     </div>
   );
-} 
+}

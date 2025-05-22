@@ -16,11 +16,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState, useEffect } from "react";
 
 const navItems = [
@@ -58,11 +54,12 @@ export default function AdminNavigation() {
             key={item.id}
             href={`/admin/${item.id}`}
             className={`px-2 md:px-4 py-2 flex items-center justify-between rounded-lg text-sm font-medium transition-colors
-              ${item.enabled
-                ? isActive
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-accent hover:text-accent-foreground"
-                : "opacity-50 cursor-not-allowed"
+              ${
+                item.enabled
+                  ? isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-accent hover:text-accent-foreground"
+                  : "opacity-50 cursor-not-allowed"
               }`}
             onClick={(e) => {
               if (!item.enabled) e.preventDefault();
@@ -80,10 +77,10 @@ export default function AdminNavigation() {
 
       {/* Lookup section with sub-navigation */}
       <Collapsible open={lookupOpen} onOpenChange={setLookupOpen} className="w-full">
-        <CollapsibleTrigger className={`px-2 md:px-4 py-2 flex items-center justify-between rounded-lg text-sm font-medium transition-colors w-full
-          ${isLookupSection
-            ? "bg-primary text-primary-foreground"
-            : "hover:bg-accent hover:text-accent-foreground"}`}>
+        <CollapsibleTrigger
+          className={`px-2 md:px-4 py-2 flex items-center justify-between rounded-lg text-sm font-medium transition-colors w-full
+          ${isLookupSection ? "bg-primary text-primary-foreground" : "hover:bg-accent hover:text-accent-foreground"}`}
+        >
           <div className="flex items-center space-x-2">
             <Search className="w-4 h-4" />
             <span className="hidden sm:inline">Lookup</span>
@@ -94,9 +91,15 @@ export default function AdminNavigation() {
             viewBox="0 0 16 16"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className={`transition-transform ${lookupOpen ? 'rotate-180' : ''}`}
+            className={`transition-transform ${lookupOpen ? "rotate-180" : ""}`}
           >
-            <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path
+              d="M4 6L8 10L12 6"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         </CollapsibleTrigger>
         <CollapsibleContent className="pl-4 mt-1 space-y-1 overflow-hidden">
@@ -108,10 +111,7 @@ export default function AdminNavigation() {
                 key={item.id}
                 href={subPath}
                 className={`px-2 md:px-4 py-2 flex items-center rounded-lg text-sm font-medium transition-colors
-                ${isActive
-                    ? "bg-primary/10 text-primary"
-                    : "hover:bg-accent hover:text-accent-foreground"
-                  }`}
+                ${isActive ? "bg-primary/10 text-primary" : "hover:bg-accent hover:text-accent-foreground"}`}
               >
                 <div className="flex items-center space-x-2">
                   {item.icon && <item.icon className="w-4 h-4" />}
@@ -124,4 +124,4 @@ export default function AdminNavigation() {
       </Collapsible>
     </nav>
   );
-} 
+}

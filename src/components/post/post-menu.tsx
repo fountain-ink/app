@@ -50,13 +50,9 @@ export const PostMenu = ({ post }: { post: Post }) => {
     setIsCreatingDraft(true);
 
     try {
-      const attributes = post.metadata.__typename === 'ArticleMetadata'
-        ? post.metadata.attributes
-        : [];
+      const attributes = post.metadata.__typename === "ArticleMetadata" ? post.metadata.attributes : [];
 
-      const contentJsonAttribute = attributes.find(
-        (attr: { key: string; value: any }) => attr.key === "contentJson"
-      );
+      const contentJsonAttribute = attributes.find((attr: { key: string; value: any }) => attr.key === "contentJson");
 
       if (!contentJsonAttribute || !contentJsonAttribute.value) {
         toast.error("Cannot edit this post: Original content not available");
@@ -76,7 +72,7 @@ export const PostMenu = ({ post }: { post: Post }) => {
       await createDraft({
         initialContent: contentJson,
         publishedId: post.id,
-        documentId
+        documentId,
       });
 
       saveDocument(documentId, {
@@ -148,17 +144,17 @@ export const PostMenu = ({ post }: { post: Post }) => {
     },
     ...(isUserPost
       ? [
-        {
-          icon: Pencil,
-          label: isCreatingDraft ? "Creating draft..." : "Edit post",
-          onClick: isCreatingDraft ? () => { } : handleEditPost,
-        },
-        {
-          icon: Trash2,
-          label: "Delete post",
-          onClick: openDeleteDialog,
-        },
-      ]
+          {
+            icon: Pencil,
+            label: isCreatingDraft ? "Creating draft..." : "Edit post",
+            onClick: isCreatingDraft ? () => {} : handleEditPost,
+          },
+          {
+            icon: Trash2,
+            label: "Delete post",
+            onClick: openDeleteDialog,
+          },
+        ]
       : []),
   ];
 

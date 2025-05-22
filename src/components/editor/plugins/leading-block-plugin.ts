@@ -29,7 +29,7 @@ const withLeadingBlock: OverrideEditor<LeadingBlockConfig> = ({ editor, getOptio
       const isSynced = editor.getOptions(YjsPlugin)._isSynced;
       const isConnected = editor.getOptions(YjsPlugin)._isConnected;
 
-      if (!isSynced || !isConnected) return; 
+      if (!isSynced || !isConnected) return;
 
       if (currentPath.length === 0) {
         const firstChild = editor.children[0];

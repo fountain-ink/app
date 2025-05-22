@@ -7,7 +7,21 @@ import type { Tag } from "emblor";
 import { FC, useCallback, useEffect, useState, useRef, useMemo } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { CombinedFormValues } from "./publish-dialog";
-import { ImageIcon, PenIcon, AlertCircle, PenOffIcon, ScrollText, Heart, MessageCircle, MoreHorizontalIcon, ChevronLeft, ChevronRight, ChevronDown, CalendarIcon, XIcon } from "lucide-react";
+import {
+  ImageIcon,
+  PenIcon,
+  AlertCircle,
+  PenOffIcon,
+  ScrollText,
+  Heart,
+  MessageCircle,
+  MoreHorizontalIcon,
+  ChevronLeft,
+  ChevronRight,
+  ChevronDown,
+  CalendarIcon,
+  XIcon,
+} from "lucide-react";
 import { checkSlugAvailability } from "@/lib/slug/check-slug-availability";
 import { debounce } from "lodash";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
@@ -27,9 +41,11 @@ export const detailsFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title should be less than 100 characters"),
   subtitle: z.string().optional().nullable(),
   coverUrl: z.string().optional().nullable(),
-  slug: z.string().optional()
-    .refine(value => !value || /^[a-z0-9-]+$/.test(value), {
-      message: "Slug must contain only lowercase letters, numbers, and hyphens"
+  slug: z
+    .string()
+    .optional()
+    .refine((value) => !value || /^[a-z0-9-]+$/.test(value), {
+      message: "Slug must contain only lowercase letters, numbers, and hyphens",
     }),
   tags: z.array(z.string()).max(5, "You can add up to 5 tags").default([]),
   images: z.array(z.string()).default([]),
@@ -40,8 +56,8 @@ export const detailsFormSchema = z.object({
 
 export type DetailsFormValues = z.infer<typeof detailsFormSchema>;
 
-const generateSlug = (title: string, subtitle: string = ""): string => {
-  const combinedText = (title + " " + subtitle).trim();
+const generateSlug = (title: string, subtitle = ""): string => {
+  const combinedText = `${title} ${subtitle}`.trim();
   const words = combinedText.split(/\s+/);
   const limitedWords = words.slice(0, 10);
   const limitedText = limitedWords.join(" ");
@@ -74,7 +90,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
   const [isSlugAvailable, setIsSlugAvailable] = useState<boolean | null>(null);
   const [isEditingPreview, setIsEditingPreview] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(images.findIndex(image => image === coverUrl) || 0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(images.findIndex((image) => image === coverUrl) || 0);
   const isShowingUploader = currentImageIndex === images.length;
   const isMiscExpanded = form.watch("details.isMiscSectionExpanded");
 
@@ -95,7 +111,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
     } else {
       const uniqueImages = [...currentImages];
 
-      draftImages.forEach(img => {
+      draftImages.forEach((img) => {
         if (!uniqueImages.includes(img)) {
           uniqueImages.push(img);
         }
@@ -147,33 +163,33 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
     }
   };
 
-  const slugCheckRunner = useCallback(async (slugToValidate: string) => {
-    if (!slugToValidate) {
-      setIsSlugAvailable(null);
-      return;
-    }
-    setIsCheckingSlug(true);
-    try {
-      const appToken = getCookie("appToken") as string;
-      const claims = getTokenClaims(appToken);
-      const handle = claims?.metadata?.username || '';
-      const result = await checkSlugAvailability(slugToValidate, handle);
-      setIsSlugAvailable(result.available);
-    } catch (error) {
-      console.error("Failed to check slug availability:", error);
-      setIsSlugAvailable(null);
-    } finally {
-      setIsCheckingSlug(false);
-    }
-  }, [setIsSlugAvailable, setIsCheckingSlug]);
-
-  const checkSlugDebounced = useMemo(() =>
-    debounce(slugCheckRunner, 500),
-    [slugCheckRunner]
+  const slugCheckRunner = useCallback(
+    async (slugToValidate: string) => {
+      if (!slugToValidate) {
+        setIsSlugAvailable(null);
+        return;
+      }
+      setIsCheckingSlug(true);
+      try {
+        const appToken = getCookie("appToken") as string;
+        const claims = getTokenClaims(appToken);
+        const handle = claims?.metadata?.username || "";
+        const result = await checkSlugAvailability(slugToValidate, handle);
+        setIsSlugAvailable(result.available);
+      } catch (error) {
+        console.error("Failed to check slug availability:", error);
+        setIsSlugAvailable(null);
+      } finally {
+        setIsCheckingSlug(false);
+      }
+    },
+    [setIsSlugAvailable, setIsCheckingSlug],
   );
 
+  const checkSlugDebounced = useMemo(() => debounce(slugCheckRunner, 500), [slugCheckRunner]);
+
   useEffect(() => {
-    if (typeof slug === 'string') {
+    if (typeof slug === "string") {
       checkSlugDebounced(slug);
     } else {
       setIsSlugAvailable(null);
@@ -216,8 +232,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
 
   const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     form.setValue("details.isSlugManuallyEdited", true, { shouldDirty: true });
-    form.setValue("details.slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""),
-      { shouldValidate: true });
+    form.setValue("details.slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""), { shouldValidate: true });
   };
 
   return (
@@ -234,18 +249,14 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
               size="iconSm"
               icon={isEditingPreview ? <PenOffIcon className="w-4 h-4" /> : <PenIcon className="w-4 h-4" />}
               label={isEditingPreview ? "Cancel editing preview" : "Edit preview"}
-              onClick={() => setIsEditingPreview(prev => !prev)}
+              onClick={() => setIsEditingPreview((prev) => !prev)}
             />
           </div>
           {isEditingPreview ? (
             <div className="flex flex-row items-start gap-4 sm:gap-8">
               <div className="h-40 w-40 relative shrink-0 aspect-square rounded-sm overflow-hidden">
                 {coverUrl ? (
-                  <img
-                    src={coverUrl}
-                    alt="Cover"
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={coverUrl} alt="Cover" className="w-full h-full object-cover" />
                 ) : (
                   <ImageUploader
                     label=""
@@ -306,7 +317,12 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
                     <FormItem className="max-w-full">
                       <FormLabel htmlFor="subtitle">Subtitle</FormLabel>
                       <FormControl>
-                        <Input id="subtitle" placeholder="Enter subtitle (optional)" {...field} value={field.value ?? ""} />
+                        <Input
+                          id="subtitle"
+                          placeholder="Enter subtitle (optional)"
+                          {...field}
+                          value={field.value ?? ""}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -318,11 +334,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
             <div className="flex flex-row items-start gap-4 sm:gap-8">
               <div className="h-40 w-40 relative shrink-0 aspect-square rounded-sm overflow-hidden">
                 {coverUrl ? (
-                  <img
-                    src={coverUrl}
-                    alt="Cover"
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={coverUrl} alt="Cover" className="w-full h-full object-cover" />
                 ) : (
                   <ImageUploader
                     label=""
@@ -369,8 +381,8 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
           )}
 
           <p className="text-sm text-muted-foreground">
-            Change how the post will be shown on social media and your blog index. This does not affect post's
-            original title or subtitle.
+            Change how the post will be shown on social media and your blog index. This does not affect post's original
+            title or subtitle.
           </p>
         </div>
 
@@ -383,25 +395,20 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
               <ScrollText className="w-4 h-4 text-muted-foreground" />
               <h3 className="font-medium">Misc</h3>
             </div>
-            <motion.div
-              animate={{ rotate: isMiscExpanded ? 180 : 0 }}
-              transition={{ duration: 0.2 }}
-            >
+            <motion.div animate={{ rotate: isMiscExpanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
               <ChevronDown className="h-4 w-4 text-muted-foreground" />
             </motion.div>
           </div>
 
           {!isMiscExpanded && (
-            <p className="text-sm text-muted-foreground">
-              Configure post slug, tags, and other article settings
-            </p>
+            <p className="text-sm text-muted-foreground">Configure post slug, tags, and other article settings</p>
           )}
 
           <motion.div
             initial={isMiscExpanded ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
             animate={{
               height: isMiscExpanded ? "auto" : 0,
-              opacity: isMiscExpanded ? 1 : 0
+              opacity: isMiscExpanded ? 1 : 0,
             }}
             transition={{ duration: 0.3 }}
             className={cn("overflow-hidden flex flex-col gap-4", !isMiscExpanded && "-mt-4")}
@@ -437,15 +444,14 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
                     )}
                   </div>
                   <FormDescription>
-                    {isSlugAvailable === false ?
-                      "This slug is already taken for your account. Please choose another one." :
-                      "The slug is used in the URL of your post."}
+                    {isSlugAvailable === false
+                      ? "This slug is already taken for your account. Please choose another one."
+                      : "The slug is used in the URL of your post."}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
 
             <FormField
               control={form.control}
@@ -496,15 +502,11 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
                             variant="outline"
                             className={cn(
                               "w-full justify-start text-left max-w-xs font-normal",
-                              !field.value && "text-muted-foreground"
+                              !field.value && "text-muted-foreground",
                             )}
                           >
                             <CalendarIcon className="mr-2 h-4 w-4" />
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
+                            {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                           </Button>
                         </PopoverTrigger>
                         {field.value && (
@@ -536,9 +538,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
                       </PopoverContent>
                     </Popover>
                   </div>
-                  <FormDescription>
-                    Set an original publication date for this post.
-                  </FormDescription>
+                  <FormDescription>Set an original publication date for this post.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

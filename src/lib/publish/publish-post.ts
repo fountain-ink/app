@@ -24,7 +24,7 @@ export async function publishPost(
   router: ReturnType<typeof useRouter>,
   queryClient: ReturnType<typeof useQueryClient>,
 ): Promise<boolean> {
-  const documentId = draft.documentId
+  const documentId = draft.documentId;
   const collectingSettings = draft.collectingSettings;
   const sendNewsletter = draft.distributionSettings?.sendNewsletter;
   const selectedBlogAddress = draft.distributionSettings?.selectedBlogAddress;
@@ -120,7 +120,7 @@ export async function publishPost(
     lensSlug: postSlug,
     draftSlug: draft.slug || undefined,
     username,
-    postId: postValue.value?.id as PostId
+    postId: postValue.value?.id as PostId,
   });
 
   router.push(`/p/${username}/${postSlug}?success=true`);
@@ -136,5 +136,4 @@ export async function publishPost(
   }
 
   return true;
-
 }

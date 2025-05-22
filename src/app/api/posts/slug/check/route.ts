@@ -8,8 +8,8 @@ export async function GET(req: NextRequest) {
 
   try {
     const searchParams = req.nextUrl.searchParams;
-    const slug = searchParams.get('slug');
-    const handle = searchParams.get('handle');
+    const slug = searchParams.get("slug");
+    const handle = searchParams.get("handle");
 
     if (!slug) {
       console.error("[Posts Slug Check] Missing slug parameter");
@@ -21,17 +21,14 @@ export async function GET(req: NextRequest) {
       console.log("[Posts Slug Check] No handle provided, assuming available");
       return NextResponse.json({
         available: true,
-        slug: slug
+        slug: slug,
       });
     }
 
     const db = await createServiceClient();
 
     // Check if slug exists for this specific handle
-    const { data: existingPosts, error } = await db.from("posts")
-      .select("id")
-      .eq("slug", slug)
-      .eq("handle", handle);
+    const { data: existingPosts, error } = await db.from("posts").select("id").eq("slug", slug).eq("handle", handle);
 
     if (error) {
       console.error("[Posts Slug Check] Error checking slug availability:", error);
@@ -40,10 +37,12 @@ export async function GET(req: NextRequest) {
 
     const isAvailable = !existingPosts || existingPosts.length === 0;
 
-    console.log(`[Posts Slug Check] Slug '${slug}' for handle '${handle}' is ${isAvailable ? 'available' : 'already taken'}`);
+    console.log(
+      `[Posts Slug Check] Slug '${slug}' for handle '${handle}' is ${isAvailable ? "available" : "already taken"}`,
+    );
     return NextResponse.json({
       available: isAvailable,
-      slug: slug
+      slug: slug,
     });
   } catch (error) {
     console.error("[Posts Slug Check] Unexpected error:", error);
@@ -54,4 +53,4 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export const dynamic = "force-dynamic"; 
+export const dynamic = "force-dynamic";

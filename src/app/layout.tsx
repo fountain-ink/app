@@ -59,5 +59,4 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-
 export default RootLayout;

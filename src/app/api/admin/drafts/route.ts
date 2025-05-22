@@ -19,15 +19,12 @@ export async function GET(req: NextRequest) {
     if (documentId) {
       console.log(`Looking up draft by documentId: ${documentId}`);
 
-      const { data, error } = await supabase
-        .from("drafts")
-        .select("*")
-        .eq('documentId', documentId)
-        .single();
+      const { data, error } = await supabase.from("drafts").select("*").eq("documentId", documentId).single();
 
       if (error) {
         console.error(`Error looking up draft by documentId: ${error.message}`);
-        if (error.code === 'PGRST116') { // "No rows returned" error
+        if (error.code === "PGRST116") {
+          // "No rows returned" error
           return NextResponse.json({ data: null });
         }
         return NextResponse.json({ error: "Failed to lookup draft" }, { status: 500 });
@@ -39,15 +36,12 @@ export async function GET(req: NextRequest) {
     if (title) {
       console.log(`Looking up draft by title: ${title}`);
 
-      const { data, error } = await supabase
-        .from("drafts")
-        .select("*")
-        .eq('title', title)
-        .single();
+      const { data, error } = await supabase.from("drafts").select("*").eq("title", title).single();
 
       if (error) {
         console.error(`Error looking up draft by title: ${error.message}`);
-        if (error.code === 'PGRST116') { // "No rows returned" error
+        if (error.code === "PGRST116") {
+          // "No rows returned" error
           return NextResponse.json({ data: null });
         }
         return NextResponse.json({ error: "Failed to lookup draft" }, { status: 500 });
@@ -64,7 +58,7 @@ export async function GET(req: NextRequest) {
       .from("drafts")
       .select("*")
       .or(`title.ilike.%${query}%,documentId.eq.${query},author.ilike.%${query}%`)
-      .order('updatedAt', { ascending: false })
+      .order("updatedAt", { ascending: false })
       .limit(10);
 
     if (error) {
@@ -77,4 +71,4 @@ export async function GET(req: NextRequest) {
     console.error("Unexpected error:", error);
     return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
   }
-} 
+}

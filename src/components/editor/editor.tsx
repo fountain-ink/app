@@ -34,7 +34,7 @@ export default function PlateEditor(
   const searchParams = useSearchParams();
   const isPreview = searchParams.has("preview");
   const isReadOnly = props.readOnly || isPreview;
-  const isMounted = useMounted()
+  const isMounted = useMounted();
   const imported = searchParams.has("import");
 
   const editor = createPlateEditor({
@@ -50,7 +50,6 @@ export default function PlateEditor(
     if (!imported || editor || !isMounted) return;
 
     // TODO: remove last 3 nodes
-
   }, [imported, editor, isMounted]);
 
   useEffect(() => {
@@ -60,12 +59,11 @@ export default function PlateEditor(
       id: documentId,
       value: defaultContent,
       autoSelect: "end",
-    })
+    });
 
     return () => {
       editor.getApi(YjsPlugin).yjs.destroy();
     };
-
   }, [isMounted, editor]);
 
   return (

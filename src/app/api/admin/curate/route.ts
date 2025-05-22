@@ -12,8 +12,8 @@ export async function GET(req: NextRequest) {
 
     const url = new URL(req.url);
     const slug = url.searchParams.get("slug");
-    const page = parseInt(url.searchParams.get("page") || "1");
-    const limit = parseInt(url.searchParams.get("limit") || "10");
+    const page = Number.parseInt(url.searchParams.get("page") || "1");
+    const limit = Number.parseInt(url.searchParams.get("limit") || "10");
 
     // Calculate offset
     const offset = (page - 1) * limit;
@@ -21,11 +21,7 @@ export async function GET(req: NextRequest) {
     const supabase = await createServiceClient();
 
     if (slug) {
-      const { data, error } = await supabase
-        .from("curated")
-        .select("slug")
-        .eq("slug", slug)
-        .maybeSingle();
+      const { data, error } = await supabase.from("curated").select("slug").eq("slug", slug).maybeSingle();
 
       if (error) {
         console.error("Error fetching curated status:", error);
@@ -33,27 +29,26 @@ export async function GET(req: NextRequest) {
       }
 
       return NextResponse.json({ isFeatured: !!data });
-    } else {
-      const { data, error, count } = await supabase
-        .from("curated")
-        .select("*", { count: "exact" })
-        .order("created_at", { ascending: false })
-        .range(offset, offset + limit - 1);
-
-      if (error) {
-        console.error("Error fetching curated posts:", error);
-        return NextResponse.json({ error: "Failed to fetch curated posts" }, { status: 500 });
-      }
-
-      const hasMore = count ? offset + limit < count : false;
-
-      return NextResponse.json({
-        data,
-        hasMore,
-        page,
-        totalCount: count
-      });
     }
+    const { data, error, count } = await supabase
+      .from("curated")
+      .select("*", { count: "exact" })
+      .order("created_at", { ascending: false })
+      .range(offset, offset + limit - 1);
+
+    if (error) {
+      console.error("Error fetching curated posts:", error);
+      return NextResponse.json({ error: "Failed to fetch curated posts" }, { status: 500 });
+    }
+
+    const hasMore = count ? offset + limit < count : false;
+
+    return NextResponse.json({
+      data,
+      hasMore,
+      page,
+      totalCount: count,
+    });
   } catch (error) {
     console.error("Unexpected error:", error);
     return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
@@ -76,22 +71,16 @@ export async function POST(req: NextRequest) {
 
     const supabase = await createServiceClient();
 
-    const { data: existingEntry } = await supabase
-      .from("curated")
-      .select("*")
-      .eq("slug", slug)
-      .maybeSingle();
+    const { data: existingEntry } = await supabase.from("curated").select("*").eq("slug", slug).maybeSingle();
 
     if (existingEntry) {
       return NextResponse.json({ error: "Post already curated" }, { status: 409 });
     }
 
-    const { error } = await supabase
-      .from("curated")
-      .insert({
-        slug,
-        added_by,
-      });
+    const { error } = await supabase.from("curated").insert({
+      slug,
+      added_by,
+    });
 
     if (error) {
       console.error("Error adding post to curated list:", error);
@@ -121,10 +110,7 @@ export async function DELETE(req: NextRequest) {
 
     const supabase = await createServiceClient();
 
-    const { error } = await supabase
-      .from("curated")
-      .delete()
-      .eq("slug", slug);
+    const { error } = await supabase.from("curated").delete().eq("slug", slug);
 
     if (error) {
       console.error("Error removing post from curated list:", error);
@@ -136,4 +122,4 @@ export async function DELETE(req: NextRequest) {
     console.error("Unexpected error:", error);
     return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
   }
-} 
+}

@@ -59,7 +59,7 @@ export const CuratedPaginatedFeed = ({
           handleLoadMore();
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.5 },
     );
 
     observerRef.current = observer;
@@ -77,10 +77,10 @@ export const CuratedPaginatedFeed = ({
 
   const fetchCuratedPosts = async () => {
     try {
-      const response = await fetch('/api/admin/curate');
+      const response = await fetch("/api/admin/curate");
 
       if (!response.ok) {
-        throw new Error('Failed to fetch curated posts');
+        throw new Error("Failed to fetch curated posts");
       }
 
       const result = await response.json();
@@ -96,10 +96,10 @@ export const CuratedPaginatedFeed = ({
 
   const fetchBannedAuthors = async () => {
     try {
-      const response = await fetch('/api/admin/ban');
+      const response = await fetch("/api/admin/ban");
 
       if (!response.ok) {
-        throw new Error('Failed to fetch banned authors');
+        throw new Error("Failed to fetch banned authors");
       }
 
       const result = await response.json();
@@ -152,7 +152,7 @@ export const CuratedPaginatedFeed = ({
     if (isCurated) {
       setCuratedSlugs([...curatedSlugs, post.slug]);
     } else {
-      setCuratedSlugs(curatedSlugs.filter(slug => slug !== post.slug));
+      setCuratedSlugs(curatedSlugs.filter((slug) => slug !== post.slug));
     }
   };
 
@@ -168,36 +168,38 @@ export const CuratedPaginatedFeed = ({
     setBannedAddresses(newBannedAddresses);
   };
 
-  const postViews = allPosts.map((post) => {
-    if (post.__typename !== "Post") {
-      return null;
-    }
+  const postViews = allPosts
+    .map((post) => {
+      if (post.__typename !== "Post") {
+        return null;
+      }
 
-    if (post.metadata.__typename !== "ArticleMetadata") {
-      return null;
-    }
+      if (post.metadata.__typename !== "ArticleMetadata") {
+        return null;
+      }
 
-    if (!post.metadata.attributes.some((attribute) => attribute.key === "contentJson")) {
-      return null;
-    }
+      if (!post.metadata.attributes.some((attribute) => attribute.key === "contentJson")) {
+        return null;
+      }
 
-    const isCurated = curatedSlugs.includes(post.slug);
-    const isAuthorBanned = !!bannedAddresses[post.author.address];
-    const banReason = bannedAddresses[post.author.address] || null;
+      const isCurated = curatedSlugs.includes(post.slug);
+      const isAuthorBanned = !!bannedAddresses[post.author.address];
+      const banReason = bannedAddresses[post.author.address] || null;
 
-    return (
-      <CuratedPostView
-        key={post.id}
-        post={post}
-        authors={[post.author.address]}
-        isCurated={isCurated}
-        isAuthorBanned={isAuthorBanned}
-        banReason={banReason}
-        onCurationChange={handleCurationChange}
-        onBanChange={handleBanChange}
-      />
-    );
-  }).filter(Boolean);
+      return (
+        <CuratedPostView
+          key={post.id}
+          post={post}
+          authors={[post.author.address]}
+          isCurated={isCurated}
+          isAuthorBanned={isAuthorBanned}
+          banReason={banReason}
+          onCurationChange={handleCurationChange}
+          onBanChange={handleBanChange}
+        />
+      );
+    })
+    .filter(Boolean);
 
   if (postViews.length === 0) {
     return (
@@ -225,13 +227,10 @@ export const CuratedPaginatedFeed = ({
       {postViews}
 
       {nextCursor && (
-        <div
-          ref={loadMoreRef}
-          className="w-full flex justify-center py-4"
-        >
+        <div ref={loadMoreRef} className="w-full flex justify-center py-4">
           {loading && <Loader2 className="animate-spin" size={20} />}
         </div>
       )}
     </motion.div>
   );
-}; 
+};

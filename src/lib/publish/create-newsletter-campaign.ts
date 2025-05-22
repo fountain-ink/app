@@ -20,11 +20,7 @@ export async function createNewsletterCampaign({
   }
 
   const db = createClient();
-  const { data: blog } = await db
-    .from("blogs")
-    .select("*")
-    .eq("address", selectedBlogAddress)
-    .single();
+  const { data: blog } = await db.from("blogs").select("*").eq("address", selectedBlogAddress).single();
 
   if (blog?.mail_list_id) {
     try {
@@ -37,11 +33,7 @@ export async function createNewsletterCampaign({
       };
 
       try {
-        const result = await createCampaignForPost(
-          selectedBlogAddress,
-          postSlug,
-          newsletterPostData
-        );
+        const result = await createCampaignForPost(selectedBlogAddress, postSlug, newsletterPostData);
         if (result?.success) {
           console.log("Created campaign for mailing list subscribers");
         } else {
@@ -54,4 +46,4 @@ export async function createNewsletterCampaign({
       console.error("Error fetching blog data:", error);
     }
   }
-} 
+}

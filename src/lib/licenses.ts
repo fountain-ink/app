@@ -35,7 +35,7 @@ export enum Licenses {
   TBNL_NC_DT_NPL_Ledger = "TBNL-NC-DT-NPL-Ledger",
   TBNL_NC_DTSA_PL_Ledger = "TBNL-NC-DTSA-PL-Ledger",
   TBNL_NC_DTSA_NPL_Ledger = "TBNL-NC-DTSA-NPL-Ledger",
-  TBNL_NC_ND_NPL_Ledger = "TBNL-NC-ND-NPL-Ledger"
+  TBNL_NC_ND_NPL_Ledger = "TBNL-NC-ND-NPL-Ledger",
 }
 
 export const LicenseDescriptions: Record<Licenses, string> = {
@@ -44,36 +44,68 @@ export const LicenseDescriptions: Record<Licenses, string> = {
   [Licenses.CC_BY]: "Allows commercial use and derivatives with attribution to the creator required.",
   [Licenses.CC_BY_ND]: "Allows commercial use but no derivatives. Attribution to the creator required.",
   [Licenses.CC_BY_NC]: "Allows non-commercial use and derivatives. Attribution to the creator required.",
-  [Licenses.TBNL_C_D_PL_Legal]: "Grants commercial rights, allows derivatives, public can use content. Legal authority prevails.",
-  [Licenses.TBNL_C_DT_PL_Legal]: "Grants commercial rights, derivatives must be NFTs, public can use content. Legal authority prevails.",
-  [Licenses.TBNL_C_ND_PL_Legal]: "Grants commercial rights, no derivatives, public can use content. Legal authority prevails.",
-  [Licenses.TBNL_C_D_NPL_Legal]: "Grants commercial rights, allows derivatives, only the collector gets rights. Legal authority prevails.",
-  [Licenses.TBNL_C_DT_NPL_Legal]: "Grants commercial rights, derivatives must be NFTs, only the collector gets rights. Legal authority prevails.",
-  [Licenses.TBNL_C_DTSA_PL_Legal]: "Grants commercial rights, derivatives with same license, public can use content. Legal authority prevails.",
-  [Licenses.TBNL_C_DTSA_NPL_Legal]: "Grants commercial rights, derivatives with same license, only the collector gets rights. Legal authority prevails.",
-  [Licenses.TBNL_C_ND_NPL_Legal]: "Grants commercial rights, no derivatives, only the collector gets rights. Legal authority prevails.",
-  [Licenses.TBNL_C_D_PL_Ledger]: "Grants commercial rights, allows derivatives, public can use content. Blockchain ledger is authoritative.",
-  [Licenses.TBNL_C_DT_PL_Ledger]: "Grants commercial rights, derivatives must be NFTs, public can use content. Blockchain ledger is authoritative.",
-  [Licenses.TBNL_C_ND_PL_Ledger]: "Grants commercial rights, no derivatives, public can use content. Blockchain ledger is authoritative.",
-  [Licenses.TBNL_C_D_NPL_Ledger]: "Grants commercial rights, allows derivatives, only the collector gets rights. Blockchain ledger is authoritative.",
-  [Licenses.TBNL_C_DT_NPL_Ledger]: "Grants commercial rights, derivatives must be NFTs, only the collector gets rights. Blockchain ledger is authoritative.",
-  [Licenses.TBNL_C_DTSA_PL_Ledger]: "Grants commercial rights, derivatives with same license, public can use content. Blockchain ledger is authoritative.",
-  [Licenses.TBNL_C_DTSA_NPL_Ledger]: "Grants commercial rights, derivatives with same license, only the collector gets rights. Blockchain ledger is authoritative.",
-  [Licenses.TBNL_C_ND_NPL_Ledger]: "Grants commercial rights, no derivatives, only the collector gets rights. Blockchain ledger is authoritative.",
-  [Licenses.TBNL_NC_D_PL_Legal]: "Grants non-commercial rights, allows derivatives, public can use content. Legal authority prevails.",
-  [Licenses.TBNL_NC_DT_PL_Legal]: "Grants non-commercial rights, derivatives must be NFTs, public can use content. Legal authority prevails.",
-  [Licenses.TBNL_NC_ND_PL_Legal]: "Grants non-commercial rights, no derivatives, public can use content. Legal authority prevails.",
-  [Licenses.TBNL_NC_D_NPL_Legal]: "Grants non-commercial rights, allows derivatives, only the collector gets rights. Legal authority prevails.",
-  [Licenses.TBNL_NC_DT_NPL_Legal]: "Grants non-commercial rights, derivatives must be NFTs, only the collector gets rights. Legal authority prevails.",
-  [Licenses.TBNL_NC_DTSA_PL_Legal]: "Grants non-commercial rights, derivatives with same license, public can use content. Legal authority prevails.",
-  [Licenses.TBNL_NC_DTSA_NPL_Legal]: "Grants non-commercial rights, derivatives with same license, only the collector gets rights. Legal authority prevails.",
-  [Licenses.TBNL_NC_ND_NPL_Legal]: "Grants non-commercial rights, no derivatives, only the collector gets rights. Legal authority prevails.",
-  [Licenses.TBNL_NC_D_PL_Ledger]: "Grants non-commercial rights, allows derivatives, public can use content. Blockchain ledger is authoritative.",
-  [Licenses.TBNL_NC_DT_PL_Ledger]: "Grants non-commercial rights, derivatives must be NFTs, public can use content. Blockchain ledger is authoritative.",
-  [Licenses.TBNL_NC_ND_PL_Ledger]: "Grants non-commercial rights, no derivatives, public can use content. Blockchain ledger is authoritative.",
-  [Licenses.TBNL_NC_D_NPL_Ledger]: "Grants non-commercial rights, allows derivatives, only the collector gets rights. Blockchain ledger is authoritative.",
-  [Licenses.TBNL_NC_DT_NPL_Ledger]: "Grants non-commercial rights, derivatives must be NFTs, only the collector gets rights. Blockchain ledger is authoritative.",
-  [Licenses.TBNL_NC_DTSA_PL_Ledger]: "Grants non-commercial rights, derivatives with same license, public can use content. Blockchain ledger is authoritative.",
-  [Licenses.TBNL_NC_DTSA_NPL_Ledger]: "Grants non-commercial rights, derivatives with same license, only the collector gets rights. Blockchain ledger is authoritative.",
-  [Licenses.TBNL_NC_ND_NPL_Ledger]: "Grants non-commercial rights, no derivatives, only the collector gets rights. Blockchain ledger is authoritative.",
+  [Licenses.TBNL_C_D_PL_Legal]:
+    "Grants commercial rights, allows derivatives, public can use content. Legal authority prevails.",
+  [Licenses.TBNL_C_DT_PL_Legal]:
+    "Grants commercial rights, derivatives must be NFTs, public can use content. Legal authority prevails.",
+  [Licenses.TBNL_C_ND_PL_Legal]:
+    "Grants commercial rights, no derivatives, public can use content. Legal authority prevails.",
+  [Licenses.TBNL_C_D_NPL_Legal]:
+    "Grants commercial rights, allows derivatives, only the collector gets rights. Legal authority prevails.",
+  [Licenses.TBNL_C_DT_NPL_Legal]:
+    "Grants commercial rights, derivatives must be NFTs, only the collector gets rights. Legal authority prevails.",
+  [Licenses.TBNL_C_DTSA_PL_Legal]:
+    "Grants commercial rights, derivatives with same license, public can use content. Legal authority prevails.",
+  [Licenses.TBNL_C_DTSA_NPL_Legal]:
+    "Grants commercial rights, derivatives with same license, only the collector gets rights. Legal authority prevails.",
+  [Licenses.TBNL_C_ND_NPL_Legal]:
+    "Grants commercial rights, no derivatives, only the collector gets rights. Legal authority prevails.",
+  [Licenses.TBNL_C_D_PL_Ledger]:
+    "Grants commercial rights, allows derivatives, public can use content. Blockchain ledger is authoritative.",
+  [Licenses.TBNL_C_DT_PL_Ledger]:
+    "Grants commercial rights, derivatives must be NFTs, public can use content. Blockchain ledger is authoritative.",
+  [Licenses.TBNL_C_ND_PL_Ledger]:
+    "Grants commercial rights, no derivatives, public can use content. Blockchain ledger is authoritative.",
+  [Licenses.TBNL_C_D_NPL_Ledger]:
+    "Grants commercial rights, allows derivatives, only the collector gets rights. Blockchain ledger is authoritative.",
+  [Licenses.TBNL_C_DT_NPL_Ledger]:
+    "Grants commercial rights, derivatives must be NFTs, only the collector gets rights. Blockchain ledger is authoritative.",
+  [Licenses.TBNL_C_DTSA_PL_Ledger]:
+    "Grants commercial rights, derivatives with same license, public can use content. Blockchain ledger is authoritative.",
+  [Licenses.TBNL_C_DTSA_NPL_Ledger]:
+    "Grants commercial rights, derivatives with same license, only the collector gets rights. Blockchain ledger is authoritative.",
+  [Licenses.TBNL_C_ND_NPL_Ledger]:
+    "Grants commercial rights, no derivatives, only the collector gets rights. Blockchain ledger is authoritative.",
+  [Licenses.TBNL_NC_D_PL_Legal]:
+    "Grants non-commercial rights, allows derivatives, public can use content. Legal authority prevails.",
+  [Licenses.TBNL_NC_DT_PL_Legal]:
+    "Grants non-commercial rights, derivatives must be NFTs, public can use content. Legal authority prevails.",
+  [Licenses.TBNL_NC_ND_PL_Legal]:
+    "Grants non-commercial rights, no derivatives, public can use content. Legal authority prevails.",
+  [Licenses.TBNL_NC_D_NPL_Legal]:
+    "Grants non-commercial rights, allows derivatives, only the collector gets rights. Legal authority prevails.",
+  [Licenses.TBNL_NC_DT_NPL_Legal]:
+    "Grants non-commercial rights, derivatives must be NFTs, only the collector gets rights. Legal authority prevails.",
+  [Licenses.TBNL_NC_DTSA_PL_Legal]:
+    "Grants non-commercial rights, derivatives with same license, public can use content. Legal authority prevails.",
+  [Licenses.TBNL_NC_DTSA_NPL_Legal]:
+    "Grants non-commercial rights, derivatives with same license, only the collector gets rights. Legal authority prevails.",
+  [Licenses.TBNL_NC_ND_NPL_Legal]:
+    "Grants non-commercial rights, no derivatives, only the collector gets rights. Legal authority prevails.",
+  [Licenses.TBNL_NC_D_PL_Ledger]:
+    "Grants non-commercial rights, allows derivatives, public can use content. Blockchain ledger is authoritative.",
+  [Licenses.TBNL_NC_DT_PL_Ledger]:
+    "Grants non-commercial rights, derivatives must be NFTs, public can use content. Blockchain ledger is authoritative.",
+  [Licenses.TBNL_NC_ND_PL_Ledger]:
+    "Grants non-commercial rights, no derivatives, public can use content. Blockchain ledger is authoritative.",
+  [Licenses.TBNL_NC_D_NPL_Ledger]:
+    "Grants non-commercial rights, allows derivatives, only the collector gets rights. Blockchain ledger is authoritative.",
+  [Licenses.TBNL_NC_DT_NPL_Ledger]:
+    "Grants non-commercial rights, derivatives must be NFTs, only the collector gets rights. Blockchain ledger is authoritative.",
+  [Licenses.TBNL_NC_DTSA_PL_Ledger]:
+    "Grants non-commercial rights, derivatives with same license, public can use content. Blockchain ledger is authoritative.",
+  [Licenses.TBNL_NC_DTSA_NPL_Ledger]:
+    "Grants non-commercial rights, derivatives with same license, only the collector gets rights. Blockchain ledger is authoritative.",
+  [Licenses.TBNL_NC_ND_NPL_Ledger]:
+    "Grants non-commercial rights, no derivatives, only the collector gets rights. Blockchain ledger is authoritative.",
 };

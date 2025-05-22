@@ -19,15 +19,12 @@ export async function GET(req: NextRequest) {
     if (exactAddress) {
       console.log(`Looking up user by address: ${exactAddress}`);
 
-      const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq('address', exactAddress)
-        .single();
+      const { data, error } = await supabase.from("users").select("*").eq("address", exactAddress).single();
 
       if (error) {
         console.error(`Error looking up user by address: ${error.message}`);
-        if (error.code === 'PGRST116') { // "No rows returned" error
+        if (error.code === "PGRST116") {
+          // "No rows returned" error
           return NextResponse.json({ data: null });
         }
         return NextResponse.json({ error: "Failed to lookup user" }, { status: 500 });
@@ -39,15 +36,12 @@ export async function GET(req: NextRequest) {
     if (handle) {
       console.log(`Looking up user by handle: ${handle}`);
 
-      const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq('handle', handle)
-        .single();
+      const { data, error } = await supabase.from("users").select("*").eq("handle", handle).single();
 
       if (error) {
         console.error(`Error looking up user by handle: ${error.message}`);
-        if (error.code === 'PGRST116') { // "No rows returned" error
+        if (error.code === "PGRST116") {
+          // "No rows returned" error
           return NextResponse.json({ data: null });
         }
         return NextResponse.json({ error: "Failed to lookup user" }, { status: 500 });
@@ -76,4 +70,4 @@ export async function GET(req: NextRequest) {
     console.error("Unexpected error:", error);
     return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
   }
-} 
+}

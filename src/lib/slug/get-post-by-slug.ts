@@ -6,21 +6,21 @@ import { getBaseUrl } from "../get-base-url";
  * @param handle The username/handle
  * @returns The lens post ID if found, or null if not found
  */
-export async function getPostIdBySlug(
-  slug: string,
-  handle: string
-): Promise<string | null> {
+export async function getPostIdBySlug(slug: string, handle: string): Promise<string | null> {
   try {
-    const response = await fetch(`${getBaseUrl()}/api/posts/slug/lookup?slug=${encodeURIComponent(slug)}&handle=${encodeURIComponent(handle)}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      `${getBaseUrl()}/api/posts/slug/lookup?slug=${encodeURIComponent(slug)}&handle=${encodeURIComponent(handle)}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
       },
-      cache: 'no-store',
-    });
+    );
 
     if (!response.ok) {
-      console.error('Error fetching post by slug:', await response.text());
+      console.error("Error fetching post by slug:", await response.text());
       return null;
     }
 
@@ -32,7 +32,7 @@ export async function getPostIdBySlug(
 
     return null;
   } catch (error) {
-    console.error('Failed to fetch post by slug:', error);
+    console.error("Failed to fetch post by slug:", error);
     return null;
   }
-} 
+}

@@ -25,10 +25,7 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
   const post = await fetchPost(lens, { post: postId }).unwrapOr(null);
   const { account: profile } = await getUserAccount();
 
-  const authorStats =
-    post
-      ? await fetchAccountStats(lens, { account: post.author.address }).unwrapOr(null)
-      : null;
+  const authorStats = post ? await fetchAccountStats(lens, { account: post.author.address }).unwrapOr(null) : null;
 
   if (!post) return <ErrorPage error="Couldn't find post to show" />;
 
@@ -43,7 +40,6 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
   const contentJson = post?.metadata?.attributes?.find((attr: any) => attr.key === "contentJson")?.value;
   const contentHtml = post?.metadata?.attributes?.find((attr: any) => attr.key === "contentHtml")?.value;
   const originalDate = post?.metadata?.attributes?.find((attr: any) => attr.key === "originalDate")?.value;
-
 
   if (contentJson) {
     return (

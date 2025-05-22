@@ -6,7 +6,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const searchParams = req.nextUrl.searchParams;
-    const slug = searchParams.get('slug');
+    const slug = searchParams.get("slug");
 
     if (!slug) {
       console.error("[Posts Slug] Missing slug parameter");
@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
 
     let { data: post, error } = await db.from("posts").select("*").eq("slug", slug).single();
 
-    if (error && error.code === 'PGRST116') {
+    if (error && error.code === "PGRST116") {
       console.log("[Posts Slug] Not found by custom slug, trying lens_slug");
       const result = await db.from("posts").select("*").eq("lens_slug", slug).single();
       post = result.data;
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
 
     if (error) {
       console.error("[Posts Slug] Error finding post:", error);
-      if (error.code === 'PGRST116') {
+      if (error.code === "PGRST116") {
         return NextResponse.json({ error: "Post not found" }, { status: 404 });
       }
       return NextResponse.json({ error: "Failed to find post" }, { status: 500 });
@@ -46,4 +46,4 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export const dynamic = "force-dynamic"; 
+export const dynamic = "force-dynamic";

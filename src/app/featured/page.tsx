@@ -21,11 +21,11 @@ export async function generateMetadata() {
 
 const CuratedPage = async () => {
   const response = await fetch(`${getBaseUrl()}/api/curate?page=1&limit=10`, {
-    cache: 'no-store',
+    cache: "no-store",
   });
   const data = await response.json();
 
-  const initialPostIds = data?.data?.map((item: any) => item.slug).filter(Boolean) as string[] || [];
+  const initialPostIds = (data?.data?.map((item: any) => item.slug).filter(Boolean) as string[]) || [];
   const hasMore = data?.hasMore || false;
 
   return (
@@ -33,14 +33,10 @@ const CuratedPage = async () => {
       <FeedNavigation />
 
       <div className="flex flex-col my-4 items-center w-full">
-        <CuratedPaginatedFeed
-          initialPostIds={initialPostIds}
-          hasMore={hasMore}
-          page={1}
-        />
+        <CuratedPaginatedFeed initialPostIds={initialPostIds} hasMore={hasMore} page={1} />
       </div>
     </div>
   );
 };
 
-export default CuratedPage; 
+export default CuratedPage;

@@ -8,4 +8,4 @@ export default async function TokenSendPage() {
   const { address: accountAddress } = await getUserAccount();
 
   return <TokenSend accountAddress={accountAddress} tokenAddress={WGHO_ADDRESS} />;
-} 
+}

@@ -18,14 +18,14 @@ export default function AppControlsPage() {
   const [appAddress, setAppAddress] = useState("");
   const [bearerToken, setBearerToken] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { address: walletAddress } = useAccount()
+  const { address: walletAddress } = useAccount();
   const { signMessageAsync } = useSignMessage();
 
   const handleAddEndpoint = async () => {
     try {
       setIsLoading(true);
       const publicClient = await getPublicClient();
-      
+
       const builderAuth = await publicClient.login({
         builder: {
           address: evmAddress(walletAddress ?? ""),
@@ -103,9 +103,7 @@ export default function AppControlsPage() {
       <Card>
         <CardHeader>
           <CardTitle>Application Controls</CardTitle>
-          <CardDescription>
-            Manage core settings and functionalities of the application
-          </CardDescription>
+          <CardDescription>Manage core settings and functionalities of the application</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-4">
@@ -141,17 +139,10 @@ export default function AppControlsPage() {
                   />
                 </div>
                 <div className="flex gap-2">
-                  <Button
-                    onClick={handleAddEndpoint}
-                    disabled={isLoading || !endpoint || !appAddress || !bearerToken}
-                  >
+                  <Button onClick={handleAddEndpoint} disabled={isLoading || !endpoint || !appAddress || !bearerToken}>
                     {isLoading ? "Adding..." : "Add Authorization Endpoint"}
                   </Button>
-                  <Button
-                    variant="destructive"
-                    onClick={handleRemoveEndpoint}
-                    disabled={isLoading || !appAddress}
-                  >
+                  <Button variant="destructive" onClick={handleRemoveEndpoint} disabled={isLoading || !appAddress}>
                     {isLoading ? "Removing..." : "Remove Authorization Endpoint"}
                   </Button>
                 </div>
@@ -162,4 +153,4 @@ export default function AppControlsPage() {
       </Card>
     </div>
   );
-} 
+}

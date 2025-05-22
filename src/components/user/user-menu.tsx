@@ -29,7 +29,7 @@ import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { HomeIcon } from "../icons/home";
 import { useUIStore } from "@/stores/ui-store";
 
-export const UserMenu = ({ session, showDropdown = false }: { session: MeResult | null, showDropdown?: boolean }) => {
+export const UserMenu = ({ session, showDropdown = false }: { session: MeResult | null; showDropdown?: boolean }) => {
   const { isConnected: isWalletConnected, status } = useAccount();
   const { disconnect: disconnectWallet } = useDisconnect();
   const pathname = usePathname();

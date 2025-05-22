@@ -32,7 +32,7 @@ export const CuratedPaginatedFeed = ({
 
   useEffect(() => {
     if (initialPosts.length > 0) {
-      setLoadedPostIds(new Set(initialPosts.map(post => post.id)));
+      setLoadedPostIds(new Set(initialPosts.map((post) => post.id)));
     }
   }, [initialPosts]);
 
@@ -51,7 +51,7 @@ export const CuratedPaginatedFeed = ({
           handleLoadMore();
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.5 },
     );
 
     observerRef.current = observer;
@@ -75,7 +75,7 @@ export const CuratedPaginatedFeed = ({
       const lens = await getLensClient();
       const fetchedPosts: AnyPost[] = [];
 
-      const newPostIds = postIds.filter(id => !loadedPostIds.has(id));
+      const newPostIds = postIds.filter((id) => !loadedPostIds.has(id));
 
       if (newPostIds.length === 0) {
         setLoading(false);
@@ -88,9 +88,9 @@ export const CuratedPaginatedFeed = ({
         const posts = result.value.items;
         if (posts && posts.length > 0) {
           fetchedPosts.push(...posts);
-          setLoadedPostIds(prev => {
+          setLoadedPostIds((prev) => {
             const newIds = new Set(prev);
-            posts.forEach(post => newIds.add(post.id));
+            posts.forEach((post) => newIds.add(post.id));
             return newIds;
           });
         }
@@ -98,9 +98,9 @@ export const CuratedPaginatedFeed = ({
         console.error("Failed to fetch posts batch:", result.error);
       }
 
-      setAllPosts(prevPosts => {
-        const existingPostIds = new Set(prevPosts.map(post => post.id));
-        const uniqueNewPosts = fetchedPosts.filter(post => !existingPostIds.has(post.id));
+      setAllPosts((prevPosts) => {
+        const existingPostIds = new Set(prevPosts.map((post) => post.id));
+        const uniqueNewPosts = fetchedPosts.filter((post) => !existingPostIds.has(post.id));
         return [...prevPosts, ...uniqueNewPosts];
       });
     } catch (error) {
@@ -136,40 +136,42 @@ export const CuratedPaginatedFeed = ({
     }
   };
 
-  const postViews = allPosts.map((post) => {
-    if (post.__typename !== "Post") {
-      return null;
-    }
+  const postViews = allPosts
+    .map((post) => {
+      if (post.__typename !== "Post") {
+        return null;
+      }
 
-    // if (post.app?.address !== env.NEXT_PUBLIC_APP_ADDRESS) {
-    //   return null;
-    // }
+      // if (post.app?.address !== env.NEXT_PUBLIC_APP_ADDRESS) {
+      //   return null;
+      // }
 
-    if (post.metadata.__typename !== "ArticleMetadata") {
-      return null;
-    }
+      if (post.metadata.__typename !== "ArticleMetadata") {
+        return null;
+      }
 
-    if (!post.metadata.attributes.some((attribute) => attribute.key === "contentJson")) {
-      return null;
-    }
+      if (!post.metadata.attributes.some((attribute) => attribute.key === "contentJson")) {
+        return null;
+      }
 
-    return (
-      <PostView
-        options={{
-          showContent: false,
-          showAuthor: true,
-          showTitle: true,
-          showSubtitle: true,
-          showBlog: true,
-          showDate: true,
-          showPreview: true,
-        }}
-        key={post.id}
-        authors={[post.author.address]}
-        post={post}
-      />
-    );
-  }).filter(Boolean);
+      return (
+        <PostView
+          options={{
+            showContent: false,
+            showAuthor: true,
+            showTitle: true,
+            showSubtitle: true,
+            showBlog: true,
+            showDate: true,
+            showPreview: true,
+          }}
+          key={post.id}
+          authors={[post.author.address]}
+          post={post}
+        />
+      );
+    })
+    .filter(Boolean);
 
   if (postViews.length === 0 && !loading) {
     return (
@@ -182,7 +184,7 @@ export const CuratedPaginatedFeed = ({
             No curated posts available yet.
           </span>
         </CardContent>
-        <CardFooter></CardFooter>
+        <CardFooter />
       </Card>
     );
   }
@@ -198,10 +200,7 @@ export const CuratedPaginatedFeed = ({
       {postViews}
 
       {hasMorePosts && (
-        <div
-          ref={loadMoreRef}
-          className="w-full flex flex-col items-center gap-4"
-        >
+        <div ref={loadMoreRef} className="w-full flex flex-col items-center gap-4">
           {loading && (
             <>
               <PostSkeleton />
@@ -215,4 +214,4 @@ export const CuratedPaginatedFeed = ({
       )}
     </motion.div>
   );
-}; 
+};

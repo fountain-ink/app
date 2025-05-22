@@ -23,4 +23,4 @@ const BookmarksPage = async () => {
   );
 };
 
-export default BookmarksPage; 
+export default BookmarksPage;

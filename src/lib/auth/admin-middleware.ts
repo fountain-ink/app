@@ -14,35 +14,23 @@ export async function checkAdminRights(req: NextRequest) {
     const appToken = req.cookies.get("appToken")?.value;
 
     if (!appToken) {
-      return NextResponse.json(
-        { error: "Authentication required" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
     }
 
     const isValid = verifyToken(appToken, env.SUPABASE_JWT_SECRET);
     if (!isValid) {
-      return NextResponse.json(
-        { error: "Invalid authentication token" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Invalid authentication token" }, { status: 401 });
     }
 
     const claims = getTokenClaims(appToken);
 
     if (!isAdmin(claims?.sub)) {
-      return NextResponse.json(
-        { error: "Admin access required" },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Admin access required" }, { status: 403 });
     }
 
     return null;
   } catch (error) {
     console.error("Admin authentication error:", error);
-    return NextResponse.json(
-      { error: "Authentication error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Authentication error" }, { status: 500 });
   }
-} 
+}
