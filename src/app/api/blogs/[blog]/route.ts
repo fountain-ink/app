@@ -1,4 +1,4 @@
-import { getTokenClaims } from "@/lib/auth/get-token-claims";
+import { verifyAuth } from "@/lib/auth/verify-auth-request";
 import { createClient } from "@/lib/db/server";
 import { NextRequest, NextResponse } from "next/server";
 import { isEvmAddress } from "@/lib/utils/is-evm-address";
@@ -16,17 +16,10 @@ export async function POST(req: NextRequest, { params }: { params: { blog: strin
   console.log(`[Blog Create] Creating blog record for: ${params.blog}`);
 
   try {
-    // Verify authentication
-    const token = req.cookies.get("appToken")?.value;
-    if (!token) {
-      console.log("[Blog Create] No auth token found");
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const claims = getTokenClaims(token);
-    if (!claims?.metadata?.address) {
-      console.log("[Blog Create] Invalid token claims");
-      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    const { claims, error: authError } = verifyAuth(req);
+    if (authError) {
+      console.log("[Blog Create] No auth token found or invalid token");
+      return authError;
     }
 
     const userAddress = claims.metadata.address;
@@ -98,10 +91,10 @@ export async function POST(req: NextRequest, { params }: { params: { blog: strin
     };
 
     // Insert new blog record
-    const { error } = await db.from("blogs").insert(blogData);
+    const { error: dbError } = await db.from("blogs").insert(blogData);
 
-    if (error) {
-      console.error("[Blog Create] Error creating blog:", error);
+    if (dbError) {
+      console.error("[Blog Create] Error creating blog:", dbError);
       return NextResponse.json({ error: "Failed to create blog" }, { status: 500 });
     }
 
@@ -118,14 +111,9 @@ export async function POST(req: NextRequest, { params }: { params: { blog: strin
 
 export async function PUT(req: NextRequest, { params }: { params: { blog: string } }) {
   try {
-    const token = req.cookies.get("appToken")?.value;
-    if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const claims = getTokenClaims(token);
-    if (!claims?.metadata?.address) {
-      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    const { claims, error: authError } = verifyAuth(req);
+    if (authError) {
+      return authError;
     }
 
     const { settings } = await req.json();
@@ -170,10 +158,10 @@ export async function PUT(req: NextRequest, { params }: { params: { blog: string
       owner: claims.metadata.address,
     };
 
-    const { error } = await db.from("blogs").update(blogData).eq("address", blog.address);
+    const { error: dbError } = await db.from("blogs").update(blogData).eq("address", blog.address);
 
-    if (error) {
-      console.error("Error updating blog settings:", error);
+    if (dbError) {
+      console.error("Error updating blog settings:", dbError);
       return NextResponse.json({ error: "Failed to update settings" }, { status: 500 });
     }
 
@@ -190,14 +178,9 @@ export async function PUT(req: NextRequest, { params }: { params: { blog: string
 export async function GET(req: NextRequest, { params }: { params: { blog: string } }) {
   try {
     // Always require authentication for this route
-    const token = req.cookies.get("appToken")?.value;
-    if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const claims = getTokenClaims(token);
-    if (!claims?.metadata?.address) {
-      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    const { claims, error: authError } = verifyAuth(req);
+    if (authError) {
+      return authError;
     }
 
     const userAddress = claims.metadata.address;
@@ -205,10 +188,10 @@ export async function GET(req: NextRequest, { params }: { params: { blog: string
     const db = await createClient();
 
     // Find the blog by identifier (address or handle)
-    const { data: blog, error } = await findBlogByIdentifier(db, params.blog);
+    const { data: blog, error: dbError } = await findBlogByIdentifier(db, params.blog);
 
-    if (error) {
-      console.error("Error fetching blog settings:", error);
+    if (dbError) {
+      console.error("Error fetching blog settings:", dbError);
       return NextResponse.json({ error: "Failed to fetch settings" }, { status: 500 });
     }
 

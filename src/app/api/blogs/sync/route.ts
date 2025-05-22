@@ -1,4 +1,4 @@
-import { getTokenClaims } from "@/lib/auth/get-token-claims";
+import { verifyAuth } from "@/lib/auth/verify-auth-request";
 import { createClient } from "@/lib/db/server";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchGroups } from "@lens-protocol/client/actions";
@@ -9,16 +9,10 @@ export async function GET(req: NextRequest) {
   console.log("[Blogs Sync] Starting sync process");
 
   try {
-    const token = req.cookies.get("appToken")?.value;
-    if (!token) {
-      console.log("[Blogs Sync] No auth token found");
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const claims = getTokenClaims(token);
-    if (!claims?.metadata?.address) {
-      console.log("[Blogs Sync] Invalid token claims");
-      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    const { claims, error: authError } = verifyAuth(req);
+    if (authError) {
+      console.log("[Blogs Sync] No auth token found or invalid token");
+      return authError;
     }
 
     const userAddress = claims.metadata.address;
@@ -92,9 +86,9 @@ export async function GET(req: NextRequest) {
     console.log(`[Blogs Sync] Found ${existingBlogs?.length || 0} existing blogs in database`);
 
     const existingBlogsMap = new Map();
-    existingBlogs?.forEach((blog) => {
+    for (const blog of existingBlogs ?? []) {
       existingBlogsMap.set(blog.address, blog);
-    });
+    }
 
     const operations = onChainBlogs.map((blog) => {
       const existingBlog = existingBlogsMap.get(blog.address);
@@ -143,10 +137,10 @@ export async function GET(req: NextRequest) {
     console.log("[Blogs Sync] All operations completed");
 
     console.log(`[Blogs Sync] Fetching blogs for user: ${userAddress}`);
-    const { data: userBlogs, error } = await db.from("blogs").select("*").eq("owner", userAddress);
+    const { data: userBlogs, error: dbError } = await db.from("blogs").select("*").eq("owner", userAddress);
 
-    if (error) {
-      console.error("[Blogs Sync] Error fetching user blogs:", error);
+    if (dbError) {
+      console.error("[Blogs Sync] Error fetching user blogs:", dbError);
       return NextResponse.json({ error: "Failed to fetch blogs" }, { status: 500 });
     }
 
