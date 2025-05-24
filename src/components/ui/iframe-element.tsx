@@ -100,9 +100,10 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
 
   const divWithIframe = useMemo(() => {
     // biome-ignore lint/security/noDangerouslySetInnerHtml: sanitized iframe embed HTML
-    return <div dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />;
+    return <div className="flex flex-col items-center justify-center rounded-sm" dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />;
   }, [sanitizedHtml]);
 
+  
   return (
     <ElementPopover
       open={selected}
@@ -121,7 +122,7 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
       >
         <motion.figure
           className={cn("group relative m-0 w-full h-auto rounded-sm flex-1",
-            selected && !readOnly && "ring ring-2 ring-ring",
+            // selected && !readOnly && "ring ring-2 ring-ring",
             error && "border border-destructive ",
           )}
           contentEditable={false}
@@ -136,62 +137,63 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
             damping: 30,
           }}
         >
-          {isLoading && (
-            <div className="flex flex-col rounded-sm text-muted-foreground aspect-video gap-2 p-4 items-center justify-center">
-              <LoadingSpinner />
-              <div className="placeholder-background" />
-            </div>
-          )}
+        {isLoading && (
+          <div className="flex flex-col rounded-sm text-muted-foreground aspect-video gap-2 p-4 items-center justify-center rounded-sm">
+            <LoadingSpinner />
+            <div className="placeholder-background" />
+          </div>
+        )}
 
-          {error && (
-            <div className="flex flex-col rounded-sm aspect-video bg-destructive/10 gap-2 p-4 items-center justify-center">
-              <div className="flex items-center gap-2">
-                <AlertCircleIcon className="w-5 h-5 text-destructive flex-shrink-0" />
-                <span className="text-base line-clamp-3">{error}</span>
-              </div>
-              <span className="text-xs p-2 border border-dashed border-destructive bg-destructive/30 rounded-md text-muted-foreground">
-                {unsafeUrl}
-              </span>
-              <div className="placeholder-background" />
+        {error && (
+          <div className="flex flex-col rounded-sm aspect-video bg-destructive/10 gap-2 p-4 items-center justify-center">
+            <div className="flex items-center gap-2">
+              <AlertCircleIcon className="w-5 h-5 text-destructive flex-shrink-0" />
+              <span className="text-base line-clamp-3">{error}</span>
             </div>
-          )}
+            <span className="text-xs p-2 border border-dashed border-destructive bg-destructive/30 rounded-md text-muted-foreground">
+              {unsafeUrl}
+            </span>
+            <div className="placeholder-background" />
+          </div>
+        )}
 
-          {!isLoading &&
-            !error &&
-            (embed?.html ? (
+        {!isLoading &&
+          !error &&
+          (embed?.html ? (
               <div
                 className={cn(
                   "w-full h-full relative not-prose not-article m-0 rounded-sm",
+                  selected && !readOnly && "ring ring-2 ring-ring",
                 )}
-              >
+            >
                 {divWithIframe}
-              </div>
-            ) : (
-              <>
-                {!unsafeUrl ? (
-                  <div className="flex flex-col rounded-sm aspect-video bg-muted/20 gap-2 p-4 items-center justify-center">
-                    <div className="flex items-center gap-2">
-                      <LinkIcon className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-                      <span className="text-base text-muted-foreground">Add a link to embed</span>
-                    </div>
-                    <div className="placeholder-background" />
+            </div>
+          ) : (
+            <>
+              {!unsafeUrl ? (
+                <div className="flex flex-col rounded-sm aspect-video bg-muted/20 gap-2 p-4 items-center justify-center">
+                  <div className="flex items-center gap-2">
+                    <LinkIcon className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                    <span className="text-base text-muted-foreground">Add a link to embed</span>
                   </div>
-                ) : (
-                  <div className="flex flex-col rounded-sm aspect-video bg-muted/20 gap-2 p-4 items-center justify-center">
-                    <div className="flex items-center gap-2">
-                      <Link2OffIcon className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-                      <span className="text-base text-muted-foreground">
-                        No preview available for this link
-                      </span>
-                    </div>
-                    <span className="text-xs p-2 max-w-full truncate border border-dashed border-border bg-muted/30 rounded-md text-muted-foreground">
-                      {unsafeUrl}
+                  <div className="placeholder-background" />
+                </div>
+              ) : (
+                <div className="flex flex-col rounded-sm aspect-video bg-muted/20 gap-2 p-4 items-center justify-center">
+                  <div className="flex items-center gap-2">
+                    <Link2OffIcon className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                    <span className="text-base text-muted-foreground">
+                      No preview available for this link
                     </span>
-                    <div className="placeholder-background" />
                   </div>
-                )}
-              </>
-            ))}
+                  <span className="text-xs p-2 max-w-full truncate border border-dashed border-border bg-muted/30 rounded-md text-muted-foreground">
+                    {unsafeUrl}
+                  </span>
+                  <div className="placeholder-background" />
+                </div>
+              )}
+            </>
+          ))}
         </motion.figure>
 
         {children}
