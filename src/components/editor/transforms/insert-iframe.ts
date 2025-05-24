@@ -3,7 +3,7 @@ import { BaseIframePlugin, TIframeElement } from "../plugins/iframe-plugin";
 
 export const insertIframe = (
   editor: SlateEditor,
-  { url = "" }: Partial<TIframeElement>,
+  { url = "", html }: Partial<TIframeElement>,
   options: InsertNodesOptions = {},
 ): void => {
   if (!editor.selection) return;
@@ -18,6 +18,7 @@ export const insertIframe = (
       children: [{ text: "" }],
       type: editor.getType(BaseIframePlugin),
       url,
+      html,
     },
     {
       at: path,

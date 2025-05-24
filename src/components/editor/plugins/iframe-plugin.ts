@@ -5,7 +5,9 @@ import { MediaPluginOptions, parseIframeUrl, TMediaElement } from "@udecode/plat
 
 export type IframeConfig = PluginConfig<"iframe", MediaPluginOptions>;
 
-export interface TIframeElement extends TMediaElement {}
+export interface TIframeElement extends TMediaElement {
+  html?: string;
+}
 
 export const BaseIframePlugin = createTSlatePlugin<IframeConfig>({
   key: "iframe",
