@@ -176,7 +176,7 @@ const BlogPage = async ({ params, searchParams }: { params: { blog: string }; se
   console.log(posts);
 
   return (
-    <BlogTheme initialTheme={blogData?.theme?.name}>
+    <BlogTheme initialTheme={blogData?.theme?.name} customCss={blogData?.theme?.customCss}>
       <BlogHeader title={blogData?.title} icon={blogData?.icon} username={params.blog} />
       <div className="flex flex-col mt-5 items-center justify-center w-full max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
         {showAuthor && (

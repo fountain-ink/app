@@ -119,12 +119,13 @@ const UserPostLayout = async ({
   const blogAddress = post.feed.group?.address || account.username?.localName;
   const settings = await getBlogData(blogAddress);
   const themeName = settings?.theme?.name;
+  const customCss = settings?.theme?.customCss;
   const title = settings?.title;
   const icon = settings?.icon;
 
   if (post.isDeleted) {
     return (
-      <BlogTheme initialTheme={themeName}>
+      <BlogTheme initialTheme={themeName} customCss={customCss}>
         <BlogHeader title={title} icon={icon} username={blogAddress} />
         <ArticleLayout>
           <PostDeletedView />
@@ -134,7 +135,7 @@ const UserPostLayout = async ({
   }
 
   return (
-    <BlogTheme initialTheme={themeName}>
+    <BlogTheme initialTheme={themeName} customCss={customCss}>
       <BlogHeader title={title} icon={icon} username={blogAddress} />
       <ArticleLayout>
         <GradientBlur />
