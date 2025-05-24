@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useAccount, useBalance, useWalletClient, usePublicClient } from "wagmi";
+import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
 import { ConnectWalletButton } from "@/components/auth/auth-wallet-button";
 import { ArrowRight, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
@@ -53,6 +54,7 @@ export function TokenSend({ accountAddress, tokenAddress }: TokenSendClientPageP
   const [tokenType, setTokenType] = useState<"native" | "wrapped">("native");
   const { address: walletAddress, isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
+  const reconnectWallet = useReconnectWallet();
   const publicClient = usePublicClient();
 
   const { data: walletWrappedGhoBalance, isLoading: isWalletWrappedGhoBalanceLoading } = useBalance({
@@ -77,6 +79,7 @@ export function TokenSend({ accountAddress, tokenAddress }: TokenSendClientPageP
 
   const handleSendToken = async () => {
     if (!walletClient || !walletAddress || !recipientAddress || !publicClient) {
+      if (!walletClient) reconnectWallet();
       toast.error("Wallet not connected or recipient address not provided");
       return;
     }

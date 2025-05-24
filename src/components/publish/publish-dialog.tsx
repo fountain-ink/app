@@ -7,6 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useWalletClient } from "wagmi";
+import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
 import {
   PenIcon,
   ShoppingBag as ShoppingBagIcon,
@@ -66,6 +67,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { data: walletClient } = useWalletClient();
+  const reconnectWallet = useReconnectWallet();
 
   const formToDraft = (values: CombinedFormValues, currentDraft: Draft | null, blogState: any): Partial<Draft> => {
     const selectedBlogAddress = values.distribution?.selectedBlogAddress || "";
@@ -259,6 +261,12 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
   const onSubmit = async (data: CombinedFormValues) => {
     const draft = getDraft();
     if (!draft) return;
+
+    if (!walletClient) {
+      reconnectWallet();
+      toast.error("Please connect your wallet");
+      return;
+    }
 
     const finalDraft: Draft = {
       ...draft,

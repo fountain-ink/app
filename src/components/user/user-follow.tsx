@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import { follow, unfollow } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { useWalletClient } from "wagmi";
+import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
 import { getLensClient } from "@/lib/lens/client";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -15,13 +16,20 @@ export const UserFollowButton = ({ account, className }: { account: Account; cla
   const [following, setFollowing] = useState(() => !!account.operations?.isFollowedByMe);
   const [isPending, setIsPending] = useState(false);
   const { data: walletClient } = useWalletClient();
+  const reconnectWallet = useReconnectWallet();
   const router = useRouter();
 
   const toggleFollow = async () => {
     try {
       const lens = await getLensClient();
 
-      if (!lens.isSessionClient() || !walletClient) {
+      if (!lens.isSessionClient()) {
+        toast.error("Please connect your wallet first");
+        return;
+      }
+
+      if (!walletClient) {
+        reconnectWallet();
         toast.error("Please connect your wallet first");
         return;
       }
@@ -40,7 +48,7 @@ export const UserFollowButton = ({ account, className }: { account: Account; cla
 
       setIsPending(true);
 
-      let actionResult;
+      let actionResult: any;
       if (following) {
         actionResult = await unfollow(lens, {
           account: account.address,
