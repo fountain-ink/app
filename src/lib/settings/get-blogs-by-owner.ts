@@ -7,6 +7,7 @@ export type BlogThemeData = {
   name?: string;
   customColor?: string;
   customBackground?: string;
+  customCss?: string;
 };
 
 export type BlogMetadata = {

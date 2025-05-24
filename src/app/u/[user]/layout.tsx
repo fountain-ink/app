@@ -52,6 +52,7 @@ const UserLayout = async ({
 
   const settings = await getBlogData(account.address);
   const themeName = settings?.theme?.name;
+  const customCss = settings?.theme?.customCss;
   const title = settings?.title;
 
   const { address, username } = await getUserAccount();
@@ -67,7 +68,7 @@ const UserLayout = async ({
   const userBlogs = await getBlogsByOwner(account.address);
 
   return (
-    <BlogTheme initialTheme={themeName}>
+    <BlogTheme initialTheme={themeName} customCss={customCss}>
       <div className="flex flex-col items-center">
         <div className="w-screen md:max-w-4xl">
           <UserCover account={account} />

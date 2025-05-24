@@ -26,6 +26,36 @@ import { fetchGroup, setGroupMetadata } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { storageClient } from "@/lib/lens/storage-client";
 import { uri } from "@lens-protocol/client";
+
+const defaultCssPlaceholder = `
+.article {}
+.article img {}
+.article iframe {}
+.article .title {}
+.article .subtitle {}
+.article h1 {}
+.article h2 {}
+.article h3 {}
+.article h4 {}
+.article p {}
+.article blockquote {}
+.article ul, .article ol {}
+.article .todo-element {}
+.article li {}
+.article ul li::marker, .article ol li::marker {}
+.article strong {}
+.article pre {}
+.article pre code {}
+.not-article .title {}
+.not-article .subtitle {}
+.not-article h3 {}
+.not-article h4 {}
+.not-article p {}
+.not-article blockquote {}
+.not-article ul {}
+.not-article ol {}
+.not-article li {}
+`;
 // import { setGroupMetadata } from "@lens-protocol/client/actions";
 // import { handleOperationWith } from "@lens-protocol/client/viem";
 // import { storageClient } from "@/lib/lens/storage-client";
@@ -101,6 +131,7 @@ interface FormState {
   };
   theme: {
     name: ThemeType;
+    customCss: string;
   };
   icon: string;
   isDirty: boolean;
@@ -131,6 +162,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     },
     theme: {
       name: (settings?.theme?.name as ThemeType) || defaultThemeName,
+      customCss: settings?.theme?.customCss || "",
     },
     icon: settings?.icon || "",
     isDirty: false,
@@ -164,6 +196,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
       },
       theme: {
         name: (settings?.theme?.name as ThemeType) || defaultThemeName,
+        customCss: settings?.theme?.customCss || "",
       },
       icon: settings?.icon || "",
       isDirty: false,
@@ -392,6 +425,17 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     }
   };
 
+  const handleCustomCssChange = (css: string) => {
+    setFormState((prev) => ({
+      ...prev,
+      theme: {
+        ...prev.theme,
+        customCss: css,
+      },
+      isDirty: true,
+    }));
+  };
+
   const handleThemeChange = (themeName: ThemeType) => {
     console.log(themeName, formState);
     setFormState((prev) => ({
@@ -536,6 +580,19 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
             <h2 className="text-lg font-semibold">Theme</h2>
 
             <ThemeButtons currentTheme={formState.theme.name} onChange={handleThemeChange} />
+
+            <div className="mt-4">
+              <Label htmlFor="custom-css">Custom CSS</Label>
+              <p className="text-sm text-muted-foreground mb-2">Override article styles using your own CSS.</p>
+              <TextareaAutosize
+                id="custom-css"
+                variant="default"
+                className="font-mono text-xs p-2"
+                value={formState.theme.customCss}
+                onChange={(e) => handleCustomCssChange(e.target.value)}
+                placeholder={defaultCssPlaceholder}
+              />
+            </div>
           </div>
         </div>
 
@@ -601,7 +658,10 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                 <div className="bg-background px-3 py-1.5 flex items-center gap-2">
                   {/* Navigation Buttons */}
                   <div className="flex items-center gap-1">
-                    <button className="text-muted-foreground hover:text-foreground transition-colors w-5 h-5 flex items-center justify-center rounded-full">
+                    <button
+                      type="button"
+                      className="text-muted-foreground hover:text-foreground transition-colors w-5 h-5 flex items-center justify-center rounded-full"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="14"
@@ -616,7 +676,10 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                         <path d="m15 18-6-6 6-6" />
                       </svg>
                     </button>
-                    <button className="text-muted-foreground hover:text-foreground transition-colors w-5 h-5 flex items-center justify-center rounded-full">
+                    <button
+                      type="button"
+                      className="text-muted-foreground hover:text-foreground transition-colors w-5 h-5 flex items-center justify-center rounded-full"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="14"
@@ -643,7 +706,10 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                   </div>
 
                   {/* Reload Button */}
-                  <button className="text-muted-foreground hover:text-foreground transition-colors w-5 h-5 flex items-center justify-center rounded-full">
+                  <button
+                    type="button"
+                    className="text-muted-foreground hover:text-foreground transition-colors w-5 h-5 flex items-center justify-center rounded-full"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="14"
