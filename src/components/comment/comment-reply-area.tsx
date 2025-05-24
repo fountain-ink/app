@@ -11,6 +11,7 @@ import { textOnly } from "@lens-protocol/metadata";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useAccount, useWalletClient } from "wagmi";
+import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
 import { UserAvatar } from "../user/user-avatar";
 import { UserUsername } from "../user/user-handle";
 import { UserName } from "../user/user-name";
@@ -39,11 +40,18 @@ export const CommentReplyArea = ({
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: walletClient } = useWalletClient();
+  const reconnectWallet = useReconnectWallet();
   const { isConnected: isWalletConnected, status: walletClientStatus } = useAccount();
   const { data: authenticatedUser, loading: isAuthenticatedUserLoading } = useAuthenticatedUser();
 
   const handleSubmit = async () => {
     if (!content.trim() || isSubmitting) return;
+
+    if (!walletClient) {
+      reconnectWallet();
+      toast.error("Please connect your wallet");
+      return;
+    }
 
     setIsSubmitting(true);
     const pendingToast = toast.loading("Publishing comment...");

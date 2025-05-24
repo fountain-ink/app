@@ -8,6 +8,7 @@ import { Post, postId, evmAddress, bigDecimal } from "@lens-protocol/client";
 import { executePostAction } from "@lens-protocol/client/actions";
 import { handleOperationWith, signMessageWith } from "@lens-protocol/client/viem";
 import { useWalletClient, useBalance } from "wagmi";
+import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
 import { getLensClient } from "@/lib/lens/client";
 import { toast } from "sonner";
 import { useAuthenticatedUser } from "@lens-protocol/react";
@@ -43,6 +44,7 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
   const [isTipping, setIsTipping] = useState(false);
   const [open, setOpen] = useState(false);
   const { data: walletClient } = useWalletClient();
+  const reconnectWallet = useReconnectWallet();
   const { data: authenticatedUser } = useAuthenticatedUser();
 
   const currencyAddress = DEFAULT_CURRENCY;
@@ -80,6 +82,7 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
     const hasEnoughBalance = tokenBalance ? Number.parseFloat(tokenBalance) >= Number.parseFloat(finalAmount) : false;
 
     if (!walletClient) {
+      reconnectWallet();
       toast.error("Wallet not connected");
       return;
     }

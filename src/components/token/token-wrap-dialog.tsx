@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Info, ArrowDownUp, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useWalletClient, useBalance } from "wagmi";
+import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
 import { useState, useEffect } from "react";
 import { getLensClient } from "@/lib/lens/client";
 import { toast } from "sonner";
@@ -24,6 +25,7 @@ interface TokenWrapProps {
 
 export const TokenWrapDialog = ({ isOpen, onOpenChange, accountAddress }: TokenWrapProps) => {
   const { data: walletClient } = useWalletClient();
+  const reconnectWallet = useReconnectWallet();
   const [isProcessing, setIsProcessing] = useState(false);
   const [amount, setAmount] = useState<string>("");
   const [mode, setMode] = useState<"wrap" | "unwrap">("wrap");
@@ -51,6 +53,7 @@ export const TokenWrapDialog = ({ isOpen, onOpenChange, accountAddress }: TokenW
 
   const handleWrapTokens = async () => {
     if (!walletClient || !amount || Number.parseFloat(amount) <= 0) {
+      if (!walletClient) reconnectWallet();
       toast.error("Please enter a valid amount");
       return;
     }
@@ -93,6 +96,7 @@ export const TokenWrapDialog = ({ isOpen, onOpenChange, accountAddress }: TokenW
 
   const handleUnwrapTokens = async () => {
     if (!walletClient || !amount || Number.parseFloat(amount) <= 0) {
+      if (!walletClient) reconnectWallet();
       toast.error("Please enter a valid amount");
       return;
     }

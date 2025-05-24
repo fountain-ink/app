@@ -13,6 +13,7 @@ import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { useWalletClient } from "wagmi";
+import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
 import { getLensClient } from "@/lib/lens/client";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -45,6 +46,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const { data: walletClient } = useWalletClient();
+  const reconnectWallet = useReconnectWallet();
   const { data: user } = useAuthenticatedUser();
 
   const slugIsValid = slug === "" || isValidSlug(slug);
@@ -69,6 +71,12 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateGroupMo
 
     if (!user || !user.address) {
       toast.error("Please login to create a blog");
+      return;
+    }
+
+    if (!walletClient) {
+      reconnectWallet();
+      toast.error("Please connect your wallet");
       return;
     }
 

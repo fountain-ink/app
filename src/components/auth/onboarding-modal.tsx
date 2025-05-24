@@ -5,6 +5,7 @@ import { account as accountMetadataBuilder, image, MetadataAttribute } from "@le
 import { useState, useEffect, useCallback, useRef } from "react";
 import { toast } from "sonner";
 import { useAccount, useSignMessage, useWalletClient } from "wagmi";
+import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
@@ -39,6 +40,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
   const router = useRouter();
   const { signMessageAsync } = useSignMessage();
   const { data: walletClient } = useWalletClient();
+  const reconnectWallet = useReconnectWallet();
 
   const validateUsername = useCallback(async (name: string) => {
     if (!name || name.length <= 2) {
@@ -157,6 +159,12 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
   const handleFinalSubmit = async (profileData: ProfileSetupData) => {
     if (!username || !walletAddress) {
       toast.error("Username is missing.");
+      return;
+    }
+
+    if (!walletClient) {
+      reconnectWallet();
+      toast.error("Please connect your wallet first");
       return;
     }
 

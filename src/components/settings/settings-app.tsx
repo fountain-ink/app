@@ -13,6 +13,7 @@ import { getLensClient } from "@/lib/lens/client";
 import { enableSignless, fetchMeDetails, removeSignless } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { useWalletClient } from "wagmi";
+import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -31,6 +32,7 @@ export function ApplicationSettings({ initialSettings = {}, initialEmail }: Appl
   const [isDirty, setIsDirty] = useState(false);
   const [isSignless, setIsSignless] = useState(false);
   const { data: walletClient } = useWalletClient();
+  const reconnectWallet = useReconnectWallet();
 
   useEffect(() => {
     const fetchSignlessStatus = async () => {
@@ -47,7 +49,13 @@ export function ApplicationSettings({ initialSettings = {}, initialEmail }: Appl
 
   const handleSignlessChange = async (checked: boolean) => {
     const client = await getLensClient();
-    if (!client.isSessionClient() || !walletClient) {
+    if (!client.isSessionClient()) {
+      toast.error("Please connect your wallet first");
+      return;
+    }
+
+    if (!walletClient) {
+      reconnectWallet();
       toast.error("Please connect your wallet first");
       return;
     }

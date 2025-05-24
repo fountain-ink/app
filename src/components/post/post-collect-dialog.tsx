@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Info, Calendar, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useWalletClient } from "wagmi";
+import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
 import { useState } from "react";
 import { getLensClient } from "@/lib/lens/client";
 import { toast } from "sonner";
@@ -65,6 +66,7 @@ interface PostCollectProps {
 
 export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) => {
   const { data: walletClient } = useWalletClient();
+  const reconnectWallet = useReconnectWallet();
   const [isCollecting, setIsCollecting] = useState(false);
 
   const collectAction = post.actions.find((action) => action.__typename === "SimpleCollectAction") as
@@ -94,7 +96,13 @@ export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) =>
   const endsAt = collectAction?.endsAt ? new Date(collectAction.endsAt) : null;
 
   const handleCollect = async () => {
-    if (!walletClient || !canCollect) return;
+    if (!walletClient || !canCollect) {
+      if (!walletClient) {
+        reconnectWallet();
+        toast.error("Please connect your wallet");
+      }
+      return;
+    }
 
     try {
       setIsCollecting(true);

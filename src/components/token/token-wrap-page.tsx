@@ -4,6 +4,7 @@ import { TokenWrapDialog } from "@/components/token/token-wrap-dialog";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useAccount, useBalance, useWalletClient } from "wagmi";
+import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
 import { ConnectWalletButton } from "@/components/auth/auth-wallet-button";
 import { ArrowRight, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
@@ -20,6 +21,7 @@ export function TokenWrap({ accountAddress, tokenAddress }: TokenWrapClientPageP
   const [transferAmount, setTransferAmount] = useState<string>("");
   const { address: walletAddress, isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
+  const reconnectWallet = useReconnectWallet();
   console.log("accountAddress", accountAddress);
   console.log("walletAddress", walletAddress);
 
@@ -45,6 +47,7 @@ export function TokenWrap({ accountAddress, tokenAddress }: TokenWrapClientPageP
 
   const handleTransferToAccount = async () => {
     if (!walletClient || !walletAddress || !accountAddress) {
+      if (!walletClient) reconnectWallet();
       toast.error("Wallet or account not connected");
       return;
     }

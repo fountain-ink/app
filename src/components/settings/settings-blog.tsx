@@ -12,6 +12,7 @@ import { TextareaAutosize } from "../ui/textarea";
 import { BlogData, BlogMetadata } from "@/lib/settings/get-blog-data";
 import { useBlogSettings } from "@/hooks/use-blog-settings";
 import { useWalletClient } from "wagmi";
+import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
 import Link from "next/link";
 import { ArrowLeftIcon, ExternalLink, MailIcon } from "lucide-react";
 import { isValidTheme, ThemeType, themeNames, themeDescriptions, defaultThemeName } from "@/styles/themes";
@@ -119,6 +120,7 @@ interface ImageState {
 export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }: BlogSettingsProps) {
   const { settings, saveSettings } = useBlogSettings(initialSettings);
   const { data: walletClient } = useWalletClient();
+  const reconnectWallet = useReconnectWallet();
   const [formState, setFormState] = useState<FormState>({
     title: settings?.title || "",
     about: settings?.about || "",
@@ -293,6 +295,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
         }
 
         if (!walletClient) {
+          reconnectWallet();
           toast.error("Please connect your wallet", { id: chainToastId });
           return;
         }
@@ -601,7 +604,10 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                 <div className="bg-background px-3 py-1.5 flex items-center gap-2">
                   {/* Navigation Buttons */}
                   <div className="flex items-center gap-1">
-                    <button className="text-muted-foreground hover:text-foreground transition-colors w-5 h-5 flex items-center justify-center rounded-full">
+                    <button
+                      type="button"
+                      className="text-muted-foreground hover:text-foreground transition-colors w-5 h-5 flex items-center justify-center rounded-full"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="14"
@@ -616,7 +622,10 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                         <path d="m15 18-6-6 6-6" />
                       </svg>
                     </button>
-                    <button className="text-muted-foreground hover:text-foreground transition-colors w-5 h-5 flex items-center justify-center rounded-full">
+                    <button
+                      type="button"
+                      className="text-muted-foreground hover:text-foreground transition-colors w-5 h-5 flex items-center justify-center rounded-full"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="14"
@@ -643,7 +652,10 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                   </div>
 
                   {/* Reload Button */}
-                  <button className="text-muted-foreground hover:text-foreground transition-colors w-5 h-5 flex items-center justify-center rounded-full">
+                  <button
+                    type="button"
+                    className="text-muted-foreground hover:text-foreground transition-colors w-5 h-5 flex items-center justify-center rounded-full"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="14"

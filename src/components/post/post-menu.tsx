@@ -8,6 +8,7 @@ import { Bookmark, Link, MoreHorizontal, Trash2, Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useWalletClient } from "wagmi";
+import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
 import { ActionButton, type DropdownItem } from "./post-action-button";
 import { usePostActions } from "@/hooks/use-post-actions";
 import { getLensClient } from "@/lib/lens/client";
@@ -29,6 +30,7 @@ import { ConfirmButton } from "@/components/ui/confirm-button";
 export const PostMenu = ({ post }: { post: Post }) => {
   const { handleBookmark, stats, operations, isLoggedIn } = usePostActions(post);
   const { data: walletClient } = useWalletClient();
+  const reconnectWallet = useReconnectWallet();
   const router = useRouter();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -59,7 +61,7 @@ export const PostMenu = ({ post }: { post: Post }) => {
         return;
       }
 
-      let contentJson;
+      let contentJson: any;
       try {
         contentJson = JSON.parse(contentJsonAttribute.value as string);
       } catch (e) {
@@ -110,6 +112,12 @@ export const PostMenu = ({ post }: { post: Post }) => {
 
       if (!lens.isSessionClient()) {
         toast.error("You need to be logged in to delete a post");
+        return;
+      }
+
+      if (!walletClient) {
+        reconnectWallet();
+        toast.error("Please connect your wallet first");
         return;
       }
 

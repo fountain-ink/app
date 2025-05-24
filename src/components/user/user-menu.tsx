@@ -13,6 +13,8 @@ import { useTheme } from "next-themes";
 import { usePathname, useRouter } from "next/navigation";
 import { useAccount, useDisconnect } from "wagmi";
 import { ConnectWalletButton } from "../auth/auth-wallet-button";
+import { Wallet } from "lucide-react";
+import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
 import { LogoutIcon } from "../icons/logout";
 import { MoonIcon } from "../icons/moon";
 import { SettingsGearIcon } from "../icons/settings";
@@ -59,7 +61,9 @@ export const UserMenu = ({ session, showDropdown = false }: { session: MeResult 
     }
   };
 
-  if (!isWalletConnected && status !== "connecting") {
+  const reconnectWallet = useReconnectWallet();
+
+  if (!session && !isWalletConnected && status !== "connecting") {
     return <ConnectWalletButton text="Login" />;
   }
 
@@ -140,6 +144,12 @@ export const UserMenu = ({ session, showDropdown = false }: { session: MeResult 
               icon={MoonIcon}
             >
               Dark Mode
+            </AnimatedMenuItem>
+          )}
+
+          {!isWalletConnected && (
+            <AnimatedMenuItem icon={Wallet} onClick={reconnectWallet}>
+              Reconnect Wallet
             </AnimatedMenuItem>
           )}
 

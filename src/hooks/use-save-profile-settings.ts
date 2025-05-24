@@ -9,6 +9,7 @@ import { account } from "@lens-protocol/metadata";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useWalletClient } from "wagmi";
+import { useReconnectWallet } from "./use-reconnect-wallet";
 
 type ProfileSettingsParams = {
   profile: Account;
@@ -22,6 +23,7 @@ type ProfileSettingsParams = {
 export function useSaveProfileSettings() {
   const [isSaving, setIsSaving] = useState(false);
   const { data: walletClient } = useWalletClient();
+  const reconnectWallet = useReconnectWallet();
 
   const saveSettings = async ({ profile, name, bio, picture, coverPicture, attributes }: ProfileSettingsParams) => {
     setIsSaving(true);
@@ -41,6 +43,7 @@ export function useSaveProfileSettings() {
     }
 
     if (!walletClient) {
+      reconnectWallet();
       toast.error("Error: No wallet client found");
       return { success: false, error: "No wallet client found" };
     }
