@@ -130,7 +130,7 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
         <motion.figure
           className={cn(
             "group relative m-0 w-full h-auto rounded-sm flex-1",
-            // selected && !readOnly && "ring ring-2 ring-ring",
+            selected && !readOnly && "ring ring-2 ring-ring",
             !readOnly && "cursor-pointer",
             error && "border border-destructive ",
           )}
@@ -147,14 +147,14 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
           }}
         >
           {isLoading && (
-            <div className="flex flex-col rounded-sm text-muted-foreground aspect-video gap-2 p-4 items-center justify-center rounded-sm">
+            <div className="flex relative overflow-hidden flex-col rounded-sm text-muted-foreground aspect-video gap-2 p-4 items-center justify-center rounded-sm">
               <LoadingSpinner />
               <div className="placeholder-background" />
             </div>
           )}
 
           {error && (
-            <div className="flex flex-col rounded-sm aspect-video bg-destructive/10 gap-2 p-4 items-center justify-center">
+            <div className="flex relative overflow-hidden flex-col rounded-sm aspect-video bg-destructive/10 gap-2 p-4 items-center justify-center">
               <div className="flex items-center gap-2">
                 <AlertCircleIcon className="w-5 h-5 text-destructive flex-shrink-0" />
                 <span className="text-base line-clamp-3">{error}</span>
@@ -172,7 +172,7 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
               <div
                 className={cn(
                   "w-full h-full relative not-prose not-article m-0 rounded-sm",
-                  selected && !readOnly && "ring ring-2 ring-ring",
+                  // selected && !readOnly && "ring ring-2 ring-ring",
                   !readOnly && "cursor-default"
                 )}
               >
@@ -181,10 +181,10 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
             ) : (
               <>
                 {!unsafeUrl ? (
-                  <div className="flex flex-col rounded-sm aspect-video bg-muted/20 gap-2 p-4 items-center justify-center">
+                  <div className="flex flex-col relative overflow-hidden rounded-sm aspect-video bg-muted/20 gap-2 p-4 items-center justify-center">
                     <div className="flex items-center gap-2">
-                      <LinkIcon className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-                      <span className="text-base text-muted-foreground">Add a link to embed</span>
+                      <LinkIcon className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                      <span className="text-base select-none text-muted-foreground">Add a link to embed</span>
                     </div>
                     <div className="placeholder-background" />
                   </div>
