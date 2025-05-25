@@ -1,29 +1,12 @@
 import { createCampaignForPost } from "@/lib/listmonk/client";
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/db/server";
-import { findBlogByIdentifier } from "@/lib/utils/find-blog-by-id";
-import { verifyAuth } from "@/lib/auth/verify-auth-request";
+import { getVerifiedBlog } from "../../utils";
 
 export async function POST(req: NextRequest, { params }: { params: { blog: string } }) {
   try {
-    const { claims, error: authError } = verifyAuth(req);
-    if (authError) {
-      return authError;
-    }
-
-    const userAddress = claims.metadata.address;
-
-    const db = await createClient();
-    const { data: blog, error } = await findBlogByIdentifier(db, params.blog);
-
-    if (error || !blog) {
-      console.error("Error fetching blog data:", error);
-      return NextResponse.json({ error: "Blog not found" }, { status: 404 });
-    }
-
-    if (blog.owner !== userAddress) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-    }
+    const result = await getVerifiedBlog(req, params.blog);
+    if (result.error) return result.error;
+    const { blog, userAddress } = result;
 
     if (!blog.mail_list_id) {
       return NextResponse.json({ error: "Blog does not have a mailing list" }, { status: 400 });

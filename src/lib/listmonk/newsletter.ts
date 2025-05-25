@@ -21,7 +21,7 @@ export interface NewsletterResponse {
  */
 export async function createMailingList(blog: string): Promise<NewsletterResponse | null> {
   try {
-    const response = await fetch(`/api/newsletter/${blog}/create`, {
+    const response = await fetch(`/api/newsletter/${blog}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -83,7 +83,7 @@ export async function importNewsletterSubscribers(blog: string, file: File): Pro
     const formData = new FormData();
     formData.append("file", file);
 
-    const response = await fetch(`/api/newsletter/${blog}/import`, {
+    const response = await fetch(`/api/newsletter/${blog}/subscribers`, {
       method: "POST",
       body: formData,
     });
@@ -108,7 +108,7 @@ export async function importNewsletterSubscribers(blog: string, file: File): Pro
  */
 export async function exportNewsletterSubscribers(blog: string): Promise<void> {
   try {
-    const response = await fetch(`/api/newsletter/${blog}/export`, {
+    const response = await fetch(`/api/newsletter/${blog}/subscribers`, {
       method: "GET",
     });
 
