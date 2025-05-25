@@ -92,6 +92,7 @@ export const UserMenu = ({ session, showDropdown = false }: { session: MeResult 
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent align="end" className="w-48">
+
           {session && (
             <>
               <AnimatedMenuItem href="/featured" icon={HomeIcon}>
@@ -114,6 +115,12 @@ export const UserMenu = ({ session, showDropdown = false }: { session: MeResult 
           >
             {session ? "Switch Profile" : "Select Profile"}
           </AnimatedMenuItem>
+
+          {!isWalletConnected && (
+            <AnimatedMenuItem icon={Wallet} onClick={reconnectWallet}>
+              Reconnect Wallet
+            </AnimatedMenuItem>
+          )}
 
           {session && (
             <>
@@ -147,14 +154,9 @@ export const UserMenu = ({ session, showDropdown = false }: { session: MeResult 
             </AnimatedMenuItem>
           )}
 
-          {!isWalletConnected && (
-            <AnimatedMenuItem icon={Wallet} onClick={reconnectWallet}>
-              Reconnect Wallet
-            </AnimatedMenuItem>
-          )}
 
           <AnimatedMenuItem icon={LogoutIcon} onClick={handleDisconnect}>
-            Disconnect
+            Logout
           </AnimatedMenuItem>
         </DropdownMenuContent>
       </DropdownMenuPortal>
