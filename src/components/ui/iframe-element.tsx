@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import { cn, withRef } from "@udecode/cn";
 import { PlateElement, useReadOnly, useFocused, useSelected, useEditorRef, useElement } from "@udecode/plate/react";
 import { TIframeElement } from "../editor/plugins/iframe-plugin";
-import { useIframeState } from "../hooks/use-iframe-state";
+import { useIframeState } from "../../hooks/use-iframe-state";
 import { ElementPopover, type ElementWidth, widthVariants } from "./element-popover";
 import { motion } from "motion/react";
 import { Button } from "./button";
@@ -17,15 +17,15 @@ import DOMPurify from "dompurify";
 import { loadIframelyEmbedJs } from "@/lib/load-embed-js";
 import { Input } from "./input";
 
+
 export const IframeElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
-  const { embed, isLoading, error, unsafeUrl } = useIframeState();
+  const { isLoading, error, unsafeUrl, html } = useIframeState();
   const [sanitizedHtml, setSanitizedHtml] = useState("");
   const editor = useEditorRef();
   const element = useElement<TIframeElement>();
   const [width, setWidth] = useState<ElementWidth>((element?.width as ElementWidth) || "column");
   const readOnly = useReadOnly();
   const selected = useSelected();
-  const focused = useFocused();
 
   const [editUrlValue, setEditUrlValue] = useState(element.url ?? "");
 
@@ -47,6 +47,7 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
           at: editor.selection ?? element,
         },
       );
+      console.log(editor.children)
     }
   };
 
@@ -54,6 +55,7 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
     setWidth(newWidth);
     editor.tf.setNodes({ width: newWidth }, { at: element });
   };
+
 
   const editUrlPopoverContent = (
     <div className="flex items-center gap-1">
@@ -90,7 +92,6 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
   );
 
   useEffect(() => {
-    const html = embed?.html ?? (readOnly ? element.html : "");
     setSanitizedHtml(
       DOMPurify.sanitize(html || "", {
         ADD_TAGS: ["iframe"],
@@ -98,7 +99,7 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
         FORBID_TAGS: ["script"],
       }),
     );
-  }, [embed?.html, element.html, readOnly]);
+  }, [html]);
 
   useEffect(() => {
     loadIframelyEmbedJs();
@@ -107,12 +108,15 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
   const divWithIframe = useMemo(() => {
     return (
       <div
-        className="flex flex-col items-center justify-center rounded-sm"
+        className={cn(
+          "flex flex-col items-center justify-center rounded-sm",
+          !readOnly && "pointer-events-none cursor-default"
+        )}
         // biome-ignore lint/security/noDangerouslySetInnerHtml: sanitized iframe embed HTML
         dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
       />
     );
-  }, [sanitizedHtml]);
+  }, [sanitizedHtml, readOnly]);
 
   return (
     <ElementPopover
@@ -127,6 +131,7 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
           className={cn(
             "group relative m-0 w-full h-auto rounded-sm flex-1",
             // selected && !readOnly && "ring ring-2 ring-ring",
+            !readOnly && "cursor-pointer",
             error && "border border-destructive ",
           )}
           contentEditable={false}
@@ -163,11 +168,12 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
 
           {!isLoading &&
             !error &&
-            (embed?.html ? (
+            (html ? (
               <div
                 className={cn(
                   "w-full h-full relative not-prose not-article m-0 rounded-sm",
                   selected && !readOnly && "ring ring-2 ring-ring",
+                  !readOnly && "cursor-default"
                 )}
               >
                 {divWithIframe}
