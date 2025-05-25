@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { useElement } from "@udecode/plate/react";
+import { useEditorRef, useElement, useReadOnly } from "@udecode/plate/react";
 import { TIframeElement } from "../editor/plugins/iframe-plugin";
 
 interface IframelyEmbed {
@@ -11,7 +11,9 @@ interface IframelyEmbed {
 
 export const useIframeState = () => {
   const element = useElement<TIframeElement>();
-  const { align, url: initialUrl } = element;
+  const editor = useEditorRef();
+  const readOnly = useReadOnly();
+  const { align, url: initialUrl, html: elementHtml } = element;
   const [embed, setEmbed] = useState<IframelyEmbed | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,9 +24,15 @@ export const useIframeState = () => {
       return;
     }
 
+    if (elementHtml) {
+      setEmbed({ html: elementHtml });
+      return;
+    }
+
     const fetchEmbedData = async () => {
       setIsLoading(true);
       setError(null);
+      setEmbed(undefined);
       try {
         const response = await fetch(`/api/iframe?url=${encodeURIComponent(initialUrl)}`, {
           next: {
@@ -41,6 +49,10 @@ export const useIframeState = () => {
         const data = await response.json();
         if (data.html) {
           setEmbed({ html: data.html });
+          if (!readOnly) {
+            const path = editor.api.findPath(element);
+            editor.tf.setNodes<TIframeElement>({ html: data.html }, { at: path });
+          }
         } else {
           console.warn("API endpoint did not return HTML for URL:", initialUrl, data);
           setError(data.error ? `Embed Error: ${data.error}` : "Could not retrieve embeddable content.");
@@ -55,7 +67,7 @@ export const useIframeState = () => {
     };
 
     fetchEmbedData();
-  }, [initialUrl]);
+  }, [initialUrl, elementHtml, editor, element, readOnly]);
 
   return {
     align,
