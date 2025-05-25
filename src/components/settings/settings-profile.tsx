@@ -18,7 +18,6 @@ import { Account } from "@lens-protocol/client";
 import { Globe } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { useWalletClient } from "wagmi";
 import { ImageCropperUploader } from "../images/image-uploader";
 import { Button } from "../ui/button";
 import { TextareaAutosize } from "../ui/textarea";

@@ -14,6 +14,7 @@ import { TextareaAutosize } from "../ui/textarea";
 import { BlogData, BlogMetadata } from "@/lib/settings/get-blog-data";
 import { useBlogSettings } from "@/hooks/use-blog-settings";
 import { useWalletClient } from "wagmi";
+import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
 import Link from "next/link";
 import { ArrowLeftIcon, ExternalLink, MailIcon, ChevronDownIcon, ChevronUpIcon, CodeIcon } from "lucide-react";
 import { isValidTheme, ThemeType, themeNames, themeDescriptions, defaultThemeName } from "@/styles/themes";
@@ -117,6 +118,7 @@ interface ImageState {
 export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }: BlogSettingsProps) {
   const { settings, saveSettings } = useBlogSettings(initialSettings);
   const { data: walletClient } = useWalletClient();
+  const reconnectWallet = useReconnectWallet();
   const [formState, setFormState] = useState<FormState>({
     title: settings?.title || "",
     about: settings?.about || "",
@@ -296,6 +298,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
         }
 
         if (!walletClient) {
+          reconnectWallet();
           toast.error("Please connect your wallet", { id: chainToastId });
           return;
         }

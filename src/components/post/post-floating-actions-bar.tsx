@@ -4,7 +4,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useScroll } from "@/hooks/use-scroll";
 import { Account, AnyPost, Post } from "@lens-protocol/client";
 import { motion } from "motion/react";
-import { useWalletClient } from "wagmi";
 import { ActionButton } from "./post-action-button";
 import React from "react";
 import { useActionBar } from "@/contexts/action-bar-context";
