@@ -23,7 +23,7 @@ export default async function WriteDraft({ params }: { params: { id: string } })
         username={username}
         appToken={appToken}
         value={value}
-        isCollaborative={isCollaborative}
+        isCollaborative={false}
       />
     </ArticleLayout>
   );

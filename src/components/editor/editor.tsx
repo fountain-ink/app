@@ -37,6 +37,11 @@ export default function PlateEditor(
   const isReadOnly = props.readOnly || isPreview;
   const isMounted = useMounted();
   const imported = searchParams.has("import");
+  const editorValue = props.readOnly
+    ? trimEmptyNodes(props.value ? JSON.parse(props.value) : (defaultContent as any))
+    : props.isCollaborative
+      ? undefined
+      : JSON.parse(props.value ?? defaultContent);
 
   const editor = createPlateEditor({
     plugins: [...getEditorPlugins(documentId, props.isCollaborative ?? false, props.appToken, isReadOnly)],
@@ -44,10 +49,7 @@ export default function PlateEditor(
       components: getRichElements(),
     },
     skipInitialization: props.isCollaborative && !props.readOnly,
-    value:
-      !props.isCollaborative || props.readOnly
-        ? trimEmptyNodes(props.value ? JSON.parse(props.value) : (defaultContent as any))
-        : undefined,
+    value: editorValue,
   });
 
   useEffect(() => {
@@ -57,6 +59,7 @@ export default function PlateEditor(
   }, [imported, editor, isMounted]);
 
   useEffect(() => {
+    console.log(props.isCollaborative);
     if (!isMounted || props.readOnly || !props.isCollaborative) return;
 
     editor.getApi(YjsPlugin).yjs.init({
