@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import { cn, withRef } from "@udecode/cn";
 import { PlateElement, useReadOnly, useFocused, useSelected, useEditorRef, useElement } from "@udecode/plate/react";
 import { TIframeElement } from "../editor/plugins/iframe-plugin";
-import { useIframeState } from "../hooks/use-iframe-state";
+import { useIframeState } from "../../hooks/use-iframe-state";
 import { ElementPopover, type ElementWidth, widthVariants } from "./element-popover";
 import { motion } from "motion/react";
 import { Button } from "./button";
@@ -17,15 +17,15 @@ import DOMPurify from "dompurify";
 import { loadIframelyEmbedJs } from "@/lib/load-embed-js";
 import { Input } from "./input";
 
+
 export const IframeElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
-  const { embed, isLoading, error, unsafeUrl } = useIframeState();
+  const { isLoading, error, unsafeUrl, html } = useIframeState();
   const [sanitizedHtml, setSanitizedHtml] = useState("");
   const editor = useEditorRef();
   const element = useElement<TIframeElement>();
   const [width, setWidth] = useState<ElementWidth>((element?.width as ElementWidth) || "column");
   const readOnly = useReadOnly();
   const selected = useSelected();
-  const focused = useFocused();
 
   const [editUrlValue, setEditUrlValue] = useState(element.url ?? "");
 
@@ -41,7 +41,13 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
 
   const handleUrlSubmit = () => {
     if (editUrlValue !== element.url) {
-      editor.tf.setNodes<TIframeElement>({ url: editUrlValue }, { at: editor.selection ?? element });
+      editor.tf.setNodes<TIframeElement>(
+        { url: editUrlValue, html: undefined },
+        {
+          at: editor.selection ?? element,
+        },
+      );
+      console.log(editor.children)
     }
   };
 
@@ -49,6 +55,7 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
     setWidth(newWidth);
     editor.tf.setNodes({ width: newWidth }, { at: element });
   };
+
 
   const editUrlPopoverContent = (
     <div className="flex items-center gap-1">
@@ -86,24 +93,31 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
 
   useEffect(() => {
     setSanitizedHtml(
-      DOMPurify.sanitize(embed?.html || "", {
+      DOMPurify.sanitize(html || "", {
         ADD_TAGS: ["iframe"],
         ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "scrolling"],
         FORBID_TAGS: ["script"],
       }),
     );
-  }, [embed?.html]);
+  }, [html]);
 
   useEffect(() => {
     loadIframelyEmbedJs();
   }, [sanitizedHtml]);
 
   const divWithIframe = useMemo(() => {
-    // biome-ignore lint/security/noDangerouslySetInnerHtml: sanitized iframe embed HTML
-    return <div className="flex flex-col items-center justify-center rounded-sm" dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />;
-  }, [sanitizedHtml]);
+    return (
+      <div
+        className={cn(
+          "flex flex-col items-center justify-center rounded-sm",
+          !readOnly && "pointer-events-none cursor-default"
+        )}
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: sanitized iframe embed HTML
+        dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
+      />
+    );
+  }, [sanitizedHtml, readOnly]);
 
-  
   return (
     <ElementPopover
       open={selected}
@@ -112,17 +126,12 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
       onWidthChange={handleWidth}
       content={editUrlPopoverContent}
     >
-      <PlateElement
-        ref={ref}
-        className={cn(
-          className,
-          "my-9 flex flex-col items-center rounded-sm",
-        )}
-        {...props}
-      >
+      <PlateElement ref={ref} className={cn(className, "my-9 flex flex-col items-center rounded-sm")} {...props}>
         <motion.figure
-          className={cn("group relative m-0 w-full h-auto rounded-sm flex-1",
+          className={cn(
+            "group relative m-0 w-full h-auto rounded-sm flex-1",
             // selected && !readOnly && "ring ring-2 ring-ring",
+            !readOnly && "cursor-pointer",
             error && "border border-destructive ",
           )}
           contentEditable={false}
@@ -137,63 +146,62 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
             damping: 30,
           }}
         >
-        {isLoading && (
-          <div className="flex flex-col rounded-sm text-muted-foreground aspect-video gap-2 p-4 items-center justify-center rounded-sm">
-            <LoadingSpinner />
-            <div className="placeholder-background" />
-          </div>
-        )}
-
-        {error && (
-          <div className="flex flex-col rounded-sm aspect-video bg-destructive/10 gap-2 p-4 items-center justify-center">
-            <div className="flex items-center gap-2">
-              <AlertCircleIcon className="w-5 h-5 text-destructive flex-shrink-0" />
-              <span className="text-base line-clamp-3">{error}</span>
+          {isLoading && (
+            <div className="flex flex-col rounded-sm text-muted-foreground aspect-video gap-2 p-4 items-center justify-center rounded-sm">
+              <LoadingSpinner />
+              <div className="placeholder-background" />
             </div>
-            <span className="text-xs p-2 border border-dashed border-destructive bg-destructive/30 rounded-md text-muted-foreground">
-              {unsafeUrl}
-            </span>
-            <div className="placeholder-background" />
-          </div>
-        )}
+          )}
 
-        {!isLoading &&
-          !error &&
-          (embed?.html ? (
+          {error && (
+            <div className="flex flex-col rounded-sm aspect-video bg-destructive/10 gap-2 p-4 items-center justify-center">
+              <div className="flex items-center gap-2">
+                <AlertCircleIcon className="w-5 h-5 text-destructive flex-shrink-0" />
+                <span className="text-base line-clamp-3">{error}</span>
+              </div>
+              <span className="text-xs p-2 border border-dashed border-destructive bg-destructive/30 rounded-md text-muted-foreground">
+                {unsafeUrl}
+              </span>
+              <div className="placeholder-background" />
+            </div>
+          )}
+
+          {!isLoading &&
+            !error &&
+            (html ? (
               <div
                 className={cn(
                   "w-full h-full relative not-prose not-article m-0 rounded-sm",
                   selected && !readOnly && "ring ring-2 ring-ring",
+                  !readOnly && "cursor-default"
                 )}
-            >
+              >
                 {divWithIframe}
-            </div>
-          ) : (
-            <>
-              {!unsafeUrl ? (
-                <div className="flex flex-col rounded-sm aspect-video bg-muted/20 gap-2 p-4 items-center justify-center">
-                  <div className="flex items-center gap-2">
-                    <LinkIcon className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-                    <span className="text-base text-muted-foreground">Add a link to embed</span>
+              </div>
+            ) : (
+              <>
+                {!unsafeUrl ? (
+                  <div className="flex flex-col rounded-sm aspect-video bg-muted/20 gap-2 p-4 items-center justify-center">
+                    <div className="flex items-center gap-2">
+                      <LinkIcon className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                      <span className="text-base text-muted-foreground">Add a link to embed</span>
+                    </div>
+                    <div className="placeholder-background" />
                   </div>
-                  <div className="placeholder-background" />
-                </div>
-              ) : (
-                <div className="flex flex-col rounded-sm aspect-video bg-muted/20 gap-2 p-4 items-center justify-center">
-                  <div className="flex items-center gap-2">
-                    <Link2OffIcon className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-                    <span className="text-base text-muted-foreground">
-                      No preview available for this link
+                ) : (
+                  <div className="flex flex-col rounded-sm aspect-video bg-muted/20 gap-2 p-4 items-center justify-center">
+                    <div className="flex items-center gap-2">
+                      <Link2OffIcon className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                      <span className="text-base text-muted-foreground">No preview available for this link</span>
+                    </div>
+                    <span className="text-xs p-2 max-w-full truncate border border-dashed border-border bg-muted/30 rounded-md text-muted-foreground">
+                      {unsafeUrl}
                     </span>
+                    <div className="placeholder-background" />
                   </div>
-                  <span className="text-xs p-2 max-w-full truncate border border-dashed border-border bg-muted/30 rounded-md text-muted-foreground">
-                    {unsafeUrl}
-                  </span>
-                  <div className="placeholder-background" />
-                </div>
-              )}
-            </>
-          ))}
+                )}
+              </>
+            ))}
         </motion.figure>
 
         {children}
