@@ -5,6 +5,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LinkIcon } from "lucide-react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEditorState } from "@udecode/plate/react";
+import { createDraft } from "@/lib/plate/create-draft";
+import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { toast } from "sonner";
 import { Badge } from "../ui/badge";
 
@@ -15,10 +19,21 @@ interface DraftShareModalProps {
 
 export const DraftShareModal = ({ isOpen, onClose }: DraftShareModalProps) => {
   const [viewAccess, setViewAccess] = useState<"everyone" | "invited">("everyone");
+  const router = useRouter();
+  const editor = useEditorState();
+  const { deleteDocument } = useDocumentStorage();
 
   const copyLink = async () => {
     try {
-      await navigator.clipboard.writeText(window.location.href);
+      let url = window.location.href;
+      if (!url.includes("/w/collab/")) {
+        const currentId = url.split("/").pop() || "";
+        const result = await createDraft({ initialContent: editor.children });
+        deleteDocument(currentId);
+        url = `${window.location.origin}/w/collab/${result.documentId}`;
+        router.replace(`/w/collab/${result.documentId}`);
+      }
+      await navigator.clipboard.writeText(url);
       toast.success("Link copied!", { description: "The draft link has been copied to your clipboard." });
     } catch (_error) {
       toast.error("Failed to copy", {

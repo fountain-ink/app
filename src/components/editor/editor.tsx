@@ -18,6 +18,7 @@ import { useMounted } from "@/hooks/use-mounted";
 import { YjsPlugin } from "@udecode/plate-yjs/react";
 import { defaultContent } from "@/lib/plate/default-content";
 import { trimEmptyNodes } from "@/lib/plate/trim-empty-nodes";
+import { useDocumentStorage } from "@/hooks/use-document-storage";
 
 export default function PlateEditor(
   props: PropsWithChildren & {
@@ -36,15 +37,51 @@ export default function PlateEditor(
   const isReadOnly = props.readOnly || isPreview;
   const isMounted = useMounted();
   const imported = searchParams.has("import");
+  const { getDocument, saveDocument } = useDocumentStorage();
+
+  const [value, setValue] = useState<any>(
+    !props.appToken && !isReadOnly ? getDocument(documentId)?.contentJson || defaultContent : [],
+  );
 
   const editor = createPlateEditor({
     plugins: [...getEditorPlugins(documentId, props.appToken, isReadOnly)],
     override: {
       components: getRichElements(),
     },
-    skipInitialization: !props.readOnly,
-    value: props.readOnly ? trimEmptyNodes(JSON.parse(props.value as string)) : undefined,
+    skipInitialization: false,
+    value:
+      !props.appToken && !isReadOnly
+        ? value
+        : props.readOnly
+          ? trimEmptyNodes(JSON.parse(props.value as string))
+          : undefined,
   });
+
+  useEffect(() => {
+    if (props.appToken || isReadOnly) return;
+
+    const loadDraft = async () => {
+      try {
+        const res = await fetch(`/api/drafts?id=${documentId}`, { credentials: "include" });
+        if (res.ok) {
+          const data = await res.json();
+          const draft = data.draft;
+          if (draft) {
+            setValue(draft.contentJson || defaultContent);
+            saveDocument(documentId, draft);
+          }
+        } else {
+          const local = getDocument(documentId);
+          if (local) setValue(local.contentJson);
+        }
+      } catch (_e) {
+        const local = getDocument(documentId);
+        if (local) setValue(local.contentJson);
+      }
+    };
+
+    loadDraft();
+  }, [documentId, props.appToken, isReadOnly]);
 
   useEffect(() => {
     if (!imported || editor || !isMounted) return;
@@ -53,7 +90,7 @@ export default function PlateEditor(
   }, [imported, editor, isMounted]);
 
   useEffect(() => {
-    if (!isMounted || props.readOnly) return;
+    if (!isMounted || props.readOnly || !props.appToken) return;
 
     editor.getApi(YjsPlugin).yjs.init({
       id: documentId,
@@ -64,11 +101,16 @@ export default function PlateEditor(
     return () => {
       editor.getApi(YjsPlugin).yjs.destroy();
     };
-  }, [isMounted, editor]);
+  }, [isMounted, editor, props.appToken]);
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <Plate editor={editor} readOnly={isReadOnly}>
+      <Plate
+        editor={editor}
+        readOnly={isReadOnly}
+        value={!props.appToken && !isReadOnly ? value : undefined}
+        onChange={!props.appToken && !isReadOnly ? setValue : undefined}
+      >
         <div data-plate-selectable="true">
           {props.showToc && <TocSidebar className="top-[80px]" topOffset={30} />}
 
@@ -86,7 +128,7 @@ export default function PlateEditor(
             </div>
           </EditorContainer>
 
-          {!isReadOnly && <AutoSave documentId={documentId} />}
+          {!isReadOnly && !props.appToken && <AutoSave documentId={documentId} />}
 
           <FloatingToolbar>
             <FloatingToolbarButtons />
