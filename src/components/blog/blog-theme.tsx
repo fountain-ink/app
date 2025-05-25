@@ -1,16 +1,22 @@
 "use client";
 
 import { defaultThemeName, isValidTheme, ThemeType } from "@/styles/themes";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import DOMPurify from "dompurify";
 import { useTheme } from "../theme/theme-context";
 
 interface BlogThemeProps {
   children: React.ReactNode;
   initialTheme?: string;
+  customCss?: string | null;
 }
 
-export const BlogTheme = ({ children, initialTheme }: BlogThemeProps) => {
+export const BlogTheme = ({ children, initialTheme, customCss }: BlogThemeProps) => {
   const { setTheme } = useTheme();
+  const sanitizedCustomCss = useMemo(() => {
+    console.log("applying custom css: ", customCss);
+    return customCss ? DOMPurify.sanitize(customCss) : "";
+  }, [customCss]);
 
   useEffect(() => {
     const themeName = initialTheme ?? defaultThemeName;
@@ -23,5 +29,11 @@ export const BlogTheme = ({ children, initialTheme }: BlogThemeProps) => {
     };
   }, [initialTheme, setTheme]);
 
-  return <>{children}</>;
+  return (
+    <>
+      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: custom CSS is user-provided */}
+      {sanitizedCustomCss ? <style dangerouslySetInnerHTML={{ __html: sanitizedCustomCss }} /> : null}
+      {children}
+    </>
+  );
 };
