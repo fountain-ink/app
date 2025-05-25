@@ -116,12 +116,6 @@ export const UserMenu = ({ session, showDropdown = false }: { session: MeResult 
             {session ? "Switch Profile" : "Select Profile"}
           </AnimatedMenuItem>
 
-          {!isWalletConnected && (
-            <AnimatedMenuItem icon={Wallet} onClick={reconnectWallet}>
-              Reconnect Wallet
-            </AnimatedMenuItem>
-          )}
-
           {session && (
             <>
               <AnimatedMenuItem href={`/u/${username}/drafts`} icon={SquarePenIcon}>
@@ -154,6 +148,11 @@ export const UserMenu = ({ session, showDropdown = false }: { session: MeResult 
             </AnimatedMenuItem>
           )}
 
+          {!isWalletConnected && (
+            <AnimatedMenuItem icon={Wallet} onClick={reconnectWallet}>
+              Reconnect Wallet
+            </AnimatedMenuItem>
+          )}
 
           <AnimatedMenuItem icon={LogoutIcon} onClick={handleDisconnect}>
             Logout
