@@ -25,7 +25,7 @@ export function NewsletterDeleteDialog({ open, onOpenChange, blogAddress, onSucc
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
-      const response = await fetch(`/api/newsletter/${blogAddress}/delete`, {
+      const response = await fetch(`/api/newsletter/${blogAddress}`, {
         method: "DELETE",
       });
 
