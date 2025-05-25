@@ -96,12 +96,12 @@ const resetBlockTypesCodeBlockRule = {
   onReset: unwrapCodeBlock,
 };
 
-export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: boolean) => {
+export const getEditorPlugins = (path: string, collaborative: boolean, appToken?: string, isReadOnly?: boolean) => {
   const pluginsList = [...plugins];
 
   const username = appToken ? getTokenClaims(appToken)?.metadata.username : undefined;
 
-  if (appToken) {
+  if (collaborative && appToken) {
     pluginsList.push(
       YjsPlugin.configure({
         render: {
@@ -552,7 +552,7 @@ export const plugins = [
             if (!mdastNode || !mdastNode.children[0]) return;
 
             if (mdastNode.depth === 1) {
-              const text = "value" in mdastNode?.children[0] ? mdastNode.children[0].value : "";
+              const text = "value" in mdastNode.children[0] ? mdastNode.children[0].value : "";
               return {
                 type: TitlePlugin.key,
                 children: [{ text }],
@@ -577,7 +577,7 @@ export const plugins = [
           deserialize: (mdastNode: Heading) => {
             if (!mdastNode || !mdastNode.children[0]) return;
 
-            const text = "value" in mdastNode?.children[0] ? mdastNode.children[0].value : "";
+            const text = "value" in mdastNode.children[0] ? mdastNode.children[0].value : "";
             if (mdastNode.depth === 2) {
               return {
                 type: SubtitlePlugin.key,
