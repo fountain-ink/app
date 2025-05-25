@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { uploadFile } from "@/lib/upload/upload-file";
 import { useCallback, useEffect, useState } from "react";
 import { TextareaAutosize } from "../ui/textarea";
@@ -13,7 +15,7 @@ import { BlogData, BlogMetadata } from "@/lib/settings/get-blog-data";
 import { useBlogSettings } from "@/hooks/use-blog-settings";
 import { useWalletClient } from "wagmi";
 import Link from "next/link";
-import { ArrowLeftIcon, ExternalLink, MailIcon } from "lucide-react";
+import { ArrowLeftIcon, ExternalLink, MailIcon, ChevronDownIcon, ChevronUpIcon, CodeIcon } from "lucide-react";
 import { isValidTheme, ThemeType, themeNames, themeDescriptions, defaultThemeName } from "@/styles/themes";
 import { ThemeButtons } from "@/components/theme/theme-buttons";
 import { toast } from "sonner";
@@ -26,43 +28,7 @@ import { fetchGroup, setGroupMetadata } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { storageClient } from "@/lib/lens/storage-client";
 import { uri } from "@lens-protocol/client";
-
-const defaultCssPlaceholder = `
-.article {}
-.article img {}
-.article iframe {}
-.article .title {}
-.article .subtitle {}
-.article h1 {}
-.article h2 {}
-.article h3 {}
-.article h4 {}
-.article p {}
-.article blockquote {}
-.article ul, .article ol {}
-.article .todo-element {}
-.article li {}
-.article ul li::marker, .article ol li::marker {}
-.article strong {}
-.article pre {}
-.article pre code {}
-.not-article .title {}
-.not-article .subtitle {}
-.not-article h3 {}
-.not-article h4 {}
-.not-article p {}
-.not-article blockquote {}
-.not-article ul {}
-.not-article ol {}
-.not-article li {}
-`;
-// import { setGroupMetadata } from "@lens-protocol/client/actions";
-// import { handleOperationWith } from "@lens-protocol/client/viem";
-// import { storageClient } from "@/lib/lens/storage-client";
-// import { fetchGroup } from "@lens-protocol/client/actions";
-// import { group } from "@lens-protocol/metadata";
-// import { getLensClient } from "@/lib/lens/client";
-// import { uri } from "@lens-protocol/client";
+import { defaultCssPlaceholder, cssExamples, CssExampleKey } from "@/lib/css-examples";
 
 interface BlogSettingsProps {
   initialSettings: BlogData;
@@ -133,6 +99,7 @@ interface FormState {
     name: ThemeType;
     customCss: string;
   };
+  showCustomCss: boolean;
   icon: string;
   isDirty: boolean;
   errors: {
@@ -164,6 +131,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
       name: (settings?.theme?.name as ThemeType) || defaultThemeName,
       customCss: settings?.theme?.customCss || "",
     },
+    showCustomCss: Boolean(settings?.theme?.customCss?.trim()),
     icon: settings?.icon || "",
     isDirty: false,
     errors: {
@@ -179,12 +147,13 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
   const [isSaving, setIsSaving] = useState(false);
   const [feedAddress, setFeedAddress] = useState<string | null>(null);
   const [highlightedElement, setHighlightedElement] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("basic");
 
   const blogAddress = initialSettings.address;
   const blogUrl = isUserBlog ? `/b/${userHandle}` : `/b/${blogAddress}`;
 
   useEffect(() => {
-    setFormState({
+    setFormState((prev) => ({
       title: settings?.title || "",
       about: settings?.about || "",
       handle: isUserBlog ? userHandle || "" : settings?.handle || "",
@@ -198,13 +167,14 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
         name: (settings?.theme?.name as ThemeType) || defaultThemeName,
         customCss: settings?.theme?.customCss || "",
       },
+      showCustomCss: Boolean(settings?.theme?.customCss?.trim()),
       icon: settings?.icon || "",
       isDirty: false,
       errors: {
         title: null,
         slug: null,
       },
-    });
+    }));
     setImageState({
       file: null,
       previewUrl: undefined,
@@ -436,6 +406,18 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
     }));
   };
 
+  const handleCustomCssToggle = (show: boolean) => {
+    setFormState((prev) => ({
+      ...prev,
+      showCustomCss: show,
+      theme: {
+        ...prev.theme,
+        customCss: show ? prev.theme.customCss : "", // Clear CSS when toggled off
+      },
+      isDirty: true,
+    }));
+  };
+
   const handleThemeChange = (themeName: ThemeType) => {
     console.log(themeName, formState);
     setFormState((prev) => ({
@@ -576,22 +558,110 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
         </div>
 
         <div className="space-y-4 py-2 pb-4">
-          <div className="space-y-2">
-            <h2 className="text-lg font-semibold">Theme</h2>
+          <div className="">
+            <h2 className="text-lg font-semibold mb-2">Theme</h2>
 
             <ThemeButtons currentTheme={formState.theme.name} onChange={handleThemeChange} />
 
             <div className="mt-4">
-              <Label htmlFor="custom-css">Custom CSS</Label>
-              <p className="text-sm text-muted-foreground mb-2">Override article styles using your own CSS.</p>
-              <TextareaAutosize
-                id="custom-css"
-                variant="default"
-                className="font-mono text-xs p-2"
-                value={formState.theme.customCss}
-                onChange={(e) => handleCustomCssChange(e.target.value)}
-                placeholder={defaultCssPlaceholder}
-              />
+              <div className="flex items-center justify-between mb-2">
+                <div>
+                  <Label htmlFor="custom-css-toggle" className="flex items-center gap-2">
+                    <CodeIcon className="w-4 h-4" />
+                    Custom CSS
+                  </Label>
+                  <p className="text-sm text-muted-foreground">Override article styles using your own CSS.</p>
+                </div>
+                <Switch
+                  id="custom-css-toggle"
+                  checked={formState.showCustomCss}
+                  onCheckedChange={handleCustomCssToggle}
+                />
+              </div>
+
+              <AnimatePresence>
+                {formState.showCustomCss && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pt-2 space-y-4">
+                      <div>
+                        <Label htmlFor="custom-css" className="text-sm font-medium mb-2 block">
+                          CSS Editor
+                        </Label>
+                        <motion.div
+                          initial={{ height: 0 }}
+                          animate={{ height: "auto" }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <div className="border border-border rounded-lg bg-muted/50 h-[200px]">
+                            <ScrollArea className="h-full">
+                              <TextareaAutosize
+                                id="custom-css"
+                                variant="default"
+                                className="font-mono text-xs md:text-xs p-3 w-full border-0 bg-transparent resize-none focus:ring-0 focus:outline-none"
+                                value={formState.theme.customCss}
+                                onChange={(e) => handleCustomCssChange(e.target.value)}
+                                placeholder={defaultCssPlaceholder}
+                              />
+                            </ScrollArea>
+                          </div>
+                        </motion.div>
+                      </div>
+
+                      {/* Examples Tabs */}
+                      <div>
+                        <Label className="text-sm font-medium mb-2 block">
+                          Style Examples
+                        </Label>
+                        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                          <TabsList className="grid w-full grid-cols-4">
+                            <TabsTrigger value="basic">Basic</TabsTrigger>
+                            <TabsTrigger value="modern">Modern</TabsTrigger>
+                            <TabsTrigger value="minimal">Minimal</TabsTrigger>
+                            <TabsTrigger value="colors">Colors</TabsTrigger>
+                          </TabsList>
+
+                          {Object.entries(cssExamples).map(([key, example]) => (
+                            <TabsContent key={key} value={key} className="mt-4">
+                              <div className="space-y-3">
+                                <div>
+                                  <h4 className="font-medium text-sm">{example.title}</h4>
+                                  <p className="text-xs text-muted-foreground">{example.description}</p>
+                                </div>
+                                <div className="relative">
+                                  <div className="border border-border rounded-lg bg-muted/50 h-[200px]">
+                                    <ScrollArea className="h-full">
+                                      <div className="font-mono text-xs p-3 whitespace-pre-wrap">
+                                        {example.css}
+                                      </div>
+                                    </ScrollArea>
+                                  </div>
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="default"
+                                    className="absolute top-3 right-3 h-8 px-3 text-xs"
+                                    onClick={() => {
+                                      handleCustomCssChange(example.css);
+                                    }}
+                                  >
+                                    Use This Style
+                                  </Button>
+                                </div>
+                              </div>
+                            </TabsContent>
+                          ))}
+                        </Tabs>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </div>
@@ -743,14 +813,12 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                     transition={{ duration: 0.3 }}
                   >
                     <div
-                      className={`w-8 h-8 rounded-full transition-colors duration-300 ${
-                        highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
-                      }`}
+                      className={`w-8 h-8 rounded-full transition-colors duration-300 ${highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
+                        }`}
                     />
                     <div
-                      className={`h-4 w-24 rounded-md transition-colors duration-300 ${
-                        highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
-                      }`}
+                      className={`h-4 w-24 rounded-md transition-colors duration-300 ${highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
+                        }`}
                     />
                   </motion.div>
                 )}
@@ -760,9 +828,8 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
               <AnimatePresence>
                 {formState.metadata.showTitle && (
                   <motion.div
-                    className={`h-6 w-48 rounded-md mb-3 transition-colors duration-300 ${
-                      highlightedElement === "title" ? "bg-primary/70" : "bg-muted"
-                    }`}
+                    className={`h-6 w-48 rounded-md mb-3 transition-colors duration-300 ${highlightedElement === "title" ? "bg-primary/70" : "bg-muted"
+                      }`}
                     initial={{ opacity: 0, height: 0, marginBottom: 0 }}
                     animate={{ opacity: 1, height: 24, marginBottom: 12 }}
                     exit={{ opacity: 0, height: 0, marginBottom: 0 }}
@@ -781,19 +848,16 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                     transition={{ duration: 0.3 }}
                   >
                     <div
-                      className={`h-5 w-16 rounded-full transition-colors duration-300 ${
-                        highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
-                      }`}
+                      className={`h-5 w-16 rounded-full transition-colors duration-300 ${highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
+                        }`}
                     />
                     <div
-                      className={`h-5 w-20 rounded-full transition-colors duration-300 ${
-                        highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
-                      }`}
+                      className={`h-5 w-20 rounded-full transition-colors duration-300 ${highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
+                        }`}
                     />
                     <div
-                      className={`h-5 w-14 rounded-full transition-colors duration-300 ${
-                        highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
-                      }`}
+                      className={`h-5 w-14 rounded-full transition-colors duration-300 ${highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
+                        }`}
                     />
                   </motion.div>
                 )}

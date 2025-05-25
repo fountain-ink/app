@@ -14,6 +14,7 @@ interface BlogThemeProps {
 export const BlogTheme = ({ children, initialTheme, customCss }: BlogThemeProps) => {
   const { setTheme } = useTheme();
   const sanitizedCustomCss = useMemo(() => {
+    console.log("applying custom css: ", customCss);
     return customCss ? DOMPurify.sanitize(customCss) : "";
   }, [customCss]);
 
