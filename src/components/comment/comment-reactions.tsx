@@ -3,6 +3,7 @@ import { Post } from "@lens-protocol/client";
 import { Heart, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { ActionButton } from "../post/post-action-button";
+import { useAuthenticatedUser } from "@lens-protocol/react";
 
 interface CommentReactionsProps {
   comment: Post;
@@ -34,6 +35,7 @@ export const CommentReactions = ({
         strokeColor="rgb(215, 84, 127)"
         fillColor="rgba(215, 84, 127, 0.9)"
         onClick={handleLike}
+        isUserLoggedIn={isLoggedIn}
         isActive={hasUpvoted}
         isDisabled={!isLoggedIn}
       />
@@ -45,6 +47,7 @@ export const CommentReactions = ({
           strokeColor="hsl(var(--primary))"
           fillColor="hsl(var(--primary) / 0.8)"
           onClick={handleShowReplies}
+          isUserLoggedIn={isLoggedIn}
           isDisabled={!hasReplies || isLoadingReplies}
           fillOnHover={false}
           fillOnClick={false}
