@@ -2,6 +2,7 @@ import { env } from "@/env";
 import { createClient } from "../db/client";
 import { findBlogByIdentifier } from "../utils/find-blog-by-id";
 import { ListmonkCampaignResponse } from "@/srv/notifications/types";
+import { renderEmail } from "@/components/email/email-content";
 
 export interface ListmonkList {
   id: number;
@@ -388,64 +389,14 @@ export async function createCampaignForPost(
       }
     }
 
-    const campaignBody = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>${postTitle}</title>
-        <style>
-          body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-          }
-          h1 { font-size: 24px; margin-bottom: 10px; }
-          h2 { font-size: 20px; margin-bottom: 10px; color: #555; font-weight: normal; }
-          .cover { max-width: 100%; height: auto; margin-bottom: 20px; }
-          .content { margin-bottom: 30px; }
-          .button {
-            display: inline-block;
-            background-color: #0070f3;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 20px;
-          }
-          .footer { 
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            font-size: 14px;
-            color: #666;
-          }
-        </style>
-      </head>
-      <body>
-        <div>
-          <h1>${postTitle}</h1>
-          ${postSubtitle ? `<h2>${postSubtitle}</h2>` : ""}
-          ${coverImageUrl ? `<img src="${coverImageUrl}" alt="Post cover image" class="cover" />` : ""}
-          
-          <div class="content">
-            ${postContent.replace(/\n/g, "<br>")}
-          </div>
-          
-          <a href="${postUrl}" class="button">Read the full post</a>
-          
-          <div class="footer">
-            <p>You're receiving this email because you subscribed to updates from ${blog.display_name || blogId} on Fountain.</p>
-            <p>To unsubscribe from these emails, click <a href="{{UnsubscribeURL}}">here</a>.</p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `;
+    const campaignBody = renderEmail({
+      blogName: blog.display_name || blogId,
+      title: postTitle,
+      subtitle: postSubtitle,
+      coverUrl: coverImageUrl,
+      contentHtml: postContent.replace(/\n/g, "<br>"),
+      postUrl,
+    });
 
     const response = await fetch(`${env.LISTMONK_API_URL}/campaigns`, {
       method: "POST",
