@@ -18,7 +18,7 @@ export function HrElement({
   const focused = useFocused();
 
   return (
-    <PlateElement className={cn("mb-1 py-2", className)} {...props}>
+    <PlateElement className={cn("my-4 py-2", className)} {...props}>
       <div contentEditable={false}>
         <hr
           {...nodeProps}

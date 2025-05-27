@@ -10,7 +10,7 @@ export function HrElementStatic({ children, className, attributes: { ...attribut
       attributes={{
         ...attributes,
       }}
-      className={cn("mb-1 py-2", className)}
+      className={cn("my-4 py-2", className)}
       {...props}
     >
       <div contentEditable={false}>
