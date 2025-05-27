@@ -14,7 +14,7 @@ export function HrElementStatic({ children, className, attributes: { ...attribut
       {...props}
     >
       <div contentEditable={false}>
-        <hr className={cn("h-0.5 cursor-pointer rounded-sm border-none bg-muted bg-clip-content")} />
+        <hr className={cn("h-0.5 w-[60%] mx-auto cursor-pointer rounded-sm border-none bg-muted bg-clip-content")} />
       </div>
       {children}
     </SlateElement>
