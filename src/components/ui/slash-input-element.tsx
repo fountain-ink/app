@@ -23,6 +23,7 @@ import {
   PilcrowIcon,
   Radical,
   TableIcon,
+  SeparatorHorizontalIcon,
 } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 
@@ -37,6 +38,7 @@ import { CodeIcon } from "lucide-react";
 import { insertBlock } from "@/lib/transforms";
 import { ListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
 import { EquationPlugin } from "@udecode/plate-math/react";
+import { HorizontalRulePlugin } from "@udecode/plate-horizontal-rule/react";
 import { insertTable } from "@udecode/plate-table";
 import { IframePlugin } from "../editor/plugins/iframe-plugin";
 import { insertIframe } from "../editor/transforms/insert-iframe";
@@ -204,18 +206,15 @@ const rules: SlashCommandRule[] = [
       insertTable(editor, {}, { select: true });
     },
   },
-  // {
-  //   icon: SeparatorHorizontalIcon,
-  //   value: "Divider",
-  //   description: "Horizontal divider.",
-  //   keywords: ["divider", "separator", "hr", "horizontal rule", "line"],
-  //   onSelect: (editor) => {
-  //     insertEmptyElement(editor, HorizontalRulePlugin.key, {
-  //       nextBlock: true,
-  //       select: true,
-  //     });
-  //   },
-  // },
+  {
+    icon: SeparatorHorizontalIcon,
+    value: "Divider",
+    description: "Horizontal divider.",
+    keywords: ["divider", "separator", "hr", "horizontal rule", "line"],
+    onSelect: (editor) => {
+      insertBlock(editor, HorizontalRulePlugin.key);
+    },
+  },
 ];
 
 // export const SlashInputElement = withRef<typeof PlateElement>(({ className, ...props }, ref) => {
