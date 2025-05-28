@@ -47,11 +47,8 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
   const reconnectWallet = useReconnectWallet();
   const { data: authenticatedUser } = useAuthenticatedUser();
 
-  const currencyAddress = DEFAULT_CURRENCY;
-
   const { data: ghoBalance, isLoading: isGhoBalanceLoading } = useBalance({
     address: authenticatedUser?.address as `0x${string}`,
-    token: currencyAddress as `0x${string}`,
   });
 
   const tokenBalance = ghoBalance ? formatBalanceDisplay(ghoBalance.value, ghoBalance.decimals) : "0";
@@ -110,8 +107,7 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
         post: postId(post.id),
         action: {
           tipping: {
-            currency: evmAddress(currencyAddress),
-            value: bigDecimal(finalAmount),
+            native: bigDecimal(finalAmount),
           },
         },
       })
