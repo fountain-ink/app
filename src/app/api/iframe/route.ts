@@ -1,7 +1,7 @@
 import { env } from "@/env";
 import { NextResponse } from "next/server";
 
-const allowedDomains = ["dune.com"];
+const allowedDomains = ["dune.com", "musescore.com"];
 
 export const revalidate = 60 * 60 * 24 * 2; // 2 days
 
