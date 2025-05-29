@@ -110,6 +110,10 @@ export const UserMenu = ({ session, showDropdown = false }: { session: MeResult 
           <AnimatedMenuItem
             icon={UserRoundPenIcon}
             onClick={() => {
+              if (!isWalletConnected) {
+                reconnectWallet();
+                return;
+              }
               setProfileSelectModalOpen(true);
             }}
           >
