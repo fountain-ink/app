@@ -205,37 +205,28 @@ export const plugins = [
   }),
   TitlePlugin.configure({
     handlers: {
-      onKeyDown: (ctx) => {
+      onPaste: (ctx) => {
         const { editor, event } = ctx;
-        if ((event.ctrlKey || event.metaKey) && event.key === "v") {
-          const anchor = editor.selection?.anchor?.path;
-          if (!anchor) return false;
+        const anchor = editor.selection?.anchor?.path;
+        if (!anchor) return false;
 
-          const currentNode = editor.api.parent(anchor);
-          if (!currentNode) return false;
+        const currentNode = editor.api.parent(anchor);
+        if (!currentNode) return false;
 
-          const [node] = currentNode;
-          const isTitle = node.type === TITLE_KEYS.title;
-          const isSubtitle = node.type === TITLE_KEYS.subtitle;
+        const [node] = currentNode;
+        const isTitle = node.type === TITLE_KEYS.title;
+        const isSubtitle = node.type === TITLE_KEYS.subtitle;
 
-          if (isTitle || isSubtitle) {
-            event.preventDefault();
-            event.stopPropagation();
+        if (isTitle || isSubtitle) {
+          event.preventDefault();
+          event.stopPropagation();
 
-            window.navigator.clipboard
-              .readText()
-              .then((textToPaste: string) => {
-                console.log(textToPaste);
-                if (textToPaste) {
-                  const singleLineText = textToPaste.replace(/(\r\n|\n|\r)/gm, "").trim();
-                  editor.tf.insertText(singleLineText);
-                }
-              })
-              .catch((err) => {
-                console.error("Failed to read clipboard contents: ", err);
-              });
-            return true;
+          const textToPaste = event.clipboardData?.getData('text/plain');
+          if (textToPaste) {
+            const singleLineText = textToPaste.replace(/(\r\n|\n|\r)/gm, "").trim();
+            editor.tf.insertText(singleLineText);
           }
+          return true;
         }
         return false;
       },
