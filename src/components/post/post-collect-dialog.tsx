@@ -78,7 +78,7 @@ export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) =>
   }
 
   const collectibleMetadata = post.collectibleMetadata;
-  const canCollect = post.operations?.canSimpleCollect;
+  const canCollect = post.operations?.canSimpleCollect.__typename === "SimpleCollectValidationPassed";
 
   const imageUrl = collectibleMetadata?.image;
   const amount = collectAction?.payToCollect?.amount;
@@ -143,6 +143,7 @@ export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) =>
     }
   };
 
+  console.log(collectAction);
   return (
     <Dialog modal={true} open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md gap-4">
@@ -226,7 +227,7 @@ export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) =>
           )} */}
         </div>
 
-        {formattedAmount || isFree && (
+        {(formattedAmount || isFree) && (
           <Button
             disabled={!canCollect || isCollecting}
             onClick={handleCollect}

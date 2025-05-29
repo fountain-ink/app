@@ -148,9 +148,7 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
     }
   };
 
-  const hasCollectAction =
-    post.operations?.canSimpleCollect.__typename === "SimpleCollectValidationPassed" ||
-    post.operations?.canSimpleCollect.__typename === "SimpleCollectValidationFailed";
+  const hasCollectAction = !(post.operations?.canSimpleCollect.__typename === "SimpleCollectValidationFailed" && post.operations?.canSimpleCollect.reasonType === "NOT_ENABLED");
   const canCollect = post.operations?.canSimpleCollect.__typename === "SimpleCollectValidationPassed";
 
   const getFinalTipAmount = () => {
