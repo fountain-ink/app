@@ -82,6 +82,7 @@ export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) =>
 
   const imageUrl = collectibleMetadata?.image;
   const amount = collectAction?.payToCollect?.amount;
+  const isFree = !amount;
   const formattedAmount = amount ? formatAmount(amount) : null;
   const totalSupply = collectAction?.collectLimit;
   const currentSupply = post.stats.collects;
@@ -225,17 +226,17 @@ export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) =>
           )} */}
         </div>
 
-        {formattedAmount && (
+        {formattedAmount || isFree && (
           <Button
-            disabled={!canCollect || !amount || isCollecting}
+            disabled={!canCollect || isCollecting}
             onClick={handleCollect}
             className="w-full"
             size="lg"
           >
-            {isCollecting ? "Collecting..." : canCollect ? `Collect for ${formattedAmount}` : "Cannot collect"}
+            {isCollecting ? "Collecting..." : canCollect ? `Collect for ${isFree ? "free" : formattedAmount}` : "Cannot collect"}
           </Button>
         )}
-        {!amount && <p className="text-sm text-center text-muted-foreground">Collect details not available.</p>}
+        {!amount && !isFree && <p className="text-sm text-center text-muted-foreground">Collect details not available.</p>}
       </DialogContent>
     </Dialog>
   );
