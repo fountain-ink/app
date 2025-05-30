@@ -9,7 +9,7 @@ import { MenuIcon } from "@/components/icons/menu";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, useOpenState } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 import { useState } from "react";
 import { useAuthenticatedUser } from "@lens-protocol/react";
 
@@ -17,6 +17,9 @@ export const EditorOptionsDropdown = () => {
   const { open, onOpenChange } = useOpenState();
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const { data: user } = useAuthenticatedUser();
+  const pathname = usePathname();
+  const documentId = pathname.split("/").pop() ?? "";
+  const isCollaborative = pathname.includes("/w/c/");
 
   const onShare = () => {
     setIsShareModalOpen(true);
@@ -63,7 +66,12 @@ export const EditorOptionsDropdown = () => {
           </AnimatedMenuItem>
         </Link> */}
       </DropdownMenuContent>
-      <DraftShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
+      <DraftShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        documentId={documentId}
+        isCollaborative={isCollaborative}
+      />
     </DropdownMenu>
   );
 };

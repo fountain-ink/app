@@ -28,6 +28,7 @@ export default function PlateEditor(
     pathname?: string;
     appToken?: string;
     value?: string;
+    isCollaborative?: boolean;
   },
 ) {
   const documentId = props?.pathname?.split("?")?.[0]?.split("/")?.at(-1) ?? "erroredDocumentId";
@@ -36,14 +37,19 @@ export default function PlateEditor(
   const isReadOnly = props.readOnly || isPreview;
   const isMounted = useMounted();
   const imported = searchParams.has("import");
+  const editorValue = props.readOnly
+    ? trimEmptyNodes(props.value ? JSON.parse(props.value) : (defaultContent as any))
+    : props.isCollaborative
+      ? undefined
+      : JSON.parse(props.value ?? defaultContent);
 
   const editor = createPlateEditor({
-    plugins: [...getEditorPlugins(documentId, props.appToken, isReadOnly)],
+    plugins: [...getEditorPlugins(documentId, props.isCollaborative ?? false, props.appToken, isReadOnly)],
     override: {
       components: getRichElements(),
     },
-    skipInitialization: !props.readOnly,
-    value: props.readOnly ? trimEmptyNodes(JSON.parse(props.value as string)) : undefined,
+    skipInitialization: props.isCollaborative && !props.readOnly,
+    value: editorValue,
   });
 
   useEffect(() => {
@@ -53,7 +59,8 @@ export default function PlateEditor(
   }, [imported, editor, isMounted]);
 
   useEffect(() => {
-    if (!isMounted || props.readOnly) return;
+    console.log(props.isCollaborative);
+    if (!isMounted || props.readOnly || !props.isCollaborative) return;
 
     editor.getApi(YjsPlugin).yjs.init({
       id: documentId,
@@ -64,7 +71,7 @@ export default function PlateEditor(
     return () => {
       editor.getApi(YjsPlugin).yjs.destroy();
     };
-  }, [isMounted, editor]);
+  }, [isMounted, editor, props.isCollaborative]);
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -86,7 +93,7 @@ export default function PlateEditor(
             </div>
           </EditorContainer>
 
-          {!isReadOnly && <AutoSave documentId={documentId} />}
+          {!isReadOnly && <AutoSave documentId={documentId} isCollaborative={!!props.isCollaborative} />}
 
           <FloatingToolbar>
             <FloatingToolbarButtons />
@@ -101,7 +108,7 @@ export default function PlateEditor(
 
 export const useMyEditor = () => {
   return usePlateEditor({
-    plugins: [...getEditorPlugins("nopath")],
+    plugins: [...getEditorPlugins("nopath", false)],
     override: {
       components: getElements(),
     },

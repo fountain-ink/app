@@ -28,8 +28,9 @@ const withLeadingBlock: OverrideEditor<LeadingBlockConfig> = ({ editor, getOptio
       const { level, type, ...query } = getOptions();
       const isSynced = editor.getOptions(YjsPlugin)._isSynced;
       const isConnected = editor.getOptions(YjsPlugin)._isConnected;
+      const isCollaborative = editor.pluginList.includes(YjsPlugin.key);
 
-      if (!isSynced || !isConnected) return;
+      if ((!isSynced || !isConnected) && isCollaborative) return;
 
       if (currentPath.length === 0) {
         const firstChild = editor.children[0];

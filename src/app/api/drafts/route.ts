@@ -116,10 +116,6 @@ export async function POST(req: NextRequest) {
       yDoc = `\\x${binaryData.toString("hex")}`;
     }
 
-    if (!yDoc) {
-      return NextResponse.json({ error: "Missing yDoc data" }, { status: 400 });
-    }
-
     const { data, error } = await db
       .from("drafts")
       .insert({

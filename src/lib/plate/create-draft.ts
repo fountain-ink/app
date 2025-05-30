@@ -9,6 +9,7 @@ type CreateDraftOptions = {
   documentId?: string;
   isGuest?: boolean;
   publishedId?: string; // ID of the original published post when editing
+  collaborative?: boolean;
 };
 
 /**
@@ -21,12 +22,22 @@ type CreateDraftOptions = {
  * @throws Error if the draft creation fails
  */
 export async function createDraft(options: CreateDraftOptions = {}) {
-  const { initialContent, documentId = getRandomUid(), isGuest = isGuestUser(), publishedId } = options;
+  const {
+    initialContent,
+    documentId = getRandomUid(),
+    isGuest = isGuestUser(),
+    publishedId,
+    collaborative = false,
+  } = options;
 
   const contentToUse = initialContent || defaultContent;
-  const yDoc = await generateYDoc(documentId, contentToUse);
-  const yDocBinary = Y.encodeStateAsUpdate(yDoc);
-  const yDocBase64 = Buffer.from(yDocBinary).toString("base64");
+
+  let yDocBase64: string | undefined;
+  if (collaborative) {
+    const yDoc = await generateYDoc(documentId, contentToUse);
+    const yDocBinary = Y.encodeStateAsUpdate(yDoc);
+    yDocBase64 = Buffer.from(yDocBinary).toString("base64");
+  }
 
   const response = await fetch("/api/drafts", {
     method: "POST",
@@ -35,7 +46,7 @@ export async function createDraft(options: CreateDraftOptions = {}) {
     },
     body: JSON.stringify({
       documentId,
-      yDocBase64: yDocBase64,
+      yDocBase64,
       contentJson: contentToUse,
       publishedId,
     }),
