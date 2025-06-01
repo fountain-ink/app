@@ -22,7 +22,7 @@ function applyImportantToColors(css: string) {
   return css.replace(propertyRegex, (block, leadingWhitespace, rule) => {
     return (
       leadingWhitespace +
-      rule.replace(/([^;{}]+):\s*([^;!]+)(;?)/g, (match, prop, value, semicolon) => {
+      rule.replace(/([^;{}]+):\s*([^;!]+)(;?)/g, (match: any, prop: string, value: string, semicolon: any) => {
         const property = prop.trim();
         const lowerProp = property.toLowerCase();
         if (value.trim().endsWith("!important") || (!property.startsWith("--") && !COLOR_PROPS.includes(lowerProp))) {
