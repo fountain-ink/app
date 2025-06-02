@@ -1,72 +1,73 @@
 import { getRandomUid } from "@/lib/get-random-uid";
 import * as Y from "yjs";
-import { isGuestUser } from "../auth/is-guest-user";
+import { isGuestUser } from "../auth/is-guest-user"; // Assuming this is used, else remove
 import { defaultContent } from "./default-content";
 import { slateToDeterministicYjsState } from "@udecode/plate-yjs";
 
 type CreateDraftOptions = {
   initialContent?: any;
   documentId?: string;
-  isGuest?: boolean;
-  publishedId?: string; // ID of the original published post when editing
+  isGuest?: boolean; // Assuming this is used, else remove
+  publishedId?: string;
+  isCollaborative?: boolean;
+  yDocBase64?: string;
 };
 
-/**
- * Creates a new draft with the specified content
- * @param options.initialContent Optional initial content for the draft. If not provided, uses default content.
- * @param options.documentId Optional document ID. If not provided, generates a random UID.
- * @param options.isGuest Optional flag to indicate if user is a guest. Affects default content if initialContent not provided.
- * @param options.publishedId Optional ID of the original published post when creating a draft from an existing post.
- * @returns Object containing the documentId of the created draft
- * @throws Error if the draft creation fails
- */
+export const generateYDoc = async (documentId: string, content: any) => {
+  const yDoc = new Y.Doc();
+  const initialDelta = await slateToDeterministicYjsState(documentId, content);
+  yDoc.transact(() => {
+    Y.applyUpdate(yDoc, initialDelta);
+  });
+  return yDoc;
+};
+
 export async function createDraft(options: CreateDraftOptions = {}) {
-  const { initialContent, documentId = getRandomUid(), isGuest = isGuestUser(), publishedId } = options;
+  const {
+    initialContent,
+    documentId = getRandomUid(),
+    publishedId,
+    isCollaborative: optionsIsCollaborative = false
+    // isGuest is not used in the new logic, consider removing if not used elsewhere
+  } = options;
 
   const contentToUse = initialContent || defaultContent;
-  const yDoc = await generateYDoc(documentId, contentToUse);
-  const yDocBinary = Y.encodeStateAsUpdate(yDoc);
-  const yDocBase64 = Buffer.from(yDocBinary).toString("base64");
+  let yDocBase64ToUse = options.yDocBase64;
+
+  const body: {
+    documentId: string;
+    contentJson: any;
+    publishedId?: string;
+    yDocBase64?: string;
+  } = {
+    documentId,
+    contentJson: contentToUse,
+    publishedId,
+  };
+
+  if (optionsIsCollaborative && !yDocBase64ToUse) {
+    const yDoc = await generateYDoc(documentId, contentToUse);
+    const yDocBinary = Y.encodeStateAsUpdate(yDoc);
+    yDocBase64ToUse = Buffer.from(yDocBinary).toString("base64");
+  }
+
+  if (yDocBase64ToUse) {
+    body.yDocBase64 = yDocBase64ToUse;
+  }
 
   const response = await fetch("/api/drafts", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      documentId,
-      yDocBase64: yDocBase64,
-      contentJson: contentToUse,
-      publishedId,
-    }),
+    body: JSON.stringify(body),
   });
 
   if (!response.ok) {
-    throw new Error("Failed to create draft");
+    const errorBody = await response.text();
+    console.error("Failed to create draft:", response.status, errorBody);
+    throw new Error(`Failed to create draft: ${response.status} ${errorBody}`);
   }
 
-  return { documentId };
+  return await response.json();
 }
-
-/**
- * Generates a Yjs document from the given content
- * @param content The content to generate the Yjs document from
- * @returns A Yjs document
- */
-const generateYDoc = async (documentId: string, content: any) => {
-  const yDoc = new Y.Doc();
-  const initialDelta = await slateToDeterministicYjsState(documentId, content);
-
-  yDoc.transact(() => {
-    Y.applyUpdate(yDoc, initialDelta);
-  });
-
-  // console.log("yDoc", yDoc);
-  // const sharedRoot = yDoc.get("content", Y.XmlText);
-  // const insertDelta = slateNodesToInsertDelta(content);
-  // console.log("insertDelta", insertDelta);
-  // console.log("initialDelta", initialDelta);
-  //sharedRoot.applyDelta(insertDelta as any);
-
-  return yDoc;
-};

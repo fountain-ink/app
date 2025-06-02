@@ -23,9 +23,9 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    const documentId = req.nextUrl.searchParams.get("id");
+    const documentIdParam = req.nextUrl.searchParams.get("id"); // Renamed for clarity
 
-    if (documentId) {
+    if (documentIdParam) {
       const { data: draft, error } = await db
         .from("drafts")
         .select(`
@@ -37,14 +37,18 @@ export async function GET(req: NextRequest) {
           createdAt,
           updatedAt,
           contentHtml,
-          coverUrl
+          coverUrl,
+          contentJson,         // Added
+          isCollaborative      // Added
         `)
-        .eq("documentId", documentId)
+        .eq("documentId", documentIdParam)
         .eq("author", address)
         .single();
 
       if (error) {
-        throw new Error(error.message);
+        console.error("Error fetching draft:", error.message);
+        // Consider if specific error types (e.g., not found vs. server error) need different handling
+        throw new Error(`Error fetching draft: ${error.message}`);
       }
 
       if (!draft) {
@@ -75,11 +79,13 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json({ drafts }, { status: 200 });
+
   } catch (error) {
     if (error instanceof Error) {
-      console.error(error.message);
+      console.error("GET /api/drafts error:", error.message);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
+    return NextResponse.json({ error: "An unknown error occurred" }, { status: 500 });
   }
 }
 
@@ -91,12 +97,11 @@ export async function POST(req: NextRequest) {
     }
 
     const db = await createClient();
-    const address = claims.sub;
+    const userAddress = claims.sub;
 
     if (!claims.metadata.isAnonymous) {
-      const { address: lensAddress } = await getUserAccount();
-
-      if (lensAddress !== address) {
+      const { address: actualUserAddress } = await getUserAccount();
+      if (actualUserAddress !== userAddress) {
         return NextResponse.json({ error: "Invalid profile" }, { status: 401 });
       }
     }
@@ -105,42 +110,46 @@ export async function POST(req: NextRequest) {
     const documentId = body.documentId || getRandomUid();
     const contentJson = body.contentJson;
     const publishedId = body.publishedId || null;
+    const yDocBase64 = body.yDocBase64; // Optional
 
     if (!contentJson) {
-      return NextResponse.json({ error: "Missing default content" }, { status: 400 });
+      return NextResponse.json({ error: "Missing contentJson" }, { status: 400 });
     }
 
-    let yDoc = null;
-    if (body.yDocBase64) {
-      const binaryData = Buffer.from(body.yDocBase64, "base64");
-      yDoc = `\\x${binaryData.toString("hex")}`;
-    }
+    let yDocForDb = null;
+    let isCollaborativeDb = false; // Renamed to avoid conflict with option name if ever in same scope
 
-    if (!yDoc) {
-      return NextResponse.json({ error: "Missing yDoc data" }, { status: 400 });
+    if (yDocBase64) {
+      const binaryData = Buffer.from(yDocBase64, "base64");
+      yDocForDb = `\\x${binaryData.toString("hex")}`;
+      isCollaborativeDb = true;
     }
 
     const { data, error } = await db
       .from("drafts")
       .insert({
-        yDoc,
+        yDoc: yDocForDb,
         contentJson,
         documentId,
         author: address,
         published_id: publishedId,
+        isCollaborative: isCollaborativeDb, // Use the new column
       })
       .select()
       .single();
 
     if (error) {
-      throw new Error(error.message);
+      console.error("DB insert error:", error);
+      throw new Error(`DB insert error: ${error.message}`);
     }
 
     return NextResponse.json({ draft: data }, { status: 201 });
   } catch (error) {
     if (error instanceof Error) {
+      console.error("POST /api/drafts error:", error.message);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
+    return NextResponse.json({ error: "An unknown error occurred" }, { status: 500 });
   }
 }
 
@@ -168,37 +177,68 @@ export async function PUT(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { content } = body;
+    const {
+      contentJson,
+      title,
+      subtitle,
+      coverUrl,
+      contentMarkdown
+    } = body;
 
-    if (!content) {
-      return NextResponse.json({ error: "Missing content" }, { status: 400 });
+    // Check if at least one field to update is provided
+    if (contentJson === undefined && title === undefined && subtitle === undefined && coverUrl === undefined && contentMarkdown === undefined) {
+      return NextResponse.json({ error: "Missing content to update. At least one field (contentJson, title, etc.) must be provided." }, { status: 400 });
     }
 
-    const updateData = {
+    const updateData: { [key: string]: any } = {
       updatedAt: new Date().toISOString(),
-      contentJson: content,
     };
+
+    if (contentJson !== undefined) {
+      updateData.contentJson = contentJson;
+    }
+    if (title !== undefined) {
+      updateData.title = title;
+    }
+    if (subtitle !== undefined) {
+      updateData.subtitle = subtitle;
+    }
+    if (coverUrl !== undefined) {
+      updateData.coverUrl = coverUrl;
+    }
+    if (contentMarkdown !== undefined) {
+      updateData.contentMarkdown = contentMarkdown;
+    }
+
+    // This check is implicitly handled by the first check for undefined fields.
+    // If all were undefined, it returns 400. If at least one is defined, updateData will have more than just updatedAt.
+    // So, an explicit check for Object.keys(updateData).length === 1 might be redundant.
 
     const { data, error } = await db
       .from("drafts")
       .update(updateData)
-      .match({ documentId, author: address })
+      .match({ documentId, author: userAddress })
       .select()
       .single();
 
     if (error) {
-      throw new Error(error.message);
+      console.error("Error updating draft:", error.message);
+      // Consider more specific error handling, e.g. P2025 for record not found by Prisma/Supabase
+      throw new Error(`Error updating draft: ${error.message}`);
     }
 
+    // data will be null if match fails (e.g. documentId not found or author mismatch)
     if (!data) {
-      return NextResponse.json({ error: "Draft not found" }, { status: 404 });
+      return NextResponse.json({ error: "Draft not found or not authorized for update" }, { status: 404 });
     }
 
     return NextResponse.json({ draft: data }, { status: 200 });
   } catch (error) {
     if (error instanceof Error) {
+      console.error("PUT /api/drafts error:", error.message);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
+    return NextResponse.json({ error: "An unknown error occurred" }, { status: 500 });
   }
 }
 

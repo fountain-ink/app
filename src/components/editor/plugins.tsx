@@ -63,6 +63,7 @@ import { toast } from "sonner";
 import { ImageElement } from "../ui/image-element";
 import { ImagePreview } from "../ui/image-preview";
 import { RemoteCursorOverlay } from "../ui/remote-cursor-overlay";
+import { Value } from "@udecode/plate-common"; // Import Value for Plate's content type
 import { LeadingBlockPlugin } from "./plugins/leading-block-plugin";
 import { NormalizePlugin } from "./plugins/normalize-plugin";
 import { SubtitlePlugin, TITLE_KEYS, TitlePlugin } from "./plugins/title-plugin";
@@ -96,12 +97,19 @@ const resetBlockTypesCodeBlockRule = {
   onReset: unwrapCodeBlock,
 };
 
-export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: boolean) => {
-  const pluginsList = [...plugins];
+// Updated function signature
+export const getEditorPlugins = (
+  documentId: string,
+  isCollaborative: boolean,
+  appToken?: string,
+  isReadOnly?: boolean
+) => {
+  const pluginsList = [...plugins]; // Assuming 'plugins' is the base list of non-conditional plugins
 
   const username = appToken ? getTokenClaims(appToken)?.metadata.username : undefined;
 
-  if (appToken) {
+  // Conditionally add YjsPlugin
+  if (isCollaborative && appToken && !isReadOnly) { // Yjs only for collaborative, authenticated, editable mode
     pluginsList.push(
       YjsPlugin.configure({
         render: {
@@ -112,61 +120,55 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
             autoSend: true,
             data: {
               name: username || "anonymous",
-              color: "#0101af",
+              color: "#0101af", // Consider making color dynamic or based on user ID
             },
           },
           providers: [
             {
               type: "hocuspocus",
               options: {
-                // url: "ws://0.0.0.0:4444",
-                url: "https://collab.fountain.ink",
-                name: path,
-                connect: false,
+                url: "https://collab.fountain.ink", // Ensure this is the correct URL
+                name: documentId, // Use the documentId for the collaboration channel
+                connect: false, // Should this be true to connect immediately? Typically yes.
                 token: appToken,
                 onOpen: () => {
-                  useYjsState.getState().setActiveDocument(path);
+                  useYjsState.getState().setActiveDocument(documentId);
                 },
                 onDestroy: () => {
-                  useYjsState.getState().setStatus(path, "disconnected");
+                  useYjsState.getState().setStatus(documentId, "disconnected");
                   useYjsState.getState().setActiveDocument(null);
                 },
                 onStatus(data: any) {
-                  useYjsState.getState().setStatus(path, data.status);
+                  useYjsState.getState().setStatus(documentId, data.status);
                 },
                 onClose(data: any) {
-                  useYjsState.getState().setError(path, `Connection closed: ${data.event.reason}`);
+                  useYjsState.getState().setError(documentId, `Connection closed: ${data.event.reason}`);
                 },
                 onAuthenticated() {
-                  useYjsState.getState().setStatus(path, "connected");
+                  useYjsState.getState().setStatus(documentId, "connected");
                 },
                 onConnect() {
-                  useYjsState.getState().setStatus(path, "connected");
+                  // It's good to ensure connect: true if Yjs is included, or manage connection explicitly
+                  useYjsState.getState().setStatus(documentId, "connected");
                 },
                 onSynced() {
-                  useYjsState.getState().setStatus(path, "synced");
+                  useYjsState.getState().setStatus(documentId, "synced");
                 },
                 onAuthenticationFailed(data: any) {
                   toast.error(`Authentication failed: ${data.reason}`);
-                  useYjsState.getState().setError(path, `Authentication failed: ${data.reason}`);
+                  useYjsState.getState().setError(documentId, `Authentication failed: ${data.reason}`);
                 },
                 onDisconnect(data: any) {
-                  useYjsState.getState().setStatus(path, "disconnected");
+                  useYjsState.getState().setStatus(documentId, "disconnected");
                   if (data.event.reason) {
-                    useYjsState.getState().setError(path, data.event.reason);
+                    useYjsState.getState().setError(documentId, data.event.reason);
                   }
                 },
               },
             },
           ],
         },
-      }) as any,
-      // ExtendedCommentsPlugin.configure({
-      //   render: {
-      //     aboveNodes: BlockDiscussion as any,
-      //     afterEditable: AfterEditableComments as any,
-      //   },
-      // }),
+      }) as any
     );
   }
 
