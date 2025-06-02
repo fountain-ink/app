@@ -126,9 +126,16 @@ export const MediaPlaceholderElement = withHOC(
     const { openFilePicker } = useFilePicker({
       accept: currentMedia?.accept ?? [],
       multiple: false,
-      onFilesSelected: ({ plainFiles: updatedFiles }) => {
-        const firstFile = updatedFiles[0];
-        replaceCurrentPlaceholder(firstFile);
+      onFilesSelected: (data) => {
+        if (data.errors && data.errors.length > 0) {
+          console.error('File selection errors:', data.errors);
+          return;
+        }
+
+        if (data.plainFiles && data.plainFiles.length > 0) {
+          const firstFile = data.plainFiles[0];
+          replaceCurrentPlaceholder(firstFile);
+        }
       },
     });
 
@@ -287,7 +294,6 @@ export function formatBytes(
 
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
 
-  return `${(bytes / 1024 ** i).toFixed(decimals)} ${
-    sizeType === "accurate" ? (accurateSizes[i] ?? "Bytest") : (sizes[i] ?? "Bytes")
-  }`;
+  return `${(bytes / 1024 ** i).toFixed(decimals)} ${sizeType === "accurate" ? (accurateSizes[i] ?? "Bytest") : (sizes[i] ?? "Bytes")
+    }`;
 }

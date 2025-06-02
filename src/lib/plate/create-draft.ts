@@ -73,12 +73,5 @@ const generateYDoc = async (documentId: string, content: any) => {
     Y.applyUpdate(yDoc, initialDelta);
   });
 
-  // console.log("yDoc", yDoc);
-  // const sharedRoot = yDoc.get("content", Y.XmlText);
-  // const insertDelta = slateNodesToInsertDelta(content);
-  // console.log("insertDelta", insertDelta);
-  // console.log("initialDelta", initialDelta);
-  //sharedRoot.applyDelta(insertDelta as any);
-
   return yDoc;
 };
