@@ -126,14 +126,15 @@ export const MediaPlaceholderElement = withHOC(
     const { openFilePicker } = useFilePicker({
       accept: currentMedia?.accept ?? [],
       multiple: false,
-      onFilesSelected: (data) => {
+      onFilesSelected: (data: { errors?: any[]; plainFiles?: File[] }) => {
         if (data.errors && data.errors.length > 0) {
           console.error('File selection errors:', data.errors);
           return;
         }
 
-        if (data.plainFiles && data.plainFiles.length > 0) {
-          const firstFile = data.plainFiles[0];
+        const firstFile = data.plainFiles?.[0];
+
+        if (firstFile) {
           replaceCurrentPlaceholder(firstFile);
         }
       },
