@@ -16,7 +16,6 @@ import { getElements, getRichElements } from "./elements";
 import { getEditorPlugins } from "./plugins";
 import { useMounted } from "@/hooks/use-mounted";
 import { YjsPlugin } from "@udecode/plate-yjs/react";
-import { defaultContent } from "@/lib/plate/default-content";
 import { trimEmptyNodes } from "@/lib/plate/trim-empty-nodes";
 
 export default function PlateEditor(
@@ -28,43 +27,45 @@ export default function PlateEditor(
     pathname?: string;
     appToken?: string;
     value?: string;
+    collaborative?: boolean;
   },
 ) {
   const documentId = props?.pathname?.split("?")?.[0]?.split("/")?.at(-1) ?? "erroredDocumentId";
   const searchParams = useSearchParams();
   const isPreview = searchParams.has("preview");
   const isReadOnly = props.readOnly || isPreview;
+  const isCollaborative = props.collaborative ?? false;
   const isMounted = useMounted();
   const imported = searchParams.has("import");
+  const parsedValue = JSON.parse(props.value as string);
+  const value = props.readOnly ? trimEmptyNodes(parsedValue) : parsedValue;
 
   const editor = createPlateEditor({
-    plugins: [...getEditorPlugins(documentId, props.appToken, isReadOnly)],
+    plugins: [...getEditorPlugins(documentId, props.appToken, isReadOnly, isCollaborative)],
     override: {
       components: getRichElements(),
     },
-    skipInitialization: !props.readOnly,
-    value: props.readOnly ? trimEmptyNodes(JSON.parse(props.value as string)) : undefined,
+    skipInitialization: isCollaborative,
+    value: isCollaborative ? undefined : value,
   });
 
   useEffect(() => {
-    if (!imported || editor || !isMounted) return;
-
-    // TODO: remove last 3 nodes
-  }, [imported, editor, isMounted]);
-
-  useEffect(() => {
-    if (!isMounted || props.readOnly) return;
+    if (!isMounted || props.readOnly || !isCollaborative) return;
 
     editor.getApi(YjsPlugin).yjs.init({
       id: documentId,
-      value: defaultContent,
+      value: undefined,
       autoSelect: "end",
     });
 
     return () => {
       editor.getApi(YjsPlugin).yjs.destroy();
     };
-  }, [isMounted, editor]);
+  }, [isMounted, editor, isCollaborative]);
+
+  if (!documentId) {
+    return null;
+  }
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -86,7 +87,7 @@ export default function PlateEditor(
             </div>
           </EditorContainer>
 
-          {!isReadOnly && <AutoSave documentId={documentId} />}
+          {!isReadOnly && <AutoSave documentId={documentId} collaborative={isCollaborative} />}
 
           <FloatingToolbar>
             <FloatingToolbarButtons />
@@ -101,7 +102,7 @@ export default function PlateEditor(
 
 export const useMyEditor = () => {
   return usePlateEditor({
-    plugins: [...getEditorPlugins("nopath")],
+    plugins: [...getEditorPlugins("nopath", undefined, false, false)],
     override: {
       components: getElements(),
     },

@@ -13,7 +13,13 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useAuthenticatedUser } from "@lens-protocol/react";
 
-export const EditorOptionsDropdown = () => {
+export const EditorOptionsDropdown = ({
+  documentId,
+  collaborative,
+}: {
+  documentId: string;
+  collaborative: boolean;
+}) => {
   const { open, onOpenChange } = useOpenState();
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const { data: user } = useAuthenticatedUser();
@@ -63,7 +69,12 @@ export const EditorOptionsDropdown = () => {
           </AnimatedMenuItem>
         </Link> */}
       </DropdownMenuContent>
-      <DraftShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
+      <DraftShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        documentId={documentId}
+        collaborative={collaborative}
+      />
     </DropdownMenu>
   );
 };

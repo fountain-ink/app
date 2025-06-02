@@ -10,7 +10,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { getStaticEditor, staticComponents } from "../static";
 
-export function AutoSave({ documentId }: { documentId: string }) {
+export function AutoSave({ documentId, collaborative = false }: { documentId: string; collaborative?: boolean }) {
   const editor = useEditorState();
   const { api } = useEditorPlugin(MarkdownPlugin);
   const [isSaving, setIsSaving] = useState(false);
@@ -30,11 +30,11 @@ export function AutoSave({ documentId }: { documentId: string }) {
         const contentMarkdown = api.markdown.serialize({ value: editor.children });
 
         const uniqueImages = [...(existingDraft?.images || [])];
-        images.forEach((img) => {
+        for (const img of images) {
           if (!uniqueImages.includes(img)) {
             uniqueImages.push(img);
           }
-        });
+        }
 
         const draft = {
           ...(existingDraft || {}),
@@ -57,6 +57,14 @@ export function AutoSave({ documentId }: { documentId: string }) {
 
         // FIXME: possibly an issue with the type inference here
         saveDocument(documentId, draft as Draft);
+
+        if (!collaborative) {
+          await fetch(`/api/drafts?id=${documentId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content }),
+          });
+        }
         setSaveSuccess(true);
         setTimeout(() => {
           setIsVisible(false);
@@ -67,7 +75,7 @@ export function AutoSave({ documentId }: { documentId: string }) {
         setIsSaving(false);
       }
     },
-    [documentId, saveDocument, getDocument],
+    [documentId, saveDocument, getDocument, collaborative],
   );
 
   const debouncedSave = useDebouncedCallback(saveContent, 500);

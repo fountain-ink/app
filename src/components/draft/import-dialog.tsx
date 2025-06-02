@@ -45,13 +45,14 @@ export function ImportDialog() {
       const data = await response.json();
       console.log("Imported content:", data);
 
-      const result = await createHtmlDraft(data.content, data.title, data.subtitle, data.coverImageUrl);
-      console.log("Draft created with ID:", result.documentId);
+      const { draft } = await createHtmlDraft(data.content, data.title, data.subtitle, data.coverImageUrl);
+
+      console.log("Draft created:", draft);
 
       toast.success("Content imported successfully!");
       setIsOpen(false);
 
-      router.push(`/w/${result.documentId}?import`);
+      router.push(`/w/${draft.documentId}`);
     } catch (error) {
       console.error("Import failed:", error);
       toast.error(error instanceof Error ? error.message : "Failed to import content");

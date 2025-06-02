@@ -7,13 +7,17 @@ import { LinkIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "../ui/badge";
+import { slateToDeterministicYjsState } from "@udecode/plate-yjs";
+import * as Y from "yjs";
 
 interface DraftShareModalProps {
   isOpen: boolean;
   onClose: () => void;
+  documentId: string;
+  collaborative: boolean;
 }
 
-export const DraftShareModal = ({ isOpen, onClose }: DraftShareModalProps) => {
+export const DraftShareModal = ({ isOpen, onClose, documentId, collaborative }: DraftShareModalProps) => {
   const [viewAccess, setViewAccess] = useState<"everyone" | "invited">("everyone");
 
   const copyLink = async () => {
@@ -24,6 +28,51 @@ export const DraftShareModal = ({ isOpen, onClose }: DraftShareModalProps) => {
       toast.error("Failed to copy", {
         description: "There was an error copying the link.",
       });
+    }
+  };
+
+  const generateYDoc = async (documentId: string, content: any) => {
+    const yDoc = new Y.Doc();
+    const initialDelta = await slateToDeterministicYjsState(documentId, content);
+    yDoc.transact(() => {
+      Y.applyUpdate(yDoc, initialDelta);
+    });
+    return yDoc;
+  };
+
+  const enableCollab = async () => {
+    try {
+      const draftRes = await fetch(`/api/drafts?id=${documentId}`);
+      if (!draftRes.ok) {
+        toast.error("Failed to fetch draft content");
+        return;
+      }
+
+      const { draft } = await draftRes.json();
+      const content = draft.contentJson;
+
+      const yDoc = await generateYDoc(documentId, content);
+      const yDocBinary = Y.encodeStateAsUpdate(yDoc);
+      const base64String = btoa(String.fromCharCode(...yDocBinary));
+
+      const res = await fetch(`/api/drafts?id=${documentId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          enableCollaboration: true,
+          yDocBase64: base64String
+        }),
+      });
+
+      if (res.ok) {
+        toast.success("Collaboration enabled");
+        window.location.reload();
+      } else {
+        toast.error("Failed to enable collaboration");
+      }
+    } catch (error) {
+      console.error("Error enabling collaboration:", error);
+      toast.error("Failed to enable collaboration");
     }
   };
 
@@ -49,10 +98,16 @@ export const DraftShareModal = ({ isOpen, onClose }: DraftShareModalProps) => {
                 </SelectItem>
               </SelectContent>
             </Select>
-            <Button onClick={copyLink} variant={"ghost"}>
-              <LinkIcon size={18} />
-              {"Copy link"}
-            </Button>
+            {collaborative ? (
+              <Button onClick={copyLink} variant={"ghost"}>
+                <LinkIcon size={18} />
+                {"Copy link"}
+              </Button>
+            ) : (
+              <Button onClick={enableCollab} variant={"ghost"}>
+                Enable collaboration
+              </Button>
+            )}
           </div>
           <p className="text-sm text-muted-foreground">
             {viewAccess === "everyone"
