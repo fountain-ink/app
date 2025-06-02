@@ -51,6 +51,12 @@ const MEDIA_CONFIG: Record<
   },
 };
 
+const createFileList = (files: File[]): FileList => {
+  const dt = new DataTransfer();
+  files.forEach(file => dt.items.add(file));
+  return dt.files;
+};
+
 export interface MediaPopoverProps {
   children: React.ReactNode;
 }
@@ -67,7 +73,7 @@ export const MediaPlaceholderPopover = ({ children }: MediaPopoverProps) => {
   const multiple = getOption("multiple") ?? true;
 
   const { isUploading, uploadedFile, uploadFile, uploadingFile } = useUploadFile({
-    onUploadComplete() {},
+    onUploadComplete() { },
   });
 
   const replaceCurrentPlaceholder = useCallback(
@@ -83,13 +89,15 @@ export const MediaPlaceholderPopover = ({ children }: MediaPopoverProps) => {
   const { openFilePicker } = useFilePicker({
     accept: currentMedia?.accept ?? [],
     multiple,
-    onFilesSelected: ({ plainFiles: updatedFiles }) => {
-      const firstFile = updatedFiles[0];
-      const restFiles = updatedFiles.slice(1);
+    onFilesSelected: (data: { errors?: any[]; plainFiles?: File[] }) => {
+      const firstFile = data.plainFiles?.[0];
+      const restFiles = data.plainFiles?.slice(1);
 
-      replaceCurrentPlaceholder(firstFile);
+      if (firstFile) {
+        replaceCurrentPlaceholder(firstFile);
+      }
 
-      restFiles.length > 0 && tf.insert.media(restFiles);
+      restFiles?.length && tf.insert.media(createFileList(restFiles));
     },
   });
 
