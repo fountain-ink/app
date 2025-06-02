@@ -26,8 +26,8 @@ const withLeadingBlock: OverrideEditor<LeadingBlockConfig> = ({ editor, getOptio
   transforms: {
     normalizeNode([currentNode, currentPath]) {
       const { level, type, ...query } = getOptions();
-      const isSynced = editor.getOptions(YjsPlugin)._isSynced;
-      const isConnected = editor.getOptions(YjsPlugin)._isConnected;
+      const isSynced = editor.getOptions(YjsPlugin)?._isSynced;
+      const isConnected = editor.getOptions(YjsPlugin)?._isConnected;
 
       if (!isSynced || !isConnected) return;
 

@@ -11,9 +11,11 @@ import { Badge } from "../ui/badge";
 interface DraftShareModalProps {
   isOpen: boolean;
   onClose: () => void;
+  documentId: string;
+  collaborative: boolean;
 }
 
-export const DraftShareModal = ({ isOpen, onClose }: DraftShareModalProps) => {
+export const DraftShareModal = ({ isOpen, onClose, documentId, collaborative }: DraftShareModalProps) => {
   const [viewAccess, setViewAccess] = useState<"everyone" | "invited">("everyone");
 
   const copyLink = async () => {
@@ -24,6 +26,24 @@ export const DraftShareModal = ({ isOpen, onClose }: DraftShareModalProps) => {
       toast.error("Failed to copy", {
         description: "There was an error copying the link.",
       });
+    }
+  };
+
+  const enableCollab = async () => {
+    try {
+      const res = await fetch(`/api/drafts?id=${documentId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ enableCollaboration: true }),
+      });
+      if (res.ok) {
+        toast.success("Collaboration enabled");
+        window.location.reload();
+      } else {
+        toast.error("Failed to enable collaboration");
+      }
+    } catch {
+      toast.error("Failed to enable collaboration");
     }
   };
 
@@ -49,10 +69,16 @@ export const DraftShareModal = ({ isOpen, onClose }: DraftShareModalProps) => {
                 </SelectItem>
               </SelectContent>
             </Select>
-            <Button onClick={copyLink} variant={"ghost"}>
-              <LinkIcon size={18} />
-              {"Copy link"}
-            </Button>
+            {collaborative ? (
+              <Button onClick={copyLink} variant={"ghost"}>
+                <LinkIcon size={18} />
+                {"Copy link"}
+              </Button>
+            ) : (
+              <Button onClick={enableCollab} variant={"ghost"}>
+                Enable collaboration
+              </Button>
+            )}
           </div>
           <p className="text-sm text-muted-foreground">
             {viewAccess === "everyone"

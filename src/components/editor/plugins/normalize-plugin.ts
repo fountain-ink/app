@@ -8,8 +8,8 @@ export const NormalizePlugin = createPlatePlugin({
 
   extendEditor: ({ editor }: { editor: any }) => {
     const { normalizeNode, apply } = editor;
-    const isSynced = editor.getOptions(YjsPlugin)._isSynced;
-    const isConnected = editor.getOptions(YjsPlugin)._isConnected;
+    const isSynced = editor.getOptions(YjsPlugin)?._isSynced;
+    const isConnected = editor.getOptions(YjsPlugin)?._isConnected;
 
     editor.apply = (...args: any) => {
       const operation = args[0] as { type: string; path: number[]; properties: { type?: string } };

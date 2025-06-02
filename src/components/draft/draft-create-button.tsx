@@ -25,7 +25,7 @@ export const DraftCreateButton = ({
       const documentId = getRandomUid();
       router.push(`/w/${documentId}`);
 
-      await createDraft({ documentId, initialContent });
+      await createDraft({ documentId, initialContent, collaborative: false });
     } catch (error) {
       console.error("Failed to create draft:", error);
       toast.error(error instanceof Error ? error.message : "Failed to create draft");

@@ -7,6 +7,7 @@ type CreateDraftOptions = {
   documentId?: string;
   isGuest?: boolean;
   publishedId?: string;
+  collaborative?: boolean;
 };
 
 /**
@@ -51,5 +52,6 @@ export async function createHtmlDraft(
   return createDraft({
     ...options,
     initialContent: nodes as Value,
+    collaborative: options.collaborative,
   });
 }

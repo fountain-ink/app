@@ -28,22 +28,24 @@ export default function PlateEditor(
     pathname?: string;
     appToken?: string;
     value?: string;
+    collaborative?: boolean;
   },
 ) {
   const documentId = props?.pathname?.split("?")?.[0]?.split("/")?.at(-1) ?? "erroredDocumentId";
   const searchParams = useSearchParams();
   const isPreview = searchParams.has("preview");
   const isReadOnly = props.readOnly || isPreview;
+  const collaborative = props.collaborative ?? false;
   const isMounted = useMounted();
   const imported = searchParams.has("import");
 
   const editor = createPlateEditor({
-    plugins: [...getEditorPlugins(documentId, props.appToken, isReadOnly)],
+    plugins: [...getEditorPlugins(documentId, props.appToken, isReadOnly, collaborative)],
     override: {
       components: getRichElements(),
     },
-    skipInitialization: !props.readOnly,
-    value: props.readOnly ? trimEmptyNodes(JSON.parse(props.value as string)) : undefined,
+    skipInitialization: !props.readOnly && collaborative,
+    value: props.readOnly || !collaborative ? trimEmptyNodes(JSON.parse(props.value as string)) : undefined,
   });
 
   useEffect(() => {
@@ -53,7 +55,7 @@ export default function PlateEditor(
   }, [imported, editor, isMounted]);
 
   useEffect(() => {
-    if (!isMounted || props.readOnly) return;
+    if (!isMounted || props.readOnly || !collaborative) return;
 
     editor.getApi(YjsPlugin).yjs.init({
       id: documentId,
@@ -64,7 +66,7 @@ export default function PlateEditor(
     return () => {
       editor.getApi(YjsPlugin).yjs.destroy();
     };
-  }, [isMounted, editor]);
+  }, [isMounted, editor, collaborative]);
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -86,7 +88,7 @@ export default function PlateEditor(
             </div>
           </EditorContainer>
 
-          {!isReadOnly && <AutoSave documentId={documentId} />}
+          {!isReadOnly && <AutoSave documentId={documentId} collaborative={collaborative} />}
 
           <FloatingToolbar>
             <FloatingToolbarButtons />
@@ -101,7 +103,7 @@ export default function PlateEditor(
 
 export const useMyEditor = () => {
   return usePlateEditor({
-    plugins: [...getEditorPlugins("nopath")],
+    plugins: [...getEditorPlugins("nopath", undefined, false, false)],
     override: {
       components: getElements(),
     },

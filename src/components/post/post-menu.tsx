@@ -75,6 +75,7 @@ export const PostMenu = ({ post }: { post: Post }) => {
         initialContent: contentJson,
         publishedId: post.id,
         documentId,
+        collaborative: false,
       });
 
       saveDocument(documentId, {

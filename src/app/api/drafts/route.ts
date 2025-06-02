@@ -3,6 +3,9 @@ import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { verifyAuth } from "@/lib/auth/verify-auth-request";
 import { getRandomUid } from "@/lib/get-random-uid";
 import { createClient } from "@/lib/db/server";
+import { defaultContent } from "@/lib/plate/default-content";
+import { slateToDeterministicYjsState } from "@udecode/plate-yjs";
+import * as Y from "yjs";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -116,10 +119,6 @@ export async function POST(req: NextRequest) {
       yDoc = `\\x${binaryData.toString("hex")}`;
     }
 
-    if (!yDoc) {
-      return NextResponse.json({ error: "Missing yDoc data" }, { status: 400 });
-    }
-
     const { data, error } = await db
       .from("drafts")
       .insert({
@@ -168,16 +167,37 @@ export async function PUT(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { content } = body;
+    const { content, enableCollaboration } = body;
 
-    if (!content) {
+    if (!content && !enableCollaboration) {
       return NextResponse.json({ error: "Missing content" }, { status: 400 });
     }
 
-    const updateData = {
+    const updateData: any = {
       updatedAt: new Date().toISOString(),
-      contentJson: content,
     };
+
+    if (content) {
+      updateData.contentJson = content;
+    }
+
+    if (enableCollaboration) {
+      const { data: existingDraft, error: fetchError } = await db
+        .from("drafts")
+        .select("contentJson")
+        .match({ documentId, author: address })
+        .single();
+
+      if (fetchError) {
+        throw new Error(fetchError.message);
+      }
+
+      const draftContent = content || existingDraft?.contentJson || defaultContent;
+
+      const yDoc = await generateYDoc(documentId, draftContent);
+      const binary = Y.encodeStateAsUpdate(yDoc);
+      updateData.yDoc = `\\x${Buffer.from(binary).toString("hex")}`;
+    }
 
     const { data, error } = await db
       .from("drafts")
@@ -241,4 +261,13 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
   }
+}
+
+async function generateYDoc(documentId: string, content: any) {
+  const yDoc = new Y.Doc();
+  const initialDelta = await slateToDeterministicYjsState(documentId, content);
+  yDoc.transact(() => {
+    Y.applyUpdate(yDoc, initialDelta);
+  });
+  return yDoc;
 }

@@ -68,7 +68,9 @@ export const Header = ({ session }: { session: MeResult | null }) => {
         {isAuthenticated && <FeedbackForm />}
         {isBlogPage && blogData && <BlogEmailSubscribe blogData={blogData} variant="default" />}
         {isWritePage && <PublishMenu documentId={documentId} />}
-        {isWritePage && <EditorOptionsDropdown />}
+        {isWritePage && (
+          <EditorOptionsDropdown documentId={documentId} collaborative={yjsState.status !== "disconnected"} />
+        )}
         {!isWritePage && !isMobile && <DraftCreateButton />}
         <UserMenu session={session} showDropdown={true} />
       </div>
