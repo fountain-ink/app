@@ -56,7 +56,8 @@ export async function createDraft(options: CreateDraftOptions = {}) {
     throw new Error("Failed to create draft");
   }
 
-  return { documentId };
+  const result = await response.json();
+  return result;
 }
 
 /**
