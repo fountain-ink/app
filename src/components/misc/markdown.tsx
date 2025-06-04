@@ -30,13 +30,12 @@ const Markdown: React.FC<{ content: string; proseStyling?: boolean; className?: 
 
 const replaceUsernames = (content: string): string => {
   if (!content) return content;
-  const usernameRegex = /(?<!\/)@[\w^\/]+(?!\/)/g;
+  const usernameRegex = /(?<!\/)@[a-zA-Z0-9_]+/g;
   const communityRegex = /(?<!\S)\/\w+(?!\S)/g;
   return content
     .replace(usernameRegex, (match) => {
-      const parts = match.slice(1).split("/");
-      const handle = parts.length > 1 ? parts[1] : parts[0];
-      return `${BASE_URL}u/${handle}`;
+      const handle = match.slice(1);
+      return `[@${handle}](${BASE_URL}u/${handle})`;
     })
     .replace(communityRegex, (match) => `${BASE_URL}c${match}`);
 };
@@ -52,8 +51,15 @@ const parseLinks = (content: string): string => {
 const CustomLink: Components["a"] = ({ node, ...props }) => {
   const { href, children } = props;
   if (href?.startsWith(BASE_URL)) {
-    if (href.startsWith(`${BASE_URL}`)) {
-      return <UserLazyUsername username={href.split("/u/")[1] || ""} />;
+    if (href.startsWith(`${BASE_URL}u/`)) {
+      const userPath = href.split("/u/")[1];
+      if (userPath) {
+        const decodedPath = decodeURIComponent(userPath);
+        const username = decodedPath.match(/^[a-zA-Z0-9_]+/)?.[0] || "";
+        if (username) {
+          return <UserLazyUsername username={username} />;
+        }
+      }
     }
     // if (href.startsWith(`${BASE_URL}c/`)) {
     //   return <CommunityHandle handle={href.split("/c/")[1]} />;
