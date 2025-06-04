@@ -49,6 +49,11 @@ const getAuthHeader = () => {
 };
 
 /**
+ * Escapes single quotes in SQL strings to mitigate injection risks
+ */
+export const escapeSqlString = (value: string) => value.replace(/'/g, "''");
+
+/**
  * Fetches a list by ID from Listmonk
  */
 export async function getListById(listId: number): Promise<ListmonkList | null> {
@@ -113,7 +118,7 @@ export async function createList(name: string, description: string): Promise<Lis
 export async function findSubscriberByEmail(email: string): Promise<ListmonkSubscriber | null> {
   try {
     const params = new URLSearchParams({
-      query: `email='${email}'`,
+      query: `email='${escapeSqlString(email)}'`,
     });
 
     const response = await fetch(`${env.LISTMONK_API_URL}/subscribers?${params.toString()}`, {
@@ -351,16 +356,14 @@ export async function deleteList(listId: number): Promise<boolean> {
  */
 export async function findSubscriber(email: string): Promise<any | null> {
   try {
-    const response = await fetch(
-      `${env.LISTMONK_API_URL}/subscribers?query=subscribers.email = '${email}'`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: getAuthHeader(),
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const safeEmail = escapeSqlString(email);
+    const response = await fetch(`${env.LISTMONK_API_URL}/subscribers?query=subscribers.email = '${safeEmail}'`, {
+      method: "GET",
+      headers: {
+        Authorization: getAuthHeader(),
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!response.ok) {
       console.error(`Failed to find subscriber: ${response.status} ${response.statusText}`);
@@ -405,7 +408,9 @@ export async function deleteSubscriber(subscriberId: number): Promise<boolean> {
 export async function bulkDeleteSubscribers(subscriberIds: number[]): Promise<boolean> {
   try {
     const params = new URLSearchParams();
-    subscriberIds.forEach(id => params.append("id", id.toString()));
+    for (const id of subscriberIds) {
+      params.append("id", id.toString());
+    }
 
     const response = await fetch(`${env.LISTMONK_API_URL}/subscribers?${params.toString()}`, {
       method: "DELETE",
@@ -422,6 +427,34 @@ export async function bulkDeleteSubscribers(subscriberIds: number[]): Promise<bo
     return true;
   } catch (error) {
     console.error("Error bulk deleting subscribers:", error);
+    return false;
+  }
+}
+
+/**
+ * Deletes all subscribers from a specific list
+ */
+export async function deleteAllSubscribersFromList(listId: number): Promise<boolean> {
+  try {
+    const response = await fetch(`${env.LISTMONK_API_URL}/subscribers/query/delete`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: getAuthHeader(),
+      },
+      body: JSON.stringify({
+        query: `subscribers.id IN (SELECT subscriber_id FROM subscriber_lists WHERE list_id = ${listId})`,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to delete subscribers for list ${listId}: ${response.status} ${response.statusText}`);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error deleting all subscribers:", error);
     return false;
   }
 }

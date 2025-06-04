@@ -13,14 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -82,26 +75,26 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
       setLoading(true);
       const currentPage = page !== undefined ? page : pagination.pageIndex;
       const currentSearch = search !== undefined ? search : searchValue;
-      
+
       const params = new URLSearchParams({
         page: (currentPage + 1).toString(), // API is 1-indexed
         per_page: pagination.pageSize.toString(),
       });
-      
+
       if (currentSearch) {
         params.append("search", currentSearch);
       }
-      
+
       const response = await fetch(`/api/newsletter/${blogAddress}/subscribers?${params.toString()}`, {
         headers: {
-          "Accept": "application/json",
+          Accept: "application/json",
         },
       });
-      
+
       if (!response.ok) {
         throw new Error("Failed to fetch subscribers");
       }
-      
+
       const result = await response.json();
       setData(result.subscribers || []);
       setTotalCount(result.total || 0);
@@ -115,12 +108,12 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
 
   useEffect(() => {
     fetchSubscribers();
-    
+
     // Listen for subscriber additions
     const handleSubscriberAdded = () => {
       fetchSubscribers();
     };
-    
+
     window.addEventListener("subscriber-added", handleSubscriberAdded);
     return () => {
       window.removeEventListener("subscriber-added", handleSubscriberAdded);
@@ -135,7 +128,7 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
   // Debounced search
   useEffect(() => {
     const timer = setTimeout(() => {
-      setPagination(prev => ({ ...prev, pageIndex: 0 })); // Reset to first page
+      setPagination((prev) => ({ ...prev, pageIndex: 0 })); // Reset to first page
       fetchSubscribers(0, searchValue);
     }, 300);
 
@@ -144,9 +137,9 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
 
   const handleDelete = async (email: string) => {
     setDeletingEmails([email]);
-    
+
     try {
-      const response = await fetch(`/api/newsletter/${blogAddress}/subscribers/${encodeURIComponent(email)}`, {
+      const response = await fetch(`/api/newsletter/${blogAddress}/subscribers?email=${encodeURIComponent(email)}`, {
         method: "DELETE",
       });
 
@@ -156,7 +149,7 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
 
       toast.success("Subscriber removed successfully");
       await fetchSubscribers();
-      
+
       // Trigger parent component refresh (to update subscriber count)
       window.dispatchEvent(new CustomEvent("subscriber-deleted"));
     } catch (error) {
@@ -170,13 +163,13 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
 
   const handleBulkDelete = async () => {
     const selectedRows = table.getSelectedRowModel().rows;
-    const subscriberIds = selectedRows.map(row => parseInt(row.original.id));
-    const emailsToDelete = selectedRows.map(row => row.original.email);
-    
+    const subscriberIds = selectedRows.map((row) => Number.parseInt(row.original.id));
+    const emailsToDelete = selectedRows.map((row) => row.original.email);
+
     if (subscriberIds.length === 0) return;
 
     setDeletingEmails(emailsToDelete);
-    
+
     try {
       const response = await fetch(`/api/newsletter/${blogAddress}/subscribers`, {
         method: "DELETE",
@@ -198,7 +191,7 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
       // Clear selection and refresh
       table.resetRowSelection();
       await fetchSubscribers();
-      
+
       // Trigger parent component refresh (to update subscriber count)
       window.dispatchEvent(new CustomEvent("subscriber-deleted"));
     } catch (error) {
@@ -211,9 +204,9 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
 
   const handleDeleteAll = async () => {
     if (!mailListId) return;
-    
+
     setDeletingEmails(["all"]);
-    
+
     try {
       const response = await fetch(`/api/newsletter/${blogAddress}/subscribers/all`, {
         method: "DELETE",
@@ -229,7 +222,7 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
       // Clear selection and refresh
       table.resetRowSelection();
       await fetchSubscribers();
-      
+
       // Trigger parent component refresh (to update subscriber count)
       window.dispatchEvent(new CustomEvent("subscriber-deleted"));
     } catch (error) {
@@ -288,11 +281,7 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button 
-                variant="ghost" 
-                className="h-8 w-8 p-0"
-                disabled={isDeleting}
-              >
+              <Button variant="ghost" className="h-8 w-8 p-0" disabled={isDeleting}>
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
@@ -304,10 +293,7 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
                 Copy email
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem 
-                onClick={() => setDeleteEmail(subscriber.email)}
-                className="text-destructive"
-              >
+              <DropdownMenuItem onClick={() => setDeleteEmail(subscriber.email)} className="text-destructive">
                 <Trash2 className="mr-2 h-4 w-4" />
                 Remove subscriber
               </DropdownMenuItem>
@@ -376,11 +362,10 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
           )}
         </div>
         <div className="text-sm text-muted-foreground">
-          {table.getSelectedRowModel().rows.length} of{" "}
-          {totalCount} row(s) selected.
+          {table.getSelectedRowModel().rows.length} of {totalCount} row(s) selected.
         </div>
       </div>
-      
+
       {loading ? (
         <div className="rounded-md border">
           <div className="p-4">
@@ -396,61 +381,44 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
       ) : (
         <div className="rounded-md border">
           <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                      </TableHead>
+                    );
+                  })}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No subscribers found.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="h-24 text-center">
+                    No subscribers found.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
         </div>
       )}
-      
+
       {!loading && (
         <div className="flex items-center justify-between">
           <div className="flex-1 text-sm text-muted-foreground">
-            Page {pagination.pageIndex + 1} of{" "}
-            {Math.ceil(totalCount / pagination.pageSize)} • {totalCount} total
+            Page {pagination.pageIndex + 1} of {Math.ceil(totalCount / pagination.pageSize)} • {totalCount} total
           </div>
           <div className="flex items-center space-x-2">
             <Button
@@ -462,12 +430,7 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
               <ChevronLeft className="h-4 w-4" />
               Previous
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
+            <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
               Next
               <ChevronRight className="h-4 w-4" />
             </Button>
@@ -485,7 +448,7 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={() => deleteEmail && handleDelete(deleteEmail)}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
@@ -500,12 +463,13 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
           <AlertDialogHeader>
             <AlertDialogTitle>Remove {table.getSelectedRowModel().rows.length} subscribers</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to remove {table.getSelectedRowModel().rows.length} selected subscriber(s) from your newsletter? This action cannot be undone.
+              Are you sure you want to remove {table.getSelectedRowModel().rows.length} selected subscriber(s) from your
+              newsletter? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={() => {
                 setShowBulkDeleteDialog(false);
                 handleBulkDelete();
@@ -523,12 +487,13 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
           <AlertDialogHeader>
             <AlertDialogTitle>Delete ALL {totalCount} subscribers</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to remove ALL {totalCount} subscribers from your newsletter? This will completely empty your subscriber list and cannot be undone.
+              Are you sure you want to remove ALL {totalCount} subscribers from your newsletter? This will completely
+              empty your subscriber list and cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={() => {
                 setShowDeleteAllDialog(false);
                 handleDeleteAll();
