@@ -29,11 +29,11 @@ export const defaultCssPlaceholder = `/* Article styles */
 .not-article ol {}
 .not-article li {}
 
-/* Override theme colors (use !important) */
+/* Override theme colors */
 :root {
-  --primary: your-color-here !important;
-  --accent: your-color-here !important;
-  --muted: your-color-here !important;
+  --primary: your-color-here;
+  --accent: your-color-here;
+  --muted: your-color-here;
 }`;
 
 export const cssExamples = {
@@ -73,8 +73,8 @@ export const cssExamples = {
 
 /* Example: Override accent color for highlights */
 :root {
-  --accent: 220 90% 95% !important;
-  --accent-foreground: 220 90% 15% !important;
+  --accent: 220 90% 95%;
+  --accent-foreground: 220 90% 15%;
 }`
   },
 
@@ -83,10 +83,10 @@ export const cssExamples = {
     description: "Contemporary styling with custom colors and modern typography",
     css: `/* Custom color overrides for modern look */
 :root {
-  --primary: 236 72% 79% !important;          /* Modern purple */
-  --primary-foreground: 236 72% 9% !important;
-  --accent: 236 72% 95% !important;           /* Light purple accent */
-  --muted: 236 20% 96% !important;
+  --primary: 236 72% 79%;
+  --primary-foreground: 236 72% 9%;
+  --accent: 236 72% 95%;
+  --muted: 236 20% 96%;
 }
 
 /* Modern typography with gradient title */
@@ -205,23 +205,23 @@ export const cssExamples = {
   colors: {
     title: "Custom Colors",
     description: "Examples of how to override theme color variables",
-    css: `/* Override theme color variables with !important */
+    css: `/* Override theme color variables */
 :root {
   /* Primary colors */
-  --primary: 142 76% 36% !important;           /* Custom green */
-  --primary-foreground: 0 0% 98% !important;
+  --primary: 142 76% 36%;           /* Custom green */
+  --primary-foreground: 0 0% 98%;
 
   /* Accent colors */
-  --accent: 142 76% 92% !important;            /* Light green accent */
-  --accent-foreground: 142 76% 16% !important;
+  --accent: 142 76% 92%;            /* Light green accent */
+  --accent-foreground: 142 76% 16%;
 
   /* Muted colors for subtle elements */
-  --muted: 142 20% 95% !important;
-  --muted-foreground: 142 20% 45% !important;
+  --muted: 142 20% 95%;
+  --muted-foreground: 142 20% 45%;
 
   /* Border and input colors */
-  --border: 142 30% 88% !important;
-  --input: 142 30% 88% !important;
+  --border: 142 30% 88%;
+  --input: 142 30% 88%;
 }
 
 /* Use the custom colors in your styles */
@@ -257,15 +257,15 @@ export const cssExamples = {
   border-radius: 4px;
 }
 
-/* Alternative: Direct color overrides with !important */
+/* Alternative: Direct color overrides */
 .article .title.custom-color {
-  color: #2d7d32 !important; /* Direct green color */
+  color: #2d7d32; /* Direct green color */
 }
 
 .article blockquote.custom-style {
-  background: #e8f5e8 !important;
-  border-left-color: #2d7d32 !important;
-  color: #1b5e20 !important;
+  background: #e8f5e8;
+  border-left-color: #2d7d32;
+  color: #1b5e20;
 }`
   }
 };
