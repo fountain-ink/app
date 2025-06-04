@@ -357,7 +357,7 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
               className="min-w-fit whitespace-nowrap flex items-center gap-2"
             >
               <Trash2 className="h-4 w-4" />
-              Delete All ({totalCount})
+              Delete All
             </Button>
           )}
         </div>
