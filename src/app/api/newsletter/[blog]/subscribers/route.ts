@@ -33,23 +33,18 @@ export async function GET(req: NextRequest, { params }: { params: { blog: string
     return NextResponse.json({ error: "Failed to fetch subscribers" }, { status: 500 });
   }
 
-  // Check if the request wants JSON data (for the data table)
   const acceptHeader = req.headers.get("accept");
   if (acceptHeader?.includes("application/json")) {
-    // Get pagination and search params
     const url = new URL(req.url);
     const page = Number.parseInt(url.searchParams.get("page") || "1");
     const per_page = Number.parseInt(url.searchParams.get("per_page") || "20");
     const search = url.searchParams.get("search") || "";
 
-    // Fetch subscribers with pagination and search
     let subscribersData: any;
     if (search) {
-      // Search for specific email
       const sanitized = escapeSqlString(search);
       subscribersData = await getSubscribers(blog.mail_list_id, page, per_page, `email LIKE '%${sanitized}%'`);
     } else {
-      // Get all subscribers for this list with pagination
       subscribersData = await getSubscribers(blog.mail_list_id, page, per_page);
     }
 
@@ -57,8 +52,7 @@ export async function GET(req: NextRequest, { params }: { params: { blog: string
       return NextResponse.json({ error: "Failed to fetch subscribers" }, { status: 500 });
     }
 
-    // Transform data for the table
-    const tableData = subscribersData.data.results.map((sub) => ({
+    const tableData = subscribersData.data.results.map((sub: any) => ({
       id: sub.id.toString(),
       email: sub.email,
       created_at: sub.created_at,
@@ -73,7 +67,6 @@ export async function GET(req: NextRequest, { params }: { params: { blog: string
     });
   }
 
-  // Default CSV export behavior
   const headers = ["email", "name", "status", "created_at"];
   const rows = subscribers.data.results.map((sub) => [
     sub.email,
