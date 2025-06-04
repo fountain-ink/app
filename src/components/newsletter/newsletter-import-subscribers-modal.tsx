@@ -91,6 +91,10 @@ export function ImportSubscribersModal({ open, onOpenChange, blogAddress, onSucc
 
       setFile(null);
       onOpenChange(false);
+      
+      // Trigger subscriber table refresh
+      window.dispatchEvent(new CustomEvent("subscriber-added"));
+      
       onSuccess?.();
     } catch (error) {
       console.error("Error importing subscribers:", error);

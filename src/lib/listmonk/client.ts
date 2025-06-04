@@ -24,6 +24,11 @@ export interface ListmonkSubscriber {
   status: string;
   created_at: string;
   updated_at: string;
+  lists?: any[];
+  attribs?: {
+    campaign_views?: number;
+    [key: string]: any;
+  };
 }
 
 export interface ListmonkSubscriberResponse {
@@ -279,15 +284,20 @@ export async function getSubscribers(
   listId?: number,
   page = 1,
   perPage = 100,
+  query?: string,
 ): Promise<ListmonkSubscriberResponse | null> {
   try {
     const params = new URLSearchParams({
       page: page.toString(),
-      per_page: "all",
+      per_page: perPage.toString(),
     });
 
     if (listId) {
       params.append("list_id", listId.toString());
+    }
+
+    if (query) {
+      params.append("query", query);
     }
 
     const response = await fetch(`${env.LISTMONK_API_URL}/subscribers?${params.toString()}`, {
@@ -332,6 +342,86 @@ export async function deleteList(listId: number): Promise<boolean> {
     return data.data === true;
   } catch (error) {
     console.error("Error deleting list:", error);
+    return false;
+  }
+}
+
+/**
+ * Finds a subscriber by email
+ */
+export async function findSubscriber(email: string): Promise<any | null> {
+  try {
+    const response = await fetch(
+      `${env.LISTMONK_API_URL}/subscribers?query=subscribers.email = '${email}'`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: getAuthHeader(),
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      console.error(`Failed to find subscriber: ${response.status} ${response.statusText}`);
+      return null;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error finding subscriber:", error);
+    return null;
+  }
+}
+
+/**
+ * Deletes a subscriber by ID
+ */
+export async function deleteSubscriber(subscriberId: number): Promise<boolean> {
+  try {
+    const response = await fetch(`${env.LISTMONK_API_URL}/subscribers/${subscriberId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: getAuthHeader(),
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to delete subscriber: ${response.status} ${response.statusText}`);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error deleting subscriber:", error);
+    return false;
+  }
+}
+
+/**
+ * Bulk deletes subscribers by IDs using Listmonk's bulk delete API
+ */
+export async function bulkDeleteSubscribers(subscriberIds: number[]): Promise<boolean> {
+  try {
+    const params = new URLSearchParams();
+    subscriberIds.forEach(id => params.append("id", id.toString()));
+
+    const response = await fetch(`${env.LISTMONK_API_URL}/subscribers?${params.toString()}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: getAuthHeader(),
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to bulk delete subscribers: ${response.status} ${response.statusText}`);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error bulk deleting subscribers:", error);
     return false;
   }
 }

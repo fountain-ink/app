@@ -64,6 +64,7 @@
     "@t3-oss/env-nextjs": "^0.10.1",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tanstack/react-query": "^5.51.21",
+    "@tanstack/react-table": "^8.21.3",
     "@types/mdast": "^4.0.4",
     "@udecode/cmdk": "^0.2.0",
     "@udecode/cn": "^47.3.1",

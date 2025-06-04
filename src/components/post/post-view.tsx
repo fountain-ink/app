@@ -200,7 +200,7 @@ export const PostView = ({
             )}
           </div>
 
-          <div className="flex h-10 flex-row items-center text-sm tracking-wide relative mt-auto"></div>
+          <div className="flex h-10 flex-row items-center text-sm tracking-wide relative mt-auto" />
         </div>
       </Link>
 

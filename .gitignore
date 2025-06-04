@@ -43,3 +43,6 @@ package-lock.json
 
 # generated fonts
 src/styles/fonts.css
+
+# Claude documentation
+CLAUDE.md
