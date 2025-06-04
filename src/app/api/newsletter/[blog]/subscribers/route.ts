@@ -1,4 +1,13 @@
-import { getListById, importSubscribers, getSubscribers, addSubscriber, bulkDeleteSubscribers } from "@/lib/listmonk/client";
+import {
+  getListById,
+  importSubscribers,
+  getSubscribers,
+  addSubscriber,
+  bulkDeleteSubscribers,
+  escapeSqlString,
+  findSubscriberByEmail,
+  deleteSubscriber,
+} from "@/lib/listmonk/client";
 import { NextRequest, NextResponse } from "next/server";
 import { getVerifiedBlog } from "../../utils";
 
@@ -29,15 +38,16 @@ export async function GET(req: NextRequest, { params }: { params: { blog: string
   if (acceptHeader?.includes("application/json")) {
     // Get pagination and search params
     const url = new URL(req.url);
-    const page = parseInt(url.searchParams.get("page") || "1");
-    const per_page = parseInt(url.searchParams.get("per_page") || "20");
+    const page = Number.parseInt(url.searchParams.get("page") || "1");
+    const per_page = Number.parseInt(url.searchParams.get("per_page") || "20");
     const search = url.searchParams.get("search") || "";
 
     // Fetch subscribers with pagination and search
-    let subscribersData;
+    let subscribersData: any;
     if (search) {
       // Search for specific email
-      subscribersData = await getSubscribers(blog.mail_list_id, page, per_page, `email LIKE '%${search}%'`);
+      const sanitized = escapeSqlString(search);
+      subscribersData = await getSubscribers(blog.mail_list_id, page, per_page, `email LIKE '%${sanitized}%'`);
     } else {
       // Get all subscribers for this list with pagination
       subscribersData = await getSubscribers(blog.mail_list_id, page, per_page);
@@ -119,7 +129,7 @@ export async function POST(req: NextRequest, { params }: { params: { blog: strin
 
     for (const email of emails) {
       const trimmedEmail = email.trim().toLowerCase();
-      
+
       // Basic email validation
       if (!trimmedEmail.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
         failed++;
@@ -208,13 +218,36 @@ export async function DELETE(req: NextRequest, { params }: { params: { blog: str
   const { blog } = result;
 
   if (!blog.mail_list_id) {
-    return NextResponse.json(
-      { error: "This blog doesn't have a mailing list yet" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "This blog doesn't have a mailing list yet" }, { status: 400 });
   }
 
   try {
+    const url = new URL(req.url);
+    const email = url.searchParams.get("email");
+
+    if (email) {
+      const decodedEmail = decodeURIComponent(email);
+      const subscriber = await findSubscriberByEmail(decodedEmail);
+
+      if (!subscriber) {
+        return NextResponse.json({ error: "Subscriber not found" }, { status: 404 });
+      }
+
+      const isInList = subscriber.lists?.some((list) => list.id === blog.mail_list_id);
+
+      if (!isInList) {
+        return NextResponse.json({ error: "Subscriber is not in this blog's mailing list" }, { status: 404 });
+      }
+
+      const success = await deleteSubscriber(subscriber.id);
+
+      if (!success) {
+        return NextResponse.json({ error: "Failed to remove subscriber" }, { status: 500 });
+      }
+
+      return NextResponse.json({ success: true, message: "Subscriber removed successfully" });
+    }
+
     const body = await req.json();
     const { subscriber_ids } = body;
 
@@ -223,24 +256,18 @@ export async function DELETE(req: NextRequest, { params }: { params: { blog: str
     }
 
     const success = await bulkDeleteSubscribers(subscriber_ids);
-    
+
     if (!success) {
-      return NextResponse.json(
-        { error: "Failed to delete subscribers" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Failed to delete subscribers" }, { status: 500 });
     }
 
     return NextResponse.json({
       success: true,
-      message: `Successfully deleted ${subscriber_ids.length} subscribers`
+      message: `Successfully deleted ${subscriber_ids.length} subscribers`,
     });
   } catch (error) {
     console.error("Error bulk deleting subscribers:", error);
-    return NextResponse.json(
-      { error: "Failed to delete subscribers" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to delete subscribers" }, { status: 500 });
   }
 }
 
