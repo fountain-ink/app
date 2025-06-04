@@ -166,7 +166,7 @@ export async function PUT(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { content, enableCollaboration, yDocBase64 } = body;
+    const { content, enableCollaboration, yDocBase64, title, subtitle, coverUrl } = body;
 
     if (!content && !enableCollaboration) {
       return NextResponse.json({ error: "Missing content" }, { status: 400 });
@@ -175,6 +175,18 @@ export async function PUT(req: NextRequest) {
     const updateData: any = {
       updatedAt: new Date().toISOString(),
     };
+
+    if (title) {
+      updateData.title = title;
+    }
+
+    if (subtitle) {
+      updateData.subtitle = subtitle;
+    }
+
+    if (coverUrl) {
+      updateData.coverUrl = coverUrl;
+    }
 
     if (content) {
       updateData.contentJson = content;

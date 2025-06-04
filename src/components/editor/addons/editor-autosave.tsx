@@ -62,7 +62,7 @@ export function AutoSave({ documentId, collaborative = false }: { documentId: st
           await fetch(`/api/drafts?id=${documentId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ content }),
+            body: JSON.stringify({ content, title, subtitle, coverUrl }),
           });
         }
         setSaveSuccess(true);
