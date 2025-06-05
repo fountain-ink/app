@@ -43,6 +43,7 @@ export async function POST(
   request: NextRequest,
   { params }: { params: { blog: string } }
 ) {
+  console.log('🔔 RSS source addition started for blog:', params.blog);
   try {
     const appToken = getAppToken();
     const claims = getTokenClaims(appToken);
