@@ -100,6 +100,7 @@ bun run format       # Format code with Biome
 ## Development Workflow
 
 ### Branch & PR Strategy
+All new feature development follows this process:
 When starting work on a new feature or fix:
 
 1. **Create a new branch** from `main` with a descriptive name:
