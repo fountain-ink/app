@@ -41,8 +41,10 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
     };
     
     window.addEventListener("subscriber-deleted", handleSubscriberChange);
+    window.addEventListener("subscriber-added", handleSubscriberChange);
     return () => {
       window.removeEventListener("subscriber-deleted", handleSubscriberChange);
+      window.removeEventListener("subscriber-added", handleSubscriberChange);
     };
   }, [router]);
   const [isLoading, setIsLoading] = useState(false);

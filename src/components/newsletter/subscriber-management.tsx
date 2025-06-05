@@ -17,10 +17,35 @@ interface SubscriberManagementProps {
 export function SubscriberManagement({ blogAddress, mailListId, subscriberCount }: SubscriberManagementProps) {
   const [emails, setEmails] = useState("");
   const [isAdding, setIsAdding] = useState(false);
+  const [validationError, setValidationError] = useState("");
+
+  // Email validation regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  const validateEmails = (emailString: string): boolean => {
+    if (!emailString.trim()) {
+      setValidationError("Please enter at least one email address");
+      return false;
+    }
+
+    const emailList = emailString
+      .split(",")
+      .map(email => email.trim())
+      .filter(email => email.length > 0);
+
+    const invalidEmails = emailList.filter(email => !emailRegex.test(email));
+    
+    if (invalidEmails.length > 0) {
+      setValidationError(`Invalid email format: ${invalidEmails.join(", ")}`);
+      return false;
+    }
+
+    setValidationError("");
+    return true;
+  };
 
   const handleAddEmails = async () => {
-    if (!emails.trim()) {
-      toast.error("Please enter at least one email address");
+    if (!validateEmails(emails)) {
       return;
     }
 
@@ -79,7 +104,18 @@ export function SubscriberManagement({ blogAddress, mailListId, subscriberCount 
             type="text"
             placeholder="Enter email addresses, comma separated"
             value={emails}
-            onChange={(e) => setEmails(e.target.value)}
+            onChange={(e) => {
+              setEmails(e.target.value);
+              if (validationError) {
+                validateEmails(e.target.value);
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !isAdding && emails.trim()) {
+                e.preventDefault();
+                handleAddEmails();
+              }
+            }}
             className="flex-1"
             disabled={isAdding}
             autoComplete="off"
@@ -93,6 +129,9 @@ export function SubscriberManagement({ blogAddress, mailListId, subscriberCount 
             Add emails
           </Button>
         </div>
+        {validationError && (
+          <p className="text-sm text-destructive">{validationError}</p>
+        )}
       </div>
 
       {/* Subscribers Table */}
