@@ -3,7 +3,7 @@ import { getAppToken } from "@/lib/auth/get-app-token";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { getBaseUrl } from "@/lib/get-base-url";
 import { memoryStorage } from "@/lib/cross-posting/memory-storage";
-import { addWebhookLog } from "@/app/api/debug/webhook-logs/route";
+import { addWebhookLog } from "@/lib/cross-posting/webhook-logs";
 import Parser from "rss-parser";
 
 async function subscribeToWebSubHub(hubUrl: string, topicUrl: string) {

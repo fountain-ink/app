@@ -4,7 +4,7 @@ import Parser from "rss-parser";
 import { memoryStorage } from "@/lib/cross-posting/memory-storage";
 import { addCrossPostedContent } from "@/lib/cross-posting/content-storage";
 import { broadcastCrossPostUpdate } from "@/lib/cross-posting/sse-broadcast";
-import { addWebhookLog } from "@/app/api/debug/webhook-logs/route";
+import { addWebhookLog } from "@/lib/cross-posting/webhook-logs";
 
 export async function GET(request: NextRequest) {
   // Handle WebSub subscription verification challenge
