@@ -221,8 +221,9 @@ export function CrossPostingSettings({ blogAddress }: CrossPostingSettingsProps)
 
   const validateRssUrl = (url: string): boolean => {
     try {
+      // Just validate it's a proper URL - let the server validate if it's actually RSS
       new URL(url);
-      return url.includes('/feed') || url.includes('/rss') || url.includes('.xml') || url.includes('.rss');
+      return true;
     } catch {
       return false;
     }
