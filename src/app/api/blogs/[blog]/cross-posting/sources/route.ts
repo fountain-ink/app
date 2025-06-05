@@ -140,12 +140,21 @@ export async function POST(
     // Subscribe to WebSub hub if supported
     if (websub_supported && websub_hub_url) {
       try {
+        console.log(`🔔 Attempting WebSub subscription to hub: ${websub_hub_url} for feed: ${rss_url}`);
         await subscribeToWebSubHub(websub_hub_url, rss_url);
-        console.log(`Subscribed to WebSub hub: ${websub_hub_url} for feed: ${rss_url}`);
+        console.log(`✅ Successfully subscribed to WebSub hub: ${websub_hub_url} for feed: ${rss_url}`);
       } catch (error) {
-        console.error('Failed to subscribe to WebSub hub:', error);
+        console.error('❌ Failed to subscribe to WebSub hub:', error);
         // Don't fail the whole request if WebSub subscription fails
+        // But log the detailed error
+        console.error('WebSub subscription error details:', {
+          hub: websub_hub_url,
+          topic: rss_url,
+          error: error instanceof Error ? error.message : String(error)
+        });
       }
+    } else {
+      console.log(`ℹ️ WebSub not supported for feed: ${rss_url}`);
     }
 
     return NextResponse.json(newSource);

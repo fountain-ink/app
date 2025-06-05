@@ -42,12 +42,18 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.text();
     const contentType = request.headers.get('content-type') || '';
+    const url = new URL(request.url);
     
-    console.log('WebSub notification received:', {
+    console.log('🔔 WebSub POST notification received at:', url.toString());
+    console.log('WebSub notification details:', {
       contentType,
       bodyLength: body.length,
+      timestamp: new Date().toISOString(),
       headers: Object.fromEntries(request.headers.entries())
     });
+
+    // Log the first 500 characters of the body for debugging
+    console.log('Feed content preview:', body.substring(0, 500));
 
     // Verify signature if provided (recommended for security)
     const signature = request.headers.get('x-hub-signature') || request.headers.get('x-hub-signature-256');
