@@ -32,7 +32,7 @@ class MemoryStorage {
     
     if (index === -1) return false;
     
-    sources[index] = { ...sources[index], ...updates };
+    sources[index] = { ...sources[index], ...updates } as CrossPostingSource;
     this.storage.set(blogAddress, sources);
     return true;
   }

@@ -107,7 +107,7 @@ export async function POST(
       const hubMatch = feedText.match(/<atom:link[^>]+rel=["']hub["'][^>]*href=["']([^"']+)["'][^>]*\/?>|<atom:link[^>]+href=["']([^"']+)["'][^>]*rel=["']hub["'][^>]*\/?>/i);
       if (hubMatch) {
         websub_supported = true;
-        websub_hub_url = hubMatch[1] || hubMatch[2];
+        websub_hub_url = hubMatch[1] || hubMatch[2] || '';
       }
       
       // Parse the feed for title

@@ -411,7 +411,7 @@ export function CrossPostingSettings({ blogAddress }: CrossPostingSettingsProps)
                   )}
                 </Badge>
                 {accountManager.is_delegated && (
-                  <Zap className="h-4 w-4 text-yellow-500" title="Auto-publishing available" />
+                  <Zap className="h-4 w-4 text-yellow-500" />
                 )}
               </div>
               {accountManager.is_delegated && accountManager.expires_at && (

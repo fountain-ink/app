@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import Parser from "rss-parser";
 import { memoryStorage } from "@/lib/cross-posting/memory-storage";
-import { addCrossPostedContent } from "@/app/api/blogs/[blog]/cross-posting/content/route";
-import { broadcastCrossPostUpdate } from "@/app/api/blogs/[blog]/cross-posting/events/route";
+import { addCrossPostedContent } from "@/lib/cross-posting/content-storage";
+import { broadcastCrossPostUpdate } from "@/lib/cross-posting/sse-broadcast";
 
 export async function GET(request: NextRequest) {
   // Handle WebSub subscription verification challenge
@@ -91,6 +91,11 @@ async function handleFeedUpdate(feedContent: string) {
       // Get the latest item (most recent post)
       const latestItem = feed.items[0];
       
+      if (!latestItem) {
+        console.log('No latest item found in feed');
+        return;
+      }
+      
       console.log('Latest post:', {
         title: latestItem.title,
         link: latestItem.link,
@@ -130,7 +135,7 @@ async function handleFeedUpdate(feedContent: string) {
           published_at: latestItem.pubDate || new Date().toISOString(),
           platform: matchingSource.platform,
           source_id: matchingSource.id,
-          status: matchingSource.auto_publish ? 'published' : 'draft' // TODO: Actually implement auto-publish
+          status: (matchingSource.auto_publish ? 'published' : 'draft') as 'published' | 'failed' | 'draft'
         };
         
         addCrossPostedContent(blogAddress, newContent);
