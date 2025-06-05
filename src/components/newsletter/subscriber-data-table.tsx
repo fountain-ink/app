@@ -361,9 +361,6 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
             </Button>
           )}
         </div>
-        <div className="text-sm text-muted-foreground">
-          {table.getSelectedRowModel().rows.length} of {totalCount} row(s) selected.
-        </div>
       </div>
 
       {loading ? (
@@ -461,9 +458,9 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
       <AlertDialog open={showBulkDeleteDialog} onOpenChange={setShowBulkDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remove {table.getSelectedRowModel().rows.length} subscribers</AlertDialogTitle>
+            <AlertDialogTitle>Remove {table.getSelectedRowModel().rows.length} subscriber{table.getSelectedRowModel().rows.length !== 1 ? 's' : ''}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to remove {table.getSelectedRowModel().rows.length} selected subscriber(s) from your
+              Are you sure you want to remove {table.getSelectedRowModel().rows.length} selected subscriber{table.getSelectedRowModel().rows.length !== 1 ? 's' : ''} from your
               newsletter? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -476,7 +473,7 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
               }}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Remove {table.getSelectedRowModel().rows.length} subscribers
+              Remove {table.getSelectedRowModel().rows.length} subscriber{table.getSelectedRowModel().rows.length !== 1 ? 's' : ''}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -485,9 +482,9 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
       <AlertDialog open={showDeleteAllDialog} onOpenChange={setShowDeleteAllDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete ALL {totalCount} subscribers</AlertDialogTitle>
+            <AlertDialogTitle>Delete ALL {totalCount} subscriber{totalCount !== 1 ? 's' : ''}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to remove ALL {totalCount} subscribers from your newsletter? This will completely
+              Are you sure you want to remove ALL {totalCount} subscriber{totalCount !== 1 ? 's' : ''} from your newsletter? This will completely
               empty your subscriber list and cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -500,7 +497,7 @@ export function SubscriberDataTable({ blogAddress, mailListId }: SubscriberDataT
               }}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete ALL {totalCount} subscribers
+              Delete ALL {totalCount} subscriber{totalCount !== 1 ? 's' : ''}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
