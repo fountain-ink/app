@@ -141,7 +141,15 @@ export function CrossPostingSettings({ blogAddress }: CrossPostingSettingsProps)
 
   // Set up SSE connection for real-time updates
   useEffect(() => {
+    if (!blogAddress) return;
+
+    console.log(`Setting up SSE connection for blog: ${blogAddress}`);
+    
     const eventSource = new EventSource(`/api/blogs/${blogAddress}/cross-posting/events`);
+    
+    eventSource.onopen = () => {
+      console.log('✅ SSE connection opened');
+    };
     
     eventSource.onmessage = (event) => {
       try {
@@ -172,6 +180,8 @@ export function CrossPostingSettings({ blogAddress }: CrossPostingSettingsProps)
           });
         } else if (message.type === 'connected') {
           console.log('🔗 Connected to cross-posting updates');
+        } else if (message.type === 'ping') {
+          // Keep-alive ping, do nothing
         }
       } catch (error) {
         console.error('Error parsing SSE message:', error);
@@ -179,11 +189,18 @@ export function CrossPostingSettings({ blogAddress }: CrossPostingSettingsProps)
     };
 
     eventSource.onerror = (error) => {
-      console.error('SSE connection error:', error);
+      console.error('❌ SSE connection error:', error);
+      console.log('SSE readyState:', eventSource.readyState);
+      
+      // Don't try to reconnect automatically - let browser handle it
+      if (eventSource.readyState === EventSource.CLOSED) {
+        console.log('SSE connection closed permanently');
+      }
     };
 
     // Cleanup on unmount
     return () => {
+      console.log('🔌 Closing SSE connection');
       eventSource.close();
     };
   }, [blogAddress]);

@@ -7,12 +7,16 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { blog: string } }
 ) {
-  const appToken = getAppToken();
-  const claims = getTokenClaims(appToken);
+  try {
+    const appToken = getAppToken();
+    const claims = getTokenClaims(appToken);
 
-  if (!claims) {
-    return new Response("Unauthorized", { status: 401 });
-  }
+    if (!claims) {
+      console.log('SSE connection failed: No auth token');
+      return new Response("Unauthorized", { status: 401 });
+    }
+
+    console.log(`SSE connection established for blog: ${params.blog}`);
 
   const blogAddress = params.blog;
 
@@ -58,4 +62,8 @@ export async function GET(
       'Access-Control-Allow-Headers': 'Cache-Control'
     }
   });
+  } catch (error) {
+    console.error('SSE endpoint error:', error);
+    return new Response("Internal Server Error", { status: 500 });
+  }
 }
