@@ -16,6 +16,9 @@ export const trimEmptyNodes = (nodes: any[] | undefined): any[] | undefined => {
     if (node.type === "iframe" && !node.url) {
       return false;
     }
+    if (node.type === "iframe" && !node.html) {
+      return false;
+    }
     return true;
   });
 
