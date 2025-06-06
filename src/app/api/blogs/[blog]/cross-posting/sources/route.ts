@@ -3,7 +3,6 @@ import { getAppToken } from "@/lib/auth/get-app-token";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { getBaseUrl } from "@/lib/get-base-url";
 import { memoryStorage } from "@/lib/cross-posting/memory-storage";
-import { addWebhookLog } from "@/lib/cross-posting/webhook-logs";
 import Parser from "rss-parser";
 
 async function subscribeToWebSubHub(hubUrl: string, topicUrl: string) {
@@ -143,17 +142,10 @@ export async function POST(
     if (websub_supported && websub_hub_url) {
       try {
         console.log(`🔔 Attempting WebSub subscription to hub: ${websub_hub_url} for feed: ${rss_url}`);
-        addWebhookLog('subscription', `🔔 Attempting WebSub subscription`, { hub: websub_hub_url, topic: rss_url });
         await subscribeToWebSubHub(websub_hub_url, rss_url);
         console.log(`✅ Successfully subscribed to WebSub hub: ${websub_hub_url} for feed: ${rss_url}`);
-        addWebhookLog('subscription', `✅ WebSub subscription successful`, { hub: websub_hub_url, topic: rss_url });
       } catch (error) {
         console.error('❌ Failed to subscribe to WebSub hub:', error);
-        addWebhookLog('error', `❌ WebSub subscription failed`, { 
-          hub: websub_hub_url, 
-          topic: rss_url, 
-          error: error instanceof Error ? error.message : String(error) 
-        });
         // Don't fail the whole request if WebSub subscription fails
         // But log the detailed error
         console.error('WebSub subscription error details:', {

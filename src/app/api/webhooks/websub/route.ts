@@ -4,7 +4,6 @@ import Parser from "rss-parser";
 import { memoryStorage } from "@/lib/cross-posting/memory-storage";
 import { addCrossPostedContent } from "@/lib/cross-posting/content-storage";
 import { broadcastCrossPostUpdate } from "@/lib/cross-posting/sse-broadcast";
-import { addWebhookLog } from "@/lib/cross-posting/webhook-logs";
 
 export async function GET(request: NextRequest) {
   // Handle WebSub subscription verification challenge
@@ -15,13 +14,11 @@ export async function GET(request: NextRequest) {
   const lease_seconds = searchParams.get('hub.lease_seconds');
 
   console.log('WebSub verification request:', { mode, topic, challenge, lease_seconds });
-  addWebhookLog('websub_get', `WebSub verification: ${mode} for ${topic}`, { mode, topic, challenge, lease_seconds });
 
   if (mode === 'subscribe' && challenge) {
     // Verify that we actually requested this subscription
     // TODO: Check our database to confirm we have this RSS URL
     console.log(`WebSub subscription confirmed for topic: ${topic}`);
-    addWebhookLog('websub_get', `✅ WebSub subscription confirmed for: ${topic}`);
     
     // Return the challenge to confirm subscription
     return new Response(challenge, {
@@ -53,13 +50,6 @@ export async function POST(request: NextRequest) {
       bodyLength: body.length,
       timestamp: new Date().toISOString(),
       headers: Object.fromEntries(request.headers.entries())
-    });
-
-    addWebhookLog('websub_post', '🔔 WebSub notification received', {
-      contentType,
-      bodyLength: body.length,
-      url: url.toString(),
-      timestamp: new Date().toISOString()
     });
 
     // Log the first 500 characters of the body for debugging

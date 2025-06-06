@@ -634,46 +634,6 @@ export function CrossPostingSettings({ blogAddress }: CrossPostingSettingsProps)
         </CardContent>
       </Card>
 
-      {/* Debug Status Card */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5" />
-            Debug Status
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span>SSE Connection:</span>
-              <Badge variant="outline" className="text-xs">
-                {crossPostedContent.length > -1 ? 'Connected' : 'Disconnected'}
-              </Badge>
-            </div>
-            <div className="flex justify-between">
-              <span>Last Check:</span>
-              <span className="text-muted-foreground">
-                {sources[0]?.last_checked_at ? new Date(sources[0].last_checked_at).toLocaleTimeString() : 'Never'}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span>WebSub Hub:</span>
-              <span className="text-muted-foreground font-mono text-xs">
-                {sources[0]?.websub_hub_url || 'Not detected'}
-              </span>
-            </div>
-            <Button 
-              onClick={() => window.open('/debug/webhook-logs', '_blank')} 
-              variant="outline" 
-              size="sm"
-              className="w-full mt-2"
-            >
-              View Webhook Logs
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Cross-posted Content Section */}
       <Card>
         <CardHeader>

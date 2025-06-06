@@ -53,39 +53,3 @@ class MemoryStorage {
 }
 
 export const memoryStorage = new MemoryStorage();
-
-// Add persistent webhook logs storage
-interface WebhookLog {
-  timestamp: string;
-  type: 'websub_post' | 'websub_get' | 'subscription' | 'error';
-  message: string;
-  data?: any;
-}
-
-class WebhookLogStorage {
-  private logs: WebhookLog[] = [];
-
-  addLog(type: string, message: string, data?: any) {
-    this.logs.push({
-      timestamp: new Date().toISOString(),
-      type: type as any,
-      message,
-      data
-    });
-    
-    // Keep only last 100 logs
-    if (this.logs.length > 100) {
-      this.logs.shift();
-    }
-  }
-
-  getLogs() {
-    return {
-      logs: this.logs,
-      count: this.logs.length,
-      lastUpdate: this.logs[this.logs.length - 1]?.timestamp || null
-    };
-  }
-}
-
-export const webhookLogStorage = new WebhookLogStorage();
