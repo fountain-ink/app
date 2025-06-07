@@ -22,6 +22,9 @@ next-env.d.ts
 # misc
 .DS_Store
 *.pem
+.cursor/
+.claude
+.backups/
 
 # debug
 npm-debug.log*

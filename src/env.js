@@ -6,6 +6,7 @@ export const env = createEnv({
     NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
     SUPABASE_JWT_SECRET: z.string(),
     SUPABASE_SERVICE_KEY: z.string(),
+    DATABASE_URL: z.string().optional(),
     LISTMONK_API_URL: z.string(),
     LISTMONK_API_USERNAME: z.string(),
     LISTMONK_API_TOKEN: z.string(),
@@ -28,6 +29,7 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     SUPABASE_JWT_SECRET: process.env.SUPABASE_JWT_SECRET,
     SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY,
+    DATABASE_URL: process.env.DATABASE_URL,
 
     LENS_API_KEY: process.env.LENS_API_KEY,
     LENS_API_KEY_TESTNET: process.env.LENS_API_KEY_TESTNET,
