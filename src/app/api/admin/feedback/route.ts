@@ -1,4 +1,4 @@
-import { createServiceClient } from "@/lib/db/service";
+import { createClient } from "@/lib/db/server";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminRights } from "@/lib/auth/admin-middleware";
 
@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     const sortBy = url.searchParams.get("sort_by") || "createdAt";
     const sortDirection = url.searchParams.get("sort_direction") || "desc";
 
-    const supabase = await createServiceClient();
+    const supabase = await createClient();
 
     let query = supabase.from("feedback").select("*");
 
@@ -63,7 +63,7 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const supabase = await createServiceClient();
+    const supabase = await createClient();
 
     const updateData: any = {
       status,

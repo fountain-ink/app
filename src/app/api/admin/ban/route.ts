@@ -1,4 +1,4 @@
-import { createServiceClient } from "@/lib/db/service";
+import { createClient } from "@/lib/db/server";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminRights } from "@/lib/auth/admin-middleware";
 
@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
 
     const url = new URL(req.url);
     const address = url.searchParams.get("address");
-    const supabase = await createServiceClient();
+    const supabase = await createClient();
 
     if (address) {
       const { data: existingBan, error } = await supabase
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const supabase = await createServiceClient();
+    const supabase = await createClient();
 
     const { data: existingBan } = await supabase.from("banlist").select("*").eq("address", address).maybeSingle();
 
@@ -94,7 +94,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const supabase = await createServiceClient();
+    const supabase = await createClient();
 
     const { error } = await supabase.from("banlist").delete().eq("address", address);
 

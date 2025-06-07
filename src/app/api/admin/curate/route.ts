@@ -1,4 +1,4 @@
-import { createServiceClient } from "@/lib/db/service";
+import { createClient } from "@/lib/db/server";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminRights } from "@/lib/auth/admin-middleware";
 
@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
     // Calculate offset
     const offset = (page - 1) * limit;
 
-    const supabase = await createServiceClient();
+    const supabase = await createClient();
 
     if (slug) {
       const { data, error } = await supabase.from("curated").select("slug").eq("slug", slug).maybeSingle();
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const supabase = await createServiceClient();
+    const supabase = await createClient();
 
     const { data: existingEntry } = await supabase.from("curated").select("*").eq("slug", slug).maybeSingle();
 
@@ -108,7 +108,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const supabase = await createServiceClient();
+    const supabase = await createClient();
 
     const { error } = await supabase.from("curated").delete().eq("slug", slug);
 

@@ -1,4 +1,4 @@
-import { createServiceClient } from "@/lib/db/service";
+import { createClient } from "@/lib/db/server";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminRights } from "@/lib/auth/admin-middleware";
 
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     const documentId = url.searchParams.get("documentId") || "";
     const title = url.searchParams.get("title") || "";
 
-    const supabase = await createServiceClient();
+    const supabase = await createClient();
 
     if (documentId) {
       console.log(`Looking up draft by documentId: ${documentId}`);
