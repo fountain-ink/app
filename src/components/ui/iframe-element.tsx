@@ -17,7 +17,6 @@ import DOMPurify from "dompurify";
 import { loadIframelyEmbedJs } from "@/lib/load-embed-js";
 import { Input } from "./input";
 
-
 export const IframeElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
   const { isLoading, error, unsafeUrl, html } = useIframeState();
   const [sanitizedHtml, setSanitizedHtml] = useState("");
@@ -47,7 +46,7 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
           at: editor.selection ?? element,
         },
       );
-      console.log(editor.children)
+      console.log(editor.children);
     }
   };
 
@@ -55,7 +54,6 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
     setWidth(newWidth);
     editor.tf.setNodes({ width: newWidth }, { at: element });
   };
-
 
   const editUrlPopoverContent = (
     <div className="flex items-center gap-1">
@@ -110,7 +108,7 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
       <div
         className={cn(
           "flex flex-col items-center justify-center rounded-sm",
-          !readOnly && "pointer-events-none cursor-default"
+          !readOnly && "pointer-events-none cursor-default",
         )}
         // biome-ignore lint/security/noDangerouslySetInnerHtml: sanitized iframe embed HTML
         dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
@@ -173,7 +171,7 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
                 className={cn(
                   "w-full h-full relative not-prose not-article m-0 rounded-sm",
                   // selected && !readOnly && "ring ring-2 ring-ring",
-                  !readOnly && "cursor-default"
+                  !readOnly && "cursor-default",
                 )}
               >
                 {divWithIframe}

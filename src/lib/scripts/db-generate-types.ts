@@ -1,67 +1,67 @@
 #!/usr/bin/env bun
-import { spawn } from "bun"
-import { env } from "../../env.js"
+import { spawn } from "bun";
+import { env } from "../../env.js";
 
 function getConnectionUrl(): string {
   if (!env.DATABASE_URL) {
-    console.error("[ERROR] DATABASE_URL not configured!")
-    console.error("Set DATABASE_URL in your .env.local file")
-    process.exit(1)
+    console.error("[ERROR] DATABASE_URL not configured!");
+    console.error("Set DATABASE_URL in your .env.local file");
+    process.exit(1);
   }
-  return env.DATABASE_URL
+  return env.DATABASE_URL;
 }
 
 async function generateTypes() {
-  const connectionUrl = getConnectionUrl()
-  const outputFile = "src/lib/db/database.ts"
-  
-  console.log(`[GENERATE] Creating TypeScript types...`)
-  console.log(`[DATABASE] Connecting...`)
-  console.log(`[OUTPUT] ${outputFile}`)
-  
+  const connectionUrl = getConnectionUrl();
+  const outputFile = "src/lib/db/database.ts";
+
+  console.log("[GENERATE] Creating TypeScript types...");
+  console.log("[DATABASE] Connecting...");
+  console.log(`[OUTPUT] ${outputFile}`);
+
   try {
     // Try using supabase CLI with the connection URL
     const proc = spawn({
       cmd: ["supabase", "gen", "types", "typescript", "--db-url", connectionUrl],
       stdout: "pipe",
       stderr: "pipe",
-    })
-    
+    });
+
     // Collect the output
-    const output = await new Response(proc.stdout).text()
-    const error = await new Response(proc.stderr).text()
-    const exitCode = await proc.exited
-    
+    const output = await new Response(proc.stdout).text();
+    const error = await new Response(proc.stderr).text();
+    const exitCode = await proc.exited;
+
     if (exitCode === 0 && output.length > 0) {
       // Write the output to file
-      await Bun.write(outputFile, output)
-      
-      const lines = output.split('\n').length
-      
-      console.log(`[SUCCESS] Types generated successfully!`)
-      console.log(`[FILE] ${outputFile}`)
-      console.log(`[LINES] ${lines}`)
-      
+      await Bun.write(outputFile, output);
+
+      const lines = output.split("\n").length;
+
+      console.log("[SUCCESS] Types generated successfully!");
+      console.log(`[FILE] ${outputFile}`);
+      console.log(`[LINES] ${lines}`);
+
       // Verify the content looks like TypeScript
-      if (output.includes('export interface') || output.includes('export type')) {
-        console.log(`[OK] TypeScript interfaces detected`)
+      if (output.includes("export interface") || output.includes("export type")) {
+        console.log("[OK] TypeScript interfaces detected");
       } else {
-        console.log(`[WARNING] Generated content may not be valid TypeScript`)
+        console.log("[WARNING] Generated content may not be valid TypeScript");
       }
     } else {
-      console.error("[ERROR] Type generation failed!")
+      console.error("[ERROR] Type generation failed!");
       if (error) {
-        console.error("Error details:", error)
+        console.error("Error details:", error);
       }
-      console.error("Falling back to copying existing database types...")
-      
+      console.error("Falling back to copying existing database types...");
+
       // Fallback: try to copy from the existing file or create a basic structure
-      await createFallbackTypes(outputFile)
+      await createFallbackTypes(outputFile);
     }
   } catch (error) {
-    console.error("[ERROR] Failed to generate types:", error)
-    console.error("Creating fallback types...")
-    await createFallbackTypes(outputFile)
+    console.error("[ERROR] Failed to generate types:", error);
+    console.error("Creating fallback types...");
+    await createFallbackTypes(outputFile);
   }
 }
 
@@ -117,17 +117,17 @@ export interface Database {
     }
   }
 }
-`
-  
-  await Bun.write(outputFile, fallbackContent)
-  console.log(`[FALLBACK] Created fallback types in ${outputFile}`)
+`;
+
+  await Bun.write(outputFile, fallbackContent);
+  console.log(`[FALLBACK] Created fallback types in ${outputFile}`);
 }
 
 // Check if DATABASE_URL is available
 if (!env.DATABASE_URL) {
-  console.error("❌ DATABASE_URL not configured!")
-  console.error("Set DATABASE_URL in your .env.local file")
-  process.exit(1)
+  console.error("❌ DATABASE_URL not configured!");
+  console.error("Set DATABASE_URL in your .env.local file");
+  process.exit(1);
 }
 
-await generateTypes()
+await generateTypes();

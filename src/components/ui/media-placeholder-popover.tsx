@@ -53,7 +53,7 @@ const MEDIA_CONFIG: Record<
 
 const createFileList = (files: File[]): FileList => {
   const dt = new DataTransfer();
-  files.forEach(file => dt.items.add(file));
+  files.forEach((file) => dt.items.add(file));
   return dt.files;
 };
 
@@ -73,7 +73,7 @@ export const MediaPlaceholderPopover = ({ children }: MediaPopoverProps) => {
   const multiple = getOption("multiple") ?? true;
 
   const { isUploading, uploadedFile, uploadFile, uploadingFile } = useUploadFile({
-    onUploadComplete() { },
+    onUploadComplete() {},
   });
 
   const replaceCurrentPlaceholder = useCallback(

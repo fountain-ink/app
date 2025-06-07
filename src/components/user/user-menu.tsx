@@ -92,7 +92,6 @@ export const UserMenu = ({ session, showDropdown = false }: { session: MeResult 
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent align="end" className="w-48">
-
           {session && (
             <>
               <AnimatedMenuItem href="/featured" icon={HomeIcon}>

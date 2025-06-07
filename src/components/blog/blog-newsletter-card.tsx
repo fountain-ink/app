@@ -5,7 +5,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { UsersIcon, UploadIcon, PenToolIcon, DownloadIcon, Trash2Icon, LoaderCircleIcon, AlertTriangle } from "lucide-react";
+import {
+  UsersIcon,
+  UploadIcon,
+  PenToolIcon,
+  DownloadIcon,
+  Trash2Icon,
+  LoaderCircleIcon,
+  AlertTriangle,
+} from "lucide-react";
 import { toast } from "sonner";
 import { createMailingList, exportNewsletterSubscribers } from "@/lib/listmonk/newsletter";
 import { useRouter } from "next/navigation";
@@ -34,12 +42,12 @@ const getBlogUrl = (blog: BlogDataWithSubscriberCount): string => {
 
 export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
   const router = useRouter();
-  
+
   useEffect(() => {
     const handleSubscriberChange = () => {
       router.refresh();
     };
-    
+
     window.addEventListener("subscriber-deleted", handleSubscriberChange);
     window.addEventListener("subscriber-added", handleSubscriberChange);
     return () => {
@@ -247,8 +255,9 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
                   <div className="flex gap-3">
                     <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-500 flex-shrink-0 mt-0.5" />
                     <p className="text-sm text-amber-800 dark:text-amber-200">
-                      Only add people who have explicitly opted-in to receiving emails. Do not add people whose information was 
-                      obtained solely via the exchange of products/services, giveaways, or similar collection methods.
+                      Only add people who have explicitly opted-in to receiving emails. Do not add people whose
+                      information was obtained solely via the exchange of products/services, giveaways, or similar
+                      collection methods.
                     </p>
                   </div>
                 </div>
@@ -257,9 +266,7 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="text-sm font-medium">Import subscribers</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Import or export your newsletter subscribers
-                      </p>
+                      <p className="text-sm text-muted-foreground">Import or export your newsletter subscribers</p>
                     </div>
                     <div className="flex gap-2">
                       <Button variant="outline" className="gap-2 bg-card" onClick={handleExport}>
@@ -274,9 +281,9 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
                   </div>
                 </div>
               </div>
-              
+
               {/* Subscriber Management Section */}
-              <SubscriberManagement 
+              <SubscriberManagement
                 blogAddress={blog.address}
                 mailListId={blog.mail_list_id}
                 subscriberCount={blog.subscriber_count}

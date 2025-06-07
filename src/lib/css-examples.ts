@@ -75,7 +75,7 @@ export const cssExamples = {
 :root {
   --accent: 220 90% 95%;
   --accent-foreground: 220 90% 15%;
-}`
+}`,
   },
 
   modern: {
@@ -134,7 +134,7 @@ export const cssExamples = {
   padding: var(--code-block-padding);
   overflow-x: auto;
   box-shadow: 0 4px 6px hsl(var(--muted-foreground) / 0.1);
-}`
+}`,
   },
 
   minimal: {
@@ -199,7 +199,7 @@ export const cssExamples = {
   height: auto;
   border-radius: var(--image-border-radius);
   margin: var(--image-margin-y) 0;
-}`
+}`,
   },
 
   colors: {
@@ -266,8 +266,8 @@ export const cssExamples = {
   background: #e8f5e8;
   border-left-color: #2d7d32;
   color: #1b5e20;
-}`
-  }
+}`,
+  },
 };
 
-export type CssExampleKey = keyof typeof cssExamples; 
+export type CssExampleKey = keyof typeof cssExamples;

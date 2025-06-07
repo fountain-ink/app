@@ -30,11 +30,11 @@ export function SubscriberManagement({ blogAddress, mailListId, subscriberCount 
 
     const emailList = emailString
       .split(",")
-      .map(email => email.trim())
-      .filter(email => email.length > 0);
+      .map((email) => email.trim())
+      .filter((email) => email.length > 0);
 
-    const invalidEmails = emailList.filter(email => !emailRegex.test(email));
-    
+    const invalidEmails = emailList.filter((email) => !emailRegex.test(email));
+
     if (invalidEmails.length > 0) {
       setValidationError(`Invalid email format: ${invalidEmails.join(", ")}`);
       return false;
@@ -50,13 +50,13 @@ export function SubscriberManagement({ blogAddress, mailListId, subscriberCount 
     }
 
     setIsAdding(true);
-    
+
     try {
       // Parse and validate emails
       const emailList = emails
         .split(",")
-        .map(email => email.trim())
-        .filter(email => email.length > 0);
+        .map((email) => email.trim())
+        .filter((email) => email.length > 0);
 
       const response = await fetch(`/api/newsletter/${blogAddress}/subscribers`, {
         method: "POST",
@@ -78,7 +78,7 @@ export function SubscriberManagement({ blogAddress, mailListId, subscriberCount 
         toast.success("Successfully processed subscribers");
       }
       setEmails("");
-      
+
       // Trigger table refresh
       window.dispatchEvent(new CustomEvent("subscriber-added"));
     } catch (error) {
@@ -120,18 +120,12 @@ export function SubscriberManagement({ blogAddress, mailListId, subscriberCount 
             disabled={isAdding}
             autoComplete="off"
           />
-          <Button 
-            onClick={handleAddEmails} 
-            disabled={isAdding || !emails.trim()}
-            className="gap-2"
-          >
+          <Button onClick={handleAddEmails} disabled={isAdding || !emails.trim()} className="gap-2">
             <Plus className="h-4 w-4" />
             Add emails
           </Button>
         </div>
-        {validationError && (
-          <p className="text-sm text-destructive">{validationError}</p>
-        )}
+        {validationError && <p className="text-sm text-destructive">{validationError}</p>}
       </div>
 
       {/* Subscribers Table */}
@@ -140,11 +134,8 @@ export function SubscriberManagement({ blogAddress, mailListId, subscriberCount 
           <h4 className="text-sm font-medium">All subscribers ({subscriberCount})</h4>
           <p className="text-sm text-muted-foreground">Updated just now</p>
         </div>
-        
-        <SubscriberDataTable 
-          blogAddress={blogAddress} 
-          mailListId={mailListId}
-        />
+
+        <SubscriberDataTable blogAddress={blogAddress} mailListId={mailListId} />
       </div>
     </div>
   );

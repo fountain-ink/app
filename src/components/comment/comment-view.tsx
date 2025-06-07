@@ -86,7 +86,9 @@ export const CommentView = ({
         </Button> */}
       </div>
 
-      <div className="text-sm mt-2 whitespace-pre-wrap">{"content" in comment.metadata && comment.metadata.content}</div>
+      <div className="text-sm mt-2 whitespace-pre-wrap">
+        {"content" in comment.metadata && comment.metadata.content}
+      </div>
 
       <div className="flex items-center gap-4">
         <div className="-ml-2">

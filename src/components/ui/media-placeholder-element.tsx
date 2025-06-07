@@ -128,7 +128,7 @@ export const MediaPlaceholderElement = withHOC(
       multiple: false,
       onFilesSelected: (data: { errors?: any[]; plainFiles?: File[] }) => {
         if (data.errors && data.errors.length > 0) {
-          console.error('File selection errors:', data.errors);
+          console.error("File selection errors:", data.errors);
           return;
         }
 
@@ -295,6 +295,7 @@ export function formatBytes(
 
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
 
-  return `${(bytes / 1024 ** i).toFixed(decimals)} ${sizeType === "accurate" ? (accurateSizes[i] ?? "Bytest") : (sizes[i] ?? "Bytes")
-    }`;
+  return `${(bytes / 1024 ** i).toFixed(decimals)} ${
+    sizeType === "accurate" ? (accurateSizes[i] ?? "Bytest") : (sizes[i] ?? "Bytes")
+  }`;
 }

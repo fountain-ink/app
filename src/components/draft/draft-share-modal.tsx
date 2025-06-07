@@ -60,7 +60,7 @@ export const DraftShareModal = ({ isOpen, onClose, documentId, collaborative }: 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           enableCollaboration: true,
-          yDocBase64: base64String
+          yDocBase64: base64String,
         }),
       });
 

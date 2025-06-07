@@ -89,9 +89,9 @@ export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) =>
   const title = "title" in post.metadata ? post.metadata.title : collectibleMetadata?.name;
   const totalValue = amount
     ? formatAmount({
-      value: (currentSupply * Number.parseFloat(amount.value)).toString(),
-      asset: amount.asset,
-    })
+        value: (currentSupply * Number.parseFloat(amount.value)).toString(),
+        asset: amount.asset,
+      })
     : null;
 
   const endsAt = collectAction?.endsAt ? new Date(collectAction.endsAt) : null;
@@ -228,16 +228,17 @@ export const PostCollect = ({ post, isOpen, onOpenChange }: PostCollectProps) =>
         </div>
 
         {(formattedAmount || isFree) && (
-          <Button
-            disabled={!canCollect || isCollecting}
-            onClick={handleCollect}
-            className="w-full"
-            size="lg"
-          >
-            {isCollecting ? "Collecting..." : canCollect ? `Collect for ${isFree ? "free" : formattedAmount}` : "Cannot collect"}
+          <Button disabled={!canCollect || isCollecting} onClick={handleCollect} className="w-full" size="lg">
+            {isCollecting
+              ? "Collecting..."
+              : canCollect
+                ? `Collect for ${isFree ? "free" : formattedAmount}`
+                : "Cannot collect"}
           </Button>
         )}
-        {!amount && !isFree && <p className="text-sm text-center text-muted-foreground">Collect details not available.</p>}
+        {!amount && !isFree && (
+          <p className="text-sm text-center text-muted-foreground">Collect details not available.</p>
+        )}
       </DialogContent>
     </Dialog>
   );

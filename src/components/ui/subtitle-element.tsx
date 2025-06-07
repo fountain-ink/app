@@ -19,7 +19,7 @@ export const SubtitleElement = withRef<typeof PlateElement>(({ children, attribu
             if (path) {
               editor.tf.select(path);
               editor.tf.focus();
-              editor.tf.collapse({ edge: 'start' });
+              editor.tf.collapse({ edge: "start" });
             }
           }
         },

@@ -20,7 +20,7 @@ export const TitleElement = withRef<typeof PlateElement>(({ children, attributes
             if (path) {
               editor.tf.select(path);
               editor.tf.focus();
-              editor.tf.collapse({ edge: 'anchor' });
+              editor.tf.collapse({ edge: "anchor" });
             }
           }
         },
