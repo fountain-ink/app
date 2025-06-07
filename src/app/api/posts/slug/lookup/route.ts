@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/db/server";
+import { createServiceClient } from "@/lib/db/service";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET - Look up a post by slug and handle
@@ -21,9 +22,9 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const db = await createClient();
+    // bypass RLS is fine for post lookup
+    const db = await createServiceClient();
 
-    // Find post with the given slug and handle
     const { data: posts, error } = await db.from("posts").select("lens_slug").eq("slug", slug).eq("handle", handle);
 
     if (error) {
@@ -37,7 +38,6 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // If found, return the lens_slug (post ID)
     if (posts && posts.length > 0) {
       console.log(`[Posts Slug Lookup] Found post for slug '${slug}' and handle '${handle}'`);
       return NextResponse.json({
