@@ -189,6 +189,7 @@
     "recharts": "^2.13.3",
     "remark-gfm": "^4.0.0",
     "remark-math": "^6.0.0",
+    "rss-parser": "^3.13.0",
     "sonner": "^1.7.2",
     "tailwind-highlightjs": "^2.0.1",
     "tailwind-merge": "^2.5.4",

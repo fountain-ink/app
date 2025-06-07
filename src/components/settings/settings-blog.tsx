@@ -16,7 +16,7 @@ import { useBlogSettings } from "@/hooks/use-blog-settings";
 import { useWalletClient } from "wagmi";
 import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
 import Link from "next/link";
-import { ArrowLeftIcon, ExternalLink, MailIcon, ChevronDownIcon, ChevronUpIcon, CodeIcon } from "lucide-react";
+import { ArrowLeftIcon, ExternalLink, MailIcon, ChevronDownIcon, ChevronUpIcon, CodeIcon, Rss } from "lucide-react";
 import { isValidTheme, ThemeType, themeNames, themeDescriptions, defaultThemeName } from "@/styles/themes";
 import { ThemeButtons } from "@/components/theme/theme-buttons";
 import { toast } from "sonner";
@@ -454,6 +454,12 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
             <Button variant="outline" size="sm">
               <MailIcon className="h-4 w-4 mr-2" />
               Newsletter
+            </Button>
+          </Link>
+          <Link href={`/settings/b/${blogAddress}/cross-posting`}>
+            <Button variant="outline" size="sm">
+              <Rss className="h-4 w-4 mr-2" />
+              Cross-posting
             </Button>
           </Link>
           <Link href={blogUrl} target="_blank">

@@ -23,6 +23,7 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_ADDRESS: z.string(),
     NEXT_PUBLIC_APP_ADDRESS_TESTNET: z.string(),
     NEXT_PUBLIC_ENVIRONMENT: z.enum(["development", "production"]).default("development"),
+    NEXT_PUBLIC_COLLABORATION_URL: z.string().optional(),
   },
 
   runtimeEnv: {
@@ -47,6 +48,7 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_ADDRESS: process.env.NEXT_PUBLIC_APP_ADDRESS,
     NEXT_PUBLIC_APP_ADDRESS_TESTNET: process.env.NEXT_PUBLIC_APP_ADDRESS_TESTNET,
     NEXT_PUBLIC_ENVIRONMENT: process.env.NEXT_PUBLIC_ENVIRONMENT,
+    NEXT_PUBLIC_COLLABORATION_URL: process.env.NEXT_PUBLIC_COLLABORATION_URL,
   },
 
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

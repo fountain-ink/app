@@ -75,6 +75,7 @@ import { Heading, Text } from "mdast";
 import { uploadFile } from "@/lib/upload/upload-file";
 import { getRandomUid } from "@/lib/get-random-uid";
 import { IframePlugin } from "./plugins/iframe-plugin";
+import { env } from "@/env";
 
 const lowlight = createLowlight(all);
 
@@ -120,7 +121,7 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
               type: "hocuspocus",
               options: {
                 // url: "ws://0.0.0.0:4444",
-                url: "https://collab.fountain.ink",
+                url: env.NEXT_PUBLIC_COLLABORATION_URL || "https://collab.fountain.ink",
                 name: path,
                 connect: false,
                 token: appToken,

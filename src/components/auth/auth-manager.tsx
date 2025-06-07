@@ -1,14 +1,28 @@
 "use client";
 
-import { isValidToken } from "@/lib/auth/validate-token";
 import { AccessToken, IdToken, RefreshToken } from "@lens-protocol/client";
 import { getCookie, setCookie } from "cookies-next";
 import { useEffect, useRef } from "react";
 
 const getCookieConfig = () => {
   const isLocalhost = window?.location?.hostname === "localhost";
+  const isDevelopment = process.env.NODE_ENV === "development";
+
+  if (isLocalhost || isDevelopment) {
+    return {
+      domain: undefined,
+      maxAge: 30 * 24 * 60 * 60,
+      secure: !isLocalhost,
+      sameSite: "lax" as const,
+      path: "/",
+    };
+  }
+
+  const hostname = window?.location?.hostname;
+  const isMainDomain = hostname?.includes("fountain.ink");
+
   return {
-    domain: isLocalhost ? undefined : ".fountain.ink",
+    domain: isMainDomain ? ".fountain.ink" : undefined,
     maxAge: 30 * 24 * 60 * 60,
     secure: true,
     sameSite: "lax" as const,
@@ -43,14 +57,7 @@ export const setupGuestAuth = async () => {
 
 export const setupUserAuth = async (refreshToken: string) => {
   try {
-    const isLocalhost = window?.location?.hostname === "localhost";
-    const cookieConfig = {
-      domain: isLocalhost ? undefined : ".fountain.ink",
-      maxAge: 30 * 24 * 60 * 60,
-      secure: true,
-      sameSite: "lax" as const,
-      path: "/",
-    };
+    const cookieConfig = getCookieConfig();
 
     const existingAppToken = getCookie("appToken");
 
