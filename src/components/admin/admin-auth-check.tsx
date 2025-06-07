@@ -7,11 +7,12 @@ interface AdminAuthCheckProps {
   children: React.ReactNode;
 }
 
-export default function AdminAuthCheck({ children }: AdminAuthCheckProps) {
+export default async function AdminAuthCheck({ children }: AdminAuthCheckProps) {
   const appToken = getAppToken();
   const claims = getTokenClaims(appToken);
+  const userIsAdmin = await isAdmin(claims?.sub);
 
-  if (!claims || !isAdmin(claims.sub)) {
+  if (!claims || !userIsAdmin) {
     redirect("/");
   }
 
