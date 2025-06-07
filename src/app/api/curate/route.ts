@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/db/server";
+import { createServiceClient } from "@/lib/db/service";
 import { NextRequest, NextResponse } from "next/server";
 
-// GET - Public API to fetch curated posts
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
@@ -12,7 +12,8 @@ export async function GET(req: NextRequest) {
     // Calculate offset
     const offset = (page - 1) * limit;
 
-    const supabase = await createClient();
+    // bypass RLS is fine for curated posts fetching
+    const supabase = await createServiceClient();
 
     if (slug) {
       // Fetch specific curated post
