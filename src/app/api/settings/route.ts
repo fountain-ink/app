@@ -1,7 +1,6 @@
 import { verifyAuth } from "@/lib/auth/verify-auth-request";
 import { Json } from "@/lib/db/database";
 import { createClient } from "@/lib/db/server";
-import { createServiceClient } from "@/lib/db/service";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(req: NextRequest) {

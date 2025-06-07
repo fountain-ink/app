@@ -1,4 +1,4 @@
-import { createServiceClient } from "@/lib/db/service";
+import { createClient } from "@/lib/db/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Missing slug parameter" }, { status: 400 });
     }
 
-    const db = await createServiceClient();
+    const db = await createClient();
 
     let { data: post, error } = await db.from("posts").select("*").eq("slug", slug).single();
 

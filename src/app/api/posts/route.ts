@@ -1,6 +1,5 @@
 import { verifyAuth } from "@/lib/auth/verify-auth-request";
 import { createClient } from "@/lib/db/server";
-import { createServiceClient } from "@/lib/db/service";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET - Fetch posts for a user
@@ -17,7 +16,7 @@ export async function GET(req: NextRequest) {
     const userAddress = claims.metadata.address;
     console.log(`[Posts Fetch] User authenticated: ${userAddress}`);
 
-    const db = await createServiceClient();
+    const db = await createClient();
 
     const { data: userPosts, error } = await db.from("posts").select("*").eq("author", userAddress);
 
@@ -62,7 +61,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing lens_slug" }, { status: 400 });
     }
 
-    const db = await createServiceClient();
+    const db = await createClient();
 
     if (post_id) {
       console.log(`[Posts Update] Attempting to update post with ID: ${post_id}`);

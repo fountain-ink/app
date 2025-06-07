@@ -9,9 +9,9 @@ export async function createServiceClient() {
         "x-application-name": "fountain",
       },
 
-      fetch: (url: any, options = {}) => {
+      fetch: ((url: any, options = {}) => {
         return fetch(url, { ...options, cache: "no-store" });
-      },
+      }) as typeof fetch,
     },
   });
 

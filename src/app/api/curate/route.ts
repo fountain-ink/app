@@ -1,4 +1,4 @@
-import { createServiceClient } from "@/lib/db/service";
+import { createClient } from "@/lib/db/server";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET - Public API to fetch curated posts
@@ -12,8 +12,7 @@ export async function GET(req: NextRequest) {
     // Calculate offset
     const offset = (page - 1) * limit;
 
-    // Use createServiceClient instead of createClient for proper authentication
-    const supabase = await createServiceClient();
+    const supabase = await createClient();
 
     if (slug) {
       // Fetch specific curated post

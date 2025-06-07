@@ -1,4 +1,4 @@
-import { createServiceClient } from "@/lib/db/service";
+import { createClient } from "@/lib/db/server";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET - Look up a post by slug and handle
@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const db = await createServiceClient();
+    const db = await createClient();
 
     // Find post with the given slug and handle
     const { data: posts, error } = await db.from("posts").select("lens_slug").eq("slug", slug).eq("handle", handle);

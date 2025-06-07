@@ -1,4 +1,4 @@
-import { createServiceClient } from "@/lib/db/service";
+import { createClient } from "@/lib/db/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No valid addresses provided in the request body" }, { status: 400 });
     }
 
-    const supabase = await createServiceClient();
+    const supabase = await createClient();
 
     const { data: bannedAddresses, error } = await supabase
       .from("banlist")

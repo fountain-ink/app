@@ -1,5 +1,4 @@
 import { createClient } from "@/lib/db/server";
-import { createServiceClient } from "@/lib/db/service";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET - Check if slug is available for a specific handle
@@ -25,7 +24,7 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    const db = await createServiceClient();
+    const db = await createClient();
 
     // Check if slug exists for this specific handle
     const { data: existingPosts, error } = await db.from("posts").select("id").eq("slug", slug).eq("handle", handle);

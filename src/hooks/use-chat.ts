@@ -7,7 +7,7 @@ export const useChat = () => {
   return useBaseChat({
     id: "editor",
     api: "/api/ai/command",
-    fetch: async (input, init) => {
+    fetch: (async (input, init) => {
       const res = await fetch(input, init);
 
       if (!res.ok) {
@@ -25,7 +25,7 @@ export const useChat = () => {
       }
 
       return res;
-    },
+    }) as typeof fetch,
   });
 };
 
