@@ -111,6 +111,39 @@ export type Database = {
           },
         ]
       }
+      chat_messages: {
+        Row: {
+          author: string
+          created_at: string
+          deleted_at: string | null
+          edited: boolean
+          id: number
+          message: string
+          metadata: Json | null
+          updated_at: string
+        }
+        Insert: {
+          author: string
+          created_at?: string
+          deleted_at?: string | null
+          edited?: boolean
+          id?: number
+          message: string
+          metadata?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          author?: string
+          created_at?: string
+          deleted_at?: string | null
+          edited?: boolean
+          id?: number
+          message?: string
+          metadata?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       curated: {
         Row: {
           added_by: string | null
@@ -290,7 +323,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
