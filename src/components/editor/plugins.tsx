@@ -293,7 +293,27 @@ export const plugins = [
       },
     },
   }),
-  BlockquotePlugin,
+  BlockquotePlugin.configure({
+    handlers: {
+      onKeyDown: ({ editor, event }) => {
+        if (event.key === "Backspace" || event.key === "Delete") {
+          if (!editor.selection) {
+            event.preventDefault();
+            return true;
+          }
+          
+          const anchor = editor.selection.anchor?.path;
+          const focus = editor.selection.focus?.path;
+          
+          if (!anchor || !focus) {
+            event.preventDefault();
+            return true;
+          }
+        }
+        return false;
+      },
+    },
+  }),
   CodeBlockPlugin.configure({ options: { lowlight } }),
   CodePlugin,
   HorizontalRulePlugin,
@@ -478,7 +498,9 @@ export const plugins = [
       onKeyDown: ({ event, editor }: { event: React.KeyboardEvent; editor: PlateEditor }) => {
         if (event.key !== "Backspace") return;
 
-        const anchor = editor.selection?.anchor?.path;
+        if (!editor.selection || !editor.selection.anchor || !editor.selection.focus) return;
+
+        const anchor = editor.selection.anchor.path;
         if (!anchor) return;
 
         const currentNode = editor.api.parent(anchor);
@@ -603,12 +625,18 @@ export const plugins = [
         {
           ...resetBlockTypesCommonRule,
           hotkey: "Enter",
-          predicate: (editor) => editor.api.isEmpty(editor.selection, { block: true }),
+          predicate: (editor) => {
+            if (!editor.selection) return false;
+            return editor.api.isEmpty(editor.selection, { block: true });
+          },
         },
         {
           ...resetBlockTypesCommonRule,
           hotkey: "Backspace",
-          predicate: (editor) => editor.api.isEmpty(editor.selection, { block: true }),
+          predicate: (editor) => {
+            if (!editor.selection) return false;
+            return editor.api.isEmpty(editor.selection, { block: true });
+          },
         },
         // {
         //   ...resetBlockTypesCommonRule,
