@@ -31,6 +31,7 @@ export const Header = ({ session }: { session: MeResult | null }) => {
   const postId = isPostPage && pathSegments.length >= 3 ? pathSegments[2] : undefined;
   const documentId = pathname.split("/").filter(Boolean).pop() ?? "";
   const yjsState = useYjsState((state) => state.getState(documentId) ?? { status: "disconnected" as ConnectionStatus });
+  const isCollaborative = yjsState.isCollaborative ?? false;
   const isAuthenticated = session !== null;
   const logoLink = isAuthenticated ? "/featured" : "/";
   const isMobile = useIsMobile();
@@ -61,7 +62,7 @@ export const Header = ({ session }: { session: MeResult | null }) => {
         <Link prefetch href={logoLink} className="w-10 h-10 flex items-center justify-center pointer-events-auto">
           <FountainLogo />
         </Link>
-        {isWritePage && <ConnectionBadge {...yjsState} />}
+        {isWritePage && isCollaborative && <ConnectionBadge {...yjsState} />}
         {isSettingsPage && <SettingsBadge />}
       </div>
       <div className="flex gap-4 pointer-events-auto">
@@ -69,7 +70,7 @@ export const Header = ({ session }: { session: MeResult | null }) => {
         {isBlogPage && blogData && <BlogEmailSubscribe blogData={blogData} variant="default" />}
         {isWritePage && <PublishMenu documentId={documentId} />}
         {isWritePage && (
-          <EditorOptionsDropdown documentId={documentId} collaborative={yjsState.status !== "disconnected"} />
+          <EditorOptionsDropdown documentId={documentId} collaborative={isCollaborative} />
         )}
         {!isWritePage && !isMobile && <DraftCreateButton />}
         <UserMenu session={session} showDropdown={true} />

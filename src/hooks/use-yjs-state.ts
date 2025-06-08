@@ -7,6 +7,7 @@ interface DocumentState {
   [path: string]: {
     status: ConnectionStatus;
     error?: string;
+    isCollaborative?: boolean;
   };
 }
 
@@ -15,9 +16,10 @@ interface YjsState {
   activeDocument: string | null;
   setStatus: (path: string, status: ConnectionStatus) => void;
   setError: (path: string, error: string) => void;
-  getState: (path: string) => { status: ConnectionStatus; error?: string } | null;
+  getState: (path: string) => { status: ConnectionStatus; error?: string; isCollaborative?: boolean } | null;
   removeDocument: (path: string) => void;
   setActiveDocument: (path: string | null) => void;
+  setCollaborative: (path: string, isCollaborative: boolean) => void;
 }
 
 export const useYjsState = create<YjsState>()(
@@ -54,6 +56,17 @@ export const useYjsState = create<YjsState>()(
           return { documents: remainingDocuments };
         }),
       setActiveDocument: (path: string | null) => set({ activeDocument: path }),
+      setCollaborative: (path: string, isCollaborative: boolean) =>
+        set((state) => ({
+          documents: {
+            ...state.documents,
+            [path]: {
+              ...state.documents[path],
+              isCollaborative,
+              status: state.documents[path]?.status || "disconnected",
+            },
+          },
+        })),
     }),
     {
       name: "yjs-state",

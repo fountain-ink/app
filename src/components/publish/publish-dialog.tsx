@@ -13,7 +13,6 @@ import {
   ShoppingBag as ShoppingBagIcon,
   AlertCircleIcon,
   CircleDollarSignIcon,
-  RefreshCw,
   SendIcon,
   RssIcon,
 } from "lucide-react";
@@ -312,7 +311,10 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} className="transition-all duration-300">
+      <Button 
+        onClick={() => setOpen(true)} 
+        className="transition-all duration-300"
+      >
         Publish
       </Button>
 
@@ -390,7 +392,10 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
               </ScrollArea>
             </Tabs>
             <div className="flex items-center justify-start gap-2">
-              <Button onClick={handlePublishClick} disabled={!isValid || isPublishing}>
+              <Button 
+                onClick={handlePublishClick} 
+                disabled={!isValid || isPublishing}
+              >
                 {isPublishing ? (isEditMode ? "Updating..." : "Publishing...") : isEditMode ? "Update Post" : "Publish"}
               </Button>
 

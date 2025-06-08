@@ -9,6 +9,7 @@ import { useEditorPlugin, useEditorState } from "@udecode/plate/react";
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { getStaticEditor, staticComponents } from "../static";
+import { useYjsState } from "@/hooks/use-yjs-state";
 
 export function AutoSave({ documentId, collaborative = false }: { documentId: string; collaborative?: boolean }) {
   const editor = useEditorState();
@@ -17,6 +18,10 @@ export function AutoSave({ documentId, collaborative = false }: { documentId: st
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const { saveDocument, getDocument } = useDocumentStorage();
+  
+  // Get the Yjs state to check sync status
+  const yjsState = useYjsState((state) => state.getState(documentId));
+  const isSynced = yjsState?.status === "synced" || yjsState?.status === "connected";
 
   const saveContent = useCallback(
     async (content: Value) => {
@@ -58,7 +63,8 @@ export function AutoSave({ documentId, collaborative = false }: { documentId: st
         // FIXME: possibly an issue with the type inference here
         saveDocument(documentId, draft as Draft);
 
-        if (!collaborative) {
+        // Save to server if not collaborative OR if collaborative and synced
+        if (!collaborative || (collaborative && isSynced)) {
           await fetch(`/api/drafts?id=${documentId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -75,7 +81,7 @@ export function AutoSave({ documentId, collaborative = false }: { documentId: st
         setIsSaving(false);
       }
     },
-    [documentId, saveDocument, getDocument, collaborative],
+    [documentId, saveDocument, getDocument, collaborative, isSynced, editor],
   );
 
   const debouncedSave = useDebouncedCallback(saveContent, 500);
@@ -84,6 +90,13 @@ export function AutoSave({ documentId, collaborative = false }: { documentId: st
     if (!editor) return;
     debouncedSave(editor.children);
   }, [editor, editor?.children, debouncedSave]);
+
+  // Save when collaborative document becomes synced
+  useEffect(() => {
+    if (collaborative && isSynced && editor) {
+      saveContent(editor.children);
+    }
+  }, [collaborative, isSynced, editor, saveContent]);
 
   return null;
   // return (

@@ -17,6 +17,7 @@ import { getEditorPlugins } from "./plugins";
 import { useMounted } from "@/hooks/use-mounted";
 import { YjsPlugin } from "@udecode/plate-yjs/react";
 import { trimEmptyNodes } from "@/lib/plate/trim-empty-nodes";
+import { useYjsState } from "@/hooks/use-yjs-state";
 
 export default function PlateEditor(
   props: PropsWithChildren & {
@@ -39,6 +40,7 @@ export default function PlateEditor(
   const imported = searchParams.has("import");
   const parsedValue = JSON.parse(props.value as string);
   const value = props.readOnly ? trimEmptyNodes(parsedValue) : parsedValue;
+  const setCollaborative = useYjsState((state) => state.setCollaborative);
 
   const editor = createPlateEditor({
     plugins: [...getEditorPlugins(documentId, props.appToken, isReadOnly, isCollaborative)],
@@ -51,6 +53,9 @@ export default function PlateEditor(
   });
 
   useEffect(() => {
+    // Set the collaborative state for this document
+    setCollaborative(documentId, isCollaborative);
+    
     if (!isMounted || props.readOnly || !isCollaborative) return;
 
     editor.getApi(YjsPlugin).yjs.init({
@@ -62,7 +67,7 @@ export default function PlateEditor(
     return () => {
       editor.getApi(YjsPlugin).yjs.destroy();
     };
-  }, [isMounted, editor, isCollaborative]);
+  }, [isMounted, editor, isCollaborative, documentId, setCollaborative]);
 
   if (!documentId) {
     return null;
