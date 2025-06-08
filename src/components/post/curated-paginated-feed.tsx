@@ -1,26 +1,30 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { AnyPost } from "@lens-protocol/client";
+import type { AnyPost, Post } from "@lens-protocol/client";
 import { motion } from "motion/react";
 import { GraphicHand2 } from "../icons/custom-icons";
 import { PostView } from "./post-view";
+import { PostVerticalView } from "./post-vertical-view";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchPosts } from "@lens-protocol/client/actions";
 import { env } from "@/env";
 import PostSkeleton from "./post-skeleton";
+import { cn } from "@/lib/utils";
 
 export const CuratedPaginatedFeed = ({
   initialPostIds = [],
   initialPosts = [],
   hasMore = false,
   page = 1,
+  viewMode = "single",
 }: {
   initialPostIds?: string[];
   initialPosts?: AnyPost[];
   hasMore?: boolean;
   page?: number;
+  viewMode?: "single" | "grid";
 }) => {
   const [allPosts, setAllPosts] = useState<AnyPost[]>(initialPosts);
   const [loadedPostIds, setLoadedPostIds] = useState<Set<string>>(new Set());
@@ -154,17 +158,31 @@ export const CuratedPaginatedFeed = ({
         return null;
       }
 
+      const commonOptions = {
+        showContent: false,
+        showAuthor: true,
+        showTitle: true,
+        showSubtitle: true,
+        showBlog: true,
+        showDate: true,
+        showPreview: true,
+      };
+
+      if (viewMode === "grid") {
+        return (
+          <div key={post.id} className="break-inside-avoid mb-6">
+            <PostVerticalView
+              options={commonOptions}
+              authors={[post.author.address]}
+              post={post as Post}
+            />
+          </div>
+        );
+      }
+
       return (
         <PostView
-          options={{
-            showContent: false,
-            showAuthor: true,
-            showTitle: true,
-            showSubtitle: true,
-            showBlog: true,
-            showDate: true,
-            showPreview: true,
-          }}
+          options={commonOptions}
           key={post.id}
           authors={[post.author.address]}
           post={post}
@@ -195,22 +213,47 @@ export const CuratedPaginatedFeed = ({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="flex flex-col gap-4 items-center w-full"
+      className={cn(
+        "w-full",
+        viewMode === "grid" 
+          ? "columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 sm:gap-6" 
+          : "flex flex-col gap-4 items-center"
+      )}
     >
       {postViews}
 
-      {hasMorePosts && (
-        <div ref={loadMoreRef} className="w-full flex flex-col items-center gap-4">
-          {loading && (
-            <>
-              <PostSkeleton />
-              <PostSkeleton />
-              <PostSkeleton />
-              <PostSkeleton />
-              <PostSkeleton />
-            </>
-          )}
-        </div>
+      {/* Show loading skeletons for infinite scroll */}
+      {loading && viewMode === "grid" && (
+        <>
+          {[...Array(6)].map((_, i) => (
+            <div key={`skeleton-${i}`} className="break-inside-avoid mb-6">
+              <div className="animate-pulse">
+                <div className="aspect-[4/3] bg-muted rounded-xl mb-3" />
+                <div className="space-y-3">
+                  <div className="h-3 bg-muted rounded w-1/2" />
+                  <div className="h-6 bg-muted rounded w-full" />
+                  <div className="h-4 bg-muted rounded" />
+                  <div className="h-4 bg-muted rounded w-5/6" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </>
+      )}
+
+      {loading && viewMode === "single" && (
+        <>
+          <PostSkeleton />
+          <PostSkeleton />
+          <PostSkeleton />
+          <PostSkeleton />
+          <PostSkeleton />
+        </>
+      )}
+
+      {/* Load more trigger */}
+      {hasMorePosts && !loading && (
+        <div ref={loadMoreRef} className="h-10 w-full" />
       )}
     </motion.div>
   );

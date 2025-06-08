@@ -2,7 +2,7 @@ import { getLensClient } from "@/lib/lens/client";
 import { fetchPosts } from "@lens-protocol/client/actions";
 import { MainContentFocus, AnyPost } from "@lens-protocol/client";
 import { env } from "@/env";
-import { LatestArticleFeed } from "@/components/post/post-paginated-feed";
+import { PostFeedWithToggle } from "@/components/post/post-feed-with-toggle";
 import { FeedNavigation } from "@/components/navigation/feed-navigation";
 
 export async function generateMetadata() {
@@ -35,11 +35,14 @@ const home = async () => {
   const mutablePosts: AnyPost[] = postsResult?.items ? [...postsResult.items] : [];
 
   return (
-    <div className="flex flex-col mt-5 items-center justify-center w-full max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
-      <FeedNavigation />
+    <div className="flex flex-col mt-5 items-center justify-center w-full">
+      <div className="w-full max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
+        <FeedNavigation />
+      </div>
 
       <div className="flex flex-col items-center w-full">
-        <LatestArticleFeed
+        <PostFeedWithToggle
+          feedType="latest"
           initialPosts={mutablePosts}
           initialPaginationInfo={postsResult?.pageInfo ?? {}}
           isUserProfile={false}

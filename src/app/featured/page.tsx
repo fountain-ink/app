@@ -1,6 +1,6 @@
 import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { FeedNavigation } from "@/components/navigation/feed-navigation";
-import { CuratedPaginatedFeed } from "@/components/post/curated-paginated-feed";
+import { PostFeedWithToggle } from "@/components/post/post-feed-with-toggle";
 import { getBaseUrl } from "@/lib/get-base-url";
 
 export async function generateMetadata() {
@@ -29,11 +29,18 @@ const CuratedPage = async () => {
   const hasMore = data?.hasMore || false;
 
   return (
-    <div className="flex flex-col mt-5 items-center justify-center w-full max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
-      <FeedNavigation />
+    <div className="flex flex-col mt-5 items-center justify-center w-full">
+      <div className="w-full max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
+        <FeedNavigation />
+      </div>
 
       <div className="flex flex-col my-4 items-center w-full">
-        <CuratedPaginatedFeed initialPostIds={initialPostIds} hasMore={hasMore} page={1} />
+        <PostFeedWithToggle 
+          feedType="curated"
+          initialPostIds={initialPostIds} 
+          hasMore={hasMore} 
+          page={1} 
+        />
       </div>
     </div>
   );

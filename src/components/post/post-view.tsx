@@ -14,7 +14,7 @@ import { resolveUrl } from "@/lib/utils/resolve-url";
 import { useEffect, MouseEvent } from "react";
 import { extractSubtitle } from "@/lib/extract-subtitle";
 
-interface PostViewOptions {
+export interface PostViewOptions {
   showDate?: boolean;
   showAuthor?: boolean;
   showTitle?: boolean;
