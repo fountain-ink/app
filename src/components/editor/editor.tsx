@@ -46,6 +46,7 @@ export default function PlateEditor(
       components: getRichElements(),
     },
     skipInitialization: isCollaborative,
+    shouldNormalizeEditor: !isCollaborative && !isReadOnly,
     value: isCollaborative ? undefined : value,
   });
 

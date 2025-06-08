@@ -75,6 +75,7 @@ import { Heading, Text } from "mdast";
 import { uploadFile } from "@/lib/upload/upload-file";
 import { getRandomUid } from "@/lib/get-random-uid";
 import { IframePlugin } from "./plugins/iframe-plugin";
+import { BlockquoteNormalizePlugin } from "./plugins/blockquote-normalize-plugin";
 
 const lowlight = createLowlight(all);
 
@@ -197,6 +198,7 @@ export const getEditorPlugins = (path: string, appToken?: string, isReadOnly?: b
 
 export const plugins = [
   NormalizePlugin,
+  BlockquoteNormalizePlugin,
   TrailingBlockPlugin,
   LeadingBlockPlugin.configure({
     options: {
@@ -293,27 +295,7 @@ export const plugins = [
       },
     },
   }),
-  BlockquotePlugin.configure({
-    handlers: {
-      onKeyDown: ({ editor, event }) => {
-        if (event.key === "Backspace" || event.key === "Delete") {
-          if (!editor.selection) {
-            event.preventDefault();
-            return true;
-          }
-          
-          const anchor = editor.selection.anchor?.path;
-          const focus = editor.selection.focus?.path;
-          
-          if (!anchor || !focus) {
-            event.preventDefault();
-            return true;
-          }
-        }
-        return false;
-      },
-    },
-  }),
+  BlockquotePlugin,
   CodeBlockPlugin.configure({ options: { lowlight } }),
   CodePlugin,
   HorizontalRulePlugin,

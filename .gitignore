@@ -25,6 +25,7 @@ next-env.d.ts
 .cursor/
 .claude
 .backups/
+.mcp.json
 
 # debug
 npm-debug.log*
