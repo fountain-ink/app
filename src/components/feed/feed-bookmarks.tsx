@@ -1,12 +1,10 @@
 "use client"
 
 import { useEffect, useCallback } from "react"
-import { PostView } from "@/components/post/post-view"
-import { PostVerticalView } from "@/components/post/post-vertical-view"
 import { Button } from "@/components/ui/button"
-import { Feed } from "./feed"
+import { Feed, renderArticlePost, isValidArticlePost } from "./feed"
 import { useBookmarks } from "@/hooks/use-bookmarks"
-import type { Post } from "@lens-protocol/client"
+import type { AnyPost } from "@lens-protocol/client"
 import { useFeedContext } from "@/contexts/feed-context"
 
 export function BookmarksFeed() {
@@ -17,45 +15,14 @@ export function BookmarksFeed() {
     fetchBookmarks()
   }, [])
 
-  const renderBookmark = useCallback((post: Post) => {
-    if (post.__typename !== "Post") return null
-    if (post.metadata?.__typename !== "ArticleMetadata") return null
-    
-    const commonOptions = {
-      showAuthor: false,
-      showTitle: true,
-      showSubtitle: true,
-      showDate: true,
-      showPreview: true,
-      showContent: false,
-    }
-    
-    if (viewMode === "grid") {
-      return (
-        <div className="break-inside-avoid mb-4">
-          <PostVerticalView
-            post={post}
-            authors={[post.author.address]}
-            options={commonOptions}
-          />
-        </div>
-      )
-    }
-    
-    return (
-      <PostView
-        post={post}
-        authors={[post.author.address]}
-        options={commonOptions}
-      />
-    )
+  const renderBookmark = useCallback((post: AnyPost) => {
+    return renderArticlePost(post, viewMode, { 
+      showAuthor: false 
+    })
   }, [viewMode])
 
-  // Filter out invalid posts
-  const validBookmarks = bookmarks.filter(post => 
-    post.__typename === "Post" && 
-    post.metadata?.__typename === "ArticleMetadata"
-  )
+  // Filter out invalid posts - bookmarks should have contentJson
+  const validBookmarks = bookmarks.filter(isValidArticlePost)
 
   return (
     <>
@@ -65,7 +32,6 @@ export function BookmarksFeed() {
         isLoading={loading && bookmarks.length === 0}
         hasMore={false} // We'll handle load more with a button
         emptyTitle="No bookmarks yet"
-        className={viewMode === "grid" ? "columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 sm:gap-6" : ""}
         emptySubtitle="Start exploring and save your favorite posts"
       />
       

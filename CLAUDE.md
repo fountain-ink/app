@@ -113,6 +113,5 @@ Required environment variables are defined in `/src/lib/environment.ts`. Key var
 ## Development Workflow Reminders
 - Whenever we make a change run `bunx tsc --noEmit` and fix errors until there's none left. do not run `bun run dev` or `bun run build`. assume dev server is always runinng.
 
-
 ## Code Style
-Prioritize having fewer files. Only use individual exports in files, do not create index files.
+Prioritize having fewer files. Only create new files when absolutely necessary. Only use individual exports in files, do not create index files.

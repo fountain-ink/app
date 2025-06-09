@@ -7,6 +7,87 @@ import { PostSkeleton } from "@/components/post/post-skeleton"
 import { GraphicHand2 } from "@/components/icons/custom-icons"
 import { cn } from "@/lib/utils"
 import { useFeedContext } from "@/contexts/feed-context"
+import type { AnyPost, Post } from "@lens-protocol/client"
+import { PostView } from "@/components/post/post-view"
+import { PostVerticalView } from "@/components/post/post-vertical-view"
+import { DraftCreateButton } from "@/components/draft/draft-create-button"
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+
+export const GRID_LAYOUT_CLASSES = "columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 sm:gap-6"
+
+export function isValidArticlePost(post: AnyPost): boolean {
+  return (
+    post.__typename === "Post" &&
+    post.metadata.__typename === "ArticleMetadata" &&
+    post.metadata.attributes.some(attr => attr.key === "contentJson")
+  )
+}
+
+export function UserProfileEmptyState() {
+  return (
+    <Card className="m-0 md:m-10 bg-transparent group border-0 flex flex-col gap-4 items-center justify-center shadow-none drop-shadow-none">
+      <CardHeader>
+        <GraphicHand2 />
+      </CardHeader>
+      <CardContent>
+        <span className="font-[family-name:var(--title-font)] text-lg lg:text-xl text-center font-[letter-spacing:var(--title-letter-spacing)] font-[color:var(--title-color)] overflow-hidden line-clamp-2">
+          Nothing here yet, but the world awaits your words.
+        </span>
+      </CardContent>
+      <CardFooter>
+        <DraftCreateButton text="Start writing" />
+      </CardFooter>
+    </Card>
+  )
+}
+
+export interface PostRenderOptions {
+  showContent?: boolean
+  showAuthor?: boolean
+  showBlog?: boolean
+  showTitle?: boolean
+  showSubtitle?: boolean
+  showDate?: boolean
+  showPreview?: boolean
+}
+
+export function renderArticlePost(
+  post: AnyPost, 
+  viewMode: "single" | "grid", 
+  options: PostRenderOptions = {}
+): ReactNode {
+  if (!isValidArticlePost(post)) return null
+  
+  const defaultOptions = {
+    showContent: false,
+    showBlog: true,
+    showTitle: true,
+    showSubtitle: true,
+    showDate: true,
+    showPreview: true,
+    ...options
+  }
+
+  if (viewMode === "grid") {
+    return (
+      <div className="break-inside-avoid mb-4">
+        <PostVerticalView
+          options={defaultOptions}
+          authors={[post.author.address]}
+          post={post as Post}
+        />
+      </div>
+    )
+  }
+
+  return (
+    <PostView
+      options={defaultOptions}
+      authors={[post.author.address]}
+      post={post as Post}
+    />
+  )
+}
 
 export interface FeedProps {
   items: any[]
@@ -16,7 +97,6 @@ export interface FeedProps {
   onLoadMore?: () => void
   emptyTitle?: string
   emptySubtitle?: string
-  className?: string
   skeletonCount?: number
 }
 
@@ -28,7 +108,6 @@ export function Feed({
   onLoadMore,
   emptyTitle = "No posts available",
   emptySubtitle = "Check back later or explore other content",
-  className,
   skeletonCount = 3,
 }: FeedProps) {
   const { viewMode } = useFeedContext()
@@ -60,7 +139,7 @@ export function Feed({
   }
 
   return (
-    <div className={cn("w-full", viewMode === "grid" ? className : "")}>
+    <div className={cn("w-full", viewMode === "grid" ? GRID_LAYOUT_CLASSES : "")}>
       <div
         className={cn(
           "w-full",

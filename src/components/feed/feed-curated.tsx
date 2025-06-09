@@ -1,12 +1,10 @@
 "use client"
 
 import { useCallback, useState, useEffect } from "react"
-import type { AnyPost, Post, PostId } from "@lens-protocol/client"
+import type { AnyPost, PostId } from "@lens-protocol/client"
 import { fetchPosts } from "@lens-protocol/client/actions"
 import { getLensClient } from "@/lib/lens/client"
-import { PostView } from "@/components/post/post-view"
-import { PostVerticalView } from "@/components/post/post-vertical-view"
-import { Feed } from "./feed"
+import { Feed, renderArticlePost, isValidArticlePost } from "./feed"
 import { useInfiniteFeed } from "@/hooks/use-infinite-feed"
 import { useFeedContext } from "@/contexts/feed-context"
 
@@ -108,47 +106,14 @@ export function CuratedFeed({
   })
 
   const renderPost = useCallback((post: AnyPost) => {
-    if (post.__typename !== "Post") return null
-    if (post.metadata.__typename !== "ArticleMetadata") return null
-    if (!post.metadata.attributes.some(attr => attr.key === "contentJson")) return null
-
-    const commonOptions = {
-      showContent: false,
+    return renderArticlePost(post, viewMode, { 
       showAuthor: true,
-      showTitle: true,
-      showSubtitle: true,
-      showBlog: true,
-      showDate: true,
-      showPreview: true,
-    }
-
-    if (viewMode === "grid") {
-      return (
-        <div className="break-inside-avoid mb-4">
-          <PostVerticalView
-            options={commonOptions}
-            authors={[post.author.address]}
-            post={post as Post}
-          />
-        </div>
-      )
-    }
-
-    return (
-      <PostView
-        options={commonOptions}
-        authors={[post.author.address]}
-        post={post}
-      />
-    )
+      showBlog: true 
+    })
   }, [viewMode])
 
   // Filter out invalid posts
-  const validPosts = items.filter(post => {
-    if (post.__typename !== "Post") return false
-    if (post.metadata.__typename !== "ArticleMetadata") return false
-    return post.metadata.attributes.some(attr => attr.key === "contentJson")
-  })
+  const validPosts = items.filter(isValidArticlePost)
 
   return (
     <Feed
@@ -159,7 +124,6 @@ export function CuratedFeed({
       onLoadMore={loadMore}
       emptyTitle="No curated posts available yet"
       emptySubtitle="Check back later for featured content"
-      className={viewMode === "grid" ? "columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 sm:gap-6" : ""}
     />
   )
 }
