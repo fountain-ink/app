@@ -161,7 +161,7 @@ export const LatestArticleFeed = ({
 
       if (viewMode === "grid") {
         return (
-          <div key={post.id} className="break-inside-avoid mb-6">
+          <div key={post.id} className="break-inside-avoid mb-4">
             <PostVerticalView
               options={commonOptions}
               authors={[post.author.address]}
@@ -183,38 +183,21 @@ export const LatestArticleFeed = ({
     .filter(Boolean);
 
   if (initialLoading) {
+    if (viewMode === "grid") {
+      return (
+        <div className="w-full flex items-center justify-center py-20">
+          <div className="animate-pulse text-muted-foreground">Loading...</div>
+        </div>
+      );
+    }
+    
     return (
-      <div className={cn(
-        "w-full py-4",
-        viewMode === "grid" 
-          ? "columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 sm:gap-6" 
-          : "flex flex-col items-center gap-4"
-      )}>
-        {viewMode === "grid" ? (
-          <>
-            {[...Array(8)].map((_, i) => (
-              <div key={`initial-skeleton-${i}`} className="break-inside-avoid mb-6">
-                <div className="animate-pulse">
-                  <div className="aspect-[4/3] bg-muted rounded-xl mb-3" />
-                  <div className="space-y-3">
-                    <div className="h-3 bg-muted rounded w-1/2" />
-                    <div className="h-6 bg-muted rounded w-full" />
-                    <div className="h-4 bg-muted rounded" />
-                    <div className="h-4 bg-muted rounded w-5/6" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </>
-        ) : (
-          <>
-            <PostSkeleton />
-            <PostSkeleton />
-            <PostSkeleton />
-            <PostSkeleton />
-            <PostSkeleton />
-          </>
-        )}
+      <div className="w-full py-4 flex flex-col items-center gap-4">
+        <PostSkeleton />
+        <PostSkeleton />
+        <PostSkeleton />
+        <PostSkeleton />
+        <PostSkeleton />
       </div>
     );
   }
@@ -250,25 +233,7 @@ export const LatestArticleFeed = ({
     >
       {postViews}
 
-      {/* Show loading skeletons for infinite scroll */}
-      {loading && viewMode === "grid" && (
-        <>
-          {[...Array(6)].map((_, i) => (
-            <div key={`skeleton-${i}`} className="break-inside-avoid mb-6">
-              <div className="animate-pulse">
-                <div className="aspect-[4/3] bg-muted rounded-xl mb-3" />
-                <div className="space-y-3">
-                  <div className="h-3 bg-muted rounded w-1/2" />
-                  <div className="h-6 bg-muted rounded w-full" />
-                  <div className="h-4 bg-muted rounded" />
-                  <div className="h-4 bg-muted rounded w-5/6" />
-                </div>
-              </div>
-            </div>
-          ))}
-        </>
-      )}
-
+      {/* Show loading skeletons for single column view only */}
       {loading && viewMode === "single" && (
         <>
           <PostSkeleton />

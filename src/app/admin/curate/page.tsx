@@ -4,7 +4,7 @@ import { getLensClient } from "@/lib/lens/client";
 import { fetchPosts } from "@lens-protocol/client/actions";
 import { MainContentFocus, AnyPost } from "@lens-protocol/client";
 import { env } from "@/env";
-import { CuratedPaginatedFeed } from "@/components/admin/admin-feed";
+import { CuratedFeed } from "@/components/feed/feed-curated";
 
 export const metadata = {
   title: "Curate Posts | Admin Portal",
@@ -35,7 +35,7 @@ const CuratePage = async () => {
       <Separator className="w-full bg-border mb-8" />
 
       <div className="flex flex-col items-center">
-        <CuratedPaginatedFeed initialPosts={mutablePosts} initialPaginationInfo={postsResult?.pageInfo ?? {}} />
+        <CuratedFeed initialPosts={mutablePosts} />
       </div>
     </div>
   );

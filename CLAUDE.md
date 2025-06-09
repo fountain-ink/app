@@ -7,17 +7,11 @@ Fountain is a self-hostable web3 publishing platform - an alternative to Medium,
 
 ## Development Commands
 ```bash
-# Start development server
-bun run dev
-
 # Run collaboration server (required for editor real-time sync)
 bun run collab
 
 # Run notifications server
 bun run notifications
-
-# Build for production
-bun run build
 
 # Start production server
 bun run start
@@ -114,3 +108,11 @@ Required environment variables are defined in `/src/lib/environment.ts`. Key var
 - Auth: `APP_SECRET`
 - Web3: Various blockchain and storage provider keys
 - Email: Listmonk configuration
+```
+
+## Development Workflow Reminders
+- Whenever we make a change run `bunx tsc --noEmit` and fix errors until there's none left. do not run `bun run dev` or `bun run build`. assume dev server is always runinng.
+
+
+## Code Style
+Prioritize having fewer files. Only use individual exports in files, do not create index files.

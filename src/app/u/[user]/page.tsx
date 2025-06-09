@@ -1,4 +1,4 @@
-import { ArticleFeed } from "@/components/post/post-article-feed";
+import { ArticleFeed } from "@/components/feed/feed-articles";
 import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { evmAddress, MainContentFocus } from "@lens-protocol/client";
@@ -24,7 +24,11 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
 
   const isUserProfile = address === account?.address;
 
-  return <ArticleFeed posts={[...posts.value.items]} isUserProfile={isUserProfile} />;
+  return (
+    <div className="flex flex-col my-4 gap-4">
+      <ArticleFeed posts={[...posts.value.items]} isUserProfile={isUserProfile} />
+    </div>
+  );
 };
 
 export default UserPage;

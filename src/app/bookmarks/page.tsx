@@ -1,7 +1,7 @@
-import { BookmarkList } from "@/components/bookmark/bookmark-list";
+import { BookmarksFeed } from "@/components/feed/feed-bookmarks";
+import { FeedLayout } from "@/components/navigation/feed-layout";
 import ErrorPage from "@/components/misc/error-page";
 import { getLensClient } from "@/lib/lens/client";
-import { FeedNavigation } from "@/components/navigation/feed-navigation";
 
 export const maxDuration = 60;
 
@@ -13,13 +13,9 @@ const BookmarksPage = async () => {
   }
 
   return (
-    <div className="flex flex-col mt-5 items-center justify-center w-full max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
-      <FeedNavigation />
-
-      <div className="flex flex-col my-4 items-center w-full">
-        <BookmarkList />
-      </div>
-    </div>
+    <FeedLayout>
+      <BookmarksFeed />
+    </FeedLayout>
   );
 };
 

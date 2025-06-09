@@ -13,6 +13,7 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider as DarkModeProvider } from "next-themes";
 import { PostActionsProvider } from "@/contexts/post-actions-context";
+import { FeedProvider } from "@/contexts/feed-context";
 import { GlobalModals } from "@/components/misc/global-modals";
 
 export const metadata = {
@@ -42,16 +43,18 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
       >
         <Web3Providers>
           <PostActionsProvider>
-            <DarkModeProvider attribute="class" defaultTheme="system" enableSystem={true} disableTransitionOnChange>
-              <ThemeProvider>
-                <AuthManager credentials={credentials} />
-                <Toaster position="top-center" offset={16} />
-                <Header session={session} />
-                <GlobalModals />
-                <main className="flex-1">{children}</main>
-                <GlobalFooter />
-              </ThemeProvider>
-            </DarkModeProvider>
+            <FeedProvider>
+              <DarkModeProvider attribute="class" defaultTheme="system" enableSystem={true} disableTransitionOnChange>
+                <ThemeProvider>
+                  <AuthManager credentials={credentials} />
+                  <Toaster position="top-center" offset={16} />
+                  <Header session={session} />
+                  <GlobalModals />
+                  <main className="flex-1">{children}</main>
+                  <GlobalFooter />
+                </ThemeProvider>
+              </DarkModeProvider>
+            </FeedProvider>
           </PostActionsProvider>
         </Web3Providers>
       </body>
