@@ -8,7 +8,7 @@ export const FeedNavigation = () => {
   const isLoggedIn = !!user && !loading;
 
   return (
-    <div className="p-4 pb-0 font-[family-name:var(--title-font)] border-b border-border w-full">
+    <div className="p-4 py-0 font-[family-name:var(--title-font)] border-b border-border w-full">
       <SlideNav
         items={[
           {
