@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useState, useEffect } from "react"
+import { useCallback, useState, useEffect, useMemo } from "react"
 import type { AnyPost, PaginatedResultInfo } from "@lens-protocol/client"
 import { MainContentFocus } from "@lens-protocol/client"
 import { fetchPosts } from "@lens-protocol/client/actions"
@@ -67,12 +67,12 @@ export function LatestFeed({
     fetchMore,
   })
 
-  const renderPost = useCallback((post: AnyPost) => {
-    return renderArticlePost(post, viewMode, { showAuthor: true })
+  const renderPost = useCallback((post: AnyPost, index: number) => {
+    return renderArticlePost(post, viewMode, { showAuthor: true }, index)
   }, [viewMode])
 
-  // Filter out invalid posts
-  const validPosts = items.filter(isValidArticlePost)
+  // Filter out invalid posts - memoize to prevent unnecessary re-renders
+  const validPosts = useMemo(() => items.filter(isValidArticlePost), [items])
 
   // Custom empty state for user profiles
   if (validPosts.length === 0 && !isLoading && !isInitializing && isUserProfile) {

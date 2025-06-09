@@ -161,6 +161,7 @@
     "lodash": "^4.17.21",
     "lowlight": "^3.3.0",
     "markdown-it": "^14.1.0",
+    "masonic": "^4.1.0",
     "motion": "^12.4.3",
     "neverthrow": "^8.2.0",
     "next": "^14.2.22",

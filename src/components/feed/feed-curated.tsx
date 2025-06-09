@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useState, useEffect } from "react"
+import { useCallback, useState, useEffect, useMemo } from "react"
 import type { AnyPost, PostId } from "@lens-protocol/client"
 import { fetchPosts } from "@lens-protocol/client/actions"
 import { getLensClient } from "@/lib/lens/client"
@@ -105,15 +105,15 @@ export function CuratedFeed({
     pageSize: 10,
   })
 
-  const renderPost = useCallback((post: AnyPost) => {
+  const renderPost = useCallback((post: AnyPost, index: number) => {
     return renderArticlePost(post, viewMode, { 
       showAuthor: true,
       showBlog: true 
-    })
+    }, index)
   }, [viewMode])
 
-  // Filter out invalid posts
-  const validPosts = items.filter(isValidArticlePost)
+  // Filter out invalid posts - memoize to prevent unnecessary re-renders
+  const validPosts = useMemo(() => items.filter(isValidArticlePost), [items])
 
   return (
     <Feed

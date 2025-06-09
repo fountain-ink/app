@@ -75,10 +75,16 @@ export function useInfiniteFeed<T extends { id: string }>({
     }
   }, [fetchMore])
 
-  // Update items when initialItems changes
+  // Update items when initialItems changes - but only if they're actually different
   useEffect(() => {
-    setItems(initialItems)
-  }, [initialItems])
+    // Check if the items have actually changed to prevent unnecessary updates
+    const itemsChanged = initialItems.length !== items.length || 
+      initialItems.some((item, index) => item?.id !== items[index]?.id)
+    
+    if (itemsChanged) {
+      setItems(initialItems)
+    }
+  }, [initialItems]) // Intentionally not including items in deps to prevent infinite loop
 
   return {
     items,

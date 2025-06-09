@@ -240,3 +240,34 @@ p.first-paragraph {
 iframe {
   color-scheme: light !important;
 }
+
+/* Masonry layout styles */
+@layer utilities {
+  .masonry-columns {
+    column-count: 1;
+    column-gap: 1.5rem;
+  }
+  
+  @media (min-width: 640px) {
+    .masonry-columns {
+      column-count: 2;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .masonry-columns {
+      column-count: 3;
+    }
+  }
+  
+  @media (min-width: 1280px) {
+    .masonry-columns {
+      column-count: 4;
+    }
+  }
+  
+  .masonry-item {
+    break-inside: avoid;
+    margin-bottom: 1.5rem;
+  }
+}

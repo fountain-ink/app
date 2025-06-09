@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useCallback } from "react"
+import { useEffect, useCallback, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { Feed, renderArticlePost, isValidArticlePost } from "./feed"
 import { useBookmarks } from "@/hooks/use-bookmarks"
@@ -15,14 +15,14 @@ export function BookmarksFeed() {
     fetchBookmarks()
   }, [])
 
-  const renderBookmark = useCallback((post: AnyPost) => {
+  const renderBookmark = useCallback((post: AnyPost, index: number) => {
     return renderArticlePost(post, viewMode, { 
       showAuthor: false 
-    })
+    }, index)
   }, [viewMode])
 
-  // Filter out invalid posts - bookmarks should have contentJson
-  const validBookmarks = bookmarks.filter(isValidArticlePost)
+  // Filter out invalid posts - bookmarks should have contentJson - memoize to prevent unnecessary re-renders
+  const validBookmarks = useMemo(() => bookmarks.filter(isValidArticlePost), [bookmarks])
 
   return (
     <>

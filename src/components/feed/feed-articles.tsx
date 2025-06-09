@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback } from "react"
+import { useCallback, useMemo } from "react"
 import type { AnyPost } from "@lens-protocol/client"
 import { Feed, renderArticlePost, isValidArticlePost, UserProfileEmptyState } from "./feed"
 import { useFeedContext } from "@/contexts/feed-context"
@@ -13,12 +13,12 @@ export interface ArticleFeedProps {
 export function ArticleFeed({ posts, isUserProfile = false }: ArticleFeedProps) {
   const { viewMode } = useFeedContext()
   
-  const renderPost = useCallback((post: AnyPost) => {
-    return renderArticlePost(post, viewMode, { showAuthor: false })
+  const renderPost = useCallback((post: AnyPost, index: number) => {
+    return renderArticlePost(post, viewMode, { showAuthor: false }, index)
   }, [viewMode])
 
-  // Filter out invalid posts
-  const validPosts = posts.filter(isValidArticlePost)
+  // Filter out invalid posts - memoize to prevent unnecessary re-renders
+  const validPosts = useMemo(() => posts.filter(isValidArticlePost), [posts])
 
   // Custom empty state for user profiles
   if (validPosts.length === 0 && isUserProfile) {

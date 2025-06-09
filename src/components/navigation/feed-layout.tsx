@@ -18,12 +18,12 @@ function FeedLayoutContent({ children }: FeedLayoutProps) {
         <FeedViewToggle />
         <FeedNavigation />
       </div>
-      
+
       <div className="flex flex-col my-4 items-center w-full">
         <div className={cn(
           "w-full",
-          viewMode === "grid" 
-            ? "max-w-7xl mx-auto px-4" 
+          viewMode === "grid"
+            ? "max-w-6xl mx-auto px-4"
             : "max-w-3xl mx-auto"
         )}>
           {children}

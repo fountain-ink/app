@@ -13,7 +13,6 @@ import { useRouter } from "next/navigation"
 import { useCallback, useState, MouseEvent } from "react"
 import { PostMenu } from "./post-menu"
 import { PostReactions } from "./post-reactions"
-import { motion, AnimatePresence } from "motion/react"
 
 interface PostVerticalViewProps {
   post: Post
@@ -24,6 +23,7 @@ interface PostVerticalViewProps {
   onEnterSelectionMode?: () => void
   isSelectionMode?: boolean
   className?: string
+  priority?: boolean
 }
 
 export const PostVerticalView = ({
@@ -43,6 +43,7 @@ export const PostVerticalView = ({
   onEnterSelectionMode,
   isSelectionMode = false,
   className,
+  priority = false,
 }: PostVerticalViewProps) => {
   const router = useRouter()
   const [isHovered, setIsHovered] = useState(false)
@@ -97,25 +98,27 @@ export const PostVerticalView = ({
     >
       {/* Image with rounded corners */}
       {options.showPreview && (
-        <div className="relative w-full overflow-hidden rounded-xl mb-3">
-          {resolvedCoverUrl ? (
-            <div className="relative w-full">
-              <Image
-                src={resolvedCoverUrl}
-                alt={articleMetadata?.title || "Post preview"}
-                width={400}
-                height={300}
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="w-full h-auto object-cover transition-all duration-300 ease-in-out group-hover:scale-110"
-                suppressHydrationWarning
-              />
-              <div className="absolute inset-0 pointer-events-none transition-all duration-300 ease-in-out bg-white opacity-0 group-hover:opacity-10" />
-            </div>
-          ) : (
-            <div className="relative w-full aspect-[4/3] bg-muted rounded-xl">
-              <div className="placeholder-background h-full w-full rounded-xl">&nbsp;</div>
-            </div>
-          )}
+        <div className="relative w-full mb-3">
+          <div className="relative w-full aspect-[4/3] overflow-hidden rounded-xl">
+            {resolvedCoverUrl ? (
+              <>
+                <Image
+                  src={resolvedCoverUrl}
+                  alt={articleMetadata?.title || "Post preview"}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover transition-all duration-300 ease-in-out group-hover:scale-110"
+                  priority={priority}
+                  suppressHydrationWarning
+                />
+                <div className="absolute inset-0 pointer-events-none transition-all duration-300 ease-in-out bg-white opacity-0 group-hover:opacity-10" />
+              </>
+            ) : (
+              <div className="absolute inset-0 bg-muted">
+                <div className="placeholder-background h-full w-full">&nbsp;</div>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
@@ -153,7 +156,7 @@ export const PostVerticalView = ({
         {/* Title - no line clamp */}
         {options.showTitle && articleMetadata?.title && (
           <h2
-            className="text-[1.375rem] font-[family-name:var(--title-font)] tracking-[-0.8px] font-medium leading-[1.375] mb-1"
+            className="text-[1.25rem] font-[family-name:var(--title-font)] tracking-[-0.6px] font-medium leading-[1.35] mb-1"
             suppressHydrationWarning
           >
             {articleMetadata.title}
@@ -163,7 +166,7 @@ export const PostVerticalView = ({
         {/* Subtitle with line clamp */}
         {options.showSubtitle && subtitle && (
           <p
-            className="text-[1.0625rem] font-[family-name:var(--paragraph-font)] text-muted-foreground leading-[1.375] line-clamp-3"
+            className="text-base font-[family-name:var(--paragraph-font)] text-muted-foreground leading-[1.35] line-clamp-3"
             suppressHydrationWarning
           >
             {subtitle}
@@ -171,33 +174,25 @@ export const PostVerticalView = ({
         )}
       </div>
 
-      {/* Bottom row - appears on hover, absolutely positioned below the card */}
-      <AnimatePresence>
-        {isHovered && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute top-full left-0 right-0 flex items-center justify-between bg-background/95 backdrop-blur-sm p-3 rounded-xl z-10"
-          >
-            {options.showDate && (
-              <time className="text-xs text-muted-foreground" suppressHydrationWarning>
-                {formatDate(post.timestamp)}
-              </time>
-            )}
-
-            <div className="flex items-center gap-2">
-              <div onClick={handleInteractiveElementClick}>
-                <PostReactions post={post} />
-              </div>
-              <div onClick={handleInteractiveElementClick}>
-                <PostMenu post={post} />
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Bottom row - always visible like in normal post view */}
+      <div className="flex flex-row justify-between items-center mt-3 h-8 text-sm">
+        <div className="flex flex-row items-center gap-3">
+          {options.showDate && (
+            <time className="text-xs text-muted-foreground" suppressHydrationWarning>
+              {formatDate(post.timestamp)}
+            </time>
+          )}
+          <div onClick={handleInteractiveElementClick}>
+            <PostReactions post={post} />
+          </div>
+        </div>
+        
+        <div className="flex justify-end">
+          <div onClick={handleInteractiveElementClick}>
+            <PostMenu post={post} />
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

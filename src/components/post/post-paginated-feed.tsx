@@ -12,7 +12,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchPosts } from "@lens-protocol/client/actions";
 import { env } from "@/env";
-import PostSkeleton from "./post-skeleton";
+import { PostSkeleton, PostVerticalSkeleton } from "./post-skeleton";
 import { cn } from "@/lib/utils";
 
 async function filterBannedPosts(posts: readonly AnyPost[]): Promise<AnyPost[]> {
@@ -185,8 +185,12 @@ export const LatestArticleFeed = ({
   if (initialLoading) {
     if (viewMode === "grid") {
       return (
-        <div className="w-full flex items-center justify-center py-20">
-          <div className="animate-pulse text-muted-foreground">Loading...</div>
+        <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 sm:gap-6 w-full">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={`skeleton-${i}`} className="break-inside-avoid mb-4">
+              <PostVerticalSkeleton />
+            </div>
+          ))}
         </div>
       );
     }
@@ -233,7 +237,7 @@ export const LatestArticleFeed = ({
     >
       {postViews}
 
-      {/* Show loading skeletons for single column view only */}
+      {/* Show loading skeletons based on view mode */}
       {loading && viewMode === "single" && (
         <>
           <PostSkeleton />
@@ -241,6 +245,16 @@ export const LatestArticleFeed = ({
           <PostSkeleton />
           <PostSkeleton />
           <PostSkeleton />
+        </>
+      )}
+      
+      {loading && viewMode === "grid" && (
+        <>
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={`loading-skeleton-${i}`} className="break-inside-avoid mb-4">
+              <PostVerticalSkeleton />
+            </div>
+          ))}
         </>
       )}
 

@@ -1,9 +1,9 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { useRef, useCallback, ReactNode, useEffect } from "react"
+import { motion } from "motion/react"
+import { useRef, useCallback, ReactNode, useEffect, useMemo } from "react"
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer"
-import { PostSkeleton } from "@/components/post/post-skeleton"
+import { PostSkeleton, PostVerticalSkeleton } from "@/components/post/post-skeleton"
 import { GraphicHand2 } from "@/components/icons/custom-icons"
 import { cn } from "@/lib/utils"
 import { useFeedContext } from "@/contexts/feed-context"
@@ -12,8 +12,10 @@ import { PostView } from "@/components/post/post-view"
 import { PostVerticalView } from "@/components/post/post-vertical-view"
 import { DraftCreateButton } from "@/components/draft/draft-create-button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { Masonry } from "masonic"
+import { useMediaQuery } from "@/hooks/use-media-query"
 
-export const GRID_LAYOUT_CLASSES = "columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 sm:gap-6"
+export const GRID_LAYOUT_CLASSES = "columns-1 sm:columns-2 lg:columns-3 gap-6"
 
 export function isValidArticlePost(post: AnyPost): boolean {
   return (
@@ -54,7 +56,8 @@ export interface PostRenderOptions {
 export function renderArticlePost(
   post: AnyPost, 
   viewMode: "single" | "grid", 
-  options: PostRenderOptions = {}
+  options: PostRenderOptions = {},
+  index?: number
 ): ReactNode {
   if (!isValidArticlePost(post)) return null
   
@@ -70,13 +73,12 @@ export function renderArticlePost(
 
   if (viewMode === "grid") {
     return (
-      <div className="break-inside-avoid mb-4">
-        <PostVerticalView
-          options={defaultOptions}
-          authors={[post.author.address]}
-          post={post as Post}
-        />
-      </div>
+      <PostVerticalView
+        options={defaultOptions}
+        authors={[post.author.address]}
+        post={post as Post}
+        priority={index !== undefined && index < 6}
+      />
     )
   }
 
@@ -108,10 +110,28 @@ export function Feed({
   onLoadMore,
   emptyTitle = "No posts available",
   emptySubtitle = "Check back later or explore other content",
-  skeletonCount = 3,
+  skeletonCount = 6,
 }: FeedProps) {
   const { viewMode } = useFeedContext()
   const loadMoreRef = useRef<HTMLDivElement>(null)
+  
+  // Ensure items is always a valid array and memoize it to prevent unnecessary re-renders
+  const safeItems = useMemo(() => {
+    if (!Array.isArray(items)) return []
+    return items.filter(item => item != null)
+  }, [items])
+  
+  // Responsive column width for Masonic - max 3 columns
+  const isLg = useMediaQuery("(min-width: 1024px)")
+  const isMd = useMediaQuery("(min-width: 768px)")
+  const isSm = useMediaQuery("(min-width: 640px)")
+  
+  const columnWidth = useMemo(() => {
+    if (isLg) return 320  // 3 columns on large screens
+    if (isMd) return 340  // 2 columns on medium
+    if (isSm) return 360  // 2 columns on small
+    return 480 // mobile full width
+  }, [isLg, isMd, isSm])
   
   const entry = useIntersectionObserver(loadMoreRef, { threshold: 0.5 })
 
@@ -121,7 +141,7 @@ export function Feed({
     }
   }, [entry?.isIntersecting, hasMore, isLoading, onLoadMore])
 
-  if (items.length === 0 && !isLoading) {
+  if (safeItems.length === 0 && !isLoading) {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -138,21 +158,98 @@ export function Feed({
     )
   }
 
-  return (
-    <div className={cn("w-full", viewMode === "grid" ? GRID_LAYOUT_CLASSES : "")}>
-      <div
-        className={cn(
-          "w-full",
-          viewMode === "single" && "flex flex-col gap-4 items-center"
-        )}
+
+  // Create a stable items array for Masonic that includes both items and skeletons
+  const masonryItems = useMemo(() => {
+    const items: any[] = []
+    
+    // Add all real items first
+    items.push(...safeItems)
+    
+    // If loading and we have items (loading more), add skeleton placeholders
+    if (isLoading && safeItems.length > 0) {
+      const skeletonsToShow = Math.min(skeletonCount, 6)
+      for (let i = 0; i < skeletonsToShow; i++) {
+        items.push({
+          id: `loading-skeleton-${safeItems.length}-${i}`,
+          _isSkeleton: true,
+          _isLoadingMore: true
+        })
+      }
+    }
+    
+    // If loading and no items (initial load), show only skeletons
+    if (isLoading && safeItems.length === 0) {
+      for (let i = 0; i < skeletonCount; i++) {
+        items.push({
+          id: `initial-skeleton-${i}`,
+          _isSkeleton: true,
+          _isInitialLoad: true
+        })
+      }
+    }
+    
+    return items
+  }, [safeItems, isLoading, skeletonCount])
+
+  // Unified render function for both items and skeletons
+  const MasonryRenderItem = useCallback(({ data, index }: { data: any; index: number }) => {
+    // Check if this is a skeleton item
+    if (data._isSkeleton) {
+      return (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ 
+            duration: 0.5, 
+            delay: data._isLoadingMore ? 0 : Math.min(index * 0.05, 0.3) 
+          }}
+        >
+          <PostVerticalSkeleton />
+        </motion.div>
+      )
+    }
+    
+    // Regular item
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: Math.min(index * 0.05, 0.3) }}
       >
-        {items.map((item, index) => (
+        {renderItem(data, index)}
+      </motion.div>
+    )
+  }, [renderItem])
+
+  if (viewMode === "grid") {
+    return (
+      <div className="w-full">
+        <Masonry
+          items={masonryItems}
+          columnGutter={24}
+          columnWidth={columnWidth}
+          overscanBy={2}
+          render={MasonryRenderItem}
+          itemKey={(item) => item?.id || `item-${masonryItems.indexOf(item)}`}
+        />
+
+        {hasMore && <div ref={loadMoreRef} className="h-10" />}
+      </div>
+    )
+  }
+
+  // Single column view
+  return (
+    <div className="w-full">
+      <div className="flex flex-col gap-4 items-center">
+        {safeItems.map((item, index) => (
           <motion.div
-            key={item.id || index}
+            key={item?.id || `item-${index}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.05 }}
-            className={viewMode === "single" ? "w-full" : ""}
+            className="w-full"
           >
             {renderItem(item, index)}
           </motion.div>
@@ -160,7 +257,7 @@ export function Feed({
       </div>
 
       {isLoading && (
-        <div className={cn("mt-6", viewMode === "grid" && "grid grid-cols-1 md:grid-cols-2 gap-6")}>
+        <div className="mt-6">
           {Array.from({ length: skeletonCount }).map((_, i) => (
             <PostSkeleton key={`skeleton-${i}`} />
           ))}
