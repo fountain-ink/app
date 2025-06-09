@@ -198,7 +198,7 @@ const BlogPage = async ({ params, searchParams }: { params: { blog: string }; se
           <BlogTagNavigation tags={formattedTags} username={params.blog} />
         )} */}
         <div className="flex flex-col my-4 gap-4">
-          <ArticleFeed posts={[...(posts?.items ?? [])]} isUserProfile={isUserBlog || isUserMemeber} />
+          <ArticleFeed posts={[...(posts?.items ?? [])]} isUserProfile={isUserBlog || isUserMemeber} forceViewMode="single" />
         </div>
       </div>
     </BlogTheme>

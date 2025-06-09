@@ -7,8 +7,13 @@ import { useBookmarks } from "@/hooks/use-bookmarks"
 import type { AnyPost } from "@lens-protocol/client"
 import { useFeedContext } from "@/contexts/feed-context"
 
-export function BookmarksFeed() {
-  const { viewMode } = useFeedContext()
+interface BookmarksFeedProps {
+  forceViewMode?: "single" | "grid"
+}
+
+export function BookmarksFeed({ forceViewMode }: BookmarksFeedProps = {}) {
+  const { viewMode: contextViewMode } = useFeedContext()
+  const viewMode = forceViewMode || contextViewMode
   const { bookmarks, loading, hasMore, fetchBookmarks } = useBookmarks()
 
   useEffect(() => {
@@ -34,6 +39,7 @@ export function BookmarksFeed() {
         emptyTitle="No bookmarks yet"
         emptySubtitle="Start exploring and save your favorite posts"
         skeletonCount={3}
+        forceViewMode={forceViewMode}
       />
       
       {hasMore && bookmarks.length > 0 && (

@@ -29,7 +29,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
     return <ErrorPage error="Can't access bookmarks" />;
   }
 
-  return <BookmarksFeed />;
+  return <BookmarksFeed forceViewMode="single" />;
 };
 
 export default UserPage;

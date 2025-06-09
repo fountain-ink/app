@@ -8,10 +8,12 @@ import { useFeedContext } from "@/contexts/feed-context"
 export interface ArticleFeedProps {
   posts: AnyPost[]
   isUserProfile?: boolean
+  forceViewMode?: "single" | "grid"
 }
 
-export function ArticleFeed({ posts, isUserProfile = false }: ArticleFeedProps) {
-  const { viewMode } = useFeedContext()
+export function ArticleFeed({ posts, isUserProfile = false, forceViewMode }: ArticleFeedProps) {
+  const { viewMode: contextViewMode } = useFeedContext()
+  const viewMode = forceViewMode || contextViewMode
   
   const renderPost = useCallback((post: AnyPost, index: number) => {
     return renderArticlePost(post, viewMode, { showAuthor: false }, index)
@@ -33,6 +35,7 @@ export function ArticleFeed({ posts, isUserProfile = false }: ArticleFeedProps) 
       hasMore={false}
       emptyTitle={isUserProfile ? "Nothing here yet" : "No posts available"}
       emptySubtitle={isUserProfile ? "Start writing to share your thoughts" : "Check back later for new content"}
+      forceViewMode={forceViewMode}
     />
   )
 }

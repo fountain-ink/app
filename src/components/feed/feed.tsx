@@ -100,6 +100,7 @@ export interface FeedProps {
   emptyTitle?: string
   emptySubtitle?: string
   skeletonCount?: number
+  forceViewMode?: "single" | "grid"
 }
 
 export function Feed({
@@ -111,8 +112,10 @@ export function Feed({
   emptyTitle = "No posts available",
   emptySubtitle = "Check back later or explore other content",
   skeletonCount = 6,
+  forceViewMode,
 }: FeedProps) {
-  const { viewMode } = useFeedContext()
+  const { viewMode: contextViewMode } = useFeedContext()
+  const viewMode = forceViewMode || contextViewMode
   const loadMoreRef = useRef<HTMLDivElement>(null)
   
   // Ensure items is always a valid array and memoize it to prevent unnecessary re-renders

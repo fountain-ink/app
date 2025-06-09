@@ -26,7 +26,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
 
   return (
     <div className="flex flex-col my-4 gap-4">
-      <ArticleFeed posts={[...posts.value.items]} isUserProfile={isUserProfile} />
+      <ArticleFeed posts={[...posts.value.items]} isUserProfile={isUserProfile} forceViewMode="single" />
     </div>
   );
 };
