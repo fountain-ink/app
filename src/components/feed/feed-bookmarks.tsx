@@ -29,10 +29,11 @@ export function BookmarksFeed() {
       <Feed
         items={validBookmarks}
         renderItem={renderBookmark}
-        isLoading={loading && bookmarks.length === 0}
-        hasMore={false} // We'll handle load more with a button
+        isLoading={loading}
+        hasMore={false}
         emptyTitle="No bookmarks yet"
         emptySubtitle="Start exploring and save your favorite posts"
+        skeletonCount={3}
       />
       
       {hasMore && bookmarks.length > 0 && (

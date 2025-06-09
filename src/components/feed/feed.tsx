@@ -133,6 +133,58 @@ export function Feed({
     return 480 // mobile full width
   }, [isLg, isMd, isSm])
   
+  const masonryKey = useMemo(() => {
+    return `masonry-${safeItems.length}-${isLoading}`
+  }, [safeItems.length, isLoading])
+  
+  const masonryItems = useMemo(() => {
+    if (isLoading && safeItems.length === 0) {
+      return Array.from({ length: skeletonCount }, (_, i) => ({
+        id: `skeleton-${i}`,
+        _isSkeleton: true
+      }))
+    }
+    
+    const items = [...safeItems]
+    
+    if (isLoading && safeItems.length > 0) {
+      const loadingSkeletons = Array.from({ length: Math.min(3, skeletonCount) }, (_, i) => ({
+        id: `loading-skeleton-${i}`,
+        _isSkeleton: true
+      }))
+      items.push(...loadingSkeletons)
+    }
+    
+    return items
+  }, [safeItems, isLoading, skeletonCount])
+
+  const MasonryRenderItem = useCallback(({ data, index }: { data: any; index: number }) => {
+    if (data._isSkeleton) {
+      return (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ 
+            duration: 0.5, 
+            delay: Math.min(index * 0.05, 0.3) 
+          }}
+        >
+          <PostVerticalSkeleton />
+        </motion.div>
+      )
+    }
+    
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: Math.min(index * 0.05, 0.3) }}
+      >
+        {renderItem(data, index)}
+      </motion.div>
+    )
+  }, [renderItem])
+  
   const entry = useIntersectionObserver(loadMoreRef, { threshold: 0.5 })
 
   useEffect(() => {
@@ -158,74 +210,11 @@ export function Feed({
     )
   }
 
-
-  // Create a stable items array for Masonic that includes both items and skeletons
-  const masonryItems = useMemo(() => {
-    const items: any[] = []
-    
-    // Add all real items first
-    items.push(...safeItems)
-    
-    // If loading and we have items (loading more), add skeleton placeholders
-    if (isLoading && safeItems.length > 0) {
-      const skeletonsToShow = Math.min(skeletonCount, 6)
-      for (let i = 0; i < skeletonsToShow; i++) {
-        items.push({
-          id: `loading-skeleton-${safeItems.length}-${i}`,
-          _isSkeleton: true,
-          _isLoadingMore: true
-        })
-      }
-    }
-    
-    // If loading and no items (initial load), show only skeletons
-    if (isLoading && safeItems.length === 0) {
-      for (let i = 0; i < skeletonCount; i++) {
-        items.push({
-          id: `initial-skeleton-${i}`,
-          _isSkeleton: true,
-          _isInitialLoad: true
-        })
-      }
-    }
-    
-    return items
-  }, [safeItems, isLoading, skeletonCount])
-
-  // Unified render function for both items and skeletons
-  const MasonryRenderItem = useCallback(({ data, index }: { data: any; index: number }) => {
-    // Check if this is a skeleton item
-    if (data._isSkeleton) {
-      return (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ 
-            duration: 0.5, 
-            delay: data._isLoadingMore ? 0 : Math.min(index * 0.05, 0.3) 
-          }}
-        >
-          <PostVerticalSkeleton />
-        </motion.div>
-      )
-    }
-    
-    // Regular item
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: Math.min(index * 0.05, 0.3) }}
-      >
-        {renderItem(data, index)}
-      </motion.div>
-    )
-  }, [renderItem])
-
   if (viewMode === "grid") {
     return (
       <div className="w-full">
         <Masonry
+          key={masonryKey}
           items={masonryItems}
           columnGutter={24}
           columnWidth={columnWidth}
