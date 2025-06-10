@@ -30,6 +30,9 @@ p.first-paragraph {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Always show scrollbar to prevent layout shift */
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
 
     ::-webkit-file-upload-button {
       cursor: pointer;

@@ -144,6 +144,86 @@ export type Database = {
         }
         Relationships: []
       }
+      contest_winners: {
+        Row: {
+          added_at: string
+          added_by: string
+          contest_id: string
+          id: number
+          place: number
+          post_slug: string
+          prize_amount: string | null
+          transaction_hash: string | null
+        }
+        Insert: {
+          added_at?: string
+          added_by: string
+          contest_id: string
+          id?: number
+          place: number
+          post_slug: string
+          prize_amount?: string | null
+          transaction_hash?: string | null
+        }
+        Update: {
+          added_at?: string
+          added_by?: string
+          contest_id?: string
+          id?: number
+          place?: number
+          post_slug?: string
+          prize_amount?: string | null
+          transaction_hash?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contest_winners_contest_id_fkey"
+            columns: ["contest_id"]
+            isOneToOne: false
+            referencedRelation: "contests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contests: {
+        Row: {
+          created_at: string
+          created_by: string
+          end_date: string
+          id: string
+          name: string
+          prize_pool: Json | null
+          slug: string
+          start_date: string
+          status: string | null
+          theme: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          end_date: string
+          id?: string
+          name: string
+          prize_pool?: Json | null
+          slug: string
+          start_date: string
+          status?: string | null
+          theme?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          end_date?: string
+          id?: string
+          name?: string
+          prize_pool?: Json | null
+          slug?: string
+          start_date?: string
+          status?: string | null
+          theme?: string | null
+        }
+        Relationships: []
+      }
       curated: {
         Row: {
           added_by: string | null

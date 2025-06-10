@@ -17,12 +17,10 @@ function FeedLayoutContent({ children, hideViewToggle = false, wide = false }: F
   return (
     <div className="flex flex-col mt-5 items-center justify-center w-full">
       <div className={cn(
-        "w-full px-0 sm:px-4 mx-auto",
-        wide ? "max-w-5xl" : "max-w-full"
+        "w-full px-0 sm:px-4 mx-auto", "max-w-full"
       )}>
         <div className={cn(
-          "mx-auto flex justify-center items-center",
-          wide ? "max-w-5xl" : "max-w-3xl"
+          "mx-auto flex justify-center items-center", "max-w-3xl"
         )}>
           <FeedNavigation />
           {!hideViewToggle && <FeedViewToggle />}

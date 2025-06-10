@@ -22,7 +22,7 @@ export function TabNavigation({ navItems, basePath = "/settings" }: TabNavigatio
   const pathname = usePathname()
 
   return (
-    <nav className="flex flex-col lg:w-1/5 p-2 gap-2">
+    <nav className="flex flex-col w-48 p-2 gap-2">
       {navItems.map((item) => {
         const isActive = pathname === `${basePath}/${item.id}`
         return (

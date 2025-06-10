@@ -18,28 +18,28 @@ interface ContestPostWrapperProps {
 
 const placeStyles = {
   1: {
-    borderColor: "border-yellow-500",
-    bgGradient: "from-yellow-50 to-yellow-100/50 dark:from-yellow-950/20 dark:to-yellow-900/10",
-    crownColor: "text-yellow-600 dark:text-yellow-400",
-    prizeColor: "text-yellow-700 dark:text-yellow-300"
+    borderColor: "border-yellow-400/60 dark:border-yellow-600/40",
+    bgGradient: "from-yellow-50/30 to-yellow-100/20 dark:from-yellow-950/10 dark:to-yellow-900/5",
+    crownColor: "text-yellow-600 dark:text-yellow-500",
+    prizeColor: "text-yellow-700 dark:text-yellow-400"
   },
   2: {
-    borderColor: "border-gray-400",
-    bgGradient: "from-gray-50 to-gray-100/50 dark:from-gray-950/20 dark:to-gray-900/10",
-    crownColor: "text-gray-600 dark:text-gray-400",
-    prizeColor: "text-gray-700 dark:text-gray-300"
+    borderColor: "border-blue-400/60 dark:border-blue-600/40",
+    bgGradient: "from-blue-50/30 to-blue-100/20 dark:from-blue-950/10 dark:to-blue-900/5",
+    crownColor: "text-blue-600 dark:text-blue-500",
+    prizeColor: "text-blue-700 dark:text-blue-400"
   },
   3: {
-    borderColor: "border-orange-600",
-    bgGradient: "from-orange-50 to-orange-100/50 dark:from-orange-950/20 dark:to-orange-900/10",
-    crownColor: "text-orange-700 dark:text-orange-400",
-    prizeColor: "text-orange-800 dark:text-orange-300"
+    borderColor: "border-orange-400/60 dark:border-orange-600/40",
+    bgGradient: "from-orange-50/30 to-orange-100/20 dark:from-orange-950/10 dark:to-orange-900/5",
+    crownColor: "text-orange-600 dark:text-orange-500",
+    prizeColor: "text-orange-700 dark:text-orange-400"
   },
   default: {
-    borderColor: "border-blue-500",
-    bgGradient: "from-blue-50 to-blue-100/50 dark:from-blue-950/20 dark:to-blue-900/10",
-    crownColor: "text-blue-600 dark:text-blue-400",
-    prizeColor: "text-blue-700 dark:text-blue-300"
+    borderColor: "border-gray-300/60 dark:border-gray-600/40",
+    bgGradient: "from-gray-50/30 to-gray-100/20 dark:from-gray-950/10 dark:to-gray-900/5",
+    crownColor: "text-gray-600 dark:text-gray-400",
+    prizeColor: "text-gray-700 dark:text-gray-300"
   }
 }
 
@@ -57,7 +57,7 @@ export function ContestPostWrapper({
   place,
   prizeAmount,
   prizeTransactionHash,
-  blockExplorerUrl = "https://etherscan.io/tx/",
+  blockExplorerUrl = "https://lenscan.io/tx/",
   authors = []
 }: ContestPostWrapperProps) {
   const style = placeStyles[place as keyof typeof placeStyles] || placeStyles.default
@@ -65,13 +65,13 @@ export function ContestPostWrapper({
 
   return (
     <div className={cn(
-      "relative rounded-lg border-2 p-1",
+      "relative rounded-lg border p-1 mt-2",
       style.borderColor
     )}>
       {/* Place indicator badge */}
       <div className={cn(
         "absolute -top-3 left-4 z-10 flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold",
-        "bg-background border-2",
+        "bg-background border",
         style.borderColor
       )}>
         {showCrown && <Crown className={cn("w-4 h-4", style.crownColor)} />}
@@ -84,7 +84,7 @@ export function ContestPostWrapper({
       {prizeAmount && prizeTransactionHash && (
         <div className={cn(
           "absolute -top-3 right-4 z-10",
-          "bg-background border-2 rounded-full",
+          "bg-background border rounded-full",
           style.borderColor
         )}>
           <Link
@@ -104,13 +104,22 @@ export function ContestPostWrapper({
 
       {/* Gradient background */}
       <div className={cn(
-        "absolute inset-0 rounded-lg bg-gradient-to-br opacity-50",
+        "absolute inset-0 rounded-lg bg-gradient-to-br opacity-30",
         style.bgGradient
       )} />
 
       {/* Post content */}
       <div className="relative">
-        <PostView post={post} authors={authors} />
+        <PostView 
+        options={{
+          showContent: false,
+          showPreview: true,
+          showAuthor: true,
+          showDate: true,
+          showTitle: true,
+          showSubtitle: true,
+        }} 
+        post={post} authors={authors} />
       </div>
     </div>
   )
