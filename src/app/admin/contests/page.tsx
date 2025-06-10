@@ -97,7 +97,7 @@ export default function AdminContestsPage() {
                 </div>
                 <div className="flex items-center gap-1">
                   <DollarSign className="w-4 h-4" />
-                  <span>${contest.prize_pool.total} Prize Pool</span>
+                  <span>{contest.prize_pool.total} Prize Pool</span>
                 </div>
               </div>
             </Link>
