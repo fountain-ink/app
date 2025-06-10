@@ -20,6 +20,10 @@ export const FeedNavigation = () => {
             label: "Latest",
           },
           {
+            href: "/contests",
+            label: "Contests",
+          },
+          {
             href: "/bookmarks",
             label: "Bookmarks",
             isVisible: isLoggedIn,

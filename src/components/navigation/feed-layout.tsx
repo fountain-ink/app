@@ -7,26 +7,36 @@ import { useFeedContext } from "@/contexts/feed-context"
 
 interface FeedLayoutProps {
   children: React.ReactNode
+  hideViewToggle?: boolean
+  wide?: boolean
 }
 
-function FeedLayoutContent({ children }: FeedLayoutProps) {
+function FeedLayoutContent({ children, hideViewToggle = false, wide = false }: FeedLayoutProps) {
   const { viewMode } = useFeedContext()
 
   return (
     <div className="flex flex-col mt-5 items-center justify-center w-full">
-      <div className="w-full max-w-full px-0 sm:px-4 mx-auto">
-        <div className="max-w-3xl mx-auto flex justify-center items-center">
+      <div className={cn(
+        "w-full px-0 sm:px-4 mx-auto",
+        wide ? "max-w-5xl" : "max-w-full"
+      )}>
+        <div className={cn(
+          "mx-auto flex justify-center items-center",
+          wide ? "max-w-5xl" : "max-w-3xl"
+        )}>
           <FeedNavigation />
-          <FeedViewToggle />
+          {!hideViewToggle && <FeedViewToggle />}
         </div>
       </div>
 
       <div className="flex flex-col my-4 items-center w-full">
         <div className={cn(
-          "w-full",
-          viewMode === "grid"
-            ? "max-w-6xl mx-auto px-4"
-            : "max-w-3xl mx-auto"
+          "w-full mx-auto",
+          wide ? "max-w-5xl px-4" : (
+            viewMode === "grid" && !hideViewToggle
+              ? "max-w-6xl px-4"
+              : "max-w-3xl"
+          )
         )}>
           {children}
         </div>
@@ -35,6 +45,6 @@ function FeedLayoutContent({ children }: FeedLayoutProps) {
   )
 }
 
-export function FeedLayout({ children }: FeedLayoutProps) {
-  return <FeedLayoutContent>{children}</FeedLayoutContent>
+export function FeedLayout({ children, hideViewToggle = false, wide = false }: FeedLayoutProps) {
+  return <FeedLayoutContent hideViewToggle={hideViewToggle} wide={wide}>{children}</FeedLayoutContent>
 }
