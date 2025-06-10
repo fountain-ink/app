@@ -4,7 +4,7 @@ import { getLensClient } from "@/lib/lens/client";
 import { fetchPosts } from "@lens-protocol/client/actions";
 import { MainContentFocus, AnyPost } from "@lens-protocol/client";
 import { env } from "@/env";
-import { LatestArticleFeed } from "@/components/post/post-paginated-feed";
+import { LatestFeed } from "@/components/feed/feed-latest";
 
 export const metadata = {
   title: "Latest Posts | Admin Portal",
@@ -32,7 +32,7 @@ const LatestPostsPage = async () => {
       <Separator className="w-64 bg-primary mt-1 mb-8" />
 
       <div className="flex flex-col my-4 items-center w-full">
-        <LatestArticleFeed
+        <LatestFeed
           initialPosts={mutablePosts}
           initialPaginationInfo={postsResult?.pageInfo ?? {}}
           isUserProfile={false}

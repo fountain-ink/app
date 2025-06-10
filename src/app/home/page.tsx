@@ -2,8 +2,9 @@ import { getLensClient } from "@/lib/lens/client";
 import { fetchPosts } from "@lens-protocol/client/actions";
 import { MainContentFocus, AnyPost } from "@lens-protocol/client";
 import { env } from "@/env";
-import { LatestArticleFeed } from "@/components/post/post-paginated-feed";
-import { FeedNavigation } from "@/components/navigation/feed-navigation";
+import { LatestFeed } from "@/components/feed/feed-latest";
+import { FeedLayout } from "@/components/navigation/feed-layout";
+import { getBannedAddresses, filterBannedPosts } from "@/lib/utils/ban-filter";
 
 export async function generateMetadata() {
   return {
@@ -24,28 +25,31 @@ export async function generateMetadata() {
 const home = async () => {
   const lens = await getLensClient();
 
-  const postsResult = await fetchPosts(lens, {
-    filter: {
-      metadata: { mainContentFocus: [MainContentFocus.Article] },
-      feeds: [{ globalFeed: true }],
-      apps: [env.NEXT_PUBLIC_APP_ADDRESS],
-    },
-  }).unwrapOr(null);
+  // Fetch posts and banned addresses in parallel
+  const [postsResult, bannedAddresses] = await Promise.all([
+    fetchPosts(lens, {
+      filter: {
+        metadata: { mainContentFocus: [MainContentFocus.Article] },
+        feeds: [{ globalFeed: true }],
+        apps: [env.NEXT_PUBLIC_APP_ADDRESS],
+      },
+    }).unwrapOr(null),
+    getBannedAddresses()
+  ]);
 
-  const mutablePosts: AnyPost[] = postsResult?.items ? [...postsResult.items] : [];
+  // Filter out banned posts server-side
+  const allPosts: AnyPost[] = postsResult?.items ? [...postsResult.items] : [];
+  const filteredPosts = filterBannedPosts(allPosts, bannedAddresses);
 
   return (
-    <div className="flex flex-col mt-5 items-center justify-center w-full max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
-      <FeedNavigation />
-
-      <div className="flex flex-col items-center w-full">
-        <LatestArticleFeed
-          initialPosts={mutablePosts}
-          initialPaginationInfo={postsResult?.pageInfo ?? {}}
-          isUserProfile={false}
-        />
-      </div>
-    </div>
+    <FeedLayout>
+      <LatestFeed
+        initialPosts={filteredPosts}
+        initialPaginationInfo={postsResult?.pageInfo ?? {}}
+        isUserProfile={false}
+        preFilteredPosts={true}
+      />
+    </FeedLayout>
   );
 };
 

@@ -1,14 +1,14 @@
+"use client"
+
 import { SlideNav } from "@/components/ui/slide-tabs";
-import { getAppToken } from "@/lib/auth/get-app-token";
-import { getTokenClaims } from "@/lib/auth/get-token-claims";
+import { useAuthenticatedUser } from "@lens-protocol/react";
 
 export const FeedNavigation = () => {
-  const token = getAppToken();
-  const claims = getTokenClaims(token);
-  const isLoggedIn = !claims || (!!claims && claims.metadata?.isAnonymous === false);
+  const { data: user, loading } = useAuthenticatedUser();
+  const isLoggedIn = !!user && !loading;
 
   return (
-    <div className="p-4 pb-0 font-[family-name:var(--title-font)] border-b border-border w-full max-w-3xl">
+    <div className="p-4 py-0 font-[family-name:var(--title-font)] border-b border-border w-full">
       <SlideNav
         items={[
           {
@@ -18,6 +18,10 @@ export const FeedNavigation = () => {
           {
             href: "/home",
             label: "Latest",
+          },
+          {
+            href: "/contests",
+            label: "Contests",
           },
           {
             href: "/bookmarks",

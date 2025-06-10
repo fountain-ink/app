@@ -1,4 +1,4 @@
-import { BookmarkList } from "@/components/bookmark/bookmark-list";
+import { BookmarksFeed } from "@/components/feed/feed-bookmarks";
 import ErrorPage from "@/components/misc/error-page";
 import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
@@ -10,7 +10,6 @@ export const maxDuration = 60;
 const UserPage = async ({ params }: { params: { user: string } }) => {
   const lens = await getLensClient();
   const { username } = await getUserAccount();
-
   const profile = await fetchAccount(lens, { username: { localName: params.user } });
 
   if (!profile) {
@@ -30,11 +29,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
     return <ErrorPage error="Can't access bookmarks" />;
   }
 
-  return (
-    <div className="flex flex-col my-4">
-      <BookmarkList />
-    </div>
-  );
+  return <BookmarksFeed forceViewMode="single" />;
 };
 
 export default UserPage;

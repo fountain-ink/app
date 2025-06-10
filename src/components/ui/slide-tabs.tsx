@@ -25,6 +25,12 @@ export function SlideNav({ items, className }: SlideNavProps) {
 
   const visibleItems = items.filter((item) => item.isVisible !== false);
 
+  const isActive = (href: string) => {
+    if (pathname === href) return true;
+    if (href !== "/" && pathname.startsWith(href)) return true;
+    return false;
+  };
+
   return (
     <nav className={cn("relative flex justify-center", className)}>
       <div className="relative flex gap-4">
@@ -45,14 +51,14 @@ export function SlideNav({ items, className }: SlideNavProps) {
                 href={item.href}
                 scroll={false}
                 ref={(node) => {
-                  if (node && pathname === item.href) {
+                  if (node && isActive(item.href)) {
                     setActiveItem(node);
                   }
                 }}
                 prefetch
                 className={cn(
                   "px-4 py-2 font-medium transition-colors relative",
-                  pathname === item.href ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+                  isActive(item.href) ? "text-foreground" : "text-muted-foreground hover:text-foreground",
                 )}
               >
                 {item.label}

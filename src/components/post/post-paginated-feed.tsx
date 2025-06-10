@@ -1,17 +1,19 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { AnyPost, PaginatedResultInfo } from "@lens-protocol/client";
+import type { AnyPost, PaginatedResultInfo, Post } from "@lens-protocol/client";
 import { MainContentFocus, PageSize } from "@lens-protocol/client";
 import { motion } from "motion/react";
 import { DraftCreateButton } from "../draft/draft-create-button";
 import { GraphicHand2 } from "../icons/custom-icons";
 import { PostView } from "./post-view";
+import { PostVerticalView } from "./post-vertical-view";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchPosts } from "@lens-protocol/client/actions";
 import { env } from "@/env";
-import PostSkeleton from "./post-skeleton";
+import { PostSkeleton, PostVerticalSkeleton } from "./post-skeleton";
+import { cn } from "@/lib/utils";
 
 async function filterBannedPosts(posts: readonly AnyPost[]): Promise<AnyPost[]> {
   if (!posts || posts.length === 0) {
@@ -43,10 +45,12 @@ export const LatestArticleFeed = ({
   initialPosts,
   initialPaginationInfo,
   isUserProfile = false,
+  viewMode = "single",
 }: {
   initialPosts: AnyPost[];
   initialPaginationInfo: Partial<PaginatedResultInfo>;
   isUserProfile?: boolean;
+  viewMode?: "single" | "grid";
 }) => {
   const [allPosts, setAllPosts] = useState<AnyPost[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(initialPaginationInfo?.next || null);
@@ -145,17 +149,31 @@ export const LatestArticleFeed = ({
         return null;
       }
 
+      const commonOptions = {
+        showContent: false,
+        showAuthor: true,
+        showTitle: true,
+        showSubtitle: true,
+        showBlog: true,
+        showDate: true,
+        showPreview: true,
+      };
+
+      if (viewMode === "grid") {
+        return (
+          <div key={post.id} className="break-inside-avoid mb-4">
+            <PostVerticalView
+              options={commonOptions}
+              authors={[post.author.address]}
+              post={post as Post}
+            />
+          </div>
+        );
+      }
+
       return (
         <PostView
-          options={{
-            showContent: false,
-            showAuthor: true,
-            showTitle: true,
-            showSubtitle: true,
-            showBlog: true,
-            showDate: true,
-            showPreview: true,
-          }}
+          options={commonOptions}
           key={post.id}
           authors={[post.author.address]}
           post={post}
@@ -165,8 +183,20 @@ export const LatestArticleFeed = ({
     .filter(Boolean);
 
   if (initialLoading) {
+    if (viewMode === "grid") {
+      return (
+        <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 sm:gap-6 w-full">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={`skeleton-${i}`} className="break-inside-avoid mb-4">
+              <PostVerticalSkeleton />
+            </div>
+          ))}
+        </div>
+      );
+    }
+    
     return (
-      <div className="w-full flex flex-col items-center py-4 gap-4">
+      <div className="w-full py-4 flex flex-col items-center gap-4">
         <PostSkeleton />
         <PostSkeleton />
         <PostSkeleton />
@@ -198,26 +228,41 @@ export const LatestArticleFeed = ({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="flex flex-col gap-4 my-4 items-center w-full"
+      className={cn(
+        "my-4 w-full",
+        viewMode === "grid" 
+          ? "columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 sm:gap-6" 
+          : "flex flex-col gap-4 items-center"
+      )}
     >
       {postViews}
 
-      {/* Show loading skeletons for infinite scroll */}
-      {loading && (
-        <div className="w-full flex flex-col items-center py-4 gap-4">
+      {/* Show loading skeletons based on view mode */}
+      {loading && viewMode === "single" && (
+        <>
           <PostSkeleton />
           <PostSkeleton />
           <PostSkeleton />
           <PostSkeleton />
           <PostSkeleton />
-        </div>
+        </>
+      )}
+      
+      {loading && viewMode === "grid" && (
+        <>
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={`loading-skeleton-${i}`} className="break-inside-avoid mb-4">
+              <PostVerticalSkeleton />
+            </div>
+          ))}
+        </>
       )}
 
       {/* Load more trigger (only render if not loading and there's a next cursor) */}
       {!loading && nextCursor && (
         <div
           ref={loadMoreRef}
-          className="h-10 w-full" // Add some height to ensure it can be observed
+          className="h-10 w-full"
         />
       )}
     </motion.div>
