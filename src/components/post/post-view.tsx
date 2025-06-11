@@ -1,12 +1,12 @@
 import { formatDate, cn } from "@/lib/utils";
-import {  Post } from "@lens-protocol/client";
-import {  EvmAddress } from "@lens-protocol/metadata";
+import { Post } from "@lens-protocol/client";
+import { EvmAddress } from "@lens-protocol/metadata";
 import Markdown from "../misc/markdown";
 import { AuthorView } from "../user/user-author-view";
 import { PostMenu } from "./post-menu";
 import { PostReactions } from "./post-reactions";
 import Link from "next/link";
-import { OptimizedImage } from "../misc/optimized-image";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { resolveUrl } from "@/lib/utils/resolve-url";
 import { useEffect, MouseEvent, useState, useCallback } from "react";
@@ -172,7 +172,7 @@ export const PostView = ({
           <div className="relative w-full mb-3">
             {coverUrl ? (
               <div className="relative w-full overflow-hidden rounded-xl">
-                <OptimizedImage
+                <Image
                   src={coverUrl}
                   alt={metadata.title || "Post preview"}
                   width={400}
@@ -180,6 +180,8 @@ export const PostView = ({
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="w-full h-auto object-cover transition-all duration-300 ease-in-out group-hover:scale-110"
                   priority={priority}
+                  quality={75}
+                  loading={priority ? "eager" : "lazy"}
                 />
                 <div className="absolute inset-0 pointer-events-none transition-all duration-300 ease-in-out bg-white opacity-0 group-hover:opacity-10" />
               </div>
@@ -292,13 +294,14 @@ export const PostView = ({
             {metadata.attributes?.find((attr) => "key" in attr && attr.key === "coverUrl")?.value ? (
               <div className="h-full w-full overflow-hidden relative">
                 {coverUrl && (
-                  <OptimizedImage
+                  <Image
                     src={coverUrl}
                     alt="Cover"
                     className="w-full h-full object-cover transition-all duration-300 ease-in-out group-hover/post:scale-110"
                     width={256}
                     height={256}
-                    aspectRatio="square"
+                    quality={75}
+                    loading="lazy"
                   />
                 )}
                 <div className="absolute inset-0 pointer-events-none transition-all duration-300 ease-in-out bg-white opacity-0 group-hover/post:opacity-20" />
