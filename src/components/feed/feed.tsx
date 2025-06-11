@@ -104,9 +104,12 @@ export function Feed({
   const { viewMode: contextViewMode } = useFeedContext()
   const viewMode = forceViewMode || contextViewMode
   const loadMoreRef = useRef<HTMLDivElement>(null)
-
-  // Ensure items is always a valid array
+  const [observerKey, setObserverKey] = useState(0)
   const safeItems = items && Array.isArray(items) ? items.filter(item => item != null) : []
+
+  useEffect(() => {
+    setObserverKey(prev => prev + 1)
+  }, [viewMode])
 
   const entry = useIntersectionObserver(loadMoreRef, {
     threshold: 0,
@@ -189,7 +192,7 @@ export function Feed({
           }
         </Masonry>
 
-        {hasMore && <div ref={loadMoreRef} className="h-20" />}
+        {hasMore && <div key={observerKey} ref={loadMoreRef} className="h-20" />}
       </div>
     )
   }
@@ -219,7 +222,7 @@ export function Feed({
         </div>
       )}
 
-      {hasMore && <div ref={loadMoreRef} className="h-10" />}
+      {hasMore && <div key={observerKey} ref={loadMoreRef} className="h-10" />}
     </div>
   )
 }
