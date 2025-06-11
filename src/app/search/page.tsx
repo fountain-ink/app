@@ -3,7 +3,7 @@ import { fetchPosts } from "@lens-protocol/client/actions"
 import { MainContentFocus, AnyPost } from "@lens-protocol/client"
 import { env } from "@/env"
 import { SearchFeed } from "@/components/feed/feed-search"
-import { FeedLayout } from "@/components/navigation/feed-layout"
+import { SearchLayout } from "@/components/navigation/search-layout"
 import { getBannedAddresses, filterBannedPosts } from "@/lib/utils/ban-filter"
 
 interface SearchPageProps {
@@ -54,26 +54,26 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
     const pageInfo = postsResult?.pageInfo || (postsResult?.items?.length ? { next: "initial" } : {})
 
     return (
-      <FeedLayout>
+      <SearchLayout>
         <SearchFeed
           initialPosts={filteredPosts}
           initialPaginationInfo={pageInfo}
           initialQuery={query}
           preFilteredPosts={true}
         />
-      </FeedLayout>
+      </SearchLayout>
     )
   }
 
   return (
-    <FeedLayout>
+    <SearchLayout>
       <SearchFeed
         initialPosts={[]}
         initialPaginationInfo={{}}
         initialQuery=""
         preFilteredPosts={true}
       />
-    </FeedLayout>
+    </SearchLayout>
   )
 }
 

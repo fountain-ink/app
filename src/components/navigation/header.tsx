@@ -17,6 +17,7 @@ import { getBlogData, BlogData } from "@/lib/settings/get-blog-data";
 import { toast } from "sonner";
 import { BlogEmailSubscribe } from "../newsletter/newsletter-subscribe-dialog";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { HeaderSearch } from "./header-search";
 
 export const Header = ({ session }: { session: MeResult | null }) => {
   const pathname = usePathname();
@@ -62,6 +63,7 @@ export const Header = ({ session }: { session: MeResult | null }) => {
         <Link prefetch href={logoLink} className="w-10 h-10 flex items-center justify-center pointer-events-auto">
           <FountainLogo />
         </Link>
+        {!isWritePage && <HeaderSearch />}
         {isWritePage && isCollaborative && <ConnectionBadge {...yjsState} />}
         {isSettingsPage && <SettingsBadge />}
       </div>
