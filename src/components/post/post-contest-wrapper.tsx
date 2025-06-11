@@ -68,7 +68,6 @@ export function ContestPostWrapper({
       "relative rounded-lg border p-1 pt-3 mt-2 -ml-1 -mr-4",
       style.borderColor
     )}>
-      {/* Place indicator badge */}
       <div className={cn(
         "absolute -top-3 left-4 z-10 flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold",
         "bg-background border",
@@ -80,7 +79,6 @@ export function ContestPostWrapper({
         </span>
       </div>
 
-      {/* Prize money badge (if winner) */}
       {prizeAmount && prizeTransactionHash && (
         <div className={cn(
           "absolute -top-3 right-4 z-10",
@@ -102,24 +100,23 @@ export function ContestPostWrapper({
         </div>
       )}
 
-      {/* Gradient background */}
       <div className={cn(
         "absolute inset-0 rounded-lg bg-gradient-to-br opacity-30",
         style.bgGradient
       )} />
 
-      {/* Post content */}
       <div className="relative">
-        <PostView 
-        options={{
-          showContent: false,
-          showPreview: true,
-          showAuthor: true,
-          showDate: true,
-          showTitle: true,
-          showSubtitle: true,
-        }} 
-        post={post} authors={authors} />
+        <PostView
+          options={{
+            showContent: false,
+            showPreview: true,
+            showAuthor: true,
+            showDate: true,
+            showTitle: true,
+            showSubtitle: true,
+          }}
+          isVertical={false}
+          post={post} authors={authors} />
       </div>
     </div>
   )

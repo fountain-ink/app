@@ -136,9 +136,9 @@ export default function ContestWeekPage() {
 
   if (loading) {
     return (
-      <FeedLayout hideViewToggle wide>
+      <FeedLayout hideViewToggle>
         <div className="relative">
-          <div className="absolute -left-[100px] top-0 hidden xl:block">
+          <div className="absolute -left-[200px] top-0 hidden xl:block">
             <TabNavigation navItems={weekItems} basePath="/contests" />
           </div>
           <div className="max-w-3xl mx-auto">
@@ -171,9 +171,9 @@ export default function ContestWeekPage() {
   }
 
   return (
-    <FeedLayout hideViewToggle wide>
+    <FeedLayout hideViewToggle>
       <div className="relative">
-        <div className="absolute -left-[100px] top-0 hidden xl:block">
+        <div className="absolute -left-[200px] top-0 hidden xl:block">
           <TabNavigation navItems={weekItems} basePath="/contests" />
         </div>
         <div className="max-w-3xl mx-auto">

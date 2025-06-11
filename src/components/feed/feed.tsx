@@ -3,13 +3,12 @@
 import { motion } from "motion/react"
 import { useRef, useCallback, ReactNode, useEffect, useMemo } from "react"
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer"
-import { PostSkeleton, PostVerticalSkeleton } from "@/components/post/post-skeleton"
+import { PostSkeleton } from "@/components/post/post-skeleton"
 import { GraphicHand2 } from "@/components/icons/custom-icons"
 import { cn } from "@/lib/utils"
 import { useFeedContext } from "@/contexts/feed-context"
 import type { AnyPost, Post } from "@lens-protocol/client"
 import { PostView } from "@/components/post/post-view"
-import { PostVerticalView } from "@/components/post/post-vertical-view"
 import { DraftCreateButton } from "@/components/draft/draft-create-button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Masonry } from "masonic"
@@ -71,22 +70,13 @@ export function renderArticlePost(
     ...options
   }
 
-  if (viewMode === "grid") {
-    return (
-      <PostVerticalView
-        options={defaultOptions}
-        authors={[post.author.address]}
-        post={post as Post}
-        priority={index !== undefined && index < 6}
-      />
-    )
-  }
-
   return (
     <PostView
       options={defaultOptions}
       authors={[post.author.address]}
       post={post as Post}
+      isVertical={viewMode === "grid"}
+      priority={index !== undefined && index < 6}
     />
   )
 }
@@ -172,7 +162,7 @@ export function Feed({
             delay: Math.min(index * 0.05, 0.3) 
           }}
         >
-          <PostVerticalSkeleton />
+          <PostSkeleton isVertical={true} />
         </motion.div>
       )
     }

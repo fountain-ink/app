@@ -124,9 +124,9 @@ export default function ContestsPage() {
 
   if (loading) {
     return (
-      <FeedLayout hideViewToggle wide>
+      <FeedLayout hideViewToggle>
         <div className="relative">
-          <div className="absolute -left-[100px] top-0 hidden xl:block">
+          <div className="absolute -left-[200px] top-0 hidden xl:block">
             <TabNavigation navItems={[]} basePath="/contests" />
           </div>
           <div className="max-w-3xl mx-auto">
@@ -157,17 +157,17 @@ export default function ContestsPage() {
   }
 
   return (
-    <FeedLayout hideViewToggle wide>
+    <FeedLayout hideViewToggle>
       <div className="relative">
-        <div className="absolute -left-[100px] top-0 hidden xl:block">
+        <div className="absolute -left-[200px] top-0 hidden xl:block">
           <TabNavigation navItems={weekItems} basePath="/contests" />
         </div>
         <div className="max-w-3xl mx-auto">
           <div className="space-y-6">
             <div className="xl:hidden mb-4 max-w-md">
               <p className="text-sm text-muted-foreground mb-2">Pick a contest:</p>
-              <Select 
-                value="all-contests" 
+              <Select
+                value="all-contests"
                 onValueChange={(value) => {
                   if (value === "all-contests") {
                     router.push("/contests")
@@ -199,14 +199,16 @@ export default function ContestsPage() {
                     return post ? (
                       <PostView
                         key={`${winner.post_slug}-${winner.place}`}
-        options={{
-          showContent: false,
-          showPreview: true,
-          showAuthor: true,
-          showDate: true,
-          showTitle: true,
-          showSubtitle: true,
-        }} 
+                        options={{
+                          showContent: false,
+                          showPreview: true,
+                          showAuthor: true,
+                          showDate: true,
+                          showTitle: true,
+                          showSubtitle: true,
+                        }}
+                        isVertical={false}
+
                         post={post}
                         authors={[]}
                       />

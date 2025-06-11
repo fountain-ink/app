@@ -1,18 +1,18 @@
-import { formatDate, formatRelativeTime } from "@/lib/utils";
-import { Account, Post } from "@lens-protocol/client";
-import { ArticleMetadata, EvmAddress } from "@lens-protocol/metadata";
-import type { Draft } from "../draft/draft";
-import { DraftMenu } from "../draft/draft-menu";
+import { formatDate, cn } from "@/lib/utils";
+import {  Post } from "@lens-protocol/client";
+import {  EvmAddress } from "@lens-protocol/metadata";
 import Markdown from "../misc/markdown";
-import { AuthorView, LazyAuthorView } from "../user/user-author-view";
+import { AuthorView } from "../user/user-author-view";
 import { PostMenu } from "./post-menu";
 import { PostReactions } from "./post-reactions";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { resolveUrl } from "@/lib/utils/resolve-url";
-import { useEffect, MouseEvent } from "react";
+import { useEffect, MouseEvent, useState, useCallback } from "react";
 import { extractSubtitle } from "@/lib/extract-subtitle";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useFeedContext } from "@/contexts/feed-context";
 
 export interface PostViewOptions {
   showDate?: boolean;
@@ -32,7 +32,11 @@ interface PostViewProps {
   onSelect?: () => void;
   onEnterSelectionMode?: () => void;
   isSelectionMode?: boolean;
+  isVertical?: boolean;
+  className?: string;
+  priority?: boolean;
 }
+
 
 export const PostView = ({
   post,
@@ -50,8 +54,23 @@ export const PostView = ({
   onSelect,
   onEnterSelectionMode,
   isSelectionMode = false,
+  isVertical: isVerticalProp,
+  className,
+  priority = false,
 }: PostViewProps) => {
   const router = useRouter();
+  const isMobile = useIsMobile();
+  const [isHovered, setIsHovered] = useState(false);
+
+  let feedViewMode: "single" | "grid" | undefined;
+  try {
+    const feedContext = useFeedContext();
+    feedViewMode = feedContext?.viewMode;
+  } catch {
+    // Feed context not available, that's ok
+  }
+
+  const isVertical = isVerticalProp ?? (isMobile || feedViewMode === "grid");
 
   if (!post || post.metadata.__typename !== "ArticleMetadata") {
     return null;
@@ -106,6 +125,141 @@ export const PostView = ({
     e.stopPropagation();
   };
 
+  const handleCardClick = useCallback((e: MouseEvent) => {
+    if (e.defaultPrevented) {
+      return;
+    }
+
+    if (e.shiftKey || isSelectionMode) {
+      e.preventDefault();
+      if (!isSelectionMode && onEnterSelectionMode) {
+        onEnterSelectionMode();
+      }
+      if (onSelect) {
+        onSelect();
+      }
+    }
+  }, [isSelectionMode, onEnterSelectionMode, onSelect]);
+
+  if (isVertical) {
+    return (
+      <Link
+        href={isSelectionMode ? "#" : href}
+        className={cn(
+          "group relative flex flex-col block",
+          isSelectionMode && "cursor-pointer",
+          isSelected && "ring-2 ring-primary rounded-xl",
+          className
+        )}
+        onClick={handleCardClick}
+        onPointerDown={handlePointerDown}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        suppressHydrationWarning
+        prefetch
+      >
+        {/* Image with rounded corners */}
+        {options.showPreview && (
+          <div className="relative w-full mb-3">
+            <div className="relative w-full aspect-[4/3] overflow-hidden rounded-xl">
+              {coverUrl ? (
+                <>
+                  <Image
+                    src={coverUrl}
+                    alt={metadata.title || "Post preview"}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover transition-all duration-300 ease-in-out group-hover:scale-110"
+                    priority={priority}
+                    suppressHydrationWarning
+                  />
+                  <div className="absolute inset-0 pointer-events-none transition-all duration-300 ease-in-out bg-white opacity-0 group-hover:opacity-10" />
+                </>
+              ) : (
+                <div className="absolute inset-0 bg-muted">
+                  <div className="placeholder-background h-full w-full">&nbsp;</div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Content */}
+        <div className="flex flex-col">
+          {/* Author Info */}
+          <div className="flex flex-row items-center w-full gap-1 mb-2 font-[family-name:var(--paragraph-font)] text-[13px]">
+            {options.showAuthor && (
+              <div onClick={handleInteractiveElementClick}>
+                <AuthorView showUsername={false} accounts={[post.author]} />
+              </div>
+            )}
+            {options.showBlog && blog && (
+              <div className="">
+                {options.showAuthor ? (
+                  <div className="flex flex-row items-center gap-1">
+                    <span className="text-muted-foreground">in</span>
+                    <div onClick={handleInteractiveElementClick}>
+                      <Link
+                        prefetch
+                        href={`/b/${post.feed.group?.address}`}
+                        className="text-foreground hover:underline"
+                      >
+                        {blog.name}
+                      </Link>
+                    </div>
+                  </div>
+                ) : (
+                  <span className="text-foreground">{blog.name}</span>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Title - no line clamp */}
+          {options.showTitle && metadata.title && (
+            <h2
+              className="text-[1.25rem] font-[family-name:var(--title-font)] tracking-[-0.6px] font-medium leading-[1.35] mb-1"
+              suppressHydrationWarning
+            >
+              {metadata.title}
+            </h2>
+          )}
+
+          {/* Subtitle with line clamp */}
+          {options.showSubtitle && subtitle && (
+            <p
+              className="text-base font-[family-name:var(--paragraph-font)] text-muted-foreground leading-[1.35] line-clamp-3"
+              suppressHydrationWarning
+            >
+              {subtitle}
+            </p>
+          )}
+        </div>
+
+        {/* Bottom row - always visible */}
+        <div className="flex flex-row justify-between items-center mt-3 h-8 text-sm">
+          <div className="flex flex-row items-center gap-3">
+            {options.showDate && (
+              <time className="text-xs text-muted-foreground" suppressHydrationWarning>
+                {formatDate(post.timestamp)}
+              </time>
+            )}
+            <div onClick={handleInteractiveElementClick}>
+              <PostReactions post={post} />
+            </div>
+          </div>
+
+          <div className="flex justify-end">
+            <div onClick={handleInteractiveElementClick}>
+              <PostMenu post={post} />
+            </div>
+          </div>
+        </div>
+      </Link>
+    );
+  }
+
+  // Horizontal layout (original)
   return (
     <div
       className={`group/post relative w-screen max-w-full sm:max-w-3xl p-4 ${isSelected ? "bg-primary/10" : "bg-transparent"}`}

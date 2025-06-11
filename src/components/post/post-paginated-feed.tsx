@@ -7,12 +7,11 @@ import { motion } from "motion/react";
 import { DraftCreateButton } from "../draft/draft-create-button";
 import { GraphicHand2 } from "../icons/custom-icons";
 import { PostView } from "./post-view";
-import { PostVerticalView } from "./post-vertical-view";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchPosts } from "@lens-protocol/client/actions";
 import { env } from "@/env";
-import { PostSkeleton, PostVerticalSkeleton } from "./post-skeleton";
+import { PostSkeleton } from "./post-skeleton";
 import { cn } from "@/lib/utils";
 
 async function filterBannedPosts(posts: readonly AnyPost[]): Promise<AnyPost[]> {
@@ -159,25 +158,15 @@ export const LatestArticleFeed = ({
         showPreview: true,
       };
 
-      if (viewMode === "grid") {
-        return (
-          <div key={post.id} className="break-inside-avoid mb-4">
-            <PostVerticalView
-              options={commonOptions}
-              authors={[post.author.address]}
-              post={post as Post}
-            />
-          </div>
-        );
-      }
-
       return (
-        <PostView
-          options={commonOptions}
-          key={post.id}
-          authors={[post.author.address]}
-          post={post}
-        />
+        <div key={post.id} className={viewMode === "grid" ? "break-inside-avoid mb-4" : ""}>
+          <PostView
+            options={commonOptions}
+            authors={[post.author.address]}
+            post={post}
+            isVertical={viewMode === "grid"}
+          />
+        </div>
       );
     })
     .filter(Boolean);
@@ -188,7 +177,7 @@ export const LatestArticleFeed = ({
         <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 sm:gap-6 w-full">
           {Array.from({ length: 8 }).map((_, i) => (
             <div key={`skeleton-${i}`} className="break-inside-avoid mb-4">
-              <PostVerticalSkeleton />
+              <PostSkeleton isVertical={true} />
             </div>
           ))}
         </div>
@@ -252,7 +241,7 @@ export const LatestArticleFeed = ({
         <>
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={`loading-skeleton-${i}`} className="break-inside-avoid mb-4">
-              <PostVerticalSkeleton />
+              <PostSkeleton isVertical={true} />
             </div>
           ))}
         </>
