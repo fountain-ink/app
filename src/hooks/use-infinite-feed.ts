@@ -17,6 +17,7 @@ export interface UseInfiniteFeedResult<T> {
   hasMore: boolean
   loadMore: () => void
   refresh: () => void
+  reset: (newItems?: T[], newPaginationInfo?: Partial<PaginatedResultInfo>) => void
 }
 
 export function useInfiniteFeed<T extends { id: string }>({
@@ -79,6 +80,12 @@ export function useInfiniteFeed<T extends { id: string }>({
     }
   }, [fetchMore])
 
+  const reset = useCallback((newItems: T[] = [], newPaginationInfo: Partial<PaginatedResultInfo> = {}) => {
+    setItems(newItems)
+    setPaginationInfo(newPaginationInfo)
+    setPage(1)
+  }, [])
+
   useEffect(() => {
     const itemsChanged = initialItems.length !== items.length ||
       initialItems.some((item, index) => item?.id !== items[index]?.id)
@@ -94,5 +101,6 @@ export function useInfiniteFeed<T extends { id: string }>({
     hasMore,
     loadMore,
     refresh,
+    reset,
   }
 }
