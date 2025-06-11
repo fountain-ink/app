@@ -6,13 +6,14 @@ import { AuthorView } from "../user/user-author-view";
 import { PostMenu } from "./post-menu";
 import { PostReactions } from "./post-reactions";
 import Link from "next/link";
-import Image from "next/image";
+import { OptimizedImage } from "../misc/optimized-image";
 import { useRouter } from "next/navigation";
 import { resolveUrl } from "@/lib/utils/resolve-url";
 import { useEffect, MouseEvent, useState, useCallback } from "react";
 import { extractSubtitle } from "@/lib/extract-subtitle";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useFeedContext } from "@/contexts/feed-context";
+import { useImagePreload } from "@/hooks/use-image-preload";
 
 export interface PostViewOptions {
   showDate?: boolean;
@@ -61,6 +62,7 @@ export const PostView = ({
   const router = useRouter();
   const isMobile = useIsMobile();
   const [isHovered, setIsHovered] = useState(false);
+  const preloadImage = useImagePreload();
 
   let feedViewMode: "single" | "grid" | undefined;
   try {
@@ -89,6 +91,13 @@ export const PostView = ({
   useEffect(() => {
     router.prefetch(href);
   }, [router, href]);
+
+  const handleMouseEnter = useCallback(() => {
+    setIsHovered(true);
+    if (coverUrl) {
+      preloadImage(coverUrl);
+    }
+  }, [coverUrl, preloadImage]);
 
   if (options.showContent && !("content" in metadata && metadata.content)) {
     return null;
@@ -153,7 +162,7 @@ export const PostView = ({
         )}
         onClick={handleCardClick}
         onPointerDown={handlePointerDown}
-        onMouseEnter={() => setIsHovered(true)}
+        onMouseEnter={handleMouseEnter}
         onMouseLeave={() => setIsHovered(false)}
         suppressHydrationWarning
         prefetch
@@ -164,14 +173,14 @@ export const PostView = ({
             <div className="relative w-full aspect-[4/3] overflow-hidden rounded-xl">
               {coverUrl ? (
                 <>
-                  <Image
+                  <OptimizedImage
                     src={coverUrl}
                     alt={metadata.title || "Post preview"}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover transition-all duration-300 ease-in-out group-hover:scale-110"
                     priority={priority}
-                    suppressHydrationWarning
+                    aspectRatio="4/3"
                   />
                   <div className="absolute inset-0 pointer-events-none transition-all duration-300 ease-in-out bg-white opacity-0 group-hover:opacity-10" />
                 </>
@@ -273,6 +282,8 @@ export const PostView = ({
         h-fit leading-tight`}
         onClick={handleClick}
         onPointerDown={handlePointerDown}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={() => setIsHovered(false)}
         suppressHydrationWarning
         prefetch
       >
@@ -281,13 +292,13 @@ export const PostView = ({
             {metadata.attributes?.find((attr) => "key" in attr && attr.key === "coverUrl")?.value ? (
               <div className="h-full w-full overflow-hidden relative">
                 {coverUrl && (
-                  <Image
+                  <OptimizedImage
                     src={coverUrl}
                     alt="Cover"
                     className="w-full h-full object-cover transition-all duration-300 ease-in-out group-hover/post:scale-110"
                     width={256}
                     height={256}
-                    suppressHydrationWarning
+                    aspectRatio="square"
                   />
                 )}
                 <div className="absolute inset-0 pointer-events-none transition-all duration-300 ease-in-out bg-white opacity-0 group-hover/post:opacity-20" />
