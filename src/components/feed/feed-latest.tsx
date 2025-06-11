@@ -44,13 +44,15 @@ export function LatestFeed({
   const fetchMore = useCallback(async (cursor?: string) => {
     const lens = await getLensClient()
     
+    const actualCursor = cursor === "initial" ? undefined : cursor
+    
     const result = await fetchPosts(lens, {
       filter: {
         metadata: { mainContentFocus: [MainContentFocus.Article] },
         feeds: [{ globalFeed: true }],
         apps: [env.NEXT_PUBLIC_APP_ADDRESS],
       },
-      cursor,
+      cursor: actualCursor,
     }).unwrapOr(null)
 
     if (!result) {
@@ -71,10 +73,7 @@ export function LatestFeed({
     return renderArticlePost(post, viewMode, { showAuthor: true }, index)
   }, [viewMode])
 
-  // Filter out invalid posts - memoize to prevent unnecessary re-renders
   const validPosts = useMemo(() => items.filter(isValidArticlePost), [items])
-
-  // Custom empty state for user profiles
   if (validPosts.length === 0 && !isLoading && !isInitializing && isUserProfile) {
     return <UserProfileEmptyState />
   }

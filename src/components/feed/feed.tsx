@@ -188,7 +188,10 @@ export function Feed({
     )
   }, [renderItem])
   
-  const entry = useIntersectionObserver(loadMoreRef, { threshold: 0.5 })
+  const entry = useIntersectionObserver(loadMoreRef, { 
+    threshold: 0,
+    rootMargin: '800px'
+  })
 
   useEffect(() => {
     if (entry?.isIntersecting && hasMore && !isLoading && onLoadMore) {
@@ -226,7 +229,7 @@ export function Feed({
           itemKey={(item) => item?.id || `item-${masonryItems.indexOf(item)}`}
         />
 
-        {hasMore && <div ref={loadMoreRef} className="h-10" />}
+        {hasMore && <div ref={loadMoreRef} className="h-20" />}
       </div>
     )
   }

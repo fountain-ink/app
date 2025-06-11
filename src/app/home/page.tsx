@@ -37,15 +37,15 @@ const home = async () => {
     getBannedAddresses()
   ]);
 
-  // Filter out banned posts server-side
   const allPosts: AnyPost[] = postsResult?.items ? [...postsResult.items] : [];
   const filteredPosts = filterBannedPosts(allPosts, bannedAddresses);
+  const pageInfo = postsResult?.pageInfo || (postsResult?.items?.length ? { next: "initial" } : {});
 
   return (
     <FeedLayout>
       <LatestFeed
         initialPosts={filteredPosts}
-        initialPaginationInfo={postsResult?.pageInfo ?? {}}
+        initialPaginationInfo={pageInfo}
         isUserProfile={false}
         preFilteredPosts={true}
       />

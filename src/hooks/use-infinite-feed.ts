@@ -31,20 +31,22 @@ export function useInfiniteFeed<T extends { id: string }>({
   const [page, setPage] = useState(1)
 
   // Determine if we have more items to load
-  const hasMore = paginationInfo 
-    ? 'next' in paginationInfo 
-      ? !!paginationInfo.next 
+  const hasMore = paginationInfo
+    ? 'next' in paginationInfo
+      ? !!paginationInfo.next
       : 'hasMore' in paginationInfo ? !!paginationInfo.hasMore : false
     : false
 
   const loadMore = useCallback(async () => {
-    if (isLoading || !hasMore) return
+    if (isLoading || !hasMore) {
+      return
+    }
 
     setIsLoading(true)
     try {
       const cursor = paginationInfo && 'next' in paginationInfo && paginationInfo.next ? paginationInfo.next : undefined
       const result = await fetchMore(cursor, page)
-      
+
       if (result.items.length > 0) {
         setItems(prev => {
           const existingIds = new Set(prev.map(item => item.id))
@@ -53,6 +55,8 @@ export function useInfiniteFeed<T extends { id: string }>({
         })
         setPaginationInfo(result.pageInfo)
         setPage(prev => prev + 1)
+      } else {
+        setPaginationInfo(result.pageInfo || {})
       }
     } catch (error) {
       console.error("Error loading more items:", error)
@@ -75,16 +79,14 @@ export function useInfiniteFeed<T extends { id: string }>({
     }
   }, [fetchMore])
 
-  // Update items when initialItems changes - but only if they're actually different
   useEffect(() => {
-    // Check if the items have actually changed to prevent unnecessary updates
-    const itemsChanged = initialItems.length !== items.length || 
+    const itemsChanged = initialItems.length !== items.length ||
       initialItems.some((item, index) => item?.id !== items[index]?.id)
-    
+
     if (itemsChanged) {
       setItems(initialItems)
     }
-  }, [initialItems]) // Intentionally not including items in deps to prevent infinite loop
+  }, [initialItems]) 
 
   return {
     items,

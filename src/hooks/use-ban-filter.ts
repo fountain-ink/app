@@ -9,13 +9,12 @@ export function useBanFilter(): BanInfo {
   const [bannedCache] = useState(() => new Map<string, boolean>())
 
   const checkBanStatus = useCallback(async (addresses: string[]): Promise<Record<string, boolean>> => {
-    // Filter out addresses we already have cached
-    const uncheckedAddresses = addresses.filter(addr => !bannedCache.has(addr.toLowerCase()))
+    const validAddresses = addresses.filter(addr => addr != null)
+    const uncheckedAddresses = validAddresses.filter(addr => !bannedCache.has(addr.toLowerCase()))
     
     if (uncheckedAddresses.length === 0) {
-      // Return cached results
       const result: Record<string, boolean> = {}
-      addresses.forEach(addr => {
+      validAddresses.forEach(addr => {
         result[addr] = bannedCache.get(addr.toLowerCase()) || false
       })
       return result
@@ -43,7 +42,7 @@ export function useBanFilter(): BanInfo {
 
       // Return combined results
       const result: Record<string, boolean> = {}
-      addresses.forEach(addr => {
+      validAddresses.forEach(addr => {
         result[addr] = bannedCache.get(addr.toLowerCase()) || false
       })
       return result
@@ -51,7 +50,7 @@ export function useBanFilter(): BanInfo {
       console.error("Error checking ban status:", err)
       // Return false for all addresses on error
       const result: Record<string, boolean> = {}
-      addresses.forEach(addr => {
+      validAddresses.forEach(addr => {
         result[addr] = false
       })
       return result
@@ -64,20 +63,24 @@ export function useBanFilter(): BanInfo {
   }
 }
 
-export async function filterBannedPosts<T extends { author: { address: { address: string } } }>(
+export async function filterBannedPosts<T extends { author?: { address?: string } }>(
   posts: readonly T[] | T[],
   checkBanStatus: (addresses: string[]) => Promise<Record<string, boolean>>
 ): Promise<T[]> {
   if (posts.length === 0) return []
   
   // Extract unique addresses from posts
-  const addresses = [...new Set(posts.map(post => post.author.address.address))]
+  const addresses = [...new Set(posts
+    .map(post => post.author?.address)
+    .filter(addr => addr != null)
+  )] as string[]
   
   // Check ban status for all addresses
   const banStatusMap = await checkBanStatus(addresses)
   
   // Filter out posts from banned addresses
-  return posts.filter(
-    post => !banStatusMap[post.author.address.address]
-  )
+  return posts.filter(post => {
+    const addr = post.author?.address
+    return !addr || !banStatusMap[addr]
+  })
 }

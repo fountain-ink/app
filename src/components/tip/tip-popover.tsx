@@ -47,7 +47,6 @@ export const TipPopover = ({ children, onCollectClick, post }: TipPopoverProps) 
   const reconnectWallet = useReconnectWallet();
   const { data: authenticatedUser } = useAuthenticatedUser();
 
-  console.log(authenticatedUser);
   const { data: ghoBalance, isLoading: isGhoBalanceLoading } = useBalance({
     address: authenticatedUser?.address as `0x${string}`,
   });
