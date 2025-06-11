@@ -9,7 +9,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { resolveUrl } from "@/lib/utils/resolve-url";
-import { useEffect, MouseEvent, useState, useCallback } from "react";
+import { useEffect, MouseEvent, useState, useCallback, memo, useMemo } from "react";
 import { extractSubtitle } from "@/lib/extract-subtitle";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useFeedContext } from "@/contexts/feed-context";
@@ -38,8 +38,7 @@ interface PostViewProps {
   priority?: boolean;
 }
 
-
-export const PostView = ({
+export const PostView = memo(({
   post,
   authors,
   options = {
@@ -79,31 +78,44 @@ export const PostView = ({
   }
   const metadata = post.metadata;
   const blog = post.feed.group?.metadata;
-  const blogImage = resolveUrl(blog?.icon);
-  const subtitleFromAttributes = metadata.attributes?.find((attr) => "key" in attr && attr.key === "subtitle")?.value;
-  const contentJson = metadata.attributes?.find((attr) => "key" in attr && attr.key === "contentJson")?.value;
-  const subtitle = subtitleFromAttributes || extractSubtitle(contentJson);
+
+  const coverUrl = useMemo(() =>
+    metadata.attributes?.find((attr) => "key" in attr && attr.key === "coverUrl")?.value,
+    [metadata.attributes]
+  );
+
+  const subtitleFromAttributes = useMemo(() =>
+    metadata.attributes?.find((attr) => "key" in attr && attr.key === "subtitle")?.value,
+    [metadata.attributes]
+  );
+
+  const contentJson = useMemo(() =>
+    metadata.attributes?.find((attr) => "key" in attr && attr.key === "contentJson")?.value,
+    [metadata.attributes]
+  );
+
+  const subtitle = useMemo(() =>
+    subtitleFromAttributes || extractSubtitle(contentJson),
+    [subtitleFromAttributes, contentJson]
+  );
 
   const username = post.author.username?.localName || "";
   const href = `/p/${username}/${post.slug}`;
-  const coverUrl = metadata.attributes?.find((attr) => "key" in attr && attr.key === "coverUrl")?.value;
 
-  useEffect(() => {
-    router.prefetch(href);
-  }, [router, href]);
-
+  // Only prefetch on hover, not on mount
   const handleMouseEnter = useCallback(() => {
     setIsHovered(true);
+    router.prefetch(href);
     if (coverUrl) {
       preloadImage(coverUrl);
     }
-  }, [coverUrl, preloadImage]);
+  }, [router, href, coverUrl, preloadImage]);
 
   if (options.showContent && !("content" in metadata && metadata.content)) {
     return null;
   }
 
-  const handleClick = (e: MouseEvent) => {
+  const handleClick = useCallback((e: MouseEvent) => {
     if (e.defaultPrevented) {
       return;
     }
@@ -116,9 +128,9 @@ export const PostView = ({
       window.getSelection()?.removeAllRanges();
       onEnterSelectionMode?.();
     }
-  };
+  }, [isSelectionMode, onSelect, onEnterSelectionMode]);
 
-  const handlePointerDown = (e: React.PointerEvent) => {
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
     if (e.pointerType === "touch" && e.isPrimary) {
       e.preventDefault();
       window.getSelection()?.removeAllRanges();
@@ -128,11 +140,11 @@ export const PostView = ({
         onEnterSelectionMode?.();
       }
     }
-  };
+  }, [isSelectionMode, onSelect, onEnterSelectionMode]);
 
-  const handleInteractiveElementClick = (e: React.MouseEvent) => {
+  const handleInteractiveElementClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-  };
+  }, []);
 
   const handleCardClick = useCallback((e: MouseEvent) => {
     if (e.defaultPrevented) {
@@ -165,7 +177,7 @@ export const PostView = ({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={() => setIsHovered(false)}
         suppressHydrationWarning
-        prefetch
+        prefetch={false}
       >
         {/* Image with rounded corners */}
         {options.showPreview && (
@@ -175,15 +187,17 @@ export const PostView = ({
                 <Image
                   src={coverUrl}
                   alt={metadata.title || "Post preview"}
-                  width={400}
-                  height={300}
+                  width={40}
+                  height={30}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="w-full h-auto object-cover transition-all duration-300 ease-in-out group-hover:scale-110"
+                  className="w-full h-auto object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
                   priority={priority}
                   quality={75}
                   loading={priority ? "eager" : "lazy"}
+                  placeholder="blur"
+                  blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2E5YTlhOSIvPjwvc3ZnPg=="
                 />
-                <div className="absolute inset-0 pointer-events-none transition-all duration-300 ease-in-out bg-white opacity-0 group-hover:opacity-10" />
+                <div className="absolute inset-0 pointer-events-none transition-opacity duration-300 ease-in-out bg-white opacity-0 group-hover:opacity-10" />
               </div>
             ) : (
               <div className="relative w-full aspect-[4/3] overflow-hidden rounded-xl">
@@ -211,7 +225,7 @@ export const PostView = ({
                     <span className="text-muted-foreground">in</span>
                     <div onClick={handleInteractiveElementClick}>
                       <Link
-                        prefetch
+                        prefetch={false}
                         href={`/b/${post.feed.group?.address}`}
                         className="text-foreground hover:underline"
                       >
@@ -287,24 +301,24 @@ export const PostView = ({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={() => setIsHovered(false)}
         suppressHydrationWarning
-        prefetch
+        prefetch={false}
       >
         {options.showPreview && (
           <div className="h-40 w-40 shrink-0 aspect-square rounded-sm overflow-hidden">
-            {metadata.attributes?.find((attr) => "key" in attr && attr.key === "coverUrl")?.value ? (
+            {coverUrl ? (
               <div className="h-full w-full overflow-hidden relative">
-                {coverUrl && (
-                  <Image
-                    src={coverUrl}
-                    alt="Cover"
-                    className="w-full h-full object-cover transition-all duration-300 ease-in-out group-hover/post:scale-110"
-                    width={256}
-                    height={256}
-                    quality={75}
-                    loading="lazy"
-                  />
-                )}
-                <div className="absolute inset-0 pointer-events-none transition-all duration-300 ease-in-out bg-white opacity-0 group-hover/post:opacity-20" />
+                <Image
+                  src={coverUrl}
+                  alt="Cover"
+                  className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover/post:scale-110"
+                  width={256}
+                  height={256}
+                  // quality={75}
+                  loading="lazy"
+                  placeholder="blur"
+                  blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgZmlsbD0iI2E5YTlhOSIvPjwvc3ZnPg=="
+                />
+                <div className="absolute inset-0 pointer-events-none transition-opacity duration-300 ease-in-out bg-white opacity-0 group-hover/post:opacity-20" />
               </div>
             ) : (
               <div className="h-full w-auto relative">
@@ -328,7 +342,7 @@ export const PostView = ({
                       <span className="text-muted-foreground">in</span>
                       <div onClick={handleInteractiveElementClick}>
                         <Link
-                          prefetch
+                          prefetch={false}
                           href={`/b/${post.feed.group?.address}`}
                           className="text-foreground gap-1 flex flex-row items-center hover:underline"
                         >
@@ -397,4 +411,14 @@ export const PostView = ({
       </div>
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  return (
+    prevProps.post.id === nextProps.post.id &&
+    prevProps.isSelected === nextProps.isSelected &&
+    prevProps.isSelectionMode === nextProps.isSelectionMode &&
+    prevProps.priority === nextProps.priority &&
+    JSON.stringify(prevProps.options) === JSON.stringify(nextProps.options)
+  );
+});
+
+PostView.displayName = "PostView";

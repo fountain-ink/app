@@ -1,8 +1,9 @@
 import { Post } from "@lens-protocol/client";
 import { ActionButton } from "./post-action-button";
 import { usePostActionsButtons } from "@/hooks/use-post-actions-buttons";
+import { memo } from "react";
 
-export const PostReactions = ({ post, hideAdminButtons = false }: { post: Post; hideAdminButtons?: boolean }) => {
+export const PostReactions = memo(({ post, hideAdminButtons = false }: { post: Post; hideAdminButtons?: boolean }) => {
   const { likeButton, collectButton, commentButton, adminButtons } = usePostActionsButtons({ post });
   const leftButtons = [commentButton, collectButton, likeButton];
 
@@ -47,4 +48,8 @@ export const PostReactions = ({ post, hideAdminButtons = false }: { post: Post; 
       )}
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  return prevProps.post.id === nextProps.post.id && prevProps.hideAdminButtons === nextProps.hideAdminButtons;
+});
+
+PostReactions.displayName = "PostReactions";

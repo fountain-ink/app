@@ -1,7 +1,7 @@
 "use client"
 
-import { motion } from "motion/react"
-import { useRef, useCallback, ReactNode, useEffect, useState } from "react"
+import { motion, useReducedMotion } from "motion/react"
+import { useRef, useCallback, ReactNode, useEffect, useState, memo } from "react"
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer"
 import { PostSkeleton } from "@/components/post/post-skeleton"
 import { GraphicHand2 } from "@/components/icons/custom-icons"
@@ -12,6 +12,15 @@ import { PostView } from "@/components/post/post-view"
 import { DraftCreateButton } from "@/components/draft/draft-create-button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import Masonry from "react-layout-masonry"
+
+const MemoizedPostView = memo(PostView, (prevProps, nextProps) => {
+  return (
+    prevProps.post.id === nextProps.post.id &&
+    prevProps.isSelected === nextProps.isSelected &&
+    prevProps.isSelectionMode === nextProps.isSelectionMode &&
+    prevProps.priority === nextProps.priority
+  )
+})
 
 export function isValidArticlePost(post: AnyPost): boolean {
   return (
@@ -68,12 +77,12 @@ export function renderArticlePost(
   }
 
   return (
-    <PostView
+    <MemoizedPostView
       options={defaultOptions}
       authors={[post.author.address]}
       post={post as Post}
       isVertical={viewMode === "grid"}
-      priority={index !== undefined && index < 6}
+      priority={index !== undefined && index < 3}
     />
   )
 }
@@ -106,6 +115,7 @@ export function Feed({
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const [observerKey, setObserverKey] = useState(0)
   const safeItems = items && Array.isArray(items) ? items.filter(item => item != null) : []
+  const shouldReduceMotion = useReducedMotion()
 
   useEffect(() => {
     setObserverKey(prev => prev + 1)
@@ -113,7 +123,7 @@ export function Feed({
 
   const entry = useIntersectionObserver(loadMoreRef, {
     threshold: 0,
-    rootMargin: '800px'
+    rootMargin: '400px'
   })
 
   useEffect(() => {
@@ -122,10 +132,11 @@ export function Feed({
     }
   }, [entry?.isIntersecting, hasMore, isLoading, onLoadMore])
 
+
   if (safeItems.length === 0 && !isLoading) {
     return (
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="flex flex-col items-center justify-center py-12 px-4 text-center"
@@ -148,46 +159,33 @@ export function Feed({
         >
           {isLoading && safeItems.length === 0 &&
             Array.from({ length: skeletonCount }, (_, i) => (
-              <motion.div
+              <div
                 key={`skeleton-${i}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.5,
-                  delay: Math.min(i * 0.05, 0.3)
-                }}
+                style={{ contain: 'layout style' }}
               >
                 <PostSkeleton isVertical={true} className="w-full" />
-              </motion.div>
+              </div>
             ))
           }
 
-          {/* Actual items */}
           {safeItems.map((item, index) => (
-            <motion.div
+            <div
               key={item?.id || `item-${index}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: Math.min(index * 0.05, 0.3) }}
+              style={{ contain: 'layout style' }}
+              className={shouldReduceMotion ? '' : 'animate-fade-in'}
             >
               {renderItem(item, index)}
-            </motion.div>
+            </div>
           ))}
 
-          {/* Loading more skeletons */}
           {isLoading && safeItems.length > 0 &&
             Array.from({ length: Math.min(3, skeletonCount) }, (_, i) => (
-              <motion.div
+              <div
                 key={`loading-skeleton-${i}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.5,
-                  delay: 0.1
-                }}
+                style={{ contain: 'layout style' }}
               >
                 <PostSkeleton isVertical={true} className="w-full" />
-              </motion.div>
+              </div>
             ))
           }
         </Masonry>
@@ -197,26 +195,26 @@ export function Feed({
     )
   }
 
-  // Single column view
   return (
     <div className="w-full">
       <div className="flex flex-col gap-4 items-center">
         {safeItems.map((item, index) => (
-          <motion.div
+          <div
             key={item?.id || `item-${index}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.05 }}
-            className="w-full"
+            className={cn(
+              "w-full",
+              shouldReduceMotion ? '' : 'animate-fade-in'
+            )}
+            style={{ contain: 'layout style' }}
           >
             {renderItem(item, index)}
-          </motion.div>
+          </div>
         ))}
       </div>
 
       {isLoading && (
         <div className="mt-6">
-          {Array.from({ length: skeletonCount }).map((_, i) => (
+          {Array.from({ length: Math.min(3, skeletonCount) }).map((_, i) => (
             <PostSkeleton key={`skeleton-${i}`} />
           ))}
         </div>
