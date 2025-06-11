@@ -47,6 +47,7 @@ export function HeaderSearch() {
       <form onSubmit={handleSubmit} className="relative">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none z-10" />
         <motion.div
+          initial={false}
           animate={{ width: isFocused ? 280 : 200 }}
           transition={{ duration: 0.2, ease: "easeInOut" }}
         >
