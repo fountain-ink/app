@@ -179,7 +179,6 @@ export const PostView = memo(({
         suppressHydrationWarning
         prefetch={false}
       >
-        {/* Image with rounded corners */}
         {options.showPreview && (
           <div className="relative w-full mb-3">
             {coverUrl ? (
@@ -187,15 +186,15 @@ export const PostView = memo(({
                 <Image
                   src={coverUrl}
                   alt={metadata.title || "Post preview"}
-                  width={40}
-                  height={30}
+                  width={100}
+                  height={100}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="w-full h-auto object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
                   priority={priority}
-                  quality={75}
-                  loading={priority ? "eager" : "lazy"}
-                  placeholder="blur"
-                  blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2E5YTlhOSIvPjwvc3ZnPg=="
+                // quality={75}
+                // loading={priority ? "eager" : "lazy"}
+                // placeholder="blur"
+                // blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2E5YTlhOSIvPjwvc3ZnPg=="
                 />
                 <div className="absolute inset-0 pointer-events-none transition-opacity duration-300 ease-in-out bg-white opacity-0 group-hover:opacity-10" />
               </div>
@@ -209,9 +208,7 @@ export const PostView = memo(({
           </div>
         )}
 
-        {/* Content */}
         <div className="flex flex-col">
-          {/* Author Info */}
           <div className="flex flex-row items-center w-full gap-1 mb-2 font-[family-name:var(--paragraph-font)] text-[13px]">
             {options.showAuthor && (
               <div onClick={handleInteractiveElementClick}>
@@ -240,7 +237,6 @@ export const PostView = memo(({
             )}
           </div>
 
-          {/* Title - no line clamp */}
           {options.showTitle && metadata.title && (
             <h2
               className="text-[1.25rem] font-[family-name:var(--title-font)] tracking-[-0.6px] font-medium leading-[1.35] mb-1"
@@ -250,7 +246,6 @@ export const PostView = memo(({
             </h2>
           )}
 
-          {/* Subtitle with line clamp */}
           {options.showSubtitle && subtitle && (
             <p
               className="text-base font-[family-name:var(--paragraph-font)] text-muted-foreground leading-[1.35] line-clamp-3"
@@ -261,7 +256,6 @@ export const PostView = memo(({
           )}
         </div>
 
-        {/* Bottom row - always visible */}
         <div className="flex flex-row justify-between items-center mt-3 h-8 text-sm">
           <div className="flex flex-row items-center gap-3">
             {options.showDate && (
@@ -284,7 +278,7 @@ export const PostView = memo(({
     );
   }
 
-  // Horizontal layout (original)
+  // Horizontal layout 
   return (
     <div
       className={`group/post relative w-screen max-w-full sm:max-w-3xl p-4 ${isSelected ? "bg-primary/10" : "bg-transparent"}`}
@@ -311,12 +305,12 @@ export const PostView = memo(({
                   src={coverUrl}
                   alt="Cover"
                   className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover/post:scale-110"
-                  width={256}
-                  height={256}
-                  // quality={75}
-                  loading="lazy"
-                  placeholder="blur"
-                  blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgZmlsbD0iI2E5YTlhOSIvPjwvc3ZnPg=="
+                  width={100}
+                  height={100}
+                // quality={50}
+                // loading="lazy"
+                // placeholder="blur"
+                // blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgZmlsbD0iI2E5YTlhOSIvPjwvc3ZnPg=="
                 />
                 <div className="absolute inset-0 pointer-events-none transition-opacity duration-300 ease-in-out bg-white opacity-0 group-hover/post:opacity-20" />
               </div>
