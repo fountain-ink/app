@@ -170,26 +170,26 @@ export const PostView = ({
         {/* Image with rounded corners */}
         {options.showPreview && (
           <div className="relative w-full mb-3">
-            <div className="relative w-full aspect-[4/3] overflow-hidden rounded-xl">
-              {coverUrl ? (
-                <>
-                  <OptimizedImage
-                    src={coverUrl}
-                    alt={metadata.title || "Post preview"}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-cover transition-all duration-300 ease-in-out group-hover:scale-110"
-                    priority={priority}
-                    aspectRatio="4/3"
-                  />
-                  <div className="absolute inset-0 pointer-events-none transition-all duration-300 ease-in-out bg-white opacity-0 group-hover:opacity-10" />
-                </>
-              ) : (
+            {coverUrl ? (
+              <div className="relative w-full overflow-hidden rounded-xl">
+                <OptimizedImage
+                  src={coverUrl}
+                  alt={metadata.title || "Post preview"}
+                  width={400}
+                  height={300}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="w-full h-auto object-cover transition-all duration-300 ease-in-out group-hover:scale-110"
+                  priority={priority}
+                />
+                <div className="absolute inset-0 pointer-events-none transition-all duration-300 ease-in-out bg-white opacity-0 group-hover:opacity-10" />
+              </div>
+            ) : (
+              <div className="relative w-full aspect-[4/3] overflow-hidden rounded-xl">
                 <div className="absolute inset-0 bg-muted">
                   <div className="placeholder-background h-full w-full">&nbsp;</div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -254,7 +254,7 @@ export const PostView = ({
               </time>
             )}
             <div onClick={handleInteractiveElementClick}>
-              <PostReactions post={post} />
+              <PostReactions post={post} hideAdminButtons={true} />
             </div>
           </div>
 

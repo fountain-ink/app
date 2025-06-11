@@ -2,7 +2,7 @@ import { Post } from "@lens-protocol/client";
 import { ActionButton } from "./post-action-button";
 import { usePostActionsButtons } from "@/hooks/use-post-actions-buttons";
 
-export const PostReactions = ({ post }: { post: Post }) => {
+export const PostReactions = ({ post, hideAdminButtons = false }: { post: Post; hideAdminButtons?: boolean }) => {
   const { likeButton, collectButton, commentButton, adminButtons } = usePostActionsButtons({ post });
   const leftButtons = [commentButton, collectButton, likeButton];
 
@@ -25,7 +25,7 @@ export const PostReactions = ({ post }: { post: Post }) => {
         />
       ))}
 
-      {adminButtons && adminButtons.length > 0 && (
+      {!hideAdminButtons && adminButtons && adminButtons.length > 0 && (
         <div className="ml-auto flex gap-2">
           {adminButtons.map((button) => (
             <ActionButton

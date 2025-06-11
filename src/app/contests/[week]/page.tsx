@@ -142,7 +142,7 @@ export default function ContestWeekPage() {
             <TabNavigation navItems={weekItems} basePath="/contests" />
           </div>
           <div className="max-w-3xl mx-auto">
-            <div className="space-y-6">
+            <div className="">
               <div className="xl:hidden mb-4 max-w-md">
                 <p className="text-sm text-muted-foreground mb-2">Pick a contest:</p>
                 <Select disabled value="loading">
@@ -177,7 +177,7 @@ export default function ContestWeekPage() {
           <TabNavigation navItems={weekItems} basePath="/contests" />
         </div>
         <div className="max-w-3xl mx-auto">
-          <div className="space-y-6">
+          <div className="">
             <div className="xl:hidden mb-4 max-w-md">
               <p className="text-sm text-muted-foreground mb-2">Pick a contest:</p>
               <Select 
@@ -210,7 +210,7 @@ export default function ContestWeekPage() {
                 {contestData?.contest.name || `Week ${weekSlug.replace("week-", "")} Contest`}
               </h2>
               {contestData?.contest.theme && (
-                <p className="text-muted-foreground">{contestData.contest.theme}</p>
+                <p className="text-muted-foreground pl-4">{contestData.contest.theme}</p>
               )}
             </div>
 

@@ -10,7 +10,7 @@ interface PostSkeletonProps {
 export const PostSkeleton = ({ isVertical = false, className }: PostSkeletonProps = {}) => {
   if (isVertical) {
     return (
-      <div className={cn("group relative flex flex-col", className)}>
+      <div className={cn("group relative flex flex-col w-full", className)}>
         {/* Image skeleton */}
         <div className="relative w-full aspect-[4/3] bg-muted rounded-xl mb-3 overflow-hidden">
           <div className="h-full w-full animate-pulse" />
