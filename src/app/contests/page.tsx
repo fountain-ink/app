@@ -10,6 +10,14 @@ import { Calendar, Trophy } from "lucide-react"
 import { getLensClient } from "@/lib/lens/client"
 import { fetchPosts } from "@lens-protocol/client/actions"
 import type { Post, PostId } from "@lens-protocol/client"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { useRouter } from "next/navigation"
 
 interface Contest {
   id: string
@@ -33,6 +41,7 @@ export default function ContestsPage() {
   const [winners, setWinners] = useState<ContestWinner[]>([])
   const [posts, setPosts] = useState<Map<string, Post>>(new Map())
   const [loading, setLoading] = useState(true)
+  const router = useRouter()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -116,10 +125,23 @@ export default function ContestsPage() {
   if (loading) {
     return (
       <FeedLayout hideViewToggle wide>
-        <div className="flex flex-row gap-4">
-          <TabNavigation navItems={[]} basePath="/contests" />
-          <div className="flex-1">
+        <div className="relative">
+          <div className="absolute -left-[100px] top-0 hidden xl:block">
+            <TabNavigation navItems={[]} basePath="/contests" />
+          </div>
+          <div className="max-w-3xl mx-auto">
             <div className="space-y-6">
+              <div className="xl:hidden mb-4 max-w-md">
+                <p className="text-sm text-muted-foreground mb-2">Pick a contest:</p>
+                <Select disabled value="loading">
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Loading contests..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="loading">Loading contests...</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="space-y-4">
                 <div className="space-y-6">
                   {[...Array(3)].map((_, i) => (
@@ -136,10 +158,39 @@ export default function ContestsPage() {
 
   return (
     <FeedLayout hideViewToggle wide>
-      <div className="flex flex-row gap-4">
-        <TabNavigation navItems={weekItems} basePath="/contests" />
-        <div className="flex-1">
+      <div className="relative">
+        <div className="absolute -left-[100px] top-0 hidden xl:block">
+          <TabNavigation navItems={weekItems} basePath="/contests" />
+        </div>
+        <div className="max-w-3xl mx-auto">
           <div className="space-y-6">
+            <div className="xl:hidden mb-4 max-w-md">
+              <p className="text-sm text-muted-foreground mb-2">Pick a contest:</p>
+              <Select 
+                value="all-contests" 
+                onValueChange={(value) => {
+                  if (value === "all-contests") {
+                    router.push("/contests")
+                  } else {
+                    router.push(`/contests/${value}`)
+                  }
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a contest" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all-contests">
+                    Recent Winners
+                  </SelectItem>
+                  {weekItems.map((item) => (
+                    <SelectItem key={item.id} value={item.id}>
+                      {item.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             {winners.length > 0 ? (
               <div className="space-y-4">
                 <div className="space-y-6">

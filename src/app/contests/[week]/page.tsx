@@ -6,10 +6,17 @@ import { TabNavigation } from "@/components/settings/tab-navigation"
 import { ContestPostWrapper } from "@/components/post/post-contest-wrapper"
 import { PostSkeleton } from "@/components/post/post-skeleton"
 import { Calendar, Trophy } from "lucide-react"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import type { Post, PostId } from "@lens-protocol/client"
 import { getLensClient } from "@/lib/lens/client"
 import { fetchPosts } from "@lens-protocol/client/actions"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface Contest {
   id: string
@@ -41,6 +48,7 @@ interface ContestData {
 
 export default function ContestWeekPage() {
   const params = useParams()
+  const router = useRouter()
   const weekSlug = params.week as string
   const [contestData, setContestData] = useState<ContestData | null>(null)
   const [posts, setPosts] = useState<Map<string, Post>>(new Map())
@@ -129,10 +137,23 @@ export default function ContestWeekPage() {
   if (loading) {
     return (
       <FeedLayout hideViewToggle wide>
-        <div className="flex flex-row sm:gap-2 lg:gap-4">
-          <TabNavigation navItems={weekItems} basePath="/contests" />
-          <div className="flex-1">
+        <div className="relative">
+          <div className="absolute -left-[100px] top-0 hidden xl:block">
+            <TabNavigation navItems={weekItems} basePath="/contests" />
+          </div>
+          <div className="max-w-3xl mx-auto">
             <div className="space-y-6">
+              <div className="xl:hidden mb-4 max-w-md">
+                <p className="text-sm text-muted-foreground mb-2">Pick a contest:</p>
+                <Select disabled value="loading">
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Loading..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="loading">Loading contests...</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="pb-6 border-b">
                 <div className="h-8 bg-muted rounded-md w-1/3 animate-pulse mb-2" />
                 <div className="h-5 bg-muted rounded-md w-1/2 animate-pulse" />
@@ -151,10 +172,39 @@ export default function ContestWeekPage() {
 
   return (
     <FeedLayout hideViewToggle wide>
-      <div className="flex flex-row sm:gap-2 lg:gap-4">
-        <TabNavigation navItems={weekItems} basePath="/contests" />
-        <div className="flex-1">
+      <div className="relative">
+        <div className="absolute -left-[100px] top-0 hidden xl:block">
+          <TabNavigation navItems={weekItems} basePath="/contests" />
+        </div>
+        <div className="max-w-3xl mx-auto">
           <div className="space-y-6">
+            <div className="xl:hidden mb-4 max-w-md">
+              <p className="text-sm text-muted-foreground mb-2">Pick a contest:</p>
+              <Select 
+                value={weekSlug} 
+                onValueChange={(value) => {
+                  if (value === "all-contests") {
+                    router.push("/contests")
+                  } else {
+                    router.push(`/contests/${value}`)
+                  }
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all-contests">
+                    All Contests
+                  </SelectItem>
+                  {weekItems.map((item) => (
+                    <SelectItem key={item.id} value={item.id}>
+                      {item.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <div className="pb-6 border-b">
               <h2 className="text-2xl font-semibold mb-2">
                 {contestData?.contest.name || `Week ${weekSlug.replace("week-", "")} Contest`}

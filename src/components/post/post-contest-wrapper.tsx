@@ -65,7 +65,7 @@ export function ContestPostWrapper({
 
   return (
     <div className={cn(
-      "relative rounded-lg border p-1 mt-2",
+      "relative rounded-lg border p-1 pt-3 mt-2 -ml-1 -mr-4",
       style.borderColor
     )}>
       {/* Place indicator badge */}
