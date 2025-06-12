@@ -18,22 +18,10 @@ interface ContestPostWrapperProps {
 
 const placeStyles = {
   1: {
-    borderColor: "border-yellow-400/60 dark:border-yellow-600/40",
-    bgGradient: "from-yellow-50/30 to-yellow-100/20 dark:from-yellow-950/10 dark:to-yellow-900/5",
-    crownColor: "text-yellow-600 dark:text-yellow-500",
-    prizeColor: "text-yellow-700 dark:text-yellow-400"
-  },
-  2: {
-    borderColor: "border-blue-400/60 dark:border-blue-600/40",
-    bgGradient: "from-blue-50/30 to-blue-100/20 dark:from-blue-950/10 dark:to-blue-900/5",
-    crownColor: "text-blue-600 dark:text-blue-500",
-    prizeColor: "text-blue-700 dark:text-blue-400"
-  },
-  3: {
-    borderColor: "border-orange-400/60 dark:border-orange-600/40",
-    bgGradient: "from-orange-50/30 to-orange-100/20 dark:from-orange-950/10 dark:to-orange-900/5",
-    crownColor: "text-orange-600 dark:text-orange-500",
-    prizeColor: "text-orange-700 dark:text-orange-400"
+    borderColor: "border-yellow-400/80 dark:border-yellow-500/60",
+    bgGradient: "from-yellow-50/50 to-yellow-100/30 dark:from-yellow-950/20 dark:to-yellow-900/10",
+    crownColor: "text-yellow-600 dark:text-yellow-400",
+    prizeColor: "text-yellow-700 dark:text-yellow-300"
   },
   default: {
     borderColor: "border-gray-300/60 dark:border-gray-600/40",
@@ -60,7 +48,7 @@ export function ContestPostWrapper({
   blockExplorerUrl = "https://lenscan.io/tx/",
   authors = []
 }: ContestPostWrapperProps) {
-  const style = placeStyles[place as keyof typeof placeStyles] || placeStyles.default
+  const style = place === 1 ? placeStyles[1] : placeStyles.default
   const showCrown = place <= 3
 
   return (
