@@ -24,8 +24,12 @@ p.first-paragraph {
   overflow: hidden;
 }
 
-[data-scroll-locked][data-scroll-locked] {
-  overflow: scroll !important;
+
+body[data-scroll-locked],
+html[data-scroll-locked] {
+  overflow: auto !important;
+  position: relative !important;
+  padding-right: 0 !important;
 }
 
 @keyframes fade-in {
@@ -33,6 +37,7 @@ p.first-paragraph {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
