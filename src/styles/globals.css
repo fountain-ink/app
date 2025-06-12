@@ -220,6 +220,13 @@ p.first-paragraph {
   .no-spinners {
     -moz-appearance: textfield;
   }
+
+  /* Hide search input clear button in Chrome/Safari */
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+  }
 }
 
 @layer base {

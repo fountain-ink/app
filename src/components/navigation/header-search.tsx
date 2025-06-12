@@ -96,7 +96,7 @@ export function HeaderSearch() {
             exit={{ opacity: 0, width: "100vw" }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
             onSubmit={handleSubmit}
-            className="fixed inset-x-0 top-0 z-50 h-[58px] bg-background px-4 border-b flex items-center gap-2"
+            className="fixed inset-x-0 top-0 z-50 h-[58px] bg-background pl-2 pr-4 border-b flex items-center gap-2"
           >
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
