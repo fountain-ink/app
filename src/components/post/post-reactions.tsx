@@ -3,9 +3,11 @@ import { ActionButton } from "./post-action-button";
 import { usePostActionsButtons } from "@/hooks/use-post-actions-buttons";
 import { memo } from "react";
 
-export const PostReactions = memo(({ post, hideAdminButtons = false }: { post: Post; hideAdminButtons?: boolean }) => {
+export const PostReactions = memo(({ post, hideAdminButtons = false, isCompact = false }: { post: Post; hideAdminButtons?: boolean; isCompact?: boolean }) => {
   const { likeButton, collectButton, commentButton, adminButtons } = usePostActionsButtons({ post });
-  const leftButtons = [commentButton, collectButton, likeButton];
+  const leftButtons = isCompact 
+    ? [commentButton, likeButton] // Hide collect button in compact mode
+    : [commentButton, collectButton, likeButton];
 
   return (
     <div className="flex flex-row gap-2 sm:gap-4 items-center justify-center">

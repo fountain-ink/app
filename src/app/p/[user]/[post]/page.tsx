@@ -7,6 +7,7 @@ import { PostActionsBar } from "@/components/post/post-actions-bar";
 import { FloatingActionBar } from "@/components/post/post-floating-actions-bar";
 import { PostMetadata } from "@/components/post/post-metadata";
 import { PostTags } from "@/components/post/post-tags";
+import { ReadMore } from "@/components/post/read-more";
 import { AuthorView } from "@/components/user/user-author-view";
 import { UserPostCard } from "@/components/user/user-post-card";
 import { ActionBarProvider } from "@/contexts/action-bar-context";
@@ -67,6 +68,7 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
             <CommentPreview post={post} />
             <FloatingActionBar post={post} account={profile?.loggedInAs.account} />
           </div>
+          <ReadMore author={post.author} currentPostId={post.id} />
         </ActionBarProvider>
       </div>
     );

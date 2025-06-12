@@ -23,6 +23,7 @@ export interface PostViewOptions {
   showPreview?: boolean;
   showContent?: boolean;
   showBlog?: boolean;
+  isCompact?: boolean;
 }
 
 interface PostViewProps {
@@ -182,24 +183,29 @@ export const PostView = memo(({
         {options.showPreview && (
           <div className="relative w-full mb-3">
             {coverUrl ? (
-              <div className="relative w-full overflow-hidden rounded-xl">
+              <div className={cn(
+                "relative w-full overflow-hidden rounded-xl",
+                options.isCompact && "h-48"
+              )}>
                 <Image
                   src={coverUrl}
                   alt={metadata.title || "Post preview"}
                   width={100}
                   height={100}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="w-full h-auto object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
+                  className={cn(
+                    "w-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-110",
+                    options.isCompact ? "h-full" : "h-auto"
+                  )}
                   priority={priority}
-                // quality={75}
-                // loading={priority ? "eager" : "lazy"}
-                // placeholder="blur"
-                // blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2E5YTlhOSIvPjwvc3ZnPg=="
                 />
                 <div className="absolute inset-0 pointer-events-none transition-opacity duration-300 ease-in-out bg-white opacity-0 group-hover:opacity-10" />
               </div>
             ) : (
-              <div className="relative w-full aspect-[4/3] overflow-hidden rounded-xl">
+              <div className={cn(
+                "relative w-full overflow-hidden rounded-xl",
+                options.isCompact ? "h-48" : "aspect-[4/3]"
+              )}>
                 <div className="absolute inset-0 bg-muted">
                   <div className="placeholder-background h-full w-full">&nbsp;</div>
                 </div>
@@ -239,7 +245,7 @@ export const PostView = memo(({
 
           {options.showTitle && metadata.title && (
             <h2
-              className="text-[1.25rem] font-[family-name:var(--title-font)] tracking-[-0.6px] font-medium leading-[1.35] mb-1"
+              className="!text-[1.25rem] !font-[family-name:var(--title-font)] !tracking-[-0.6px] !font-medium !leading-[1.35] !mb-1 !p-0"
               suppressHydrationWarning
             >
               {metadata.title}
@@ -248,7 +254,7 @@ export const PostView = memo(({
 
           {options.showSubtitle && subtitle && (
             <p
-              className="text-base font-[family-name:var(--paragraph-font)] text-muted-foreground leading-[1.35] line-clamp-3"
+              className="!text-base !font-[family-name:var(--paragraph-font)] !text-muted-foreground !leading-[1.35] !line-clamp-3 !p-0"
               suppressHydrationWarning
             >
               {subtitle}
@@ -259,12 +265,12 @@ export const PostView = memo(({
         <div className="flex flex-row justify-between items-center mt-3 h-8 text-sm">
           <div className="flex flex-row items-center gap-3">
             {options.showDate && (
-              <time className="text-xs text-muted-foreground" suppressHydrationWarning>
+              <time className="text-xs text-muted-foreground whitespace-nowrap" suppressHydrationWarning>
                 {formatDate(post.timestamp)}
               </time>
             )}
             <div onClick={handleInteractiveElementClick}>
-              <PostReactions post={post} hideAdminButtons={true} />
+              <PostReactions post={post} hideAdminButtons={true} isCompact={options.isCompact} />
             </div>
           </div>
 
@@ -387,14 +393,14 @@ export const PostView = memo(({
           <div className="flex flex-row items-center gap-3">
             <div className="flex justify-start">
               {options.showDate && (
-                <span className="text-foreground/80" suppressHydrationWarning>
+                <span className="text-foreground/80 whitespace-nowrap" suppressHydrationWarning>
                   {formatDate(post.timestamp)}
                 </span>
               )}
             </div>
             <div className="flex justify-center">
               <div onClick={handleInteractiveElementClick}>
-                <PostReactions post={post} />
+                <PostReactions post={post} isCompact={options.isCompact} />
               </div>
             </div>
           </div>
