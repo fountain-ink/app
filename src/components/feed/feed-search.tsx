@@ -20,6 +20,7 @@ export interface SearchFeedProps {
   initialPosts: AnyPost[]
   initialPaginationInfo: Partial<PaginatedResultInfo>
   initialQuery: string
+  initialTag?: string
   preFilteredPosts?: boolean
 }
 
@@ -27,12 +28,14 @@ export function SearchFeed({
   initialPosts,
   initialPaginationInfo,
   initialQuery,
+  initialTag = "",
   preFilteredPosts = false,
 }: SearchFeedProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { viewMode } = useFeedContext()
   const [searchQuery, setSearchQuery] = useState(initialQuery)
+  const [selectedTag, setSelectedTag] = useState(initialTag)
   const debouncedQuery = useDebounce(searchQuery, 500)
   const [filteredInitialPosts, setFilteredInitialPosts] = useState<AnyPost[]>(
     preFilteredPosts ? initialPosts : []
@@ -58,12 +61,18 @@ export function SearchFeed({
       params.delete("q")
     }
     
+    if (selectedTag) {
+      params.set("tag", selectedTag)
+    } else {
+      params.delete("tag")
+    }
+    
     const newUrl = params.toString() ? `/search?${params.toString()}` : "/search"
     router.push(newUrl, { scroll: false })
-  }, [debouncedQuery, router, searchParams])
+  }, [debouncedQuery, selectedTag, router, searchParams])
 
   const fetchMore = useCallback(async (cursor?: string) => {
-    if (!debouncedQuery) {
+    if (!debouncedQuery && !selectedTag) {
       return { items: [], pageInfo: undefined }
     }
 
@@ -73,8 +82,11 @@ export function SearchFeed({
     
     const result = await fetchPosts(lens, {
       filter: {
-        metadata: { mainContentFocus: [MainContentFocus.Article] },
-        searchQuery: debouncedQuery,
+        metadata: { 
+          mainContentFocus: [MainContentFocus.Article],
+          tags: selectedTag ? { oneOf: [selectedTag] } : undefined
+        },
+        searchQuery: debouncedQuery || undefined,
         apps: [env.NEXT_PUBLIC_APP_ADDRESS],
       },
       cursor: actualCursor,
@@ -86,7 +98,7 @@ export function SearchFeed({
 
     const filtered = await filterBannedPosts(result.items, checkBanStatus)
     return { items: filtered, pageInfo: result.pageInfo }
-  }, [debouncedQuery, checkBanStatus])
+  }, [debouncedQuery, selectedTag, checkBanStatus])
 
   const { items, isLoading, hasMore, loadMore, reset } = useInfiniteFeed({
     initialItems: filteredInitialPosts,
@@ -96,12 +108,12 @@ export function SearchFeed({
 
   useEffect(() => {
     const performSearch = async () => {
-      if (debouncedQuery === initialQuery) return
+      if (debouncedQuery === initialQuery && selectedTag === initialTag) return
       
       setIsSearching(true)
       reset()
       
-      if (debouncedQuery) {
+      if (debouncedQuery || selectedTag) {
         const result = await fetchMore()
         if (result.items.length > 0) {
           reset(result.items, result.pageInfo || {})
@@ -112,7 +124,7 @@ export function SearchFeed({
     }
 
     performSearch()
-  }, [debouncedQuery, fetchMore, initialQuery, reset])
+  }, [debouncedQuery, selectedTag, fetchMore, initialQuery, initialTag, reset])
 
   const renderPost = useCallback((post: AnyPost, index: number) => {
     return renderArticlePost(post, viewMode, { showAuthor: true }, index)
@@ -120,25 +132,66 @@ export function SearchFeed({
 
   const validPosts = useMemo(() => items.filter(isValidArticlePost), [items])
 
-  const showResults = debouncedQuery && !isSearching
+  const showResults = (debouncedQuery || selectedTag) && !isSearching
   const showEmpty = showResults && validPosts.length === 0 && !isLoading && !isInitializing
-  const showPrompt = !debouncedQuery && !isSearching
+  const showPrompt = !debouncedQuery && !selectedTag && !isSearching
+  
+  const commonTags = [
+    "web3", "blockchain", "crypto", "defi", "nft", 
+    "ethereum", "bitcoin", "technology", "programming", 
+    "art", "music", "philosophy", "politics", "science"
+  ]
+  
+  const handleTagClick = (tag: string) => {
+    setSelectedTag(tag === selectedTag ? "" : tag)
+  }
 
   return (
     <div className="w-full space-y-6">
       <div className="top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-4">
-        <div className="max-w-3xl mx-auto flex items-center gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search articles..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
+        <div className="max-w-3xl mx-auto flex flex-col gap-4">
+          <div className="flex items-center gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search articles..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <FeedViewToggle />
           </div>
-          <FeedViewToggle />
+          
+          {selectedTag && (
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Tag:</span>
+              <button
+                onClick={() => setSelectedTag("")}
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-primary/10 hover:bg-primary/20 transition-colors text-sm"
+              >
+                {selectedTag}
+                <span className="ml-1 text-xs">✕</span>
+              </button>
+            </div>
+          )}
+          
+          <div className="flex flex-wrap gap-2">
+            {commonTags.map((tag) => (
+              <button
+                key={tag}
+                onClick={() => handleTagClick(tag)}
+                className={`px-3 py-1 rounded-md text-sm transition-colors ${
+                  selectedTag === tag 
+                    ? "bg-primary text-primary-foreground" 
+                    : "border border-border hover:bg-secondary/50"
+                }`}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

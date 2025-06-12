@@ -9,40 +9,53 @@ import { getBannedAddresses, filterBannedPosts } from "@/lib/utils/ban-filter"
 interface SearchPageProps {
   searchParams: Promise<{
     q?: string
+    tag?: string
   }>
 }
 
 export async function generateMetadata({ searchParams }: SearchPageProps) {
-  const { q } = await searchParams
+  const { q, tag } = await searchParams
   const query = q || ""
+  const searchTag = tag || ""
+  
+  const title = query ? `Search: ${query} - Fountain` : 
+                searchTag ? `Tag: ${searchTag} - Fountain` : 
+                "Search - Fountain"
+  const description = query ? `Search results for "${query}" on Fountain` : 
+                     searchTag ? `Articles tagged with "${searchTag}" on Fountain` :
+                     "Search articles on Fountain"
   
   return {
-    title: query ? `Search: ${query} - Fountain` : "Search - Fountain",
-    description: query ? `Search results for "${query}" on Fountain` : "Search articles on Fountain",
+    title,
+    description,
     openGraph: {
-      title: query ? `Search: ${query} - Fountain` : "Search - Fountain",
-      description: query ? `Search results for "${query}" on Fountain` : "Search articles on Fountain",
+      title,
+      description,
     },
     twitter: {
       card: "summary",
-      title: query ? `Search: ${query} - Fountain` : "Search - Fountain",
-      description: query ? `Search results for "${query}" on Fountain` : "Search articles on Fountain",
+      title,
+      description,
     },
   }
 }
 
 const SearchPage = async ({ searchParams }: SearchPageProps) => {
-  const { q } = await searchParams
+  const { q, tag } = await searchParams
   const query = q || ""
+  const searchTag = tag || ""
   
   const lens = await getLensClient()
 
-  if (query) {
+  if (query || searchTag) {
     const [postsResult, bannedAddresses] = await Promise.all([
       fetchPosts(lens, {
         filter: {
-          metadata: { mainContentFocus: [MainContentFocus.Article] },
-          searchQuery: query,
+          metadata: { 
+            mainContentFocus: [MainContentFocus.Article],
+            tags: searchTag ? { oneOf: [searchTag] } : undefined
+          },
+          searchQuery: query || undefined,
           apps: [env.NEXT_PUBLIC_APP_ADDRESS],
         },
       }).unwrapOr(null),
@@ -59,6 +72,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
           initialPosts={filteredPosts}
           initialPaginationInfo={pageInfo}
           initialQuery={query}
+          initialTag={searchTag}
           preFilteredPosts={true}
         />
       </SearchLayout>
@@ -71,6 +85,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
         initialPosts={[]}
         initialPaginationInfo={{}}
         initialQuery=""
+        initialTag=""
         preFilteredPosts={true}
       />
     </SearchLayout>

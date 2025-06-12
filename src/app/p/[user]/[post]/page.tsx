@@ -6,6 +6,7 @@ import ErrorPage from "@/components/misc/error-page";
 import { PostActionsBar } from "@/components/post/post-actions-bar";
 import { FloatingActionBar } from "@/components/post/post-floating-actions-bar";
 import { PostMetadata } from "@/components/post/post-metadata";
+import { PostTags } from "@/components/post/post-tags";
 import { AuthorView } from "@/components/user/user-author-view";
 import { UserPostCard } from "@/components/user/user-post-card";
 import { ActionBarProvider } from "@/contexts/action-bar-context";
@@ -59,6 +60,9 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
           <div className="max-w-[60ch] mx-auto p-4 sm:p-8 md:px-16 flex flex-col gap-6 sm:gap-8">
             <PostActionsBar post={post} />
             <UserPostCard account={post.author} stats={authorStats} />
+            {post.metadata.tags && post.metadata.tags.length > 0 && (
+              <PostTags tags={post.metadata.tags} />
+            )}
             <PostMetadata post={post} />
             <CommentPreview post={post} />
             <FloatingActionBar post={post} account={profile?.loggedInAs.account} />
