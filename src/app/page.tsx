@@ -1,110 +1,184 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { ConnectWalletButton } from "@/components/auth/auth-wallet-button";
-import { DraftCreateButton } from "@/components/draft/draft-create-button";
-import { GraphicHand, GraphicInk } from "@/components/icons/custom-icons";
-import { ArticleLayout } from "@/components/navigation/article-layout";
-import { GradientBlur } from "@/components/navigation/gradient-blur";
-import Link from "next/link";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
+import { RoughNotation, RoughNotationGroup } from "react-rough-notation";
+import Image from "next/image";
+import React from "react";
+import "@/styles/article.css";
+
+const features = [
+  {
+    image: "/images/no-tech-1.svg",
+    title: "No big tech or vendor lock-in",
+    description: (
+      <>
+        Fountain is built on user ownership of and decentralisation, secured by{" "}
+        <RoughNotation type="underline" color="hsl(var(--primary))" order={4}>
+          <span className="text-primary whitespace-nowrap">Ethereum</span>
+        </RoughNotation>
+        . We believe in{" "}
+        <RoughNotation type="underline" color="hsl(var(--primary))" order={4}>
+          <a href="https://github.com/fountain-ink/app" target="_blank" className="text-primary whitespace-nowrap">open-source</a>
+        </RoughNotation>{" "}
+        and letting users stay in control of their writing and audience.
+      </>
+    ),
+    color: "bg-[#CFDFF7]",
+  },
+  {
+    image: "/images/sun-transparent-2.png",
+    title: "No ads - slow social",
+    description: (
+      <>
+        The previous generation of social ran on attention maxxing and squeezing
+        ad revenue out of users. We think users should control and{" "}
+        <RoughNotation type="underline" color="hsl(var(--primary))" order={4}>
+          <span className="text-primary whitespace-nowrap">
+            own their content and connections
+          </span>
+        </RoughNotation>
+        .
+      </>
+    ),
+    color: "bg-[#D1EBDB]",
+  },
+  {
+    image: "/images/hands-transparent-4.png",
+    title: "Experiments in collaboration",
+    description: (
+      <>
+        Fountain has{" "}
+        <RoughNotation type="underline" color="hsl(var(--primary))" order={4}>
+          <span className="text-primary whitespace-nowrap">
+            multiplayer built in
+          </span>
+        </RoughNotation>
+        , just like Figma or Notion. Beyond that, there are many kinds of groups
+        and zines with super easy{" "}
+        <RoughNotation type="underline" color="hsl(var(--primary))" order={4}>
+          <span className="text-primary whitespace-nowrap">revenue splits</span>
+        </RoughNotation>{" "}
+        out of the box.
+      </>
+    ),
+    color: "bg-[#FFF4C1]",
+  },
+  {
+    image: "/images/notes-svg-4.svg",
+    title: "Become a better writer",
+    description: (
+      <>
+        Fountain is designed to be the world typewriter - no distractions when
+        writing, but{" "}
+        <RoughNotation type="underline" color="hsl(var(--primary))" order={4}>
+          <span className="text-primary whitespace-nowrap">help you grow</span>
+        </RoughNotation>{" "}
+        as a writer through feedback from other users and AI assistants.
+      </>
+    ),
+    color: "bg-[#FFE4E4]",
+  },
+];
+
+const arrows = [
+  "/images/arrow-right-1.svg",
+  "/images/arrow-left-2.svg",
+  "/images/arrow-right-3.svg",
+];
 
 export default function HomePage() {
-  const [showBanner, setShowBanner] = useState(true);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setShowBanner(false);
-        window.removeEventListener("scroll", handleScroll);
-      }
-    };
-
-    if (showBanner) {
-      window.addEventListener("scroll", handleScroll);
-    }
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [showBanner]);
-
   return (
-    <>
-      <GradientBlur />
-      <main className="flex flex-col items-center max-w-md sm:max-w-lg mx-auto" id={"scroll_container"}>
-        <ArticleLayout>
-          <div className="-mt-10">
-            <header className="text-center title">Writing, redefined</header>
-            <header className="text-center subtitle">Welcome to Fountain.</header>
-
-            <GraphicHand />
-
-            <div className="flex justify-center pt-10 pb-10 items-center">
-              <ConnectWalletButton text="Join Now" />
-            </div>
-
-            <p>
-              <b>Own your content and audience.</b> Because of the way Fountain is built, nobody, not even us, can take
-              it away.
-            </p>
-
-            <p>
-              <b>Copyrighted automatically.</b> All Fountain posts are timestamped and written into blockchain, with a
-              license of your liking attached.
-            </p>
-
-            <p>
-              <b>Earn in new ways.</b> We help you get rewarded directly by the people who enjoy your words.
-            </p>
-
-            <p>
-              <b>Human collaboration.</b> Writing with friends is as simple as copy-pasting a link to your browser.
-            </p>
-
-            <p>
-              <b>Public goods.</b> Fountain is proudly{" "}
-              <Link href="https://github.com/fountain-ink/app" className="underline decoration-offset-4 decoration-2">
-                open source
-              </Link>{" "}
-              under AGPLv3.
-            </p>
-
-            <p>
-              <b>Decentralized resilience.</b> Built on top of{" "}
-              <Link href="https://lens.xyz" className="underline decoration-offset-4 decoration-2">
-                Lens
-              </Link>
-              , Fountain features zero vendor lock in. All of your content is distributed across every Lens app, in the
-              present and in the future.
-            </p>
-
-            <div className="w-full h-auto relative">
-              <GraphicInk />
-            </div>
-
-            <div className="flex justify-center py-10 pb-20 items-center">
-              <DraftCreateButton text="Start Writing" />
-            </div>
-          </div>
-        </ArticleLayout>
-      </main>
-
-      <div
-        className={`
-          fixed bottom-0 left-0 right-0 z-50
-          flex justify-center items-center p-4
-          bg-gradient-to-t from-background via-background/90 to-transparent
-          transition-opacity duration-300 ease-in-out
-          ${showBanner ? "opacity-100" : "opacity-0 pointer-events-none"}
-        `}
-        aria-hidden={!showBanner}
-      >
-        <div className="flex flex-col items-center text-sm font-medium">
-          Read More
-          <ChevronDownIcon className="w-4 h-4" />
+    <main className="container article mx-auto px-4 py-16">
+      <RoughNotationGroup show>
+        <div className="text-center mb-16">
+          <header className="text-6xl font-serif title">
+            <RoughNotation type="highlight" color="#CFDFF7" order="1">
+              Read
+            </RoughNotation>
+            ,{" "}
+            <RoughNotation type="highlight" color="#D1EBDB" order="2">
+              write
+            </RoughNotation>{" "}
+            &{" "}
+            <RoughNotation type="highlight" color="#FFF4C1" order="3">
+              collaborate
+            </RoughNotation>
+            <br />
+            <RoughNotation type="underline" color="black" order="4">
+              with others
+            </RoughNotation>
+          </header>
+          <header className="!text-2xl !tracking-tighter !font-normal !mt-8 max-w-2xl mx-auto !text-primary/60 subtitle">
+            Fountain is a blogging platform for experimentation on a new kind of
+            collaborative internet.
+          </header>
         </div>
-      </div>
-    </>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 max-w-6xl mx-auto gap-x-2 gap-y-4 md:gap-y-0 py-8 items-center">
+          {features.map((feature, index) => {
+            const featureEl = (
+              <div
+                className={`flex gap-8 items-start ${index % 2 === 0
+                  ? "flex-row-reverse lg:flex-row"
+                  : "flex-row"
+                  }`}
+              >
+                <div
+                  className={`sm:w-40 sm:h-40 w-28 h-28 rounded-lg flex-shrink-0 ${feature.color} overflow-hidden`}
+                >
+                  <Image
+                    src={feature.image}
+                    alt={feature.title}
+                    width={128}
+                    height={128}
+                    className={`w-full h-full object-contain `}
+                  />
+                </div>
+                <div
+                  className={`pt-2 flex-grow ${index % 2 === 0 ? "text-right lg:text-left" : ""
+                    }`}
+                >
+                  <h3 className="!text-xl sm:!text-2xl !p-0 !font-medium !mb-0">
+                    {feature.title}
+                  </h3>
+                  <div className={` w-full flex ${index % 2 === 0 ? "lg:justify-start justify-end" : "justify-start"}`}>
+                    <p className="!text-sm sm:!text-base !pt-0 sm:!pt-4 !leading-normal !tracking-tight !text-primary/50 !max-w-xs">
+                      {feature.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+
+            const arrow = arrows[index];
+            const arrowEl = arrow ? (
+              <Image src={arrow} alt="arrow" width={80} height={80} />
+            ) : (
+              <div />
+            );
+
+            if (index % 2 === 0) {
+              // Left feature, right arrow
+              return (
+                <React.Fragment key={feature.title}>
+                  <div className="lg:col-span-1">{featureEl}</div>
+                  <div className="hidden lg:flex items-center justify-start">
+                    {arrowEl}
+                  </div>
+                </React.Fragment>
+              );
+            }
+            // Left arrow, right feature
+            return (
+              <React.Fragment key={feature.title}>
+                <div className="hidden lg:flex items-center justify-end mr-4">
+                  {arrowEl}
+                </div>
+                <div className="lg:col-span-1">{featureEl}</div>
+              </React.Fragment>
+            );
+          })}
+        </div>
+      </RoughNotationGroup>
+    </main>
   );
 }
