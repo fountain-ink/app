@@ -56,6 +56,7 @@ export interface PostRenderOptions {
   showSubtitle?: boolean
   showDate?: boolean
   showPreview?: boolean
+  isCompact?: boolean
 }
 
 export function renderArticlePost(
@@ -97,6 +98,7 @@ export interface FeedProps {
   emptySubtitle?: string
   skeletonCount?: number
   forceViewMode?: "single" | "grid"
+  disableInfiniteScroll?: boolean
 }
 
 export function Feed({
@@ -109,6 +111,7 @@ export function Feed({
   emptySubtitle = "Check back later or explore other content",
   skeletonCount = 6,
   forceViewMode,
+  disableInfiniteScroll = false,
 }: FeedProps) {
   const { viewMode: contextViewMode } = useFeedContext()
   const viewMode = forceViewMode || contextViewMode
@@ -127,10 +130,10 @@ export function Feed({
   })
 
   useEffect(() => {
-    if (entry?.isIntersecting && hasMore && !isLoading && onLoadMore) {
+    if (entry?.isIntersecting && hasMore && !isLoading && onLoadMore && !disableInfiniteScroll) {
       onLoadMore()
     }
-  }, [entry?.isIntersecting, hasMore, isLoading, onLoadMore])
+  }, [entry?.isIntersecting, hasMore, isLoading, onLoadMore, disableInfiniteScroll])
 
 
   if (safeItems.length === 0 && !isLoading) {
@@ -190,7 +193,7 @@ export function Feed({
           }
         </Masonry>
 
-        {hasMore && <div key={observerKey} ref={loadMoreRef} className="h-20" />}
+        {hasMore && !disableInfiniteScroll && <div key={observerKey} ref={loadMoreRef} className="h-20" />}
       </div>
     )
   }
@@ -220,7 +223,7 @@ export function Feed({
         </div>
       )}
 
-      {hasMore && <div key={observerKey} ref={loadMoreRef} className="h-10" />}
+      {hasMore && !disableInfiniteScroll && <div key={observerKey} ref={loadMoreRef} className="h-10" />}
     </div>
   )
 }
