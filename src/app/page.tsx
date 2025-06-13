@@ -4,6 +4,7 @@ import { RoughNotation, RoughNotationGroup } from "react-rough-notation";
 import Image from "next/image";
 import React from "react";
 import "@/styles/article.css";
+import { useTheme } from "next-themes";
 
 const features = [
   {
@@ -22,7 +23,9 @@ const features = [
         and letting users stay in control of their writing and audience.
       </>
     ),
-    color: "bg-[#CFDFF7]",
+    color: "bg-[#CFDFF7] dark:bg-[#CFDFF7]/70",
+    highlightColor: "#CFDFF7",
+    highlightColorDark: "rgba(207, 223, 247, 0.5)",
   },
   {
     image: "/images/sun-transparent-2.png",
@@ -39,7 +42,9 @@ const features = [
         .
       </>
     ),
-    color: "bg-[#D1EBDB]",
+    color: "bg-[#D1EBDB] dark:bg-[#D1EBDB]/70",
+    highlightColor: "#D1EBDB",
+    highlightColorDark: "rgba(209, 235, 219, 0.5)",
   },
   {
     image: "/images/hands-transparent-4.png",
@@ -60,7 +65,9 @@ const features = [
         out of the box.
       </>
     ),
-    color: "bg-[#FFF4C1]",
+    color: "bg-[#FFF4C1] dark:bg-[#FFF4C1]/70",
+    highlightColor: "#FFF4C1",
+    highlightColorDark: "rgba(255, 244, 193, 0.5)",
   },
   {
     image: "/images/notes-svg-4.svg",
@@ -75,7 +82,9 @@ const features = [
         as a writer through feedback from other users and AI assistants.
       </>
     ),
-    color: "bg-[#FFE4E4]",
+    color: "bg-[#FFE4E4] dark:bg-[#FFE4E4]/70",
+    highlightColor: "#FFE4E4",
+    highlightColorDark: "rgba(255, 228, 228, 0.5)",
   },
 ];
 
@@ -86,24 +95,27 @@ const arrows = [
 ];
 
 export default function HomePage() {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
   return (
     <main className="container article mx-auto px-4 py-16">
       <RoughNotationGroup show>
         <div className="text-center mb-16">
           <header className="text-6xl font-serif title">
-            <RoughNotation type="highlight" color="#CFDFF7" order="1">
+            <RoughNotation type="highlight" color={isDark ? features[0].highlightColorDark : features[0].highlightColor} order="1">
               Read
             </RoughNotation>
             ,{" "}
-            <RoughNotation type="highlight" color="#D1EBDB" order="2">
+            <RoughNotation type="highlight" color={isDark ? features[1].highlightColorDark : features[1].highlightColor} order="2">
               write
             </RoughNotation>{" "}
             &{" "}
-            <RoughNotation type="highlight" color="#FFF4C1" order="3">
+            <RoughNotation type="highlight" color={isDark ? features[2].highlightColorDark : features[2].highlightColor} order="3">
               collaborate
             </RoughNotation>
             <br />
-            <RoughNotation type="underline" color="black" order="4">
+            <RoughNotation type="underline" color={isDark ? "hsl(var(--primary))" : "black"} order="4">
               with others
             </RoughNotation>
           </header>
