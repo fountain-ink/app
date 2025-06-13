@@ -103,15 +103,15 @@ export default function HomePage() {
       <RoughNotationGroup show>
         <div className="text-center mb-16">
           <header className="text-6xl font-serif title">
-            <RoughNotation type="highlight" color={isDark ? features[0].highlightColorDark : features[0].highlightColor} order="1">
+            <RoughNotation type="highlight" color={isDark ? features[0]?.highlightColorDark : features[0]?.highlightColor} order="1">
               Read
             </RoughNotation>
             ,{" "}
-            <RoughNotation type="highlight" color={isDark ? features[1].highlightColorDark : features[1].highlightColor} order="2">
+            <RoughNotation type="highlight" color={isDark ? features[1]?.highlightColorDark : features[1]?.highlightColor} order="2">
               write
             </RoughNotation>{" "}
             &{" "}
-            <RoughNotation type="highlight" color={isDark ? features[2].highlightColorDark : features[2].highlightColor} order="3">
+            <RoughNotation type="highlight" color={isDark ? features[2]?.highlightColorDark : features[2]?.highlightColor} order="3">
               collaborate
             </RoughNotation>
             <br />
