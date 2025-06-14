@@ -9,6 +9,10 @@ import { Bird, HighFive, Notes, Sun } from "@/components/icons/landing-images";
 import { FavoritesFeed } from "@/components/feed/feed-favorites";
 import { FeedProvider } from "@/contexts/feed-context";
 import type { AnyPost } from "@lens-protocol/client";
+import { ConnectWalletButton } from "@/components/auth/auth-wallet-button";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { ConnectKitButton } from "connectkit";
 
 const features = [
   {
@@ -210,7 +214,7 @@ export function LandingPageClient({ favoritePosts }: LandingPageClientProps) {
       </main>
 
       {favoritePosts.length > 0 && (
-        <section className="container mx-auto max-w-5xl px-4 py-16">
+        <section className="container mx-auto max-w-5xl px-4 py-16 relative">
           <div className="mb-12">
             <RoughNotationGroup show>
               <RoughNotation type="underline" color={"hsl(var(--primary))"}>
@@ -225,6 +229,24 @@ export function LandingPageClient({ favoritePosts }: LandingPageClientProps) {
               <FavoritesFeed posts={favoritePosts} showFadeOut={true} />
             </div>
           </FeedProvider>
+
+          <div className="absolute bottom-10 left-0 right-0 flex justify-center pb-8 z-10">
+            <ConnectKitButton.Custom>
+              {({ isConnected }) => (
+                <>
+                  {isConnected ? (
+                    <Link href="/featured">
+                      <Button variant="default" className="shadow-lg">
+                        Read More
+                      </Button>
+                    </Link>
+                  ) : (
+                    <ConnectWalletButton text="Join now" className="shadow-lg" />
+                  )}
+                </>
+              )}
+            </ConnectKitButton.Custom>
+          </div>
         </section>
       )}
     </>
