@@ -4,7 +4,7 @@ import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { fetchAccount } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
-import { ImportDialog } from "@/components/draft/import-dialog";
+import { ImportDialog } from "@/components/draft/draft-import-dialog";
 import { DraftCreateButton } from "@/components/draft/draft-create-button";
 
 export const maxDuration = 60;

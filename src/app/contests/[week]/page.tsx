@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { FeedLayout } from "@/components/navigation/feed-layout"
-import { TabNavigation } from "@/components/settings/tab-navigation"
+import { TabNavigation } from "@/components/navigation/tab-navigation"
 import { ContestPostWrapper } from "@/components/post/post-contest-wrapper"
 import { PostSkeleton } from "@/components/post/post-skeleton"
 import { Calendar, Trophy } from "lucide-react"
@@ -180,8 +180,8 @@ export default function ContestWeekPage() {
           <div className="">
             <div className="xl:hidden mb-4 max-w-md">
               <p className="text-sm text-muted-foreground mb-2">Pick a contest:</p>
-              <Select 
-                value={weekSlug} 
+              <Select
+                value={weekSlug}
                 onValueChange={(value) => {
                   if (value === "all-contests") {
                     router.push("/contests")

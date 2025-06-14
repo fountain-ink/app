@@ -29,7 +29,7 @@ import { getCookie } from "cookies-next";
 import { Button } from "@/components/ui/button";
 import { CoinIcon } from "@/components/icons/custom-icons";
 import { usePublishDraft } from "@/hooks/use-publish-draft";
-import { ImageUploader } from "@/components/images/image-uploader";
+import { ImageUploader } from "@/components/misc/image-uploader";
 import { uploadFile } from "@/lib/upload/upload-file";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";

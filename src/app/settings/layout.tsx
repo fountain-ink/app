@@ -1,6 +1,6 @@
 "use client";
 
-import { TabNavigation } from "@/components/settings/tab-navigation";
+import { TabNavigation } from "@/components/navigation/tab-navigation";
 import {
   Brush,
   DollarSign,

@@ -18,7 +18,7 @@ import { Account } from "@lens-protocol/client";
 import { Globe } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { ImageCropperUploader } from "../images/image-uploader";
+import { ImageCropperUploader } from "../misc/image-uploader";
 import { Button } from "../ui/button";
 import { TextareaAutosize } from "../ui/textarea";
 import { useRouter } from "next/navigation";

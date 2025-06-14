@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { TextareaAutosize } from "../ui/textarea";
-import { ImageCropperUploader } from "../images/image-uploader";
+import { ImageCropperUploader } from "../misc/image-uploader";
 import { DialogHeader, DialogTitle } from "../ui/dialog";
 import { X, ChevronLeft } from "lucide-react";
 

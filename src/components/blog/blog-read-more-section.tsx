@@ -9,7 +9,7 @@ import { evmAddress } from "@lens-protocol/client"
 import { fetchPosts } from "@lens-protocol/client/actions"
 import { EvmAddress } from "@lens-protocol/metadata"
 import { getLensClient } from "@/lib/lens/client"
-import { PostView } from "./post-view"
+import { PostView } from "../post/post-view"
 import { Button } from "@/components/ui/button"
 import { env } from "@/env"
 

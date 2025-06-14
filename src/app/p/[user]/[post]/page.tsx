@@ -7,7 +7,7 @@ import { PostActionsBar } from "@/components/post/post-actions-bar";
 import { FloatingActionBar } from "@/components/post/post-floating-actions-bar";
 import { PostMetadata } from "@/components/post/post-metadata";
 import { PostTags } from "@/components/post/post-tags";
-import { ReadMore } from "@/components/post/read-more";
+import { ReadMore } from "@/components/blog/blog-read-more-section";
 import { AuthorView } from "@/components/user/user-author-view";
 import { UserPostCard } from "@/components/user/user-post-card";
 import { ActionBarProvider } from "@/contexts/action-bar-context";

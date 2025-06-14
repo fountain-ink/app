@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { FeedLayout } from "@/components/navigation/feed-layout"
-import { TabNavigation } from "@/components/settings/tab-navigation"
+import { TabNavigation } from "@/components/navigation/tab-navigation"
 import { ContestPostWrapper } from "@/components/post/post-contest-wrapper"
 import { PostView } from "@/components/post/post-view"
 import { PostSkeleton } from "@/components/post/post-skeleton"
