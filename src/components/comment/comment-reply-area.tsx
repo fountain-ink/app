@@ -8,7 +8,7 @@ import { Account, PostFeedInfo } from "@lens-protocol/client";
 import { currentSession, fetchPost, post } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { textOnly } from "@lens-protocol/metadata";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useAccount, useWalletClient } from "wagmi";
 import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
@@ -37,12 +37,28 @@ export const CommentReplyArea = ({
   account,
   isCompact = false,
 }: PostReplyAreaProps) => {
+  const storageKey = `comment-draft-${postId}`;
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: walletClient } = useWalletClient();
   const reconnectWallet = useReconnectWallet();
   const { isConnected: isWalletConnected, status: walletClientStatus } = useAccount();
   const { data: authenticatedUser, loading: isAuthenticatedUserLoading } = useAuthenticatedUser();
+
+  useEffect(() => {
+    const savedDraft = localStorage.getItem(storageKey);
+    if (savedDraft) {
+      setContent(savedDraft);
+    }
+  }, [storageKey]);
+
+  useEffect(() => {
+    if (content.trim()) {
+      localStorage.setItem(storageKey, content);
+    } else {
+      localStorage.removeItem(storageKey);
+    }
+  }, [content, storageKey]);
 
   const handleSubmit = async () => {
     if (!content.trim() || isSubmitting) return;
@@ -107,6 +123,7 @@ export const CommentReplyArea = ({
       toast.dismiss(pendingToast);
 
       setContent("");
+      localStorage.removeItem(storageKey);
 
       if (onSubmit) {
         await onSubmit(content.trim());
@@ -123,6 +140,7 @@ export const CommentReplyArea = ({
 
   const handleCancel = () => {
     setContent("");
+    localStorage.removeItem(storageKey);
     onCancel?.();
   };
 
