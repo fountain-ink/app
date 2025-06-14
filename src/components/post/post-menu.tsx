@@ -26,6 +26,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { ConfirmButton } from "@/components/ui/confirm-button";
+import { getPostUrl } from "@/lib/utils/get-post-url";
 
 export const PostMenu = ({ post }: { post: Post }) => {
   const { handleBookmark, stats, operations, isLoggedIn } = usePostActions(post);
@@ -38,7 +39,7 @@ export const PostMenu = ({ post }: { post: Post }) => {
   const { saveDocument } = useDocumentStorage();
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(`${getBaseUrl()}p/${post.author.username?.localName}/${post.slug}`);
+    navigator.clipboard.writeText(`${getBaseUrl()}${getPostUrl(post).slice(1)}`);
     toast.success("Link copied to clipboard");
   };
 

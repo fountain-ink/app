@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useCallback } from "react";
 import { useSharedPostActions } from "@/contexts/post-actions-context";
 import { useAuthenticatedUser } from "@lens-protocol/react";
+import { getPostUrl } from "@/lib/utils/get-post-url";
 
 export const usePostActions = (post: Post) => {
   const router = useRouter();
@@ -79,7 +80,7 @@ export const usePostActions = (post: Post) => {
   const handleComment = useCallback(
     async (redirectToPost?: boolean) => {
       if (redirectToPost) {
-        window.location.href = `/p/${post.author.username?.localName}/${post.slug}?comment=${post.slug}`;
+        window.location.href = `${getPostUrl(post)}?comment=${post.slug}`;
         return;
       }
 

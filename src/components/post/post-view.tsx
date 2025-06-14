@@ -14,6 +14,7 @@ import { extractSubtitle } from "@/lib/extract-subtitle";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useFeedContext } from "@/contexts/feed-context";
 import { useImagePreload } from "@/hooks/use-image-preload";
+import { getPostUrl } from "@/lib/utils/get-post-url";
 
 export interface PostViewOptions {
   showDate?: boolean;
@@ -100,8 +101,7 @@ export const PostView = memo(({
     [subtitleFromAttributes, contentJson]
   );
 
-  const username = post.author.username?.localName || "";
-  const href = `/p/${username}/${post.slug}`;
+  const href = getPostUrl(post);
 
   // Only prefetch on hover, not on mount
   const handleMouseEnter = useCallback(() => {

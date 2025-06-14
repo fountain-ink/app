@@ -123,7 +123,8 @@ export async function publishPost(
     postId: postValue.value?.id as PostId,
   });
 
-  router.push(`/p/${username}/${postSlug}?success=true`);
+  const redirectSlug = draft.slug || postSlug;
+  router.push(`/p/${username}/${redirectSlug}?success=true`);
   router.refresh();
 
   if (sendNewsletter) {

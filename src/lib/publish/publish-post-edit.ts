@@ -107,7 +107,8 @@ export async function publishPostEdit(
       postId: postId(draft.published_id),
     });
 
-    router.push(`/p/${username}/${postSlug}?updated=true`);
+    const redirectSlug = draft.slug || postSlug;
+    router.push(`/p/${username}/${redirectSlug}?updated=true`);
     router.refresh();
   }
 
