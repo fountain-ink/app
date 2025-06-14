@@ -56,7 +56,7 @@ type PostActionButtons = {
   adminButtons?: ActionButtonConfig[];
 };
 
-export const usePostActionsButtons = ({ post }: { post: Post }): PostActionButtons => {
+export const usePostActionsButtons = ({ post, tipPopoverOpen, onTipPopoverChange }: { post: Post; tipPopoverOpen?: boolean; onTipPopoverChange?: (open: boolean) => void }): PostActionButtons => {
   const {
     handleComment,
     handleCollect,
@@ -120,7 +120,12 @@ export const usePostActionsButtons = ({ post }: { post: Post }): PostActionButto
       fillColor: "rgba(254, 178, 4, 0.3)",
       shouldIncrementOnClick: false,
       renderPopover: (trigger: React.ReactElement) => (
-        <TipPopover onCollectClick={handleCollect} post={post}>
+        <TipPopover 
+          onCollectClick={handleCollect} 
+          post={post} 
+          open={tipPopoverOpen}
+          onOpenChange={onTipPopoverChange}
+        >
           {trigger}
         </TipPopover>
       ),

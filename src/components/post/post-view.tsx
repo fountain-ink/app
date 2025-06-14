@@ -145,6 +145,7 @@ export const PostView = memo(({
 
   const handleInteractiveElementClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
+    e.preventDefault();
   }, []);
 
   const handleCardClick = useCallback((e: MouseEvent) => {

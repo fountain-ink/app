@@ -5,7 +5,7 @@ import { useScroll } from "@/hooks/use-scroll";
 import { Account, AnyPost, Post } from "@lens-protocol/client";
 import { motion } from "motion/react";
 import { ActionButton } from "./post-action-button";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useActionBar } from "@/contexts/action-bar-context";
 import { useOnScreen } from "@/hooks/use-on-screen";
 import { usePostActionsButtons } from "@/hooks/use-post-actions-buttons";
@@ -15,12 +15,25 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
   const translateY = scrollProgress * 100;
   const { actionBarRef } = useActionBar();
   const isActionBarVisible = useOnScreen(actionBarRef, { threshold: 0.5 });
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [tipPopoverOpen, setTipPopoverOpen] = useState(false);
+
+  useEffect(() => {
+    const isHiding = isActionBarVisible || (!shouldShow && shouldAnimate);
+    if (isHiding && tipPopoverOpen) {
+      setTipPopoverOpen(false);
+    }
+  }, [isActionBarVisible, shouldShow, shouldAnimate, tipPopoverOpen]);
 
   if (post.__typename !== "Post") {
     return null;
   }
 
-  const { likeButton, collectButton, commentButton, bookmarkButton, shareButton } = usePostActionsButtons({ post });
+  const { likeButton, collectButton, commentButton, bookmarkButton, shareButton } = usePostActionsButtons({ 
+    post,
+    tipPopoverOpen,
+    onTipPopoverChange: setTipPopoverOpen
+  });
 
   const actionButtons = [shareButton, bookmarkButton, collectButton, commentButton, likeButton];
 
@@ -28,6 +41,7 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
     <>
       <TooltipProvider delayDuration={300}>
         <motion.div
+          ref={containerRef}
           style={{
             opacity: isActionBarVisible ? 0 : 1.0 - scrollProgress,
           }}
