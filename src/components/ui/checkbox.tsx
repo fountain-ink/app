@@ -1,20 +1,86 @@
-"use client";
+'use client';
 
-import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
-import { cn, withRef } from "@udecode/cn";
-import { Check } from "lucide-react";
+import * as React from 'react';
+import { Checkbox as CheckboxPrimitive } from 'radix-ui';
+import { motion, type HTMLMotionProps } from 'motion/react';
 
-export const Checkbox = withRef<typeof CheckboxPrimitive.Root>(({ className, ...props }, ref) => (
-  <CheckboxPrimitive.Root
-    ref={ref}
-    className={cn(
-      "peer size-4 shrink-0 rounded-[4px] border border-primary bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
-      className,
-    )}
-    {...props}
-  >
-    <CheckboxPrimitive.Indicator className={cn("flex items-center justify-center text-current")}>
-      <Check className="size-4" />
-    </CheckboxPrimitive.Indicator>
-  </CheckboxPrimitive.Root>
-));
+import { cn } from '@/lib/utils';
+
+type CheckboxProps = React.ComponentProps<typeof CheckboxPrimitive.Root> &
+  HTMLMotionProps<'button'>;
+
+function Checkbox({ className, onCheckedChange, ...props }: CheckboxProps) {
+  const [isChecked, setIsChecked] = React.useState(
+    props?.checked ?? props?.defaultChecked ?? false,
+  );
+
+  React.useEffect(() => {
+    if (props?.checked !== undefined) setIsChecked(props.checked);
+  }, [props?.checked]);
+
+  const handleCheckedChange = React.useCallback(
+    (checked: boolean) => {
+      setIsChecked(checked);
+      onCheckedChange?.(checked);
+    },
+    [onCheckedChange],
+  );
+
+  return (
+    <CheckboxPrimitive.Root
+      {...props}
+      onCheckedChange={handleCheckedChange}
+      asChild
+    >
+      <motion.button
+        data-slot="checkbox"
+        className={cn(
+          'peer size-5 flex items-center justify-center shrink-0 rounded-sm bg-input transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground',
+          className,
+        )}
+        whileTap={{ scale: 0.95 }}
+        whileHover={{ scale: 1.05 }}
+        {...props}
+      >
+        <CheckboxPrimitive.Indicator forceMount asChild>
+          <motion.svg
+            data-slot="checkbox-indicator"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="3.5"
+            stroke="currentColor"
+            className="size-3.5"
+            initial="unchecked"
+            animate={isChecked ? 'checked' : 'unchecked'}
+          >
+            <motion.path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M4.5 12.75l6 6 9-13.5"
+              variants={{
+                checked: {
+                  pathLength: 1,
+                  opacity: 1,
+                  transition: {
+                    duration: 0.2,
+                    delay: 0.2,
+                  },
+                },
+                unchecked: {
+                  pathLength: 0,
+                  opacity: 0,
+                  transition: {
+                    duration: 0.2,
+                  },
+                },
+              }}
+            />
+          </motion.svg>
+        </CheckboxPrimitive.Indicator>
+      </motion.button>
+    </CheckboxPrimitive.Root>
+  );
+}
+
+export { Checkbox, type CheckboxProps };
