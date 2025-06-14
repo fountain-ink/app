@@ -220,7 +220,7 @@ export function LandingPageClient({ favoritePosts }: LandingPageClientProps) {
             {/* <p className="text-lg text-muted-foreground">Featured articles from the Fountain community</p> */}
           </div>
 
-          <FeedProvider>
+          <FeedProvider initialViewMode="grid">
             <div className="max-w-6xl mx-auto">
               <FavoritesFeed posts={favoritePosts} showFadeOut={true} />
             </div>

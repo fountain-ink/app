@@ -3,17 +3,18 @@
 import { useEffect, useState } from "react"
 import { useLocalStorage } from "./use-local-storage"
 
-export function useFeedViewMode() {
+export function useFeedViewMode(initialMode?: "single" | "grid") {
   const [savedViewMode, setSavedViewMode] = useLocalStorage<"single" | "grid">(
     "feed-view-mode",
     "single"
   )
-  const [viewMode, setViewMode] = useState<"single" | "grid">("single")
+  const [viewMode, setViewMode] = useState<"single" | "grid">(initialMode || "single")
 
-  // Initialize from local storage after mount
   useEffect(() => {
-    setViewMode(savedViewMode)
-  }, [savedViewMode])
+    if (!initialMode) {
+      setViewMode(savedViewMode)
+    }
+  }, [savedViewMode, initialMode])
 
   const handleViewModeChange = (mode: "single" | "grid") => {
     setViewMode(mode)

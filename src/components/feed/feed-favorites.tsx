@@ -8,18 +8,20 @@ import { useFeedContext } from "@/contexts/feed-context"
 export interface FavoritesFeedProps {
   posts: AnyPost[]
   showFadeOut?: boolean
+  forceViewMode?: "single" | "grid"
 }
 
-export function FavoritesFeed({ posts, showFadeOut = true }: FavoritesFeedProps) {
+export function FavoritesFeed({ posts, showFadeOut = true, forceViewMode }: FavoritesFeedProps) {
   const { viewMode } = useFeedContext()
+  const effectiveViewMode = forceViewMode || viewMode
 
   const renderPost = useCallback((post: AnyPost, index: number) => {
-    return renderArticlePost(post, viewMode, { 
+    return renderArticlePost(post, effectiveViewMode, { 
       showAuthor: true,
       showBlog: true,
       isCompact: true
     }, index)
-  }, [viewMode])
+  }, [effectiveViewMode])
 
   const validPosts = useMemo(() => posts.filter(isValidArticlePost), [posts])
 
@@ -34,6 +36,7 @@ export function FavoritesFeed({ posts, showFadeOut = true }: FavoritesFeedProps)
         emptyTitle="No favorites available yet"
         emptySubtitle="Check back later for featured content"
         disableInfiniteScroll
+        forceViewMode={forceViewMode}
       />
       {showFadeOut && validPosts.length > 0 && (
         <div className="absolute bottom-0 left-0 right-0 h-3/4 bg-gradient-to-t from-background to-transparent pointer-events-none" />

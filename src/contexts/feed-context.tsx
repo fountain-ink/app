@@ -10,8 +10,13 @@ interface FeedContextValue {
 
 const FeedContext = createContext<FeedContextValue | undefined>(undefined)
 
-export function FeedProvider({ children }: { children: ReactNode }) {
-  const { viewMode, setViewMode } = useFeedViewMode()
+interface FeedProviderProps {
+  children: ReactNode
+  initialViewMode?: "single" | "grid"
+}
+
+export function FeedProvider({ children, initialViewMode }: FeedProviderProps) {
+  const { viewMode, setViewMode } = useFeedViewMode(initialViewMode)
 
   return (
     <FeedContext.Provider value={{ viewMode, setViewMode }}>
