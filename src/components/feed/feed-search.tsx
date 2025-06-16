@@ -13,8 +13,9 @@ import { useBanFilter, filterBannedPosts } from "@/hooks/use-ban-filter"
 import { useFeedContext } from "@/contexts/feed-context"
 import { useDebounce } from "@/hooks/use-debounce"
 import { Input } from "@/components/ui/input"
-import { Search } from "lucide-react"
+import { Search, ChevronDown } from "lucide-react"
 import { FeedViewToggle } from "./feed-view-toggle"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 
 export interface SearchFeedProps {
   initialPosts: AnyPost[]
@@ -42,6 +43,7 @@ export function SearchFeed({
   )
   const [isInitializing, setIsInitializing] = useState(!preFilteredPosts)
   const [isSearching, setIsSearching] = useState(false)
+  const [isTagsExpanded, setIsTagsExpanded] = useState(false)
   const { checkBanStatus } = useBanFilter()
 
   useEffect(() => {
@@ -60,13 +62,13 @@ export function SearchFeed({
     } else {
       params.delete("q")
     }
-    
+
     if (selectedTag) {
       params.set("tag", selectedTag)
     } else {
       params.delete("tag")
     }
-    
+
     const newUrl = params.toString() ? `/search?${params.toString()}` : "/search"
     router.push(newUrl, { scroll: false })
   }, [debouncedQuery, selectedTag, router, searchParams])
@@ -77,12 +79,12 @@ export function SearchFeed({
     }
 
     const lens = await getLensClient()
-    
+
     const actualCursor = cursor === "initial" ? undefined : cursor
-    
+
     const result = await fetchPosts(lens, {
       filter: {
-        metadata: { 
+        metadata: {
           mainContentFocus: [MainContentFocus.Article],
           tags: selectedTag ? { oneOf: [selectedTag] } : undefined
         },
@@ -109,17 +111,17 @@ export function SearchFeed({
   useEffect(() => {
     const performSearch = async () => {
       if (debouncedQuery === initialQuery && selectedTag === initialTag) return
-      
+
       setIsSearching(true)
       reset()
-      
+
       if (debouncedQuery || selectedTag) {
         const result = await fetchMore()
         if (result.items.length > 0) {
           reset(result.items, result.pageInfo || {})
         }
       }
-      
+
       setIsSearching(false)
     }
 
@@ -135,15 +137,19 @@ export function SearchFeed({
   const showResults = (debouncedQuery || selectedTag) && !isSearching
   const showEmpty = showResults && validPosts.length === 0 && !isLoading && !isInitializing
   const showPrompt = !debouncedQuery && !selectedTag && !isSearching
-  
+
   const commonTags = [
-    "web3", "blockchain", "crypto", "defi", "nft", 
-    "ethereum", "bitcoin", "technology", "programming", 
-    "art", "music", "philosophy", "politics", "science"
+    "web3", "blockchain", "WriteOnChain", "crypto", "defi", "nft", "milady", "remilio", "fountain", "deso",
+    "ethereum", "bitcoin", "technology", "code", "ai",
+    "art", "music", "philosophy", "politics", "science",
   ]
-  
+
   const handleTagClick = (tag: string) => {
     setSelectedTag(tag === selectedTag ? "" : tag)
+  }
+
+  const capitalizeFirstLetter = (str: string) => {
+    return str.charAt(0).toUpperCase() + str.slice(1)
   }
 
   return (
@@ -163,35 +169,62 @@ export function SearchFeed({
             </div>
             <FeedViewToggle />
           </div>
-          
-          {selectedTag && (
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Tag:</span>
-              <button
-                onClick={() => setSelectedTag("")}
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-primary/10 hover:bg-primary/20 transition-colors text-sm"
-              >
-                {selectedTag}
-                <span className="ml-1 text-xs">✕</span>
-              </button>
-            </div>
-          )}
-          
-          <div className="flex flex-wrap gap-2">
-            {commonTags.map((tag) => (
-              <button
-                key={tag}
-                onClick={() => handleTagClick(tag)}
-                className={`px-3 py-1 rounded-md text-sm transition-colors ${
-                  selectedTag === tag 
-                    ? "bg-primary text-primary-foreground" 
-                    : "border border-border hover:bg-secondary/50"
-                }`}
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
+
+          <Collapsible open={isTagsExpanded} onOpenChange={setIsTagsExpanded}>
+            {!isTagsExpanded ? (
+              <div className="flex items-center gap-2 relative">
+                <div
+                  className="flex gap-2 flex-1 overflow-x-auto scrollbar-hide scroll-smooth"
+                  id="tags-scroll"
+                >
+                  {commonTags.map((tag) => (
+                    <button
+                      key={tag}
+                      onClick={() => handleTagClick(tag)}
+                      className={`px-3 py-1 rounded-md text-sm transition-colors whitespace-nowrap ${selectedTag === tag
+                          ? "bg-primary text-primary-foreground"
+                          : "border border-border hover:bg-secondary/50"
+                        }`}
+                    >
+                      {capitalizeFirstLetter(tag)}
+                    </button>
+                  ))}
+                </div>
+                <CollapsibleTrigger asChild>
+                  <button className="p-2 rounded-md hover:bg-secondary/50 transition-colors">
+                    <ChevronDown className="h-4 w-4 transition-transform duration-200" />
+                  </button>
+                </CollapsibleTrigger>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-muted-foreground">Browse tags</span>
+                  <CollapsibleTrigger asChild>
+                    <button className="p-2 rounded-md hover:bg-secondary/50 transition-colors">
+                      <ChevronDown className="h-4 w-4 rotate-180 transition-transform duration-200" />
+                    </button>
+                  </CollapsibleTrigger>
+                </div>
+                <CollapsibleContent>
+                  <div className="flex flex-wrap gap-2">
+                    {commonTags.map((tag) => (
+                      <button
+                        key={tag}
+                        onClick={() => handleTagClick(tag)}
+                        className={`px-3 py-1 rounded-md text-sm transition-colors ${selectedTag === tag
+                            ? "bg-primary text-primary-foreground"
+                            : "border border-border hover:bg-secondary/50"
+                          }`}
+                      >
+                        {capitalizeFirstLetter(tag)}
+                      </button>
+                    ))}
+                  </div>
+                </CollapsibleContent>
+              </>
+            )}
+          </Collapsible>
         </div>
       </div>
 

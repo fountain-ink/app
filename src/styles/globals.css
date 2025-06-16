@@ -32,6 +32,16 @@ html[data-scroll-locked] {
   padding-right: 0 !important;
 }
 
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+  }
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;
