@@ -1,5 +1,5 @@
-import { proseClasses } from "@/styles/prose";
 import { Metadata } from "next";
+import { proseClasses } from "@/styles/prose";
 
 export const metadata: Metadata = {
   title: "About Fountain",

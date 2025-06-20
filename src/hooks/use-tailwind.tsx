@@ -1,9 +1,8 @@
 "use client";
 
+import { createAtomStore } from "jotai-x";
 import { useEffect } from "react";
 import { useOrientation } from "react-use";
-
-import { createAtomStore } from "jotai-x";
 
 import { useMounted } from "@/hooks/use-mounted";
 import { useViewport } from "@/hooks/use-viewport";

@@ -1,7 +1,7 @@
 "use client";
 
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { Account, Post } from "@lens-protocol/client";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { useActionBar } from "@/contexts/action-bar-context";
 import { usePostActionsButtons } from "@/hooks/use-post-actions-buttons";
 import { ActionButton } from "./post-action-button";

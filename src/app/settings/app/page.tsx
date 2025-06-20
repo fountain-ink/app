@@ -1,9 +1,9 @@
+import { notFound } from "next/navigation";
 import { ApplicationSettings } from "@/components/settings/settings-app";
 import { getAppToken } from "@/lib/auth/get-app-token";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { getEmail } from "@/lib/settings/get-user-email";
 import { getUserSettings } from "@/lib/settings/get-user-settings";
-import { notFound } from "next/navigation";
 
 export const metadata = {
   title: "Application Settings",

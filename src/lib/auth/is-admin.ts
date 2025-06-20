@@ -1,7 +1,6 @@
 import { fetchAdminsFor } from "@lens-protocol/client/actions";
-import { TokenClaims } from "./app-token";
-import { getLensClient } from "../lens/client";
 import { env } from "@/env";
+import { getLensClient } from "../lens/client";
 
 /**
  * Checks if a user is an admin based on their address

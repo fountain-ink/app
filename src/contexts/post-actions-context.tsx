@@ -1,10 +1,10 @@
 "use client";
 
-import React, { createContext, useState, useContext, useCallback, ReactNode, useEffect, useMemo } from "react";
 import { LoggedInPostOperations, Post, PostStats } from "@lens-protocol/client";
+import { useAccount, useAuthenticatedUser } from "@lens-protocol/react";
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { CommentSheet } from "@/components/comment/comment-sheet";
 import { PostCollect } from "@/components/post/post-collect-dialog";
-import { useAccount, useAuthenticatedUser } from "@lens-protocol/react";
 
 interface BooleanPostOperations {
   hasUpvoted: boolean;

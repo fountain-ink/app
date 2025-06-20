@@ -1,29 +1,37 @@
-"use client"
+"use client";
 
-import { useCallback, useMemo } from "react"
-import type { AnyPost } from "@lens-protocol/client"
-import { Feed, renderArticlePost, isValidArticlePost } from "./feed"
-import { useFeedContext } from "@/contexts/feed-context"
+import type { AnyPost } from "@lens-protocol/client";
+import { useCallback, useMemo } from "react";
+import { useFeedContext } from "@/contexts/feed-context";
+import { Feed, isValidArticlePost, renderArticlePost } from "./feed";
 
 export interface FavoritesFeedProps {
-  posts: AnyPost[]
-  showFadeOut?: boolean
-  forceViewMode?: "single" | "grid"
+  posts: AnyPost[];
+  showFadeOut?: boolean;
+  forceViewMode?: "single" | "grid";
 }
 
 export function FavoritesFeed({ posts, showFadeOut = true, forceViewMode }: FavoritesFeedProps) {
-  const { viewMode } = useFeedContext()
-  const effectiveViewMode = forceViewMode || viewMode
+  const { viewMode } = useFeedContext();
+  const effectiveViewMode = forceViewMode || viewMode;
 
-  const renderPost = useCallback((post: AnyPost, index: number) => {
-    return renderArticlePost(post, effectiveViewMode, { 
-      showAuthor: true,
-      showBlog: true,
-      isCompact: true
-    }, index)
-  }, [effectiveViewMode])
+  const renderPost = useCallback(
+    (post: AnyPost, index: number) => {
+      return renderArticlePost(
+        post,
+        effectiveViewMode,
+        {
+          showAuthor: true,
+          showBlog: true,
+          isCompact: true,
+        },
+        index,
+      );
+    },
+    [effectiveViewMode],
+  );
 
-  const validPosts = useMemo(() => posts.filter(isValidArticlePost), [posts])
+  const validPosts = useMemo(() => posts.filter(isValidArticlePost), [posts]);
 
   return (
     <div className={showFadeOut ? "relative" : ""}>
@@ -42,5 +50,5 @@ export function FavoritesFeed({ posts, showFadeOut = true, forceViewMode }: Favo
         <div className="absolute bottom-0 left-0 right-0 h-3/4 bg-gradient-to-t from-background to-transparent pointer-events-none" />
       )}
     </div>
-  )
+  );
 }

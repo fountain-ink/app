@@ -1,5 +1,5 @@
-import PostSkeleton from "@/components/post/post-skeleton";
 import { FeedLayout } from "@/components/navigation/feed-layout";
+import PostSkeleton from "@/components/post/post-skeleton";
 
 export default function Loading() {
   return (

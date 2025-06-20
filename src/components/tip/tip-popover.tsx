@@ -1,19 +1,19 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ShoppingBag, DollarSign, ArrowLeft } from "lucide-react";
-import { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { Post, postId, evmAddress, bigDecimal } from "@lens-protocol/client";
+import { bigDecimal, Post, postId } from "@lens-protocol/client";
 import { executePostAction } from "@lens-protocol/client/actions";
-import { handleOperationWith, signMessageWith } from "@lens-protocol/client/viem";
-import { useWalletClient, useBalance } from "wagmi";
+import { handleOperationWith } from "@lens-protocol/client/viem";
+import { useAuthenticatedUser } from "@lens-protocol/react";
+import { ArrowLeft, DollarSign, ShoppingBag } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { formatUnits } from "viem";
+import { useBalance, useWalletClient } from "wagmi";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
 import { getLensClient } from "@/lib/lens/client";
-import { toast } from "sonner";
-import { useAuthenticatedUser } from "@lens-protocol/react";
-import { formatUnits } from "viem";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const DEFAULT_CURRENCY = "0x6bDc36E20D267Ff0dd6097799f82e78907105e2F"; // WGHO
 
@@ -178,15 +178,8 @@ export const TipPopover = ({ children, onCollectClick, post, open: controlledOpe
 
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
-      <PopoverTrigger asChild>
-        {children}
-      </PopoverTrigger>
-      <PopoverContent
-        className="w-80 p-4 pb-3"
-        sideOffset={8}
-        align="center"
-        side="top"
-      >
+      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverContent className="w-80 p-4 pb-3" sideOffset={8} align="center" side="top">
         <div className="flex flex-col items-center gap-3">
           {hasCollectAction && (
             <>
@@ -269,7 +262,9 @@ export const TipPopover = ({ children, onCollectClick, post, open: controlledOpe
           </Button>
 
           {isGhoBalanceLoading ? null : (
-            <div className="text-xs text-muted-foreground w-full text-center -mt-2">Account balance: ${tokenBalance}</div>
+            <div className="text-xs text-muted-foreground w-full text-center -mt-2">
+              Account balance: ${tokenBalance}
+            </div>
           )}
         </div>
       </PopoverContent>

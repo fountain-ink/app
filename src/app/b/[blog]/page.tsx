@@ -1,22 +1,22 @@
-import { AuthorView } from "@/components/user/user-author-view";
-import { ArticleFeed } from "@/components/feed/feed-articles";
-import { getUserAccount } from "@/lib/auth/get-user-profile";
-import { getLensClient } from "@/lib/lens/client";
+import { Account, MainContentFocus } from "@lens-protocol/client";
 import {
   fetchAccount,
-  fetchPosts,
-  fetchPostTags,
+  fetchAdminsFor,
   fetchGroup,
   fetchGroupMembers,
-  fetchAdminsFor,
+  fetchPosts,
+  fetchPostTags,
 } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
-import { getBlogData } from "@/lib/settings/get-blog-data";
-import { MainContentFocus, Account } from "@lens-protocol/client";
-import { isEvmAddress } from "@/lib/utils/is-evm-address";
 import { BlogHeader } from "@/components/blog/blog-header";
 import { BlogTheme } from "@/components/blog/blog-theme";
+import { ArticleFeed } from "@/components/feed/feed-articles";
+import { AuthorView } from "@/components/user/user-author-view";
+import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getBaseUrl } from "@/lib/get-base-url";
+import { getLensClient } from "@/lib/lens/client";
+import { getBlogData } from "@/lib/settings/get-blog-data";
+import { isEvmAddress } from "@/lib/utils/is-evm-address";
 
 export async function generateMetadata({ params }: { params: { blog: string } }) {
   const lens = await getLensClient();
@@ -76,11 +76,11 @@ export async function generateMetadata({ params }: { params: { blog: string } })
       type: "website",
       images: icon
         ? [
-          {
-            url: icon,
-            alt: `${title} icon`,
-          },
-        ]
+            {
+              url: icon,
+              alt: `${title} icon`,
+            },
+          ]
         : undefined,
     },
     twitter: {
@@ -198,7 +198,11 @@ const BlogPage = async ({ params, searchParams }: { params: { blog: string }; se
           <BlogTagNavigation tags={formattedTags} username={params.blog} />
         )} */}
         <div className="flex flex-col my-4 gap-4">
-          <ArticleFeed posts={[...(posts?.items ?? [])]} isUserProfile={isUserBlog || isUserMemeber} forceViewMode="single" />
+          <ArticleFeed
+            posts={[...(posts?.items ?? [])]}
+            isUserProfile={isUserBlog || isUserMemeber}
+            forceViewMode="single"
+          />
         </div>
       </div>
     </BlogTheme>

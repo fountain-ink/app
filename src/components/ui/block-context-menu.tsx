@@ -1,16 +1,14 @@
 "use client";
 
-import React from "react";
-
 import { cn } from "@udecode/cn";
+import { useEditorPlugin, useEditorRef, useElement } from "@udecode/plate/react";
 import { BLOCK_CONTEXT_MENU_ID, BlockMenuPlugin } from "@udecode/plate-selection/react";
 import { MoreHorizontal } from "lucide-react";
-
+import React from "react";
 import { useIsTouchDevice } from "@/hooks/use-is-touch";
 import { useLockScroll } from "@/hooks/use-lock-scroll";
-import { useEditorPlugin, useEditorRef, useElement } from "@udecode/plate/react";
 import { BlockMenu } from "./block-menu";
-import { type ButtonProps, Button } from "./button";
+import { Button, type ButtonProps } from "./button";
 import { useContextMenu } from "./menu";
 
 export function BlockContextMenu({ children }: { children: React.ReactNode }) {

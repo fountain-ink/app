@@ -1,20 +1,19 @@
 "use client";
-import { Dialog, DialogContent, DialogTitle, DialogHeader, DialogClose } from "@/components/ui/dialog";
-import { Account, Post, PostsQuery, SimpleCollectAction, postId } from "@lens-protocol/client";
+import { Post, postId, SimpleCollectAction } from "@lens-protocol/client";
 import { executePostAction } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
-import { UserAvatar } from "@/components/user/user-avatar";
-import { UserName } from "@/components/user/user-name";
-import { UserUsername } from "@/components/user/user-handle";
+import { Calendar, Info } from "lucide-react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Info, Calendar, Users } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useWalletClient } from "wagmi";
-import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
 import { useState } from "react";
-import { getLensClient } from "@/lib/lens/client";
 import { toast } from "sonner";
+import { useWalletClient } from "wagmi";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { UserAvatar } from "@/components/user/user-avatar";
+import { UserUsername } from "@/components/user/user-handle";
+import { UserName } from "@/components/user/user-name";
+import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
+import { getLensClient } from "@/lib/lens/client";
 
 interface CollectAmount {
   value: string;

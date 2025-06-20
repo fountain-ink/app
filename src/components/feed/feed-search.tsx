@@ -1,28 +1,28 @@
-"use client"
+"use client";
 
-import { useCallback, useState, useEffect, useMemo } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
-import type { AnyPost, PaginatedResultInfo } from "@lens-protocol/client"
-import { MainContentFocus } from "@lens-protocol/client"
-import { fetchPosts } from "@lens-protocol/client/actions"
-import { getLensClient } from "@/lib/lens/client"
-import { env } from "@/env"
-import { Feed, renderArticlePost, isValidArticlePost } from "./feed"
-import { useInfiniteFeed } from "@/hooks/use-infinite-feed"
-import { useBanFilter, filterBannedPosts } from "@/hooks/use-ban-filter"
-import { useFeedContext } from "@/contexts/feed-context"
-import { useDebounce } from "@/hooks/use-debounce"
-import { Input } from "@/components/ui/input"
-import { Search, ChevronDown } from "lucide-react"
-import { FeedViewToggle } from "./feed-view-toggle"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import type { AnyPost, PaginatedResultInfo } from "@lens-protocol/client";
+import { MainContentFocus } from "@lens-protocol/client";
+import { fetchPosts } from "@lens-protocol/client/actions";
+import { ChevronDown, Search } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Input } from "@/components/ui/input";
+import { useFeedContext } from "@/contexts/feed-context";
+import { env } from "@/env";
+import { filterBannedPosts, useBanFilter } from "@/hooks/use-ban-filter";
+import { useDebounce } from "@/hooks/use-debounce";
+import { useInfiniteFeed } from "@/hooks/use-infinite-feed";
+import { getLensClient } from "@/lib/lens/client";
+import { Feed, isValidArticlePost, renderArticlePost } from "./feed";
+import { FeedViewToggle } from "./feed-view-toggle";
 
 export interface SearchFeedProps {
-  initialPosts: AnyPost[]
-  initialPaginationInfo: Partial<PaginatedResultInfo>
-  initialQuery: string
-  initialTag?: string
-  preFilteredPosts?: boolean
+  initialPosts: AnyPost[];
+  initialPaginationInfo: Partial<PaginatedResultInfo>;
+  initialQuery: string;
+  initialTag?: string;
+  preFilteredPosts?: boolean;
 }
 
 export function SearchFeed({
@@ -32,125 +32,146 @@ export function SearchFeed({
   initialTag = "",
   preFilteredPosts = false,
 }: SearchFeedProps) {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const { viewMode } = useFeedContext()
-  const [searchQuery, setSearchQuery] = useState(initialQuery)
-  const [selectedTag, setSelectedTag] = useState(initialTag)
-  const debouncedQuery = useDebounce(searchQuery, 500)
-  const [filteredInitialPosts, setFilteredInitialPosts] = useState<AnyPost[]>(
-    preFilteredPosts ? initialPosts : []
-  )
-  const [isInitializing, setIsInitializing] = useState(!preFilteredPosts)
-  const [isSearching, setIsSearching] = useState(false)
-  const [isTagsExpanded, setIsTagsExpanded] = useState(false)
-  const { checkBanStatus } = useBanFilter()
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { viewMode } = useFeedContext();
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
+  const [selectedTag, setSelectedTag] = useState(initialTag);
+  const debouncedQuery = useDebounce(searchQuery, 500);
+  const [filteredInitialPosts, setFilteredInitialPosts] = useState<AnyPost[]>(preFilteredPosts ? initialPosts : []);
+  const [isInitializing, setIsInitializing] = useState(!preFilteredPosts);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isTagsExpanded, setIsTagsExpanded] = useState(false);
+  const { checkBanStatus } = useBanFilter();
 
   useEffect(() => {
     if (!preFilteredPosts) {
-      filterBannedPosts(initialPosts, checkBanStatus).then(filtered => {
-        setFilteredInitialPosts(filtered)
-        setIsInitializing(false)
-      })
+      filterBannedPosts(initialPosts, checkBanStatus).then((filtered) => {
+        setFilteredInitialPosts(filtered);
+        setIsInitializing(false);
+      });
     }
-  }, [initialPosts, checkBanStatus, preFilteredPosts])
+  }, [initialPosts, checkBanStatus, preFilteredPosts]);
 
   useEffect(() => {
-    const params = new URLSearchParams(searchParams)
+    const params = new URLSearchParams(searchParams);
     if (debouncedQuery) {
-      params.set("q", debouncedQuery)
+      params.set("q", debouncedQuery);
     } else {
-      params.delete("q")
+      params.delete("q");
     }
 
     if (selectedTag) {
-      params.set("tag", selectedTag)
+      params.set("tag", selectedTag);
     } else {
-      params.delete("tag")
+      params.delete("tag");
     }
 
-    const newUrl = params.toString() ? `/search?${params.toString()}` : "/search"
-    router.push(newUrl, { scroll: false })
-  }, [debouncedQuery, selectedTag, router, searchParams])
+    const newUrl = params.toString() ? `/search?${params.toString()}` : "/search";
+    router.push(newUrl, { scroll: false });
+  }, [debouncedQuery, selectedTag, router, searchParams]);
 
-  const fetchMore = useCallback(async (cursor?: string) => {
-    if (!debouncedQuery && !selectedTag) {
-      return { items: [], pageInfo: undefined }
-    }
+  const fetchMore = useCallback(
+    async (cursor?: string) => {
+      if (!debouncedQuery && !selectedTag) {
+        return { items: [], pageInfo: undefined };
+      }
 
-    const lens = await getLensClient()
+      const lens = await getLensClient();
 
-    const actualCursor = cursor === "initial" ? undefined : cursor
+      const actualCursor = cursor === "initial" ? undefined : cursor;
 
-    const result = await fetchPosts(lens, {
-      filter: {
-        metadata: {
-          mainContentFocus: [MainContentFocus.Article],
-          tags: selectedTag ? { oneOf: [selectedTag] } : undefined
+      const result = await fetchPosts(lens, {
+        filter: {
+          metadata: {
+            mainContentFocus: [MainContentFocus.Article],
+            tags: selectedTag ? { oneOf: [selectedTag] } : undefined,
+          },
+          searchQuery: debouncedQuery || undefined,
+          apps: [env.NEXT_PUBLIC_APP_ADDRESS],
         },
-        searchQuery: debouncedQuery || undefined,
-        apps: [env.NEXT_PUBLIC_APP_ADDRESS],
-      },
-      cursor: actualCursor,
-    }).unwrapOr(null)
+        cursor: actualCursor,
+      }).unwrapOr(null);
 
-    if (!result) {
-      return { items: [], pageInfo: undefined }
-    }
+      if (!result) {
+        return { items: [], pageInfo: undefined };
+      }
 
-    const filtered = await filterBannedPosts(result.items, checkBanStatus)
-    return { items: filtered, pageInfo: result.pageInfo }
-  }, [debouncedQuery, selectedTag, checkBanStatus])
+      const filtered = await filterBannedPosts(result.items, checkBanStatus);
+      return { items: filtered, pageInfo: result.pageInfo };
+    },
+    [debouncedQuery, selectedTag, checkBanStatus],
+  );
 
   const { items, isLoading, hasMore, loadMore, reset } = useInfiniteFeed({
     initialItems: filteredInitialPosts,
     initialPaginationInfo,
     fetchMore,
-  })
+  });
 
   useEffect(() => {
     const performSearch = async () => {
-      if (debouncedQuery === initialQuery && selectedTag === initialTag) return
+      if (debouncedQuery === initialQuery && selectedTag === initialTag) return;
 
-      setIsSearching(true)
-      reset()
+      setIsSearching(true);
+      reset();
 
       if (debouncedQuery || selectedTag) {
-        const result = await fetchMore()
+        const result = await fetchMore();
         if (result.items.length > 0) {
-          reset(result.items, result.pageInfo || {})
+          reset(result.items, result.pageInfo || {});
         }
       }
 
-      setIsSearching(false)
-    }
+      setIsSearching(false);
+    };
 
-    performSearch()
-  }, [debouncedQuery, selectedTag, fetchMore, initialQuery, initialTag, reset])
+    performSearch();
+  }, [debouncedQuery, selectedTag, fetchMore, initialQuery, initialTag, reset]);
 
-  const renderPost = useCallback((post: AnyPost, index: number) => {
-    return renderArticlePost(post, viewMode, { showAuthor: true }, index)
-  }, [viewMode])
+  const renderPost = useCallback(
+    (post: AnyPost, index: number) => {
+      return renderArticlePost(post, viewMode, { showAuthor: true }, index);
+    },
+    [viewMode],
+  );
 
-  const validPosts = useMemo(() => items.filter(isValidArticlePost), [items])
+  const validPosts = useMemo(() => items.filter(isValidArticlePost), [items]);
 
-  const showResults = (debouncedQuery || selectedTag) && !isSearching
-  const showEmpty = showResults && validPosts.length === 0 && !isLoading && !isInitializing
-  const showPrompt = !debouncedQuery && !selectedTag && !isSearching
+  const showResults = (debouncedQuery || selectedTag) && !isSearching;
+  const showEmpty = showResults && validPosts.length === 0 && !isLoading && !isInitializing;
+  const showPrompt = !debouncedQuery && !selectedTag && !isSearching;
 
   const commonTags = [
-    "web3", "blockchain", "WriteOnChain", "crypto", "defi", "nft", "milady", "remilio", "fountain", "deso",
-    "ethereum", "bitcoin", "technology", "code", "ai",
-    "art", "music", "philosophy", "politics", "science",
-  ]
+    "web3",
+    "blockchain",
+    "WriteOnChain",
+    "crypto",
+    "defi",
+    "nft",
+    "milady",
+    "remilio",
+    "fountain",
+    "deso",
+    "ethereum",
+    "bitcoin",
+    "technology",
+    "code",
+    "ai",
+    "art",
+    "music",
+    "philosophy",
+    "politics",
+    "science",
+  ];
 
   const handleTagClick = (tag: string) => {
-    setSelectedTag(tag === selectedTag ? "" : tag)
-  }
+    setSelectedTag(tag === selectedTag ? "" : tag);
+  };
 
   const capitalizeFirstLetter = (str: string) => {
-    return str.charAt(0).toUpperCase() + str.slice(1)
-  }
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
 
   return (
     <div className="w-full space-y-6">
@@ -173,18 +194,16 @@ export function SearchFeed({
           <Collapsible open={isTagsExpanded} onOpenChange={setIsTagsExpanded}>
             {!isTagsExpanded ? (
               <div className="flex items-center gap-2 relative">
-                <div
-                  className="flex gap-2 flex-1 overflow-x-auto scrollbar-hide scroll-smooth"
-                  id="tags-scroll"
-                >
+                <div className="flex gap-2 flex-1 overflow-x-auto scrollbar-hide scroll-smooth" id="tags-scroll">
                   {commonTags.map((tag) => (
                     <button
                       key={tag}
                       onClick={() => handleTagClick(tag)}
-                      className={`px-3 py-1 rounded-md text-sm transition-colors whitespace-nowrap ${selectedTag === tag
+                      className={`px-3 py-1 rounded-md text-sm transition-colors whitespace-nowrap ${
+                        selectedTag === tag
                           ? "bg-primary text-primary-foreground"
                           : "border border-border hover:bg-secondary/50"
-                        }`}
+                      }`}
                     >
                       {capitalizeFirstLetter(tag)}
                     </button>
@@ -212,10 +231,11 @@ export function SearchFeed({
                       <button
                         key={tag}
                         onClick={() => handleTagClick(tag)}
-                        className={`px-3 py-1 rounded-md text-sm transition-colors ${selectedTag === tag
+                        className={`px-3 py-1 rounded-md text-sm transition-colors ${
+                          selectedTag === tag
                             ? "bg-primary text-primary-foreground"
                             : "border border-border hover:bg-secondary/50"
-                          }`}
+                        }`}
                       >
                         {capitalizeFirstLetter(tag)}
                       </button>
@@ -232,18 +252,14 @@ export function SearchFeed({
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <Search className="mb-4 h-12 w-12 text-muted-foreground" />
           <h3 className="mb-2 text-lg font-semibold">Search for articles</h3>
-          <p className="text-sm text-muted-foreground">
-            Enter keywords to find articles on Fountain
-          </p>
+          <p className="text-sm text-muted-foreground">Enter keywords to find articles on Fountain</p>
         </div>
       )}
 
       {showEmpty && (
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <h3 className="mb-2 text-lg font-semibold">No results found</h3>
-          <p className="text-sm text-muted-foreground">
-            Try searching with different keywords
-          </p>
+          <p className="text-sm text-muted-foreground">Try searching with different keywords</p>
         </div>
       )}
 
@@ -259,5 +275,5 @@ export function SearchFeed({
         />
       )}
     </div>
-  )
+  );
 }

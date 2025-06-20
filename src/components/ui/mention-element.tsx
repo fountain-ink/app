@@ -1,13 +1,12 @@
 "use client";
 
-import { useMounted } from "@/hooks/use-mounted";
 import { cn, withRef } from "@udecode/cn";
-import { IS_APPLE, getHandler } from "@udecode/plate";
+import { getHandler, IS_APPLE } from "@udecode/plate";
+import { PlateElement, useElement, useFocused, useSelected } from "@udecode/plate/react";
 import type { TMentionElement } from "@udecode/plate-mention";
-import { useElement, useFocused, useSelected } from "@udecode/plate/react";
 import React from "react";
+import { useMounted } from "@/hooks/use-mounted";
 import { UserLazyUsername } from "../user/user-lazy-username";
-import { PlateElement } from "@udecode/plate/react";
 
 export const MentionElement = withRef<
   typeof PlateElement,

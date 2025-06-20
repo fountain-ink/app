@@ -1,16 +1,16 @@
 "use client";
 
 import type { Account, AccountStats } from "@lens-protocol/client";
-import { UserAvatar } from "@/components/user/user-avatar";
-import { UserName } from "@/components/user/user-name";
-import { UserFollowing } from "@/components/user/user-following";
-import { UserFollowButton } from "@/components/user/user-follow";
-import { UserBio } from "@/components/user/user-bio";
-import { Button } from "@/components/ui/button";
-import { ProfileSettingsModal } from "@/components/settings/settings-profile";
 import { evmAddress, useAuthenticatedUser } from "@lens-protocol/react";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { ProfileSettingsModal } from "@/components/settings/settings-profile";
+import { Button } from "@/components/ui/button";
+import { UserAvatar } from "@/components/user/user-avatar";
+import { UserBio } from "@/components/user/user-bio";
+import { UserFollowButton } from "@/components/user/user-follow";
+import { UserFollowing } from "@/components/user/user-following";
+import { UserName } from "@/components/user/user-name";
+import { cn } from "@/lib/utils";
 
 interface UserPostCardProps {
   account: Account;

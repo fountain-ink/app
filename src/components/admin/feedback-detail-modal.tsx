@@ -1,22 +1,20 @@
 "use client";
 
+import { format, formatDistanceToNow } from "date-fns";
+import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { formatDistanceToNow, format } from "date-fns";
-import Image from "next/image";
-import { useState } from "react";
-import type { Database } from "@/lib/db/database";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import type { Database } from "@/lib/db/database";
 
 type FeedbackItem = Database["public"]["Tables"]["feedback"]["Row"];
 

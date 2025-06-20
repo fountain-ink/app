@@ -1,8 +1,8 @@
 "use client";
 
-import setGlobalColorTheme, { type ThemeType, defaultThemeName } from "@/styles/themes";
 import { useTheme as useNextTheme } from "next-themes";
-import { type PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
+import { createContext, type PropsWithChildren, useContext, useEffect, useState } from "react";
+import setGlobalColorTheme, { defaultThemeName, type ThemeType } from "@/styles/themes";
 
 interface ThemeContextType {
   theme: ThemeType;

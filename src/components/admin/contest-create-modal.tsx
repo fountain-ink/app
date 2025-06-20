@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { toast } from "sonner"
+import { useState } from "react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 interface ContestCreateModalProps {
-  onClose: () => void
-  onSuccess: () => void
+  onClose: () => void;
+  onSuccess: () => void;
 }
 
 export function ContestCreateModal({ onClose, onSuccess }: ContestCreateModalProps) {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     slug: "",
@@ -22,23 +22,26 @@ export function ContestCreateModal({ onClose, onSuccess }: ContestCreateModalPro
     prizeTotal: "",
     startDate: "",
     endDate: "",
-  })
+  });
 
   const generateSlug = (name: string) => {
-    return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
-  }
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+  };
 
   const handleNameChange = (name: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       name,
-      slug: generateSlug(name)
-    }))
-  }
+      slug: generateSlug(name),
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
     try {
       const res = await fetch("/api/admin/contests", {
@@ -50,26 +53,26 @@ export function ContestCreateModal({ onClose, onSuccess }: ContestCreateModalPro
           theme: formData.theme,
           prize_pool: {
             total: formData.prizeTotal,
-            distribution: {}
+            distribution: {},
           },
           start_date: new Date(formData.startDate).toISOString(),
           end_date: new Date(formData.endDate).toISOString(),
         }),
-      })
+      });
 
       if (res.ok) {
-        toast.success("Contest created successfully")
-        onSuccess()
+        toast.success("Contest created successfully");
+        onSuccess();
       } else {
-        const error = await res.json()
-        toast.error(error.message || "Failed to create contest")
+        const error = await res.json();
+        toast.error(error.message || "Failed to create contest");
       }
     } catch (error) {
-      toast.error("Failed to create contest")
+      toast.error("Failed to create contest");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <Dialog open onOpenChange={onClose}>
@@ -88,13 +91,13 @@ export function ContestCreateModal({ onClose, onSuccess }: ContestCreateModalPro
               required
             />
           </div>
-          
+
           <div>
             <Label htmlFor="slug">URL Slug</Label>
             <Input
               id="slug"
               value={formData.slug}
-              onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
+              onChange={(e) => setFormData((prev) => ({ ...prev, slug: e.target.value }))}
               placeholder="week-1"
               required
             />
@@ -105,7 +108,7 @@ export function ContestCreateModal({ onClose, onSuccess }: ContestCreateModalPro
             <Textarea
               id="theme"
               value={formData.theme}
-              onChange={(e) => setFormData(prev => ({ ...prev, theme: e.target.value }))}
+              onChange={(e) => setFormData((prev) => ({ ...prev, theme: e.target.value }))}
               placeholder="Creative Writing Challenge"
               rows={2}
             />
@@ -117,7 +120,7 @@ export function ContestCreateModal({ onClose, onSuccess }: ContestCreateModalPro
               id="prizeTotal"
               type="number"
               value={formData.prizeTotal}
-              onChange={(e) => setFormData(prev => ({ ...prev, prizeTotal: e.target.value }))}
+              onChange={(e) => setFormData((prev) => ({ ...prev, prizeTotal: e.target.value }))}
               placeholder="1000"
               required
             />
@@ -130,7 +133,7 @@ export function ContestCreateModal({ onClose, onSuccess }: ContestCreateModalPro
                 id="startDate"
                 type="datetime-local"
                 value={formData.startDate}
-                onChange={(e) => setFormData(prev => ({ ...prev, startDate: e.target.value }))}
+                onChange={(e) => setFormData((prev) => ({ ...prev, startDate: e.target.value }))}
                 required
               />
             </div>
@@ -140,7 +143,7 @@ export function ContestCreateModal({ onClose, onSuccess }: ContestCreateModalPro
                 id="endDate"
                 type="datetime-local"
                 value={formData.endDate}
-                onChange={(e) => setFormData(prev => ({ ...prev, endDate: e.target.value }))}
+                onChange={(e) => setFormData((prev) => ({ ...prev, endDate: e.target.value }))}
                 required
               />
             </div>
@@ -157,5 +160,5 @@ export function ContestCreateModal({ onClose, onSuccess }: ContestCreateModalPro
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -1,6 +1,6 @@
-import { createServiceClient } from "@/lib/db/service";
 import { sign } from "jsonwebtoken";
 import { customAlphabet } from "nanoid";
+import { createServiceClient } from "@/lib/db/service";
 import { AppToken, TokenClaims } from "./app-token";
 
 const SUPABASE_JWT_SECRET = process.env.SUPABASE_JWT_SECRET!;

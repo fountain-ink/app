@@ -1,10 +1,9 @@
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-
+import { useEditorRef } from "@udecode/plate/react";
 import { HighlightPlugin } from "@udecode/plate-highlight/react";
 import { KbdPlugin } from "@udecode/plate-kbd/react";
 import { insertInlineEquation } from "@udecode/plate-math";
 import { HighlighterIcon, KeyboardIcon, MoreHorizontalIcon, RadicalIcon } from "lucide-react";
-import { useEditorRef } from "@udecode/plate/react";
 import {
   DropdownMenu,
   DropdownMenuContent,

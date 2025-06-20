@@ -1,12 +1,10 @@
 "use client";
 
-import type React from "react";
-
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
+import { type PlateEditor, useEditorRef } from "@udecode/plate/react";
 
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
-import { type PlateEditor, ParagraphPlugin, useEditorRef } from "@udecode/plate/react";
 import { DatePlugin } from "@udecode/plate-date/react";
 import { ExcalidrawPlugin } from "@udecode/plate-excalidraw/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
@@ -27,27 +25,22 @@ import {
   Heading2Icon,
   Heading3Icon,
   Heading4Icon,
-  Heading5Icon,
-  Heading6Icon,
   ImageIcon,
   Link2Icon,
   ListIcon,
   ListOrderedIcon,
   MinusIcon,
   PenToolIcon,
-  PilcrowIcon,
   PlusIcon,
   QuoteIcon,
   SquareIcon,
   TableIcon,
   TableOfContentsIcon,
 } from "lucide-react";
-
-import { insertBlock, insertInlineElement } from "@/lib/transforms";
+import type React from "react";
 
 import { DropdownMenu, DropdownMenuTrigger, useOpenState } from "./dropdown-menu";
 import { ToolbarButton } from "./toolbar";
-import { TITLE_KEYS } from "@/components/editor/plugins/title-plugin";
 
 type Group = {
   group: string;

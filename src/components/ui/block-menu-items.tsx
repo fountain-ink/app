@@ -1,9 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
-
-import { showCaption } from "@udecode/plate-caption/react";
+import { TElement } from "@udecode/plate";
 import { ParagraphPlugin, useEditorRef } from "@udecode/plate/react";
+import { showCaption } from "@udecode/plate-caption/react";
 import { AudioPlugin, FilePlugin, ImagePlugin, MediaEmbedPlugin, VideoPlugin } from "@udecode/plate-media/react";
 import {
   BlockSelectionPlugin,
@@ -11,21 +10,20 @@ import {
   useBlockSelectionNodes,
 } from "@udecode/plate-selection/react";
 import { AlignCenter, AlignLeft, AlignRight, CaptionsIcon, RefreshCwIcon, Trash2 } from "lucide-react";
-
+import { useMemo } from "react";
 import { getBlockType, setBlockType } from "@/lib/transforms";
 import {
   type Action,
+  filterMenuGroups,
+  filterMenuItems,
   Menu,
   MenuContent,
   MenuGroup,
   MenuItem,
   MenuTrigger,
-  filterMenuGroups,
-  filterMenuItems,
   useComboboxValueState,
 } from "./menu";
 import { turnIntoItems } from "./turn-into-dropdown-menu";
-import { TElement } from "@udecode/plate";
 
 export const GROUP = {
   ALIGN: "align",

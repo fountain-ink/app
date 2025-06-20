@@ -1,18 +1,9 @@
 "use client";
 
 import type * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import type { TTableElement } from "@udecode/plate-table";
-
 import { cn, withRef } from "@udecode/cn";
-import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
 import {
-  TablePlugin,
-  TableProvider,
-  useTableBordersDropdownMenuContentState,
-  useTableElement,
-  useTableMergeState,
-} from "@udecode/plate-table/react";
-import {
+  PlateElement,
   useEditorPlugin,
   useEditorRef,
   useEditorSelector,
@@ -22,7 +13,15 @@ import {
   useSelected,
   withHOC,
 } from "@udecode/plate/react";
-import { motion } from "motion/react";
+import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
+import type { TTableElement } from "@udecode/plate-table";
+import {
+  TablePlugin,
+  TableProvider,
+  useTableBordersDropdownMenuContentState,
+  useTableElement,
+  useTableMergeState,
+} from "@udecode/plate-table/react";
 import {
   ArrowDown,
   ArrowLeft,
@@ -33,9 +32,10 @@ import {
   SquareSplitHorizontalIcon,
   XIcon,
 } from "lucide-react";
-
+import { motion } from "motion/react";
 import { useState } from "react";
 import { BorderAll, BorderBottom, BorderLeft, BorderNone, BorderRight, BorderTop } from "../icons/table-icons";
+import { Caption, CaptionTextarea } from "./caption";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -45,12 +45,9 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 import { ElementPopover, type ElementWidth, widthVariants } from "./element-popover";
-import { PlateElement } from "@udecode/plate/react";
 import { PopoverContent } from "./popover";
 import { Separator } from "./separator";
-import { Toolbar, ToolbarButton, ToolbarGroup } from "./toolbar";
-import { ScrollArea } from "./scroll-area";
-import { Caption, CaptionTextarea } from "./caption";
+import { Toolbar, ToolbarButton } from "./toolbar";
 
 export const TableElement = withHOC(
   TableProvider,

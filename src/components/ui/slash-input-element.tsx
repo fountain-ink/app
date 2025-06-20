@@ -1,18 +1,16 @@
 import { withRef } from "@udecode/cn";
-import { HEADING_KEYS } from "@udecode/plate-heading";
-
-import {
-  InlineCombobox,
-  InlineComboboxContent,
-  InlineComboboxEmpty,
-  InlineComboboxInput,
-  InlineComboboxItem,
-} from "./inline-combobox";
-import { PlateElement } from "@udecode/plate/react";
-
-import { ImagePlugin } from "@udecode/plate-media/react";
 import type { PlateEditor } from "@udecode/plate/react";
+import { ParagraphPlugin, PlateElement } from "@udecode/plate/react";
+import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
+import { insertEmptyCodeBlock } from "@udecode/plate-code-block";
+import { HEADING_KEYS } from "@udecode/plate-heading";
+import { HorizontalRulePlugin } from "@udecode/plate-horizontal-rule/react";
+import { ListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
+import { EquationPlugin } from "@udecode/plate-math/react";
+import { ImagePlugin } from "@udecode/plate-media/react";
+import { insertTable } from "@udecode/plate-table";
 import {
+  CodeIcon,
   FrameIcon,
   Heading2Icon,
   HeadingIcon,
@@ -21,27 +19,21 @@ import {
   ListIcon,
   ListOrderedIcon,
   PilcrowIcon,
+  QuoteIcon,
   Radical,
-  TableIcon,
   SeparatorHorizontalIcon,
+  TableIcon,
 } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
-
-import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
-import { QuoteIcon } from "lucide-react";
-
-import { ParagraphPlugin } from "@udecode/plate/react";
-
-import { insertEmptyCodeBlock } from "@udecode/plate-code-block";
-import { CodeIcon } from "lucide-react";
-
 import { insertBlock } from "@/lib/transforms";
-import { ListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
-import { EquationPlugin } from "@udecode/plate-math/react";
-import { HorizontalRulePlugin } from "@udecode/plate-horizontal-rule/react";
-import { insertTable } from "@udecode/plate-table";
-import { IframePlugin } from "../editor/plugins/iframe-plugin";
 import { insertIframe } from "../editor/transforms/insert-iframe";
+import {
+  InlineCombobox,
+  InlineComboboxContent,
+  InlineComboboxEmpty,
+  InlineComboboxInput,
+  InlineComboboxItem,
+} from "./inline-combobox";
 
 interface SlashCommandRule {
   icon: ComponentType<SVGProps<SVGSVGElement>>;

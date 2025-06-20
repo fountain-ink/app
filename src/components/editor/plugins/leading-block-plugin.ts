@@ -1,12 +1,6 @@
-import {
-  type OverrideEditor,
-  type PluginConfig,
-  type QueryNodeOptions,
-  createTSlatePlugin,
-  queryNode,
-} from "@udecode/plate";
-import { TitlePlugin } from "./title-plugin";
+import { createTSlatePlugin, type OverrideEditor, type PluginConfig, type QueryNodeOptions } from "@udecode/plate";
 import { YjsPlugin } from "@udecode/plate-yjs/react";
+import { TitlePlugin } from "./title-plugin";
 export type LeadingBlockConfig = PluginConfig<
   "leadingBlock",
   {

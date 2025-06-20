@@ -1,17 +1,15 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { getLensClient, getPublicClient } from "@/lib/lens/client";
+import { evmAddress, url } from "@lens-protocol/client";
 import { addAppAuthorizationEndpoint, removeAppAuthorizationEndpoint } from "@lens-protocol/client/actions";
-import { evmAddress, uri, url } from "@lens-protocol/client";
+import { useState } from "react";
 import { toast } from "sonner";
 import { useAccount, useSignMessage } from "wagmi";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { getLensClient, getPublicClient } from "@/lib/lens/client";
 
 export default function AppControlsPage() {
   const [endpoint, setEndpoint] = useState("");

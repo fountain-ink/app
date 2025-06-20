@@ -1,10 +1,9 @@
 "use client";
 
 import { cn, withRef } from "@udecode/cn";
-import { useTodoListElement, useTodoListElementState } from "@udecode/plate-list/react";
-
-import { Checkbox } from "./checkbox";
 import { PlateElement } from "@udecode/plate/react";
+import { useTodoListElement, useTodoListElementState } from "@udecode/plate-list/react";
+import { Checkbox } from "./checkbox";
 
 export const TodoListElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
   const { element } = props;

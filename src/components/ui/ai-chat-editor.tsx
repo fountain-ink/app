@@ -1,9 +1,8 @@
 "use client";
 
-import { memo } from "react";
-
 import { withProps } from "@udecode/cn";
 import { BaseParagraphPlugin, SlateLeaf } from "@udecode/plate";
+import { usePlateEditor } from "@udecode/plate/react";
 import { useAIChatEditor } from "@udecode/plate-ai/react";
 import {
   BaseBoldPlugin,
@@ -20,9 +19,7 @@ import { BaseIndentPlugin } from "@udecode/plate-indent";
 import { BaseIndentListPlugin } from "@udecode/plate-indent-list";
 import { BaseLinkPlugin } from "@udecode/plate-link";
 import { MarkdownPlugin } from "@udecode/plate-markdown";
-import { usePlateEditor } from "@udecode/plate/react";
-
-import { TodoLiStatic, TodoMarkerStatic } from "./static/indent-todo-marker-static";
+import { memo } from "react";
 import { BlockquoteElementStatic } from "./static/blockquote-element-static";
 import { CodeBlockElementStatic } from "./static/code-block-element-static";
 import { CodeLeafStatic } from "./static/code-leaf-static";
@@ -31,6 +28,7 @@ import { CodeSyntaxLeafStatic } from "./static/code-syntax-leaf-static";
 import { EditorStatic } from "./static/editor-static";
 import { HeadingElementStatic } from "./static/heading-element-static";
 import { HrElementStatic } from "./static/hr-element-static";
+import { TodoLiStatic, TodoMarkerStatic } from "./static/indent-todo-marker-static";
 import { LinkElementStatic } from "./static/link-element-static";
 import { ParagraphElementStatic } from "./static/paragraph-element-static";
 

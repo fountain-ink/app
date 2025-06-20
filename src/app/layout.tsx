@@ -1,20 +1,19 @@
 import { AuthManager } from "@/components/auth/auth-manager";
 import { Web3Providers } from "@/components/misc/web3-providers";
-import { Header } from "@/components/navigation/header";
 import { GlobalFooter } from "@/components/navigation/global-footer";
+import { Header } from "@/components/navigation/header";
 import { ThemeProvider } from "@/components/theme/theme-context";
 import { Toaster } from "@/components/ui/sonner";
 import { getSession } from "@/lib/auth/get-session";
 import { getLensClient } from "@/lib/lens/client";
 import "@/styles/globals.css";
 import { cn } from "@udecode/cn";
-import { PlateController } from "@udecode/plate/react";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider as DarkModeProvider } from "next-themes";
-import { PostActionsProvider } from "@/contexts/post-actions-context";
-import { FeedProvider } from "@/contexts/feed-context";
 import { GlobalModals } from "@/components/misc/global-modals";
+import { FeedProvider } from "@/contexts/feed-context";
+import { PostActionsProvider } from "@/contexts/post-actions-context";
 
 export const metadata = {
   title: "Fountain",

@@ -1,4 +1,3 @@
-import { proseClasses } from "@/styles/prose";
 import { Metadata } from "next";
 import { ArticleLayout } from "@/components/navigation/article-layout";
 

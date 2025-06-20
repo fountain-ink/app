@@ -1,11 +1,18 @@
 "use client";
 
+import { cn, withCn } from "@udecode/cn";
+import { TElement } from "@udecode/plate";
+import { useComposedRef, useEditorRef } from "@udecode/plate/react";
+import { filterWords } from "@udecode/plate-combobox";
+import { type UseComboboxInputResult, useComboboxInput, useHTMLInputCursorState } from "@udecode/plate-combobox/react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { AnimatePresence, motion } from "motion/react";
 import React, {
+  createContext,
+  forwardRef,
   type HTMLAttributes,
   type ReactNode,
   type RefObject,
-  createContext,
-  forwardRef,
   startTransition,
   useCallback,
   useContext,
@@ -13,19 +20,9 @@ import React, {
   useMemo,
   useState,
 } from "react";
-
 import type { PointRef } from "slate";
-
-import { cn, withCn } from "@udecode/cn";
-import { filterWords } from "@udecode/plate-combobox";
-import { type UseComboboxInputResult, useComboboxInput, useHTMLInputCursorState } from "@udecode/plate-combobox/react";
-import { useComposedRef, useEditorRef } from "@udecode/plate/react";
-import { type VariantProps, cva } from "class-variance-authority";
-import { AnimatePresence, motion } from "motion/react";
-import { ScrollArea } from "./scroll-area";
-
-import { TElement } from "@udecode/plate";
 import { Ariakit } from "./menu";
+import { ScrollArea } from "./scroll-area";
 
 const menuAnimationVariants = {
   hidden: {

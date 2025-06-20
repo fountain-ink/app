@@ -1,7 +1,6 @@
-import { env } from "@/env";
+import { type NextRequest, NextResponse } from "next/server";
 import { verifyAuth } from "@/lib/auth/verify-auth-request";
 import { createClient } from "@/lib/db/server";
-import { type NextRequest, NextResponse } from "next/server";
 
 type FeedbackType = "bug" | "feature" | "other";
 

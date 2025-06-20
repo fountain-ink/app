@@ -1,7 +1,7 @@
+import { NextRequest, NextResponse } from "next/server";
 import { verifyAuth } from "@/lib/auth/verify-auth-request";
 import { Json } from "@/lib/db/database";
 import { createClient } from "@/lib/db/server";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(req: NextRequest) {
   try {

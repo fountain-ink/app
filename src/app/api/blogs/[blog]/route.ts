@@ -1,9 +1,9 @@
+import { fetchGroup } from "@lens-protocol/client/actions";
+import { NextRequest, NextResponse } from "next/server";
 import { verifyAuth } from "@/lib/auth/verify-auth-request";
 import { createClient } from "@/lib/db/server";
-import { NextRequest, NextResponse } from "next/server";
-import { isEvmAddress } from "@/lib/utils/is-evm-address";
 import { getLensClient } from "@/lib/lens/client";
-import { fetchGroup } from "@lens-protocol/client/actions";
+import { isEvmAddress } from "@/lib/utils/is-evm-address";
 
 async function findBlogByIdentifier(db: any, identifier: string) {
   if (isEvmAddress(identifier)) {

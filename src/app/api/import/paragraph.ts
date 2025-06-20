@@ -1,5 +1,5 @@
-import { getTransactionContent, getTransactionId } from "@/lib/get-arweave-content";
 import { gql } from "graphql-request";
+import { getTransactionContent, getTransactionId } from "@/lib/get-arweave-content";
 
 const query = gql`
   query GetParagraphPost($slug: String!) {

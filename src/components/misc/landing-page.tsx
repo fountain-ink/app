@@ -1,18 +1,18 @@
 "use client";
 
-import { RoughNotation, RoughNotationGroup } from "react-rough-notation";
 import Image from "next/image";
 import React from "react";
+import { RoughNotation, RoughNotationGroup } from "react-rough-notation";
 import "@/styles/article.css";
-import { useTheme } from "next-themes";
-import { Bird, HighFive, Notes, Sun } from "@/components/icons/landing-images";
-import { FavoritesFeed } from "@/components/feed/feed-favorites";
-import { FeedProvider } from "@/contexts/feed-context";
 import type { AnyPost } from "@lens-protocol/client";
-import { ConnectWalletButton } from "@/components/auth/auth-wallet-button";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { ConnectKitButton } from "connectkit";
+import Link from "next/link";
+import { useTheme } from "next-themes";
+import { ConnectWalletButton } from "@/components/auth/auth-wallet-button";
+import { FavoritesFeed } from "@/components/feed/feed-favorites";
+import { Bird, HighFive, Notes, Sun } from "@/components/icons/landing-images";
+import { Button } from "@/components/ui/button";
+import { FeedProvider } from "@/contexts/feed-context";
 
 const features = [
   {
@@ -23,13 +23,13 @@ const features = [
         Fountain is built on user ownership of and decentralisation{" "}
         {/* <RoughNotation type="underline" color="hsl(var(--primary))" order={4}> */}
         <span className="text-primary whitespace-nowrap">secured by Ethereum</span>
-        {/* </RoughNotation> */}
-        . We believe in{" "}
+        {/* </RoughNotation> */}. We believe in{" "}
         <RoughNotation type="underline" color="hsl(var(--primary))" order={4}>
           <a
             href="https://github.com/fountain-ink/app"
             target="_blank"
             className="text-primary whitespace-nowrap"
+            rel="noopener"
           >
             open-source
           </a>
@@ -46,8 +46,9 @@ const features = [
     title: "Slow social",
     description: (
       <>
-        In the new kind of interenet there's no attention-maxxing and squeezing ad revenue out of users.
-        Fountain is beautifully crafted from the ground up to be <span className="text-primary whitespace-nowrap">fully distractions-free</span>.
+        In the new kind of interenet there's no attention-maxxing and squeezing ad revenue out of users. Fountain is
+        beautifully crafted from the ground up to be{" "}
+        <span className="text-primary whitespace-nowrap">fully distractions-free</span>.
         {/* We believe users should control and{" "} */}
         {/* <RoughNotation type="underline" color="hsl(var(--primary))" order={4}> */}
         {/* <span className="text-primary whitespace-nowrap">
@@ -65,17 +66,12 @@ const features = [
     title: "Collaborate with others",
     description: (
       <>
-        Fountain has{" "}
-        {/* <RoughNotation type="underline" color="hsl(var(--primary))" order={4}> */}
-        <span className="text-primary whitespace-nowrap">
-          multiplayer built in
-        </span>
-        {/* </RoughNotation> */}
-        . Beyond that, we make it super easy to{" "}
+        Fountain has {/* <RoughNotation type="underline" color="hsl(var(--primary))" order={4}> */}
+        <span className="text-primary whitespace-nowrap">multiplayer built in</span>
+        {/* </RoughNotation> */}. Beyond that, we make it super easy to{" "}
         {/* <RoughNotation type="underline" color="hsl(var(--primary))" order={4}> */}
         <span className="text-primary whitespace-nowrap">split revenue</span>
-        {/* </RoughNotation>{" "} */}
-        {" "}with collaborators.
+        {/* </RoughNotation>{" "} */} with collaborators.
       </>
     ),
     color: "bg-[#FFF4C1] dark:bg-[#FFF4C1]/70",
@@ -87,11 +83,11 @@ const features = [
     title: "Embed anything you want",
     description: (
       <>
-        Our powerful editor is designed to be <span className="text-primary">the world typewriter</span> - with features that{" "}
-        {/* <RoughNotation type="underline" color="hsl(var(--primary))" order={4}> */}
+        Our powerful editor is designed to be <span className="text-primary">the world typewriter</span> - with features
+        that {/* <RoughNotation type="underline" color="hsl(var(--primary))" order={4}> */}
         <span className="text-primary whitespace-nowrap">help you grow</span>
-        {/* </RoughNotation>{" "} */}
-        {" "}as a writer. Embed music, videos, demos - <span className="text-primary whitespace-nowrap">over 1900+</span> platforms are suported.
+        {/* </RoughNotation>{" "} */} as a writer. Embed music, videos, demos -{" "}
+        <span className="text-primary whitespace-nowrap">over 1900+</span> platforms are suported.
       </>
     ),
     color: "bg-[#FFE4E4] dark:bg-[#FFE4E4]/70",
@@ -100,11 +96,7 @@ const features = [
   },
 ];
 
-const arrows = [
-  "/images/arrow-right-1.svg",
-  "/images/arrow-left-2.svg",
-  "/images/arrow-right-3.svg",
-];
+const arrows = ["/images/arrow-right-1.svg", "/images/arrow-left-2.svg", "/images/arrow-right-3.svg"];
 
 interface LandingPageClientProps {
   favoritePosts: AnyPost[];
@@ -120,15 +112,27 @@ export function LandingPageClient({ favoritePosts }: LandingPageClientProps) {
         <RoughNotationGroup show>
           <div className="text-center mb-16">
             <header className="text-6xl font-serif title">
-              <RoughNotation type="highlight" color={isDark ? features[0]?.highlightColorDark : features[0]?.highlightColor} order="1">
+              <RoughNotation
+                type="highlight"
+                color={isDark ? features[0]?.highlightColorDark : features[0]?.highlightColor}
+                order="1"
+              >
                 Read
               </RoughNotation>
               ,{" "}
-              <RoughNotation type="highlight" color={isDark ? features[1]?.highlightColorDark : features[1]?.highlightColor} order="2">
+              <RoughNotation
+                type="highlight"
+                color={isDark ? features[1]?.highlightColorDark : features[1]?.highlightColor}
+                order="2"
+              >
                 write
               </RoughNotation>{" "}
               &{" "}
-              <RoughNotation type="highlight" color={isDark ? features[2]?.highlightColorDark : features[2]?.highlightColor} order="3">
+              <RoughNotation
+                type="highlight"
+                color={isDark ? features[2]?.highlightColorDark : features[2]?.highlightColor}
+                order="3"
+              >
                 collaborate
               </RoughNotation>
               <br />
@@ -145,10 +149,7 @@ export function LandingPageClient({ favoritePosts }: LandingPageClientProps) {
             {features.map((feature: any, index) => {
               const featureEl = (
                 <div
-                  className={`flex gap-8 items-start ${index % 2 === 0
-                    ? "flex-row-reverse lg:flex-row"
-                    : "flex-row"
-                    }`}
+                  className={`flex gap-8 items-start ${index % 2 === 0 ? "flex-row-reverse lg:flex-row" : "flex-row"}`}
                 >
                   <div
                     className={`sm:w-40 sm:h-40 w-28 h-28 rounded-lg flex-shrink-0 ${feature.color} overflow-hidden flex items-center justify-center`}
@@ -161,18 +162,15 @@ export function LandingPageClient({ favoritePosts }: LandingPageClientProps) {
                         alt={feature.title}
                         width={128}
                         height={128}
-                        className={`w-full h-full object-contain `}
+                        className={"w-full h-full object-contain "}
                       />
                     )}
                   </div>
-                  <div
-                    className={`pt-2 flex-grow ${index % 2 === 0 ? "text-right lg:text-left" : ""
-                      }`}
-                  >
-                    <h3 className="!text-xl sm:!text-2xl !p-0 !font-medium !mb-0">
-                      {feature.title}
-                    </h3>
-                    <div className={` w-full flex ${index % 2 === 0 ? "lg:justify-start justify-end" : "justify-start"}`}>
+                  <div className={`pt-2 flex-grow ${index % 2 === 0 ? "text-right lg:text-left" : ""}`}>
+                    <h3 className="!text-xl sm:!text-2xl !p-0 !font-medium !mb-0">{feature.title}</h3>
+                    <div
+                      className={` w-full flex ${index % 2 === 0 ? "lg:justify-start justify-end" : "justify-start"}`}
+                    >
                       <p className="!text-sm sm:!text-base !pt-0 sm:!pt-4 !leading-normal !tracking-tight !text-primary/50 !max-w-xs">
                         {feature.description}
                       </p>
@@ -182,29 +180,21 @@ export function LandingPageClient({ favoritePosts }: LandingPageClientProps) {
               );
 
               const arrow = arrows[index];
-              const arrowEl = arrow ? (
-                <Image src={arrow} alt="arrow" width={80} height={80} />
-              ) : (
-                <div />
-              );
+              const arrowEl = arrow ? <Image src={arrow} alt="arrow" width={80} height={80} /> : <div />;
 
               if (index % 2 === 0) {
                 // Left feature, right arrow
                 return (
                   <React.Fragment key={feature.title}>
                     <div className="lg:col-span-1">{featureEl}</div>
-                    <div className="hidden lg:flex items-center justify-start">
-                      {arrowEl}
-                    </div>
+                    <div className="hidden lg:flex items-center justify-start">{arrowEl}</div>
                   </React.Fragment>
                 );
               }
               // Left arrow, right feature
               return (
                 <React.Fragment key={feature.title}>
-                  <div className="hidden lg:flex items-center justify-end mr-4">
-                    {arrowEl}
-                  </div>
+                  <div className="hidden lg:flex items-center justify-end mr-4">{arrowEl}</div>
                   <div className="lg:col-span-1">{featureEl}</div>
                 </React.Fragment>
               );

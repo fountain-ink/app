@@ -1,30 +1,30 @@
-"use client"
+"use client";
 
-import { Badge } from "@/components/ui/badge"
-import { motion } from "motion/react"
-import type { LucideIcon } from "lucide-react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import type { LucideIcon } from "lucide-react";
+import { motion } from "motion/react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
 
 interface NavItem {
-  id: string
-  label: string
-  icon: LucideIcon
-  enabled: boolean
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  enabled: boolean;
 }
 
 interface TabNavigationProps {
-  navItems: NavItem[]
-  basePath?: string
+  navItems: NavItem[];
+  basePath?: string;
 }
 
 export function TabNavigation({ navItems, basePath = "/settings" }: TabNavigationProps) {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <nav className="flex flex-col w-48 p-2 gap-2">
       {navItems.map((item) => {
-        const isActive = pathname === `${basePath}/${item.id}`
+        const isActive = pathname === `${basePath}/${item.id}`;
         return (
           <motion.div
             key={item.id}
@@ -43,7 +43,7 @@ export function TabNavigation({ navItems, basePath = "/settings" }: TabNavigatio
                     : "opacity-50 cursor-not-allowed"
                 }`}
               onClick={(e) => {
-                if (!item.enabled) e.preventDefault()
+                if (!item.enabled) e.preventDefault();
               }}
             >
               <div className="flex items-center space-x-2">
@@ -51,13 +51,11 @@ export function TabNavigation({ navItems, basePath = "/settings" }: TabNavigatio
                 <span className="hidden sm:inline">{item.label}</span>
               </div>
 
-              <span className="hidden lg:inline">
-                {!item.enabled && <Badge variant="outline">Soon</Badge>}
-              </span>
+              <span className="hidden lg:inline">{!item.enabled && <Badge variant="outline">Soon</Badge>}</span>
             </Link>
           </motion.div>
-        )
+        );
       })}
     </nav>
-  )
+  );
 }

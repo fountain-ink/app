@@ -1,8 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { settingsEvents } from "@/lib/settings/events";
 import { UserSettings } from "@/lib/settings/user-settings";
-import { useState } from "react";
 
 export function useSettings(initialSettings: UserSettings = {}) {
   const [settings, setSettings] = useState<UserSettings>(initialSettings);

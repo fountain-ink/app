@@ -1,21 +1,11 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import {
-  ChartLine,
-  Search,
-  MessageSquare,
-  FileCog,
-  User2,
-  FileText,
-  BookOpen,
-  ShieldAlert,
-  Trophy,
-} from "lucide-react";
+import { BookOpen, ChartLine, FileText, MessageSquare, Search, ShieldAlert, Trophy, User2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { useState, useEffect } from "react";
 
 const navItems = [
   { id: "contests", label: "Contests", icon: Trophy, enabled: true },

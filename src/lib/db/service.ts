@@ -1,5 +1,5 @@
-import { env } from "@/env";
 import { createClient } from "@supabase/supabase-js";
+import { env } from "@/env";
 import { Database } from "./database";
 
 export async function createServiceClient() {

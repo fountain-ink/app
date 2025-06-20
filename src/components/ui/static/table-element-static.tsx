@@ -1,10 +1,7 @@
-import React from "react";
-
-import type { SlateElementProps } from "@udecode/plate";
-
 import { cn } from "@udecode/cn";
+import type { SlateElementProps } from "@udecode/plate";
 import { SlateElement } from "@udecode/plate";
-import { type TTableElement, BaseTablePlugin } from "@udecode/plate-table";
+import { BaseTablePlugin, type TTableElement } from "@udecode/plate-table";
 
 export const TableElementStatic = ({ children, className, ...props }: SlateElementProps<TTableElement>) => {
   const { disableMarginLeft } = props.editor.getOptions(BaseTablePlugin);

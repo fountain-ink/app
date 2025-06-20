@@ -1,12 +1,12 @@
 "use client";
 
-import { getLensClient } from "@/lib/lens/client";
 import { fetchAccounts } from "@lens-protocol/client/actions";
+import { User2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { getLensClient } from "@/lib/lens/client";
+import { resolveUrl } from "@/lib/utils/resolve-url";
 import { LoadingSpinner } from "../misc/loading-spinner";
 import { InlineComboboxEmpty, InlineComboboxItem } from "../ui/inline-combobox";
-import { resolveUrl } from "@/lib/utils/resolve-url";
-import { User2Icon } from "lucide-react";
 
 export type MentionableUser = {
   key: string;

@@ -1,7 +1,7 @@
-import { getLensClient } from "@/lib/lens/client";
 import { AnyPost } from "@lens-protocol/client";
 import { fetchPostBookmarks } from "@lens-protocol/client/actions";
 import { useCallback, useRef, useState } from "react";
+import { getLensClient } from "@/lib/lens/client";
 
 export const useBookmarks = () => {
   const [bookmarks, setBookmarks] = useState<AnyPost[]>([]);

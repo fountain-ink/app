@@ -1,20 +1,7 @@
 "use client";
 
+import { ChartLine, DollarSign, FileSliders, LayoutGrid, Mail, PenTool, Settings, User2, Users } from "lucide-react";
 import { TabNavigation } from "@/components/navigation/tab-navigation";
-import {
-  Brush,
-  DollarSign,
-  LayoutGrid,
-  Mail,
-  PenTool,
-  Settings,
-  User2,
-  Users,
-  BookOpen,
-  FileCog,
-  FileSliders,
-  ChartLine,
-} from "lucide-react";
 
 const navItems = [
   { id: "profile", label: "Profile", icon: User2, enabled: true },
@@ -33,11 +20,7 @@ const navItems = [
   { id: "layouts", label: "Layouts", icon: LayoutGrid, enabled: false },
 ];
 
-export default function SettingsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function SettingsLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="container mx-auto p-0 sm:p-6 sm:py-10 max-w-6xl">
       <h1 className="text-3xl font-bold ml-4 mb-10">Settings</h1>

@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { SlideNav } from "@/components/ui/slide-tabs";
 import { useAuthenticatedUser } from "@lens-protocol/react";
+import { SlideNav } from "@/components/ui/slide-tabs";
 
 export const FeedNavigation = () => {
   const { data: user, loading } = useAuthenticatedUser();

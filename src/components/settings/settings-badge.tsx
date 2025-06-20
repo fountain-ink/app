@@ -1,9 +1,9 @@
 "use client";
 
-import { settingsEvents } from "@/lib/settings/events";
-import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import { settingsEvents } from "@/lib/settings/events";
+import { cn } from "@/lib/utils";
 import { Badge } from "../ui/badge";
 
 type Status = {

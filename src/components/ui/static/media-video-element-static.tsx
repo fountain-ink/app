@@ -1,8 +1,7 @@
+import { cn } from "@udecode/cn";
+import { NodeApi, SlateElement, type SlateElementProps } from "@udecode/plate";
 import type { TCaptionElement } from "@udecode/plate-caption";
 import type { TVideoElement } from "@udecode/plate-media";
-
-import { cn } from "@udecode/cn";
-import { type SlateElementProps, NodeApi, SlateElement } from "@udecode/plate";
 
 export function MediaVideoElementStatic({ children, className, ...props }: SlateElementProps) {
   const {

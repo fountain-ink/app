@@ -13,8 +13,7 @@
     "generate-fonts": "bun run src/lib/scripts/generate-fonts.js",
     "dev": "bun run generate-fonts && next dev",
     "build": "bun run generate-fonts && next build",
-    "lint": "bunx @biomejs/biome lint --write --unsafe ./src",
-    "format": "bunx @biomejs/biome format --write  ./src",
+    "check": "bunx @biomejs/biome check --write  ./src",
     "start": "next start",
     "collab": "dotenv -e .env.local -- npx tsx src/srv/collaboration.ts",
     "notifications": "dotenv -e .env.local -- npx tsx src/srv/notifications/server.ts"
@@ -22,7 +21,7 @@
   "dependencies": {
     "@ariakit/react": "^0.4.15",
     "@aws-sdk/client-s3": "^3.649.0",
-    "@biomejs/biome": "^1.8.1",
+    "@biomejs/biome": "^2.0.0",
     "@emoji-mart/data": "^1.2.1",
     "@faker-js/faker": "^7.6.0",
     "@hocuspocus/extension-database": "^2.13.7",

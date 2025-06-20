@@ -1,10 +1,7 @@
-import React from "react";
-
+import { cn } from "@udecode/cn";
+import { NodeApi, SlateElement, type SlateElementProps } from "@udecode/plate";
 import type { TCaptionElement } from "@udecode/plate-caption";
 import type { TImageElement } from "@udecode/plate-media";
-
-import { cn } from "@udecode/cn";
-import { type SlateElementProps, NodeApi, SlateElement } from "@udecode/plate";
 
 export function ImageElementStatic({ children, className, ...props }: SlateElementProps) {
   const {

@@ -1,21 +1,21 @@
 "use client";
 
+import { enableSignless, fetchMeDetails, removeSignless } from "@lens-protocol/client/actions";
+import { handleOperationWith } from "@lens-protocol/client/viem";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { useWalletClient } from "wagmi";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useEmail } from "@/hooks/use-email";
-import { useSettings } from "@/hooks/use-settings";
-import { UserSettings } from "@/lib/settings/user-settings";
-import { useEffect, useState } from "react";
-import { Input } from "../ui/input";
-import { getLensClient } from "@/lib/lens/client";
-import { enableSignless, fetchMeDetails, removeSignless } from "@lens-protocol/client/actions";
-import { handleOperationWith } from "@lens-protocol/client/viem";
-import { useWalletClient } from "wagmi";
 import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
-import { toast } from "sonner";
+import { useSettings } from "@/hooks/use-settings";
+import { getLensClient } from "@/lib/lens/client";
+import { UserSettings } from "@/lib/settings/user-settings";
 import { cn } from "@/lib/utils";
+import { Input } from "../ui/input";
 
 interface ApplicationSettingsProps {
   initialSettings?: UserSettings;

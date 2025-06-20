@@ -1,6 +1,6 @@
-import { createClient } from "@/lib/db/server";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminRights } from "@/lib/auth/admin-middleware";
+import { createClient } from "@/lib/db/server";
 
 export async function GET(req: NextRequest) {
   try {

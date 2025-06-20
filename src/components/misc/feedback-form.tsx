@@ -1,16 +1,15 @@
 import html2canvas from "html2canvas";
 import { useState } from "react";
 import { toast } from "sonner";
+import { BugIcon } from "../icons/bug";
+import { LightBulbIcon } from "../icons/light-bulb";
+import { MessageCircleIcon } from "../icons/message-circle";
 import { AnimatedMenuItem } from "../navigation/animated-item";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuPortal, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Label } from "../ui/label";
 import { TextareaAutosize } from "../ui/textarea";
-
-import { BugIcon } from "../icons/bug";
-import { LightBulbIcon } from "../icons/light-bulb";
-import { MessageCircleIcon } from "../icons/message-circle";
 
 type FeedbackType = "bug" | "feature" | "other";
 

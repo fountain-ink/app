@@ -1,14 +1,14 @@
 "use client";
 
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { useScroll } from "@/hooks/use-scroll";
-import { Account, AnyPost, Post } from "@lens-protocol/client";
+import { Account, AnyPost } from "@lens-protocol/client";
 import { motion } from "motion/react";
-import { ActionButton } from "./post-action-button";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { useActionBar } from "@/contexts/action-bar-context";
 import { useOnScreen } from "@/hooks/use-on-screen";
 import { usePostActionsButtons } from "@/hooks/use-post-actions-buttons";
+import { useScroll } from "@/hooks/use-scroll";
+import { ActionButton } from "./post-action-button";
 
 export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: Account }) => {
   const { scrollProgress, shouldShow, shouldAnimate } = useScroll();
@@ -29,10 +29,10 @@ export const FloatingActionBar = ({ post, account }: { post: AnyPost; account?: 
     return null;
   }
 
-  const { likeButton, collectButton, commentButton, bookmarkButton, shareButton } = usePostActionsButtons({ 
+  const { likeButton, collectButton, commentButton, bookmarkButton, shareButton } = usePostActionsButtons({
     post,
     tipPopoverOpen,
-    onTipPopoverChange: setTipPopoverOpen
+    onTipPopoverChange: setTipPopoverOpen,
   });
 
   const actionButtons = [shareButton, bookmarkButton, collectButton, commentButton, likeButton];

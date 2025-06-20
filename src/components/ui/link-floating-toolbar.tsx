@@ -2,10 +2,10 @@
 
 import { cn } from "@udecode/cn";
 import { useFormInputProps } from "@udecode/plate/react";
-import { type UseVirtualFloatingOptions, flip, offset } from "@udecode/plate-floating";
+import { flip, offset, type UseVirtualFloatingOptions } from "@udecode/plate-floating";
 import {
-  type LinkFloatingToolbarState,
   FloatingLinkUrlInput,
+  type LinkFloatingToolbarState,
   LinkOpenButton,
   useFloatingLinkEdit,
   useFloatingLinkEditState,

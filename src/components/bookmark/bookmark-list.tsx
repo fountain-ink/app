@@ -1,14 +1,12 @@
 "use client";
 
-import { useBookmarks } from "@/hooks/use-bookmarks";
 import { useEffect } from "react";
-import { PostView } from "../post/post-view";
-import { Button } from "../ui/button";
-import { Post } from "@lens-protocol/client";
-import { LoadingSpinner } from "../misc/loading-spinner";
-import { Card, CardContent, CardHeader } from "../ui/card";
+import { useBookmarks } from "@/hooks/use-bookmarks";
 import { GraphicHand2 } from "../icons/custom-icons";
 import PostSkeleton from "../post/post-skeleton";
+import { PostView } from "../post/post-view";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardHeader } from "../ui/card";
 
 export const BookmarkList = () => {
   const { bookmarks, loading, hasMore, fetchBookmarks } = useBookmarks();

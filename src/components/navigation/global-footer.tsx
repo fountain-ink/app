@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FountainLogo, HeyIcon } from "../icons/custom-icons";
-import { TbBrandTelegram, TbBrandX, TbX } from "react-icons/tb";
+import { TbBrandTelegram, TbBrandX } from "react-icons/tb";
+import { HeyIcon } from "../icons/custom-icons";
 
 export const GlobalFooter = () => {
   const pathname = usePathname();

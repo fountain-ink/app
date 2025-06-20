@@ -1,27 +1,27 @@
 "use client";
 
-import { usePostActions } from "@/hooks/use-post-actions";
-import { handlePlatformShare } from "@/lib/get-share-url";
-import { Account, Post } from "@lens-protocol/client";
+import { Post } from "@lens-protocol/client";
 import {
+  Ban,
   Bookmark,
   Heart,
   LucideIcon,
+  Meh,
   MessageCircle,
   Share2,
-  Ban,
-  StarIcon,
   ShieldAlert,
   ShieldX,
-  Meh,
+  StarIcon,
 } from "lucide-react";
+import React, { JSXElementConstructor, ReactElement } from "react";
 import { IconType } from "react-icons";
 import { TbBrandBluesky, TbBrandX, TbLink } from "react-icons/tb";
-import { TipPopover } from "@/components/tip/tip-popover";
 import { CoinIcon } from "@/components/icons/custom-icons";
-import React, { ReactElement, JSXElementConstructor } from "react";
-import { useAdminStatus } from "./use-admin-status";
+import { TipPopover } from "@/components/tip/tip-popover";
+import { usePostActions } from "@/hooks/use-post-actions";
+import { handlePlatformShare } from "@/lib/get-share-url";
 import { useAdminPostActions } from "./use-admin-post-actions";
+import { useAdminStatus } from "./use-admin-status";
 
 type ActionButtonConfig = {
   icon: LucideIcon | IconType | React.FC<any>;
@@ -56,7 +56,15 @@ type PostActionButtons = {
   adminButtons?: ActionButtonConfig[];
 };
 
-export const usePostActionsButtons = ({ post, tipPopoverOpen, onTipPopoverChange }: { post: Post; tipPopoverOpen?: boolean; onTipPopoverChange?: (open: boolean) => void }): PostActionButtons => {
+export const usePostActionsButtons = ({
+  post,
+  tipPopoverOpen,
+  onTipPopoverChange,
+}: {
+  post: Post;
+  tipPopoverOpen?: boolean;
+  onTipPopoverChange?: (open: boolean) => void;
+}): PostActionButtons => {
   const {
     handleComment,
     handleCollect,
@@ -120,12 +128,7 @@ export const usePostActionsButtons = ({ post, tipPopoverOpen, onTipPopoverChange
       fillColor: "rgba(254, 178, 4, 0.3)",
       shouldIncrementOnClick: false,
       renderPopover: (trigger: React.ReactElement) => (
-        <TipPopover 
-          onCollectClick={handleCollect} 
-          post={post} 
-          open={tipPopoverOpen}
-          onOpenChange={onTipPopoverChange}
-        >
+        <TipPopover onCollectClick={handleCollect} post={post} open={tipPopoverOpen} onOpenChange={onTipPopoverChange}>
           {trigger}
         </TipPopover>
       ),

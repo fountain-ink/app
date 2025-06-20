@@ -1,6 +1,6 @@
-import type { Draft } from "@/components/draft/draft";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import type { Draft } from "@/components/draft/draft";
 
 interface DocumentState {
   [documentId: string]: Draft;

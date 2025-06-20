@@ -1,17 +1,16 @@
 "use client";
 
-import React from "react";
-
 import { cn } from "@udecode/cn";
-import { HEADING_KEYS } from "@udecode/plate-heading";
 import {
-  ParagraphPlugin,
-  type PlaceholderProps,
   createNodeHOC,
   createNodesHOC,
+  ParagraphPlugin,
+  type PlaceholderProps,
   usePlaceholderState,
   useReadOnly,
 } from "@udecode/plate/react";
+import { HEADING_KEYS } from "@udecode/plate-heading";
+import React from "react";
 import { TITLE_KEYS } from "../editor/plugins/title-plugin";
 
 export const Placeholder = (props: PlaceholderProps) => {

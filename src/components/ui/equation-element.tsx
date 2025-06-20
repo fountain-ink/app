@@ -1,16 +1,21 @@
 "use client";
 
 import { cn, withRef } from "@udecode/cn";
+import {
+  createPrimitiveComponent,
+  PlateElement,
+  useEditorRef,
+  useElement,
+  useReadOnly,
+  useSelected,
+} from "@udecode/plate/react";
 import type { TEquationElement } from "@udecode/plate-math";
 import { useEquationElement, useEquationInput } from "@udecode/plate-math/react";
 import { useMediaState } from "@udecode/plate-media/react";
-import { createPrimitiveComponent, useEditorRef, useElement, useSelected } from "@udecode/plate/react";
 import { RadicalIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { useReadOnly } from "@udecode/plate/react";
+import { useRef, useState } from "react";
 import { Caption, CaptionTextarea } from "./caption";
 import { ELEMENT_WIDTH_CLASSES, ElementPopover, type ElementWidth } from "./element-popover";
-import { PlateElement } from "@udecode/plate/react";
 import { TextareaAutosize } from "./textarea";
 
 const EquationInput = createPrimitiveComponent(TextareaAutosize)({

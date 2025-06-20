@@ -1,24 +1,23 @@
-import { storageClient } from "@/lib/lens/storage-client";
-import { AnyClient } from "@lens-protocol/client";
+import { AnyClient, never } from "@lens-protocol/client";
+import { canCreateUsername, createAccountWithUsername, fetchAccount } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
-import { account as accountMetadataBuilder, image, MetadataAttribute } from "@lens-protocol/metadata"; // Updated imports
-import { useState, useEffect, useCallback, useRef } from "react";
+import { account as accountMetadataBuilder } from "@lens-protocol/metadata"; // Updated imports
+import { CheckCircle2, ChevronLeft, Loader2, XCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useAccount, useSignMessage, useWalletClient } from "wagmi";
 import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
+import { getLensClient } from "@/lib/lens/client";
+import { storageClient } from "@/lib/lens/storage-client";
+import { uploadFile } from "@/lib/upload/upload-file";
+import { GraphicHand2 } from "../icons/custom-icons";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { setupUserAuth } from "./auth-manager";
-import { ChevronLeft, CheckCircle2, XCircle, Loader2 } from "lucide-react";
-import { GraphicHand2 } from "../icons/custom-icons";
 import { OnboardingProfileSetup, ProfileSetupData } from "./onboarding-profile-setup";
-import { uploadFile } from "@/lib/upload/upload-file";
-import { canCreateUsername, createAccountWithUsername, fetchAccount } from "@lens-protocol/client/actions";
-import { never } from "@lens-protocol/client";
-import { getLensClient, getPublicClient } from "@/lib/lens/client";
-import { useRouter } from "next/navigation";
 
 interface OnboardingModalProps {
   open: boolean;

@@ -1,10 +1,14 @@
 "use client";
 
-import { Plate, createPlateEditor, useEditorMounted, usePlateEditor } from "@udecode/plate/react";
-import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState, type PropsWithChildren } from "react";
+import { createPlateEditor, Plate, usePlateEditor } from "@udecode/plate/react";
+import { YjsPlugin } from "@udecode/plate-yjs/react";
+import { useSearchParams } from "next/navigation";
+import { type PropsWithChildren, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { useMounted } from "@/hooks/use-mounted";
+import { useYjsState } from "@/hooks/use-yjs-state";
+import { trimEmptyNodes } from "@/lib/plate/trim-empty-nodes";
 import { Editor, EditorContainer } from "../ui/editor";
 import { FixedToolbar } from "../ui/fixed-toolbar";
 import { FixedToolbarButtons } from "../ui/fixed-toolbar-buttons";
@@ -14,10 +18,6 @@ import { TocSidebar } from "../ui/toc-sidebar";
 import { AutoSave } from "./addons/editor-autosave";
 import { getElements, getRichElements } from "./elements";
 import { getEditorPlugins } from "./plugins";
-import { useMounted } from "@/hooks/use-mounted";
-import { YjsPlugin } from "@udecode/plate-yjs/react";
-import { trimEmptyNodes } from "@/lib/plate/trim-empty-nodes";
-import { useYjsState } from "@/hooks/use-yjs-state";
 
 export default function PlateEditor(
   props: PropsWithChildren & {
@@ -55,7 +55,7 @@ export default function PlateEditor(
   useEffect(() => {
     // Set the collaborative state for this document
     setCollaborative(documentId, isCollaborative);
-    
+
     if (!isMounted || props.readOnly || !isCollaborative) return;
 
     editor.getApi(YjsPlugin).yjs.init({

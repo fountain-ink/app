@@ -1,11 +1,11 @@
+import { ChevronLeft } from "lucide-react";
 import { useState } from "react";
+import { ImageCropperUploader } from "../misc/image-uploader";
 import { Button } from "../ui/button";
+import { DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { TextareaAutosize } from "../ui/textarea";
-import { ImageCropperUploader } from "../misc/image-uploader";
-import { DialogHeader, DialogTitle } from "../ui/dialog";
-import { X, ChevronLeft } from "lucide-react";
 
 export interface ProfileSetupData {
   profilePicture?: File | null;

@@ -1,46 +1,46 @@
-"use client"
+"use client";
 
-import { useState, useRef, useEffect } from "react"
-import { useRouter, usePathname } from "next/navigation"
-import { motion, AnimatePresence } from "motion/react"
-import { Search, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { useIsMobile } from "@/hooks/use-mobile"
-import { cn } from "@/lib/utils"
+import { Search, X } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 export function HeaderSearch() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [isFocused, setIsFocused] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
-  const router = useRouter()
-  const pathname = usePathname()
-  const inputRef = useRef<HTMLInputElement>(null)
-  const isMobile = useIsMobile()
+  const [isOpen, setIsOpen] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+  const pathname = usePathname();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const isMobile = useIsMobile();
 
   // Hide on search page
   if (pathname === "/search") {
-    return null
+    return null;
   }
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
-      inputRef.current.focus()
+      inputRef.current.focus();
     }
-  }, [isOpen])
+  }, [isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
-      setSearchQuery("")
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
     }
-  }
+  };
 
   const handleClose = () => {
-    setIsOpen(false)
-    setSearchQuery("")
-  }
+    setIsOpen(false);
+    setSearchQuery("");
+  };
 
   if (!isMobile) {
     return (
@@ -60,12 +60,12 @@ export function HeaderSearch() {
             onBlur={() => setIsFocused(false)}
             className={cn(
               "pl-10 h-9 bg-secondary/15 border-secondary/30 text-foreground placeholder:text-foreground/60 transition-colors",
-              isFocused && "border-foreground/20 bg-secondary/20"
+              isFocused && "border-foreground/20 bg-secondary/20",
             )}
           />
         </motion.div>
       </form>
-    )
+    );
   }
 
   return (
@@ -78,12 +78,7 @@ export function HeaderSearch() {
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.15 }}
           >
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsOpen(true)}
-              aria-label="Search"
-            >
+            <Button variant="ghost" size="icon" onClick={() => setIsOpen(true)} aria-label="Search">
               <Search className="h-4 w-4" />
             </Button>
           </motion.div>
@@ -109,7 +104,7 @@ export function HeaderSearch() {
                 className="pl-10 pr-10 h-9 bg-transparent"
                 onKeyDown={(e) => {
                   if (e.key === "Escape") {
-                    handleClose()
+                    handleClose();
                   }
                 }}
               />
@@ -128,5 +123,5 @@ export function HeaderSearch() {
         )}
       </AnimatePresence>
     </div>
-  )
+  );
 }

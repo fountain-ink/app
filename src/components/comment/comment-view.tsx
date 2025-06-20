@@ -1,18 +1,15 @@
+import { AnyPost } from "@lens-protocol/client";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useState } from "react";
 import { useComments } from "@/hooks/use-comments";
 import { cn, formatRelativeTime } from "@/lib/utils";
-import { AnyPost, PostReferenceType, postId } from "@lens-protocol/client";
-import { fetchPostReferences } from "@lens-protocol/client/actions";
-import { AnimatePresence, motion } from "motion/react";
-import { MoreHorizontal } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { UserAvatar } from "../user/user-avatar";
+import { UserCard } from "../user/user-card";
 import { UserUsername } from "../user/user-handle";
 import { UserName } from "../user/user-name";
 import { CommentReactions } from "./comment-reactions";
 import { CommentReplyArea } from "./comment-reply-area";
-import { UserLazyUsername } from "../user/user-lazy-username";
-import { UserCard } from "../user/user-card";
 
 interface CommentViewProps {
   comment: AnyPost;
@@ -68,11 +65,11 @@ export const CommentView = ({
     <div className="flex flex-col">
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-3">
-          <UserCard onClick={(e) => onOpenChange?.(false)} linkProfile username={comment.author.username?.localName}>
+          <UserCard onClick={(_e) => onOpenChange?.(false)} linkProfile username={comment.author.username?.localName}>
             <UserAvatar account={comment.author} className="w-10 h-10" />
           </UserCard>
           <div className="flex flex-col gap-1">
-            <UserCard onClick={(e) => onOpenChange?.(false)} linkProfile username={comment.author.username?.localName}>
+            <UserCard onClick={(_e) => onOpenChange?.(false)} linkProfile username={comment.author.username?.localName}>
               <div className="flex items-center gap-2">
                 <UserName account={comment.author} className="text-sm font-medium" />
                 <UserUsername account={comment.author} className="text-sm text-muted-foreground" />

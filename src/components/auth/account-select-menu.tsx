@@ -1,20 +1,18 @@
-import { getLensClient, getPublicClient } from "@/lib/lens/client";
 import { Account, evmAddress } from "@lens-protocol/client";
 import { fetchAccountsAvailable } from "@lens-protocol/client/actions";
-import { Loader2, Plus, PlusIcon } from "lucide-react";
+import { useAuthenticatedUser } from "@lens-protocol/react";
+import { Loader2, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAccount, useSignMessage } from "wagmi";
-import { UserIcon } from "../icons/user";
-import { AnimatedMenuItem } from "../navigation/animated-item";
-import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
-import { ScrollArea } from "../ui/scroll-area";
-import { OnboardingModal } from "./onboarding-modal";
-import { SelectAccountButton } from "./account-select-button";
-import { syncBlogsQuietly } from "../blog/blog-sync-button";
-import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { env } from "@/env";
-import { useAuthenticatedUser } from "@lens-protocol/react";
+import { useBlogStorage } from "@/hooks/use-blog-storage";
+import { getLensClient, getPublicClient } from "@/lib/lens/client";
+import { syncBlogsQuietly } from "../blog/blog-sync-button";
+import { Button } from "../ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import { ScrollArea } from "../ui/scroll-area";
+import { SelectAccountButton } from "./account-select-button";
+import { OnboardingModal } from "./onboarding-modal";
 
 export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOpenChange?: (open: boolean) => void }) {
   const { address } = useAccount();

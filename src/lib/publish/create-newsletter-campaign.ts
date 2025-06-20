@@ -1,6 +1,6 @@
+import type { Draft } from "@/components/draft/draft";
 import { createClient } from "@/lib/db/client";
 import { createCampaignForPost } from "@/lib/listmonk/newsletter";
-import type { Draft } from "@/components/draft/draft";
 
 interface CreateNewsletterCampaignParams {
   selectedBlogAddress?: string;

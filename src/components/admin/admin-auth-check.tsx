@@ -1,7 +1,7 @@
+import { redirect } from "next/navigation";
 import { getAppToken } from "@/lib/auth/get-app-token";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { isAdmin } from "@/lib/auth/is-admin";
-import { redirect } from "next/navigation";
 
 interface AdminAuthCheckProps {
   children: React.ReactNode;

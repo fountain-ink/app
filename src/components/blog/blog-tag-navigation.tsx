@@ -1,8 +1,8 @@
 "use client";
 
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { Button } from "../ui/button";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
+import { Button } from "../ui/button";
 
 export const BlogTagNavigation = ({
   tags,

@@ -1,13 +1,13 @@
-import { formatRelativeTime } from "@/lib/utils";
 import { AnyPost } from "@lens-protocol/client";
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
+import { formatRelativeTime } from "@/lib/utils";
+import { CommentReplyArea } from "../comment/comment-reply-area";
 import { Button } from "../ui/button";
 import { UserAvatar } from "../user/user-avatar";
 import { UserUsername } from "../user/user-handle";
 import { UserName } from "../user/user-name";
 import { PostReactions } from "./post-reactions";
-import { CommentReplyArea } from "../comment/comment-reply-area";
 
 interface CommentViewProps {
   comment: AnyPost;

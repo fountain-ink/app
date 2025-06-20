@@ -1,5 +1,5 @@
-import { createList, deleteList } from "@/lib/listmonk/client";
 import { NextRequest, NextResponse } from "next/server";
+import { createList, deleteList } from "@/lib/listmonk/client";
 import { getVerifiedBlog } from "../utils";
 
 export async function POST(req: NextRequest, { params }: { params: { blog: string } }) {

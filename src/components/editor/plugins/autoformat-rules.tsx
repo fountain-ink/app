@@ -1,22 +1,21 @@
 "use client";
 
+import { ElementApi, isType, type SlateEditor } from "@udecode/plate";
+import { ParagraphPlugin } from "@udecode/plate/react";
 import type { AutoformatRule } from "@udecode/plate-autoformat";
-
-import { type SlateEditor, ElementApi, isType } from "@udecode/plate";
 import {
   autoformatArrow,
-  autoformatFraction,
-  autoformatEquality,
   autoformatComparison,
+  autoformatEquality,
+  autoformatFraction,
   autoformatLegal,
   autoformatLegalHtml,
-  autoformatSubscriptNumbers,
-  autoformatSuperscriptNumbers,
-  autoformatSubscriptSymbols,
-  autoformatSuperscriptSymbols,
   autoformatPunctuation,
   autoformatSmartQuotes,
-  autoformatOperation,
+  autoformatSubscriptNumbers,
+  autoformatSubscriptSymbols,
+  autoformatSuperscriptNumbers,
+  autoformatSuperscriptSymbols,
 } from "@udecode/plate-autoformat";
 import { AutoformatPlugin } from "@udecode/plate-autoformat/react";
 import {
@@ -34,13 +33,9 @@ import { CodeBlockPlugin, CodeLinePlugin } from "@udecode/plate-code-block/react
 import { HEADING_KEYS } from "@udecode/plate-heading";
 import { HorizontalRulePlugin } from "@udecode/plate-horizontal-rule/react";
 import { INDENT_LIST_KEYS, ListStyleType, toggleIndentList } from "@udecode/plate-indent-list";
+import { TTodoListItemElement, toggleList } from "@udecode/plate-list";
+import { BulletedListPlugin, ListItemPlugin, NumberedListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
 import { openNextToggles, TogglePlugin } from "@udecode/plate-toggle/react";
-import { ParagraphPlugin } from "@udecode/plate/react";
-import { TodoListPlugin } from "@udecode/plate-list/react";
-import { NumberedListPlugin } from "@udecode/plate-list/react";
-import { ListItemPlugin } from "@udecode/plate-list/react";
-import { BulletedListPlugin } from "@udecode/plate-list/react";
-import { toggleList, TTodoListItemElement } from "@udecode/plate-list";
 
 export const format = (editor: SlateEditor, customFormatting: any) => {
   if (editor.selection) {

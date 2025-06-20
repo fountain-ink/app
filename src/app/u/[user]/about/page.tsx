@@ -1,7 +1,7 @@
+import { fetchAccount } from "@lens-protocol/client/actions";
 import ErrorPage from "@/components/misc/error-page";
 import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
-import { fetchAccount } from "@lens-protocol/client/actions";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
   const lens = await getLensClient();

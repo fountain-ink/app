@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getVerifiedBlog } from "../../../utils";
 import { deleteAllSubscribersFromList } from "@/lib/listmonk/client";
+import { getVerifiedBlog } from "../../../utils";
 
 export async function DELETE(req: NextRequest, { params }: { params: { blog: string } }) {
   const result = await getVerifiedBlog(req, params.blog);

@@ -1,6 +1,6 @@
-import { getTransactionContent, getTransactionId } from "@/lib/get-arweave-content";
 import { gql } from "graphql-request";
 import markdownit from "markdown-it";
+import { getTransactionContent, getTransactionId } from "@/lib/get-arweave-content";
 
 const query = gql`
   query GetMirrorTransactions($digest: String!) {

@@ -1,21 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
-
 import { useEditorPlugin, useEditorRef, useHotkeys } from "@udecode/plate/react";
 import { BlockMenuPlugin, BlockSelectionPlugin } from "@udecode/plate-selection/react";
+import React, { useState } from "react";
 
 import { BlockMenuItems } from "./block-menu-items";
 import { Input } from "./input";
 import {
-  type MenuContentProps,
-  type MenuProps,
   ComboboxContent,
   ComboboxEmpty,
   ComboboxInput,
   ComboboxList,
   Menu,
   MenuContent,
+  type MenuContentProps,
+  type MenuProps,
   MenuTrigger,
   useComboboxValueState,
 } from "./menu";

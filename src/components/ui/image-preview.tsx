@@ -1,10 +1,9 @@
 import { cn } from "@udecode/cn";
-import { PreviewImage, useImagePreview, useImagePreviewValue, useScaleInput } from "@udecode/plate-media/react";
 import { useEditorRef } from "@udecode/plate/react";
+import { PreviewImage, useImagePreview, useImagePreviewValue, useScaleInput } from "@udecode/plate-media/react";
 import { ArrowLeftIcon, ArrowRightIcon, Minimize2, Minus, Plus } from "lucide-react";
-
-import { Button } from "./button";
 import { RefObject } from "react";
+import { Button } from "./button";
 
 const SCROLL_SPEED = 4;
 

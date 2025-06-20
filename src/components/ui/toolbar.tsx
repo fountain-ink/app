@@ -1,11 +1,10 @@
 "use client";
 
-import * as React from "react";
-
 import * as ToolbarPrimitive from "@radix-ui/react-toolbar";
 import { cn, withCn, withRef, withVariants } from "@udecode/cn";
-import { type VariantProps, cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 import { ChevronDownIcon } from "lucide-react";
+import * as React from "react";
 
 import { Separator } from "./separator";
 import { withTooltip } from "./tooltip";

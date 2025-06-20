@@ -1,5 +1,5 @@
-import { createClient } from "@/lib/db/server";
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/db/server";
 
 export async function GET(req: NextRequest) {
   console.log("[Posts Slug] Looking up post by slug");

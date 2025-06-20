@@ -1,9 +1,9 @@
 "use client";
 
-import { globalThemes, themeNames, themeDescriptions } from "@/styles/themes";
+import { AnimatePresence, motion } from "motion/react";
 import { useTheme as useNextTheme } from "next-themes";
 import type { ThemeType } from "@/styles/themes";
-import { motion, AnimatePresence } from "motion/react";
+import { globalThemes, themeDescriptions, themeNames } from "@/styles/themes";
 
 interface ThemeButtonsProps {
   onChange?: (theme: ThemeType) => void;

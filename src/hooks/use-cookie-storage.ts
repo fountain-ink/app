@@ -1,7 +1,6 @@
-import { useCallback, useState } from "react";
-
 import { getCookie, setCookie } from "cookies-next";
 import { merge } from "lodash";
+import { useCallback, useState } from "react";
 
 const isSsr = (): boolean => typeof window === "undefined";
 const ssrCookies = isSsr() ? require("next/headers").cookies : undefined;

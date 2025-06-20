@@ -1,17 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
-
-import type { TCodeBlockElement } from "@udecode/plate-code-block";
-
 import { cn } from "@udecode/cn";
 import { useEditorRef, useElement, useReadOnly } from "@udecode/plate/react";
+import type { TCodeBlockElement } from "@udecode/plate-code-block";
 import { Check } from "lucide-react";
-
+import React, { useState } from "react";
+import { AnimatedChevron } from "./animated-chevron";
 import { Button } from "./button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "./command";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
-import { AnimatedChevron } from "./animated-chevron";
 
 const languages: { label: string; value: string }[] = [
   { label: "Auto", value: "auto" },

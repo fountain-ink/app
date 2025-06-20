@@ -1,3 +1,6 @@
+import { Trash2Icon } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -7,10 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useState } from "react";
-import { toast } from "sonner";
 import { ConfirmButton } from "@/components/ui/confirm-button";
-import { Trash2Icon } from "lucide-react";
 
 interface NewsletterDeleteDialogProps {
   open: boolean;

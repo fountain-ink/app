@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 import { withRef } from "@udecode/cn";
 import { BulletedListPlugin, useListToolbarButton, useListToolbarButtonState } from "@udecode/plate-list/react";
 import { List, ListOrdered } from "lucide-react";

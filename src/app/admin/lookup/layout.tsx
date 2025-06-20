@@ -1,10 +1,8 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User2, FileText, BookOpen } from "lucide-react";
-import Link from "next/link";
+import { BookOpen, FileText, User2 } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const tabs = [
   { id: "users", label: "Users", icon: User2 },

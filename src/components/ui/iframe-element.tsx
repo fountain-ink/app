@@ -1,20 +1,17 @@
 "use client";
 
-import React, { useEffect, useMemo, useState, useRef } from "react";
 import { cn, withRef } from "@udecode/cn";
-import { PlateElement, useReadOnly, useFocused, useSelected, useEditorRef, useElement } from "@udecode/plate/react";
-import { TIframeElement } from "../editor/plugins/iframe-plugin";
-import { useIframeState } from "../../hooks/use-iframe-state";
-import { ElementPopover, type ElementWidth, widthVariants } from "./element-popover";
-import { motion } from "motion/react";
-import { Button } from "./button";
-import { AlertCircleIcon } from "lucide-react";
-import { CheckIcon } from "lucide-react";
-import { Link2OffIcon } from "lucide-react";
-import { LinkIcon } from "lucide-react";
-import { LoadingSpinner } from "../misc/loading-spinner";
+import { PlateElement, useEditorRef, useElement, useReadOnly, useSelected } from "@udecode/plate/react";
 import DOMPurify from "dompurify";
+import { AlertCircleIcon, CheckIcon, Link2OffIcon, LinkIcon } from "lucide-react";
+import { motion } from "motion/react";
+import { useEffect, useMemo, useState } from "react";
 import { loadIframelyEmbedJs } from "@/lib/load-embed-js";
+import { useIframeState } from "../../hooks/use-iframe-state";
+import { TIframeElement } from "../editor/plugins/iframe-plugin";
+import { LoadingSpinner } from "../misc/loading-spinner";
+import { Button } from "./button";
+import { ElementPopover, type ElementWidth, widthVariants } from "./element-popover";
 import { Input } from "./input";
 
 export const IframeElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
@@ -176,29 +173,25 @@ export const IframeElement = withRef<typeof PlateElement>(({ children, className
               >
                 {divWithIframe}
               </div>
+            ) : !unsafeUrl ? (
+              <div className="flex flex-col relative overflow-hidden rounded-sm aspect-video bg-muted/20 gap-2 p-4 items-center justify-center">
+                <div className="flex items-center gap-2">
+                  <LinkIcon className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                  <span className="text-base select-none text-muted-foreground">Add a link to embed</span>
+                </div>
+                <div className="placeholder-background" />
+              </div>
             ) : (
-              <>
-                {!unsafeUrl ? (
-                  <div className="flex flex-col relative overflow-hidden rounded-sm aspect-video bg-muted/20 gap-2 p-4 items-center justify-center">
-                    <div className="flex items-center gap-2">
-                      <LinkIcon className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                      <span className="text-base select-none text-muted-foreground">Add a link to embed</span>
-                    </div>
-                    <div className="placeholder-background" />
-                  </div>
-                ) : (
-                  <div className="flex flex-col rounded-sm aspect-video bg-muted/20 gap-2 p-4 items-center justify-center">
-                    <div className="flex items-center gap-2">
-                      <Link2OffIcon className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-                      <span className="text-base text-muted-foreground">No preview available for this link</span>
-                    </div>
-                    <span className="text-xs p-2 max-w-full truncate border border-dashed border-border bg-muted/30 rounded-md text-muted-foreground">
-                      {unsafeUrl}
-                    </span>
-                    <div className="placeholder-background" />
-                  </div>
-                )}
-              </>
+              <div className="flex flex-col rounded-sm aspect-video bg-muted/20 gap-2 p-4 items-center justify-center">
+                <div className="flex items-center gap-2">
+                  <Link2OffIcon className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                  <span className="text-base text-muted-foreground">No preview available for this link</span>
+                </div>
+                <span className="text-xs p-2 max-w-full truncate border border-dashed border-border bg-muted/30 rounded-md text-muted-foreground">
+                  {unsafeUrl}
+                </span>
+                <div className="placeholder-background" />
+              </div>
             ))}
         </motion.figure>
 

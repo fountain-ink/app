@@ -1,8 +1,7 @@
-import { Post, ArticleMetadata } from "@lens-protocol/client";
+import { Post } from "@lens-protocol/client";
+import { ExternalLink, InfoIcon } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Licenses, LicenseDescriptions } from "@/lib/licenses";
-import { ExternalLink, ScrollIcon, ScrollTextIcon } from "lucide-react";
-import { InfoIcon } from "lucide-react";
+import { LicenseDescriptions, Licenses } from "@/lib/licenses";
 import { resolveUrl } from "@/lib/utils/resolve-url";
 import { Separator } from "../ui/separator";
 

@@ -1,30 +1,27 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuthenticatedUser } from "@lens-protocol/react";
+import { formatDistanceToNow } from "date-fns";
+import { Ban, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useState, useEffect } from "react";
-import { formatDistanceToNow } from "date-fns";
-import { Ban, Trash2 } from "lucide-react";
-import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { UserCard } from "@/components/user/user-card";
-import { Input } from "@/components/ui/input";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { useAuthenticatedUser } from "@lens-protocol/react";
 
 type BannedUser = {
   id: number;
@@ -271,7 +268,11 @@ function BannedUsersTable({
     field,
     children,
     className,
-  }: { field: string; children: React.ReactNode; className?: string }) => {
+  }: {
+    field: string;
+    children: React.ReactNode;
+    className?: string;
+  }) => {
     const isSorted = sortField === field;
     return (
       <TableHead
@@ -314,13 +315,7 @@ function BannedUsersTable({
   );
 }
 
-function BannedUserRow({
-  user,
-  onUnban,
-}: {
-  user: BannedUser;
-  onUnban: (address: string) => Promise<void>;
-}) {
+function BannedUserRow({ user, onUnban }: { user: BannedUser; onUnban: (address: string) => Promise<void> }) {
   const [isUnbanning, setIsUnbanning] = useState(false);
 
   const handleUnban = async () => {

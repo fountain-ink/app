@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 import { withRef } from "@udecode/cn";
 import { type ImagePlugin, type MediaEmbedPlugin, useMediaToolbarButton } from "@udecode/plate-media/react";
 import { ImageIcon } from "lucide-react";

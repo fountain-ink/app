@@ -1,18 +1,17 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
-
 import { nanoid } from "@udecode/plate";
+import { useEditorPlugin } from "@udecode/plate/react";
 import { setMediaNode } from "@udecode/plate-media";
 import {
   AudioPlugin,
   FilePlugin,
   ImagePlugin,
   PlaceholderPlugin,
-  VideoPlugin,
   usePlaceholderPopoverState,
+  VideoPlugin,
 } from "@udecode/plate-media/react";
-import { useEditorPlugin } from "@udecode/plate/react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useFilePicker } from "use-file-picker";
 
 import { useUploadFile } from "@/hooks/use-upload-file";

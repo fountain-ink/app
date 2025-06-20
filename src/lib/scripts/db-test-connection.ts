@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
-import { spawn } from "bun";
 import { createClient } from "@supabase/supabase-js";
+import { spawn } from "bun";
 import { env } from "../../env.js";
 
 // Test connection to production database

@@ -1,28 +1,27 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { useMemo } from "react"
-import { ArrowRight } from "lucide-react"
-import { useQuery } from "@tanstack/react-query"
-import { Account, MainContentFocus, PageSize, Post } from "@lens-protocol/client"
-import { evmAddress } from "@lens-protocol/client"
-import { fetchPosts } from "@lens-protocol/client/actions"
-import { EvmAddress } from "@lens-protocol/metadata"
-import { getLensClient } from "@/lib/lens/client"
-import { PostView } from "../post/post-view"
-import { Button } from "@/components/ui/button"
-import { env } from "@/env"
+import { Account, evmAddress, MainContentFocus, PageSize, Post } from "@lens-protocol/client";
+import { fetchPosts } from "@lens-protocol/client/actions";
+import { EvmAddress } from "@lens-protocol/metadata";
+import { useQuery } from "@tanstack/react-query";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { useMemo } from "react";
+import { Button } from "@/components/ui/button";
+import { env } from "@/env";
+import { getLensClient } from "@/lib/lens/client";
+import { PostView } from "../post/post-view";
 
 interface ReadMoreProps {
-  author: Account
-  currentPostId: string
+  author: Account;
+  currentPostId: string;
 }
 
 export function ReadMore({ author, currentPostId }: ReadMoreProps) {
   const { data: posts, isLoading } = useQuery({
     queryKey: ["posts", "author", author.address],
     queryFn: async () => {
-      const lens = await getLensClient()
+      const lens = await getLensClient();
       const response = await fetchPosts(lens, {
         filter: {
           authors: [evmAddress(author.address)],
@@ -32,32 +31,32 @@ export function ReadMore({ author, currentPostId }: ReadMoreProps) {
           },
         },
         pageSize: PageSize.Ten,
-      })
-      return response.isOk() ? response.value.items : []
+      });
+      return response.isOk() ? response.value.items : [];
     },
     staleTime: 1000 * 60 * 60 * 24, // 1 day
-  })
+  });
 
   const filteredPosts = useMemo(() => {
-    if (!posts) return []
+    if (!posts) return [];
 
-    return posts
-      .filter((post) => post.__typename === "Post" && post.id !== currentPostId)
-      .slice(0, 6) as Post[]
-  }, [posts, currentPostId])
+    return posts.filter((post) => post.__typename === "Post" && post.id !== currentPostId).slice(0, 6) as Post[];
+  }, [posts, currentPostId]);
 
   if (isLoading) {
-    return null
+    return null;
   }
 
   if (!filteredPosts.length) {
-    return null
+    return null;
   }
 
   return (
     <div className="max-w-[60ch] mx-auto p-4 sm:p-8 md:px-16 py-12">
       <div className="not-article">
-        <h2 className="!font-[family-name:var(--title-font)] !font-semibold !text-xl !mb-4">More from {author.username?.localName}</h2>
+        <h2 className="!font-[family-name:var(--title-font)] !font-semibold !text-xl !mb-4">
+          More from {author.username?.localName}
+        </h2>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -90,5 +89,5 @@ export function ReadMore({ author, currentPostId }: ReadMoreProps) {
         </Link>
       </div>
     </div>
-  )
+  );
 }

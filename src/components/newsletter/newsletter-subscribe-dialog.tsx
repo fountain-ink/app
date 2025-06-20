@@ -1,6 +1,9 @@
 "use client";
 
+import { AlertCircle, MailCheck } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,12 +12,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
-import { MailCheck, AlertCircle } from "lucide-react";
-import { BlogData } from "@/lib/settings/get-blog-data";
 import { subscribeToNewsletter } from "@/lib/listmonk/newsletter";
+import { BlogData } from "@/lib/settings/get-blog-data";
 
 interface BlogSubscribeProps {
   blogData: BlogData;

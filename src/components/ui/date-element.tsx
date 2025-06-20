@@ -1,9 +1,8 @@
 "use client";
 
 import { cn, withRef } from "@udecode/cn";
-
-import { Calendar } from "./calendar";
 import { PlateElement } from "@udecode/plate/react";
+import { Calendar } from "./calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
 export const DateElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {

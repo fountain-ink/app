@@ -1,50 +1,43 @@
-import { z } from "zod";
-import { useEffect, useState, useRef } from "react";
-import { UseFormReturn } from "react-hook-form";
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Slider } from "@/components/ui/slider";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
+import { fetchAccount } from "@lens-protocol/client/actions";
 import { useAuthenticatedUser } from "@lens-protocol/react";
-
+import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 import {
-  PlusIcon,
-  SearchIcon,
-  XIcon,
-  FileTextIcon,
-  CreditCardIcon,
-  MegaphoneIcon,
+  AlertCircleIcon,
   ChartPie,
   CircleFadingPlus,
   ClockFadingIcon,
-  User2Icon,
-  AlertCircleIcon,
-  Coins,
-  HandCoins,
-  ShoppingBagIcon,
   Copyright,
+  CreditCardIcon,
+  HandCoins,
+  MegaphoneIcon,
+  PlusIcon,
+  SearchIcon,
+  ShoppingBagIcon,
+  User2Icon,
+  XIcon,
 } from "lucide-react";
-import { ShoppingBag as ShoppingBagSvg } from "../icons/custom-icons";
-
-import { isValidEthereumAddress } from "@/lib/utils";
+import React, { useEffect, useRef, useState } from "react";
+import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
-import { MentionableUser } from "../user/user-search";
-import { UserSearchList } from "../user/user-search-list";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import { getLensClient } from "@/lib/lens/client";
+import { LicenseDescriptions, Licenses } from "@/lib/licenses";
+import { isValidEthereumAddress } from "@/lib/utils";
+import { resolveUrl } from "@/lib/utils/resolve-url";
+import { ShoppingBag as ShoppingBagSvg } from "../icons/custom-icons";
 import { EvmAddress } from "../misc/evm-address";
 import { UserLazyUsername } from "../user/user-lazy-username";
+import { MentionableUser } from "../user/user-search";
+import { UserSearchList } from "../user/user-search-list";
 import { CombinedFormValues } from "./publish-dialog";
-import { resolveUrl } from "@/lib/utils/resolve-url";
-import { MetadataLicenseType } from "@lens-protocol/metadata";
-import { LicenseDescriptions, Licenses } from "@/lib/licenses";
-import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
-import { fetchAccount } from "@lens-protocol/client/actions";
-import { getLensClient } from "@/lib/lens/client";
 
 export const collectingFormSchema = z
   .object({

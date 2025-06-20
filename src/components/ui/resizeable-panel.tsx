@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useCallback, useContext, useEffect, useState } from "react";
-
 import { cn } from "@udecode/cn";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { RightPanelType } from "@/hooks/use-resizable-panel";

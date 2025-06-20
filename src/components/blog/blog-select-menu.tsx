@@ -1,12 +1,10 @@
 "use client";
 
-import { useEffect, useState, memo } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useBlogStorage } from "@/hooks/use-blog-storage";
-import { BlogData } from "@/lib/settings/get-blog-data";
 import { MailIcon, PenToolIcon } from "lucide-react";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useBlogStorage } from "@/hooks/use-blog-storage";
 
 interface BlogSelectMenuProps {
   onBlogChange?: (value: string) => void;

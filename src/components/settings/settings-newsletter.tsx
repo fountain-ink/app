@@ -1,6 +1,6 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BlogNewsletterCard } from "@/components/blog/blog-newsletter-card";
 import { BlogDataWithSubscriberCount } from "@/app/settings/newsletter/page";
+import { BlogNewsletterCard } from "@/components/blog/blog-newsletter-card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface NewsletterSettingsProps {
   blogs: BlogDataWithSubscriberCount[];

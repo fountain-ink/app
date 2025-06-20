@@ -1,6 +1,6 @@
-import { mainnet, PublicClient, staging, testnet } from "@lens-protocol/client";
-import { clientCookieStorage, cookieStorage } from "./storage";
+import { mainnet, PublicClient, testnet } from "@lens-protocol/client";
 import { env } from "@/env";
+import { clientCookieStorage, cookieStorage } from "./storage";
 
 const isServer = typeof window === "undefined";
 

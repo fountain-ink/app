@@ -1,17 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
-
 import { cn } from "@udecode/cn";
 import { createPlatePlugin, useEditorPlugin, useEditorRef } from "@udecode/plate/react";
 import {
   type CursorData,
+  CursorOverlay as CursorOverlayPrimitive,
   type CursorOverlayProps,
   type CursorProps,
   type CursorState,
-  CursorOverlay as CursorOverlayPrimitive,
 } from "@udecode/plate-cursor";
 import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
+import { useEffect } from "react";
 
 export function Selection({
   caretPosition,

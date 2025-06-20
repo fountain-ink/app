@@ -1,39 +1,32 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuthenticatedUser } from "@lens-protocol/react";
 import { useQueryClient } from "@tanstack/react-query";
+import { AlertCircleIcon, CircleDollarSignIcon, PenIcon, RssIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useWalletClient } from "wagmi";
-import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
-import {
-  PenIcon,
-  ShoppingBag as ShoppingBagIcon,
-  AlertCircleIcon,
-  CircleDollarSignIcon,
-  SendIcon,
-  RssIcon,
-} from "lucide-react";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useWalletClient } from "wagmi";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
-import { ArticleDetailsTab, detailsFormSchema, DetailsFormValues } from "./publish-details-tab";
-import { MonetizationTab, collectingFormSchema, CollectingFormValues } from "./publish-monetization-tab";
-import { DistributionTab, distributionFormSchema, DistributionFormValues } from "./publish-distribution-tab";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useBlogStorage } from "@/hooks/use-blog-storage";
+import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
+import { extractMetadata } from "@/lib/extract-metadata";
+import { Licenses } from "@/lib/licenses";
+import { cn } from "@/lib/utils";
+import { usePublishDraft } from "../../hooks/use-publish-draft";
 import { publishPost } from "../../lib/publish/publish-post";
 import { publishPostEdit } from "../../lib/publish/publish-post-edit";
-import { usePublishDraft } from "../../hooks/use-publish-draft";
-import { extractMetadata } from "@/lib/extract-metadata";
 import { Draft } from "../draft/draft";
-import { cn } from "@/lib/utils";
-import { useBlogStorage } from "@/hooks/use-blog-storage";
-import { useAuthenticatedUser } from "@lens-protocol/react";
-import { Licenses } from "@/lib/licenses";
+import { ArticleDetailsTab, detailsFormSchema } from "./publish-details-tab";
+import { DistributionTab, distributionFormSchema } from "./publish-distribution-tab";
+import { collectingFormSchema, MonetizationTab } from "./publish-monetization-tab";
 
 const isUserBlog = (blogAddress: string | undefined, blogs: any[]): boolean => {
   if (!blogAddress) return false;
@@ -68,7 +61,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
   const { data: walletClient } = useWalletClient();
   const reconnectWallet = useReconnectWallet();
 
-  const formToDraft = (values: CombinedFormValues, currentDraft: Draft | null, blogState: any): Partial<Draft> => {
+  const formToDraft = (values: CombinedFormValues, _currentDraft: Draft | null, blogState: any): Partial<Draft> => {
     const selectedBlogAddress = values.distribution?.selectedBlogAddress || "";
     const shouldSaveBlogAddress = selectedBlogAddress && !isUserBlog(selectedBlogAddress, blogState.blogs);
 
@@ -311,10 +304,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
 
   return (
     <>
-      <Button 
-        onClick={() => setOpen(true)} 
-        className="transition-all duration-300"
-      >
+      <Button onClick={() => setOpen(true)} className="transition-all duration-300">
         Publish
       </Button>
 
@@ -392,10 +382,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
               </ScrollArea>
             </Tabs>
             <div className="flex items-center justify-start gap-2">
-              <Button 
-                onClick={handlePublishClick} 
-                disabled={!isValid || isPublishing}
-              >
+              <Button onClick={handlePublishClick} disabled={!isValid || isPublishing}>
                 {isPublishing ? (isEditMode ? "Updating..." : "Publishing...") : isEditMode ? "Update Post" : "Publish"}
               </Button>
 

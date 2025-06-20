@@ -1,7 +1,7 @@
 import { NodeApi, Path, TNode } from "@udecode/plate";
-import { ParagraphPlugin, createPlatePlugin } from "@udecode/plate-core/react";
-import { TITLE_KEYS } from "./title-plugin";
+import { createPlatePlugin, ParagraphPlugin } from "@udecode/plate-core/react";
 import { YjsPlugin } from "@udecode/plate-yjs/react";
+import { TITLE_KEYS } from "./title-plugin";
 
 export const NormalizePlugin = createPlatePlugin({
   key: "normalize",

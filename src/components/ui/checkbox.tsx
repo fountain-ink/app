@@ -1,18 +1,15 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { Checkbox as CheckboxPrimitive } from 'radix-ui';
-import { motion, type HTMLMotionProps } from 'motion/react';
+import { type HTMLMotionProps, motion } from "motion/react";
+import { Checkbox as CheckboxPrimitive } from "radix-ui";
+import * as React from "react";
 
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
-type CheckboxProps = React.ComponentProps<typeof CheckboxPrimitive.Root> &
-  HTMLMotionProps<'button'>;
+type CheckboxProps = React.ComponentProps<typeof CheckboxPrimitive.Root> & HTMLMotionProps<"button">;
 
 function Checkbox({ className, onCheckedChange, ...props }: CheckboxProps) {
-  const [isChecked, setIsChecked] = React.useState(
-    props?.checked ?? props?.defaultChecked ?? false,
-  );
+  const [isChecked, setIsChecked] = React.useState(props?.checked ?? props?.defaultChecked ?? false);
 
   React.useEffect(() => {
     if (props?.checked !== undefined) setIsChecked(props.checked);
@@ -27,15 +24,11 @@ function Checkbox({ className, onCheckedChange, ...props }: CheckboxProps) {
   );
 
   return (
-    <CheckboxPrimitive.Root
-      {...props}
-      onCheckedChange={handleCheckedChange}
-      asChild
-    >
+    <CheckboxPrimitive.Root {...props} onCheckedChange={handleCheckedChange} asChild>
       <motion.button
         data-slot="checkbox"
         className={cn(
-          'peer size-5 flex items-center justify-center shrink-0 rounded-sm bg-input transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground',
+          "peer size-5 flex items-center justify-center shrink-0 rounded-sm bg-input transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
           className,
         )}
         whileTap={{ scale: 0.95 }}
@@ -52,7 +45,7 @@ function Checkbox({ className, onCheckedChange, ...props }: CheckboxProps) {
             stroke="currentColor"
             className="size-3.5"
             initial="unchecked"
-            animate={isChecked ? 'checked' : 'unchecked'}
+            animate={isChecked ? "checked" : "unchecked"}
           >
             <motion.path
               strokeLinecap="round"

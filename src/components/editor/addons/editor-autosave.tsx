@@ -1,15 +1,14 @@
 "use client";
 
-import type { Draft } from "@/components/draft/draft";
-import { useDocumentStorage } from "@/hooks/use-document-storage";
-import { extractMetadata } from "@/lib/extract-metadata";
-import { serializeHtml, Value } from "@udecode/plate";
-import { MarkdownPlugin } from "@udecode/plate-markdown";
+import { Value } from "@udecode/plate";
 import { useEditorPlugin, useEditorState } from "@udecode/plate/react";
+import { MarkdownPlugin } from "@udecode/plate-markdown";
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { getStaticEditor, staticComponents } from "../static";
+import type { Draft } from "@/components/draft/draft";
+import { useDocumentStorage } from "@/hooks/use-document-storage";
 import { useYjsState } from "@/hooks/use-yjs-state";
+import { extractMetadata } from "@/lib/extract-metadata";
 
 export function AutoSave({ documentId, collaborative = false }: { documentId: string; collaborative?: boolean }) {
   const editor = useEditorState();
@@ -18,7 +17,7 @@ export function AutoSave({ documentId, collaborative = false }: { documentId: st
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const { saveDocument, getDocument } = useDocumentStorage();
-  
+
   // Get the Yjs state to check sync status
   const yjsState = useYjsState((state) => state.getState(documentId));
   const isSynced = yjsState?.status === "synced" || yjsState?.status === "connected";

@@ -1,13 +1,12 @@
 "use client";
 
-import { useDocumentStorage } from "@/hooks/use-document-storage";
-import { useQueryClient } from "@tanstack/react-query";
-
 import { EvmAddress } from "@lens-protocol/metadata";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import type { Draft } from "./draft";
+import { useDocumentStorage } from "@/hooks/use-document-storage";
 import Markdown from "../misc/markdown";
 import { LazyAuthorView } from "../user/user-author-view";
+import type { Draft } from "./draft";
 import { DraftMenu } from "./draft-menu";
 
 interface DraftViewOptions {

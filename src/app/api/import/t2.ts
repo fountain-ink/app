@@ -1,7 +1,7 @@
-import { getTransactionContent } from "@/lib/get-arweave-content";
 import edjsHTML from "editorjs-html";
 import { JSDOM } from "jsdom";
 import { NextResponse } from "next/server";
+import { getTransactionContent } from "@/lib/get-arweave-content";
 
 interface T2Post {
   coverImageUrl: string;

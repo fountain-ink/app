@@ -1,58 +1,58 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import { Plus, Calendar, Trophy, DollarSign } from "lucide-react"
-import Link from "next/link"
-import { formatDate } from "@/lib/utils"
-import { Badge } from "@/components/ui/badge"
-import { ContestCreateModal } from "@/components/admin/contest-create-modal"
+import { Calendar, DollarSign, Plus, Trophy } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { ContestCreateModal } from "@/components/admin/contest-create-modal";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { formatDate } from "@/lib/utils";
 
 interface Contest {
-  id: string
-  slug: string
-  name: string
-  theme: string
-  prize_pool: { total: string; distribution: Record<string, string> }
-  start_date: string
-  end_date: string
-  status: "upcoming" | "active" | "ended"
-  created_at: string
+  id: string;
+  slug: string;
+  name: string;
+  theme: string;
+  prize_pool: { total: string; distribution: Record<string, string> };
+  start_date: string;
+  end_date: string;
+  status: "upcoming" | "active" | "ended";
+  created_at: string;
 }
 
 export default function AdminContestsPage() {
-  const [contests, setContests] = useState<Contest[]>([])
-  const [loading, setLoading] = useState(true)
-  const [showCreateModal, setShowCreateModal] = useState(false)
+  const [contests, setContests] = useState<Contest[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const fetchContests = async () => {
     try {
-      const res = await fetch("/api/admin/contests")
+      const res = await fetch("/api/admin/contests");
       if (res.ok) {
-        const data = await res.json()
-        setContests(data)
+        const data = await res.json();
+        setContests(data);
       }
     } catch (error) {
-      console.error("Error fetching contests:", error)
+      console.error("Error fetching contests:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchContests()
-  }, [])
+    fetchContests();
+  }, []);
 
   const getStatusBadge = (status: Contest["status"]) => {
     const variants = {
       upcoming: { label: "Upcoming", className: "bg-blue-100 text-blue-800" },
       active: { label: "Active", className: "bg-green-100 text-green-800" },
       ended: { label: "Ended", className: "bg-gray-100 text-gray-800" },
-    }
-    const variant = variants[status]
-    return <Badge className={variant.className}>{variant.label}</Badge>
-  }
+    };
+    const variant = variants[status];
+    return <Badge className={variant.className}>{variant.label}</Badge>;
+  };
 
   return (
     <div className="flex flex-col mt-5 max-w-6xl">
@@ -63,9 +63,7 @@ export default function AdminContestsPage() {
           Create Contest
         </Button>
       </div>
-      <p className="text-muted-foreground mb-6">
-        Create and manage writing contests with prize distributions.
-      </p>
+      <p className="text-muted-foreground mb-6">Create and manage writing contests with prize distributions.</p>
 
       <Separator className="w-full bg-border mb-8" />
 
@@ -93,7 +91,9 @@ export default function AdminContestsPage() {
               <div className="flex gap-6 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <Calendar className="w-4 h-4" />
-                  <span>{formatDate(contest.start_date)} - {formatDate(contest.end_date)}</span>
+                  <span>
+                    {formatDate(contest.start_date)} - {formatDate(contest.end_date)}
+                  </span>
                 </div>
                 <div className="flex items-center gap-1">
                   <DollarSign className="w-4 h-4" />
@@ -109,11 +109,11 @@ export default function AdminContestsPage() {
         <ContestCreateModal
           onClose={() => setShowCreateModal(false)}
           onSuccess={() => {
-            setShowCreateModal(false)
-            fetchContests()
+            setShowCreateModal(false);
+            fetchContests();
           }}
         />
       )}
     </div>
-  )
+  );
 }

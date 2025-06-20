@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function setSupabaseSession(request: NextRequest) {
   const appToken = request.cookies.get("appToken");

@@ -1,10 +1,10 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type StatsData = {
   users: {
@@ -116,15 +116,7 @@ export default function StatsPage() {
   );
 }
 
-function StatsCard({
-  title,
-  value,
-  subtext,
-}: {
-  title: string;
-  value: string;
-  subtext?: string;
-}) {
+function StatsCard({ title, value, subtext }: { title: string; value: string; subtext?: string }) {
   return (
     <Card>
       <CardContent className="p-6">

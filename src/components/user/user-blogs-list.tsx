@@ -1,11 +1,10 @@
 "use client";
 
-import { BlogCard } from "@/components/blog/blog-card";
-import { BlogData } from "@/lib/settings/get-blogs-by-owner";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useRef, useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import { BlogCard } from "@/components/blog/blog-card";
+import { Button } from "@/components/ui/button";
+import { BlogData } from "@/lib/settings/get-blogs-by-owner";
 import { cn } from "@/lib/utils";
 
 interface UserBlogsListProps {

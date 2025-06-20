@@ -1,10 +1,10 @@
+import { headers } from "next/headers";
 import Editor from "@/components/editor/editor";
 import { ArticleLayout } from "@/components/navigation/article-layout";
 import { getAppToken } from "@/lib/auth/get-app-token";
 import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { createClient } from "@/lib/db/server";
 import { defaultContent } from "@/lib/plate/default-content";
-import { headers } from "next/headers";
 
 export default async function WriteDraft({ params }: { params: { id: string } }) {
   const { username } = await getUserAccount();

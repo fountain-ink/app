@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import { motion, useReducedMotion } from "motion/react"
-import { useRef, useCallback, ReactNode, useEffect, useState, memo } from "react"
-import { useIntersectionObserver } from "@/hooks/use-intersection-observer"
-import { PostSkeleton } from "@/components/post/post-skeleton"
-import { GraphicHand2 } from "@/components/icons/custom-icons"
-import { cn } from "@/lib/utils"
-import { useFeedContext } from "@/contexts/feed-context"
-import type { AnyPost, Post } from "@lens-protocol/client"
-import { PostView } from "@/components/post/post-view"
-import { DraftCreateButton } from "@/components/draft/draft-create-button"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import Masonry from "react-layout-masonry"
+import type { AnyPost, Post } from "@lens-protocol/client";
+import { motion, useReducedMotion } from "motion/react";
+import { memo, ReactNode, useEffect, useRef, useState } from "react";
+import Masonry from "react-layout-masonry";
+import { DraftCreateButton } from "@/components/draft/draft-create-button";
+import { GraphicHand2 } from "@/components/icons/custom-icons";
+import { PostSkeleton } from "@/components/post/post-skeleton";
+import { PostView } from "@/components/post/post-view";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { useFeedContext } from "@/contexts/feed-context";
+import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
+import { cn } from "@/lib/utils";
 
 const MemoizedPostView = memo(PostView, (prevProps, nextProps) => {
   return (
@@ -19,15 +19,15 @@ const MemoizedPostView = memo(PostView, (prevProps, nextProps) => {
     prevProps.isSelected === nextProps.isSelected &&
     prevProps.isSelectionMode === nextProps.isSelectionMode &&
     prevProps.priority === nextProps.priority
-  )
-})
+  );
+});
 
 export function isValidArticlePost(post: AnyPost): boolean {
   return (
     post.__typename === "Post" &&
     post.metadata.__typename === "ArticleMetadata" &&
-    post.metadata.attributes.some(attr => attr.key === "contentJson")
-  )
+    post.metadata.attributes.some((attr) => attr.key === "contentJson")
+  );
 }
 
 export function UserProfileEmptyState() {
@@ -45,27 +45,27 @@ export function UserProfileEmptyState() {
         <DraftCreateButton text="Start writing" />
       </CardFooter>
     </Card>
-  )
+  );
 }
 
 export interface PostRenderOptions {
-  showContent?: boolean
-  showAuthor?: boolean
-  showBlog?: boolean
-  showTitle?: boolean
-  showSubtitle?: boolean
-  showDate?: boolean
-  showPreview?: boolean
-  isCompact?: boolean
+  showContent?: boolean;
+  showAuthor?: boolean;
+  showBlog?: boolean;
+  showTitle?: boolean;
+  showSubtitle?: boolean;
+  showDate?: boolean;
+  showPreview?: boolean;
+  isCompact?: boolean;
 }
 
 export function renderArticlePost(
   post: AnyPost,
   viewMode: "single" | "grid",
   options: PostRenderOptions = {},
-  index?: number
+  index?: number,
 ): ReactNode {
-  if (!isValidArticlePost(post)) return null
+  if (!isValidArticlePost(post)) return null;
 
   const defaultOptions = {
     showContent: false,
@@ -74,8 +74,8 @@ export function renderArticlePost(
     showSubtitle: true,
     showDate: true,
     showPreview: true,
-    ...options
-  }
+    ...options,
+  };
 
   return (
     <MemoizedPostView
@@ -85,20 +85,20 @@ export function renderArticlePost(
       isVertical={viewMode === "grid"}
       priority={index !== undefined && index < 3}
     />
-  )
+  );
 }
 
 export interface FeedProps {
-  items: any[]
-  renderItem: (item: any, index: number) => ReactNode
-  isLoading?: boolean
-  hasMore?: boolean
-  onLoadMore?: () => void
-  emptyTitle?: string
-  emptySubtitle?: string
-  skeletonCount?: number
-  forceViewMode?: "single" | "grid"
-  disableInfiniteScroll?: boolean
+  items: any[];
+  renderItem: (item: any, index: number) => ReactNode;
+  isLoading?: boolean;
+  hasMore?: boolean;
+  onLoadMore?: () => void;
+  emptyTitle?: string;
+  emptySubtitle?: string;
+  skeletonCount?: number;
+  forceViewMode?: "single" | "grid";
+  disableInfiniteScroll?: boolean;
 }
 
 export function Feed({
@@ -113,28 +113,27 @@ export function Feed({
   forceViewMode,
   disableInfiniteScroll = false,
 }: FeedProps) {
-  const { viewMode: contextViewMode } = useFeedContext()
-  const viewMode = forceViewMode || contextViewMode
-  const loadMoreRef = useRef<HTMLDivElement>(null)
-  const [observerKey, setObserverKey] = useState(0)
-  const safeItems = items && Array.isArray(items) ? items.filter(item => item != null) : []
-  const shouldReduceMotion = useReducedMotion()
+  const { viewMode: contextViewMode } = useFeedContext();
+  const viewMode = forceViewMode || contextViewMode;
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+  const [observerKey, setObserverKey] = useState(0);
+  const safeItems = items && Array.isArray(items) ? items.filter((item) => item != null) : [];
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
-    setObserverKey(prev => prev + 1)
-  }, [viewMode])
+    setObserverKey((prev) => prev + 1);
+  }, [viewMode]);
 
   const entry = useIntersectionObserver(loadMoreRef, {
     threshold: 0,
-    rootMargin: '400px'
-  })
+    rootMargin: "400px",
+  });
 
   useEffect(() => {
     if (entry?.isIntersecting && hasMore && !isLoading && onLoadMore && !disableInfiniteScroll) {
-      onLoadMore()
+      onLoadMore();
     }
-  }, [entry?.isIntersecting, hasMore, isLoading, onLoadMore, disableInfiniteScroll])
-
+  }, [entry?.isIntersecting, hasMore, isLoading, onLoadMore, disableInfiniteScroll]);
 
   if (safeItems.length === 0 && !isLoading) {
     return (
@@ -150,52 +149,43 @@ export function Feed({
         <h3 className="text-lg font-semibold mb-2">{emptyTitle}</h3>
         <p className="text-sm text-muted-foreground max-w-md">{emptySubtitle}</p>
       </motion.div>
-    )
+    );
   }
 
   if (viewMode === "grid") {
     return (
       <div className="w-full px-4">
-        <Masonry
-          columns={{ 350: 1, 640: 2, 1024: 3 }}
-          gap={32}
-        >
-          {isLoading && safeItems.length === 0 &&
+        <Masonry columns={{ 350: 1, 640: 2, 1024: 3 }} gap={32}>
+          {isLoading &&
+            safeItems.length === 0 &&
             Array.from({ length: skeletonCount }, (_, i) => (
-              <div
-                key={`skeleton-${i}`}
-                style={{ contain: 'layout style' }}
-              >
+              <div key={`skeleton-${i}`} style={{ contain: "layout style" }}>
                 <PostSkeleton isVertical={true} className="w-full" />
               </div>
-            ))
-          }
+            ))}
 
           {safeItems.map((item, index) => (
             <div
               key={item?.id || `item-${index}`}
-              style={{ contain: 'layout style' }}
-              className={shouldReduceMotion ? '' : 'animate-fade-in'}
+              style={{ contain: "layout style" }}
+              className={shouldReduceMotion ? "" : "animate-fade-in"}
             >
               {renderItem(item, index)}
             </div>
           ))}
 
-          {isLoading && safeItems.length > 0 &&
+          {isLoading &&
+            safeItems.length > 0 &&
             Array.from({ length: Math.min(3, skeletonCount) }, (_, i) => (
-              <div
-                key={`loading-skeleton-${i}`}
-                style={{ contain: 'layout style' }}
-              >
+              <div key={`loading-skeleton-${i}`} style={{ contain: "layout style" }}>
                 <PostSkeleton isVertical={true} className="w-full" />
               </div>
-            ))
-          }
+            ))}
         </Masonry>
 
         {hasMore && !disableInfiniteScroll && <div key={observerKey} ref={loadMoreRef} className="h-20" />}
       </div>
-    )
+    );
   }
 
   return (
@@ -204,11 +194,8 @@ export function Feed({
         {safeItems.map((item, index) => (
           <div
             key={item?.id || `item-${index}`}
-            className={cn(
-              "w-full",
-              shouldReduceMotion ? '' : 'animate-fade-in'
-            )}
-            style={{ contain: 'layout style' }}
+            className={cn("w-full", shouldReduceMotion ? "" : "animate-fade-in")}
+            style={{ contain: "layout style" }}
           >
             {renderItem(item, index)}
           </div>
@@ -225,5 +212,5 @@ export function Feed({
 
       {hasMore && !disableInfiniteScroll && <div key={observerKey} ref={loadMoreRef} className="h-10" />}
     </div>
-  )
+  );
 }

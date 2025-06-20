@@ -1,8 +1,8 @@
+import type { AnyPost, PostId } from "@lens-protocol/client";
+import { fetchPosts } from "@lens-protocol/client/actions";
 import { LandingPageClient } from "@/components/misc/landing-page";
 import { createServiceClient } from "@/lib/db/service";
 import { getLensClient } from "@/lib/lens/client";
-import { fetchPosts } from "@lens-protocol/client/actions";
-import type { AnyPost, PostId } from "@lens-protocol/client";
 
 export default async function HomePage() {
   let favoritePosts: AnyPost[] = [];
@@ -15,7 +15,7 @@ export default async function HomePage() {
       .order("created_at", { ascending: false })
       .limit(9);
 
-    const postIds = curatedData?.map(item => item.slug).filter(Boolean) || [];
+    const postIds = curatedData?.map((item) => item.slug).filter(Boolean) || [];
 
     if (postIds.length > 0) {
       const lens = await getLensClient();

@@ -1,7 +1,7 @@
 import { env } from "@/env";
+import { ListmonkCampaignResponse } from "@/srv/notifications/types";
 import { createClient } from "../db/client";
 import { findBlogByIdentifier } from "../utils/find-blog-by-id";
-import { ListmonkCampaignResponse } from "@/srv/notifications/types";
 
 export interface ListmonkList {
   id: number;
@@ -466,7 +466,7 @@ export async function createCampaignForPost(
   listId: number,
   blogId: string,
   postId: string,
-  authorAddress: string,
+  _authorAddress: string,
   postMetadata?: string,
 ) {
   try {

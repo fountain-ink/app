@@ -1,7 +1,7 @@
-import { getLensClient } from "@/lib/lens/client";
-import { AnyPost, PostReferenceType, postId } from "@lens-protocol/client";
+import { AnyPost, PostReferenceType } from "@lens-protocol/client";
 import { fetchPostReferences } from "@lens-protocol/client/actions";
 import { useCallback, useRef, useState } from "react";
+import { getLensClient } from "@/lib/lens/client";
 
 export const useComments = (postId: string) => {
   const [comments, setComments] = useState<AnyPost[]>([]);

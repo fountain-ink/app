@@ -1,22 +1,22 @@
 "use client";
 
-import { type ConnectionStatus, useYjsState } from "@/hooks/use-yjs-state";
 import { MeResult } from "@lens-protocol/client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { type ConnectionStatus, useYjsState } from "@/hooks/use-yjs-state";
+import { BlogData, getBlogData } from "@/lib/settings/get-blog-data";
 import { DraftCreateButton } from "../draft/draft-create-button";
 import { EditorOptionsDropdown } from "../editor/addons/editor-options-dropdown";
 import { FountainLogo } from "../icons/custom-icons";
 import { FeedbackForm } from "../misc/feedback-form";
+import { BlogEmailSubscribe } from "../newsletter/newsletter-subscribe-dialog";
+import { PublishMenu } from "../publish/publish-dialog";
 import { SettingsBadge } from "../settings/settings-badge";
 import { ConnectionBadge } from "../ui/connection-badge";
 import { UserMenu } from "../user/user-menu";
-import { PublishMenu } from "../publish/publish-dialog";
-import { getBlogData, BlogData } from "@/lib/settings/get-blog-data";
-import { toast } from "sonner";
-import { BlogEmailSubscribe } from "../newsletter/newsletter-subscribe-dialog";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { HeaderSearch } from "./header-search";
 
 export const Header = ({ session }: { session: MeResult | null }) => {
@@ -71,9 +71,7 @@ export const Header = ({ session }: { session: MeResult | null }) => {
         {isAuthenticated && <FeedbackForm />}
         {isBlogPage && blogData && <BlogEmailSubscribe blogData={blogData} variant="default" />}
         {isWritePage && <PublishMenu documentId={documentId} />}
-        {isWritePage && (
-          <EditorOptionsDropdown documentId={documentId} collaborative={isCollaborative} />
-        )}
+        {isWritePage && <EditorOptionsDropdown documentId={documentId} collaborative={isCollaborative} />}
         {!isWritePage && !isMobile && <DraftCreateButton />}
         <UserMenu session={session} showDropdown={true} />
       </div>

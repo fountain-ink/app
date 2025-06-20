@@ -1,7 +1,5 @@
-import { settingsEvents } from "@/lib/settings/events";
 import { useState } from "react";
-import { Database } from "@/lib/db/database";
-import { useBlogStorage } from "@/hooks/use-blog-storage";
+import { settingsEvents } from "@/lib/settings/events";
 import { BlogData } from "@/lib/settings/get-blog-data";
 
 export function useBlogSettings(initialSettings: BlogData) {

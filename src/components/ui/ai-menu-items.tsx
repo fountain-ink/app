@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useMemo } from "react";
-
 import { NodeApi } from "@udecode/plate";
+import { type PlateEditor, useEditorRef, usePluginOption } from "@udecode/plate/react";
 import { AIChatPlugin, AIPlugin } from "@udecode/plate-ai/react";
 import { useIsSelecting } from "@udecode/plate-selection/react";
-import { type PlateEditor, useEditorRef, usePluginOption } from "@udecode/plate/react";
 import {
   AlbumIcon,
   BadgeHelpIcon,
@@ -20,6 +18,7 @@ import {
   Wand,
   X,
 } from "lucide-react";
+import React, { useMemo } from "react";
 
 import {
   type Action,
@@ -258,13 +257,7 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
     filterItems?: boolean;
     items?: { label: string; value: string }[];
     shortcut?: string;
-    onSelect?: ({
-      aiEditor,
-      editor,
-    }: {
-      aiEditor: PlateEditor;
-      editor: PlateEditor;
-    }) => void;
+    onSelect?: ({ aiEditor, editor }: { aiEditor: PlateEditor; editor: PlateEditor }) => void;
   }
 >;
 

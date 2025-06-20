@@ -3,8 +3,8 @@
 import { Account } from "@lens-protocol/client";
 import { User2Icon } from "lucide-react";
 import { toast } from "sonner";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { resolveUrl } from "@/lib/utils/resolve-url";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export const UserAvatar = ({
   account,

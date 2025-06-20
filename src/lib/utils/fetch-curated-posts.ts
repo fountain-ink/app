@@ -1,7 +1,7 @@
+import type { AnyPost, PostId } from "@lens-protocol/client";
+import { fetchPosts } from "@lens-protocol/client/actions";
 import { createServiceClient } from "@/lib/db/service";
 import { getLensClient } from "@/lib/lens/client";
-import { fetchPosts } from "@lens-protocol/client/actions";
-import type { AnyPost, PostId } from "@lens-protocol/client";
 
 export interface CuratedData {
   posts: AnyPost[];

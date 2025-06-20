@@ -3,8 +3,7 @@
 import type { Transition, Variants } from "motion/react";
 import { motion, useAnimation } from "motion/react";
 import type { HTMLAttributes } from "react";
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from "react";
-import { cn } from "@/lib/utils";
+import { forwardRef, useCallback, useEffect, useRef } from "react";
 
 export interface HomeIconHandle {
   animate: boolean;
@@ -34,7 +33,7 @@ const pathVariants: Variants = {
 };
 
 const HomeIcon = forwardRef<HomeIconHandle, HomeIconProps>(
-  ({ animate, onMouseEnter, onMouseLeave, className, size = 28, ...props }, ref) => {
+  ({ animate, onMouseEnter, onMouseLeave, className, size = 28, ...props }, _ref) => {
     const controls = useAnimation();
     const isControlledRef = useRef(false);
 

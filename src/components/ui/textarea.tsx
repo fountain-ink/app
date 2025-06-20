@@ -1,8 +1,7 @@
-import * as React from "react";
-
 import { cn } from "@udecode/cn";
 import { TextareaAutosize as ReactTextareaAutosize } from "@udecode/plate-caption/react";
-import { type VariantProps, cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
 
 export const textareaVariants = cva(
   cn("resize-none text-sm disabled:cursor-not-allowed disabled:opacity-50", "placeholder:text-muted-foreground/80"),

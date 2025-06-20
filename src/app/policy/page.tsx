@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import { proseClasses } from "@/styles/prose";
 import { ArticleLayout } from "@/components/navigation/article-layout";
 export const metadata: Metadata = {
   title: "Privacy Policy | Fountain",

@@ -1,18 +1,18 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { fetchAccounts } from "@lens-protocol/client/actions";
 import { Search } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useState, useEffect, useRef } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { getLensClient } from "@/lib/lens/client";
-import { fetchAccounts } from "@lens-protocol/client/actions";
-import { resolveUrl } from "@/lib/utils/resolve-url";
-import { Database } from "@/lib/db/database";
+import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Database } from "@/lib/db/database";
+import { getLensClient } from "@/lib/lens/client";
+import { resolveUrl } from "@/lib/utils/resolve-url";
 
 // Type for Lens account data
 type LensAccountData = {

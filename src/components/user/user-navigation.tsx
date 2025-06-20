@@ -1,7 +1,6 @@
 "use client";
 
 import { SlideNav } from "../ui/slide-tabs";
-import { Badge } from "../ui/badge";
 
 export const UserNavigation = ({ username, isUserProfile }: { username: string; isUserProfile: boolean }) => {
   return (

@@ -1,9 +1,9 @@
-import { env } from "@/env";
 import { sign } from "jsonwebtoken";
-import { getLensClient } from "../lens/client";
-import { getUserAccount } from "./get-user-profile";
+import { env } from "@/env";
 import { AppToken, TokenClaims } from "./app-token";
+import { getUserAccount } from "./get-user-profile";
 import { getAppAdmins } from "./is-admin";
+
 const SUPABASE_JWT_SECRET = env.SUPABASE_JWT_SECRET;
 
 export async function signAppToken(): Promise<AppToken> {

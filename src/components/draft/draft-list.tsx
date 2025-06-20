@@ -1,19 +1,18 @@
 "use client";
 
-import { LoadingSpinner } from "@/components/misc/loading-spinner";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { EvmAddress } from "@lens-protocol/metadata";
 import { useQueryClient } from "@tanstack/react-query";
 import { Trash, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-import type { Draft } from "./draft";
-import { DraftView } from "./draft-view";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { GraphicHand2 } from "../icons/custom-icons";
-import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
-import { DraftCreateButton } from "./draft-create-button";
 import PostSkeleton from "../post/post-skeleton";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
+import type { Draft } from "./draft";
+import { DraftCreateButton } from "./draft-create-button";
+import { DraftView } from "./draft-view";
 
 async function getCloudDrafts() {
   const response = await fetch("/api/drafts", {

@@ -1,22 +1,22 @@
-import { getLensClient } from "@/lib/lens/client";
-import { storageClient } from "@/lib/lens/storage-client";
 import { PostId, TransactionIndexingError } from "@lens-protocol/client";
-import { fetchGroup, fetchPost, post } from "@lens-protocol/client/actions";
+import { fetchPost, post } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { article } from "@lens-protocol/metadata";
-import { toast } from "sonner";
-import { type UseWalletClientReturnType } from "wagmi";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { type UseWalletClientReturnType } from "wagmi";
 import type { Draft } from "@/components/draft/draft";
-import { getPostContent } from "./get-post-content";
-import { getPostAttributes } from "./get-post-attributes";
-import { createPostRecord } from "./create-post-record";
+import { getLensClient } from "@/lib/lens/client";
+import { storageClient } from "@/lib/lens/storage-client";
 import { getUserAccount } from "../auth/get-user-profile";
-import { deleteCloudDraft } from "./delete-cloud-draft";
-import { getPostActions } from "./get-post-actions";
 import { createNewsletterCampaign } from "./create-newsletter-campaign";
+import { createPostRecord } from "./create-post-record";
+import { deleteCloudDraft } from "./delete-cloud-draft";
 import { getFeedAddress } from "./get-feed-address";
+import { getPostActions } from "./get-post-actions";
+import { getPostAttributes } from "./get-post-attributes";
+import { getPostContent } from "./get-post-content";
 
 export async function publishPost(
   draft: Draft,

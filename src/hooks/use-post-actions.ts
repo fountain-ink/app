@@ -1,10 +1,10 @@
-import { getLensClient } from "@/lib/lens/client";
 import { Post, PostReactionType } from "@lens-protocol/client";
 import { addReaction, bookmarkPost, undoBookmarkPost, undoReaction } from "@lens-protocol/client/actions";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useCallback } from "react";
-import { useSharedPostActions } from "@/contexts/post-actions-context";
 import { useAuthenticatedUser } from "@lens-protocol/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo } from "react";
+import { useSharedPostActions } from "@/contexts/post-actions-context";
+import { getLensClient } from "@/lib/lens/client";
 import { getPostUrl } from "@/lib/utils/get-post-url";
 
 export const usePostActions = (post: Post) => {

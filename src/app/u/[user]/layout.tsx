@@ -1,9 +1,12 @@
+import { fetchAccount, fetchAccountStats } from "@lens-protocol/client/actions";
+import { BlogTheme } from "@/components/blog/blog-theme";
 import ErrorPage from "@/components/misc/error-page";
-import { PageTransition } from "@/components/navigation/page-transition";
 import { ProfileSettingsModal } from "@/components/settings/settings-profile";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { UserAvatar } from "@/components/user/user-avatar";
 import { UserBio } from "@/components/user/user-bio";
+import { UserBlogsList } from "@/components/user/user-blogs-list";
 import { UserCover } from "@/components/user/user-cover";
 import { UserFollowButton } from "@/components/user/user-follow";
 import { UserFollowing } from "@/components/user/user-following";
@@ -12,16 +15,10 @@ import { UserLocation } from "@/components/user/user-location";
 import { UserName } from "@/components/user/user-name";
 import { UserNavigation } from "@/components/user/user-navigation";
 import { UserSite } from "@/components/user/user-site";
-import { BlogTheme } from "@/components/blog/blog-theme";
 import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { getBlogData } from "@/lib/settings/get-blog-data";
-import { fetchAccount, fetchAccountStats } from "@lens-protocol/client/actions";
-import { AnimatePresence } from "motion/react";
-import { notFound } from "next/navigation";
-import { UserBlogsList } from "@/components/user/user-blogs-list";
 import { getBlogsByOwner } from "@/lib/settings/get-blogs-by-owner";
-import { Badge } from "@/components/ui/badge";
 
 export async function generateMetadata({ params }: { params: { user: string } }) {
   const username = params.user;
@@ -32,13 +29,7 @@ export async function generateMetadata({ params }: { params: { user: string } })
   };
 }
 
-const UserLayout = async ({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { user: string };
-}) => {
+const UserLayout = async ({ children, params }: { children: React.ReactNode; params: { user: string } }) => {
   const lens = await getLensClient();
   const localName = params.user.toLowerCase();
   const account = await fetchAccount(lens, {

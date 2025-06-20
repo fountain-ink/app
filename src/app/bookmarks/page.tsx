@@ -1,6 +1,6 @@
 import { BookmarksFeed } from "@/components/feed/feed-bookmarks";
-import { FeedLayout } from "@/components/navigation/feed-layout";
 import ErrorPage from "@/components/misc/error-page";
+import { FeedLayout } from "@/components/navigation/feed-layout";
 import { getLensClient } from "@/lib/lens/client";
 
 export const maxDuration = 60;

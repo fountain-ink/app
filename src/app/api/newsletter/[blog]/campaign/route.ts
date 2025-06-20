@@ -1,5 +1,5 @@
-import { createCampaignForPost } from "@/lib/listmonk/client";
 import { NextRequest, NextResponse } from "next/server";
+import { createCampaignForPost } from "@/lib/listmonk/client";
 import { getVerifiedBlog } from "../../utils";
 
 export async function POST(req: NextRequest, { params }: { params: { blog: string } }) {

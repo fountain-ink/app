@@ -1,6 +1,6 @@
 "use client";
 
-import { cn, withRef } from "@udecode/cn";
+import { cn } from "@udecode/cn";
 import { PlateLeaf } from "@udecode/plate/react";
 
 export function HighlightLeaf({ children, className, ...props }: React.ComponentProps<typeof PlateLeaf>) {

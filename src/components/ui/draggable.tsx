@@ -1,9 +1,18 @@
 "use client";
 
-import React, { useMemo } from "react";
-
-import { cn, MemoizedChildren, withRef } from "@udecode/cn";
+import { cn, MemoizedChildren } from "@udecode/cn";
 import { isType } from "@udecode/plate";
+import {
+  ParagraphPlugin,
+  type PlateElementProps,
+  type RenderNodeWrapper,
+  useEditorRef,
+  useElement,
+  usePath,
+  usePluginOption,
+  useReadOnly,
+  useSelected,
+} from "@udecode/plate/react";
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
 import { useDraggable, useDropLine } from "@udecode/plate-dnd";
@@ -13,24 +22,12 @@ import { ImagePlugin, MediaEmbedPlugin, PlaceholderPlugin } from "@udecode/plate
 import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
 import { TableCellPlugin, TablePlugin, TableRowPlugin } from "@udecode/plate-table/react";
 import { TogglePlugin } from "@udecode/plate-toggle/react";
-import {
-  type PlateElementProps,
-  type RenderNodeWrapper,
-  ParagraphPlugin,
-  useEditorRef,
-  useElement,
-  usePath,
-  usePluginOption,
-  useReadOnly,
-  useSelected,
-} from "@udecode/plate/react";
-
 import { GripVertical } from "lucide-react";
-
+import React, { useMemo } from "react";
+import { STRUCTURAL_TYPES } from "@/lib/transforms";
 import { BlockMenu } from "./block-menu";
 import { Button } from "./button";
 import { DraggableInsertHandle } from "./draggable-insert-handler";
-import { STRUCTURAL_TYPES } from "@/lib/transforms";
 
 const UNDRAGGABLE_KEYS = [ColumnItemPlugin.key, TableRowPlugin.key, TableCellPlugin.key];
 

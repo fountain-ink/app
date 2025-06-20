@@ -1,9 +1,9 @@
+import { fetchAccount } from "@lens-protocol/client/actions";
+import { notFound } from "next/navigation";
 import { BookmarksFeed } from "@/components/feed/feed-bookmarks";
 import ErrorPage from "@/components/misc/error-page";
 import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
-import { fetchAccount } from "@lens-protocol/client/actions";
-import { notFound } from "next/navigation";
 
 export const maxDuration = 60;
 

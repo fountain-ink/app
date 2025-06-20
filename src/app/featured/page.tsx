@@ -1,9 +1,9 @@
-import { FeedLayout } from "@/components/navigation/feed-layout";
+import type { AnyPost, PostId } from "@lens-protocol/client";
+import { fetchPosts } from "@lens-protocol/client/actions";
 import { CuratedFeed } from "@/components/feed/feed-curated";
+import { FeedLayout } from "@/components/navigation/feed-layout";
 import { createServiceClient } from "@/lib/db/service";
 import { getLensClient } from "@/lib/lens/client";
-import { fetchPosts } from "@lens-protocol/client/actions";
-import type { AnyPost, PostId } from "@lens-protocol/client";
 
 export async function generateMetadata() {
   return {
@@ -35,17 +35,12 @@ const CuratedPage = async () => {
       console.error("Error fetching curated posts:", error);
       return (
         <FeedLayout>
-          <CuratedFeed
-            initialPosts={[]}
-            hasMore={false}
-            page={1}
-            preFilteredPosts={true}
-          />
+          <CuratedFeed initialPosts={[]} hasMore={false} page={1} preFilteredPosts={true} />
         </FeedLayout>
       );
     }
 
-    const postIds = curatedData?.map(item => item.slug).filter(Boolean) || [];
+    const postIds = curatedData?.map((item) => item.slug).filter(Boolean) || [];
     let posts: AnyPost[] = [];
     if (postIds.length > 0) {
       const lens = await getLensClient();
@@ -56,32 +51,20 @@ const CuratedPage = async () => {
       }
     }
 
-    const { count } = await supabase
-      .from("curated")
-      .select("*", { count: "exact", head: true });
+    const { count } = await supabase.from("curated").select("*", { count: "exact", head: true });
 
     const hasMore = (count || 0) > 10;
 
     return (
       <FeedLayout>
-        <CuratedFeed
-          initialPosts={posts}
-          hasMore={hasMore}
-          page={1}
-          preFilteredPosts={true}
-        />
+        <CuratedFeed initialPosts={posts} hasMore={hasMore} page={1} preFilteredPosts={true} />
       </FeedLayout>
     );
   } catch (error) {
     console.error("Unexpected error in CuratedPage:", error);
     return (
       <FeedLayout>
-        <CuratedFeed
-          initialPosts={[]}
-          hasMore={false}
-          page={1}
-          preFilteredPosts={true}
-        />
+        <CuratedFeed initialPosts={[]} hasMore={false} page={1} preFilteredPosts={true} />
       </FeedLayout>
     );
   }

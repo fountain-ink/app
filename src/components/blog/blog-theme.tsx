@@ -1,8 +1,8 @@
 "use client";
 
-import { defaultThemeName, isValidTheme, ThemeType } from "@/styles/themes";
-import { useEffect, useMemo } from "react";
 import DOMPurify from "dompurify";
+import { useEffect, useMemo } from "react";
+import { defaultThemeName, isValidTheme } from "@/styles/themes";
 import { useTheme } from "../theme/theme-context";
 
 const COLOR_PROPS = [
@@ -19,7 +19,7 @@ const COLOR_PROPS = [
 
 function applyImportantToColors(css: string) {
   const propertyRegex = /(\s*)([^{}]+{[^}]*})/gms;
-  return css.replace(propertyRegex, (block, leadingWhitespace, rule) => {
+  return css.replace(propertyRegex, (_block, leadingWhitespace, rule) => {
     return (
       leadingWhitespace +
       rule.replace(/([^;{}]+):\s*([^;!]+)(;?)/g, (match: any, prop: string, value: string, semicolon: any) => {

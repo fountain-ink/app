@@ -7,18 +7,8 @@ Fountain is a self-hostable web3 publishing platform - an alternative to Medium,
 
 ## Development Commands
 ```bash
-# Run collaboration server (required for editor real-time sync)
-bun run collab
-
-# Run notifications server
-bun run notifications
-
-# Start production server
-bun run start
-
 # Code quality
-bun run lint    # Run Biome linter
-bun run format  # Run Biome formatter
+bun run check    # Run Biome linter and formatter
 
 # Database scripts
 bun run db:generate-types  # Generate Supabase types

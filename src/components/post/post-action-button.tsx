@@ -1,5 +1,11 @@
 "use client";
 
+import { useModal } from "connectkit";
+import { LucideIcon } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { ReactElement, useState } from "react";
+import { IconType } from "react-icons";
+import { useAccount } from "wagmi";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,14 +15,8 @@ import {
   useOpenState,
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { AnimatePresence, motion } from "motion/react";
-import { useState, ReactElement } from "react";
-import { AnimatedChevron } from "../ui/animated-chevron";
-import { LucideIcon } from "lucide-react";
-import { IconType } from "react-icons";
-import { useAccount } from "wagmi";
 import { useUIStore } from "@/stores/ui-store";
-import { useModal } from "connectkit";
+import { AnimatedChevron } from "../ui/animated-chevron";
 
 export type DropdownItem = {
   icon: any;
@@ -96,7 +96,7 @@ export const ActionButton = ({
     }
   };
 
-  const handleClick = async (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
+  const handleClick = async (_e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
     if (showLoginActions) {
       showLoginModal();
       return;
@@ -259,13 +259,7 @@ const formatNumber = (num: number): string => {
   return num.toString();
 };
 
-const ButtonHoverEffect = ({
-  isHovered,
-  strokeColor,
-}: {
-  isHovered: boolean;
-  strokeColor: string;
-}) => {
+const ButtonHoverEffect = ({ isHovered, strokeColor }: { isHovered: boolean; strokeColor: string }) => {
   return (
     <motion.div
       initial={false}
@@ -284,13 +278,7 @@ const ButtonHoverEffect = ({
   );
 };
 
-const CounterAnimation = ({
-  value,
-  strokeColor,
-}: {
-  value: number;
-  strokeColor?: string;
-}) => {
+const CounterAnimation = ({ value, strokeColor }: { value: number; strokeColor?: string }) => {
   const formattedValue = formatNumber(value);
 
   if (!formattedValue) return null;

@@ -1,8 +1,8 @@
 "use client";
 
 import { Copy } from "lucide-react";
-import { Button } from "./button";
 import { toast } from "sonner";
+import { Button } from "./button";
 
 interface EvmAddressDisplayProps {
   address: string;

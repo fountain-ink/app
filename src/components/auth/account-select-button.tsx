@@ -1,20 +1,18 @@
 "use client";
 
 import { Account } from "@lens-protocol/client";
+import { Loader2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { useAccount, useSignMessage } from "wagmi";
+import { env } from "@/env";
+import { useBlogStorage } from "@/hooks/use-blog-storage";
+import { getPublicClient } from "@/lib/lens/client";
+import { useUIStore } from "@/stores/ui-store";
 import { Button } from "../ui/button";
 import { UserAvatar } from "../user/user-avatar";
 import { setupUserAuth } from "./auth-manager";
-import { useBlogStorage } from "@/hooks/use-blog-storage";
-import { syncBlogsQuietly } from "../blog/blog-sync-button";
-import { toast } from "sonner";
-import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
-import { getPublicClient } from "@/lib/lens/client";
-import { signMessageWith } from "@lens-protocol/client/viem";
-import { env } from "@/env";
-import { useUIStore } from "@/stores/ui-store";
 
 export function SelectAccountButton({ account, onSuccess }: { account: Account; onSuccess?: () => Promise<void> }) {
   const { address: walletAddress } = useAccount();

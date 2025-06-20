@@ -1,13 +1,12 @@
 "use client";
 
-import React from "react";
+import { cn } from "@udecode/cn";
 
 import type { PlateContentProps } from "@udecode/plate/react";
-import type { VariantProps } from "class-variance-authority";
-
-import { cn } from "@udecode/cn";
 import { PlateContent, useEditorContainerRef, useEditorRef } from "@udecode/plate/react";
+import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
+import React from "react";
 
 const editorContainerVariants = cva("relative flex cursor-text", {
   defaultVariants: {

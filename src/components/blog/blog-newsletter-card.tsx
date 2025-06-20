@@ -1,29 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import {
-  UsersIcon,
-  UploadIcon,
-  PenToolIcon,
-  DownloadIcon,
-  Trash2Icon,
-  LoaderCircleIcon,
-  AlertTriangle,
-} from "lucide-react";
-import { toast } from "sonner";
-import { createMailingList, exportNewsletterSubscribers } from "@/lib/listmonk/newsletter";
-import { useRouter } from "next/navigation";
-import { ImportSubscribersModal } from "@/components/newsletter/newsletter-import-subscribers-modal";
-import { NewsletterDeleteDialog } from "@/components/newsletter/newsletter-delete-dialog";
-import { SubscriberManagement } from "@/components/newsletter/subscriber-management";
-import { BlogDataWithSubscriberCount } from "@/app/settings/newsletter/page";
+import { AlertTriangle, DownloadIcon, PenToolIcon, UploadIcon, UsersIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { BlogDataWithSubscriberCount } from "@/app/settings/newsletter/page";
+import { NewsletterDeleteDialog } from "@/components/newsletter/newsletter-delete-dialog";
+import { ImportSubscribersModal } from "@/components/newsletter/newsletter-import-subscribers-modal";
+import { SubscriberManagement } from "@/components/newsletter/subscriber-management";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { createMailingList, exportNewsletterSubscribers } from "@/lib/listmonk/newsletter";
 import { cn } from "@/lib/utils";
 
 interface BlogNewsletterCardProps {

@@ -1,5 +1,11 @@
 "use client";
 
+import { MeResult } from "@lens-protocol/client";
+import { Wallet } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
+import { useEffect } from "react";
+import { useAccount, useDisconnect } from "wagmi";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,14 +13,14 @@ import {
   DropdownMenuPortal,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { clearAllCookies } from "@/lib/auth/clear-cookies";
-import { MeResult } from "@lens-protocol/client";
-import { useTheme } from "next-themes";
-import { usePathname, useRouter } from "next/navigation";
-import { useAccount, useDisconnect } from "wagmi";
-import { ConnectWalletButton } from "../auth/auth-wallet-button";
-import { Wallet } from "lucide-react";
+import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
+import { clearAllCookies } from "@/lib/auth/clear-cookies";
+import { getLensClient } from "@/lib/lens/client";
+import { useUIStore } from "@/stores/ui-store";
+import { ConnectWalletButton } from "../auth/auth-wallet-button";
+import { BlogDropdownMenu } from "../blog/blog-dropdown-menu";
+import { HomeIcon } from "../icons/home";
 import { LogoutIcon } from "../icons/logout";
 import { MoonIcon } from "../icons/moon";
 import { SettingsGearIcon } from "../icons/settings";
@@ -22,14 +28,8 @@ import { SquarePenIcon } from "../icons/square-pen";
 import { SunIcon } from "../icons/sun";
 import { UserRoundPenIcon } from "../icons/switch-profile";
 import { UserIcon } from "../icons/user";
-import { UserAvatar } from "./user-avatar";
 import { AnimatedMenuItem } from "../navigation/animated-item";
-import { getLensClient } from "@/lib/lens/client";
-import { useEffect } from "react";
-import { BlogDropdownMenu } from "../blog/blog-dropdown-menu";
-import { useBlogStorage } from "@/hooks/use-blog-storage";
-import { HomeIcon } from "../icons/home";
-import { useUIStore } from "@/stores/ui-store";
+import { UserAvatar } from "./user-avatar";
 
 export const UserMenu = ({ session, showDropdown = false }: { session: MeResult | null; showDropdown?: boolean }) => {
   const { isConnected: isWalletConnected, status } = useAccount();

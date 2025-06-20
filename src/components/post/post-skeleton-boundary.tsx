@@ -3,13 +3,7 @@
 import { Suspense } from "react";
 import PostSkeleton from "./post-skeleton";
 
-export function PostSkeletonBoundary({
-  children,
-  count = 5,
-}: {
-  children: React.ReactNode;
-  count?: number;
-}) {
+export function PostSkeletonBoundary({ children, count = 5 }: { children: React.ReactNode; count?: number }) {
   return (
     <Suspense
       fallback={

@@ -1,6 +1,5 @@
-import { createClient } from "@/lib/db/server";
-import { createServiceClient } from "@/lib/db/service";
 import { NextRequest, NextResponse } from "next/server";
+import { createServiceClient } from "@/lib/db/service";
 
 // GET - Look up a post by slug and handle
 export async function GET(req: NextRequest) {

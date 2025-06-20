@@ -1,16 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
-
 import { cn } from "@udecode/cn";
-import { type NodeEntry, isHotkey } from "@udecode/plate";
+import { isHotkey, type NodeEntry } from "@udecode/plate";
+import { useEditorPlugin, useHotkeys, usePluginOption } from "@udecode/plate/react";
 import { AIChatPlugin, useEditorChat, useLastAssistantMessage } from "@udecode/plate-ai/react";
 import { BlockSelectionPlugin, useIsSelecting } from "@udecode/plate-selection/react";
-import { useEditorPlugin, useHotkeys, usePluginOption } from "@udecode/plate/react";
 import { ArrowUpIcon } from "lucide-react";
-
+import { useEffect } from "react";
+import { useChat } from "@/hooks/use-chat";
 import { AIChatEditor } from "./ai-chat-editor";
-import { AIMenuItems } from "./ai-menu-items";
 import { Button } from "./button";
 import {
   ComboboxContent,
@@ -22,7 +20,6 @@ import {
   useMenuStore,
 } from "./menu";
 import { TextareaAutosize } from "./textarea";
-import { useChat } from "@/hooks/use-chat";
 
 export const AIMenu = () => {
   const { api, editor } = useEditorPlugin(AIChatPlugin);

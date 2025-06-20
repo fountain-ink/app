@@ -1,13 +1,13 @@
-import { env } from "@/env";
-import { getTokenClaims } from "@/lib/auth/get-token-claims";
-import { verifyToken } from "@/lib/auth/verify-token";
-import { extractMetadata } from "@/lib/extract-metadata";
-import { createServiceClient } from "@/lib/db/service";
 import { Database } from "@hocuspocus/extension-database";
 import { Logger } from "@hocuspocus/extension-logger";
 import { Server } from "@hocuspocus/server";
 import { yTextToSlateElement } from "@slate-yjs/core";
 import * as Y from "yjs";
+import { env } from "@/env";
+import { getTokenClaims } from "@/lib/auth/get-token-claims";
+import { verifyToken } from "@/lib/auth/verify-token";
+import { createServiceClient } from "@/lib/db/service";
+import { extractMetadata } from "@/lib/extract-metadata";
 
 const db = await createServiceClient();
 

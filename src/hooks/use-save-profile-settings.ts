@@ -1,7 +1,5 @@
 "use client";
 
-import { getLensClient } from "@/lib/lens/client";
-import { storageClient } from "@/lib/lens/storage-client";
 import type { Account } from "@lens-protocol/client";
 import { setAccountMetadata } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
@@ -9,6 +7,8 @@ import { account } from "@lens-protocol/metadata";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useWalletClient } from "wagmi";
+import { getLensClient } from "@/lib/lens/client";
+import { storageClient } from "@/lib/lens/storage-client";
 import { useReconnectWallet } from "./use-reconnect-wallet";
 
 type ProfileSettingsParams = {

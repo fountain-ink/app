@@ -1,5 +1,4 @@
 import { withRef } from "@udecode/cn";
-import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
 import { PlateElement, useEditorRef } from "@udecode/plate/react";
 
 export const TitleElement = withRef<typeof PlateElement>(({ children, attributes, ...props }, ref) => {

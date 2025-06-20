@@ -1,14 +1,14 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { useAccount, useBalance, useWalletClient, usePublicClient } from "wagmi";
-import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
-import { ConnectWalletButton } from "@/components/auth/auth-wallet-button";
-import { ArrowRight, RefreshCw } from "lucide-react";
-import { toast } from "sonner";
+import { RefreshCw } from "lucide-react";
 import Link from "next/link";
-import { parseEther, encodeFunctionData } from "viem";
+import { useState } from "react";
+import { toast } from "sonner";
+import { encodeFunctionData, parseEther } from "viem";
+import { useAccount, useBalance, usePublicClient, useWalletClient } from "wagmi";
+import { ConnectWalletButton } from "@/components/auth/auth-wallet-button";
+import { Button } from "@/components/ui/button";
+import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
 
 // Minimal ABI for the lens account's executeTransaction function
 // https://github.com/lens-protocol/lens-v3/blob/development/contracts/extensions/account/IAccount.sol#L49

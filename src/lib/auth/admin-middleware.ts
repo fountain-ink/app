@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { env } from "@/env";
 import { getTokenClaims } from "./get-token-claims";
 import { isAdmin } from "./is-admin";
 import { verifyToken } from "./verify-token";
-import { env } from "@/env";
 
 /**
  * Middleware to ensure the user is authenticated and has admin access

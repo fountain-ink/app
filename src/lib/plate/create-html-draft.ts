@@ -1,6 +1,6 @@
-import { createDraft } from "./create-draft";
+import { deserializeHtml, Value } from "@udecode/plate";
 import { getStaticEditor } from "@/components/editor/static";
-import { Value, deserializeHtml } from "@udecode/plate";
+import { createDraft } from "./create-draft";
 
 type CreateDraftOptions = {
   initialContent?: any;

@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "motion/react";
 import { ChevronDown } from "lucide-react";
+import { motion } from "motion/react";
 
 type AnimatedChevronProps = {
   isOpen: boolean;

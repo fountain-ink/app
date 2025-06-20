@@ -1,29 +1,24 @@
 "use client";
 
-import React from "react";
-
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
+import { ParagraphPlugin, useEditorRef, useSelectionFragmentProp } from "@udecode/plate/react";
 
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
-import { CalloutPlugin } from "@udecode/plate-callout/react";
 import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
-import { ParagraphPlugin, useEditorRef, useSelectionFragmentProp } from "@udecode/plate/react";
+import { BulletedListPlugin, NumberedListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
 import {
   Code2Icon,
-  Columns3Icon,
   Heading1Icon,
   Heading2Icon,
-  LightbulbIcon,
   ListIcon,
   ListOrderedIcon,
   PilcrowIcon,
   QuoteIcon,
   SquareIcon,
 } from "lucide-react";
-
+import React from "react";
 import { getBlockType, setBlockType } from "@/lib/transforms";
-import { BulletedListPlugin, NumberedListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
 import {
   DropdownMenu,
   DropdownMenuContent,

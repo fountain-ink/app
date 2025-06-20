@@ -1,15 +1,14 @@
-import { ArticleLayout } from "@/components/navigation/article-layout";
-import { FloatingActionBar } from "@/components/post/post-floating-actions-bar";
-import { GradientBlur } from "@/components/navigation/gradient-blur";
-import { BlogHeader } from "@/components/blog/blog-header";
-import { BlogTheme } from "@/components/blog/blog-theme";
-import { getUserAccount } from "@/lib/auth/get-user-profile";
-import { getLensClient } from "@/lib/lens/client";
-import { getBlogData } from "@/lib/settings/get-blog-data";
 import { fetchAccount, fetchPost } from "@lens-protocol/client/actions";
 import { notFound } from "next/navigation";
+import { BlogHeader } from "@/components/blog/blog-header";
+import { BlogTheme } from "@/components/blog/blog-theme";
+import { ArticleLayout } from "@/components/navigation/article-layout";
+import { GradientBlur } from "@/components/navigation/gradient-blur";
 import PostDeletedView from "@/components/post/post-deleted-view";
+import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getBaseUrl } from "@/lib/get-base-url";
+import { getLensClient } from "@/lib/lens/client";
+import { getBlogData } from "@/lib/settings/get-blog-data";
 import { getPostIdBySlug } from "@/lib/slug/get-post-by-slug";
 
 export async function generateMetadata({ params }: { params: { user: string; post: string } }) {
@@ -87,7 +86,10 @@ export async function generateMetadata({ params }: { params: { user: string; pos
 const UserPostLayout = async ({
   children,
   params,
-}: { children: React.ReactNode; params: { user: string; post: string } }) => {
+}: {
+  children: React.ReactNode;
+  params: { user: string; post: string };
+}) => {
   const lens = await getLensClient();
   const username = params.user;
   const postParam = params.post;

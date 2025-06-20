@@ -1,7 +1,7 @@
-import { toast } from "sonner";
+import { SessionClient } from "@lens-protocol/client";
 
 import { fetchGroup } from "@lens-protocol/client/actions";
-import { SessionClient } from "@lens-protocol/client";
+import { toast } from "sonner";
 
 export async function getFeedAddress(lens: SessionClient, selectedBlog: string | undefined) {
   if (!selectedBlog) {

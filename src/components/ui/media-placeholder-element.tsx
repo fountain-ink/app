@@ -1,9 +1,17 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import type { ReactNode } from "react";
-
 import { cn } from "@udecode/cn";
+import { nanoid } from "@udecode/plate";
+import {
+  PlateElement,
+  useEditorPlugin,
+  useEditorRef,
+  useElement,
+  useReadOnly,
+  withHOC,
+  withRef,
+} from "@udecode/plate/react";
+import { setMediaNode } from "@udecode/plate-media";
 import {
   AudioPlugin,
   FilePlugin,
@@ -15,20 +23,16 @@ import {
   usePlaceholderPopoverState,
   VideoPlugin,
 } from "@udecode/plate-media/react";
-import { useEditorPlugin, withHOC, withRef, useReadOnly, useEditorRef, useElement } from "@udecode/plate/react";
-import { AudioLinesIcon, FileUpIcon, FilmIcon, ImageIcon } from "lucide-react";
 import { motion } from "framer-motion";
-
-import { BlockActionButton } from "./block-context-menu";
-import { PlateElement } from "@udecode/plate/react";
+import { AudioLinesIcon, FileUpIcon, FilmIcon, ImageIcon } from "lucide-react";
+import type { ReactNode } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useFilePicker } from "use-file-picker";
+import { useUploadFile } from "@/hooks/use-upload-file";
+import { uploadFile } from "@/lib/upload/upload-file";
 import { LoadingSpinner } from "../misc/loading-spinner";
 import { Button } from "./button";
-import { useFilePicker } from "use-file-picker";
-import { nanoid } from "@udecode/plate";
-import { setMediaNode } from "@udecode/plate-media";
-import { useUploadFile } from "@/hooks/use-upload-file";
 import { ElementPopover, ElementWidth, widthVariants } from "./element-popover";
-import { uploadFile } from "@/lib/upload/upload-file";
 
 const MEDIA_CONFIG: Record<
   string,
@@ -108,7 +112,7 @@ function MediaPopover({
 
 export const MediaPlaceholderElement = withHOC(
   PlaceholderProvider,
-  withRef<typeof PlateElement>(({ children, className, editor, ...props }, ref) => {
+  withRef<typeof PlateElement>(({ children, className, editor, ...props }, _ref) => {
     const { mediaType, progresses, progressing, setSize, updatedFiles, element } = usePlaceholderElementState();
     const { setIsUploading, setProgresses, setUpdatedFiles } = usePlaceholderPopoverState();
     const { api } = useEditorPlugin(PlaceholderPlugin);
@@ -243,23 +247,21 @@ export const MediaPlaceholderElement = withHOC(
           >
             <div className="placeholder-background absolute inset-0" />
             {progressing ? (
-              <>
-                {file && (
-                  <>
-                    {previewUrl && mediaType === ImagePlugin.key && (
-                      <img
-                        src={previewUrl}
-                        alt="Upload preview"
-                        className="h-full w-full object-cover opacity-40 animate-pulse"
-                      />
-                    )}
-                    <div className="absolute inset-0 text-muted-foreground flex items-center justify-center">
-                      <LoadingSpinner />
-                      <span className="ml-2 text-sm">Uploading</span>
-                    </div>
-                  </>
-                )}
-              </>
+              file && (
+                <>
+                  {previewUrl && mediaType === ImagePlugin.key && (
+                    <img
+                      src={previewUrl}
+                      alt="Upload preview"
+                      className="h-full w-full object-cover opacity-40 animate-pulse"
+                    />
+                  )}
+                  <div className="absolute inset-0 text-muted-foreground flex items-center justify-center">
+                    <LoadingSpinner />
+                    <span className="ml-2 text-sm">Uploading</span>
+                  </div>
+                </>
+              )
             ) : (
               <div className="relative z-10 flex flex-col items-center gap-2">
                 <Button variant="ghostText" className="relative" onClick={() => openFilePicker()}>

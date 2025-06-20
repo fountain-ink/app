@@ -1,9 +1,9 @@
+import { evmAddress } from "@lens-protocol/client";
+import { fetchGroups } from "@lens-protocol/client/actions";
+import { NextRequest, NextResponse } from "next/server";
 import { verifyAuth } from "@/lib/auth/verify-auth-request";
 import { createClient } from "@/lib/db/server";
 import { getLensClient } from "@/lib/lens/client";
-import { fetchGroups } from "@lens-protocol/client/actions";
-import { evmAddress } from "@lens-protocol/client";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   console.log("[Blogs Sync] Starting sync process");

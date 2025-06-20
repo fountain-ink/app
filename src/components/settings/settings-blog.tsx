@@ -1,35 +1,34 @@
 "use client";
 
+import { uri } from "@lens-protocol/client";
+import { fetchGroup, setGroupMetadata } from "@lens-protocol/client/actions";
+import { handleOperationWith } from "@lens-protocol/client/viem";
+import { group } from "@lens-protocol/metadata";
+import { ArrowLeftIcon, CodeIcon, ExternalLink, MailIcon } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
+import { useWalletClient } from "wagmi";
 import { ImageUploader } from "@/components/misc/image-uploader";
+import { ThemeButtons } from "@/components/theme/theme-buttons";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { uploadFile } from "@/lib/upload/upload-file";
-import { useCallback, useEffect, useState } from "react";
-import { TextareaAutosize } from "../ui/textarea";
-import { BlogData, BlogMetadata } from "@/lib/settings/get-blog-data";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useBlogSettings } from "@/hooks/use-blog-settings";
-import { useWalletClient } from "wagmi";
 import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
-import Link from "next/link";
-import { ArrowLeftIcon, ExternalLink, MailIcon, ChevronDownIcon, ChevronUpIcon, CodeIcon } from "lucide-react";
-import { isValidTheme, ThemeType, themeNames, themeDescriptions, defaultThemeName } from "@/styles/themes";
-import { ThemeButtons } from "@/components/theme/theme-buttons";
-import { toast } from "sonner";
+import { cssExamples, defaultCssPlaceholder } from "@/lib/css-examples";
 import { createClient } from "@/lib/db/client";
-import { getBaseUrl } from "@/lib/get-base-url";
-import { motion, AnimatePresence } from "motion/react";
-import { group } from "@lens-protocol/metadata";
 import { getLensClient } from "@/lib/lens/client";
-import { fetchGroup, setGroupMetadata } from "@lens-protocol/client/actions";
-import { handleOperationWith } from "@lens-protocol/client/viem";
 import { storageClient } from "@/lib/lens/storage-client";
-import { uri } from "@lens-protocol/client";
-import { defaultCssPlaceholder, cssExamples, CssExampleKey } from "@/lib/css-examples";
+import { BlogData, BlogMetadata } from "@/lib/settings/get-blog-data";
+import { uploadFile } from "@/lib/upload/upload-file";
+import { defaultThemeName, ThemeType } from "@/styles/themes";
+import { TextareaAutosize } from "../ui/textarea";
 
 interface BlogSettingsProps {
   initialSettings: BlogData;
@@ -155,7 +154,7 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
   const blogUrl = isUserBlog ? `/b/${userHandle}` : `/b/${blogAddress}`;
 
   useEffect(() => {
-    setFormState((prev) => ({
+    setFormState((_prev) => ({
       title: settings?.title || "",
       about: settings?.about || "",
       handle: isUserBlog ? userHandle || "" : settings?.handle || "",
@@ -808,12 +807,14 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                     transition={{ duration: 0.3 }}
                   >
                     <div
-                      className={`w-8 h-8 rounded-full transition-colors duration-300 ${highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
-                        }`}
+                      className={`w-8 h-8 rounded-full transition-colors duration-300 ${
+                        highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
+                      }`}
                     />
                     <div
-                      className={`h-4 w-24 rounded-md transition-colors duration-300 ${highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
-                        }`}
+                      className={`h-4 w-24 rounded-md transition-colors duration-300 ${
+                        highlightedElement === "author" ? "bg-primary/70" : "bg-muted"
+                      }`}
                     />
                   </motion.div>
                 )}
@@ -823,8 +824,9 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
               <AnimatePresence>
                 {formState.metadata.showTitle && (
                   <motion.div
-                    className={`h-6 w-48 rounded-md mb-3 transition-colors duration-300 ${highlightedElement === "title" ? "bg-primary/70" : "bg-muted"
-                      }`}
+                    className={`h-6 w-48 rounded-md mb-3 transition-colors duration-300 ${
+                      highlightedElement === "title" ? "bg-primary/70" : "bg-muted"
+                    }`}
                     initial={{ opacity: 0, height: 0, marginBottom: 0 }}
                     animate={{ opacity: 1, height: 24, marginBottom: 12 }}
                     exit={{ opacity: 0, height: 0, marginBottom: 0 }}
@@ -843,16 +845,19 @@ export function BlogSettings({ initialSettings, isUserBlog = false, userHandle }
                     transition={{ duration: 0.3 }}
                   >
                     <div
-                      className={`h-5 w-16 rounded-full transition-colors duration-300 ${highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
-                        }`}
+                      className={`h-5 w-16 rounded-full transition-colors duration-300 ${
+                        highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
+                      }`}
                     />
                     <div
-                      className={`h-5 w-20 rounded-full transition-colors duration-300 ${highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
-                        }`}
+                      className={`h-5 w-20 rounded-full transition-colors duration-300 ${
+                        highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
+                      }`}
                     />
                     <div
-                      className={`h-5 w-14 rounded-full transition-colors duration-300 ${highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
-                        }`}
+                      className={`h-5 w-14 rounded-full transition-colors duration-300 ${
+                        highlightedElement === "tags" ? "bg-primary/70" : "bg-muted"
+                      }`}
                     />
                   </motion.div>
                 )}

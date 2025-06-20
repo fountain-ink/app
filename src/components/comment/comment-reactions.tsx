@@ -1,9 +1,7 @@
-import { usePostActions } from "@/hooks/use-post-actions";
 import { Post } from "@lens-protocol/client";
 import { Heart, MessageCircle } from "lucide-react";
-import { useState } from "react";
+import { usePostActions } from "@/hooks/use-post-actions";
 import { ActionButton } from "../post/post-action-button";
-import { useAuthenticatedUser } from "@lens-protocol/react";
 
 interface CommentReactionsProps {
   comment: Post;

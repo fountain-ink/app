@@ -1,6 +1,5 @@
-import { useCallback, useMemo, useState } from "react";
-
 import { format, formatDistance } from "date-fns";
+import { useCallback, useMemo, useState } from "react";
 
 type Dates = "date" | "distance";
 

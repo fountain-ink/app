@@ -1,9 +1,8 @@
 "use client";
 
-import React from "react";
-
 import { cn } from "@udecode/cn";
 import { PlateElement } from "@udecode/plate/react";
+import React from "react";
 
 export function ParagraphElement({ children, className, ...props }: React.ComponentProps<typeof PlateElement>) {
   return (

@@ -1,3 +1,6 @@
+import { fetchAccountStats, fetchPost } from "@lens-protocol/client/actions";
+import DOMPurify from "isomorphic-dompurify";
+import { ReadMore } from "@/components/blog/blog-read-more-section";
 import { CommentPreview } from "@/components/comment/comment-preview";
 import { EditorReadTime } from "@/components/editor/addons/editor-read-time";
 import Editor from "@/components/editor/editor";
@@ -7,15 +10,12 @@ import { PostActionsBar } from "@/components/post/post-actions-bar";
 import { FloatingActionBar } from "@/components/post/post-floating-actions-bar";
 import { PostMetadata } from "@/components/post/post-metadata";
 import { PostTags } from "@/components/post/post-tags";
-import { ReadMore } from "@/components/blog/blog-read-more-section";
 import { AuthorView } from "@/components/user/user-author-view";
 import { UserPostCard } from "@/components/user/user-post-card";
 import { ActionBarProvider } from "@/contexts/action-bar-context";
 import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
 import { getPostIdBySlug } from "@/lib/slug/get-post-by-slug";
-import { fetchAccountStats, fetchPost } from "@lens-protocol/client/actions";
-import DOMPurify from "isomorphic-dompurify";
 
 const post = async ({ params }: { params: { user: string; post: string } }) => {
   const lens = await getLensClient();
@@ -61,9 +61,7 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
           <div className="max-w-[60ch] mx-auto p-4 sm:p-8 md:px-16 flex flex-col gap-6 sm:gap-8">
             <PostActionsBar post={post} />
             <UserPostCard account={post.author} stats={authorStats} />
-            {post.metadata.tags && post.metadata.tags.length > 0 && (
-              <PostTags tags={post.metadata.tags} />
-            )}
+            {post.metadata.tags && post.metadata.tags.length > 0 && <PostTags tags={post.metadata.tags} />}
             <PostMetadata post={post} />
             <CommentPreview post={post} />
             <FloatingActionBar post={post} account={profile?.loggedInAs.account} />

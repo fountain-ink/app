@@ -1,5 +1,3 @@
-import { env } from "@/env";
-
 export interface NewsletterResponse {
   success?: boolean;
   error?: string;

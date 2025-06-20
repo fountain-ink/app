@@ -1,13 +1,11 @@
 "use client";
+import { Loader2Icon, LoaderIcon, UploadIcon, XIcon } from "lucide-react";
+import { useRef, useState } from "react";
+import Cropper from "react-easy-crop";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
-import { Loader2Icon, LoaderIcon, UploadIcon, XIcon } from "lucide-react";
-import Cropper from "react-easy-crop";
-
-import { useRef, useState } from "react";
-import { Button } from "../ui/button";
-import { storageClient } from "@/lib/lens/storage-client";
 import { resolveUrl } from "@/lib/utils/resolve-url";
+import { Button } from "../ui/button";
 
 const createImage = (url: string): Promise<HTMLImageElement> =>
   new Promise((resolve, reject) => {

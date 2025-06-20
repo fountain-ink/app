@@ -1,17 +1,16 @@
 "use client";
 
-import { getLensClient } from "@/lib/lens/client";
 import { type Account } from "@lens-protocol/client";
 import { fetchAccount, fetchAccountStats } from "@lens-protocol/client/actions";
+import Link from "next/link";
 import { type PropsWithChildren, useState } from "react";
+import { getLensClient } from "@/lib/lens/client";
+import { inter } from "@/styles/google-fonts";
 import { LoadingSpinner } from "../misc/loading-spinner";
 import { TruncatedText } from "../misc/truncated-text";
 import { Badge } from "../ui/badge";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card";
 import { UserAvatar } from "./user-avatar";
-
-import { inter } from "@/styles/google-fonts";
-import Link from "next/link";
 import { UserFollowButton } from "./user-follow";
 import { UserFollowing } from "./user-following";
 

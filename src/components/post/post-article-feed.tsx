@@ -1,19 +1,13 @@
 "use client";
 
-import type { Account, AnyPost } from "@lens-protocol/client";
+import type { AnyPost } from "@lens-protocol/client";
 import { motion } from "motion/react";
 import { DraftCreateButton } from "../draft/draft-create-button";
 import { GraphicHand2 } from "../icons/custom-icons";
-import { PostView } from "./post-view";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
+import { PostView } from "./post-view";
 
-export const ArticleFeed = ({
-  posts,
-  isUserProfile = false,
-}: {
-  posts: AnyPost[];
-  isUserProfile?: boolean;
-}) => {
+export const ArticleFeed = ({ posts, isUserProfile = false }: { posts: AnyPost[]; isUserProfile?: boolean }) => {
   const postViews = posts
     .map((post) => {
       if (post.__typename !== "Post") {

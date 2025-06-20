@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
-import { spawn } from "bun";
-import { readdir, stat, readFile } from "node:fs/promises";
+import { readdir, readFile, stat } from "node:fs/promises";
 import { join } from "node:path";
+import { spawn } from "bun";
 import { env } from "../../env.js";
 
 interface RestoreOptions {

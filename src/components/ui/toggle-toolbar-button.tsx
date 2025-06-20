@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 import { withRef } from "@udecode/cn";
 import { useToggleToolbarButton, useToggleToolbarButtonState } from "@udecode/plate-toggle/react";
 import { ChevronRightIcon } from "lucide-react";

@@ -1,15 +1,13 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { LinkIcon } from "lucide-react";
+import { AnimatePresence } from "motion/react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-
+import { TbBrandBluesky, TbBrandX } from "react-icons/tb";
 import { PageTransition } from "@/components/navigation/page-transition";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { handlePlatformShare } from "@/lib/get-share-url";
-import { AnimatePresence } from "motion/react";
-import { LinkIcon, Share2Icon } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import { TbBrandBluesky, TbBrandX } from "react-icons/tb";
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();

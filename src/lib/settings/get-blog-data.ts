@@ -1,6 +1,6 @@
+import { createClient } from "../db/client";
 import { Database } from "../db/database";
 import { isEvmAddress } from "../utils/is-evm-address";
-import { createClient } from "../db/client";
 
 type Blog = Database["public"]["Tables"]["blogs"]["Row"];
 

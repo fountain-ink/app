@@ -1,5 +1,5 @@
 import { withProps } from "@udecode/cn";
-import { BaseParagraphPlugin, SlateLeaf, Value, createSlateEditor } from "@udecode/plate";
+import { BaseParagraphPlugin, createSlateEditor, SlateLeaf, Value } from "@udecode/plate";
 import {
   BaseBoldPlugin,
   BaseCodePlugin,
@@ -16,6 +16,8 @@ import { BaseCommentsPlugin } from "@udecode/plate-comments";
 import { BaseDatePlugin } from "@udecode/plate-date";
 import { BaseHeadingPlugin, BaseTocPlugin, HEADING_KEYS, HEADING_LEVELS } from "@udecode/plate-heading";
 import { BaseHorizontalRulePlugin } from "@udecode/plate-horizontal-rule";
+import { BaseIndentPlugin } from "@udecode/plate-indent";
+import { BaseIndentListPlugin } from "@udecode/plate-indent-list";
 import { BaseColumnItemPlugin, BaseColumnPlugin } from "@udecode/plate-layout";
 import { BaseLinkPlugin } from "@udecode/plate-link";
 import { BaseEquationPlugin, BaseInlineEquationPlugin } from "@udecode/plate-math";
@@ -34,7 +36,7 @@ import {
   BaseTableRowPlugin,
 } from "@udecode/plate-table";
 import { BaseTogglePlugin } from "@udecode/plate-toggle";
-
+import { all, createLowlight } from "lowlight";
 import { BlockquoteElementStatic } from "@/components/ui/static/blockquote-element-static";
 import { CalloutElementStatic } from "@/components/ui/static/callout-element-static";
 import { CodeBlockElementStatic } from "@/components/ui/static/code-block-element-static";
@@ -61,13 +63,9 @@ import { TableElementStatic } from "@/components/ui/static/table-element-static"
 import { TableRowElementStatic } from "@/components/ui/static/table-row-element-static";
 import { TocElementStatic } from "@/components/ui/static/toc-element-static";
 import { ToggleElementStatic } from "@/components/ui/static/toggle-element-static";
-import { BaseIndentPlugin } from "@udecode/plate-indent";
-import { BaseIndentListPlugin } from "@udecode/plate-indent-list";
-import Prism from "prismjs";
 import { TodoLiStatic, TodoMarkerStatic } from "../ui/static/indent-todo-marker-static";
 import { SubtitleElementStatic, TitleElementStatic } from "../ui/static/title-element-static";
 import { SubtitlePlugin, TitlePlugin } from "./plugins/title-plugin";
-import { all, createLowlight } from "lowlight";
 
 export const staticComponents = {
   [BaseAudioPlugin.key]: MediaAudioElementStatic,

@@ -1,11 +1,10 @@
 "use client";
 
-import * as React from "react";
-
 import * as Ariakit from "@ariakit/react";
 import { cn, createPrimitiveElement, useComposedRef, withRef, withVariants } from "@udecode/cn";
-import { type VariantProps, cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 import { CornerDownLeft } from "lucide-react";
+import * as React from "react";
 
 import { useOnClickOutside } from "@/hooks/use-on-click-outside";
 

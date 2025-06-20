@@ -1,10 +1,10 @@
-import { getLensClient } from "@/lib/lens/client";
+import { AnyPost, MainContentFocus } from "@lens-protocol/client";
 import { fetchPosts } from "@lens-protocol/client/actions";
-import { MainContentFocus, AnyPost } from "@lens-protocol/client";
-import { env } from "@/env";
 import { LatestFeed } from "@/components/feed/feed-latest";
 import { FeedLayout } from "@/components/navigation/feed-layout";
-import { getBannedAddresses, filterBannedPosts } from "@/lib/utils/ban-filter";
+import { env } from "@/env";
+import { getLensClient } from "@/lib/lens/client";
+import { filterBannedPosts, getBannedAddresses } from "@/lib/utils/ban-filter";
 
 export async function generateMetadata() {
   return {
@@ -34,7 +34,7 @@ const home = async () => {
         apps: [env.NEXT_PUBLIC_APP_ADDRESS],
       },
     }).unwrapOr(null),
-    getBannedAddresses()
+    getBannedAddresses(),
   ]);
 
   const allPosts: AnyPost[] = postsResult?.items ? [...postsResult.items] : [];

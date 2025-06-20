@@ -1,18 +1,12 @@
-import { useState, useEffect } from "react";
-import { MentionableUser } from "./user-search";
-import { getLensClient } from "@/lib/lens/client";
+import { Account } from "@lens-protocol/client";
 import { fetchAccounts } from "@lens-protocol/client/actions";
 import { User2Icon } from "lucide-react";
-import { Account } from "@lens-protocol/client";
+import { useEffect, useState } from "react";
+import { getLensClient } from "@/lib/lens/client";
 import { resolveUrl } from "@/lib/utils/resolve-url";
+import { MentionableUser } from "./user-search";
 
-export function UserSearchList({
-  query,
-  onSelect,
-}: {
-  query: string;
-  onSelect: (user: MentionableUser) => void;
-}) {
+export function UserSearchList({ query, onSelect }: { query: string; onSelect: (user: MentionableUser) => void }) {
   const [loading, setLoading] = useState(false);
   const [profiles, setProfiles] = useState<MentionableUser[]>([]);
 

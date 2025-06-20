@@ -1,19 +1,19 @@
-import { getLensClient } from "@/lib/lens/client";
-import { storageClient } from "@/lib/lens/storage-client";
-import { TransactionIndexingError, postId, uri } from "@lens-protocol/client";
-import { currentSession, editPost, fetchAccount, fetchPost } from "@lens-protocol/client/actions";
+import { postId, uri } from "@lens-protocol/client";
+import { editPost, fetchPost } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
-import { MetadataAttributeType, article } from "@lens-protocol/metadata";
-import { toast } from "sonner";
-import { type UseWalletClientReturnType } from "wagmi";
+import { article } from "@lens-protocol/metadata";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { type UseWalletClientReturnType } from "wagmi";
 import type { Draft } from "@/components/draft/draft";
-import { getPostContent } from "./get-post-content";
-import { getPostAttributes } from "./get-post-attributes";
-import { createPostRecord } from "./create-post-record";
+import { getLensClient } from "@/lib/lens/client";
+import { storageClient } from "@/lib/lens/storage-client";
 import { getUserAccount } from "../auth/get-user-profile";
+import { createPostRecord } from "./create-post-record";
 import { deleteCloudDraft } from "./delete-cloud-draft";
+import { getPostAttributes } from "./get-post-attributes";
+import { getPostContent } from "./get-post-content";
 /**
  * Edits an existing post on Lens Protocol
  * @param draft The draft containing the updated content

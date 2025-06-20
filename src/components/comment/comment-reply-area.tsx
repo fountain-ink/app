@@ -1,24 +1,23 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { TextareaAutosize } from "@/components/ui/textarea";
-import { getLensClient } from "@/lib/lens/client";
-import { storageClient } from "@/lib/lens/storage-client";
 import { Account, PostFeedInfo } from "@lens-protocol/client";
-import { currentSession, fetchPost, post } from "@lens-protocol/client/actions";
+import { fetchPost, post } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
 import { textOnly } from "@lens-protocol/metadata";
-import { useState, useEffect } from "react";
+import { useAuthenticatedUser } from "@lens-protocol/react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useAccount, useWalletClient } from "wagmi";
+import { Button } from "@/components/ui/button";
+import { TextareaAutosize } from "@/components/ui/textarea";
 import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
+import { getLensClient } from "@/lib/lens/client";
+import { storageClient } from "@/lib/lens/storage-client";
+import { cn } from "@/lib/utils";
 import { UserAvatar } from "../user/user-avatar";
 import { UserUsername } from "../user/user-handle";
-import { UserName } from "../user/user-name";
-import { cn } from "@/lib/utils";
-import { useAuthenticatedUser } from "@lens-protocol/react";
-import { ConnectWalletButton } from "../auth/auth-wallet-button";
 import { UserMenu } from "../user/user-menu";
+import { UserName } from "../user/user-name";
 
 interface PostReplyAreaProps {
   postId: string;

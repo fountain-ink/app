@@ -1,5 +1,5 @@
-import { PanelsContext } from "@/components/ui/resizeable-panel";
 import React from "react";
+import { PanelsContext } from "@/components/ui/resizeable-panel";
 
 export const useToggleLeftPanel = () => {
   const context = React.useContext(PanelsContext);

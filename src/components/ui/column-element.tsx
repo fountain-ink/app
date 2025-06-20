@@ -1,15 +1,9 @@
 "use client";
 
-import React from "react";
-
-import type { TColumnElement } from "@udecode/plate-layout";
-
 import { cn, withRef } from "@udecode/cn";
-import { useElement, withHOC } from "@udecode/plate/react";
+import { PlateElement, useElement, useReadOnly, withHOC } from "@udecode/plate/react";
+import type { TColumnElement } from "@udecode/plate-layout";
 import { ResizableProvider } from "@udecode/plate-resizable";
-import { useReadOnly } from "@udecode/plate/react";
-
-import { PlateElement } from "@udecode/plate/react";
 
 export const ColumnElement = withHOC(
   ResizableProvider,

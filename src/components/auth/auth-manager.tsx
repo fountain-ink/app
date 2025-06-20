@@ -1,6 +1,5 @@
 "use client";
 
-import { isValidToken } from "@/lib/auth/validate-token";
 import { AccessToken, IdToken, RefreshToken } from "@lens-protocol/client";
 import { getCookie, setCookie } from "cookies-next";
 import { useEffect, useRef } from "react";

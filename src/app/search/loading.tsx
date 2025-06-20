@@ -1,7 +1,7 @@
-import PostSkeleton from "@/components/post/post-skeleton"
-import { SearchLayout } from "@/components/navigation/search-layout"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Search } from "lucide-react"
+import { Search } from "lucide-react";
+import { SearchLayout } from "@/components/navigation/search-layout";
+import PostSkeleton from "@/components/post/post-skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {
   return (
@@ -16,7 +16,7 @@ export default function Loading() {
             <Skeleton className="h-9 w-[72px] rounded-md" />
           </div>
         </div>
-        
+
         <div className="flex flex-col gap-4 items-center w-full">
           <PostSkeleton />
           <PostSkeleton />
@@ -26,5 +26,5 @@ export default function Loading() {
         </div>
       </div>
     </SearchLayout>
-  )
+  );
 }

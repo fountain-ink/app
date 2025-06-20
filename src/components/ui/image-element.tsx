@@ -1,17 +1,23 @@
-import { uploadFile } from "@/lib/upload/upload-file";
 import { cn, withRef } from "@udecode/cn";
+import {
+  PlateElement,
+  useEditorPlugin,
+  useEditorRef,
+  useElement,
+  useReadOnly,
+  useRemoveNodeButton,
+} from "@udecode/plate/react";
 import { TImageElement } from "@udecode/plate-media";
 import { PlaceholderPlugin, useImage, useMediaState } from "@udecode/plate-media/react";
-import { useEditorPlugin, useEditorRef, useElement, useReadOnly, useRemoveNodeButton } from "@udecode/plate/react";
 import { UploadIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import type React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { uploadFile } from "@/lib/upload/upload-file";
 import { LoadingSpinner } from "../misc/loading-spinner";
 import { Button } from "./button";
 import { Caption, CaptionTextarea } from "./caption";
 import { ELEMENT_WIDTH_CLASSES, ElementPopover, type ElementWidth, widthVariants } from "./element-popover";
-import { PlateElement } from "@udecode/plate/react";
 
 const ImagePlaceholder = ({ file }: { file?: File }) => {
   const [objectUrl, setObjectUrl] = useState<string | null>(null);
@@ -42,7 +48,12 @@ function ImagePopover({
   url,
   open,
   popoverRef,
-}: { children: React.ReactNode; url?: string; open: boolean; popoverRef: React.RefObject<HTMLDivElement> }) {
+}: {
+  children: React.ReactNode;
+  url?: string;
+  open: boolean;
+  popoverRef: React.RefObject<HTMLDivElement>;
+}) {
   const editor = useEditorRef();
   const element = useElement();
   const { props: buttonProps } = useRemoveNodeButton({ element });
@@ -99,7 +110,7 @@ function ImagePopover({
   );
 }
 
-export const ImageElement = withRef<typeof PlateElement>(({ children, className, attributes, ...props }, ref) => {
+export const ImageElement = withRef<typeof PlateElement>(({ children, className, attributes, ...props }, _ref) => {
   const [_isImageLoaded, setIsImageLoaded] = useState(false);
   const [url, setUrl] = useState<string | undefined>(props?.element?.url as string | undefined);
   const [isUploading, setIsUploading] = useState(false);
@@ -186,11 +197,7 @@ export const ImageElement = withRef<typeof PlateElement>(({ children, className,
                         className="absolute inset-0 cursor-pointer opacity-0"
                         disabled={isUploading}
                       />
-                      {isUploading ? (
-                        <LoadingSpinner />
-                      ) : (
-                        <>{!url && <UploadIcon className="size-4 mr-2 text-inherit" />}</>
-                      )}
+                      {isUploading ? <LoadingSpinner /> : !url && <UploadIcon className="size-4 mr-2 text-inherit" />}
                       <span className="">{isUploading ? "Uploading..." : "Upload Image"}</span>
                     </div>
                   </Button>

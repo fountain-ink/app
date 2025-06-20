@@ -1,20 +1,14 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { LoadingSpinner } from "../misc/loading-spinner";
 import { toast } from "sonner";
-import { createDraft } from "@/lib/plate/create-draft";
+import { Button } from "@/components/ui/button";
 import { getRandomUid } from "@/lib/get-random-uid";
+import { createDraft } from "@/lib/plate/create-draft";
+import { LoadingSpinner } from "../misc/loading-spinner";
 
-export const DraftCreateButton = ({
-  text = "Write",
-  initialContent,
-}: {
-  text?: string;
-  initialContent?: any;
-}) => {
+export const DraftCreateButton = ({ text = "Write", initialContent }: { text?: string; initialContent?: any }) => {
   const [isCreating, setIsCreating] = useState(false);
   const router = useRouter();
 

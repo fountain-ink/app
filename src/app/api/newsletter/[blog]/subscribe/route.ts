@@ -1,6 +1,6 @@
-import { getListById, addSubscriber } from "@/lib/listmonk/client";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/db/server";
+import { addSubscriber, getListById } from "@/lib/listmonk/client";
 import { findBlogByIdentifier } from "@/lib/utils/find-blog-by-id";
 
 export async function POST(req: NextRequest, { params }: { params: { blog: string } }) {

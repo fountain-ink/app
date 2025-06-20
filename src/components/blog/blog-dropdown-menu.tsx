@@ -1,20 +1,20 @@
 "use client";
 
+import { ChevronRightIcon, PenToolIcon, User2Icon } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
   DropdownMenuPortal,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useBlogStorage } from "@/hooks/use-blog-storage";
+import { BlogData } from "@/lib/settings/get-blog-data";
 import { PenToolIcon as CustomPenToolIcon } from "../icons/pen-tool";
 import { AnimatedMenuItem } from "../navigation/animated-item";
-import { ChevronRightIcon, PenToolIcon, User2Icon, UserIcon } from "lucide-react";
-import { useBlogStorage } from "@/hooks/use-blog-storage";
-import Link from "next/link";
-import { BlogData } from "@/lib/settings/get-blog-data";
-import Image from "next/image";
 
 interface BlogMenuProps {
   username: string;

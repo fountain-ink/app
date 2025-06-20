@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { createMailingList } from "@/lib/listmonk/newsletter";
-import { toast } from "sonner";
 
 interface CreateNewsletterButtonProps {
   blogIdentifier: string;

@@ -1,10 +1,10 @@
+import { ChevronDown, X } from "lucide-react";
+// import { useEditor } from "novel";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
-import { ChevronDown, X } from "lucide-react";
-// import { useEditor } from "novel";
-import { useState } from "react";
 
 interface ForeignContent {
   title: string;

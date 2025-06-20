@@ -1,6 +1,5 @@
-import type { Database } from "@/lib/db/database";
-import type { Json } from "@/lib/db/database";
 import { z } from "zod";
+import type { Database } from "@/lib/db/database";
 import { detailsFormSchema } from "../publish/publish-details-tab";
 import { distributionFormSchema } from "../publish/publish-distribution-tab";
 import { collectingFormSchema } from "../publish/publish-monetization-tab";

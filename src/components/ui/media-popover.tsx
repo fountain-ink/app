@@ -1,12 +1,11 @@
 "use client";
 
+import { type WithRequiredKey } from "@udecode/plate";
+import { useEditorSelector, useElement, useReadOnly, useRemoveNodeButton, useSelected } from "@udecode/plate/react";
+import { FloatingMedia as FloatingMediaPrimitive } from "@udecode/plate-media/react";
+import { Link, Trash2Icon } from "lucide-react";
 import type React from "react";
 import { useEffect } from "react";
-
-import { type WithRequiredKey } from "@udecode/plate";
-import { FloatingMedia as FloatingMediaPrimitive } from "@udecode/plate-media/react";
-import { useEditorSelector, useElement, useReadOnly, useRemoveNodeButton, useSelected } from "@udecode/plate/react";
-import { Link, Trash2Icon } from "lucide-react";
 
 import { Button, buttonVariants } from "./button";
 import { CaptionButton } from "./caption";

@@ -1,8 +1,8 @@
-import { getRandomUid } from "@/lib/get-random-uid";
+import { slateToDeterministicYjsState } from "@udecode/plate-yjs";
 import * as Y from "yjs";
+import { getRandomUid } from "@/lib/get-random-uid";
 import { isGuestUser } from "../auth/is-guest-user";
 import { defaultContent } from "./default-content";
-import { slateToDeterministicYjsState } from "@udecode/plate-yjs";
 
 type CreateDraftOptions = {
   initialContent?: any;

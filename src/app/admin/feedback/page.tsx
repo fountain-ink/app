@@ -1,21 +1,20 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatDistanceToNow } from "date-fns";
+import { AlertCircle, Bug, HelpCircle, ImageIcon, Lightbulb, Maximize } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { FeedbackDetailModal } from "@/components/admin/feedback-detail-modal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useState, useEffect } from "react";
-import type { Database } from "@/lib/db/database";
-import { formatDistanceToNow } from "date-fns";
-import { AlertCircle, Bug, Lightbulb, ImageIcon, HelpCircle, Maximize } from "lucide-react";
-import { toast } from "sonner";
-import { FeedbackDetailModal } from "@/components/admin/feedback-detail-modal";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { UserCard } from "@/components/user/user-card";
+import type { Database } from "@/lib/db/database";
 
 type FeedbackItem = Database["public"]["Tables"]["feedback"]["Row"];
 
@@ -240,7 +239,11 @@ function FeedbackTable({
     field,
     children,
     className,
-  }: { field: string; children: React.ReactNode; className?: string }) => {
+  }: {
+    field: string;
+    children: React.ReactNode;
+    className?: string;
+  }) => {
     const isSorted = sortField === field;
     return (
       <TableHead

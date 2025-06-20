@@ -1,16 +1,15 @@
-import { z } from "zod";
-import { UseFormReturn } from "react-hook-form";
-import { Checkbox } from "@/components/ui/checkbox";
-import { BlogSelectMenu } from "@/components/blog/blog-select-menu";
+import { SendIcon } from "lucide-react";
 import { FC, useMemo } from "react";
-import { useBlogStorage } from "@/hooks/use-blog-storage";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
-import { CombinedFormValues } from "./publish-dialog";
-import { SendIcon, RssIcon, LayoutIcon, ClubIcon } from "lucide-react";
-import Link from "next/link";
+import { UseFormReturn } from "react-hook-form";
+import { z } from "zod";
+import { BlogSelectMenu } from "@/components/blog/blog-select-menu";
+import { Checkbox } from "@/components/ui/checkbox";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { usePublishDraft } from "@/hooks/use-publish-draft";
 import { LensLineLogo } from "../icons/custom-icons";
+import { CombinedFormValues } from "./publish-dialog";
 
 export const distributionFormSchema = z.object({
   selectedBlogAddress: z.string().optional(),

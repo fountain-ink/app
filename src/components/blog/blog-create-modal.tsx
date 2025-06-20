@@ -1,25 +1,25 @@
 "use client";
 
-import { feed, group } from "@lens-protocol/metadata";
-import { SessionClient, uri } from "@lens-protocol/client";
+import { uri } from "@lens-protocol/client";
 import { createGroup, fetchGroup } from "@lens-protocol/client/actions";
-import { storageClient } from "@/lib/lens/storage-client";
-import { useState, useEffect } from "react";
+import { handleOperationWith } from "@lens-protocol/client/viem";
+import { feed, group } from "@lens-protocol/metadata";
+import { useAuthenticatedUser } from "@lens-protocol/react";
+import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useWalletClient } from "wagmi";
+import { useBlogStorage } from "@/hooks/use-blog-storage";
+import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
+import { getLensClient } from "@/lib/lens/client";
+import { storageClient } from "@/lib/lens/storage-client";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
-import { handleOperationWith } from "@lens-protocol/client/viem";
-import { useWalletClient } from "wagmi";
-import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
-import { getLensClient } from "@/lib/lens/client";
-import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { syncBlogsQuietly } from "./blog-sync-button";
-import { useBlogStorage } from "@/hooks/use-blog-storage";
-import { useAuthenticatedUser } from "@lens-protocol/react";
 
 interface CreateGroupModalProps {
   open: boolean;

@@ -1,23 +1,26 @@
-import { useState, useCallback, useEffect } from "react"
-import { PaginatedResultInfo } from "@lens-protocol/client"
+import { PaginatedResultInfo } from "@lens-protocol/client";
+import { useCallback, useEffect, useState } from "react";
 
 export interface UseInfiniteFeedOptions<T> {
-  initialItems: T[]
-  initialPaginationInfo?: Partial<PaginatedResultInfo> | { hasMore?: boolean; totalCount?: number }
-  fetchMore: (cursor?: string, page?: number) => Promise<{
-    items: T[]
-    pageInfo?: Partial<PaginatedResultInfo> | { hasMore?: boolean; totalCount?: number }
-  }>
-  pageSize?: number
+  initialItems: T[];
+  initialPaginationInfo?: Partial<PaginatedResultInfo> | { hasMore?: boolean; totalCount?: number };
+  fetchMore: (
+    cursor?: string,
+    page?: number,
+  ) => Promise<{
+    items: T[];
+    pageInfo?: Partial<PaginatedResultInfo> | { hasMore?: boolean; totalCount?: number };
+  }>;
+  pageSize?: number;
 }
 
 export interface UseInfiniteFeedResult<T> {
-  items: T[]
-  isLoading: boolean
-  hasMore: boolean
-  loadMore: () => void
-  refresh: () => void
-  reset: (newItems?: T[], newPaginationInfo?: Partial<PaginatedResultInfo>) => void
+  items: T[];
+  isLoading: boolean;
+  hasMore: boolean;
+  loadMore: () => void;
+  refresh: () => void;
+  reset: (newItems?: T[], newPaginationInfo?: Partial<PaginatedResultInfo>) => void;
 }
 
 export function useInfiniteFeed<T extends { id: string }>({
@@ -26,74 +29,77 @@ export function useInfiniteFeed<T extends { id: string }>({
   fetchMore,
   pageSize = 10,
 }: UseInfiniteFeedOptions<T>): UseInfiniteFeedResult<T> {
-  const [items, setItems] = useState<T[]>(initialItems)
-  const [isLoading, setIsLoading] = useState(false)
-  const [paginationInfo, setPaginationInfo] = useState(initialPaginationInfo)
-  const [page, setPage] = useState(1)
+  const [items, setItems] = useState<T[]>(initialItems);
+  const [isLoading, setIsLoading] = useState(false);
+  const [paginationInfo, setPaginationInfo] = useState(initialPaginationInfo);
+  const [page, setPage] = useState(1);
 
   // Determine if we have more items to load
   const hasMore = paginationInfo
-    ? 'next' in paginationInfo
+    ? "next" in paginationInfo
       ? !!paginationInfo.next
-      : 'hasMore' in paginationInfo ? !!paginationInfo.hasMore : false
-    : false
+      : "hasMore" in paginationInfo
+        ? !!paginationInfo.hasMore
+        : false
+    : false;
 
   const loadMore = useCallback(async () => {
     if (isLoading || !hasMore) {
-      return
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      const cursor = paginationInfo && 'next' in paginationInfo && paginationInfo.next ? paginationInfo.next : undefined
-      const result = await fetchMore(cursor, page)
+      const cursor =
+        paginationInfo && "next" in paginationInfo && paginationInfo.next ? paginationInfo.next : undefined;
+      const result = await fetchMore(cursor, page);
 
       if (result.items.length > 0) {
-        setItems(prev => {
-          const existingIds = new Set(prev.map(item => item.id))
-          const newItems = result.items.filter(item => !existingIds.has(item.id))
-          return [...prev, ...newItems]
-        })
-        setPaginationInfo(result.pageInfo)
-        setPage(prev => prev + 1)
+        setItems((prev) => {
+          const existingIds = new Set(prev.map((item) => item.id));
+          const newItems = result.items.filter((item) => !existingIds.has(item.id));
+          return [...prev, ...newItems];
+        });
+        setPaginationInfo(result.pageInfo);
+        setPage((prev) => prev + 1);
       } else {
-        setPaginationInfo(result.pageInfo || {})
+        setPaginationInfo(result.pageInfo || {});
       }
     } catch (error) {
-      console.error("Error loading more items:", error)
+      console.error("Error loading more items:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }, [isLoading, hasMore, paginationInfo, page, fetchMore])
+  }, [isLoading, hasMore, paginationInfo, page, fetchMore]);
 
   const refresh = useCallback(async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      const result = await fetchMore(undefined, 0)
-      setItems(result.items)
-      setPaginationInfo(result.pageInfo)
-      setPage(1)
+      const result = await fetchMore(undefined, 0);
+      setItems(result.items);
+      setPaginationInfo(result.pageInfo);
+      setPage(1);
     } catch (error) {
-      console.error("Error refreshing feed:", error)
+      console.error("Error refreshing feed:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }, [fetchMore])
+  }, [fetchMore]);
 
   const reset = useCallback((newItems: T[] = [], newPaginationInfo: Partial<PaginatedResultInfo> = {}) => {
-    setItems(newItems)
-    setPaginationInfo(newPaginationInfo)
-    setPage(1)
-  }, [])
+    setItems(newItems);
+    setPaginationInfo(newPaginationInfo);
+    setPage(1);
+  }, []);
 
   useEffect(() => {
-    const itemsChanged = initialItems.length !== items.length ||
-      initialItems.some((item, index) => item?.id !== items[index]?.id)
+    const itemsChanged =
+      initialItems.length !== items.length || initialItems.some((item, index) => item?.id !== items[index]?.id);
 
     if (itemsChanged) {
-      setItems(initialItems)
+      setItems(initialItems);
     }
-  }, [initialItems]) 
+  }, [initialItems]);
 
   return {
     items,
@@ -102,5 +108,5 @@ export function useInfiniteFeed<T extends { id: string }>({
     loadMore,
     refresh,
     reset,
-  }
+  };
 }

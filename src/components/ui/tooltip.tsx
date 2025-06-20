@@ -1,46 +1,41 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { Tooltip as TooltipPrimitive } from 'radix-ui';
-import { AnimatePresence, motion, type Transition } from 'motion/react';
-
-import { cn } from '@/lib/utils';
-import { TooltipPortal } from '@radix-ui/react-tooltip';
+import { TooltipPortal } from "@radix-ui/react-tooltip";
+import { AnimatePresence, motion, type Transition } from "motion/react";
+import { Tooltip as TooltipPrimitive } from "radix-ui";
+import * as React from "react";
+import { cn } from "@/lib/utils";
 
 type TooltipContextType = {
   isOpen: boolean;
 };
 
-const TooltipContext = React.createContext<TooltipContextType | undefined>(
-  undefined,
-);
+const TooltipContext = React.createContext<TooltipContextType | undefined>(undefined);
 
 const useTooltip = (): TooltipContextType => {
   const context = React.useContext(TooltipContext);
   if (!context) {
-    throw new Error('useTooltip must be used within a Tooltip');
+    throw new Error("useTooltip must be used within a Tooltip");
   }
   return context;
 };
 
-type Side = 'top' | 'bottom' | 'left' | 'right';
+type Side = "top" | "bottom" | "left" | "right";
 
 const getInitialPosition = (side: Side) => {
   switch (side) {
-    case 'top':
+    case "top":
       return { y: 15 };
-    case 'bottom':
+    case "bottom":
       return { y: -15 };
-    case 'left':
+    case "left":
       return { x: 15 };
-    case 'right':
+    case "right":
       return { x: -15 };
   }
 };
 
-type TooltipProviderProps = React.ComponentProps<
-  typeof TooltipPrimitive.Provider
->;
+type TooltipProviderProps = React.ComponentProps<typeof TooltipPrimitive.Provider>;
 
 function TooltipProvider(props: TooltipProviderProps) {
   return <TooltipPrimitive.Provider data-slot="tooltip-provider" {...props} />;
@@ -49,9 +44,7 @@ function TooltipProvider(props: TooltipProviderProps) {
 type TooltipProps = React.ComponentProps<typeof TooltipPrimitive.Root>;
 
 function Tooltip(props: TooltipProps) {
-  const [isOpen, setIsOpen] = React.useState(
-    props?.open ?? props?.defaultOpen ?? false,
-  );
+  const [isOpen, setIsOpen] = React.useState(props?.open ?? props?.defaultOpen ?? false);
 
   React.useEffect(() => {
     if (props?.open !== undefined) setIsOpen(props.open);
@@ -67,35 +60,27 @@ function Tooltip(props: TooltipProps) {
 
   return (
     <TooltipContext.Provider value={{ isOpen }}>
-      <TooltipPrimitive.Root
-        data-slot="tooltip"
-        {...props}
-        onOpenChange={handleOpenChange}
-      />
+      <TooltipPrimitive.Root data-slot="tooltip" {...props} onOpenChange={handleOpenChange} />
     </TooltipContext.Provider>
   );
 }
 
-type TooltipTriggerProps = React.ComponentProps<
-  typeof TooltipPrimitive.Trigger
->;
+type TooltipTriggerProps = React.ComponentProps<typeof TooltipPrimitive.Trigger>;
 
 function TooltipTrigger(props: TooltipTriggerProps) {
   return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
 }
 
-type TooltipContentProps = React.ComponentProps<
-  typeof TooltipPrimitive.Content
-> & {
+type TooltipContentProps = React.ComponentProps<typeof TooltipPrimitive.Content> & {
   transition?: Transition;
   arrow?: boolean;
 };
 
 function TooltipContent({
   className,
-  side = 'top',
+  side = "top",
   sideOffset = 4,
-  transition = { type: 'spring', stiffness: 300, damping: 25 },
+  transition = { type: "spring", stiffness: 300, damping: 25 },
   arrow = true,
   children,
   ...props
@@ -107,12 +92,7 @@ function TooltipContent({
     <AnimatePresence>
       {isOpen && (
         <TooltipPrimitive.Portal forceMount data-slot="tooltip-portal">
-          <TooltipPrimitive.Content
-            forceMount
-            sideOffset={sideOffset}
-            className="z-50"
-            {...props}
-          >
+          <TooltipPrimitive.Content forceMount sideOffset={sideOffset} className="z-50" {...props}>
             <motion.div
               key="tooltip-content"
               data-slot="tooltip-content"
@@ -121,7 +101,7 @@ function TooltipContent({
               exit={{ opacity: 0, scale: 0, ...initialPosition }}
               transition={transition}
               className={cn(
-                'relative bg-primary text-primary-foreground shadow-md w-fit origin-(--radix-tooltip-content-transform-origin) rounded-md px-3 py-1.5 text-sm text-balance',
+                "relative bg-primary text-primary-foreground shadow-md w-fit origin-(--radix-tooltip-content-transform-origin) rounded-md px-3 py-1.5 text-sm text-balance",
                 className,
               )}
             >

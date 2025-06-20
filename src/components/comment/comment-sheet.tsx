@@ -1,19 +1,18 @@
 "use client";
 
+import { Account, AnyPost, Post } from "@lens-protocol/client";
+import { fetchPost } from "@lens-protocol/client/actions";
+import { ChevronLeftIcon } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useComments } from "@/hooks/use-comments";
 import { getLensClient } from "@/lib/lens/client";
-import { Account, AnyPost, Post } from "@lens-protocol/client";
-import { fetchPost } from "@lens-protocol/client/actions";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
 import { GraphicHand2 } from "../icons/custom-icons";
 import { CommentReplyArea } from "./comment-reply-area";
 import { CommentView } from "./comment-view";
-import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon } from "@radix-ui/react-icons";
-import { ChevronLeftIcon } from "lucide-react";
 
 export const CommentSheet = ({
   post,

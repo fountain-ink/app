@@ -1,10 +1,8 @@
-import { env } from "@/env";
+import { type NextRequest, NextResponse } from "next/server";
 import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { verifyAuth } from "@/lib/auth/verify-auth-request";
-import { getRandomUid } from "@/lib/get-random-uid";
 import { createClient } from "@/lib/db/server";
-import { defaultContent } from "@/lib/plate/default-content";
-import { type NextRequest, NextResponse } from "next/server";
+import { getRandomUid } from "@/lib/get-random-uid";
 
 export async function GET(req: NextRequest) {
   try {

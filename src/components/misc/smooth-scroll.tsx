@@ -1,15 +1,9 @@
 "use client";
 
-import { useStorage } from "@/hooks/use-storage";
 import { type ReactNode, useEffect, useRef } from "react";
+import { useStorage } from "@/hooks/use-storage";
 
-export const SmoothScroll = ({
-  children,
-  speed = 0.08,
-}: {
-  children: ReactNode;
-  speed?: number;
-}) => {
+export const SmoothScroll = ({ children, speed = 0.08 }: { children: ReactNode; speed?: number }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const smoothScrollRef = useRef<HTMLDivElement>(null);
   const requestRef = useRef<number | null>(null);

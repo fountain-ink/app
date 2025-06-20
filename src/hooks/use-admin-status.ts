@@ -1,6 +1,6 @@
+import { getCookie } from "cookies-next";
 import { useEffect, useState } from "react";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
-import { getCookie } from "cookies-next";
 
 export const useAdminStatus = () => {
   const [isAdmin, setIsAdmin] = useState(false);

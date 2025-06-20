@@ -1,19 +1,18 @@
 "use client";
 
-import { Dialog, DialogContent, DialogTitle, DialogHeader, DialogClose } from "@/components/ui/dialog";
-import { wrapTokens, unwrapTokens } from "@lens-protocol/client/actions";
-import { handleOperationWith } from "@lens-protocol/client/viem";
 import { bigDecimal } from "@lens-protocol/client";
-import { Button } from "@/components/ui/button";
-import { Info, ArrowDownUp, AlertCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useWalletClient, useBalance } from "wagmi";
-import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
-import { useState, useEffect } from "react";
-import { getLensClient } from "@/lib/lens/client";
+import { unwrapTokens, wrapTokens } from "@lens-protocol/client/actions";
+import { handleOperationWith } from "@lens-protocol/client/viem";
+import { AlertCircle, ArrowDownUp } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
+import { useBalance, useWalletClient } from "wagmi";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
+import { getLensClient } from "@/lib/lens/client";
 
 const WRAPPED_GHO_TOKEN_ADDRESS = "0x6bDc36E20D267Ff0dd6097799f82e78907105e2F";
 

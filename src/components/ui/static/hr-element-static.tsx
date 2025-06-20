@@ -1,8 +1,5 @@
-import React from "react";
-
-import { SlateElement, type SlateElementProps } from "@udecode/plate";
-
 import { cn } from "@udecode/cn";
+import { SlateElement, type SlateElementProps } from "@udecode/plate";
 
 export function HrElementStatic({ children, className, attributes: { ...attributes }, ...props }: SlateElementProps) {
   return (

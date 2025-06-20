@@ -1,8 +1,8 @@
+import { evmAddress, MainContentFocus } from "@lens-protocol/client";
+import { fetchAccount, fetchPosts } from "@lens-protocol/client/actions";
 import { ArticleFeed } from "@/components/feed/feed-articles";
 import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
-import { evmAddress, MainContentFocus } from "@lens-protocol/client";
-import { fetchAccount, fetchPosts } from "@lens-protocol/client/actions";
 
 const UserPage = async ({ params }: { params: { user: string } }) => {
   const lens = await getLensClient();

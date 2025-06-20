@@ -1,17 +1,15 @@
 "use client";
 
-import { LinkIcon } from "@/components/icons/link";
-import { AnimatedMenuItem } from "@/components/navigation/animated-item";
-import { BrushIcon, EyeIcon, EyeOffIcon } from "lucide-react";
-
-import { DraftShareModal } from "@/components/draft/draft-share-modal";
-import { MenuIcon } from "@/components/icons/menu";
-import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, useOpenState } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
+import { useAuthenticatedUser } from "@lens-protocol/react";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { useAuthenticatedUser } from "@lens-protocol/react";
+import { DraftShareModal } from "@/components/draft/draft-share-modal";
+import { LinkIcon } from "@/components/icons/link";
+import { MenuIcon } from "@/components/icons/menu";
+import { AnimatedMenuItem } from "@/components/navigation/animated-item";
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, useOpenState } from "@/components/ui/dropdown-menu";
 
 export const EditorOptionsDropdown = ({
   documentId,

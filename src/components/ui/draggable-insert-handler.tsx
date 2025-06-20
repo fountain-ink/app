@@ -1,6 +1,6 @@
 "use client";
 
-import { Path, PathApi, type TElement, nanoid } from "@udecode/plate";
+import { nanoid, Path, PathApi, type TElement } from "@udecode/plate";
 import { ParagraphPlugin, type PlateEditor, useEditorRef, useElement } from "@udecode/plate/react";
 import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
 import { Plus } from "lucide-react";

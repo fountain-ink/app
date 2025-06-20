@@ -1,16 +1,16 @@
 "use client";
 
 import type { Account } from "@lens-protocol/client";
-import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
 import { follow, unfollow } from "@lens-protocol/client/actions";
 import { handleOperationWith } from "@lens-protocol/client/viem";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 import { useWalletClient } from "wagmi";
 import { useReconnectWallet } from "@/hooks/use-reconnect-wallet";
 import { getLensClient } from "@/lib/lens/client";
-import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
 
 export const UserFollowButton = ({ account, className }: { account: Account; className?: string }) => {
   const [following, setFollowing] = useState(() => !!account.operations?.isFollowedByMe);

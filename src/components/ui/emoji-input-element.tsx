@@ -1,12 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
-
 import { withRef } from "@udecode/cn";
+import { PlateElement, usePluginOption } from "@udecode/plate/react";
 import { EmojiInlineIndexSearch, insertEmoji } from "@udecode/plate-emoji";
 import { EmojiPlugin } from "@udecode/plate-emoji/react";
-import { usePluginOption } from "@udecode/plate/react";
-
+import { useMemo, useState } from "react";
+import { useDebounce } from "@/hooks/use-debounce";
 import {
   InlineCombobox,
   InlineComboboxContent,
@@ -15,8 +14,6 @@ import {
   InlineComboboxInput,
   InlineComboboxItem,
 } from "./inline-combobox";
-import { PlateElement } from "@udecode/plate/react";
-import { useDebounce } from "@/hooks/use-debounce";
 
 export const EmojiInputElement = withRef<typeof PlateElement>(({ className, ...props }, ref) => {
   const data = usePluginOption(EmojiPlugin, "data")!;

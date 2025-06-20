@@ -2,18 +2,15 @@
 
 import { cn, withRef } from "@udecode/cn";
 import { NodeApi } from "@udecode/plate";
-import { formatCodeBlock, isLangSupported, TCodeBlockElement } from "@udecode/plate-code-block";
-import { PlateElement, useSelected, useReadOnly, useEditorRef } from "@udecode/plate/react";
-import { useEffect, useRef, useState } from "react";
+import { PlateElement, useReadOnly, useSelected } from "@udecode/plate/react";
 import { AnimatePresence, motion } from "motion/react";
-
-import { Button } from "./button";
-import { CodeBlockCombobox } from "./code-block-combobox";
-import { ElementPopover, widthVariants, type ElementWidth } from "./element-popover";
-import { CaptionTextarea } from "./caption";
-import { Caption } from "./caption";
-import { ScrollArea } from "./scroll-area";
+import { useEffect, useRef, useState } from "react";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
+import { Button } from "./button";
+import { Caption, CaptionTextarea } from "./caption";
+import { CodeBlockCombobox } from "./code-block-combobox";
+import { ElementPopover, type ElementWidth, widthVariants } from "./element-popover";
+import { ScrollArea } from "./scroll-area";
 
 export const CodeBlockElement = withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
   const { element, editor } = props;

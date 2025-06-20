@@ -1,7 +1,7 @@
-import { IframeElement } from "@/components/ui/iframe-element";
-import { type PluginConfig, createTSlatePlugin } from "@udecode/plate";
+import { createTSlatePlugin, type PluginConfig } from "@udecode/plate";
 import { toPlatePlugin } from "@udecode/plate-core/react";
 import { MediaPluginOptions, parseIframeUrl, TMediaElement } from "@udecode/plate-media";
+import { IframeElement } from "@/components/ui/iframe-element";
 
 export type IframeConfig = PluginConfig<"iframe", MediaPluginOptions>;
 

@@ -1,20 +1,18 @@
-import express from "express";
 import * as bodyParser from "body-parser";
+import express from "express";
 import fetch from "node-fetch";
 import { createClient } from "@/lib/db/server";
-import { env } from "@/env";
+import { createCampaignForPost } from "@/lib/listmonk/client";
+import { BlogData } from "@/lib/settings/get-blog-data";
 import { findBlogByIdentifier } from "@/lib/utils/find-blog-by-id";
 import {
+  BlogRecord,
+  PostCreatedNotification,
   SNSMessage,
   SNSMessageType,
   SNSNotification,
   SNSSubscriptionConfirmation,
-  PostCreatedNotification,
-  BlogRecord,
 } from "./types";
-
-import { createCampaignForPost } from "@/lib/listmonk/client";
-import { BlogData } from "@/lib/settings/get-blog-data";
 
 interface ExtendedRequest extends express.Request {
   rawBody?: Buffer;
@@ -28,7 +26,7 @@ const apiRouter = express.Router();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
   bodyParser.json({
-    verify: (req: express.Request, res: express.Response, buf: Buffer) => {
+    verify: (req: express.Request, _res: express.Response, buf: Buffer) => {
       // Store the raw body for SNS message verification
       (req as ExtendedRequest).rawBody = buf;
     },
@@ -229,7 +227,7 @@ apiRouter.post("/subscribe", (req: express.Request, res: express.Response) => {
 });
 
 app.use("/api", apiRouter);
-app.get("/health", (req: express.Request, res: express.Response) => {
+app.get("/health", (_req: express.Request, res: express.Response) => {
   res.status(200).json({ status: "ok" });
 });
 

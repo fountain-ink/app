@@ -1,5 +1,9 @@
 "use client";
 
+import { Account } from "@lens-protocol/client";
+import { Globe } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -12,16 +16,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSaveProfileSettings } from "@/hooks/use-save-profile-settings";
-import { getLensClient } from "@/lib/lens/client";
 import { uploadFile } from "@/lib/upload/upload-file";
-import { Account } from "@lens-protocol/client";
-import { Globe } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
-import { toast } from "sonner";
 import { ImageCropperUploader } from "../misc/image-uploader";
 import { Button } from "../ui/button";
 import { TextareaAutosize } from "../ui/textarea";
-import { useRouter } from "next/navigation";
 
 interface ProfileSettingsFormProps {
   profile: Account;

@@ -1,9 +1,9 @@
+import { NextResponse } from "next/server";
 import { getTokenClaims } from "@/lib/auth/get-token-claims";
 import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { signAppToken } from "@/lib/auth/sign-app-token";
 import { signGuestToken } from "@/lib/auth/sign-guest-token";
 import { createServiceClient } from "@/lib/db/service";
-import { NextResponse } from "next/server";
 
 async function migrateGuestData(guestAddress: string, newAddress: string) {
   const db = await createServiceClient();

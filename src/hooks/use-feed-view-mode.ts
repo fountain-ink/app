@@ -1,28 +1,25 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useLocalStorage } from "./use-local-storage"
+import { useEffect, useState } from "react";
+import { useLocalStorage } from "./use-local-storage";
 
 export function useFeedViewMode(initialMode?: "single" | "grid") {
-  const [savedViewMode, setSavedViewMode] = useLocalStorage<"single" | "grid">(
-    "feed-view-mode",
-    "single"
-  )
-  const [viewMode, setViewMode] = useState<"single" | "grid">(initialMode || "single")
+  const [savedViewMode, setSavedViewMode] = useLocalStorage<"single" | "grid">("feed-view-mode", "single");
+  const [viewMode, setViewMode] = useState<"single" | "grid">(initialMode || "single");
 
   useEffect(() => {
     if (!initialMode) {
-      setViewMode(savedViewMode)
+      setViewMode(savedViewMode);
     }
-  }, [savedViewMode, initialMode])
+  }, [savedViewMode, initialMode]);
 
   const handleViewModeChange = (mode: "single" | "grid") => {
-    setViewMode(mode)
-    setSavedViewMode(mode)
-  }
+    setViewMode(mode);
+    setSavedViewMode(mode);
+  };
 
   return {
     viewMode,
-    setViewMode: handleViewModeChange
-  }
+    setViewMode: handleViewModeChange,
+  };
 }

@@ -2,7 +2,7 @@
 
 import { cn } from "@udecode/cn";
 import { useBlockSelected } from "@udecode/plate-selection/react";
-import { type VariantProps, cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 
 export const blockSelectionVariants = cva(
   cn(

@@ -1,41 +1,40 @@
-import { z } from "zod";
-import { UseFormReturn } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { TagInput } from "emblor";
+import { getCookie } from "cookies-next";
+import { format } from "date-fns";
 import type { Tag } from "emblor";
-import { FC, useCallback, useEffect, useState, useRef, useMemo } from "react";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
-import { CombinedFormValues } from "./publish-dialog";
+import { TagInput } from "emblor";
+import { motion } from "framer-motion";
+import { debounce } from "lodash";
 import {
-  ImageIcon,
-  PenIcon,
   AlertCircle,
-  PenOffIcon,
-  ScrollText,
-  Heart,
-  MessageCircle,
-  MoreHorizontalIcon,
+  CalendarIcon,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
-  ChevronDown,
-  CalendarIcon,
+  Heart,
+  ImageIcon,
+  MessageCircle,
+  MoreHorizontalIcon,
+  PenIcon,
+  PenOffIcon,
+  ScrollText,
   XIcon,
 } from "lucide-react";
-import { checkSlugAvailability } from "@/lib/slug/check-slug-availability";
-import { debounce } from "lodash";
-import { getTokenClaims } from "@/lib/auth/get-token-claims";
-import { getCookie } from "cookies-next";
-import { Button } from "@/components/ui/button";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { UseFormReturn } from "react-hook-form";
+import { z } from "zod";
 import { CoinIcon } from "@/components/icons/custom-icons";
-import { usePublishDraft } from "@/hooks/use-publish-draft";
 import { ImageUploader } from "@/components/misc/image-uploader";
-import { uploadFile } from "@/lib/upload/upload-file";
-import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger, PopoverPortal } from "@/components/ui/popover";
-import { format } from "date-fns";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { usePublishDraft } from "@/hooks/use-publish-draft";
+import { getTokenClaims } from "@/lib/auth/get-token-claims";
+import { checkSlugAvailability } from "@/lib/slug/check-slug-availability";
+import { uploadFile } from "@/lib/upload/upload-file";
+import { cn } from "@/lib/utils";
+import { CombinedFormValues } from "./publish-dialog";
 
 export const detailsFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title should be less than 100 characters"),

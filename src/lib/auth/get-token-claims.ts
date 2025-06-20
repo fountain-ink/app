@@ -1,5 +1,5 @@
-import { TokenClaims } from "./app-token";
 import { jwtDecode } from "jwt-decode";
+import { TokenClaims } from "./app-token";
 
 export function getTokenClaims(token?: string): TokenClaims | null {
   if (!token) {

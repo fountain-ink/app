@@ -1,5 +1,4 @@
 import { Draft } from "@/components/draft/draft";
-import { getBaseUrl } from "../get-base-url";
 
 /**
  * Generates the post content based on display preferences

@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
 import { useLineHeightDropdownMenu, useLineHeightDropdownMenuState } from "@udecode/plate-line-height/react";

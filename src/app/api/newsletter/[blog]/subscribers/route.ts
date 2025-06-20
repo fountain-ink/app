@@ -1,14 +1,13 @@
+import { NextRequest, NextResponse } from "next/server";
 import {
-  getListById,
-  importSubscribers,
-  getSubscribers,
-  addSubscriber,
   bulkDeleteSubscribers,
+  deleteSubscriber,
   escapeSqlString,
   findSubscriberByEmail,
-  deleteSubscriber,
+  getListById,
+  getSubscribers,
+  importSubscribers,
 } from "@/lib/listmonk/client";
-import { NextRequest, NextResponse } from "next/server";
 import { getVerifiedBlog } from "../../utils";
 
 export async function GET(req: NextRequest, { params }: { params: { blog: string } }) {

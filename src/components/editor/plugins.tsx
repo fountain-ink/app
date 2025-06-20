@@ -1,7 +1,5 @@
-import { LinkFloatingToolbar } from "@/components/ui/link-floating-toolbar";
-import { useYjsState } from "@/hooks/use-yjs-state";
-import { getTokenClaims } from "@/lib/auth/get-token-claims";
-import { PathApi, TElement, TNode, TText } from "@udecode/plate";
+import emojiMartData, { type EmojiMartData } from "@emoji-mart/data";
+import { PathApi, TElement } from "@udecode/plate";
 import { AlignPlugin } from "@udecode/plate-alignment/react";
 import { AutoformatPlugin } from "@udecode/plate-autoformat/react";
 import {
@@ -20,7 +18,6 @@ import { CalloutPlugin } from "@udecode/plate-callout/react";
 import { CaptionPlugin } from "@udecode/plate-caption/react";
 import { unwrapCodeBlock } from "@udecode/plate-code-block";
 import { CodeBlockPlugin, CodeSyntaxPlugin } from "@udecode/plate-code-block/react";
-import { CommentsPlugin } from "@udecode/plate-comments/react";
 import { ParagraphPlugin, PlateEditor } from "@udecode/plate-core/react";
 import { DatePlugin } from "@udecode/plate-date/react";
 import { DndPlugin } from "@udecode/plate-dnd";
@@ -30,14 +27,15 @@ import { HEADING_KEYS, HEADING_LEVELS } from "@udecode/plate-heading";
 import { HeadingPlugin, TocPlugin } from "@udecode/plate-heading/react";
 import { HighlightPlugin } from "@udecode/plate-highlight/react";
 import { HorizontalRulePlugin } from "@udecode/plate-horizontal-rule/react";
-import { ListStyleType } from "@udecode/plate-indent-list";
 import { IndentPlugin } from "@udecode/plate-indent/react";
+import { ListStyleType } from "@udecode/plate-indent-list";
 import { JuicePlugin } from "@udecode/plate-juice";
 import { KbdPlugin } from "@udecode/plate-kbd/react";
 import { ColumnItemPlugin, ColumnPlugin } from "@udecode/plate-layout/react";
 import { LinkPlugin } from "@udecode/plate-link/react";
 import { ListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
-import { MarkdownPlugin, MdastTypes, remarkMention, remarkMdx, SerializeMdOptions } from "@udecode/plate-markdown";
+import { MarkdownPlugin, remarkMdx, remarkMention } from "@udecode/plate-markdown";
+import { TEquationElement } from "@udecode/plate-math";
 import { EquationPlugin, InlineEquationPlugin } from "@udecode/plate-math/react";
 import {
   AudioPlugin,
@@ -54,28 +52,28 @@ import { DeletePlugin, SelectOnBackspacePlugin } from "@udecode/plate-select";
 import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
 import { SlashPlugin } from "@udecode/plate-slash-command/react";
 import { TabbablePlugin } from "@udecode/plate-tabbable/react";
-import { TableCellHeaderPlugin, TableCellPlugin, TablePlugin, TableRowPlugin } from "@udecode/plate-table/react";
+import { TableCellPlugin, TablePlugin } from "@udecode/plate-table/react";
 import { TogglePlugin } from "@udecode/plate-toggle/react";
 import { TrailingBlockPlugin } from "@udecode/plate-trailing-block";
 import { YjsPlugin } from "@udecode/plate-yjs/react";
 import { all, createLowlight } from "lowlight";
+import { Heading, Text } from "mdast";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 import { toast } from "sonner";
+import { LinkFloatingToolbar } from "@/components/ui/link-floating-toolbar";
+import { useYjsState } from "@/hooks/use-yjs-state";
+import { getTokenClaims } from "@/lib/auth/get-token-claims";
+import { uploadFile } from "@/lib/upload/upload-file";
 import { ImageElement } from "../ui/image-element";
 import { ImagePreview } from "../ui/image-preview";
 import { RemoteCursorOverlay } from "../ui/remote-cursor-overlay";
+import { autoformatRules } from "./plugins/autoformat-rules";
+import { BlockquoteNormalizePlugin } from "./plugins/blockquote-normalize-plugin";
+import { IframePlugin } from "./plugins/iframe-plugin";
 import { LeadingBlockPlugin } from "./plugins/leading-block-plugin";
 import { NormalizePlugin } from "./plugins/normalize-plugin";
 import { SubtitlePlugin, TITLE_KEYS, TitlePlugin } from "./plugins/title-plugin";
-import emojiMartData, { type EmojiMartData } from "@emoji-mart/data";
-import { autoformatRules } from "./plugins/autoformat-rules";
-import remarkGfm from "remark-gfm";
-import remarkMath from "remark-math";
-import { TEquationElement } from "@udecode/plate-math";
-import { Heading, Text } from "mdast";
-import { uploadFile } from "@/lib/upload/upload-file";
-import { getRandomUid } from "@/lib/get-random-uid";
-import { IframePlugin } from "./plugins/iframe-plugin";
-import { BlockquoteNormalizePlugin } from "./plugins/blockquote-normalize-plugin";
 
 const lowlight = createLowlight(all);
 
@@ -640,7 +638,7 @@ export const plugins = [
   }),
   TabbablePlugin.configure(({ editor }: { editor: any }) => ({
     options: {
-      query: (event) => {
+      query: (_event) => {
         const inList = editor.api.node(editor, { match: { type: ListPlugin.key } });
         const inCodeBlock = editor.api.node(editor, { match: { type: CodeBlockPlugin.key } });
         return !inList && !inCodeBlock;
