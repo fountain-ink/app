@@ -17,8 +17,7 @@ const config = {
         extend: {
             fontFamily: {
                 sans: ["var(--font-geist-sans)"],
-                mono: ["var(--font-geist-mono)"],
-                "test-martina-plantijn": ["var(--font-test-martina-plantijn)", "sans-serif"]
+                mono: ["var(--font-geist-mono)"]
             },
             colors: {
                 border: "hsl(var(--border))",
