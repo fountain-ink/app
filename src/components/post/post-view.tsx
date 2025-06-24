@@ -322,10 +322,10 @@ export const PostView = memo(
                     className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover/post:scale-110"
                     width={256}
                     height={256}
-                  // quality={50}
-                  // loading="lazy"
-                  // placeholder="blur"
-                  // blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgZmlsbD0iI2E5YTlhOSIvPjwvc3ZnPg=="
+                    // quality={50}
+                    // loading="lazy"
+                    // placeholder="blur"
+                    // blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgZmlsbD0iI2E5YTlhOSIvPjwvc3ZnPg=="
                   />
                   <div className="absolute inset-0 pointer-events-none transition-opacity duration-300 ease-in-out bg-white opacity-0 group-hover/post:opacity-20" />
                 </div>

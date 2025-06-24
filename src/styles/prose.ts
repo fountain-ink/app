@@ -1,5 +1,3 @@
-import "./fonts";
-
 export const proseClasses = [
   "prose prose-sm sm:prose-base lg:prose-lg",
 
