@@ -1,5 +1,3 @@
-@import "./fonts.css";
-
 .article {
   color: var(--foreground);
   background-color: var(--background);
