@@ -36,8 +36,8 @@ export default function NewsletterEmail({
   theme,
 }: NewsletterEmailProps) {
   const isEditorialTheme = theme?.name === "editorial"
-  const titleFont = isEditorialTheme ? "Georgia, Plantin, serif" : "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
-  const paragraphFont = isEditorialTheme ? "Georgia, Plantin, serif" : "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+  const titleFont = isEditorialTheme ? "'Libre Baskerville', Georgia, serif" : "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+  const paragraphFont = isEditorialTheme ? "'Libre Baskerville', Georgia, serif" : "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
   return (
     <Html>
       <Head>

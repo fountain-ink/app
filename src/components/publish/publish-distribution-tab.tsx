@@ -1,4 +1,5 @@
 import { SendIcon } from "lucide-react";
+import Link from "next/link";
 import { FC, useMemo } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
@@ -186,8 +187,7 @@ export const DistributionTab: FC<DistributionTabProps> = ({ form, documentId }) 
                     id="sendNewsletter"
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                    disabled={true}
-                    // disabled={!selectedBlog?.mail_list_id}
+                    disabled={!selectedBlog?.mail_list_id}
                   />
                 </FormControl>
                 <label
@@ -198,8 +198,7 @@ export const DistributionTab: FC<DistributionTabProps> = ({ form, documentId }) 
                 </label>
               </div>
               <FormDescription className="pl-6">
-                Newsletter delivery is coming soon.
-                {/* {selectedBlog?.mail_list_id ? (
+                {selectedBlog?.mail_list_id ? (
                   "Subscribers will receive this post in their inbox."
                 ) : (
                   <>
@@ -212,7 +211,7 @@ export const DistributionTab: FC<DistributionTabProps> = ({ form, documentId }) 
                     </Link>
                     .
                   </>
-                )} */}
+                )}
               </FormDescription>
               <FormMessage />
             </FormItem>

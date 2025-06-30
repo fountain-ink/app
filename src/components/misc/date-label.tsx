@@ -22,16 +22,16 @@ export const DateLabel = ({ date, originalDate }: { date: string; originalDate?:
       <Popover>
         <PopoverTrigger asChild>
           <span className="font-[family-name:--title-font] flex flex-row gap-2 items-center justify-center cursor-help">
-            <span className="font-semibold">{formattedOriginalDate}</span>
+            <span className="font-normal">{formattedOriginalDate}</span>
             <InfoIcon className="w-3 h-3 text-muted-foreground" />
           </span>
         </PopoverTrigger>
         <PopoverContent className="text-sm w-auto gap-2 flex flex-col p-4">
           <p>
-            Published on <span className="font-semibold text-muted-foreground">{formattedActualDate}</span>
+            Published on <span className="font-normal text-muted-foreground">{formattedActualDate}</span>
           </p>
           <p>
-            Originally published on <span className="font-semibold text-muted-foreground">{formattedOriginalDate}</span>
+            Originally published on <span className="font-normal text-muted-foreground">{formattedOriginalDate}</span>
           </p>
         </PopoverContent>
       </Popover>
