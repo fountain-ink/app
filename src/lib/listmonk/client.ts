@@ -486,7 +486,6 @@ export async function createCampaignForPost(
     }
 
     let postTitle = "New Post";
-    let postContent = "Check out the new post!";
     let postSubtitle = "";
     let postUrl = `https://fountain.ink/p/${postId}`;
     let coverImageUrl = "";
@@ -497,16 +496,11 @@ export async function createCampaignForPost(
         const metadata = JSON.parse(postMetadata);
         postTitle = metadata.title || postTitle;
         postSubtitle = metadata.subtitle || "";
-        postContent = metadata.content || postContent || "";
         coverImageUrl = metadata.coverUrl || "";
         username = metadata.username || "";
 
         if (username) {
           postUrl = `https://fountain.ink/p/${username}/${postId}`;
-        }
-
-        if (postContent && postContent.length > 300) {
-          postContent = `${postContent.substring(0, 300)}...`;
         }
       } catch (e) {
         console.error("Error parsing post metadata:", e);
@@ -517,10 +511,10 @@ export async function createCampaignForPost(
       NewsletterEmail({
         postTitle,
         postSubtitle,
-        postContent,
         postUrl,
         coverImageUrl,
         blogName: blog.display_name || blogId,
+        authorUsername: username,
         theme: blog.theme as any,
       }),
     );
@@ -536,7 +530,7 @@ export async function createCampaignForPost(
         subject: `${postTitle}`,
         // subject: `${blog.display_name || blogId}: ${postTitle}`,
         lists: [listId],
-        from_email: `${blog.display_name || blogId} <noreply@fountain.ink>`,
+        from_email: username ? `${username} <noreply@fountain.ink>` : `${blog.display_name || blogId} <noreply@fountain.ink>`,
         content_type: "html",
         type: "regular",
         body: campaignBody,

@@ -224,11 +224,11 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
 
             <CardContent className="pt-6">
               <div className="space-y-6">
-                <div>
+                {/* <div>
                   <h4 className="text-sm font-medium">Email content</h4>
                   <p className="text-sm text-muted-foreground mb-2">Choose what subscribers will see</p>
                   <Select
-                    defaultValue={blog.metadata?.emailContentType || "full_post"}
+                    defaultValue={blog.metadata?.emailContentType || "notification_only"}
                     onValueChange={handleEmailContentChange}
                   >
                     <SelectTrigger className="w-full max-w-xs bg-card">
@@ -237,10 +237,10 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
                     <SelectContent>
                       <SelectItem value="full_post">Full post</SelectItem>
                       <SelectItem value="first_paragraph">First paragraph</SelectItem>
-                      <SelectItem value="notification_only">Notification Only</SelectItem>
+                      <SelectItem value="notification_only">Notification only</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
+                </div> */}
 
                 {/* Warning Section */}
                 <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 rounded-lg p-4">

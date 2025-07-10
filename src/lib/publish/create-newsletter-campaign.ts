@@ -27,7 +27,6 @@ export async function createNewsletterCampaign({
       const newsletterPostData = {
         title: draft.title || "",
         subtitle: draft.subtitle || "",
-        content: draft.contentMarkdown || "",
         coverUrl: draft.coverUrl || "",
         username,
       };
