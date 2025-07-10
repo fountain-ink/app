@@ -306,7 +306,7 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
     },
     shared: {
       "--radius": "0.75rem",
-      "--title-font": "plantin",
+      "--title-font": "var(--font-libre-baskerville), serif",
       "--title-weight": "300",
       "--title-style": "italic",
       "--title-align": "center",
@@ -316,7 +316,7 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--title-color": "hsl(var(--foreground))",
       "--title-margin": "3rem",
 
-      "--subtitle-font": "plantin",
+      "--subtitle-font": "var(--font-libre-baskerville), serif",
       "--subtitle-weight": "400",
       "--subtitle-style": "normal",
       "--subtitle-size": "1.5rem",
@@ -326,7 +326,7 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--subtitle-margin": "2rem",
       "--subtitle-align": "center",
 
-      "--header-font": "plantin",
+      "--header-font": "var(--font-libre-baskerville), serif",
       "--header-weight": "600",
       "--header-style": "normal",
       "--header-size": "1.5rem",
@@ -336,7 +336,7 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--header-margin": "1rem",
       "--header-align": "left",
 
-      "--paragraph-font": "plantin",
+      "--paragraph-font": "var(--font-libre-baskerville), serif",
       "--paragraph-weight": "400",
       "--paragraph-style": "normal",
       "--paragraph-size": "1.25rem",
@@ -390,7 +390,7 @@ export const globalThemes: Record<ThemeType, ColorTheme> = {
       "--image-border-radius": "0.50rem",
       "--image-margin-y": "2.5rem",
 
-      "--date-font": "proxima-nova-wide",
+      "--date-font": "var(--font-geist-sans), sans-serif",
     },
   },
 };

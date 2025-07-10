@@ -151,7 +151,6 @@ export async function createCampaignForPost(
   postMetadata: {
     title: string;
     subtitle?: string;
-    content?: string;
     coverUrl?: string;
     username?: string;
   },
