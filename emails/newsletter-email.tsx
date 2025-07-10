@@ -139,7 +139,7 @@ export default function NewsletterEmail({
           
           <Section style={footer}>
             <Text style={footerText}>
-              You're receiving this email because you subscribed to updates from {blogName} on Fountain.
+              You're receiving this email because you subscribed to updates from {authorUsername || blogName} on Fountain.
             </Text>
             <Text style={footerText}>
               To unsubscribe from these emails, click{" "}
@@ -232,7 +232,6 @@ const buttonStyle = {
 const footer = {
   marginTop: "30px",
   paddingTop: "20px",
-  borderTop: "1px solid #eee",
 }
 
 const footerText = {
