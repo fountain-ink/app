@@ -118,7 +118,6 @@ function TabsContent({
       <motion.div
         data-slot="tabs-content"
         className={cn("flex-1 outline-none", className)}
-        layout
         initial={{ opacity: 0, y: -10, filter: "blur(4px)" }}
         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
         exit={{ opacity: 0, y: 10, filter: "blur(4px)" }}
@@ -131,58 +130,22 @@ function TabsContent({
   );
 }
 
-type TabsContentsProps = HTMLMotionProps<"div"> & {
+type TabsContentsProps = {
   children: React.ReactNode;
   className?: string;
-  transition?: Transition;
 };
 
 function TabsContents({
   children,
   className,
-  transition = { type: "spring", stiffness: 200, damping: 25 },
-  ...props
 }: TabsContentsProps) {
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
-
-  const [height, setHeight] = React.useState(0);
-
-  React.useEffect(() => {
-    if (!containerRef.current) return;
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      const newHeight = entries?.[0]?.contentRect.height;
-      if (!newHeight) return;
-      requestAnimationFrame(() => {
-        setHeight(newHeight);
-      });
-    });
-
-    resizeObserver.observe(containerRef.current);
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, [children]);
-
-  React.useLayoutEffect(() => {
-    if (containerRef.current) {
-      const initialHeight = containerRef.current.getBoundingClientRect().height;
-      setHeight(initialHeight);
-    }
-  }, [children]);
-
   return (
-    <motion.div
+    <div
       data-slot="tabs-contents"
-      layout
-      animate={{ height: height }}
-      transition={transition}
       className={className}
-      {...props}
     >
-      <div ref={containerRef}>{children}</div>
-    </motion.div>
+      {children}
+    </div>
   );
 }
 
