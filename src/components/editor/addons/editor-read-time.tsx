@@ -29,7 +29,7 @@ export const EditorReadTime = ({ content }: EditorReadTimeProps) => {
   const readTime = calculateReadTime(content);
 
   return (
-    <div className="py-2 tracking-[0.1em] text-xs uppercase text-center font-geist-sans font-medium">
+    <div className="py-2 tracking-[0.1em] text-xs uppercase text-center font-geist-sans font-bold">
       {readTime} minute read
     </div>
   );
