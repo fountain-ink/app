@@ -229,7 +229,7 @@
   }
 
   .article .subtitle {
-    font-size: calc(var(--subtitle-size) * 0.8);
-    line-height: calc(var(--subtitle-line-height) * 0.9);
+    font-size: calc(var(--subtitle-size) * 0.9);
+    /* line-height: calc(var(--subtitle-line-height) * 0.9); */
   }
 }
