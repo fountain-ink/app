@@ -50,6 +50,7 @@ import { TableRowElement } from "@/components/ui/table-row-element";
 import { TitleElement } from "@/components/ui/title-element";
 import { TocElement } from "@/components/ui/toc-element";
 import { ToggleElement } from "@/components/ui/toggle-element";
+import { ButtonElement } from "../ui/button-element";
 import { EmojiInputElement } from "../ui/emoji-input-element";
 import { EquationElement } from "../ui/equation-element";
 import { HighlightLeaf } from "../ui/highlight-leaf";
@@ -62,6 +63,7 @@ import { ListItemElement } from "../ui/list-item";
 import { MediaPlaceholderElement } from "../ui/media-placeholder-element";
 import { SubtitleElement } from "../ui/subtitle-element";
 import { TodoListElement } from "../ui/todo-list-element";
+import { ButtonPlugin } from "./plugins/button-plugin";
 import { IframePlugin } from "./plugins/iframe-plugin";
 import { TITLE_KEYS } from "./plugins/title-plugin";
 
@@ -94,6 +96,7 @@ export const getElements = () => {
     [ImagePlugin.key]: ImageElement,
     [LinkPlugin.key]: LinkElement,
     [IframePlugin.key]: IframeElement,
+    [ButtonPlugin.key]: ButtonElement,
     [MentionPlugin.key]: MentionElement,
     [EmojiInputPlugin.key]: EmojiInputElement,
     [MentionInputPlugin.key]: MentionInputElement,

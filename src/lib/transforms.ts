@@ -23,6 +23,8 @@ import {
 import { AudioPlugin, FilePlugin, ImagePlugin, VideoPlugin } from "@udecode/plate-media/react";
 import { insertTable } from "@udecode/plate-table";
 import { TableCellPlugin, TablePlugin, TableRowPlugin } from "@udecode/plate-table/react";
+import { ButtonPlugin } from "@/components/editor/plugins/button-plugin";
+import { insertButton } from "@/components/editor/transforms/insert-button";
 
 const ACTION_THREE_COLUMNS = "action_three_columns";
 
@@ -50,6 +52,7 @@ const insertBlockMap: Record<string, (editor: PlateEditor, type: string) => void
   [ListStyleType.Disc]: insertList,
   [ACTION_THREE_COLUMNS]: (editor) => insertColumnGroup(editor, { columns: 3, select: true }),
   [AudioPlugin.key]: (editor) => insertAudioPlaceholder(editor, { select: true }),
+  [ButtonPlugin.key]: (editor) => insertButton(editor, { url: undefined }),
   [CalloutPlugin.key]: (editor) => insertCallout(editor, { select: true }),
   [CodeBlockPlugin.key]: (editor) => insertCodeBlock(editor, { select: true }),
   [EquationPlugin.key]: (editor) => insertEquation(editor, { select: true }),

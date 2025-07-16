@@ -18,6 +18,7 @@ import {
   ListChecksIcon,
   ListIcon,
   ListOrderedIcon,
+  MousePointerClickIcon,
   PilcrowIcon,
   QuoteIcon,
   Radical,
@@ -26,6 +27,7 @@ import {
 } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 import { insertBlock } from "@/lib/transforms";
+import { insertButton } from "../editor/transforms/insert-button";
 import { insertIframe } from "../editor/transforms/insert-iframe";
 import {
   InlineCombobox,
@@ -141,6 +143,15 @@ const rules: SlashCommandRule[] = [
     keywords: ["iframe", "embed", "video", "media"],
     onSelect: (editor) => {
       insertIframe(editor, { url: undefined });
+    },
+  },
+  {
+    icon: MousePointerClickIcon,
+    value: "Button",
+    description: "Add a clickable button.",
+    keywords: ["button", "link", "cta", "action", "click"],
+    onSelect: (editor) => {
+      insertButton(editor, { url: undefined });
     },
   },
   {

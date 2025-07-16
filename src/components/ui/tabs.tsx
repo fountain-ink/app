@@ -135,15 +135,9 @@ type TabsContentsProps = {
   className?: string;
 };
 
-function TabsContents({
-  children,
-  className,
-}: TabsContentsProps) {
+function TabsContents({ children, className }: TabsContentsProps) {
   return (
-    <div
-      data-slot="tabs-contents"
-      className={className}
-    >
+    <div data-slot="tabs-contents" className={className}>
       {children}
     </div>
   );

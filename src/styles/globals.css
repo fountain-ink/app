@@ -211,7 +211,6 @@ html[data-scroll-locked] {
 }
 
 @layer utilities {
-
   /* Hide scrollbar for Chrome, Safari and Opera */
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
@@ -263,7 +262,7 @@ html[data-scroll-locked] {
   padding-bottom: 56.25%;
 }
 
-.iframely-responsive>* {
+.iframely-responsive > * {
   position: absolute;
   top: 0;
   left: 0;

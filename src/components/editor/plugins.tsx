@@ -70,6 +70,7 @@ import { ImagePreview } from "../ui/image-preview";
 import { RemoteCursorOverlay } from "../ui/remote-cursor-overlay";
 import { autoformatRules } from "./plugins/autoformat-rules";
 import { BlockquoteNormalizePlugin } from "./plugins/blockquote-normalize-plugin";
+import { ButtonPlugin } from "./plugins/button-plugin";
 import { IframePlugin } from "./plugins/iframe-plugin";
 import { LeadingBlockPlugin } from "./plugins/leading-block-plugin";
 import { NormalizePlugin } from "./plugins/normalize-plugin";
@@ -234,6 +235,7 @@ export const plugins = [
   }),
   SubtitlePlugin,
   IframePlugin,
+  ButtonPlugin,
   HeadingPlugin.configure({
     options: { levels: 2 },
     handlers: {
@@ -302,7 +304,7 @@ export const plugins = [
   }),
   // MediaEmbedPlugin,
   CaptionPlugin.configure({
-    options: { plugins: [ImagePlugin, IframePlugin, CodeBlockPlugin, EquationPlugin] },
+    options: { plugins: [ImagePlugin, IframePlugin, ButtonPlugin, CodeBlockPlugin, EquationPlugin] },
   }),
   DatePlugin,
   MentionPlugin.configure({
@@ -469,6 +471,7 @@ export const plugins = [
           AudioPlugin.key,
           FilePlugin.key,
           IframePlugin.key,
+          ButtonPlugin.key,
           // TitlePlugin.key,
           // SubtitlePlugin.key
         ],
