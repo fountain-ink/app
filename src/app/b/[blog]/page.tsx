@@ -15,6 +15,7 @@ import { AuthorView } from "@/components/user/user-author-view";
 import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getBaseUrl } from "@/lib/get-base-url";
 import { getLensClient } from "@/lib/lens/client";
+import { generateEnhancedMetadata } from "@/lib/seo/metadata";
 import { getBlogData } from "@/lib/settings/get-blog-data";
 import { isEvmAddress } from "@/lib/utils/is-evm-address";
 
@@ -61,37 +62,23 @@ export async function generateMetadata({ params }: { params: { blog: string } })
     blog?.about ||
     groupMetadata?.description ||
     (profile ? `@${username}'s blog on Fountain` : `${params.blog} on Fountain`);
-  const blogUrl = `${getBaseUrl()}/b/${params.blog}`;
 
-  return {
+  return generateEnhancedMetadata({
     title,
     description,
-    icons: icon ? [{ rel: "icon", url: icon }] : undefined,
-    openGraph: {
-      title,
-      description,
-      url: blogUrl,
-      siteName: "Fountain",
-      locale: "en_US",
-      type: "website",
-      images: icon
-        ? [
-            {
-              url: icon,
-              alt: `${title} icon`,
-            },
-          ]
-        : undefined,
-    },
+    path: `/b/${params.blog}`,
+    ogImage: icon,
+    ogType: "website",
     twitter: {
       card: "summary",
-      title,
-      description,
       creator: profile?.username?.localName ? `@${profile.username.localName}` : undefined,
-      images: icon ? [icon] : undefined,
     },
-  };
+  });
 }
+
+import { StructuredData } from "@/components/seo/structured-data";
+import { generateCanonicalUrl } from "@/lib/seo/canonical";
+import { generateBlogSchema } from "@/lib/seo/structured-data";
 
 const BlogPage = async ({ params, searchParams }: { params: { blog: string }; searchParams?: { tag?: string } }) => {
   const lens = await getLensClient();
@@ -173,8 +160,20 @@ const BlogPage = async ({ params, searchParams }: { params: { blog: string }; se
   const isUserMemeber = groupMembers.some((member) => member.address === userAddress);
   console.log(posts);
 
+  const blogSchema = generateBlogSchema({
+    name: blogTitle || (isGroup ? group?.metadata?.name : `${profile?.username?.localName}'s blog`) || "Blog",
+    description: blogData?.about || (isGroup ? group?.metadata?.description : profile?.metadata?.bio),
+    url: generateCanonicalUrl(`/b/${params.blog}`),
+    author: {
+      name: isGroup ? group?.metadata?.name || "Group" : profile?.username?.localName || profile?.address || "",
+      url:
+        !isGroup && profile?.username?.localName ? generateCanonicalUrl(`/u/${profile.username.localName}`) : undefined,
+    },
+  });
+
   return (
     <BlogTheme initialTheme={blogData?.theme?.name} customCss={blogData?.theme?.customCss}>
+      <StructuredData data={blogSchema} />
       <BlogHeader title={blogData?.title} icon={blogData?.icon} username={params.blog} />
       <div className="flex flex-col mt-5 items-center justify-center w-full max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
         {showAuthor && (

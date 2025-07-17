@@ -17,16 +17,32 @@ import { UserNavigation } from "@/components/user/user-navigation";
 import { UserSite } from "@/components/user/user-site";
 import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
+import { generateEnhancedMetadata } from "@/lib/seo/metadata";
 import { getBlogData } from "@/lib/settings/get-blog-data";
 import { getBlogsByOwner } from "@/lib/settings/get-blogs-by-owner";
 
 export async function generateMetadata({ params }: { params: { user: string } }) {
   const username = params.user;
-  const title = `@${username} | Fountain`;
-  return {
-    title,
-    description: `@${username} on Fountain`,
-  };
+  const lens = await getLensClient();
+
+  const account = await fetchAccount(lens, {
+    username: { localName: username },
+  }).unwrapOr(null);
+
+  const bio = account?.metadata?.bio || undefined;
+  const avatar = account?.metadata?.picture;
+
+  return generateEnhancedMetadata({
+    title: `@${username}`,
+    description: bio || `@${username} on Fountain`,
+    path: `/b/${username}`, // Canonical points to blog page
+    ogImage: avatar,
+    ogType: "profile",
+    twitter: {
+      card: avatar ? "summary_large_image" : "summary",
+      creator: `@${username}`,
+    },
+  });
 }
 
 const UserLayout = async ({ children, params }: { children: React.ReactNode; params: { user: string } }) => {
@@ -44,9 +60,7 @@ const UserLayout = async ({ children, params }: { children: React.ReactNode; par
   const settings = await getBlogData(account.address);
   const themeName = settings?.theme?.name;
   const customCss = settings?.theme?.customCss;
-  const title = settings?.title;
-
-  const { address, username } = await getUserAccount();
+  const { address } = await getUserAccount();
 
   const stats = await fetchAccountStats(lens, { account: account?.address }).unwrapOr(null);
 

@@ -8,6 +8,7 @@ import PostDeletedView from "@/components/post/post-deleted-view";
 import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getBaseUrl } from "@/lib/get-base-url";
 import { getLensClient } from "@/lib/lens/client";
+import { generateEnhancedMetadata } from "@/lib/seo/metadata";
 import { getBlogData } from "@/lib/settings/get-blog-data";
 import { getPostIdBySlug } from "@/lib/slug/get-post-by-slug";
 
@@ -52,35 +53,32 @@ export async function generateMetadata({ params }: { params: { user: string; pos
       ? content.substring(0, 200).replace(/[#*_]/g, "") + (content.length > 200 ? "..." : "")
       : undefined;
 
-  return {
-    title: `${title ? `${title} - ` : ""}${blog?.title}`,
-    description: description || contentExcerpt,
-    icons: icon ? [{ rel: "icon", url: icon }] : undefined,
-    openGraph: {
-      title: title || `${username}'s blog post`,
-      description: description || contentExcerpt || `A blog post by @${username} on Fountain`,
-      url: postUrl,
-      siteName: blog?.title || "Fountain",
-      locale: "en_US",
-      type: "article",
-      images: coverUrl
-        ? [
-            {
-              url: coverUrl,
-              alt: title || `${username}'s blog post`,
-            },
-          ]
-        : undefined,
-      authors: [username],
+  const publishedTime = post.timestamp ? new Date(post.timestamp).toISOString() : undefined;
+
+  const tags =
+    "attributes" in post.metadata
+      ? (post.metadata.attributes
+          ?.filter((attr) => "key" in attr && attr.key === "tag")
+          ?.map((attr) => attr.value)
+          ?.filter(Boolean) as string[] | undefined)
+      : undefined;
+
+  return generateEnhancedMetadata({
+    title: title || `${username}'s blog post`,
+    description: description || contentExcerpt || `A blog post by @${username} on Fountain`,
+    path: `/p/${username}/${postParam}`,
+    ogImage: coverUrl,
+    ogType: "article",
+    article: {
+      publishedTime,
+      author: username,
+      tags,
     },
     twitter: {
       card: coverUrl ? "summary_large_image" : "summary",
-      title: title || `${username}'s blog post`,
-      description: description || contentExcerpt || `A blog post by @${username} on Fountain`,
-      images: coverUrl ? [coverUrl] : undefined,
       creator: `@${username}`,
     },
-  };
+  });
 }
 
 const UserPostLayout = async ({

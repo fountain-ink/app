@@ -10,11 +10,14 @@ import { PostActionsBar } from "@/components/post/post-actions-bar";
 import { FloatingActionBar } from "@/components/post/post-floating-actions-bar";
 import { PostMetadata } from "@/components/post/post-metadata";
 import { PostTags } from "@/components/post/post-tags";
+import { StructuredData } from "@/components/seo/structured-data";
 import { AuthorView } from "@/components/user/user-author-view";
 import { UserPostCard } from "@/components/user/user-post-card";
 import { ActionBarProvider } from "@/contexts/action-bar-context";
 import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getLensClient } from "@/lib/lens/client";
+import { generateCanonicalUrl } from "@/lib/seo/canonical";
+import { generateArticleSchema } from "@/lib/seo/structured-data";
 import { getPostIdBySlug } from "@/lib/slug/get-post-by-slug";
 
 const post = async ({ params }: { params: { user: string; post: string } }) => {
@@ -43,9 +46,28 @@ const post = async ({ params }: { params: { user: string; post: string } }) => {
   const contentHtml = post?.metadata?.attributes?.find((attr: any) => attr.key === "contentHtml")?.value;
   const originalDate = post?.metadata?.attributes?.find((attr: any) => attr.key === "originalDate")?.value;
 
+  const coverUrl = post?.metadata?.attributes?.find((attr: any) => attr.key === "coverUrl")?.value;
+  const subtitle = post?.metadata?.attributes?.find((attr: any) => attr.key === "subtitle")?.value;
+  const title = post.metadata.title;
+
+  const articleSchema = generateArticleSchema({
+    title: title || "Untitled",
+    description: subtitle || undefined,
+    datePublished: post.timestamp ? new Date(post.timestamp).toISOString() : new Date().toISOString(),
+    dateModified: post.timestamp ? new Date(post.timestamp).toISOString() : undefined,
+    author: {
+      name: post.author.username?.localName || post.author.address,
+      url: generateCanonicalUrl(`/u/${post.author.username?.localName}`),
+    },
+    image: coverUrl,
+    url: generateCanonicalUrl(`/p/${username}/${postParam}`),
+    tags: post.metadata.tags || undefined,
+  });
+
   if (contentJson) {
     return (
       <div>
+        <StructuredData data={articleSchema} />
         <ActionBarProvider>
           <div className="flex flex-col gap-4 items-center justify-center">
             <EditorReadTime content={contentJson} />

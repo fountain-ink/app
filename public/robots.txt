@@ -1,0 +1,24 @@
+# Robots.txt for Fountain
+
+# Allow all bots
+User-agent: *
+Allow: /
+
+# Note: /u/[user] pages have canonical URLs pointing to /b/[user] to avoid duplicate content
+
+# Sitemap location
+Sitemap: https://fountain.ink/sitemap.xml
+
+Crawl-delay: 1
+
+# Disallow admin and API routes
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /settings/
+
+User-agent: Googlebot
+Crawl-delay: 0
+
+User-agent: Bingbot
+Crawl-delay: 0

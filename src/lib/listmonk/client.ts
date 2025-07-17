@@ -530,7 +530,9 @@ export async function createCampaignForPost(
         subject: `${postTitle}`,
         // subject: `${blog.display_name || blogId}: ${postTitle}`,
         lists: [listId],
-        from_email: username ? `${username} <noreply@fountain.ink>` : `${blog.display_name || blogId} <noreply@fountain.ink>`,
+        from_email: username
+          ? `${username} <noreply@fountain.ink>`
+          : `${blog.display_name || blogId} <noreply@fountain.ink>`,
         content_type: "html",
         type: "regular",
         body: campaignBody,

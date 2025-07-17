@@ -10,11 +10,11 @@ import "@/styles/globals.css";
 import { cn } from "@udecode/cn";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
+import { Libre_Baskerville } from "next/font/google";
 import { ThemeProvider as DarkModeProvider } from "next-themes";
 import { GlobalModals } from "@/components/misc/global-modals";
 import { FeedProvider } from "@/contexts/feed-context";
 import { PostActionsProvider } from "@/contexts/post-actions-context";
-import { Libre_Baskerville } from "next/font/google";
 
 const libreBaskerville = Libre_Baskerville({
   subsets: ["latin"],
@@ -35,7 +35,11 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   const credentials = client.isSessionClient() ? client.getCredentials().unwrapOr(null) : null;
 
   return (
-    <html lang="en" suppressHydrationWarning className={cn(GeistSans.variable, GeistMono.variable, libreBaskerville.variable)}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={cn(GeistSans.variable, GeistMono.variable, libreBaskerville.variable)}
+    >
       <head>
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
         <script defer src="https://stats.kualta.dev/script.js" data-website-id="42c57186-3cbd-4221-91e1-083ccb710ae8" />
