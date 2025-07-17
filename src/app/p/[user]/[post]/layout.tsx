@@ -5,6 +5,7 @@ import { BlogTheme } from "@/components/blog/blog-theme";
 import { ArticleLayout } from "@/components/navigation/article-layout";
 import { GradientBlur } from "@/components/navigation/gradient-blur";
 import PostDeletedView from "@/components/post/post-deleted-view";
+import { BlogDataProvider } from "@/contexts/blog-data-context";
 import { getUserAccount } from "@/lib/auth/get-user-profile";
 import { getBaseUrl } from "@/lib/get-base-url";
 import { getLensClient } from "@/lib/lens/client";
@@ -130,7 +131,9 @@ const UserPostLayout = async ({
       <BlogTheme initialTheme={themeName} customCss={customCss}>
         <BlogHeader title={title} icon={icon} username={blogAddress} />
         <ArticleLayout>
-          <PostDeletedView />
+          <BlogDataProvider blogAddress={blogAddress} blogData={settings}>
+            <PostDeletedView />
+          </BlogDataProvider>
         </ArticleLayout>
       </BlogTheme>
     );
@@ -140,8 +143,10 @@ const UserPostLayout = async ({
     <BlogTheme initialTheme={themeName} customCss={customCss}>
       <BlogHeader title={title} icon={icon} username={blogAddress} />
       <ArticleLayout>
-        <GradientBlur />
-        {children}
+        <BlogDataProvider blogAddress={blogAddress} blogData={settings}>
+          <GradientBlur />
+          {children}
+        </BlogDataProvider>
       </ArticleLayout>
     </BlogTheme>
   );

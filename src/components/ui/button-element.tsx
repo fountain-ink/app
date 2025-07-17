@@ -2,13 +2,15 @@
 
 import { cn, withRef } from "@udecode/cn";
 import { PlateElement, useEditorRef, useElement, useReadOnly, useSelected } from "@udecode/plate/react";
-import { CheckIcon, Link2Icon, TypeIcon, MousePointerClickIcon, MailIcon, UserPlusIcon } from "lucide-react";
-import { useEffect, useState, useRef } from "react";
+import { CheckIcon, Link2Icon, MailIcon, MousePointerClickIcon, TypeIcon, UserPlusIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { useBlogData } from "@/contexts/blog-data-context";
+import { subscribeToNewsletter } from "@/lib/listmonk/newsletter";
 import { ButtonType, TButtonElement } from "../editor/plugins/button-plugin";
 import { Button, buttonVariants } from "./button";
-import { Input } from "./input";
 import { ElementPopover } from "./element-popover";
+import { Input } from "./input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
 import { Separator } from "./separator";
 
@@ -18,11 +20,20 @@ export const ButtonElement = withRef<typeof PlateElement>(({ children, className
   const readOnly = useReadOnly();
   const selected = useSelected();
   const popoverRef = useRef<HTMLDivElement>(null);
+  let blogData: ReturnType<typeof useBlogData> | null = null;
+
+  try {
+    blogData = useBlogData();
+  } catch {
+    // Context not available in editor mode
+  }
 
   const [editUrlValue, setEditUrlValue] = useState(element?.url ?? "");
   const [editTextValue, setEditTextValue] = useState(element?.buttonText ?? "");
   const [buttonType, setButtonType] = useState<ButtonType>(element?.buttonType ?? "normal");
   const [activeInput, setActiveInput] = useState<"text" | "url" | null>(null);
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setEditUrlValue(element?.url ?? "");
@@ -62,6 +73,41 @@ export const ButtonElement = withRef<typeof PlateElement>(({ children, className
     setActiveInput(null);
   };
 
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleNewsletterSubscribe = async () => {
+    if (!email || !validateEmail(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    if (!blogData?.blogAddress) {
+      toast.error("Newsletter subscription is not available");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const result = await subscribeToNewsletter(blogData.blogAddress, email);
+
+      if (result?.success) {
+        toast.success("Successfully subscribed to the newsletter!");
+        setEmail("");
+      } else if (result?.needsListCreation) {
+        toast.error("This blog doesn't have a newsletter set up yet");
+      } else {
+        toast.error(result?.error || "Failed to subscribe. Please try again.");
+      }
+    } catch (error) {
+      toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const renderButton = () => {
     switch (buttonType) {
       case "newsletter":
@@ -72,7 +118,16 @@ export const ButtonElement = withRef<typeof PlateElement>(({ children, className
                 type="email"
                 placeholder="Enter your email"
                 className="flex-1"
-                disabled={!readOnly}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={!readOnly || isLoading}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && readOnly) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleNewsletterSubscribe();
+                  }
+                }}
                 onClick={(e) => {
                   if (readOnly) {
                     e.stopPropagation();
@@ -82,15 +137,15 @@ export const ButtonElement = withRef<typeof PlateElement>(({ children, className
               <Button
                 variant="default"
                 size="default"
-                disabled={!readOnly}
+                disabled={!readOnly || isLoading || !blogData?.blogAddress}
                 onClick={(e) => {
                   if (readOnly) {
                     e.stopPropagation();
-                    toast.success("Newsletter subscription functionality not implemented in preview");
+                    handleNewsletterSubscribe();
                   }
                 }}
               >
-                Subscribe
+                {isLoading ? "Subscribing..." : "Subscribe"}
               </Button>
             </div>
           </div>
@@ -126,19 +181,11 @@ export const ButtonElement = withRef<typeof PlateElement>(({ children, className
               }
             }}
           >
-            {readOnly ? (element?.buttonText || "Click here") : (editTextValue || element?.buttonText || "Click here")}
+            {readOnly ? element?.buttonText || "Click here" : editTextValue || element?.buttonText || "Click here"}
           </a>
         ) : (
-          <Button
-            variant="default"
-            size="lg"
-            className={cn(
-              "text-base",
-              "opacity-50 cursor-not-allowed",
-            )}
-            disabled
-          >
-            {readOnly ? (element?.buttonText || "No link set") : (editTextValue || element?.buttonText || "No link set")}
+          <Button variant="default" size="lg" className={cn("text-base", "opacity-50 cursor-not-allowed")} disabled>
+            {readOnly ? element?.buttonText || "No link set" : editTextValue || element?.buttonText || "No link set"}
           </Button>
         );
     }
@@ -230,10 +277,7 @@ export const ButtonElement = withRef<typeof PlateElement>(({ children, className
         </div>
       ) : (
         <div className="flex items-center gap-1">
-          <Select
-            value={buttonType}
-            onValueChange={(value) => handleButtonTypeSelect(value as ButtonType)}
-          >
+          <Select value={buttonType} onValueChange={(value) => handleButtonTypeSelect(value as ButtonType)}>
             <SelectTrigger className="h-10 w-[180px]" onClick={(e) => e.stopPropagation()}>
               <SelectValue />
             </SelectTrigger>
@@ -301,10 +345,7 @@ export const ButtonElement = withRef<typeof PlateElement>(({ children, className
       content={editPopoverContent}
     >
       <PlateElement ref={ref} className={cn(className, "my-6")} {...props}>
-        <div
-          className="group relative m-0 w-full flex justify-center"
-          contentEditable={false}
-        >
+        <div className="group relative m-0 w-full flex justify-center" contentEditable={false}>
           {!readOnly && buttonType === "normal" && !element?.url ? (
             <div className="flex flex-col relative overflow-hidden rounded-md aspect-[6/1] bg-muted/20 gap-2 p-4 items-center justify-center w-full">
               <div className="flex items-center gap-2">
