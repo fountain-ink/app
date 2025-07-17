@@ -12,9 +12,9 @@ export const insertButton = (
       type: ButtonPlugin.key,
       url,
       buttonType: "normal",
-      text: "Click here",
+      buttonText: "Click here",
       children: [{ text: "" }],
     },
-    options
+    // options
   );
 };

@@ -9,8 +9,8 @@ export type ButtonType = "normal" | "newsletter" | "follow";
 export interface TButtonElement extends TElement {
   type: "button";
   buttonType?: ButtonType;
+  buttonText?: string;
   url?: string;
-  text?: string;
 }
 
 export const BaseButtonPlugin = createTSlatePlugin<ButtonConfig>({
@@ -18,7 +18,7 @@ export const BaseButtonPlugin = createTSlatePlugin<ButtonConfig>({
   node: {
     component: ButtonElement,
     isElement: true,
-    isVoid: false,
+    isVoid: true,
   },
   parsers: {
     html: {
@@ -53,7 +53,7 @@ export const BaseButtonPlugin = createTSlatePlugin<ButtonConfig>({
           if (buttonNode.buttonType) {
             a.setAttribute("data-button-type", buttonNode.buttonType);
           }
-          a.textContent = buttonNode.text || "Click here";
+          a.textContent = buttonNode.buttonText || "Click here";
           return a;
         },
       },

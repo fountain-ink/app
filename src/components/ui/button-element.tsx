@@ -20,7 +20,7 @@ export const ButtonElement = withRef<typeof PlateElement>(({ children, className
   const popoverRef = useRef<HTMLDivElement>(null);
 
   const [editUrlValue, setEditUrlValue] = useState(element?.url ?? "");
-  const [editTextValue, setEditTextValue] = useState(element?.text ?? "");
+  const [editTextValue, setEditTextValue] = useState(element?.buttonText ?? "");
   const [buttonType, setButtonType] = useState<ButtonType>(element?.buttonType ?? "normal");
   const [activeInput, setActiveInput] = useState<"text" | "url" | null>(null);
 
@@ -29,8 +29,8 @@ export const ButtonElement = withRef<typeof PlateElement>(({ children, className
   }, [element?.url]);
 
   useEffect(() => {
-    setEditTextValue(element?.text ?? "");
-  }, [element?.text]);
+    setEditTextValue(element?.buttonText ?? "");
+  }, [element?.buttonText]);
 
   useEffect(() => {
     setButtonType(element?.buttonType ?? "normal");
@@ -49,7 +49,7 @@ export const ButtonElement = withRef<typeof PlateElement>(({ children, className
   };
 
   const handleTextSubmit = () => {
-    if (element && editTextValue !== element.text) {
+    if (element && editTextValue !== element.buttonText) {
       editor.tf.setNodes<TButtonElement>({ text: editTextValue }, { at: element });
     }
   };
@@ -126,7 +126,7 @@ export const ButtonElement = withRef<typeof PlateElement>(({ children, className
               }
             }}
           >
-            {readOnly ? (element?.text || "Click here") : (editTextValue || element?.text || "Click here")}
+            {readOnly ? (element?.buttonText || "Click here") : (editTextValue || element?.buttonText || "Click here")}
           </a>
         ) : (
           <Button
@@ -138,7 +138,7 @@ export const ButtonElement = withRef<typeof PlateElement>(({ children, className
             )}
             disabled
           >
-            {readOnly ? (element?.text || "No link set") : (editTextValue || element?.text || "No link set")}
+            {readOnly ? (element?.buttonText || "No link set") : (editTextValue || element?.buttonText || "No link set")}
           </Button>
         );
     }
