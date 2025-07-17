@@ -20,6 +20,7 @@ interface EnhancedMetadataProps {
     creator?: string;
   };
   noIndex?: boolean;
+  customCanonical?: string;
 }
 
 export function generateEnhancedMetadata({
@@ -31,8 +32,9 @@ export function generateEnhancedMetadata({
   article,
   twitter,
   noIndex = false,
+  customCanonical,
 }: EnhancedMetadataProps): Metadata {
-  const canonicalUrl = generateCanonicalUrl(path);
+  const canonicalUrl = customCanonical || generateCanonicalUrl(path);
   const fullTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME;
 
   const metadata: Metadata = {

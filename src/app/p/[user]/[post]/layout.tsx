@@ -63,10 +63,16 @@ export async function generateMetadata({ params }: { params: { user: string; pos
           ?.filter(Boolean) as string[] | undefined)
       : undefined;
 
+  const canonicalUrl =
+    "attributes" in post.metadata
+      ? post.metadata.attributes?.find((attr) => "key" in attr && attr.key === "canonicalUrl")?.value
+      : undefined;
+
   return generateEnhancedMetadata({
     title: title || `${username}'s blog post`,
     description: description || contentExcerpt || `A blog post by @${username} on Fountain`,
     path: `/p/${username}/${postParam}`,
+    customCanonical: canonicalUrl,
     ogImage: coverUrl,
     ogType: "article",
     article: {

@@ -74,6 +74,8 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
       images: Array.isArray(values.details.images) ? values.details.images : [],
       originalDate: values.details.originalDate || null,
       isMiscSectionExpanded: values.details.isMiscSectionExpanded ?? false,
+      wasPublishedBefore: values.details.wasPublishedBefore ?? false,
+      canonicalUrl: values.details.canonicalUrl || null,
 
       distributionSettings: {
         selectedBlogAddress: shouldSaveBlogAddress ? selectedBlogAddress : undefined,
@@ -106,6 +108,8 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
           isSlugManuallyEdited: false,
           originalDate: null,
           isMiscSectionExpanded: false,
+          wasPublishedBefore: false,
+          canonicalUrl: null,
         },
         distribution: {
           selectedBlogAddress: "",
@@ -141,6 +145,8 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
         isSlugManuallyEdited: !!draft?.slug,
         originalDate: draft?.originalDate ? new Date(draft.originalDate) : null,
         isMiscSectionExpanded: draft?.isMiscSectionExpanded ?? false,
+        wasPublishedBefore: draft?.wasPublishedBefore ?? false,
+        canonicalUrl: draft?.canonicalUrl,
       },
       distribution: {
         selectedBlogAddress: draft?.distributionSettings?.selectedBlogAddress || "",
@@ -237,7 +243,7 @@ export const PublishMenu = ({ documentId }: PublishMenuProps) => {
   }, [open, isLoading, getDraft, getValues, setValue, trigger]);
 
   useEffect(() => {
-    const subscription = watch((values: any, { name, type }: { name?: string; type?: string }) => {
+    const subscription = watch((values: any) => {
       if (!isLoading && values.details && values.collecting && values.distribution) {
         const currentDraft = getDraft();
         if (currentDraft) {

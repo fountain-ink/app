@@ -26,6 +26,7 @@ import { CoinIcon } from "@/components/icons/custom-icons";
 import { ImageUploader } from "@/components/misc/image-uploader";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { Checkbox } from "@/components/ui/checkbox";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -51,6 +52,14 @@ export const detailsFormSchema = z.object({
   isSlugManuallyEdited: z.boolean().optional().default(false),
   originalDate: z.date().optional().nullable(),
   isMiscSectionExpanded: z.boolean().optional().default(false),
+  wasPublishedBefore: z.boolean().optional().default(false),
+  canonicalUrl: z
+    .string()
+    .optional()
+    .nullable()
+    .refine((value) => !value || value.trim() === "" || /^https?:\/\/.+/.test(value), {
+      message: "Canonical URL must be a valid URL starting with http:// or https://",
+    }),
 });
 
 export type DetailsFormValues = z.infer<typeof detailsFormSchema>;
@@ -92,6 +101,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
   const [currentImageIndex, setCurrentImageIndex] = useState(images.findIndex((image) => image === coverUrl) || 0);
   const isShowingUploader = currentImageIndex === images.length;
   const isMiscExpanded = form.watch("details.isMiscSectionExpanded");
+  const wasPublishedBefore = form.watch("details.wasPublishedBefore");
 
   useEffect(() => {
     const draftImages = draft?.images || [];
@@ -486,62 +496,107 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
 
             <FormField
               control={form.control}
-              name="details.originalDate"
+              name="details.wasPublishedBefore"
               render={({ field }) => (
-                <FormItem className="flex flex-col max-w-md">
-                  <FormLabel htmlFor="originalDate" className="flex items-center gap-1">
-                    <span>Original Date</span>
-                  </FormLabel>
-                  <div className="grid gap-2">
-                    <Popover>
-                      <div className="relative flex flex-row items-center gap-2">
-                        <PopoverTrigger asChild>
-                          <Button
-                            id="date"
-                            variant="outline"
-                            className={cn(
-                              "w-full justify-start text-left max-w-xs font-normal",
-                              !field.value && "text-muted-foreground",
-                            )}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                          </Button>
-                        </PopoverTrigger>
-                        {field.value && (
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => {
-                              field.onChange(null);
-                              form.setValue("details.originalDate", null);
-                            }}
-                          >
-                            <XIcon className="w-4 h-4" />
-                          </Button>
-                        )}
-                      </div>
-
-                      <PopoverContent align="start" className="w-auto z-[60] p-0">
-                        <Calendar
-                          mode="single"
-                          selected={field.value || undefined}
-                          fixedWeeks
-                          showWeekNumber={false}
-                          onSelect={(date) => {
-                            field.onChange(date);
-                            if (date) form.setValue("details.originalDate", date);
-                          }}
-                          disabled={(date) => date > new Date()}
-                        />
-                      </PopoverContent>
-                    </Popover>
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 max-w-md">
+                  <FormControl>
+                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>This post was published before</FormLabel>
+                    <FormDescription>Check this if you're republishing content from another platform</FormDescription>
                   </div>
-                  <FormDescription>Set an original publication date for this post.</FormDescription>
-                  <FormMessage />
                 </FormItem>
               )}
             />
+
+            {wasPublishedBefore && (
+              <>
+                <FormField
+                  control={form.control}
+                  name="details.originalDate"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col max-w-md">
+                      <FormLabel htmlFor="originalDate" className="flex items-center gap-1">
+                        <span>Original Date</span>
+                      </FormLabel>
+                      <div className="grid gap-2">
+                        <Popover>
+                          <div className="relative flex flex-row items-center gap-2">
+                            <PopoverTrigger asChild>
+                              <Button
+                                id="date"
+                                variant="outline"
+                                className={cn(
+                                  "w-full justify-start text-left max-w-xs font-normal",
+                                  !field.value && "text-muted-foreground",
+                                )}
+                              >
+                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                              </Button>
+                            </PopoverTrigger>
+                            {field.value && (
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() => {
+                                  field.onChange(null);
+                                  form.setValue("details.originalDate", null);
+                                }}
+                              >
+                                <XIcon className="w-4 h-4" />
+                              </Button>
+                            )}
+                          </div>
+
+                          <PopoverContent align="start" className="w-auto z-[60] p-0">
+                            <Calendar
+                              mode="single"
+                              selected={field.value || undefined}
+                              fixedWeeks
+                              showWeekNumber={false}
+                              onSelect={(date) => {
+                                field.onChange(date);
+                                if (date) form.setValue("details.originalDate", date);
+                              }}
+                              disabled={(date) => date > new Date()}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      <FormDescription>Set an original publication date for this post.</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="details.canonicalUrl"
+                  render={({ field, fieldState }) => (
+                    <FormItem className="max-w-md">
+                      <FormLabel htmlFor="canonicalUrl" className="flex items-center gap-1">
+                        <span>Canonical URL</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          id="canonicalUrl"
+                          placeholder="https://originalblog.com/post"
+                          {...field}
+                          value={field.value ?? ""}
+                          className={fieldState.error ? "border-destructive" : ""}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Optional: The original URL where this content was first published
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </>
+            )}
           </motion.div>
         </div>
       </div>

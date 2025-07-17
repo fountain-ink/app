@@ -31,6 +31,14 @@ export async function getPostAttributes({ draft }: UploadPostMetadataArgs): Prom
     });
   }
 
+  if (draft.canonicalUrl) {
+    attributes.push({
+      key: "canonicalUrl",
+      type: MetadataAttributeType.STRING,
+      value: draft.canonicalUrl,
+    });
+  }
+
   if (draft.collectingSettings?.collectingLicense) {
     attributes.push({
       key: "license",
