@@ -13,8 +13,8 @@ import { SubscriberManagement } from "@/components/newsletter/subscriber-managem
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { useBlogStorage } from "@/hooks/use-blog-storage";
 import { createMailingList, exportNewsletterSubscribers } from "@/lib/listmonk/newsletter";
 import { cn } from "@/lib/utils";
 
@@ -34,6 +34,7 @@ const getBlogUrl = (blog: BlogDataWithSubscriberCount): string => {
 
 export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
   const router = useRouter();
+  const { refreshBlogs } = useBlogStorage();
 
   useEffect(() => {
     const handleSubscriberChange = () => {
@@ -95,6 +96,8 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
 
       setNewsletterEnabled(enabled);
       toast.success(`Newsletter ${enabled ? "enabled" : "disabled"} successfully`);
+
+      await refreshBlogs();
     } catch (error) {
       console.error("Error toggling newsletter:", error);
       toast.error(error instanceof Error ? error.message : "An error occurred");
@@ -129,6 +132,8 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
       }
 
       toast.success("Email content settings updated successfully");
+
+      await refreshBlogs();
     } catch (error) {
       console.error("Error updating email content settings:", error);
       toast.error(error instanceof Error ? error.message : "An error occurred");

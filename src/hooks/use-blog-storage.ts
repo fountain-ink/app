@@ -13,6 +13,7 @@ interface BlogStorage {
   setBlogs: (blogs: BlogData[]) => void;
   getBlogs: () => Promise<BlogData[]>;
   resetState: () => void;
+  refreshBlogs: () => Promise<BlogData[]>;
 }
 
 export const useBlogStorage = create<BlogStorage>()(
@@ -105,6 +106,16 @@ export const useBlogStorage = create<BlogStorage>()(
             isFetching: false,
           },
         });
+      },
+      refreshBlogs: async () => {
+        set((state) => ({
+          blogState: {
+            ...state.blogState,
+            lastSynced: 0,
+          },
+        }));
+
+        return get().getBlogs();
       },
     }),
     {
