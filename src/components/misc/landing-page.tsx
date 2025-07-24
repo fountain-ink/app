@@ -20,7 +20,7 @@ const features = [
     title: "No big tech or vendor lock-in",
     description: (
       <>
-        Fountain is built on user ownership of and decentralisation{" "}
+        Fountain is built on user ownership and decentralisation{" "}
         {/* <RoughNotation type="underline" color="hsl(var(--primary))" order={4}> */}
         <span className="text-primary whitespace-nowrap">secured by Ethereum</span>
         {/* </RoughNotation> */}. We believe in{" "}
