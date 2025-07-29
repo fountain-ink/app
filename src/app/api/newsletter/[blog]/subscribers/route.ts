@@ -192,16 +192,105 @@ export async function POST(req: NextRequest, { params }: { params: { blog: strin
     return NextResponse.json({ error: "Invalid file format. Please upload a CSV file" }, { status: 400 });
   }
 
-  const success = await importSubscribers(file, [blog.mail_list_id]);
-  if (!success) {
-    return NextResponse.json({ error: "Failed to import subscribers" }, { status: 500 });
-  }
+  try {
+    const text = await file.text();
+    const lines = text.trim().split("\n");
 
-  return NextResponse.json({
-    success: true,
-    message: "Successfully imported subscribers to the blog",
-    data: { listId: list.id, listName: list.name },
-  });
+    if (lines.length < 2) {
+      return NextResponse.json({ error: "CSV file is empty or has no data rows" }, { status: 400 });
+    }
+
+    const headers = lines[0]?.split(",").map((h) => h.trim().replace(/^["']|["']$/g, "")) || [];
+    const emailColumnVariations = [
+      "email",
+      "subscriberEmail",
+      "subscriber_email",
+      "Email",
+      "SubscriberEmail",
+      "subscriber-email",
+      "e-mail",
+      "E-mail",
+    ];
+    const emailColumnIndex = headers.findIndex((h) => emailColumnVariations.includes(h));
+
+    if (emailColumnIndex === -1) {
+      return NextResponse.json(
+        {
+          error:
+            "Could not find email column. Please ensure your CSV has one of these columns: " +
+            emailColumnVariations.join(", "),
+        },
+        { status: 400 },
+      );
+    }
+
+    const statusColumnVariations = ["status", "Status", "subscription_status", "subscriptionStatus"];
+    const statusColumnIndex = headers.findIndex((h) => statusColumnVariations.includes(h));
+
+    const processedEmails: string[] = [];
+    let skippedCount = 0;
+
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i]?.trim();
+      if (!line) continue;
+
+      const values = line.split(",").map((v) => v.trim().replace(/^["']|["']$/g, ""));
+
+      if (values.length <= emailColumnIndex) continue;
+
+      const email = values[emailColumnIndex];
+      if (!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) continue;
+
+      // Check status if column exists
+      if (statusColumnIndex !== -1 && values.length > statusColumnIndex) {
+        const status = values[statusColumnIndex];
+        if (status && !["ACTIVE", "active", "Active"].includes(status)) {
+          skippedCount++;
+          continue;
+        }
+      }
+
+      processedEmails.push(email);
+    }
+
+    if (processedEmails.length === 0) {
+      return NextResponse.json(
+        {
+          error: `No valid email addresses found to import. ${skippedCount > 0 ? `Skipped ${skippedCount} non-active subscribers.` : ""}`,
+        },
+        { status: 400 },
+      );
+    }
+
+    // Create a new CSV file with just the email column for Listmonk
+    const newCsvContent = "email\n" + processedEmails.join("\n");
+    const newFile = new File([newCsvContent], "processed_subscribers.csv", { type: "text/csv" });
+
+    const success = await importSubscribers(newFile, [blog.mail_list_id]);
+    if (!success) {
+      return NextResponse.json({ error: "Failed to import subscribers" }, { status: 500 });
+    }
+    
+
+    return NextResponse.json({
+      success: true,
+      message: `Successfully imported ${processedEmails.length} subscribers to the blog${skippedCount > 0 ? `. Skipped ${skippedCount} non-active subscribers.` : ""}`,
+      data: {
+        listId: list?.id || blog.mail_list_id,
+        listName: list?.name || "Blog mailing list",
+        imported: processedEmails.length,
+        skipped: skippedCount,
+      },
+    });
+  } catch (error) {
+    console.error("Error processing CSV file:", error);
+    return NextResponse.json(
+      {
+        error: "Failed to process CSV file. Please ensure it's properly formatted.",
+      },
+      { status: 500 },
+    );
+  }
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: { blog: string } }) {

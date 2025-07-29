@@ -190,15 +190,6 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
                       {getBlogUrl(blog).length > 13 ? "..." : ""}
                     </span>
                   </Link>
-                  {newsletterEnabled && (
-                    <>
-                      <span className="text-muted-foreground">•</span>
-                      <span className="flex items-center gap-1">
-                        <UsersIcon className="h-3.5 w-3.5 text-muted-foreground" />
-                        {blog.subscriber_count !== undefined ? `${blog.subscriber_count} subscribers` : "0 subscribers"}
-                      </span>
-                    </>
-                  )}
                 </CardDescription>
               </div>
             </div>
@@ -289,9 +280,6 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
         open={importModalOpen}
         onOpenChange={setImportModalOpen}
         blogAddress={blog.address}
-        onSuccess={() => {
-          router.refresh();
-        }}
       />
 
       <NewsletterDeleteDialog

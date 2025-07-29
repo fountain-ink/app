@@ -87,15 +87,21 @@ export function ImportSubscribersModal({ open, onOpenChange, blogAddress, onSucc
         throw new Error(result?.error || "Failed to import subscribers");
       }
 
-      toast.success("Successfully imported subscribers");
+      const importedCount = (result.data as any)?.imported || 0;
+      const skippedCount = (result.data as any)?.skipped || 0;
+
+      toast.success(
+        `Successfully imported ${importedCount} subscriber${importedCount !== 1 ? 's' : ''}${skippedCount > 0 ? ` (${skippedCount} inactive skipped)` : ''
+        }`
+      );
 
       setFile(null);
       onOpenChange(false);
 
-      // Trigger subscriber table refresh
-      window.dispatchEvent(new CustomEvent("subscriber-added"));
-
-      onSuccess?.();
+      // Wait 2 seconds for the user to see the success message
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch (error) {
       console.error("Error importing subscribers:", error);
       toast.error(error instanceof Error ? error.message : "Failed to import subscribers");

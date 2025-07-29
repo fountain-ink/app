@@ -10,7 +10,7 @@ import { SubscriberDataTable } from "./subscriber-data-table";
 interface SubscriberManagementProps {
   blogAddress: string;
   mailListId: number | null;
-  subscriberCount: number;
+  subscriberCount?: number;
 }
 
 export function SubscriberManagement({ blogAddress, mailListId, subscriberCount }: SubscriberManagementProps) {
@@ -130,7 +130,7 @@ export function SubscriberManagement({ blogAddress, mailListId, subscriberCount 
       {/* Subscribers Table */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h4 className="text-sm font-medium">All subscribers ({subscriberCount})</h4>
+          <h4 className="text-sm font-medium">All subscribers</h4>
           <p className="text-sm text-muted-foreground">Updated just now</p>
         </div>
 
