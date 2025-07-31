@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/get-session";
 import { getLensClient } from "@/lib/lens/client";
 import { env } from "@/env.js";
+import { NotificationType } from "@lens-protocol/client";
 
 export async function GET(request: NextRequest) {
   try {
@@ -23,18 +24,23 @@ export async function GET(request: NextRequest) {
         case "posts":
           return ["COMMENTED", "QUOTED", "REPOSTED", "REACTED"];
         case "users":
-          return ["FOLLOWED", "MENTIONED", "EXECUTED_POST_ACTION", "EXECUTED_ACCOUNT_ACTION"];
+          return ["FOLLOWED", "MENTIONED"];
+        case "earnings":
+          return ["EXECUTED_POST_ACTION", "EXECUTED_ACCOUNT_ACTION", "TOKEN_DISTRIBUTED"];
         default:
           return undefined; // All types
       }
     };
 
-    // Only apply app filter for posts tab (comments, quotes, reposts, reactions)
-    // For "all" tab, we want to show everything without app filter
-    // For "users" tab, we also don't filter by app to show all follows/mentions
-    const shouldFilterByApp = filterType === "posts";
-
+    // Determine which notification types need app filtering
+    const appFilteredTypes = ["COMMENTED", "QUOTED", "REPOSTED", "REACTED", "MENTIONED"];
+    
     const notificationTypes = getNotificationTypes(filterType);
+    
+    // Check if we should apply app filter based on the notification types being requested
+    const shouldFilterByApp = filterType === "posts" || 
+                             (filterType === "all" && true) || // For "all", we want app-filtered mentions
+                             (notificationTypes && notificationTypes.some(type => appFilteredTypes.includes(type)));
 
     const result = await fetchNotifications(client, {
       cursor,

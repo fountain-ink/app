@@ -17,7 +17,8 @@ import {
   Bell,
   Coins,
   ShoppingBag,
-  HelpCircle
+  HelpCircle,
+  Gift
 } from "lucide-react";
 
 interface NotificationViewProps {
@@ -42,6 +43,51 @@ const getActionType = (action: any): "tipping" | "collecting" | "unknown" => {
   return "unknown";
 };
 
+const formatAmount = (amount: any): string | null => {
+  if (!amount) return null;
+  
+  // Handle ERC20 amounts
+  if (amount.amount && amount.asset) {
+    const value = parseFloat(amount.amount);
+    const symbol = amount.asset.symbol || "tokens";
+    return `${value} ${symbol}`;
+  }
+  
+  // Handle native amounts
+  if (amount.value && amount.currency) {
+    const value = parseFloat(amount.value);
+    return `${value} ${amount.currency}`;
+  }
+  
+  return null;
+};
+
+const getNotificationAmount = (notification: any): string | null => {
+  switch (notification.__typename) {
+    case "PostActionExecutedNotification":
+    case "AccountActionExecutedNotification":
+      if (notification.actions?.[0]) {
+        const action = notification.actions[0];
+        // For tipping actions
+        if (action.tipAmount) {
+          return formatAmount(action.tipAmount);
+        }
+        // For other actions that might have amounts
+        if (action.amount) {
+          return formatAmount(action.amount);
+        }
+      }
+      return null;
+    case "TokenDistributedNotification":
+      if (notification.amount) {
+        return formatAmount(notification.amount);
+      }
+      return null;
+    default:
+      return null;
+  }
+};
+
 const getNotificationIcon = (type: string, notification?: any) => {
   switch (type) {
     case "FollowNotification":
@@ -56,6 +102,8 @@ const getNotificationIcon = (type: string, notification?: any) => {
       return Repeat2;
     case "ReactionNotification":
       return Heart;
+    case "TokenDistributedNotification":
+      return Gift;
     case "PostActionExecutedNotification":
     case "AccountActionExecutedNotification":
       // Check the first action to determine icon
@@ -116,6 +164,8 @@ const getNotificationMessage = (notification: any): string => {
         }
       }
       return "performed an action";
+    case "TokenDistributedNotification":
+      return "distributed tokens to you";
     default:
       return "interacted with you";
   }
@@ -143,6 +193,8 @@ const getNotificationLink = (notification: any): string => {
         return `/p/${notification.post.author?.username?.localName || notification.post.author?.address}/${notification.post.slug || notification.post.id}`;
       }
       return "/notifications";
+    case "TokenDistributedNotification":
+      return "/notifications"; // No specific link for token distributions
     default:
       return "/notifications";
   }
@@ -165,6 +217,8 @@ const getNotificationActors = (notification: any): any[] => {
     case "PostActionExecutedNotification":
     case "AccountActionExecutedNotification":
       return notification.actions?.map((a: any) => a.executedBy || a.account) || [];
+    case "TokenDistributedNotification":
+      return []; // Token distributions don't have actors in the same way
     default:
       return [];
   }
@@ -217,6 +271,11 @@ const getCreatedAt = (notification: any): Date => {
       return new Date(notification.post?.timestamp || Date.now());
     case "QuoteNotification":
       return new Date(notification.quote?.timestamp || Date.now());
+    case "PostActionExecutedNotification":
+    case "AccountActionExecutedNotification":
+      return new Date(notification.actions?.[0]?.executedAt || Date.now());
+    case "TokenDistributedNotification":
+      return new Date(notification.timestamp || Date.now());
     default:
       return new Date();
   }
@@ -229,6 +288,7 @@ export function NotificationView({ notification, onRead }: NotificationViewProps
   const actors = getNotificationActors(notification);
   const postInfo = getPostTitleOrContent(notification);
   const createdAt = getCreatedAt(notification);
+  const amount = getNotificationAmount(notification);
 
   const handleClick = () => {
     if (onRead) {
@@ -254,6 +314,11 @@ export function NotificationView({ notification, onRead }: NotificationViewProps
             {actors.length > 3 && <span className="text-sm text-muted-foreground">and {actors.length - 3} others</span>}
             <span className="text-sm text-muted-foreground">{message}</span>
           </div>
+          {amount && (
+            <div className="mt-1 text-sm font-semibold text-green-600">
+              {amount}
+            </div>
+          )}
           {postInfo.text && (
             <div className="mt-1">
               {postInfo.isContent ? (

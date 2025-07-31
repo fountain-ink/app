@@ -61,6 +61,8 @@ export function NotificationsProvider({ children }: NotificationsProviderProps) 
       case "PostActionExecutedNotification":
       case "AccountActionExecutedNotification":
         return new Date(notification.actions?.[0]?.executedAt || Date.now()).getTime();
+      case "TokenDistributedNotification":
+        return new Date(notification.timestamp || Date.now()).getTime();
       default:
         return Date.now();
     }

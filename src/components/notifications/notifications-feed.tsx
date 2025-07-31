@@ -2,14 +2,13 @@
 
 import { useMemo, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { NotificationView } from "./notification-view";
 import { useNotifications } from "./notifications-context";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 
-type FilterType = "all" | "posts" | "users";
+type FilterType = "all" | "posts" | "users" | "earnings";
 
 export function NotificationsFeed() {
   const { notifications: allNotifications, isLoading: allLoading, error: allError, markAsRead, markAllAsRead, unreadCount } = useNotifications();
@@ -47,6 +46,22 @@ export function NotificationsFeed() {
     staleTime: 10000,
   });
 
+  // Fetch earnings notifications
+  const { data: earningsNotifications = [], isLoading: earningsLoading } = useQuery({
+    queryKey: ["notifications", "earnings"],
+    queryFn: async () => {
+      const response = await fetch("/api/notifications?filter=earnings");
+      if (!response.ok) {
+        throw new Error("Failed to fetch earnings notifications");
+      }
+      const data = await response.json();
+      return data.notifications || [];
+    },
+    enabled: activeTab === "earnings",
+    refetchInterval: 30000,
+    staleTime: 10000,
+  });
+
   // Mark all notifications as read when the page loads
   useEffect(() => {
     if (allNotifications.length > 0 && !allLoading) {
@@ -60,12 +75,16 @@ export function NotificationsFeed() {
         return postsNotifications;
       case "users":
         return usersNotifications;
+      case "earnings":
+        return earningsNotifications;
       default:
         return allNotifications;
     }
   };
 
-  const isLoading = activeTab === "all" ? allLoading : activeTab === "posts" ? postsLoading : usersLoading;
+  const isLoading = activeTab === "all" ? allLoading : 
+                   activeTab === "posts" ? postsLoading : 
+                   activeTab === "users" ? usersLoading : earningsLoading;
   const error = allError;
 
   if (isLoading) {
@@ -80,16 +99,6 @@ export function NotificationsFeed() {
     );
   }
 
-  const notifications = getNotifications();
-
-  if (notifications.length === 0 && !isLoading) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground">No notifications yet</p>
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between px-4 py-3 mt-4">
@@ -98,21 +107,25 @@ export function NotificationsFeed() {
 
       <Tabs defaultValue="all" className="flex-1 flex flex-col" value={activeTab} onValueChange={(value) => setActiveTab(value as FilterType)}>
         <div className="px-4 py-2">
-          <TabsList className="w-full max-w-md">
+          <TabsList className="w-full max-w-lg">
             <TabsTrigger value="all" className="flex-1">All</TabsTrigger>
             <TabsTrigger value="posts" className="flex-1">Posts</TabsTrigger>
             <TabsTrigger value="users" className="flex-1">Users</TabsTrigger>
+            <TabsTrigger value="earnings" className="flex-1">Earnings</TabsTrigger>
           </TabsList>
         </div>
 
         <TabsContent value="all" className="flex-1 m-0">
-          <NotificationList notifications={allNotifications} markAsRead={markAsRead} />
+          <NotificationList notifications={allNotifications} markAsRead={markAsRead} tabType="all" />
         </TabsContent>
         <TabsContent value="posts" className="flex-1 m-0">
-          <NotificationList notifications={postsNotifications} markAsRead={markAsRead} />
+          <NotificationList notifications={postsNotifications} markAsRead={markAsRead} tabType="posts" />
         </TabsContent>
         <TabsContent value="users" className="flex-1 m-0">
-          <NotificationList notifications={usersNotifications} markAsRead={markAsRead} />
+          <NotificationList notifications={usersNotifications} markAsRead={markAsRead} tabType="users" />
+        </TabsContent>
+        <TabsContent value="earnings" className="flex-1 m-0">
+          <NotificationList notifications={earningsNotifications} markAsRead={markAsRead} tabType="earnings" />
         </TabsContent>
       </Tabs>
     </div>
@@ -121,31 +134,46 @@ export function NotificationsFeed() {
 
 function NotificationList({ 
   notifications, 
-  markAsRead 
+  markAsRead,
+  tabType
 }: { 
   notifications: any[]; 
   markAsRead: (id: string) => void;
+  tabType: FilterType;
 }) {
   if (notifications.length === 0) {
+    const getEmptyMessage = () => {
+      switch (tabType) {
+        case "all":
+          return "No notifications yet";
+        case "posts":
+          return "No post interactions yet";
+        case "users":
+          return "No follows or mentions yet";
+        case "earnings":
+          return "No earnings yet";
+        default:
+          return "No notifications in this category";
+      }
+    };
+
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">No notifications in this category</p>
+        <p className="text-muted-foreground">{getEmptyMessage()}</p>
       </div>
     );
   }
 
   return (
-    <ScrollArea className="h-[calc(100vh-16rem)]">
-      <div className="py-2">
-        {notifications.map((notification, index) => (
-          <NotificationView
-            key={`${notification.__typename}-${index}`}
-            notification={notification}
-            onRead={() => markAsRead(`${notification.__typename}-${index}`)}
-          />
-        ))}
-      </div>
-    </ScrollArea>
+    <div className="py-2">
+      {notifications.map((notification, index) => (
+        <NotificationView
+          key={`${notification.__typename}-${index}`}
+          notification={notification}
+          onRead={() => markAsRead(`${notification.__typename}-${index}`)}
+        />
+      ))}
+    </div>
   );
 }
 
@@ -158,21 +186,20 @@ function NotificationsSuspense({ activeTab }: { activeTab: FilterType }) {
 
       <Tabs value={activeTab} className="flex-1 flex flex-col">
         <div className="px-4 py-2">
-          <TabsList className="w-full max-w-md">
+          <TabsList className="w-full max-w-lg">
             <TabsTrigger value="all" className="flex-1">All</TabsTrigger>
             <TabsTrigger value="posts" className="flex-1">Posts</TabsTrigger>
             <TabsTrigger value="users" className="flex-1">Users</TabsTrigger>
+            <TabsTrigger value="earnings" className="flex-1">Earnings</TabsTrigger>
           </TabsList>
         </div>
 
         <TabsContent value={activeTab} className="flex-1 m-0">
-          <ScrollArea className="h-[calc(100vh-16rem)]">
-            <div className="py-2 space-y-2">
-              {[...Array(5)].map((_, i) => (
-                <NotificationItemSkeleton key={i} />
-              ))}
-            </div>
-          </ScrollArea>
+          <div className="py-2 space-y-2">
+            {[...Array(5)].map((_, i) => (
+              <NotificationItemSkeleton key={i} />
+            ))}
+          </div>
         </TabsContent>
       </Tabs>
     </div>
