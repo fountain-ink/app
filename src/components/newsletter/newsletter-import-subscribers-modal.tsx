@@ -91,8 +91,9 @@ export function ImportSubscribersModal({ open, onOpenChange, blogAddress, onSucc
       const skippedCount = (result.data as any)?.skipped || 0;
 
       toast.success(
-        `Successfully imported ${importedCount} subscriber${importedCount !== 1 ? 's' : ''}${skippedCount > 0 ? ` (${skippedCount} inactive skipped)` : ''
-        }`
+        `Successfully imported ${importedCount} subscriber${importedCount !== 1 ? "s" : ""}${
+          skippedCount > 0 ? ` (${skippedCount} inactive skipped)` : ""
+        }`,
       );
 
       setFile(null);

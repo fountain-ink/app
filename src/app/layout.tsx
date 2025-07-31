@@ -13,6 +13,7 @@ import { GeistSans } from "geist/font/sans";
 import { Libre_Baskerville } from "next/font/google";
 import { ThemeProvider as DarkModeProvider } from "next-themes";
 import { GlobalModals } from "@/components/misc/global-modals";
+import { NotificationsProvider } from "@/components/notifications/notifications-context";
 import { FeedProvider } from "@/contexts/feed-context";
 import { PostActionsProvider } from "@/contexts/post-actions-context";
 
@@ -56,12 +57,14 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
             <FeedProvider>
               <DarkModeProvider attribute="class" defaultTheme="system" enableSystem={true} disableTransitionOnChange>
                 <ThemeProvider>
-                  <AuthManager credentials={credentials} />
-                  <Toaster position="top-center" offset={16} />
-                  <Header session={session} />
-                  <GlobalModals />
-                  <main className="flex-1">{children}</main>
-                  <GlobalFooter />
+                  <NotificationsProvider>
+                    <AuthManager credentials={credentials} />
+                    <Toaster position="top-center" offset={16} />
+                    <Header session={session} />
+                    <GlobalModals />
+                    <main className="flex-1">{children}</main>
+                    <GlobalFooter />
+                  </NotificationsProvider>
                 </ThemeProvider>
               </DarkModeProvider>
             </FeedProvider>

@@ -13,6 +13,7 @@ import { EditorOptionsDropdown } from "../editor/addons/editor-options-dropdown"
 import { FountainLogo } from "../icons/custom-icons";
 import { FeedbackForm } from "../misc/feedback-form";
 import { BlogEmailSubscribe } from "../newsletter/newsletter-subscribe-dialog";
+import { NotificationButton } from "../notifications/notification-button";
 import { PublishMenu } from "../publish/publish-dialog";
 import { SettingsBadge } from "../settings/settings-badge";
 import { ConnectionBadge } from "../ui/connection-badge";
@@ -73,6 +74,7 @@ export const Header = ({ session }: { session: MeResult | null }) => {
         {isWritePage && <PublishMenu documentId={documentId} />}
         {isWritePage && <EditorOptionsDropdown documentId={documentId} collaborative={isCollaborative} />}
         {!isWritePage && !isMobile && <DraftCreateButton />}
+        {isAuthenticated && <NotificationButton />}
         <UserMenu session={session} showDropdown={true} />
       </div>
     </div>

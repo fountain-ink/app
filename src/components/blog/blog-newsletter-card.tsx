@@ -276,11 +276,7 @@ export function BlogNewsletterCard({ blog }: BlogNewsletterCardProps) {
         )}
       </Card>
 
-      <ImportSubscribersModal
-        open={importModalOpen}
-        onOpenChange={setImportModalOpen}
-        blogAddress={blog.address}
-      />
+      <ImportSubscribersModal open={importModalOpen} onOpenChange={setImportModalOpen} blogAddress={blog.address} />
 
       <NewsletterDeleteDialog
         open={deleteDialogOpen}

@@ -270,7 +270,6 @@ export async function POST(req: NextRequest, { params }: { params: { blog: strin
     if (!success) {
       return NextResponse.json({ error: "Failed to import subscribers" }, { status: 500 });
     }
-    
 
     return NextResponse.json({
       success: true,
