@@ -10,6 +10,9 @@ import {
 } from "@/lib/listmonk/client";
 import { getVerifiedBlog } from "../../utils";
 
+export const runtime = 'nodejs';
+export const maxDuration = 60;
+
 export async function GET(req: NextRequest, { params }: { params: { blog: string } }) {
   const result = await getVerifiedBlog(req, params.blog);
   if (result.error) return result.error;
@@ -264,11 +267,28 @@ export async function POST(req: NextRequest, { params }: { params: { blog: strin
 
     // Create a new CSV file with just the email column for Listmonk
     const newCsvContent = "email\n" + processedEmails.join("\n");
-    const newFile = new File([newCsvContent], "processed_subscribers.csv", { type: "text/csv" });
+    
+    const blob = new Blob([newCsvContent], { type: "text/csv" });
+    const newFile = new File([blob], "processed_subscribers.csv", { type: "text/csv" });
+    
+    console.log("CSV import debug:", {
+      blogSlug: params.blog,
+      listId: blog.mail_list_id,
+      emailCount: processedEmails.length,
+      fileSize: newFile.size,
+      fileType: newFile.type,
+      fileName: newFile.name,
+      sampleEmails: processedEmails.slice(0, 3),
+    });
 
     const success = await importSubscribers(newFile, [blog.mail_list_id]);
     if (!success) {
-      return NextResponse.json({ error: "Failed to import subscribers" }, { status: 500 });
+      console.error("Failed to import subscribers to Listmonk", {
+        listId: blog.mail_list_id,
+        emailCount: processedEmails.length,
+        blogSlug: params.blog,
+      });
+      return NextResponse.json({ error: "Failed to import subscribers to Listmonk. Please check the server logs." }, { status: 500 });
     }
 
     return NextResponse.json({
@@ -283,6 +303,23 @@ export async function POST(req: NextRequest, { params }: { params: { blog: strin
     });
   } catch (error) {
     console.error("Error processing CSV file:", error);
+    if (error instanceof Error) {
+      console.error("Error details:", {
+        message: error.message,
+        stack: error.stack,
+        blogSlug: params.blog,
+      });
+      
+      if (error.message.includes("Failed to fetch")) {
+        return NextResponse.json(
+          {
+            error: "Failed to connect to newsletter service. Please try again later.",
+          },
+          { status: 503 },
+        );
+      }
+    }
+    
     return NextResponse.json(
       {
         error: "Failed to process CSV file. Please ensure it's properly formatted.",
