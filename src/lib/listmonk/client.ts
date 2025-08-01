@@ -273,13 +273,17 @@ export async function importSubscribers(file: File, listIds: number[]): Promise<
     });
 
     if (!response.ok) {
-      console.error(`Failed to import subscribers: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      console.error(`Failed to import subscribers: ${response.status} ${response.statusText}`, errorText);
       return false;
     }
 
     return true;
   } catch (error) {
     console.error("Error importing subscribers:", error);
+    if (error instanceof Error) {
+      console.error("Error details:", error.message, error.stack);
+    }
     return false;
   }
 }
@@ -472,7 +476,7 @@ export async function createCampaignForPost(
   postMetadata?: string,
 ) {
   try {
-    const db = await createClient();
+    const db = createClient();
     const { data: blog, error } = await findBlogByIdentifier(db, blogId);
 
     if (error || !blog) {
