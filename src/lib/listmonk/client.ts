@@ -250,7 +250,7 @@ export async function addSubscriber(email: string, listId: number): Promise<List
 /**
  * Imports subscribers from a CSV file
  */
-export async function importSubscribers(file: File, listIds: number[]): Promise<boolean> {
+export async function importSubscribers(file: File | Buffer | string, listIds: number[], filename = "subscribers.csv"): Promise<boolean> {
   try {
     const formData = new FormData();
     const params = {
@@ -262,7 +262,16 @@ export async function importSubscribers(file: File, listIds: number[]): Promise<
     };
 
     formData.append("params", JSON.stringify(params));
-    formData.append("file", file);
+
+    if (typeof file === 'string') {
+      const blob = new Blob([file], { type: 'text/csv' });
+      formData.append("file", blob, filename);
+    } else if (Buffer.isBuffer(file)) {
+      const blob = new Blob([file], { type: 'text/csv' });
+      formData.append("file", blob, filename);
+    } else {
+      formData.append("file", file);
+    }
 
     const response = await fetch(`${env.LISTMONK_API_URL}/import/subscribers`, {
       method: "POST",
