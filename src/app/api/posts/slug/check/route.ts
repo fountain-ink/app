@@ -9,6 +9,7 @@ export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
     const slug = searchParams.get("slug");
     const handle = searchParams.get("handle");
+    const excludeId = searchParams.get("excludeId");
 
     if (!slug) {
       console.error("[Posts Slug Check] Missing slug parameter");
@@ -27,7 +28,11 @@ export async function GET(req: NextRequest) {
     const db = await createClient();
 
     // Check if slug exists for this specific handle
-    const { data: existingPosts, error } = await db.from("posts").select("id").eq("slug", slug).eq("handle", handle);
+    let query = db.from("posts").select("id").eq("slug", slug).eq("handle", handle);
+    if (excludeId) {
+      query = query.neq("id", excludeId);
+    }
+    const { data: existingPosts, error } = await query;
 
     if (error) {
       console.error("[Posts Slug Check] Error checking slug availability:", error);

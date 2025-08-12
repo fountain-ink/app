@@ -7,6 +7,7 @@
 export async function checkSlugAvailability(
   slug: string,
   handle?: string,
+  excludeId?: string,
 ): Promise<{ available: boolean; slug: string }> {
   try {
     if (!slug) {
@@ -16,6 +17,9 @@ export async function checkSlugAvailability(
     let url = `/api/posts/slug/check?slug=${encodeURIComponent(slug)}`;
     if (handle) {
       url += `&handle=${encodeURIComponent(handle)}`;
+    }
+    if (excludeId) {
+      url += `&excludeId=${encodeURIComponent(excludeId)}`;
     }
 
     const response = await fetch(url, {

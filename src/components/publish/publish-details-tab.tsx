@@ -19,7 +19,7 @@ import {
   ScrollText,
   XIcon,
 } from "lucide-react";
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState, useId } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { CoinIcon } from "@/components/icons/custom-icons";
@@ -92,6 +92,12 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
   const images = form.watch("details.images");
   const watchedIsSlugManuallyEdited = form.watch("details.isSlugManuallyEdited");
   const draft = getDraft();
+  const titleInputId = useId();
+  const subtitleInputId = useId();
+  const slugInputId = useId();
+  const canonicalUrlInputId = useId();
+  const dateButtonId = useId();
+  const miscSectionId = useId();
   const [tags, setTags] = useState<Tag[]>([]);
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
   const [isCheckingSlug, setIsCheckingSlug] = useState(false);
@@ -183,7 +189,9 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
         const appToken = getCookie("appToken") as string;
         const claims = getTokenClaims(appToken);
         const handle = claims?.metadata?.username || "";
-        const result = await checkSlugAvailability(slugToValidate, handle);
+        // Exclude current post when editing so unchanged slug doesn't show as taken
+        const excludeId = draft?.published_id ? String(draft.published_id) : undefined;
+        const result = await checkSlugAvailability(slugToValidate, handle, excludeId);
         setIsSlugAvailable(result.available);
       } catch (error) {
         console.error("Failed to check slug availability:", error);
@@ -192,7 +200,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
         setIsCheckingSlug(false);
       }
     },
-    [setIsSlugAvailable, setIsCheckingSlug],
+    [setIsSlugAvailable, setIsCheckingSlug, draft?.published_id],
   );
 
   const checkSlugDebounced = useMemo(() => debounce(slugCheckRunner, 500), [slugCheckRunner]);
@@ -306,10 +314,10 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
                   name="details.title"
                   render={({ field, fieldState }) => (
                     <FormItem className="max-w-full">
-                      <FormLabel htmlFor="title">Title</FormLabel>
+                      <FormLabel htmlFor={titleInputId}>Title</FormLabel>
                       <FormControl>
                         <Input
-                          id="title"
+                          id={titleInputId}
                           placeholder="Enter title"
                           {...field}
                           className={fieldState.error ? "border-destructive" : ""}
@@ -324,10 +332,10 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
                   name="details.subtitle"
                   render={({ field }) => (
                     <FormItem className="max-w-full">
-                      <FormLabel htmlFor="subtitle">Subtitle</FormLabel>
+                      <FormLabel htmlFor={subtitleInputId}>Subtitle</FormLabel>
                       <FormControl>
                         <Input
-                          id="subtitle"
+                          id={subtitleInputId}
                           placeholder="Enter subtitle (optional)"
                           {...field}
                           value={field.value ?? ""}
@@ -396,17 +404,22 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
         </div>
 
         <div className="border border-border flex shrink flex-col gap-4 min-h-0 h-fit rounded-sm p-4">
-          <div
-            className="flex items-center justify-between cursor-pointer"
-            onClick={() => form.setValue("details.isMiscSectionExpanded", !isMiscExpanded, { shouldDirty: true })}
-          >
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <ScrollText className="w-4 h-4 text-muted-foreground" />
               <h3 className="font-medium">Misc</h3>
             </div>
-            <motion.div animate={{ rotate: isMiscExpanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
-              <ChevronDown className="h-4 w-4 text-muted-foreground" />
-            </motion.div>
+            <button
+              type="button"
+              className="inline-flex items-center justify-center rounded-sm p-1 hover:bg-accent"
+              onClick={() => form.setValue("details.isMiscSectionExpanded", !isMiscExpanded, { shouldDirty: true })}
+              aria-expanded={isMiscExpanded}
+              aria-controls={miscSectionId}
+            >
+              <motion.div animate={{ rotate: isMiscExpanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              </motion.div>
+            </button>
           </div>
 
           {!isMiscExpanded && (
@@ -420,6 +433,7 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
               opacity: isMiscExpanded ? 1 : 0,
             }}
             transition={{ duration: 0.3 }}
+            id={miscSectionId}
             className={cn("overflow-hidden flex flex-col gap-4", !isMiscExpanded && "-mt-4")}
           >
             <FormField
@@ -427,13 +441,13 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
               name="details.slug"
               render={({ field, fieldState }) => (
                 <FormItem className="max-w-md">
-                  <FormLabel htmlFor="slug" className="flex items-center gap-1">
+                  <FormLabel htmlFor={slugInputId} className="flex items-center gap-1">
                     <span>Post slug</span>
                   </FormLabel>
                   <div className="relative">
                     <FormControl>
                       <Input
-                        id="slug"
+                        id={slugInputId}
                         placeholder="generated-from-title"
                         {...field}
                         onChange={handleSlugChange}
@@ -524,8 +538,8 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
                         <Popover>
                           <div className="relative flex flex-row items-center gap-2">
                             <PopoverTrigger asChild>
-                              <Button
-                                id="date"
+                        <Button
+                          id={dateButtonId}
                                 variant="outline"
                                 className={cn(
                                   "w-full justify-start text-left max-w-xs font-normal",
@@ -576,12 +590,12 @@ export const ArticleDetailsTab: FC<ArticleDetailsTabProps> = ({ form, documentId
                   name="details.canonicalUrl"
                   render={({ field, fieldState }) => (
                     <FormItem className="max-w-md">
-                      <FormLabel htmlFor="canonicalUrl" className="flex items-center gap-1">
+                      <FormLabel htmlFor={canonicalUrlInputId} className="flex items-center gap-1">
                         <span>Canonical URL</span>
                       </FormLabel>
                       <FormControl>
                         <Input
-                          id="canonicalUrl"
+                          id={canonicalUrlInputId}
                           placeholder="https://originalblog.com/post"
                           {...field}
                           value={field.value ?? ""}
