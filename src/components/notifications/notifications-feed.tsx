@@ -1,17 +1,24 @@
 "use client";
 
-import { useMemo, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { NotificationView } from "./notification-view";
 import { useNotifications } from "./notifications-context";
-import { useQuery } from "@tanstack/react-query";
-import { Skeleton } from "@/components/ui/skeleton";
 
 type FilterType = "all" | "posts" | "users" | "earnings";
 
 export function NotificationsFeed() {
-  const { notifications: allNotifications, isLoading: allLoading, error: allError, markAsRead, markAllAsRead, unreadCount } = useNotifications();
+  const {
+    notifications: allNotifications,
+    isLoading: allLoading,
+    error: allError,
+    markAsRead,
+    markAllAsRead,
+    unreadCount,
+  } = useNotifications();
   const [activeTab, setActiveTab] = useState<FilterType>("all");
 
   // Fetch posts notifications
@@ -82,9 +89,14 @@ export function NotificationsFeed() {
     }
   };
 
-  const isLoading = activeTab === "all" ? allLoading : 
-                   activeTab === "posts" ? postsLoading : 
-                   activeTab === "users" ? usersLoading : earningsLoading;
+  const isLoading =
+    activeTab === "all"
+      ? allLoading
+      : activeTab === "posts"
+        ? postsLoading
+        : activeTab === "users"
+          ? usersLoading
+          : earningsLoading;
   const error = allError;
 
   if (isLoading) {
@@ -105,13 +117,26 @@ export function NotificationsFeed() {
         <h2 className="text-2xl font-semibold">Notifications</h2>
       </div>
 
-      <Tabs defaultValue="all" className="flex-1 flex flex-col" value={activeTab} onValueChange={(value) => setActiveTab(value as FilterType)}>
+      <Tabs
+        defaultValue="all"
+        className="flex-1 flex flex-col"
+        value={activeTab}
+        onValueChange={(value) => setActiveTab(value as FilterType)}
+      >
         <div className="px-4 py-2">
           <TabsList className="w-full max-w-lg">
-            <TabsTrigger value="all" className="flex-1">All</TabsTrigger>
-            <TabsTrigger value="posts" className="flex-1">Comments</TabsTrigger>
-            <TabsTrigger value="users" className="flex-1">Following</TabsTrigger>
-            <TabsTrigger value="earnings" className="flex-1">Earnings</TabsTrigger>
+            <TabsTrigger value="all" className="flex-1">
+              All
+            </TabsTrigger>
+            <TabsTrigger value="posts" className="flex-1">
+              Comments
+            </TabsTrigger>
+            <TabsTrigger value="users" className="flex-1">
+              Following
+            </TabsTrigger>
+            <TabsTrigger value="earnings" className="flex-1">
+              Earnings
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -132,12 +157,12 @@ export function NotificationsFeed() {
   );
 }
 
-function NotificationList({ 
-  notifications, 
+function NotificationList({
+  notifications,
   markAsRead,
-  tabType
-}: { 
-  notifications: any[]; 
+  tabType,
+}: {
+  notifications: any[];
   markAsRead: (id: string) => void;
   tabType: FilterType;
 }) {
@@ -187,10 +212,18 @@ function NotificationsSuspense({ activeTab }: { activeTab: FilterType }) {
       <Tabs value={activeTab} className="flex-1 flex flex-col">
         <div className="px-4 py-2">
           <TabsList className="w-full max-w-lg">
-            <TabsTrigger value="all" className="flex-1">All</TabsTrigger>
-            <TabsTrigger value="posts" className="flex-1">Comments</TabsTrigger>
-            <TabsTrigger value="users" className="flex-1">Following</TabsTrigger>
-            <TabsTrigger value="earnings" className="flex-1">Earnings</TabsTrigger>
+            <TabsTrigger value="all" className="flex-1">
+              All
+            </TabsTrigger>
+            <TabsTrigger value="posts" className="flex-1">
+              Comments
+            </TabsTrigger>
+            <TabsTrigger value="users" className="flex-1">
+              Following
+            </TabsTrigger>
+            <TabsTrigger value="earnings" className="flex-1">
+              Earnings
+            </TabsTrigger>
           </TabsList>
         </div>
 

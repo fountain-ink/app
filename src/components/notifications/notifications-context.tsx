@@ -24,7 +24,13 @@ interface NotificationsProviderProps {
 export function NotificationsProvider({ children }: NotificationsProviderProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const { setNotificationCount, lastNotificationCheck, setLastNotificationCheck, lastNotificationSeen, setLastNotificationSeen } = useUIStore();
+  const {
+    setNotificationCount,
+    lastNotificationCheck,
+    setLastNotificationCheck,
+    lastNotificationSeen,
+    setLastNotificationSeen,
+  } = useUIStore();
 
   const {
     data: allNotifications = [],
@@ -61,19 +67,27 @@ export function NotificationsProvider({ children }: NotificationsProviderProps) 
       case "PostActionExecutedNotification":
       case "AccountActionExecutedNotification":
         return new Date(notification.actions?.[0]?.executedAt || Date.now()).getTime();
-      case "TokenDistributedNotification":
-        return new Date(notification.timestamp || Date.now()).getTime();
+      case "TokenDistributedNotification": {
+        // Check various possible timestamp fields
+        const timestamp =
+          notification.timestamp || notification.createdAt || notification.distributedAt || notification.executedAt;
+        return timestamp ? new Date(timestamp).getTime() : Date.now();
+      }
       default:
         return Date.now();
     }
   };
 
-  // Count unread as notifications created after last seen
+  // Count unread as notifications created after last seen (excluding TokenDistributedNotification)
   const unreadCount = useMemo(() => {
     if (!allNotifications.length) return 0;
-    if (!lastNotificationSeen) return allNotifications.length;
-    
-    return allNotifications.filter((n: any) => {
+
+    // Filter out TokenDistributedNotification from unread count
+    const countableNotifications = allNotifications.filter((n: any) => n.__typename !== "TokenDistributedNotification");
+
+    if (!lastNotificationSeen) return countableNotifications.length;
+
+    return countableNotifications.filter((n: any) => {
       const notificationTime = getNotificationTimestamp(n);
       return notificationTime > lastNotificationSeen;
     }).length;
@@ -86,12 +100,9 @@ export function NotificationsProvider({ children }: NotificationsProviderProps) 
   // Individual notification read marking is not implemented
   // since Lens Protocol doesn't support it
 
-  const markAsRead = useCallback(
-    (notificationId: string) => {
-      // Individual marking not supported
-    },
-    [],
-  );
+  const markAsRead = useCallback((notificationId: string) => {
+    // Individual marking not supported
+  }, []);
 
   const markAllAsRead = useCallback(() => {
     setLastNotificationSeen(Date.now());
@@ -117,4 +128,3 @@ export function useNotifications() {
   }
   return context;
 }
-

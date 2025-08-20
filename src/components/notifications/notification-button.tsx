@@ -44,4 +44,3 @@ const NotificationButton = forwardRef<HTMLButtonElement, NotificationButtonProps
 NotificationButton.displayName = "NotificationButton";
 
 export { NotificationButton };
-

@@ -1,25 +1,25 @@
 "use client";
 
 import { formatDistanceToNow } from "date-fns";
+import {
+  AtSign,
+  Bell,
+  Coins,
+  Gift,
+  Heart,
+  HelpCircle,
+  MessageCircle,
+  Quote,
+  Repeat2,
+  ShoppingBag,
+  Sparkles,
+  UserPlus,
+} from "lucide-react";
 import Link from "next/link";
 import { TruncatedText } from "@/components/misc/truncated-text";
 import { UserAvatar } from "@/components/user/user-avatar";
 import { UserName } from "@/components/user/user-name";
 import { cn } from "@/lib/utils";
-import { 
-  UserPlus, 
-  AtSign, 
-  MessageCircle, 
-  Quote, 
-  Repeat2, 
-  Heart, 
-  Sparkles,
-  Bell,
-  Coins,
-  ShoppingBag,
-  HelpCircle,
-  Gift
-} from "lucide-react";
 
 interface NotificationViewProps {
   notification: any; // Lens Protocol notification type
@@ -45,20 +45,34 @@ const getActionType = (action: any): "tipping" | "collecting" | "unknown" => {
 
 const formatAmount = (amount: any): string | null => {
   if (!amount) return null;
-  
+
   // Handle ERC20 amounts
   if (amount.amount && amount.asset) {
-    const value = parseFloat(amount.amount);
+    const value = Number.parseFloat(amount.amount);
     const symbol = amount.asset.symbol || "tokens";
     return `${value} ${symbol}`;
   }
-  
+
+  // Handle NativeAmount (used in TokenDistributedNotification)
+  if (amount.__typename === "NativeAmount" && amount.value && amount.asset) {
+    let value = Number.parseFloat(amount.value);
+    // Round up to 0.01 if less than 0.01
+    if (value > 0 && value < 0.01) {
+      value = 0.01;
+    }
+    // Format as currency with dollar sign - show up to 2 decimals, removing trailing zeros
+    if (value % 1 === 0) {
+      return `$${Math.floor(value)}`;
+    }
+    return `$${value.toFixed(2).replace(/\.?0+$/, "")}`;
+  }
+
   // Handle native amounts
   if (amount.value && amount.currency) {
-    const value = parseFloat(amount.value);
+    const value = Number.parseFloat(amount.value);
     return `${value} ${amount.currency}`;
   }
-  
+
   return null;
 };
 
@@ -165,7 +179,7 @@ const getNotificationMessage = (notification: any): string => {
       }
       return "performed an action";
     case "TokenDistributedNotification":
-      return "distributed tokens to you";
+      return "You have received a reward!";
     default:
       return "interacted with you";
   }
@@ -218,7 +232,8 @@ const getNotificationActors = (notification: any): any[] => {
     case "AccountActionExecutedNotification":
       return notification.actions?.map((a: any) => a.executedBy || a.account) || [];
     case "TokenDistributedNotification":
-      return []; // Token distributions don't have actors in the same way
+      // No actors for token distributions - it's a system reward
+      return [];
     default:
       return [];
   }
@@ -227,7 +242,7 @@ const getNotificationActors = (notification: any): any[] => {
 const getPostTitleOrContent = (notification: any): { text: string | null; isContent: boolean } => {
   let title: string | null = null;
   let content: string | null = null;
-  
+
   switch (notification.__typename) {
     case "MentionNotification":
     case "ReactionNotification":
@@ -252,10 +267,10 @@ const getPostTitleOrContent = (notification: any): { text: string | null; isCont
     default:
       break;
   }
-  
+
   return {
     text: title || content,
-    isContent: !title && !!content
+    isContent: !title && !!content,
   };
 };
 
@@ -274,16 +289,22 @@ const getCreatedAt = (notification: any): Date => {
     case "PostActionExecutedNotification":
     case "AccountActionExecutedNotification":
       return new Date(notification.actions?.[0]?.executedAt || Date.now());
-    case "TokenDistributedNotification":
-      return new Date(notification.timestamp || Date.now());
+    case "TokenDistributedNotification": {
+      // Check various possible timestamp fields
+      const timestamp =
+        notification.timestamp || notification.createdAt || notification.distributedAt || notification.executedAt;
+      return timestamp ? new Date(timestamp) : new Date();
+    }
     default:
       return new Date();
   }
 };
 
 const shouldShowNotification = (notification: any): boolean => {
-  if (notification.__typename === "PostActionExecutedNotification" || 
-      notification.__typename === "AccountActionExecutedNotification") {
+  if (
+    notification.__typename === "PostActionExecutedNotification" ||
+    notification.__typename === "AccountActionExecutedNotification"
+  ) {
     if (notification.actions?.[0]) {
       const actionType = getActionType(notification.actions[0]);
       if (actionType === "unknown") {
@@ -315,28 +336,36 @@ export function NotificationView({ notification, onRead }: NotificationViewProps
 
   return (
     <Link href={link} onClick={handleClick}>
-      <div className={cn("flex items-start gap-3 p-4 hover:bg-accent/50 transition-colors cursor-pointer rounded-lg mx-2 my-1")}>
+      <div
+        className={cn(
+          "flex items-start gap-3 p-4 hover:bg-accent/50 transition-colors cursor-pointer rounded-lg mx-2 my-1",
+        )}
+      >
         <div className="flex-shrink-0 mt-0.5">
           <Icon className="h-5 w-5 text-muted-foreground" />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center flex-wrap">
-            {actors.slice(0, 3).map((actor, index) => (
-              <span key={actor?.address || index} className="flex items-center">
-                <UserAvatar account={actor} className="h-5 w-5 mr-1" />
-                <UserName account={actor} className="font-medium text-sm" />
-                {index < actors.length - 1 && index < 2 && <span className="text-muted-foreground mr-1">,</span>}
-                {index < actors.length - 1 && index < 2 && <span className="mr-1"></span>}
-              </span>
-            ))}
-            {actors.length > 3 && <span className="text-sm text-muted-foreground ml-1 mr-1">and {actors.length - 3} others</span>}
-            <span className="text-sm text-muted-foreground ml-1">{message}</span>
+            {actors.length > 0 ? (
+              <>
+                {actors.slice(0, 3).map((actor, index) => (
+                  <span key={actor?.address || index} className="flex items-center">
+                    <UserAvatar account={actor} className="h-5 w-5 mr-1" />
+                    <UserName account={actor} className="font-medium text-sm" />
+                    {index < actors.length - 1 && index < 2 && <span className="text-muted-foreground mr-1">,</span>}
+                    {index < actors.length - 1 && index < 2 && <span className="mr-1" />}
+                  </span>
+                ))}
+                {actors.length > 3 && (
+                  <span className="text-sm text-muted-foreground ml-1 mr-1">and {actors.length - 3} others</span>
+                )}
+                <span className="text-sm text-muted-foreground ml-1">{message}</span>
+              </>
+            ) : (
+              <span className="text-sm text-muted-foreground">{message}</span>
+            )}
           </div>
-          {amount && (
-            <div className="mt-1 text-sm font-semibold text-green-600">
-              {amount}
-            </div>
-          )}
+          {amount && <div className="mt-1 text-sm font-semibold text-green-600/80">{amount}</div>}
           {postInfo.text && (
             <div className="mt-1">
               {postInfo.isContent ? (
@@ -346,12 +375,13 @@ export function NotificationView({ notification, onRead }: NotificationViewProps
               )}
             </div>
           )}
-          <div className="mt-1 text-xs text-muted-foreground">
-            {formatDistanceToNow(createdAt, { addSuffix: true })}
-          </div>
+          {notification.__typename !== "TokenDistributedNotification" && (
+            <div className="mt-1 text-xs text-muted-foreground">
+              {formatDistanceToNow(createdAt, { addSuffix: true })}
+            </div>
+          )}
         </div>
       </div>
     </Link>
   );
 }
-
