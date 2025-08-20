@@ -281,7 +281,24 @@ const getCreatedAt = (notification: any): Date => {
   }
 };
 
+const shouldShowNotification = (notification: any): boolean => {
+  if (notification.__typename === "PostActionExecutedNotification" || 
+      notification.__typename === "AccountActionExecutedNotification") {
+    if (notification.actions?.[0]) {
+      const actionType = getActionType(notification.actions[0]);
+      if (actionType === "unknown") {
+        return false;
+      }
+    }
+  }
+  return true;
+};
+
 export function NotificationView({ notification, onRead }: NotificationViewProps) {
+  if (!shouldShowNotification(notification)) {
+    return null;
+  }
+
   const Icon = getNotificationIcon(notification.__typename, notification);
   const message = getNotificationMessage(notification);
   const link = getNotificationLink(notification);

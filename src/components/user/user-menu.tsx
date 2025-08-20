@@ -20,7 +20,6 @@ import { getLensClient } from "@/lib/lens/client";
 import { useUIStore } from "@/stores/ui-store";
 import { ConnectWalletButton } from "../auth/auth-wallet-button";
 import { BlogDropdownMenu } from "../blog/blog-dropdown-menu";
-import BellIcon from "../icons/bell";
 import { HomeIcon } from "../icons/home";
 import { LogoutIcon } from "../icons/logout";
 import { MoonIcon } from "../icons/moon";
@@ -103,10 +102,6 @@ export const UserMenu = ({ session, showDropdown = false }: { session: MeResult 
 
               <AnimatedMenuItem href={`/u/${username}`} icon={UserIcon}>
                 Profile
-              </AnimatedMenuItem>
-
-              <AnimatedMenuItem href="/notifications" icon={BellIcon}>
-                Notifications
               </AnimatedMenuItem>
             </>
           )}
