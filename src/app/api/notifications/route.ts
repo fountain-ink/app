@@ -31,16 +31,14 @@ export async function GET(request: NextRequest) {
           return undefined; // All types
       }
     };
-
-    // Determine which notification types need app filtering
-    const appFilteredTypes = ["COMMENTED", "QUOTED", "REPOSTED", "REACTED", "MENTIONED"];
     
     const notificationTypes = getNotificationTypes(filterType);
     
-    // Check if we should apply app filter based on the notification types being requested
-    const shouldFilterByApp = filterType === "posts" || 
-                             (filterType === "all" && true) || // For "all", we want app-filtered mentions
-                             (notificationTypes && notificationTypes.some(type => appFilteredTypes.includes(type)));
+    // Only apply app filter for posts tab (comments, quotes, reposts, reactions)
+    // Users tab (follows, mentions) should NOT have app filter
+    // Earnings tab should NOT have app filter
+    // All tab should NOT have app filter to include everything
+    const shouldFilterByApp = filterType === "posts";
 
     const result = await fetchNotifications(client, {
       cursor,

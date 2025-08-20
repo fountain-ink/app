@@ -303,16 +303,17 @@ export function NotificationView({ notification, onRead }: NotificationViewProps
           <Icon className="h-5 w-5 text-muted-foreground" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center flex-wrap">
             {actors.slice(0, 3).map((actor, index) => (
-              <div key={actor?.address || index} className="flex items-center gap-1">
-                <UserAvatar account={actor} className="h-5 w-5" />
+              <span key={actor?.address || index} className="flex items-center">
+                <UserAvatar account={actor} className="h-5 w-5 mr-1" />
                 <UserName account={actor} className="font-medium text-sm" />
-                {index < actors.length - 1 && index < 2 && <span className="text-muted-foreground">,</span>}
-              </div>
+                {index < actors.length - 1 && index < 2 && <span className="text-muted-foreground mr-1">,</span>}
+                {index < actors.length - 1 && index < 2 && <span className="mr-1"></span>}
+              </span>
             ))}
-            {actors.length > 3 && <span className="text-sm text-muted-foreground">and {actors.length - 3} others</span>}
-            <span className="text-sm text-muted-foreground">{message}</span>
+            {actors.length > 3 && <span className="text-sm text-muted-foreground ml-1 mr-1">and {actors.length - 3} others</span>}
+            <span className="text-sm text-muted-foreground ml-1">{message}</span>
           </div>
           {amount && (
             <div className="mt-1 text-sm font-semibold text-green-600">

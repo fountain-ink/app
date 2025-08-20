@@ -109,8 +109,8 @@ export function NotificationsFeed() {
         <div className="px-4 py-2">
           <TabsList className="w-full max-w-lg">
             <TabsTrigger value="all" className="flex-1">All</TabsTrigger>
-            <TabsTrigger value="posts" className="flex-1">Posts</TabsTrigger>
-            <TabsTrigger value="users" className="flex-1">Users</TabsTrigger>
+            <TabsTrigger value="posts" className="flex-1">Comments</TabsTrigger>
+            <TabsTrigger value="users" className="flex-1">Following</TabsTrigger>
             <TabsTrigger value="earnings" className="flex-1">Earnings</TabsTrigger>
           </TabsList>
         </div>
@@ -188,8 +188,8 @@ function NotificationsSuspense({ activeTab }: { activeTab: FilterType }) {
         <div className="px-4 py-2">
           <TabsList className="w-full max-w-lg">
             <TabsTrigger value="all" className="flex-1">All</TabsTrigger>
-            <TabsTrigger value="posts" className="flex-1">Posts</TabsTrigger>
-            <TabsTrigger value="users" className="flex-1">Users</TabsTrigger>
+            <TabsTrigger value="posts" className="flex-1">Comments</TabsTrigger>
+            <TabsTrigger value="users" className="flex-1">Following</TabsTrigger>
             <TabsTrigger value="earnings" className="flex-1">Earnings</TabsTrigger>
           </TabsList>
         </div>
