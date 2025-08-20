@@ -174,7 +174,7 @@ function NotificationList({
         case "posts":
           return "No post interactions yet";
         case "users":
-          return "No follows or mentions yet";
+          return "No new followers yet";
         case "earnings":
           return "No earnings yet";
         default:

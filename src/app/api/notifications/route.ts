@@ -19,20 +19,35 @@ export async function GET(request: NextRequest) {
     const filterType = searchParams.get("filter") || "all";
 
     // Map filter types to notification types
-    const getNotificationTypes = (filter: string) => {
+    const getNotificationTypes = (filter: string): NotificationType[] | undefined => {
       switch (filter) {
         case "posts":
-          return ["COMMENTED", "QUOTED", "REPOSTED", "REACTED"];
+          return [
+            NotificationType.Commented,
+            NotificationType.Quoted,
+            NotificationType.Reposted,
+            NotificationType.Reacted
+          ];
         case "users":
-          return ["FOLLOWED", "MENTIONED"];
+          return [
+            NotificationType.Followed
+          ];
         case "earnings":
-          return ["EXECUTED_POST_ACTION", "EXECUTED_ACCOUNT_ACTION", "TOKEN_DISTRIBUTED"];
+          return [
+            NotificationType.ExecutedPostAction,
+            NotificationType.ExecutedAccountAction,
+            NotificationType.TokenDistributed
+          ];
+        case "all":
+          // Don't specify types - let the API return all notifications
+          return undefined;
         default:
           return undefined; // All types
       }
     };
     
     const notificationTypes = getNotificationTypes(filterType);
+    
     
     // Only apply app filter for posts tab (comments, quotes, reposts, reactions)
     // Users tab (follows, mentions) should NOT have app filter
@@ -47,6 +62,7 @@ export async function GET(request: NextRequest) {
         ...(notificationTypes ? { notificationTypes } : {}),
       },
     });
+    
 
     if (result.isErr()) {
       console.error("Error fetching notifications:", result.error);
