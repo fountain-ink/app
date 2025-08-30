@@ -230,7 +230,7 @@
     "@types/uuid": "^10.0.0",
     "dotenv-cli": "^8.0.0",
     "encoding": "^0.1.13",
-    "lucide-react": "^0.484.0",
+    "lucide-react": "^0.542.0",
     "prismjs": "^1.29.0",
     "react-email": "^4.0.17",
     "tailwindcss": "^3.4.3",
