@@ -137,26 +137,26 @@ export const autoformatBlocks: AutoformatRule[] = [
     mode: "block",
     type: HEADING_KEYS.h2,
   },
-  {
-    match: "### ",
-    mode: "block",
-    type: HEADING_KEYS.h3,
-  },
-  {
-    match: "#### ",
-    mode: "block",
-    type: HEADING_KEYS.h4,
-  },
-  {
-    match: "##### ",
-    mode: "block",
-    type: HEADING_KEYS.h5,
-  },
-  {
-    match: "###### ",
-    mode: "block",
-    type: HEADING_KEYS.h6,
-  },
+  // {
+  //   match: "### ",
+  //   mode: "block",
+  //   type: HEADING_KEYS.h3,
+  // },
+  // {
+  //   match: "#### ",
+  //   mode: "block",
+  //   type: HEADING_KEYS.h4,
+  // },
+  // {
+  //   match: "##### ",
+  //   mode: "block",
+  //   type: HEADING_KEYS.h5,
+  // },
+  // {
+  //   match: "###### ",
+  //   mode: "block",
+  //   type: HEADING_KEYS.h6,
+  // },
   {
     match: "> ",
     mode: "block",
