@@ -38,9 +38,21 @@ export const PostMenu = ({ post }: { post: Post }) => {
   const [isCreatingDraft, setIsCreatingDraft] = useState(false);
   const { saveDocument } = useDocumentStorage();
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(`${getBaseUrl()}${getPostUrl(post).slice(1)}`);
-    toast.success("Link copied to clipboard");
+  const handleCopyLink = async () => {
+    try {
+      const postUrl = getPostUrl(post);
+      if (!postUrl) {
+        toast.error("Unable to generate post URL");
+        return;
+      }
+      
+      const fullUrl = `${getBaseUrl()}${postUrl.slice(1)}`;
+      await navigator.clipboard.writeText(fullUrl);
+      toast.success("Link copied to clipboard");
+    } catch (error) {
+      console.error("Failed to copy link:", error);
+      toast.error("Failed to copy link to clipboard");
+    }
   };
 
   const appToken = getCookie("appToken");
