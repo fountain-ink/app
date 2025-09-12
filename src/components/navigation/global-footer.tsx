@@ -18,7 +18,7 @@ export const GlobalFooter = () => {
           {/* <div className="flex items-center gap-2 opacity-40 w-4 h-4 -mt-1">
             <FountainLogo />
           </div> */}
-          <span className="text-muted-foreground">© 2025 Fountain Labs</span>
+          <span className="text-muted-foreground">© {new Date().getFullYear()} Fountain Labs</span>
           {/* <Link href="/about" className="hover:text-primary transition-colors">
             About
           </Link> */}
