@@ -157,7 +157,6 @@ const BlogPage = async ({ params, searchParams }: { params: { blog: string }; se
   const blogTitle = blogData?.title;
   const isUserBlog = username === params.blog && !isGroup;
   const isUserMemeber = groupMembers.some((member) => member.address === userAddress);
-  console.log(posts);
 
   const blogSchema = generateBlogSchema({
     name: blogTitle || (isGroup ? group?.metadata?.name : `${profile?.username?.localName}'s blog`) || "Blog",

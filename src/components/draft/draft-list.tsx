@@ -23,7 +23,6 @@ async function getCloudDrafts() {
   });
 
   const data = await response.json();
-  console.log(data);
   return data.drafts;
 }
 
