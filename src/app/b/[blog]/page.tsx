@@ -7,6 +7,9 @@ import {
   fetchPosts,
   fetchPostTags,
 } from "@lens-protocol/client/actions";
+import { StructuredData } from "@/components/seo/structured-data";
+import { generateCanonicalUrl } from "@/lib/seo/canonical";
+import { generateBlogSchema } from "@/lib/seo/structured-data";
 import { notFound } from "next/navigation";
 import { BlogHeader } from "@/components/blog/blog-header";
 import { BlogTheme } from "@/components/blog/blog-theme";
@@ -76,11 +79,7 @@ export async function generateMetadata({ params }: { params: { blog: string } })
   });
 }
 
-import { StructuredData } from "@/components/seo/structured-data";
-import { generateCanonicalUrl } from "@/lib/seo/canonical";
-import { generateBlogSchema } from "@/lib/seo/structured-data";
-
-const BlogPage = async ({ params, searchParams }: { params: { blog: string }; searchParams?: { tag?: string } }) => {
+const BlogPage = async ({ params, searchParams }: { params: { blog: string }; searchParams?: { tag?: string; subscribe?: string } }) => {
   const lens = await getLensClient();
   const { username, address: userAddress } = await getUserAccount();
   let profile;

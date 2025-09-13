@@ -1,7 +1,8 @@
 "use client";
 
 import { AlertCircle, MailCheck } from "lucide-react";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +22,8 @@ interface BlogSubscribeProps {
   variant?: "default" | "outline" | "secondary" | "ghost" | "destructive";
   size?: "default" | "sm" | "lg" | "icon";
   className?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export function BlogEmailSubscribe({
@@ -28,14 +31,38 @@ export function BlogEmailSubscribe({
   variant = "outline",
   size = "default",
   className = "",
+  open,
+  onOpenChange,
 }: BlogSubscribeProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(open || false);
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [showValidation, setShowValidation] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [needsListCreation, setNeedsListCreation] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get("subscribe") === "" || searchParams.get("subscribe") === "true") {
+      setIsModalOpen(true);
+    } else if (open !== undefined) {
+      setIsModalOpen(open);
+    }
+  }, [open, searchParams]);
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setIsModalOpen(newOpen);
+    onOpenChange?.(newOpen);
+    
+    if (!newOpen && (searchParams.get("subscribe") === "" || searchParams.get("subscribe") === "true")) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("subscribe");
+      const newUrl = params.toString() ? `?${params.toString()}` : window.location.pathname;
+      router.replace(newUrl, { scroll: false });
+    }
+  };
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -65,7 +92,7 @@ export function BlogEmailSubscribe({
         setShowValidation(false);
         setTimeout(() => {
           setIsSuccess(false);
-          setIsModalOpen(false);
+          handleOpenChange(false);
         }, 2000);
       } else if (result?.needsListCreation) {
         setNeedsListCreation(true);
@@ -83,11 +110,13 @@ export function BlogEmailSubscribe({
 
   return (
     <>
-      <Button variant={variant} size={size} onClick={() => setIsModalOpen(true)} className={className}>
-        Subscribe
-      </Button>
+      {!open && (
+        <Button variant={variant} size={size} onClick={() => handleOpenChange(true)} className={className}>
+          Subscribe
+        </Button>
+      )}
 
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <Dialog open={isModalOpen} onOpenChange={handleOpenChange}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Subscribe to {blogData?.title || "this blog"}</DialogTitle>
