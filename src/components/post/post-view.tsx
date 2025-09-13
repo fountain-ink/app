@@ -254,7 +254,7 @@ export const PostView = memo(
 
             {options.showTitle && metadata.title && (
               <h2
-                className="!text-[1.25rem] !font-[family-name:var(--title-font)] !tracking-[-0.6px] !font-medium !leading-[1.35] !mb-1 !p-0"
+                className="!text-lg !font-[family-name:var(--title-font)] !tracking-[-0.6px] !font-semibold !leading-[1.35] !mb-1 !p-0"
                 suppressHydrationWarning
               >
                 {metadata.title}
@@ -263,7 +263,7 @@ export const PostView = memo(
 
             {options.showSubtitle && subtitle && (
               <p
-                className="!text-base !font-[family-name:var(--paragraph-font)] !text-muted-foreground !leading-[1.35] !line-clamp-3 !p-0"
+                className="!text-sm !font-[family-name:var(--paragraph-font)] !tracking-[-0.4px] !text-muted-foreground !leading-[1.35] !line-clamp-3 !p-0"
                 suppressHydrationWarning
               >
                 {subtitle}
@@ -313,7 +313,7 @@ export const PostView = memo(
           prefetch={false}
         >
           {options.showPreview && (
-            <div className="h-40 w-40 shrink-0 aspect-square rounded-sm overflow-hidden">
+            <div className="h-16 w-16 sm:h-40 sm:w-40 shrink-0 aspect-square rounded-sm overflow-hidden">
               {coverUrl ? (
                 <div className="h-full w-full overflow-hidden relative">
                   <Image
@@ -367,7 +367,7 @@ export const PostView = memo(
               </div>
               {options.showTitle && metadata.title && (
                 <div
-                  className="text-[1.75rem]  font-[family-name:var(--title-font)] tracking-[-0.8px] font-medium font-[color:var(--title-color)] line-clamp-2"
+                  className="text-xl  font-[family-name:var(--title-font)] tracking-[-0.8px] font-semibold font-[color:var(--title-color)] line-clamp-3"
                   suppressHydrationWarning
                 >
                   {metadata.title}
@@ -375,7 +375,7 @@ export const PostView = memo(
               )}
               {options.showSubtitle && subtitle && (
                 <div
-                  className="text-lg mt-2 font-[family-name:--subtitle-font] text-foreground/60 line-clamp-2"
+                  className="text-sm mt-2 font-[family-name:--subtitle-font] text-foreground/60 line-clamp-2"
                   suppressHydrationWarning
                 >
                   {subtitle}
@@ -390,15 +390,7 @@ export const PostView = memo(
                 </div>
               )}
             </div>
-
-            <div className="flex h-10 flex-row items-center text-sm tracking-wide relative mt-auto" />
-          </div>
-        </Link>
-
-        <div
-          className={`absolute bottom-4 left-0 right-0 ${options.showPreview ? "ml-[190px] sm:ml-[200px] md:ml-[210px] lg:ml-[220px]" : ""}`}
-        >
-          <div className="flex flex-row justify-between items-center text-sm tracking-wide">
+            <div className="flex flex-row justify-between items-center text-sm tracking-wide">
             <div className="flex flex-row items-center gap-3">
               <div className="flex justify-start">
                 {options.showDate && (
@@ -417,7 +409,10 @@ export const PostView = memo(
               <PostMenu post={post} />
             </div>
           </div>
-        </div>
+
+          </div>
+        </Link>
+
       </div>
     );
   },
