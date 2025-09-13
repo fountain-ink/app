@@ -34,7 +34,7 @@ export function TabNavigation({ navItems, basePath = "/settings" }: TabNavigatio
           >
             <Link
               href={`${basePath}/${item.id}`}
-              className={`px-2 md:px-4 py-2 flex items-center justify-between rounded-lg text-sm font-medium transition-colors
+              className={`px-2 md:px-4 py-2 w-fit sm:w-full flex items-center justify-between rounded-lg text-sm font-medium transition-colors
                 ${
                   item.enabled
                     ? isActive
