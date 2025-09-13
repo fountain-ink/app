@@ -128,14 +128,15 @@ export async function publishPost(
   router.refresh();
 
   if (sendNewsletter) {
+    const blogAddress = selectedBlogAddress || address;
     console.log("Creating newsletter campaign for post:", {
-      blogAddress: selectedBlogAddress,
+      blogAddress,
       postSlug,
       username,
       title: draft.title,
     });
     await createNewsletterCampaign({
-      selectedBlogAddress,
+      selectedBlogAddress: blogAddress,
       postSlug,
       username,
       draft,
