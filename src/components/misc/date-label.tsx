@@ -40,7 +40,7 @@ export const DateLabel = ({ date, originalDate }: { date: string; originalDate?:
 
   return (
     <span className="font-[family-name:--title-font]">
-      <span className="font-semibold">{formattedActualDate}</span>
+      <span>{formattedActualDate}</span>
     </span>
   );
 };
