@@ -14,7 +14,7 @@ const menuAnimationVariants = {
     height: 0,
     transition: {
       height: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 300,
         damping: 35,
         mass: 0.8,
@@ -29,7 +29,7 @@ const menuAnimationVariants = {
     height: "auto",
     transition: {
       height: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 300,
         damping: 35,
         mass: 0.8,

@@ -267,7 +267,7 @@ export async function importSubscribers(file: File | Buffer | string, listIds: n
       const blob = new Blob([file], { type: 'text/csv' });
       formData.append("file", blob, filename);
     } else if (Buffer.isBuffer(file)) {
-      const blob = new Blob([file], { type: 'text/csv' });
+      const blob = new Blob([new Uint8Array(file)], { type: 'text/csv' });
       formData.append("file", blob, filename);
     } else {
       formData.append("file", file);

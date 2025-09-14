@@ -31,11 +31,11 @@ const menuAnimationVariants = {
     transition: {
       height: {
         duration: 0.2,
-        ease: [0.32, 0.72, 0, 1],
+        ease: [0.32, 0.72, 0, 1] as const,
       },
       opacity: {
         duration: 0.15,
-        ease: [0.4, 0, 0.2, 1],
+        ease: [0.4, 0, 0.2, 1] as const,
       },
     },
   },
@@ -45,11 +45,11 @@ const menuAnimationVariants = {
     transition: {
       height: {
         duration: 0.2,
-        ease: [0.32, 0.72, 0, 1],
+        ease: [0.32, 0.72, 0, 1] as const,
       },
       opacity: {
         duration: 0.15,
-        ease: [0.4, 0, 0.2, 1],
+        ease: [0.4, 0, 0.2, 1] as const,
       },
     },
   },
