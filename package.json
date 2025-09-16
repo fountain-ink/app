@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=20.19.14"
+  },
   "scripts": {
     "db:generate-types": "dotenv -e .env.local -- bun run src/lib/scripts/db-generate-types.ts",
     "db:backup": "dotenv -e .env.local -- bun run src/lib/scripts/db-backup.ts",
