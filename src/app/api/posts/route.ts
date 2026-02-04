@@ -63,6 +63,15 @@ export async function POST(req: NextRequest) {
 
     const db = await createClient();
 
+    if (handle) {
+      const { data: blog } = await db.from("blogs").select("owner").eq("handle", handle).single();
+
+      if (!blog || blog.owner !== userAddress) {
+        console.error(`[Posts Create/Update] User ${userAddress} does not own blog with handle: ${handle}`);
+        return NextResponse.json({ error: "Unauthorized - you do not own this blog" }, { status: 403 });
+      }
+    }
+
     if (post_id) {
       console.log(`[Posts Update] Attempting to update post with ID: ${post_id}`);
 
@@ -75,29 +84,30 @@ export async function POST(req: NextRequest) {
 
       if (!existingPost) {
         console.error("[Posts Update] Post not found or doesn't belong to user");
-      } else {
-        const { data: updatedPost, error: updateError } = await db
-          .from("posts")
-          .update({
-            lens_slug,
-            slug,
-            handle,
-          })
-          .eq("id", post_id)
-          .select()
-          .single();
-
-        if (updateError) {
-          console.error("[Posts Update] Error updating post record:", updateError);
-          return NextResponse.json({ error: "Failed to update post record" }, { status: 500 });
-        }
-
-        console.log(`[Posts Update] Updated post record with ID: ${post_id}`);
-        return NextResponse.json({
-          success: true,
-          post: updatedPost,
-        });
+        return NextResponse.json({ error: "Post not found or unauthorized" }, { status: 403 });
       }
+
+      const { data: updatedPost, error: updateError } = await db
+        .from("posts")
+        .update({
+          lens_slug,
+          slug,
+          handle,
+        })
+        .eq("id", post_id)
+        .select()
+        .single();
+
+      if (updateError) {
+        console.error("[Posts Update] Error updating post record:", updateError);
+        return NextResponse.json({ error: "Failed to update post record" }, { status: 500 });
+      }
+
+      console.log(`[Posts Update] Updated post record with ID: ${post_id}`);
+      return NextResponse.json({
+        success: true,
+        post: updatedPost,
+      });
     }
 
     // Create new post record
