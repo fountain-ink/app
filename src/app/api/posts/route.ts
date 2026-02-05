@@ -73,41 +73,40 @@ export async function POST(req: NextRequest) {
     }
 
     if (post_id) {
-      console.log(`[Posts Update] Attempting to update post with ID: ${post_id}`);
+      console.log(`[Posts Update] Checking if post exists with ID: ${post_id}`);
 
-      const { data: existingPost } = await db
-        .from("posts")
-        .select("*")
-        .eq("id", post_id)
-        .eq("author", userAddress)
-        .single();
+      const { data: existingPost } = await db.from("posts").select("*").eq("id", post_id).single();
 
-      if (!existingPost) {
-        console.error("[Posts Update] Post not found or doesn't belong to user");
-        return NextResponse.json({ error: "Post not found or unauthorized" }, { status: 403 });
+      if (existingPost) {
+        if (existingPost.author !== userAddress) {
+          console.error(`[Posts Update] Post belongs to ${existingPost.author}, not ${userAddress}`);
+          return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+        }
+
+        const { data: updatedPost, error: updateError } = await db
+          .from("posts")
+          .update({
+            lens_slug,
+            slug,
+            handle,
+          })
+          .eq("id", post_id)
+          .select()
+          .single();
+
+        if (updateError) {
+          console.error("[Posts Update] Error updating post record:", updateError);
+          return NextResponse.json({ error: "Failed to update post record" }, { status: 500 });
+        }
+
+        console.log(`[Posts Update] Updated post record with ID: ${post_id}`);
+        return NextResponse.json({
+          success: true,
+          post: updatedPost,
+        });
       }
 
-      const { data: updatedPost, error: updateError } = await db
-        .from("posts")
-        .update({
-          lens_slug,
-          slug,
-          handle,
-        })
-        .eq("id", post_id)
-        .select()
-        .single();
-
-      if (updateError) {
-        console.error("[Posts Update] Error updating post record:", updateError);
-        return NextResponse.json({ error: "Failed to update post record" }, { status: 500 });
-      }
-
-      console.log(`[Posts Update] Updated post record with ID: ${post_id}`);
-      return NextResponse.json({
-        success: true,
-        post: updatedPost,
-      });
+      console.log(`[Posts Create] Post not found, will create new record with ID: ${post_id}`);
     }
 
     // Create new post record
