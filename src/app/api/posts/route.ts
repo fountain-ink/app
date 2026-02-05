@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
 
     const db = await createClient();
 
-    if (handle) {
+    if (handle && handle !== claims.metadata.username) {
       const { data: blog } = await db.from("blogs").select("owner").eq("handle", handle).single();
 
       if (!blog || blog.owner !== userAddress) {
